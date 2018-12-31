@@ -8,10 +8,11 @@
 	<script type="text/javascript" src="../../packages/jquery/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
-	<script type='text/javascript'>//<![CDATA[ 
+	<script type='text/javascript'>
 		$(document).ready(function () {
 			var options = new primitives.famdiagram.Config();
 			var items = [
@@ -29,10 +30,10 @@
 				{ id: 12, parents: [10], title: "Finalize", label: "Finalize", et: 20, lt: 30, itemTitleColor: "#4b0082" },
 				{ id: 13, parents: [7], title: "Flight Simulation", label: "Flight Simulation", et: 30, lt: 45, itemTitleColor: "#4b0082" },
 				{ id: 14, parents: [13], title: "Revise & Review", label: "Revise & Review", et: 45, lt: 55, itemTitleColor: "#4b0082" }
-				
+
 			];
 
-			options.annotations = [new primitives.famdiagram.HighlightPathAnnotationConfig({ items: [1, 3, 5, 6, 8, 9, 10, 12], color: primitives.common.Colors.Red,  lineWidth: 2, zOrderType: primitives.common.ZOrderType.Foreground, opacity: 0.5 })];
+			options.annotations = [new primitives.famdiagram.HighlightPathAnnotationConfig({ items: [1, 3, 5, 6, 8, 9, 10, 12], color: primitives.common.Colors.Red, lineWidth: 2, zOrderType: primitives.common.ZOrderType.Foreground, opacity: 0.5 })];
 
 			options.items = items;
 			options.cursorItem = 0;
@@ -79,10 +80,10 @@
 
 
 				var itemTemplate = jQuery(
-				  '<div class="bp-item bp-corner-all bt-item-frame">'
+					'<div class="bp-item bp-corner-all bt-item-frame">'
 					+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 96px; height: 20px;">'
-						+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 88px; height: 18px;">'
-						+ '</div>'
+					+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 88px; height: 18px;">'
+					+ '</div>'
 					+ '</div>'
 					+ '<div class="bp-item" style="padding: 4px; top: 20px; left: 0px; width: 50px; height: 20px; font-size: 12px;">ET</div>'
 					+ '<div name="et" class="bp-item" style="padding: 4px; top: 40px; left: 0px; width: 50px; height: 20px; font-size: 12px;"></div>'
@@ -90,7 +91,7 @@
 					+ '<div name="lt" class="bp-item" style="padding: 4px; top: 40px; left: 50px; width: 50px; height: 20px; font-size: 12px;"></div>'
 					+ '<div class="bp-item" style="line-height: 0px; border-top: 1px solid gray; top: 40px; left: 4px; width: 92px; height: 1px;"></div>'
 					+ '<div class="bp-item" style="line-height: 0px; border-left: 1px solid gray; top: 24px; left: 50px; width: 1px; height: 32px;"></div>'
-				+ '</div>'
+					+ '</div>'
 				).css({
 					width: result.itemSize.width + "px",
 					height: result.itemSize.height + "px"
@@ -101,7 +102,7 @@
 			}
 
 			jQuery("#basicdiagram").famDiagram(options);
-		});//]]>  
+		});
 
 	</script>
 </head>

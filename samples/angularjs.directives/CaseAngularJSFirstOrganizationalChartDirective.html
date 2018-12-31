@@ -3,14 +3,12 @@
 <head>
 	<title>AngularJS Organizational Chart Directive Example</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" href="../../packages/jquery-ui/jquery-ui.min.css" />
-	<script type="text/javascript" src="../../packages/jquery/jquery-3.3.1.min.js"></script>
-	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
 
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
 	<script src="../../packages/angularjs/angular.js"></script>
 
@@ -117,23 +115,111 @@
 				result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
 
 
-				var itemTemplate = jQuery(
-					 '<div class="bp-item bp-corner-all bt-item-frame">'
-					+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="background:{{itemTitleColor}};top: 2px; left: 2px; width: 216px; height: 20px;">'
-						+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px;">{{itemConfig.title}}</div>'
-					+ '</div>'
-					+ '<div class="bp-item bp-photo-frame" style="top: 26px; left: 2px; width: 50px; height: 60px;">'
-						+ '<img name="photo" src="{{itemConfig.image}}" style="height: 60px; width:50px;" />'
-					+ '</div>'
-					+ '<div name="phone" class="bp-item" style="top: 26px; left: 56px; width: 162px; height: 18px; font-size: 12px;">{{itemConfig.phone}}</div>'
-					+ '<div class="bp-item" style="top: 44px; left: 56px; width: 162px; height: 18px; font-size: 12px;"><a name="email" href="mailto::{{itemConfig.email}}" target="_top">{{itemConfig.email}}</a></div>'
-					+ '<div name="description" class="bp-item" style="top: 62px; left: 56px; width: 162px; height: 36px; font-size: 10px;">{{itemConfig.description}}</div>'
-				+ '</div>'
-				).css({
-					width: result.itemSize.width + "px",
-					height: result.itemSize.height + "px"
-				}).addClass("bp-item bp-corner-all bt-item-frame");
-				result.itemTemplate = itemTemplate.wrap('<div>').parent().html();
+				/* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
+				result.itemTemplate = ["div",
+					{
+						style: {
+							width: result.itemSize.width + "px",
+							height: result.itemSize.height + "px",
+						},
+						"class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+					},
+					["div",
+						{
+							"name": "titleBackground",
+							"class": ["bp-item", "bp-corner-all", "bp-title-frame"],
+							"style": {
+								backgroundColor: "{{itemTitleColor}}",
+								top: "2px",
+								left: "2px",
+								width: "216px",
+								height: "20px"
+							}
+						},
+						["div",
+							{
+								"name": "title",
+								style: {
+									top: "3px",
+									left: "6px",
+									width: "208px",
+									height: "18px"
+								},
+								"class": ["bp-item", "bp-title"]
+							},
+							"{{itemConfig.title}}"
+						]
+					],
+					["div",
+						{
+							"style": {
+								top: "26px",
+								left: "2px",
+								width: "50px",
+								height: "60px"
+							},
+							"class": ["bp-item", "bp-photo-frame"]
+						},
+						["img",
+							{
+								"name": "photo",
+								"src": "{{itemConfig.image}}",
+								"style": {
+									height: "60px",
+									width: "50px"
+								}
+							}
+						]
+					],
+					["div",
+						{
+							"name": "phone",
+							"style": {
+								top: "26px",
+								left: "56px",
+								width: "162px",
+								height: "18px",
+								fontSize: "12px"
+							},
+							"class": "bp-item"
+						},
+						"{{itemConfig.phone}}"
+					],
+					["div",
+						{
+							"style": {
+								top: "44px",
+								left: "56px",
+								width: "162px",
+								height: "18px",
+								fontSize: "12px"
+							},
+							"class": "bp-item"
+						},
+						["a",
+							{
+								"name": "email",
+								href: "mailto::{{itemConfig.email}}",
+								target: "_top"
+							},
+							"{{itemConfig.email}}"
+						]
+					],
+					["div",
+						{
+							"name": "description",
+							"style": {
+								top: "62px",
+								left: "56px",
+								width: "162px",
+								height: "36px",
+								fontSize: "10px"
+							},
+							"class": "bp-item" 
+						},
+						"{{itemConfig.description}}"
+					]
+				];
 
 				return result;
 			}
@@ -151,27 +237,27 @@
 					config.onCursorChanged = onCursorChanged;
 					config.onHighlightChanged = onHighlightChanged;
 
-					var chart = jQuery(element).orgDiagram(config);
+					var chart = primitives.orgdiagram.Control(element[0], config);
 
 					scope.$watch('options.highlightItem', function (newValue, oldValue) {
-						var highlightItem = chart.orgDiagram("option", "highlightItem");
+						var highlightItem = chart.getOption("highlightItem");
 						if (highlightItem != newValue) {
-							chart.orgDiagram("option", { highlightItem: newValue });
-							chart.orgDiagram("update", primitives.orgdiagram.UpdateMode.PositonHighlight);
+							chart.setOption("highlightItem", newValue);
+							chart.update(primitives.orgdiagram.UpdateMode.PositonHighlight);
 						}
 					});
 
 					scope.$watch('options.cursorItem', function (newValue, oldValue) {
-						var cursorItem = chart.orgDiagram("option", "cursorItem");
+						var cursorItem = chart.getOption("cursorItem");
 						if (cursorItem != newValue) {
-							chart.orgDiagram("option", { cursorItem: newValue });
-							chart.orgDiagram("update", primitives.orgdiagram.UpdateMode.Refresh);
+							chart.setOption("cursorItem", newValue);
+							chart.update(primitives.orgdiagram.UpdateMode.Refresh);
 						}
 					});
 
 					scope.$watchCollection('options.items', function (items) {
-						chart.orgDiagram("option", { items: items });
-						chart.orgDiagram("update", primitives.orgdiagram.UpdateMode.Refresh);
+						chart.setOption("items", items);
+						chart.update(primitives.orgdiagram.UpdateMode.Refresh);
 					});
 
 					function onTemplateRender(event, data) {
@@ -182,7 +268,7 @@
 								/* Initialize widgets here */
 								var itemScope = scope.$new();
 								itemScope.itemConfig = itemConfig;
-								$compile(data.element.contents())(itemScope);
+								$compile(data.element)(itemScope);
 								if (!scope.$parent.$$phase) {
 									itemScope.$apply();
 								}
@@ -190,7 +276,7 @@
 								break;
 							case primitives.common.RenderingMode.Update:
 								/* Update widgets here */
-								var itemScope = data.element.contents().scope();
+								var itemScope = angular.element(data.element).scope();
 								itemScope.itemConfig = itemConfig;
 								break;
 						}
@@ -219,8 +305,8 @@
 							itemScopes[index].$destroy();
 						}
 
-						/* destory jQuery UI widget instance */
-						chart.remove();
+						/* destory control instance */
+						chart.destroy();
 					});
 				};
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<items jsfilename="C:\inetpub\wwwroot\primitives\min\primitives.jquery.latest.js" htmlfilename="C:\inetpub\wwwroot\primitives\src.primitives.jquery\src.primitives.jquery.html">
+	<folders>
+		<folder name="common" priority="7" />
+    <folder name="orgdiagram" priority="2" />
+  </folders>
+	<files>
+    <file name="Widget.js" priority="1" />
+	</files>
+	<enums>
+	</enums>
+</items>

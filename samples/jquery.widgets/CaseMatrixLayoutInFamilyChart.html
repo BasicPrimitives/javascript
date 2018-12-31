@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Matrix Nodes Layout In Family Chart</title>
+
+	<link rel="stylesheet" href="../../packages/jquery-ui/jquery-ui.min.css" />
+	<script type="text/javascript" src="../../packages/jquery/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+		$(document).ready(function () {
+			var options = new primitives.famdiagram.Config();
+
+			options.items = [
+				{ id: 1, parents: [], title: "1", label: "1", description: "", image: "../images/photos/z.png", itemTitleColor: "#ff0000" },
+				{ id: 2, parents: [], title: "2", label: "2", description: "", image: "../images/photos/a.png", itemTitleColor: "#ff0000" },
+				{ id: 3, parents: [1, 2], title: "3", label: "3", description: "", image: "../images/photos/b.png", itemTitleColor: "#ff0000" },
+				{ id: 4, parents: [1, 2], title: "4", label: "4", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" },
+				{ id: 5, parents: [1, 2], title: "5", label: "5", description: "", image: "../images/photos/d.png", itemTitleColor: "#ff0000" },
+				{ id: 6, parents: [1, 2], title: "6", label: "6", description: "", image: "../images/photos/e.png", itemTitleColor: "#ff0000" },
+				{ id: 7, parents: [1, 2], title: "7", label: "7", description: "", image: "../images/photos/f.png", itemTitleColor: "#ff0000" },
+				{ id: 8, parents: [1, 2], title: "8", label: "8", description: "", image: "../images/photos/g.png", itemTitleColor: "#ff0000" },
+				{ id: 9, parents: [1, 2], title: "9", label: "9", description: "", image: "../images/photos/h.png", itemTitleColor: "#ff0000" },
+				{ id: 10, parents: [3, 4, 5, 6, 7, 8, 9], title: "10", label: "10", description: "", image: "../images/photos/i.png", itemTitleColor: "#ff0000" },
+				{ id: 11, parents: [3, 4, 5, 6, 7, 8, 9], title: "11", label: "11", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" }
+			];
+
+
+			options.cursorItem = 1;
+			options.enableMatrixLayout = true;
+			options.minimumMatrixSize = 3;
+			options.hasSelectorCheckbox = primitives.common.Enabled.False;
+			options.arrowsDirection = primitives.common.GroupByType.Children;
+			options.pageFitMode = primitives.common.PageFitMode.None;
+
+			jQuery("#basicdiagram").famDiagram(options);
+		});
+
+	</script>
+</head>
+<body>
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+</html>

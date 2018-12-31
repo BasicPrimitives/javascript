@@ -58,7 +58,7 @@ var famdata = {
 			annotationType: primitives.common.AnnotationType.Connector,
 			fromItem: 5,
 			toItem: 81,
-			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
 			labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 			connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 			color: primitives.common.Colors.Red,
@@ -78,7 +78,7 @@ var famdata = {
 		{
 			annotationType: primitives.common.AnnotationType.Shape,
 			items: [5],
-			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>3</div>Cross Out shape annotation", // security issue! don't do this in real life scenarious
+			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>3</div>Cross Out shape annotation",
 			labelSize: { width: 120, height: 50 }, //new primitives.common.Size(120, 50)
 			shapeType: primitives.common.ShapeType.CrossOut,
 			borderColor: primitives.common.Colors.Red,
@@ -90,7 +90,7 @@ var famdata = {
 		{
 			annotationType: primitives.common.AnnotationType.Shape,
 			items: [81],
-			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>4</div>Oval shape annotation", // security issue! don't do this in real life scenarious
+			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>4</div>Oval shape annotation", 
 			labelSize: new primitives.common.Size(100, 50), //new primitives.common.Size(100, 50)
 			shapeType: primitives.common.ShapeType.Oval,
 			borderColor: primitives.common.Colors.Red,
@@ -259,7 +259,7 @@ var famdata2 = {
 			annotationType: primitives.common.AnnotationType.Connector,
 			fromItem: 1,
 			toItem: 15,
-			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", 
 			labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 			connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 			color: primitives.common.Colors.Red,
@@ -303,7 +303,7 @@ var sideBySide = {
 		annotationType: primitives.common.AnnotationType.Connector,
 		fromItem: 36,
 		toItem: 16,
-		label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+		label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", 
 		labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 		connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 		color: primitives.common.Colors.Red,
@@ -389,7 +389,7 @@ var crossShape = {
 			annotationType: primitives.common.AnnotationType.Connector,
 			fromItem: 2,
 			toItem: 1,
-			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", 
 			labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 			connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 			color: primitives.common.Colors.Red,
@@ -421,7 +421,7 @@ var rombusShape = {
 			annotationType: primitives.common.AnnotationType.Connector,
 			fromItem: 3,
 			toItem: 8,
-			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", 
 			labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 			connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 			color: primitives.common.Colors.Red,
@@ -451,7 +451,7 @@ var sandClockShape = {
 			annotationType: primitives.common.AnnotationType.Connector,
 			fromItem: 7,
 			toItem: 10,
-			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", 
 			labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 			connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 			color: primitives.common.Colors.Red,
@@ -484,7 +484,7 @@ var skippedMembers = {
 			annotationType: primitives.common.AnnotationType.Connector,
 			fromItem: 2,
 			toItem: 13,
-			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", 
 			labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 			connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 			color: primitives.common.Colors.Red,
@@ -518,7 +518,7 @@ var horizontalChain = {
 		annotationType: primitives.common.AnnotationType.Connector,
 		fromItem: 8,
 		toItem: 10,
-		label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+		label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", 
 		labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 		connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 		color: primitives.common.Colors.Red,
@@ -548,7 +548,7 @@ var alignmentData = {
 		annotationType: primitives.common.AnnotationType.Connector,
 		fromItem: 2,
 		toItem: 5,
-		label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+		label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", 
 		labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 		connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 		color: primitives.common.Colors.Red,
@@ -575,7 +575,7 @@ var famdataCascade = {
 		annotationType: primitives.common.AnnotationType.Connector,
 		fromItem: 10,
 		toItem: 5,
-		label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+		label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", 
 		labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 		connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 		color: primitives.common.Colors.Red,
@@ -604,7 +604,7 @@ var famdataLoops = {
 			annotationType: primitives.common.AnnotationType.Connector,
 			fromItem: 1,
 			toItem: 5,
-			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", 
 			labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 			connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 			color: primitives.common.Colors.Red,
@@ -639,7 +639,7 @@ var famdataOwnership = {
 		annotationType: primitives.common.AnnotationType.Connector,
 		fromItem: 1,
 		toItem: 5,
-		label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+		label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", 
 		labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 		connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 		color: primitives.common.Colors.Red,
@@ -685,7 +685,7 @@ var famdataWorld = {
 		annotationType: primitives.common.AnnotationType.Connector,
 		fromItem: 2,
 		toItem: 31,
-		label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+		label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", 
 		labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 		connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 		color: primitives.common.Colors.Red,
@@ -753,7 +753,7 @@ var famSpouses = {
 			annotationType: primitives.common.AnnotationType.Connector,
 			fromItem: 5,
 			toItem: 8,
-			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", 
 			labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 			connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 			color: primitives.common.Colors.Red,
@@ -795,7 +795,7 @@ var famdataLoopsTest = {
 		//    annotationType: primitives.common.AnnotationType.Connector,
 		//    fromItem: 3,
 		//    toItem: 4,
-		//    label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>", // security issue! don't do this in real life scenarious
+		//    label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>", 
 		//    labelSize: { width: 30, height: 30 }, //new primitives.common.Size(80, 30)
 		//    connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 		//    color: primitives.common.Colors.Red,
@@ -830,7 +830,7 @@ var famdataCharless2 = {
 			annotationType: primitives.common.AnnotationType.Connector,
 			fromItem: 3,
 			toItem: 4,
-			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>", // security issue! don't do this in real life scenarious
+			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>", 
 			labelSize: { width: 30, height: 30 }, //new primitives.common.Size(80, 30)
 			connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 			color: primitives.common.Colors.Red,
@@ -883,7 +883,7 @@ var matrixLayout = {
 			annotationType: primitives.common.AnnotationType.Connector,
 			fromItem: 10,
 			toItem: 24,
-			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>", // security issue! don't do this in real life scenarious
+			label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>", 
 			labelSize: { width: 30, height: 30 }, //new primitives.common.Size(80, 30)
 			connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 			color: primitives.common.Colors.Red,
@@ -932,26 +932,6 @@ var matrixLayout = {
 	]
 };
 
-var matrix2parents = {
-	cursorItem: 1,
-	enableMatrixLayout: true,
-	minimumMatrixSize: 3,
-	annotations: [],
-	items: [
-		{ id: 1, parents: [], title: "1", label: "1", description: "", image: "../images/photos/z.png", itemTitleColor: "#ff0000" },
-		{ id: 2, parents: [], title: "2", label: "2", description: "", image: "../images/photos/a.png", itemTitleColor: "#ff0000" },
-		{ id: 3, parents: [1, 2], title: "3", label: "3", description: "", image: "../images/photos/b.png", itemTitleColor: "#ff0000" },
-		{ id: 4, parents: [1, 2], title: "4", label: "4", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" },
-		{ id: 5, parents: [1, 2], title: "5", label: "5", description: "", image: "../images/photos/d.png", itemTitleColor: "#ff0000" },
-		{ id: 6, parents: [1, 2], title: "6", label: "6", description: "", image: "../images/photos/e.png", itemTitleColor: "#ff0000" },
-		{ id: 7, parents: [1, 2], title: "7", label: "7", description: "", image: "../images/photos/f.png", itemTitleColor: "#ff0000" },
-		{ id: 8, parents: [1, 2], title: "8", label: "8", description: "", image: "../images/photos/g.png", itemTitleColor: "#ff0000" },
-		{ id: 9, parents: [1, 2], title: "9", label: "9", description: "", image: "../images/photos/h.png", itemTitleColor: "#ff0000" },
-		{ id: 10, parents: [3, 4, 5, 6, 7, 8, 9], title: "10", label: "10", description: "", image: "../images/photos/i.png", itemTitleColor: "#ff0000" },
-		{ id: 11, parents: [3, 4, 5, 6, 7, 8, 9], title: "11", label: "11", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" }
-	]
-};
-
 var dataSetNames = {
 	"2 Cross Relations": "crossShape",
 	"3 Cross Relations": "famdata2",
@@ -973,8 +953,7 @@ var dataSetNames = {
 	"Simple Sand Clock": "simpleSandClock",
 	"W Shape Family": "wFamily",
 	"Simple Family": "simpleFamily",
-	"Matrix Family Layout": "matrixLayout",
-	"2 parents Matrix Layout": "matrix2parents"
+	"Matrix Family Layout": "matrixLayout"
 };
 
 var defaultDataSetName = dataSetNames["2 Cross Relations"];

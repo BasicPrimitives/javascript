@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Auto Size Diagram</title>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?2106" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type="text/javascript">
+		var control;
+		var sizes = {
+			"640*480": new primitives.common.Size(640, 480),
+			"800*600": new primitives.common.Size(800, 600),
+			"1024*768": new primitives.common.Size(1024, 768),
+			"1280*1024": new primitives.common.Size(1280, 1024)
+		}
+
+		document.addEventListener('DOMContentLoaded', function () {
+			var options = new primitives.orgdiagram.Config();
+			var items = [
+				new primitives.orgdiagram.ItemConfig({
+					id: 0,
+					parent: null,
+					title: "Title 4",
+					description: "Description",
+					image: "../images/photos/a.png"
+				})
+			];
+
+			var id = 1;
+			for (var index = 0; index < 4; index++) {
+				items.push(new primitives.orgdiagram.ItemConfig({
+					id: ++id,
+					parent: 0,
+					title: id.toString() + " Title",
+					description: id.toString() + " Description",
+					image: "../images/photos/c.png"
+				}));
+				var parent = id;
+				for (var index2 = 0; index2 < 2; index2++) {
+					items.push(new primitives.orgdiagram.ItemConfig({
+						id: ++id,
+						parent: parent,
+						title: id.toString() + " Title",
+						description: id.toString() + " Description",
+						image: "../images/photos/c.png"
+					}));
+				}
+			}
+
+			options.items = items;
+			options.cursorItem = 0;
+			options.pageFitMode = primitives.common.PageFitMode.AutoSize;
+			options.autoSizeMinimum = sizes[getRadioValue("autoSizeMinimum")];
+			options.autoSizeMaximum = sizes[getRadioValue("autoSizeMaximum")];
+			control = primitives.orgdiagram.Control(document.getElementById("diagram"), options);
+		});
+
+		function Update() {
+			var autoSizeMinimum = sizes[getRadioValue("autoSizeMinimum")];
+			var autoSizeMaximum = sizes[getRadioValue("autoSizeMaximum")];
+			control.setOptions({
+				autoSizeMinimum: autoSizeMinimum,
+				autoSizeMaximum: autoSizeMaximum
+			});
+			control.update(primitives.common.UpdateMode.Refresh);
+		}
+
+		function getRadioValue(name) {
+			var radios = document.getElementsByName(name);
+			for (var i = 0; i < radios.length; i++) {
+				if (radios[i].checked) {
+					return radios[i].value;
+				}
+			}
+			return result;
+		}
+	</script>
+</head>
+<body>
+	<h3>Auto Size Diagram.</h3>
+	<p style="max-width: 800px;">In order to make diagram automatically size itself to the size of its content set pageFitMode property to AutoSize. 
+	This mode is designed for diagrams usage inside articals.
+	Following properties allow to set minimum and maximum size of the diagram in this mode. 
+	Set minimum size to some value if you don't want it to collapse to nothing when diagram has no items.
+	Set maximum size to some value if you need to avoid humongous diagram on your page.
+	</p>
+	<p id="autoSizeMinimum">Minimum Auto Size
+		<br><label><input onclick="Update()" name="autoSizeMinimum" type="radio" value="640*480" checked="">640*480</label>
+		<br><label><input onclick="Update()" name="autoSizeMinimum" type="radio" value="800*600">800*600</label>
+		<br><label><input onclick="Update()" name="autoSizeMinimum" type="radio" value="1024*768">1024*768</label>
+		<br><label><input onclick="Update()" name="autoSizeMinimum" type="radio" value="1280*1024">1280*1024</label>
+	</p>
+	<p id="autoSizeMaximum">Maximum Auto Size
+		<br><label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="640*480">640*480</label>
+		<br><label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="800*600" checked="">800*600</label>
+		<br><label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="1024*768">1024*768</label>
+		<br><label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="1280*1024">1280*1024</label>
+	</p>
+	<div id="diagram" style="border-style: dotted; border-width: 1px;"></div>
+</body>
+</html>

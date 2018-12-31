@@ -12,28 +12,29 @@
 	<link rel="stylesheet" type="text/css" href="../../packages/jquerylayout/layout-default-latest.css" />
 
 	<script type="text/javascript">
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			jQuery('body').layout(
-			{
-				center__paneSelector: "#contentpanel"
-			});
+				{
+					center__paneSelector: "#contentpanel"
+				});
 		});
 	</script>
 
 	<!-- header -->
-
-
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
 
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<script type="text/javascript" src="../../min/bporgeditor.min.js?4300"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/bporgeditor.min.js?5100"></script>
 	<script type="text/javascript" src="../data/largedataset.js"></script>
+
+	
 
 	<style type="text/css">
 		.bp-item2 {
 			position: absolute;
-			overflow: visible;/* redefine this atttribute in bp-item class in order to place items outside of boudaries*/
+			overflow: visible; /* redefine this atttribute in bp-item class in order to place items outside of boudaries*/
 			font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
 			-webkit-tap-highlight-color: rgba(0,0,0,0);
 			-webkit-user-select: none;
@@ -42,7 +43,7 @@
 			-moz-user-select: none;
 			-ms-user-select: none;
 			user-select: none;
-			box-sizing:content-box;
+			box-sizing: content-box;
 		}
 
 		.bp-badge2 {
@@ -59,8 +60,8 @@
 			font-family: Arial;
 			padding: 4px;
 			float: left;
-			width:16px; 
-			height:16px;
+			width: 16px;
+			height: 16px;
 		}
 	</style>
 
@@ -126,7 +127,7 @@
 			elbowType: primitives.common.ElbowType.None,
 			bevelSize: 4,
 			elbowDotSize: 4,
-			lineType: primitives.common.LineType.Solid,
+			linesType: primitives.common.LineType.Solid,
 			linesColor: primitives.common.Colors.Silver,
 			linesWidth: 1,
 
@@ -164,36 +165,36 @@
 
 			scale: 1.0
 		},
-		/* On property change event handler */
-		function () {
-			Update(jQuery("#centerpanel"));
-		});
+			/* On property change event handler */
+			function () {
+				Update(jQuery("#centerpanel"));
+			});
 		var m_timer = null;
 		var orgDiagram = null;
 		var treeItems = {};
 
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			jQuery.ajaxSetup({
 				cache: false
 			});
 
 			jQuery('#contentpanel').layout(
-			{
-				center__paneSelector: "#centerpanel"
-				, south__paneSelector: "#southpanel"
-				, south__resizable: false
-				, south__closable: false
-				, south__spacing_open: 0
-				, south__size: 50
-				, west__size: 400
-				, west__paneSelector: "#westpanel"
-				, west__resizable: true
-				, center__onresize: function () {
-					if (orgDiagram != null) {
-						jQuery("#centerpanel").orgDiagram("update", primitives.common.UpdateMode.Refresh);
+				{
+					center__paneSelector: "#centerpanel"
+					, south__paneSelector: "#southpanel"
+					, south__resizable: false
+					, south__closable: false
+					, south__spacing_open: 0
+					, south__size: 50
+					, west__size: 400
+					, west__paneSelector: "#westpanel"
+					, west__resizable: true
+					, center__onresize: function () {
+						if (orgDiagram != null) {
+							jQuery("#centerpanel").orgDiagram("update", primitives.common.UpdateMode.Refresh);
+						}
 					}
-				}
-			});
+				});
 
 			optionsRender.render(jQuery("#westpanel"));
 
@@ -207,7 +208,7 @@
 		});
 
 		function Setup(selector) {
-			orgDiagram = selector.orgDiagram(GetOrgDiagramConfig());
+			orgDiagram = selector.orgDiagram(GetDiagramConfig());
 		}
 
 		var children = {};
@@ -295,11 +296,11 @@
 		}
 
 		function Update(selector, updateMode) {
-			selector.orgDiagram("option", GetOrgDiagramConfig());
+			selector.orgDiagram("option", GetDiagramConfig());
 			selector.orgDiagram("update", updateMode);
 		}
 
-		function GetOrgDiagramConfig() {
+		function GetDiagramConfig() {
 			var options = optionsRender.getValues();
 
 			jQuery.extend(options, {
@@ -340,18 +341,18 @@
 
 
 			var itemTemplate = jQuery(
-			  '<div class="bp-item bp-corner-all bt-item-frame">'
+				'<div class="bp-item bp-corner-all bt-item-frame">'
 				+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 216px; height: 20px;">'
-					+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px;">'
-					+ '</div>'
+				+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px;">'
+				+ '</div>'
 				+ '</div>'
 				+ '<div class="bp-item bp-photo-frame" style="top: 26px; left: 2px; width: 50px; height: 60px;">'
-					+ '<img name="photo" style="height: 60px; width:50px;" />'
+				+ '<img name="photo" style="height: 60px; width:50px;" />'
 				+ '</div>'
 				+ '<div name="phone" class="bp-item" style="top: 26px; left: 56px; width: 162px; height: 18px; font-size: 12px;"></div>'
 				+ '<div class="bp-item" style="top: 44px; left: 56px; width: 162px; height: 18px; font-size: 12px;"><a name="email" href="" target="_top"></a></div>'
 				+ '<div name="description" class="bp-item" style="top: 62px; left: 56px; width: 162px; height: 36px; font-size: 10px;"></div>'
-			+ '</div>'
+				+ '</div>'
 			).css({
 				width: result.itemSize.width + "px",
 				height: result.itemSize.height + "px"
@@ -370,17 +371,17 @@
 			jQuery.extend(result, options.DefaultTemplateOptions);
 
 			var itemTemplate = jQuery(
-			  '<div class="bp-item bp-corner-all bt-item-frame">'
+				'<div class="bp-item bp-corner-all bt-item-frame">'
 				+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 176px; height: 18px; overflow: hidden; text-align:center;">'
-					+ '<div name="title" class="bp-item bp-title" style="top: 2px; left: 2px; width: 172px; height: 14px; font-size: 12px; overflow: hidden;">'
-					+ '</div>'
+				+ '<div name="title" class="bp-item bp-title" style="top: 2px; left: 2px; width: 172px; height: 14px; font-size: 12px; overflow: hidden;">'
+				+ '</div>'
 				+ '</div>'
 				+ '<div class="bp-item bp-photo-frame" style="top: 22px; left: 2px; width: 50px; height: 60px; overflow: hidden;">'
-					+ '<img name="photo" style="height:60px; width:50px;" />'
+				+ '<img name="photo" style="height:60px; width:50px;" />'
 				+ '</div>'
 				+ '<div class="bp-item" style="top: 22px; left: 56px; width: 118px; height: 13px; font-size: 11px;"><a name="email" href="" target="_top"></a></div>'
 				+ '<div name="description" class="bp-item" style="top: 37px; left: 56px; width: 118px; height: 39px; font-size: 11px; overflow: hidden;"></div>'
-			+ '</div>'
+				+ '</div>'
 			).css({
 				width: result.itemSize.width + "px",
 				height: result.itemSize.height + "px"
@@ -414,9 +415,9 @@
 
 
 			var itemTemplate = jQuery(
-			  '<div class="bp-item2">'
+				'<div class="bp-item2">'
 				+ "<div name='badge' class='bp-badge2 bp-item' style='top:0px; left:6px; background-color:green; color: white;'></div>"
-			+ '</div>'
+				+ '</div>'
 			).css({
 				width: result.itemSize.width + "px",
 				height: result.itemSize.height + "px"

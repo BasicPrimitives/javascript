@@ -12,22 +12,22 @@
 	<link rel="stylesheet" type="text/css" href="../../packages/jquerylayout/layout-default-latest.css" />
 
 	<script type="text/javascript">
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			jQuery('body').layout(
-			{
-				center__paneSelector: "#contentpanel"
-			});
+				{
+					center__paneSelector: "#contentpanel"
+				});
 		});
 	</script>
 
 	<!-- header -->
-
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<script type="text/javascript" src="../../min/bporgeditor.min.js?4300"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/bporgeditor.min.js?5100"></script>
 	<script type="text/javascript" src="../data/largedataset.js"></script>
-	
+
 	<script type="text/javascript">
 		var optionsRender = primitives.helpers.controls.getOrgDiagramOptionsRender({
 			/* Layout */
@@ -91,7 +91,7 @@
 			elbowType: primitives.common.ElbowType.None,
 			bevelSize: 4,
 			elbowDotSize: 4,
-			lineType: primitives.common.LineType.Solid,
+			linesType: primitives.common.LineType.Solid,
 			linesColor: primitives.common.Colors.Silver,
 			linesWidth: 1,
 
@@ -129,39 +129,39 @@
 
 			scale: 1.0
 		},
-		/* On property change event handler */
-		function () {
-			var options = getOptions();
+			/* On property change event handler */
+			function () {
+				var options = getOptions();
 
-			orgDiagram.orgDiagram("option", options);
-			orgDiagram.orgDiagram("update", primitives.common.UpdateMode.Recreate);
-		});
+				orgDiagram.orgDiagram("option", options);
+				orgDiagram.orgDiagram("update", primitives.common.UpdateMode.Recreate);
+			});
 
 		var orgDiagram = null;
 		var treeItems = {};
 
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			jQuery.ajaxSetup({
 				cache: false
 			});
 
 			jQuery('#contentpanel').layout(
-			{
-				center__paneSelector: "#centerpanel"
-				, south__paneSelector: "#southpanel"
-				, south__resizable: false
-				, south__closable: false
-				, south__spacing_open: 0
-				, south__size: 50
-				, west__size: 400
-				, west__paneSelector: "#westpanel"
-				, west__resizable: true
-				, center__onresize: function () {
-					if (orgDiagram != null) {
-						orgDiagram.orgDiagram("update", primitives.common.UpdateMode.Refresh);
+				{
+					center__paneSelector: "#centerpanel"
+					, south__paneSelector: "#southpanel"
+					, south__resizable: false
+					, south__closable: false
+					, south__spacing_open: 0
+					, south__size: 50
+					, west__size: 400
+					, west__paneSelector: "#westpanel"
+					, west__resizable: true
+					, center__onresize: function () {
+						if (orgDiagram != null) {
+							orgDiagram.orgDiagram("update", primitives.common.UpdateMode.Refresh);
+						}
 					}
-				}
-			});
+				});
 
 			optionsRender.render(jQuery("#westpanel"));
 
@@ -196,8 +196,8 @@
 			jQuery.extend(options, {
 				onButtonClick: onButtonClick,
 				buttons: [new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"),
-					new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"),
-					new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add")
+				new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"),
+				new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add")
 				],
 
 				onItemRender: onTemplateRender,
@@ -244,18 +244,18 @@
 			jQuery.extend(result, options.DefaultTemplateOptions);
 
 			var itemTemplate = jQuery(
-			  '<div class="bp-item bp-corner-all bt-item-frame">'
+				'<div class="bp-item bp-corner-all bt-item-frame">'
 				+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 216px; height: 20px;">'
-					+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px;">'
-					+ '</div>'
+				+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px;">'
+				+ '</div>'
 				+ '</div>'
 				+ '<div class="bp-item bp-photo-frame" style="top: 26px; left: 2px; width: 50px; height: 60px;">'
-					+ '<img name="photo" style="height: 60px; width:50px;" />'
+				+ '<img name="photo" style="height: 60px; width:50px;" />'
 				+ '</div>'
 				+ '<div name="phone" class="bp-item" style="top: 26px; left: 56px; width: 162px; height: 18px; font-size: 12px;"></div>'
 				+ '<div class="bp-item" style="top: 44px; left: 56px; width: 162px; height: 18px; font-size: 12px;"><a name="email" href="" target="_top"></a></div>'
 				+ '<div name="description" class="bp-item" style="top: 62px; left: 56px; width: 162px; height: 36px; font-size: 10px;"></div>'
-			+ '</div>'
+				+ '</div>'
 			).css({
 				width: result.itemSize.width + "px",
 				height: result.itemSize.height + "px"

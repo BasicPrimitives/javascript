@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Spouse without children In Family Chart</title>
+
+	<link rel="stylesheet" href="../../packages/jquery-ui/jquery-ui.min.css" />
+	<script type="text/javascript" src="../../packages/jquery/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+		$(document).ready(function () {
+			var options = new primitives.famdiagram.Config();
+
+			options.items = [
+				{ id: 1, parents: [], spouses: ["2", "3"], title: "1", label: "1", description: "", image: "../images/photos/a.png", itemTitleColor: "#ff0000" },
+				{ id: 2, parents: [], title: "2", label: "2", description: "", image: "../images/photos/b.png", itemTitleColor: "#ff0000" },
+				{ id: 3, parents: [], title: "3", label: "3", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" }
+			];
+
+			options.lineItemsInterval = 20;
+			options.cursorItem = 1;
+			options.hasSelectorCheckbox = primitives.common.Enabled.False;
+			options.arrowsDirection = primitives.common.GroupByType.Children;
+			options.pageFitMode = primitives.common.PageFitMode.None;
+
+			jQuery("#basicdiagram").famDiagram(options);
+		});
+
+	</script>
+</head>
+<body>
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+</html>

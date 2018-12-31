@@ -9,10 +9,11 @@
 	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
 
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?3707"></script>
-	<link href="../../min/primitives.latest.css?3707" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
-	<script type='text/javascript'>//<![CDATA[ 
+	<script type='text/javascript'>
 		$(document).ready(function () {
 			var options = new primitives.orgdiagram.Config();
 
@@ -42,8 +43,8 @@
 				}),
 				new primitives.orgdiagram.ItemConfig({ id: 102, parent: 101, title: "Child 1" }),
 				new primitives.orgdiagram.ItemConfig({ id: 103, parent: 101, title: "Child 2", childrenPlacementType: primitives.common.ChildrenPlacementType.Vertical }),
-					new primitives.orgdiagram.ItemConfig({ id: 104, parent: 103, title: "Sub Child 3" }),
-					new primitives.orgdiagram.ItemConfig({ id: 105, parent: 103, title: "Sub Child 4" }),
+				new primitives.orgdiagram.ItemConfig({ id: 104, parent: 103, title: "Sub Child 3" }),
+				new primitives.orgdiagram.ItemConfig({ id: 105, parent: 103, title: "Sub Child 4" }),
 				new primitives.orgdiagram.ItemConfig({ id: 106, parent: 101, title: "Child 5" }),
 				new primitives.orgdiagram.ItemConfig({ id: 107, parent: 101, title: "Child 6" }),
 
@@ -71,7 +72,7 @@
 			options.pageFitMode = primitives.common.PageFitMode.None;
 
 			jQuery("#basicdiagram").orgDiagram(options);
-		});//]]>
+		});
 
 		function onTemplateRender(event, data) {
 			switch (data.renderingMode) {
@@ -100,10 +101,10 @@
 
 
 			var itemTemplate = jQuery(
-			  '<div class="bp-item bp-corner-all bt-item-frame">'
+				'<div class="bp-item bp-corner-all bt-item-frame">'
 				+ '<div name="title" class="bp-item" style="top: 3px; left: 6px; width: 68px; height: 28px; font-size: 12px;">'
 				+ '</div>'
-			+ '</div>'
+				+ '</div>'
 			).css({
 				width: result.itemSize.width + "px",
 				height: result.itemSize.height + "px"

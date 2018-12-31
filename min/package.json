@@ -1,0 +1,25 @@
+{
+    "name": "basicprimitives",
+    "version": "5.1.1",
+    "description": "Basic Primitives is component library for visualization of general purpose diagrams without manual nodes layout. Implements organizational and dependencies diagrams. Archive contains implementations of JavaScript Controls and PDFkit plugins. PDFkit is NodeJS and in browser PDF rendering library.",
+    "main": "primitives.latest.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Basic Primitives Inc. <support@basicprimitives.com> (https://www.basicprimitives.com)",
+    "license": "http://www.basicprimitives.com/pdf/license.pdf",
+    "keywords": [
+        "diagrams",
+        "autolayout",
+        "hierarchy",
+        "visualization",
+        "data visualization",
+        "organizational chart",
+        "multiple inheritance visualization",
+        "family tree",
+        "dependencies diagram",
+        "PERT",
+        "financial ownership diagram",
+        "DAG"
+    ]
+}

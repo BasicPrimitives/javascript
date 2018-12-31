@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Matrix Layout of Multiple Root Items In Chart</title>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+		var control;
+
+		document.addEventListener('DOMContentLoaded', function () {
+			var options = new primitives.orgdiagram.Config();
+
+			var items = [
+				new primitives.orgdiagram.ItemConfig({
+					id: 0,
+					title: "invisible",
+					parent: null,
+					isVisible: false,
+					childrenPlacementType: primitives.common.ChildrenPlacementType.Matrix
+				})
+			];
+
+			for (var index = 1; index <= 9; index += 1) {
+				items.push(
+					new primitives.orgdiagram.ItemConfig({
+						id: index,
+						parent: 0,
+						title: "Itme " + index,
+						description: "Some description about item",
+						image: "../images/photos/b.png"
+					})
+				);
+			}
+
+			options.items = items;
+			options.cursorItem = 1;
+			options.hasSelectorCheckbox = primitives.common.Enabled.True;
+			options.pageFitMode = primitives.common.PageFitMode.None;
+			options.orientationType = primitives.common.OrientationType.Top;
+
+			control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+		});
+
+	</script>
+</head>
+<body>
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+</html>

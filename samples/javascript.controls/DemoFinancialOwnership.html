@@ -1,0 +1,398 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<title>JavaScript Control Financial Ownership Chart Demo</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<!-- header -->
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="common/helpers.js"></script>
+	<script type="text/javascript" src="../data/largedataset.js"></script>
+
+	<script type="text/javascript">
+		var control;
+		var treeItems = {};
+		var timer = null;
+		var optionsRender = new primitives.helpers.controls.Render([
+			new primitives.helpers.controls.PanelConfig("Layout Options", [
+				new primitives.helpers.controls.CaptionConfig("Page Fit Mode defines rule of fitting chart into available screen space. Set it to None if you want to disable it.", false),
+				new primitives.helpers.controls.RadioBoxConfig("pageFitMode", primitives.common.PageFitMode.FitToPage, "Page Fit Mode", { None: 0, PageWidth: 1, PageHeight: 2, FitToPage: 3, SelectionOnly: 6 }, primitives.helpers.controls.ValueType.Integer, onUpdate)
+			])
+		], {
+			pageFitMode: primitives.common.PageFitMode.None
+		});
+
+		document.addEventListener('DOMContentLoaded', function () {
+			optionsRender.render(document.getElementById("westpanel"));
+			control = primitives.famdiagram.Control(document.getElementById("centerpanel"),
+				GetDiagramConfig()
+			);
+
+			window.addEventListener('resize', function (event) {
+				onWindowResize();
+			});
+		});
+
+		function GetDiagramConfig() {
+			var options = new primitives.famdiagram.Config();
+
+			var items = [
+				{ id: 1, title: "20%", isActive: false, templateName: "ShapeTemplate", shapeType: "rhombus.png", minimizedItemShapeType: primitives.common.ShapeType.Rhombus },
+				{ id: 2, title: "80%", isActive: false, templateName: "ShapeTemplate", shapeType: "circle.png", minimizedItemShapeType: primitives.common.ShapeType.Circle },
+				{ id: 3, parents: [1, 2], title: "Top Holdings", hasSelectorCheckbox: primitives.common.Enabled.True, minimizedItemShapeType: primitives.common.ShapeType.Rectangle },
+				{ id: 4, title: "Top Holdings Ltd.", hasSelectorCheckbox: primitives.common.Enabled.True, minimizedItemShapeType: primitives.common.ShapeType.Rectangle },
+				{ id: 5, parents: [3, 4], title: "ABC Holdings", hasSelectorCheckbox: primitives.common.Enabled.True, minimizedItemShapeType: primitives.common.ShapeType.Rectangle },
+				{ id: 6, parents: [5, 3], title: "ABC Co Ltd", hasSelectorCheckbox: primitives.common.Enabled.True, minimizedItemShapeType: primitives.common.ShapeType.Rectangle },
+				{ id: 7, parents: [4, 6], title: "II", isActive: false, templateName: "ShapeTemplate", shapeType: "rectangle.png", minimizedItemShapeType: primitives.common.ShapeType.Rectangle },
+				{ id: 8, parents: [6], title: "I", isActive: false, templateName: "ShapeTemplate", shapeType: "rectangle.png", minimizedItemShapeType: primitives.common.ShapeType.Rectangle }
+			];
+
+			/* create hash of items */
+			var index, len;
+			for (index = 0, len = items.length; index < len; index += 1) {
+				treeItems[items[index].id] = items[index];
+			}
+
+			var annotations = [
+				new primitives.famdiagram.HighlightPathAnnotationConfig({ items: [3, 5] }),
+				new primitives.famdiagram.HighlightPathAnnotationConfig({ items: [3, 6] }),
+
+				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 4, toItems: [5], title: "30%", templateName: "LabelAnnotationTemplate" }),
+				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 4, toItems: [5, 7], title: "100%" }),
+				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 4, toItems: [7], title: "70%" }),
+
+				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 3, toItems: [5], title: "20%" }),
+				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 3, toItems: [6], title: "80%" }),
+				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 3, toItems: [5, 6], title: "100%" }),
+
+				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 6, toItems: [5], title: "⇧27%" }),
+				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 6, toItems: [3], title: "⇧73%" }),
+				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 6, toItems: [5, 3], title: "⇧100%" }),
+
+				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 6, toItems: [7], title: "60%" }),
+				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 6, toItems: [7, 8], title: "100%" }),
+				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 6, toItems: [8], title: "40%" })
+			];
+
+			options.defaultTemplateName = "UnitTemplate";
+			options.defaulLabelAnnotationTemplate = "LabelAnnotationTemplate";
+			options.items = items;
+			options.annotations = annotations;
+			options.cursorItem = 3;
+			options.linesWidth = 1;
+			options.linesColor = "black";
+			options.highlightLinesColor = primitives.common.Colors.Red;
+			options.highlightLinesWidth = 2;
+			options.highlightLinesType = primitives.common.LineType.Solid;
+
+			options.cousinsIntervalMultiplier = 1;
+
+			var buttons = [];
+			options.buttons = buttons;
+			options.hasButtons = primitives.common.Enabled.True;
+			options.onButtonClick = function (e, data) {
+				var message = "User clicked '" + data.name + "' button for item '" + data.context.title + "'.";
+				alert(message);
+			};
+			options.onCursorChanging = onCursorChanging;
+			options.onCursorChanged = onCursorChanged;
+			options.onHighlightChanging = onHighlightChanging;
+			options.onHighlightChanged = onHighlightChanged;
+			options.onSelectionChanged = onSelectionChanged;
+
+			options.normalLevelShift = 20;
+			options.dotLevelShift = 20;
+			options.lineLevelShift = 20;
+			options.normalItemsInterval = 20;
+			options.dotItemsInterval = 20;
+			options.lineItemsInterval = 20;
+
+			options.templates = [getUnitTemplate(), getShapeTemplate(), getLabelAnnotationTemplate()];
+			options.onItemRender = onTemplateRender;
+
+			options.pageFitMode = primitives.orgdiagram.PageFitMode.None;
+
+			options.arrowsDirection = primitives.common.GroupByType.Children;
+			options.showExtraArrows = false;
+
+			return options;
+		};
+
+		function onUpdate() {
+			var options = optionsRender.getValues();
+
+			control.setOptions(options);
+			contro.update(primitives.common.UpdateMode.Refresh);
+		}
+
+		function onTemplateRender(event, data) {
+			var itemConfig = data.context,
+				element = data.element;
+
+			if (data.templateName == "ShapeTemplate") {
+				var photo = element.firstChild.firstChild;
+				photo.src = "../images/shapes/" + itemConfig["shapeType"];
+				photo.alt = itemConfig.title;
+
+				var title = element.childNodes[1];
+				title.textContent = itemConfig.title;
+			}
+
+
+			if (data.templateName == "UnitTemplate") {
+				var titleBackground = element.firstChild;
+				titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+
+				var title = element.firstChild.firstChild;
+				title.textContent = itemConfig.title;
+
+				var description = element.childNodes[1];
+				description.textContent = itemConfig.title;
+			}
+
+			if (data.templateName == "LabelAnnotationTemplate") {
+				var title = element.firstChild;
+				title.textContent = itemConfig.title;
+			}
+		}
+
+		function getLabelAnnotationTemplate() {
+			var result = new primitives.famdiagram.TemplateConfig();
+			result.name = "LabelAnnotationTemplate";
+
+			result.itemSize = new primitives.common.Size(100, 20);
+			result.minimizedItemSize = new primitives.common.Size(3, 3);
+			result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
+
+
+			result.itemTemplate = ["div",
+				{
+					"style": {
+						width: result.itemSize.width + "px",
+						height: result.itemSize.height + "px"
+					},
+					"class": "bp-item"
+				},
+				["div",
+					{
+						"name": "title",
+						"style": {
+							top: "0px",
+							left: "0px",
+							width: "100px",
+							height: "20px",
+							fontSize: "16px",
+							textAlign: "center"
+						},
+						"class": ["bp-item"]
+					}
+				]
+			];
+
+			return result;
+		}
+
+		function getShapeTemplate() {
+			var result = new primitives.famdiagram.TemplateConfig();
+			result.name = "ShapeTemplate";
+
+			result.itemSize = new primitives.common.Size(100, 100);
+			result.minimizedItemSize = new primitives.common.Size(16, 16);
+			result.minimizedItemLineWidth = 1;
+			result.minimizedItemLineType = primitives.common.LineType.Solid;
+			result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
+			result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
+			result.minimizedItemOpacity = 0.7; // Shape background opacity
+			result.minimizedItemCornerRadius = 1; // Sligtly rounded corners 
+			result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2); // Highlight padding has the same rounded corners as rectangle marker
+
+			result.itemTemplate = ["div",
+				{
+					"class": "bp-item",
+					"style": {
+						width: result.itemSize.width + "px",
+						height: result.itemSize.height + "px"
+					}
+				},
+				["div",
+					{
+						"class": ["bp-item"],
+						"style": {
+							top: "0px",
+							left: "0px",
+							width: "100px",
+							height: "100px"
+						}
+					},
+					["img",
+						{
+							"name": "shape",
+							"class": ["bp-item"],
+							"style": {
+								width: "100px",
+								height: "100px"
+							}
+						}
+					]
+				],
+				["div",
+					{
+						"name": "title",
+						"class": "bp-item",
+						"style": {
+							top: "40px",
+							left: "0px",
+							width: "100px",
+							height: "20px",
+							fontSize: "20px",
+							textAlign: "center"
+						}
+					}
+				]
+			];
+
+			return result;
+		}
+
+		function getUnitTemplate() {
+			var result = new primitives.famdiagram.TemplateConfig();
+			result.name = "UnitTemplate";
+
+			var buttons = [];
+			buttons.push(new primitives.famdiagram.ButtonConfig("email", "ui-icon-mail-closed", "E-Mail"));
+			buttons.push(new primitives.famdiagram.ButtonConfig("help", "ui-icon-help", "Help"));
+			result.buttons = buttons;
+
+			result.itemSize = new primitives.common.Size(220, 60);
+			result.minimizedItemSize = new primitives.common.Size(30, 30);
+			result.minimizedItemCornerRadius = 1; // Sligtly rounded corners 
+			result.minimizedItemLineWidth = 1;
+			result.minimizedItemLineType = primitives.common.LineType.Solid;
+			result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
+			result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
+			result.minimizedItemOpacity = 0.7; // Shape background opacity
+			result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
+
+
+			result.itemTemplate = ["div",
+					{
+						"style": {
+							width: result.itemSize.width + "px",
+							height: result.itemSize.height + "px"
+						},
+						"class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+					},
+					["div",
+						{
+							"name": "titleBackground",
+							"style": {
+								top: "2px",
+								left: "2px",
+								width: "216px",
+								height: "20px"
+							},
+							"class": ["bp-item", "bp-corner-all", "bp-title-frame"]
+						},
+						["div",
+							{
+								"name": "title",
+								"style": {
+									top: "3px",
+									left: "6px",
+									width: "208px",
+									height: "18px",
+									textAlign: "center"
+								},
+								"class": ["bp-item", "bp-title"]
+							}
+						]
+					],
+					["div",
+						{
+							"name": "description",
+							"style": {
+								top: "26px",
+								left: "4px",
+								width: "212px",
+								height: "36px",
+								fontSize: "10px"
+							},
+							"class": "bp-item"
+						}
+					]
+			];
+
+			return result;
+		}
+
+		function onSelectionChanged(e, data) {
+			var selectedItems = control.getOption("selectedItems");
+			var message = "";
+			for (var index = 0; index < selectedItems.length; index += 1) {
+				var itemConfig = treeItems[selectedItems[index]];
+				if (message != "") {
+					message += ", ";
+				}
+				message += "<b>'" + itemConfig.title + "'</b>";
+			}
+			document.getElementById("southpanel").innerHTML = "User selected following items: " + message;
+		}
+
+		function onHighlightChanging(e, data) {
+			var message = (data.context != null) ? "User is hovering mouse over item <b>'" + data.context.title + "'</b>." : "";
+			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+
+			document.getElementById("southpanel").innerHTML = message;
+		}
+
+		function onHighlightChanged(e, data) {
+			var message = (data.context != null) ? "User hovers mouse over item <b>'" + data.context.title + "'</b>." : "";
+			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+
+			document.getElementById("southpanel").innerHTML = message;
+		}
+
+		function onCursorChanging(e, data) {
+			var message = "User is clicking on item '" + data.context.title + "'.";
+			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+
+			document.getElementById("southpanel").innerHTML = message;
+
+			data.oldContext.templateName = null;
+			data.context.templateName = "contactTemplate";
+		}
+
+		function onCursorChanged(e, data) {
+			var message = "User clicked on item '" + data.context.title + "'.";
+			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+			document.getElementById("southpanel").innerHTML = message;
+		}
+
+		function onWindowResize() {
+			if (timer == null) {
+				timer = window.setTimeout(function () {
+					control.update(primitives.orgdiagram.UpdateMode.Refresh);
+					window.clearTimeout(timer);
+					timer = null;
+				}, 300);
+			}
+		}
+	</script>
+	<!-- /header -->
+</head>
+<body>
+	<div style="position: absolute; width: 400px; left: 0px; top: 0px; bottom: 50px; padding: 0px; margin: 0px; border-style: none; font-size: 14px; overflow: scroll; -webkit-overflow-scrolling: touch;">
+		<div id="westpanel" style="padding: 5px; margin: 5px; font: normal 12px verdana, areal;">
+			<h2>Financial Ownership Diagram in JavaScript</h2>
+			<p>Multiple inheritance diagram visualizing financial ownership. Chart supports following features:</p>
+			<p>Label annotations placed over connection lines. They are used to show percentage of ownership and form cascades of labels when total value label for several children or parents needs to be shown over individual labels.</p>
+			<p>Inective items are used to show templated nodes in layout having no user interactivity. They are transarent to cursor node neighbourhood visualization and they are not clickable or selectable. </p>
+			<p>Nodes may have mutial ownership, so control supports loops in parent child relations. See Family demo sample data sets as well.</p>
+		</div>
+	</div>
+	<div id="centerpanel" style="position: absolute; border-style: dotted; border-width: 0px; top: 0; right: 0; bottom: 50px; left: 400px;"></div>
+	<div id="southpanel" style="position: absolute; border-style: dotted; border-width: 0px; height: 50px; right: 0; bottom: 0; left: 0;"></div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Multiple Root Items In Chart</title>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'> 
+		var control;
+
+		document.addEventListener('DOMContentLoaded', function () {
+			var options = new primitives.orgdiagram.Config();
+
+			var items = [
+				new primitives.orgdiagram.ItemConfig({
+					id: 0,
+					parent: null,
+					title: "Scott Aasrud",
+					description: "VP, Public Sector",
+					image: "../images/photos/a.png"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 1,
+					parent: 0,
+					title: "Ted Lucas",
+					description: "VP, Human Resources",
+					image: "../images/photos/b.png"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 2,
+					parent: 0,
+					title: "Fritz Stuger",
+					description: "Business Solutions, US",
+					image: "../images/photos/c.png"
+				}),
+
+				new primitives.orgdiagram.ItemConfig({
+					id: 3,
+					parent: null,
+					title: "Scott Aasrud 2",
+					description: "VP, Public Sector",
+					image: "../images/photos/a.png"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 4,
+					parent: 3,
+					title: "Ted Lucas 2",
+					description: "VP, Human Resources",
+					image: "../images/photos/b.png"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 5,
+					parent: 3,
+					title: "Fritz Stuger 2",
+					description: "Business Solutions, US",
+					image: "../images/photos/c.png"
+				})
+			];
+
+			options.items = items;
+			options.cursorItem = 0;
+			options.hasSelectorCheckbox = primitives.common.Enabled.True;
+			options.pageFitMode = primitives.common.PageFitMode.None;
+			options.orientationType = primitives.common.OrientationType.Top;
+
+			control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+		});
+
+		function Update(orientationType, horizontalAlignment) {
+			control.setOptions({
+				orientationType: orientationType,
+				horizontalAlignment: horizontalAlignment
+			});
+			control.update(primitives.orgdiagram.UpdateMode.Refresh);
+		}
+
+	</script>
+</head>
+<body>
+	Orientation:
+	
+	<input id="Top" onclick="Update(primitives.common.OrientationType.Top, primitives.common.HorizontalAlignmentType.Center)" type="button" value="Top" />
+	<input id="Left" onclick="Update(primitives.common.OrientationType.Left, primitives.common.HorizontalAlignmentType.Left)" type="button" value="Left" />
+	<input id="Right" onclick="Update(primitives.common.OrientationType.Right, primitives.common.HorizontalAlignmentType.Left)" type="button" value="Right" />
+	<input id="Bottom" onclick="Update(primitives.common.OrientationType.Bottom, primitives.common.HorizontalAlignmentType.Center)" type="button" value="Bottom" />
+	<div id="basicdiagram" style="width: 640px; height: 400px; position: absolute; top: 60px; border-style: dotted; border-width: 1px;" />
+</body>
+</html>

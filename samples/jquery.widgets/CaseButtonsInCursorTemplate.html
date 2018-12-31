@@ -9,12 +9,12 @@
 	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
 
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
-
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript">
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			var options = new primitives.orgdiagram.Config();
 			options.hasSelectorCheckbox = primitives.common.Enabled.False;
 			options.hasButtons = primitives.common.Enabled.False;
@@ -67,29 +67,29 @@
 			result.cursorPadding = new primitives.common.Thickness(3, 3, 38, 8);
 
 			var cursorTemplate = jQuery("<div></div>")
-			.css({
-				position: "absolute",
-				overflow: "hidden",
-				width: (result.itemSize.width + result.cursorPadding.left + result.cursorPadding.right) + "px",
-				height: (result.itemSize.height + result.cursorPadding.top + result.cursorPadding.bottom) + "px"
-			});
+				.css({
+					position: "absolute",
+					overflow: "hidden",
+					width: (result.itemSize.width + result.cursorPadding.left + result.cursorPadding.right) + "px",
+					height: (result.itemSize.height + result.cursorPadding.top + result.cursorPadding.bottom) + "px"
+				});
 
 			var cursorBorder = jQuery("<div></div>")
-			.css({
-				width: (result.itemSize.width + result.cursorPadding.left + 1) + "px",
-				height: (result.itemSize.height + result.cursorPadding.top + 1) + "px"
-			}).addClass("bp-item bp-corner-all bp-cursor-frame");
+				.css({
+					width: (result.itemSize.width + result.cursorPadding.left + 1) + "px",
+					height: (result.itemSize.height + result.cursorPadding.top + 1) + "px"
+				}).addClass("bp-item bp-corner-all bp-cursor-frame");
 			cursorTemplate.append(cursorBorder);
 
 			var buttonsGroup = jQuery("<div></div>")
-			.css({
-				position: "absolute",
-				overflow: "hidden",
-				top: result.cursorPadding.top + "px",
-				left: (result.itemSize.width + result.cursorPadding.left + 10) + "px",
-				width: "35px",
-				height: (result.itemSize.height + 1) + "px"
-			}).addClass("buttons-panel");
+				.css({
+					position: "absolute",
+					overflow: "hidden",
+					top: result.cursorPadding.top + "px",
+					left: (result.itemSize.width + result.cursorPadding.left + 10) + "px",
+					width: "35px",
+					height: (result.itemSize.height + 1) + "px"
+				}).addClass("buttons-panel");
 
 			cursorTemplate.append(buttonsGroup);
 
@@ -145,8 +145,8 @@
 							height: buttonConfig.size.height + "px",
 							padding: "3px"
 						})
-						.addClass("orgdiagrambutton"); // This class forces widget to consider button as its own. 
-						//Otherwise you have to listen to onMouseClick event and use target in order to recognize button click.
+						.addClass("orgdiagrambutton"); // This class forces widget to consider button as its own.
+					//Otherwise you have to listen to onMouseClick event and use target in order to recognize button click.
 
 					buttonsPanel.append(button);
 

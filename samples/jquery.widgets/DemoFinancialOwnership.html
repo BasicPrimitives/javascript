@@ -12,22 +12,21 @@
 	<link rel="stylesheet" type="text/css" href="../../packages/jquerylayout/layout-default-latest.css" />
 
 	<script type="text/javascript">
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			jQuery('body').layout(
-			{
-				center__paneSelector: "#contentpanel"
-			});
+				{
+					center__paneSelector: "#contentpanel"
+				});
 		});
 	</script>
 
 	<!-- header -->
-
-
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
 
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<script type="text/javascript" src="../../min/bporgeditor.min.js?4300"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/bporgeditor.min.js?5100"></script>
 	<script type="text/javascript">
 		var optionsRender = new primitives.helpers.controls.Render([
 			new primitives.helpers.controls.PanelConfig("Layout Options", [
@@ -35,33 +34,33 @@
 				new primitives.helpers.controls.RadioBoxConfig("pageFitMode", primitives.common.PageFitMode.FitToPage, "Page Fit Mode", { None: 0, PageWidth: 1, PageHeight: 2, FitToPage: 3, SelectionOnly: 6 }, primitives.helpers.controls.ValueType.Integer, onUpdate)
 			])
 		], {
-			pageFitMode: primitives.common.PageFitMode.None
-		});
+				pageFitMode: primitives.common.PageFitMode.None
+			});
 		var famDiagram = null;
 		var treeItems = {};
 
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			jQuery.ajaxSetup({
 				cache: false
 			});
 
 			jQuery('#contentpanel').layout(
-			{
-				center__paneSelector: "#centerpanel"
-				, south__paneSelector: "#southpanel"
-				, south__resizable: false
-				, south__closable: false
-				, south__spacing_open: 0
-				, south__size: 50
-				, west__size: 400
-				, west__paneSelector: "#westpanel"
-				, west__resizable: true
-				, center__onresize: function () {
-					if (famDiagram != null) {
-						jQuery("#centerpanel").famDiagram("update", primitives.common.UpdateMode.Refresh);
+				{
+					center__paneSelector: "#centerpanel"
+					, south__paneSelector: "#southpanel"
+					, south__resizable: false
+					, south__closable: false
+					, south__spacing_open: 0
+					, south__size: 50
+					, west__size: 400
+					, west__paneSelector: "#westpanel"
+					, west__resizable: true
+					, center__onresize: function () {
+						if (famDiagram != null) {
+							jQuery("#centerpanel").famDiagram("update", primitives.common.UpdateMode.Refresh);
+						}
 					}
-				}
-			});
+				});
 
 			var options = new primitives.famdiagram.Config();
 
@@ -201,7 +200,7 @@
 					element.text(itemConfig[field]);
 				}
 			}
-			
+
 		}
 
 		function getLabelAnnotationTemplate() {
@@ -214,9 +213,9 @@
 
 
 			var itemTemplate = jQuery(
-			  '<div class="bp-item">'
+				'<div class="bp-item">'
 				+ '<div name="title" class="bp-item" style="top: 0px; left: 0px; width: 100px; height: 20px; font-size: 16px; text-align:center;"></div>'
-			+ '</div>'
+				+ '</div>'
 			).css({
 				width: result.itemSize.width + "px",
 				height: result.itemSize.height + "px"
@@ -234,18 +233,18 @@
 			result.minimizedItemSize = new primitives.common.Size(16, 16);
 			result.minimizedItemLineWidth = 1;
 			result.minimizedItemLineType = primitives.common.LineType.Solid;
-			result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
-			result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
+			result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color
+			result.minimizedItemFillColor = null; // Shape background has the same color as item title background color
 			result.minimizedItemOpacity = 0.7; // Shape background opacity
-			result.minimizedItemCornerRadius = 1; // Sligtly rounded corners 
+			result.minimizedItemCornerRadius = 1; // Sligtly rounded corners
 			result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2); // Highlight padding has the same rounded corners as rectangle marker
 
 
 			var itemTemplate = jQuery(
-			  '<div class="bp-item">'
+				'<div class="bp-item">'
 				+ '<div name="shape" class="bp-item" style="top: 0px; left: 0px; width: 100px; height: 100px;"></div>'
 				+ '<div name="title" class="bp-item" style="top: 40px; left: 0px; width: 100px; height: 20px; font-size: 20px; text-align:center;"></div>'
-			+ '</div>'
+				+ '</div>'
 			).css({
 				width: result.itemSize.width + "px",
 				height: result.itemSize.height + "px"
@@ -266,23 +265,23 @@
 
 			result.itemSize = new primitives.common.Size(220, 60);
 			result.minimizedItemSize = new primitives.common.Size(30, 30);
-			result.minimizedItemCornerRadius = 1; // Sligtly rounded corners 
+			result.minimizedItemCornerRadius = 1; // Sligtly rounded corners
 			result.minimizedItemLineWidth = 1;
 			result.minimizedItemLineType = primitives.common.LineType.Solid;
-			result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
-			result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
+			result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color
+			result.minimizedItemFillColor = null; // Shape background has the same color as item title background color
 			result.minimizedItemOpacity = 0.7; // Shape background opacity
 			result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
 
 
 			var itemTemplate = jQuery(
-			  '<div class="bp-item bp-corner-all bt-item-frame">'
+				'<div class="bp-item bp-corner-all bt-item-frame">'
 				+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 216px; height: 20px;">'
-					+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px; text-align:center;">'
-					+ '</div>'
+				+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px; text-align:center;">'
+				+ '</div>'
 				+ '</div>'
 				+ '<div name="description" class="bp-item" style="top: 26px; left: 4px; width: 212px; height: 36px; font-size: 10px;"></div>'
-			+ '</div>'
+				+ '</div>'
 			).css({
 				width: result.itemSize.width + "px",
 				height: result.itemSize.height + "px"
@@ -345,9 +344,9 @@
 			<h2>Financial Ownership Diagram in JavaScript</h2>
 			<p>Multiple inheritance diagram visualizing financial ownership. Chart supports following features:</p>
 			<p>Label annotations placed over connection lines. They are used to show percentage of ownership and form cascades of labels when total value label for several children or parents needs to be shown over individual labels.</p>
-			<p>Custom item templates having jQuery shape widgets to show geometrical figures. This feature allows to show small multiples or regular bar or line charts inside nodes.</p>
+			<p>Custom item templates to show geometrical figures. This feature allows to show small multiples or regular bar or line charts inside nodes.</p>
 			<p>Inective items are used to show templated nodes in layout having no user interactivity. They are transarent to cursor node neighbourhood visualization and they are not clickable or selectable. </p>
-			<p>Nodes may have mutial ownership, so widget supports loops in parent child relations. See Family demo sample data sets as well.</p>
+			<p>Nodes may have mutial ownership, so control supports loops in parent child relations. See Family demo sample data sets as well.</p>
 		</div>
 		<div id="centerpanel" style="overflow: hidden; padding: 0px; margin: 0px; border: 0px;">
 		</div>

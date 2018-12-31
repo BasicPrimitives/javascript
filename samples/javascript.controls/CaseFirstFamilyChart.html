@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>First family chart</title>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+		var control;
+		document.addEventListener('DOMContentLoaded', function () {
+			var options = new primitives.famdiagram.Config();
+
+			var items = [
+				{ id: 1, spouses: [2], title: "Thomas Williams", label: "Thomas Williams", description: "1, 1st husband", image: "../images/photos/t.png" },
+				{ id: 2, spouses: [], title: "Mary Spencer", label: "Mary Spencer", description: "2, The Mary",image: "../images/photos/m.png" },
+				{ id: 3, spouses: [2], title: "David Kirby", label: "David Kirby", description: "3, 2nd Husband", image: "../images/photos/d.png" },
+				{ id: 4, parents: [1, 2], title: "Brad Williams", label: "Brad Williams", description: "4, 1st son", image: "../images/photos/b.png" },
+				{ id: 5, parents: [2, 3], spouses: [6, 7], title: "Mike Kirby", label: "Mike Kirby", description: "5, 2nd son, having 2 spouses", image: "../images/photos/m.png"},
+				{ id: 6, title: "Lynette Maloney", label: "Lynette Maloney", description: "5, Spouse I", image: "../images/photos/m.png" },
+				{ id: 7, title: "Sara Kemp", label: "Sara Kemp", description: "5, Spouse II :-)", image: "../images/photos/s.png" },
+				{ id: 8, parents: [7], title: "Leon Kemp", label: "Leon Kemp", description: "5, Orphant", image: "../images/photos/l.png" }
+			];
+
+			options.pageFitMode = primitives.common.PageFitMode.None;
+			options.items = items;
+			options.cursorItem = 2;
+			options.linesWidth = 1;
+			options.linesColor = "black";
+			options.hasSelectorCheckbox = primitives.common.Enabled.False;
+			options.normalLevelShift = 20;
+			options.dotLevelShift = 20;
+			options.lineLevelShift = 20;
+			options.normalItemsInterval = 10;
+			options.dotItemsInterval = 10;
+			options.lineItemsInterval = 10;
+			options.arrowsDirection = primitives.common.GroupByType.Parents;
+			options.showExtraArrows = false;
+
+			control = primitives.famdiagram.Control(document.getElementById("basicdiagram"), options);
+		});
+
+	</script>
+</head>
+<body>
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+</html>

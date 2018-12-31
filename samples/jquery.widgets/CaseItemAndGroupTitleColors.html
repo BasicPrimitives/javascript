@@ -9,10 +9,11 @@
 	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
 
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
-	<script type='text/javascript'>//<![CDATA[ 
+	<script type='text/javascript'>
 		$(document).ready(function () {
 			var options = new primitives.orgdiagram.Config();
 
@@ -50,16 +51,15 @@
 			options.items = items;
 			options.cursorItem = 0;
 			options.itemTitleFirstFontColor = primitives.common.Colors.Yellow;
-            options.itemTitleSecondFontColor = primitives.common.Colors.Blue;
-            options.groupTitleOrientation = primitives.text.TextOrientationType.RotateRight;
+			options.itemTitleSecondFontColor = primitives.common.Colors.Blue;
+			options.groupTitleOrientation = primitives.text.TextOrientationType.RotateRight;
 
-			jQuery(".basicdiagram").orgDiagram(options);
-		});//]]>  
-
+			jQuery("#basicdiagram").orgDiagram(options);
+		});
 	</script>
 
 </head>
 <body>
-	<div class="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
 </body>
 </html>

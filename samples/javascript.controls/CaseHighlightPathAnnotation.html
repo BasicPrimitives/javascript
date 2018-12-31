@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Highlight Path Annotation</title>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+		var control;
+		document.addEventListener('DOMContentLoaded', function () {
+			/* This sample verifies JSON form of items & connector annotation creation */
+			control = primitives.orgdiagram.Control(document.getElementById('basicdiagram'), {
+				items: [
+					/* JSON noname objects equivalent to primitives.orgdiagram.ItemConfig */
+					{ id: 0, parent: null, title: "Scott Aasrud", description: "VP, Public Sector", image: "../images/photos/a.png" },
+					{id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: "../images/photos/b.png" },
+					{ id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: "../images/photos/c.png" },
+					{ id: 3, parent: 0, title: "Mike Wazowski", description: "Business Analyst, Canada", image: "../images/photos/o.png" },
+					{ id: 4, parent: 3, title: "Edward Smith", description: "Field Engineer", image: "../images/photos/s.png" },
+					{ id: 5, parent: 1, title: "Doug Parker", description: "Field Engineer", image: "../images/photos/p.png" }
+				],
+				annotations: [
+					/* JSON noname object equivalent to primitives.orgdiagram.ConnectorAnnotationConfig */
+					{
+						annotationType: primitives.common.AnnotationType.HighlightPath,
+						items: [5, 0],
+						color: primitives.common.Colors.Navy,
+						lineWidth: 12,
+						opacity: 0.3,
+						showArrows: false
+					},
+					/* prototype based instantiation */
+					new primitives.orgdiagram.HighlightPathAnnotationConfig({
+						items: [4, 0],
+						color: primitives.common.Colors.Red,
+						lineWidth: 2,
+						opacity: 1,
+						showArrows: true
+					})
+				],
+				cursorItem: 0,
+				hasSelectorCheckbox: primitives.common.Enabled.True,
+				highlightLinesColor: primitives.common.Colors.Red,
+				highlightLinesWidth: 1.5,
+				highlightLinesType: primitives.common.LineType.Dashed,
+				arrowsDirection: primitives.common.GroupByType.Parents,
+				pageFitMode: primitives.orgdiagram.PageFitMode.None
+			});
+		});
+
+	</script>
+</head>
+<body>
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+</html>

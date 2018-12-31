@@ -1,4 +1,4 @@
-﻿var famdata = [
+﻿var patentsdata = [
 		{ "id": 1, "parents": [], "title": "09/703,531", "description": "", "groupTitle": "Patented", image: "../images/photos/p.png", "groupTitleColor": "#008000", "itemTitleColor": "#008000" },
 		{ "id": 2, "parents": [1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], "title": "10/938,160", "description": "", "groupTitle": "Expired", image: "../images/photos/e.png", "groupTitleColor": "#454545", "itemTitleColor": "#454545" },
 		{ "id": 18, "parents": [4], "title": "09/832,436", "description": "", "groupTitle": "Patented", image: "../images/photos/p.png", "groupTitleColor": "#008000", "itemTitleColor": "#ff0000" },

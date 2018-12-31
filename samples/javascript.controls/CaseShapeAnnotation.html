@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Shape & Background Annotations</title>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+		var control;
+
+		document.addEventListener('DOMContentLoaded', function () {
+			/* This sample verifies JSON form of items & connector annotation creation */
+			control = primitives.orgdiagram.Control(document.getElementById('basicdiagram'), {
+				items: [
+					/* JSON noname objects equivalent to primitives.orgdiagram.ItemConfig */
+					{ id: 0, parent: null, title: "Scott Aasrud", description: "VP, Public Sector", image: "../images/photos/a.png" },
+					{ id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: "../images/photos/b.png" },
+					{ id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: "../images/photos/c.png" },
+					{ id: 3, parent: 0, title: "Mike Wazowski", description: "Business Analyst, Canada", image: "../images/photos/o.png" },
+					{ id: 4, parent: 3, title: "Best Friend", description: "Business Analyst, Mexico", image: "../images/photos/f.png" }
+				],
+				annotations: [
+					/* JSON noname object equivalent to primitives.orgdiagram.ConnectorAnnotationConfig */
+					{
+						annotationType: primitives.common.AnnotationType.Shape,
+						items: [0],
+						label: ["span",
+									{
+										style: {
+											lineHeight: "15px"
+										}
+									},
+									["div",
+										{
+											style: {
+												width: "10px",
+												height: "10px",
+												backgroundColor: "green",
+												color: "white"
+											},
+											class: "bp-badge"
+										},
+									"1"
+									],
+									"Oval"
+								],
+						labelSize: new primitives.common.Size(50, 30),
+						labelPlacement: primitives.common.PlacementType.Right,
+						shapeType: primitives.common.ShapeType.Oval,
+						borderColor: primitives.common.Colors.Green,
+						offset: new primitives.common.Thickness(2, 2, 2, 2),
+						lineWidth: 2,
+						selectItems: true,
+						lineType: primitives.common.LineType.Dashed
+					},
+					/* JSON noname object equivalent to primitives.orgdiagram.ConnectorAnnotationConfig */
+					{
+						annotationType: primitives.common.AnnotationType.Shape,
+						items: [2,3],
+						label: "<div class='bp-badge' style='width:10px; height:10px;background-color:Navy; color: white;'>1</div>Cross Out",
+						labelSize: { width: 50, height: 30 },
+						labelPlacement: primitives.common.PlacementType.Right,
+						shapeType: primitives.common.ShapeType.CrossOut,
+						borderColor: primitives.common.Colors.Navy,
+						offset: { left: 2, top: 2, right: 2, bottom: 2 },
+						lineWidth: 2,
+						selectItems: true,
+						lineType: primitives.common.LineType.Dashed
+					},
+					/* prototype based instantiation */
+					new primitives.orgdiagram.ShapeAnnotationConfig({
+						items: [1],
+						label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>2</div>Triangle",
+						labelSize: new primitives.common.Size(70, 30),
+						labelPlacement: primitives.common.PlacementType.Bottom,
+						shapeType: primitives.common.ShapeType.Triangle,
+						borderColor: primitives.common.Colors.Red,
+						offset: new primitives.common.Thickness(2, 2, 2, 2),
+						lineWidth: 2,
+						selectItems: true,
+						lineType: primitives.common.LineType.Dashed
+					})
+					,
+					new primitives.orgdiagram.BackgroundAnnotationConfig({
+						items: [2,3],
+						borderColor: "#f8e5f9",
+						fillColor: "#e5f9f8",
+						lineWidth: 2,
+						selectItems: true,
+						includeChildren: true,
+						lineType: primitives.common.LineType.Dotted,
+						offset: new primitives.common.Thickness(20, 20, 20, 20)
+					})
+				],
+				cursorItem: 0,
+				hasSelectorCheckbox: primitives.common.Enabled.True,
+				normalItemsInterval: 40 /* defines padding around items of background annotations*/
+			});
+		});
+
+	</script>
+</head>
+<body>
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+</html>

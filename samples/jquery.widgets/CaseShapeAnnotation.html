@@ -10,17 +10,18 @@
 
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
 
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
-	<script type='text/javascript'>//<![CDATA[ 
+	<script type='text/javascript'>
 		$(document).ready(function () {
 			/* This sample verifies JSON form of items & connector annotation creation */
 			jQuery("#basicdiagram").orgDiagram({
 				items: [
 					/* JSON noname objects equivalent to primitives.orgdiagram.ItemConfig */
 					{ id: 0, parent: null, title: "Scott Aasrud", description: "VP, Public Sector", image: "../images/photos/a.png" },
-					{id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: "../images/photos/b.png" },
+					{ id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: "../images/photos/b.png" },
 					{ id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: "../images/photos/c.png" },
 					{ id: 3, parent: 0, title: "Mike Wazowski", description: "Business Analyst, Canada", image: "../images/photos/o.png" },
 					{ id: 4, parent: 3, title: "Best Friend", description: "Business Analyst, Mexico", image: "../images/photos/f.png" }
@@ -43,7 +44,7 @@
 					/* JSON noname object equivalent to primitives.orgdiagram.ConnectorAnnotationConfig */
 					{
 						annotationType: primitives.common.AnnotationType.Shape,
-						items: [2,3],
+						items: [2, 3],
 						label: "<div class='bp-badge' style='width:10px; height:10px;background-color:Navy; color: white;'>1</div>Cross Out",
 						labelSize: { width: 50, height: 30 },
 						labelPlacement: primitives.common.PlacementType.Right,
@@ -69,7 +70,7 @@
 					})
 					,
 					new primitives.orgdiagram.BackgroundAnnotationConfig({
-						items: [2,3],
+						items: [2, 3],
 						borderColor: "#f8e5f9",
 						fillColor: "#e5f9f8",
 						lineWidth: 2,
@@ -83,7 +84,7 @@
 				hasSelectorCheckbox: primitives.common.Enabled.True,
 				normalItemsInterval: 40 /* defines padding around items of background annotations*/
 			});
-		});//]]>  
+		});
 
 	</script>
 </head>

@@ -12,23 +12,21 @@
 	<link rel="stylesheet" type="text/css" href="../../packages/jquerylayout/layout-default-latest.css" />
 
 	<script type="text/javascript">
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			jQuery('body').layout(
-			{
-				center__paneSelector: "#contentpanel"
-			});
+				{
+					center__paneSelector: "#contentpanel"
+				});
 		});
 	</script>
 
 	<!-- header -->
 	<!--<script type="text/javascript" src="../../packages/touch/jquery.ui.touch-punch.js"></script>-->
 
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
-
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
 
 	<script type="text/javascript">
 		var orgdiagram = null;
@@ -42,21 +40,21 @@
 		var toChart = null;
 		var items = {};
 
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			jQuery('#contentpanel').layout(
-			{
-				center__paneSelector: "#centerpanel"
-				, west__size: 400
-				, west__paneSelector: "#westpanel"
-				, west__resizable: true
-				, center__onresize: function () {
-					if (orgdiagram != null && orgdiagram2 != null) {
-						ResizePlaceholder();
-						jQuery("#orgdiagram").orgDiagram("update", primitives.common.UpdateMode.Refresh);
-						jQuery("#orgdiagram2").orgDiagram("update", primitives.common.UpdateMode.Refresh);
+				{
+					center__paneSelector: "#centerpanel"
+					, west__size: 400
+					, west__paneSelector: "#westpanel"
+					, west__resizable: true
+					, center__onresize: function () {
+						if (orgdiagram != null && orgdiagram2 != null) {
+							ResizePlaceholder();
+							jQuery("#orgdiagram").orgDiagram("update", primitives.common.UpdateMode.Refresh);
+							jQuery("#orgdiagram2").orgDiagram("update", primitives.common.UpdateMode.Refresh);
+						}
 					}
-				}
-			});
+				});
 
 			ResizePlaceholder();
 			orgdiagram = SetupWidget(jQuery("#orgdiagram"), "orgdiagram");
@@ -106,7 +104,7 @@
 			options.lineItemsInterval = 5;
 			options.buttonsPanelSize = 48;
 
-			options.pageFitMode = primitives.common.PageFitMode.Auto;
+			options.pageFitMode = primitives.common.PageFitMode.None;
 			options.graphicsType = primitives.common.GraphicsType.Auto;
 			options.hasSelectorCheckbox = primitives.common.Enabled.True;
 			options.hasButtons = primitives.common.Enabled.True;
@@ -126,9 +124,9 @@
 					/* Check drop event cancelation flag
 					* This fixes following issues:
 					* 1. The same event can be received again by updated chart
-					* so you changed hierarchy, updated chart and at the same drop position absolutly 
+					* so you changed hierarchy, updated chart and at the same drop position absolutly
 					* irrelevant item receives again drop event, so in order to avoid this use primitives.common.stopPropagation
-					* 2. This particlular example has nested drop zones, in order to 
+					* 2. This particlular example has nested drop zones, in order to
 					* suppress drop event processing by nested droppable and its parent we have to set "greedy" to false,
 					* but it does not work.
 					* In this example items can be droped to other items (except immidiate children in order to avoid looping)
@@ -159,16 +157,16 @@
 
 
 			var itemTemplate = jQuery(
-			  '<div class="bp-item bp-corner-all bt-item-frame">'
+				'<div class="bp-item bp-corner-all bt-item-frame">'
 				+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 136px; height: 20px;">'
-					+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 128px; height: 18px;">'
-					+ '</div>'
+				+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 128px; height: 18px;">'
+				+ '</div>'
 				+ '</div>'
 				+ '<div class="bp-item bp-photo-frame" style="top: 26px; left: 2px; width: 50px; height: 60px;">'
-					+ '<img name="photo" style="height:60px; width:50px;" />'
+				+ '<img name="photo" style="height:60px; width:50px;" />'
 				+ '</div>'
 				+ '<div name="description" class="bp-item" style="top: 26px; left: 56px; width: 82px; height: 52px; font-size: 10px;"></div>'
-			+ '</div>'
+				+ '</div>'
 			).css({
 				width: result.itemSize.width + "px",
 				height: result.itemSize.height + "px"
@@ -217,8 +215,8 @@
 							toValue = parseInt(jQuery(this).attr("data-value"), 10);
 							toChart = "orgdiagram";
 
-							/* this is needed in order to update highlighted item in chart, 
-							* so this creates consistent mouse over feed back  
+							/* this is needed in order to update highlighted item in chart,
+							* so this creates consistent mouse over feed back
 							*/
 							jQuery("#orgdiagram").orgDiagram({ "highlightItem": toValue });
 							jQuery("#orgdiagram").orgDiagram("update", primitives.common.UpdateMode.PositonHighlight);

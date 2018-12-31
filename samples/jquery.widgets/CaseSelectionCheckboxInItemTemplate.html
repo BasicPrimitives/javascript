@@ -9,10 +9,11 @@
 
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
 
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
-	<script type='text/javascript'>//<![CDATA[ 
+	<script type='text/javascript'>
 		$(document).ready(function () {
 			var treeItems = {};
 
@@ -94,7 +95,7 @@
 				jQuery("#basicdiagram").orgDiagram("update", primitives.orgdiagram.UpdateMode.Refresh);
 			})
 
-		});//]]>  
+		});
 
 		function getContactTemplate() {
 			var result = new primitives.orgdiagram.TemplateConfig();
@@ -106,9 +107,9 @@
 
 
 			var itemTemplate = jQuery(
-			  '<div class="bp-item bp-nopadding bp-corner-all bt-item-frame">'
+				'<div class="bp-item bp-nopadding bp-corner-all bt-item-frame">'
 				+ '<div style="left: 4px; top: 4px; width: 152px; height: 20px;" class="bp-item bp-selectioncheckbox-frame"><label><nobr><input class="bp-selectioncheckbox" name="checkbox" value="on" type="checkbox">&nbsp;<span name="selectiontext" class="bp-selectiontext">Selected</span></nobr></label></div>'
-			+ '</div>'
+				+ '</div>'
 			).css({
 				width: result.itemSize.width + "px",
 				height: result.itemSize.height + "px"
@@ -122,10 +123,12 @@
 			var element = data.element.find("[name=selectiontext]");
 			if (element.text() != data.context["title"]) {
 				element.text(data.context["title"]);
+				element.attr("data-id", data.id);
 			}
 
 			var checkBox = data.element.find("[name=checkbox]");
 			checkBox.prop("checked", data.isSelected);
+			checkBox.attr("data-id", data.id);
 		}
 	</script>
 

@@ -1,7 +1,5 @@
-
-/* /common/init.js*/
 /**
- * @preserve Basic Primitives Diagram v4.3.0
+ * @preserve Basic Primitives Diagram v5.1.1
  * Copyright (c) 2013 - 2018 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -11,33 +9,101 @@
  * http://www.basicprimitives.com/pdf/license.pdf
  *
  */
-
 /* File: Basic Primitives (primitives.latest.js)*/
-(function () {
+(function (root, factory) {
+    if (typeof define === "function" && define.amd) {
+        define([], function () {
+            return (root.primitives = factory());
+        });
+    } else if (typeof module === "object" && module.exports) {
+        module.exports = (root.primitives = factory());
+    } else {
+        root.primitives = factory();
+    }
+}(this, function () {
 
-	var namespace = function (name) {
-		var namespaces = name.split('.'),
-			namespace = window,
-			index;
-		for (index = 0; index < namespaces.length; index += 1) {
-			namespace = namespace[namespaces[index]] = namespace[namespaces[index]] || {};
+
+
+/* /common/init.js*/
+var primitives = {
+    common: {
+        version: "5.1.1"
+    },
+    orgdiagram: {},
+    famdiagram: {},
+    text: {},
+    callout: {},
+    connector: {},
+    shape: {},
+    pdf: {
+        orgdiagram: {},
+        famdiagram: {}
+    }
+};
+
+/* /common/dom.js*/
+primitives.common.getElementsByName = function(thisArg, parent, name, onNode) {
+	var nodes = parent.getElementsByTagName("*");
+	for (var index = 0; index < nodes.length; index += 1) {
+		var node = nodes[index];
+		if (node.name == name) {
+			onNode.call(thisArg, node);
 		}
-		return namespace;
+	}
+};
+
+primitives.common.getFixOfPixelALignment = function (element) {
+	var elementClientRectangle = element.getBoundingClientRect(),
+		top = elementClientRectangle.top + document.body.scrollTop,
+		left = elementClientRectangle.left + document.body.scrollLeft;
+	return new primitives.common.Size(-left + Math.floor(left), -top + Math.floor(top));
+};
+
+primitives.common.getElementOffset = function (element) {
+	var rect = element.getBoundingClientRect();
+	var ownerDocument = element.ownerDocument;
+	var documentElement = ownerDocument.documentElement;
+
+	return {
+		top: rect.top + window.pageYOffset - documentElement.clientTop,
+		left: rect.left + window.pageXOffset - documentElement.clientLeft
 	};
+};
 
-	namespace("primitives.common");
-	namespace("primitives.orgdiagram");
-	namespace("primitives.famdiagram");
-	namespace("primitives.text");
-	namespace("primitives.callout");
-	namespace("primitives.connector");
-	namespace("primitives.shape");
-	namespace("primitives.pdf");
-	namespace("primitives.pdf.orgdiagram");
-	namespace("primitives.pdf.famdiagram");
+primitives.common.hasClass = function (element, className) {
+	var classNames = element.className;
+	if (classNames != null && typeof classNames == "string") {
+		var list = classNames.split(" ");
+		for(var index = 0; index < list.length; index+=1) {
+			if (list[index] == className) {
+				return true;
+			}
+		}
+	}
+	return false;
+};
 
-	primitives.common.version = "4.3.0";
-}());
+/*
+	Function: primitives.common.stopPropogation
+	This method uses various approaches used in different browsers to stop event propagation.
+	Parameters:
+	event - Event to be stopped.
+*/
+primitives.common.stopPropagation = function (event) {
+	if (event.stopPropagation !== undefined) {
+		event.stopPropagation();
+	} else if (event.cancelBubble !== undefined) {
+		event.cancelBubble = true;
+	} else if (event.preventDefault !== undefined) {
+		event.preventDefault();
+	}
+};
+
+primitives.common.getInnerSize = function (element) {
+	var size = window.getComputedStyle(element);
+
+	return new primitives.common.Size(parseInt(size.width, 10), parseInt(size.height, 10));
+};
 
 /* /common/functions.js*/
 /*
@@ -227,6 +293,30 @@ primitives.common.cloneObject = function (source, isShallow) {
 };
 
 /*
+	Function: primitives.common.mergeObjects
+	Shallow copy of source object properites into destination
+	
+	Parameters:
+	destination - The object to add properties to
+	source - The source object
+	Returns: 
+	destination object
+*/
+primitives.common.mergeObjects = function (destination, source) {
+	for (var index = 1; index < arguments.length; index += 1) {
+		var src = arguments[index];
+		if (src != null) {
+			for (var key in src) {
+				if (src.hasOwnProperty(key)) {
+					destination[key] = src[key];
+				}
+			}
+		}
+	}
+	return destination;
+};
+
+/*
 	Function: primitives.common.hashCode
 	Returns hash code for specified string value.
 	
@@ -252,50 +342,6 @@ primitives.common.hashCode = function (value) {
 };
 
 /*
-	Function: primitives.common.css
-	This method assigns HTML element style attributes only if one of them does not match its current value.
-	This function helps to reduce number of HTML page layout invalidations.
-	
-	Parameters:
-	element - jQuery selector of element to be updated.
-	attr - object containing style attributes.
-*/
-primitives.common.css = function (element, attr) {
-	var attribute,
-		value;
-	if (element.hasOwnProperty("cssHash")) {
-		for (attribute in attr) {
-			if (attr.hasOwnProperty(attribute)) {
-				value = attr[attribute];
-				if (element.cssHash[attribute] != value) {
-					element.cssHash[attribute] = value;
-					element.css(attribute, value);
-				}
-			}
-		}
-	} else {
-		element.css(attr);
-		element.cssHash = attr;
-	}
-};
-
-/*
-	Function: primitives.common.stopPropogation
-	This method uses various approaches used in different browsers to stop event propagation.
-	Parameters:
-	event - Event to be stopped.
-*/
-primitives.common.stopPropagation = function (event) {
-	if (event.stopPropagation !== undefined) {
-		event.stopPropagation();
-	} else if (event.cancelBubble !== undefined) {
-		event.cancelBubble = true;
-	} else if (event.preventDefault !== undefined) {
-		event.preventDefault();
-	}
-};
-
-/*
 	Function: primitives.common.indexOf
 	Searches array for specified item and returns index (or -1 if not found)
 	Parameters:
@@ -309,7 +355,7 @@ primitives.common.indexOf = function (vector, item, compFunc) {
 		treeItem;
 	for (index = 0; index < vector.length; index += 1) {
 		treeItem = vector[index];
-		if (compFunc != null ? compFunc(treeItem, item) : treeItem === item) {
+		if (compFunc != null ? compFunc(treeItem, item) : treeItem == item) {
 			return index;
 		}
 	}
@@ -331,33 +377,6 @@ primitives.common.supportsSVG = function () {
 			document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.0");
 	}
 	return primitives.common._supportsSVG;
-};
-
-primitives.common._supportsVML = null;
-
-/*
-	Function: primitives.common.supportsVML
-	Indicates whether the browser supports VML graphics. It is applicable to Internet Explorer only. This graphics mode is depricated in favour of SVG.
-	
-	Returns: 
-	true if browser supports VML graphics.
-*/
-primitives.common.supportsVML = function () {
-	var div,
-		shape;
-	if (primitives.common._supportsVML === null) {
-		primitives.common._supportsVML = false;
-		if (!jQuery.support.opacity) {
-			div = document.createElement('div');
-			div = document.body.appendChild(div);
-			div.innerHTML = '<v:shape adj="1" />';
-			shape = div.firstChild;
-			shape.style.behavior = "url(#default#VML)";
-			primitives.common._supportsVML = shape ? typeof shape.adj === "object" : false;
-			div.parentNode.removeChild(div);
-		}
-	}
-	return primitives.common._supportsVML;
 };
 
 primitives.common._supportsCanvas = null;
@@ -390,11 +409,6 @@ primitives.common.createGraphics = function (preferred, widget) {
 	}
 	for (index = 0; result === null && index < modes.length; index += 1) {
 		switch (modes[index]) {
-			case 2/*primitives.common.GraphicsType.VML*/:
-				if (primitives.common.supportsVML()) {
-					result = new primitives.common.VmlGraphics(widget);
-				}
-				break;
 			case 0/*primitives.common.GraphicsType.SVG*/:
 				if (primitives.common.supportsSVG()) {
 					result = new primitives.common.SvgGraphics(widget);
@@ -408,6 +422,13 @@ primitives.common.createGraphics = function (preferred, widget) {
 		}
 	}
 	return result;
+};
+
+primitives.common.isChrome = function () {
+	if (navigator != null) { //ignore jslint
+		return /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor); //ignore jslint
+	}
+	return false;
 };
 
 /*
@@ -679,209 +700,760 @@ primitives.common.compareArrays = function (array1, array2, getKeyFunc) {
 	return result;
 };
 
-/* /common/mouse.js*/
-/*global mouseDelayMet*/
-primitives.common.Mouse = function () {
-	var data = {
-		distance: 3,
-		delay: 0,
-		element: null,
-		name: null,
-		onMouseStart: null,
-		onMouseDrag: null,
-		onMouseStop: null,
-		onMouseCapture: null
-	},
-	cancel = "input,textarea,button,select,option",
-	mouseDownEvent,
-	mouseStarted,
-	started;
+/* /common/jsonml-html.js*/
+/*
+	jsonml-html.js
+	JsonML to HTML utility
 
-	function _mouseInit(element, options) {
-		data.element = element;
+	Created: 2006-11-09-0116
+	Modified: 2012-11-24-1051
 
-		for (var option in options) {
-			if (options.hasOwnProperty(option)) {
-				data[option] = options[option];
-			}
-		}
+	Copyright (c)2006-2012 Stephen M. McKamey
+	Distributed under The MIT License: http://jsonml.org/license
 
-		data.element
-			.bind("mousedown." + data.name, function (event) {
-				return _mouseDown(event);
-			})
-			.bind("click." + data.name, function (event) {
-				if (true === jQuery.data(event.target, data.name + ".preventClickEvent")) {
-					jQuery.removeData(event.target, data.name + ".preventClickEvent");
-					event.stopImmediatePropagation();
-					return false;
+	This file ensures a global JsonML object adding these methods:
+
+		JsonML.toHTML(JsonML, filter)
+
+			This method produces a tree of DOM elements from a JsonML tree. The
+			array must not contain any cyclical references.
+
+			The optional filter parameter is a function which can filter and
+			transform the results. It receives each of the DOM nodes, and
+			its return value is used instead of the original value. If it
+			returns what it received, then structure is not modified. If it
+			returns undefined then the member is deleted.
+
+			This is useful for binding unobtrusive JavaScript to the generated
+			DOM elements.
+
+			Example:
+
+			// Parses the structure. If an element has a specific CSS value then
+			// takes appropriate action: Remove from results, add special event
+			// handlers, or bind to a custom component.
+
+			var myUI = JsonML.toHTML(myUITemplate, function (elem) {
+				if (elem.className.indexOf('Remove-Me') >= 0) {
+					// this will remove from resulting DOM tree
+					return null;
 				}
+
+				if (elem.tagName && elem.tagName.toLowerCase() === 'a' &&
+					elem.className.indexOf('External-Link') >= 0) {
+					// this is the equivalent of target='_blank'
+					elem.onclick = function(evt) {
+						window.open(elem.href); return false;
+					};
+
+				} else if (elem.className.indexOf('Fancy-Widgit') >= 0) {
+					// bind to a custom component
+					FancyWidgit.bindDOM(elem);
+				}
+				return elem;
 			});
 
-		started = false;
-	}
+		JsonML.toHTMLText(JsonML)
+			Converts JsonML to HTML text
 
-	// make sure destroying one instance of mouse doesn't mess with
-	// other instances of mouse
-	function _mouseDestroy() {
-		data.element.unbind("." + data.name);
-		if (_mouseMoveDelegate) {
-			jQuery(document)
-				.unbind("mousemove." + data.name, _mouseMoveDelegate)
-				.unbind("mouseup." + data.name, _mouseUpDelegate);
+		// Implement onerror to handle any runtime errors while binding:
+		JsonML.onerror = function (ex, jml, filter) {
+			// display inline error message
+			return document.createTextNode('['+ex+']');
+		};
+*/
+
+primitives.common.JsonML = {};
+
+if (typeof document !== 'undefined') {
+
+	(function (JsonML, document) {
+		'use strict';
+
+		/**
+		 * Attribute name map
+		 * 
+		 * @private
+		 * @constant
+		 * @type {Object.<string>}
+		 */
+		var ATTR_MAP = {
+			'accesskey': 'accessKey',
+			'bgcolor': 'bgColor',
+			'cellpadding': 'cellPadding',
+			'cellspacing': 'cellSpacing',
+			'checked': 'defaultChecked',
+			'class': 'className',
+			'colspan': 'colSpan',
+			'contenteditable': 'contentEditable',
+			'defaultchecked': 'defaultChecked',
+			'for': 'htmlFor',
+			'formnovalidate': 'formNoValidate',
+			'hidefocus': 'hideFocus',
+			'ismap': 'isMap',
+			'maxlength': 'maxLength',
+			'novalidate': 'noValidate',
+			'readonly': 'readOnly',
+			'rowspan': 'rowSpan',
+			'spellcheck': 'spellCheck',
+			'tabindex': 'tabIndex',
+			'usemap': 'useMap',
+			'willvalidate': 'willValidate'
+			// can add more attributes here as needed
+		};
+
+		/**
+		 * Attribute duplicates map
+		 * 
+		 * @private
+		 * @constant
+		 * @type {Object.<string>}
+		 */
+		var ATTR_DUP = {
+			'enctype': 'encoding',
+			'onscroll': 'DOMMouseScroll'
+			// can add more attributes here as needed
+		};
+
+		/**
+		 * Attributes to be set via DOM
+		 * 
+		 * @private
+		 * @constant
+		 * @type {Object.<number>}
+		 */
+		var ATTR_DOM = {
+			'autocapitalize': 1,
+			'autocomplete': 1,
+			'autocorrect': 1
+			// can add more attributes here as needed
+		};
+
+		/**
+		 * Boolean attribute map
+		 * 
+		 * @private
+		 * @constant
+		 * @type {Object.<number>}
+		 */
+		var ATTR_BOOL = {
+			'async': 1,
+			'autofocus': 1,
+			'checked': 1,
+			'defaultchecked': 1,
+			'defer': 1,
+			'disabled': 1,
+			'formnovalidate': 1,
+			'hidden': 1,
+			'indeterminate': 1,
+			'ismap': 1,
+			'multiple': 1,
+			'novalidate': 1,
+			'readonly': 1,
+			'required': 1,
+			'spellcheck': 1,
+			'willvalidate': 1
+			// can add more attributes here as needed
+		};
+
+		/**
+		 * Leading SGML line ending pattern
+		 * 
+		 * @private
+		 * @constant
+		 * @type {RegExp}
+		 */
+		var LEADING = /^[\r\n]+/;
+
+		/**
+		 * Trailing SGML line ending pattern
+		 * 
+		 * @private
+		 * @constant
+		 * @type {RegExp}
+		 */
+		var TRAILING = /[\r\n]+$/;
+
+		/**
+		 * @private
+		 * @const
+		 * @type {number}
+		 */
+		var NUL = 0;
+
+		/**
+		 * @private
+		 * @const
+		 * @type {number}
+		 */
+		var FUN = 1;
+
+		/**
+		 * @private
+		 * @const
+		 * @type {number}
+		 */
+		var ARY = 2;
+
+		/**
+		 * @private
+		 * @const
+		 * @type {number}
+		 */
+		var OBJ = 3;
+
+		/**
+		 * @private
+		 * @const
+		 * @type {number}
+		 */
+		var VAL = 4;
+
+		/**
+		 * @private
+		 * @const
+		 * @type {number}
+		 */
+		var RAW = 5;
+
+		/**
+		 * Wraps a data value to maintain as raw markup in output
+		 * 
+		 * @private
+		 * @this {Markup}
+		 * @param {string} value The value
+		 * @constructor
+		 */
+		function Markup(value) {
+			/**
+			 * @type {string}
+			 * @const
+			 * @protected
+			 */
+			this.value = value;
 		}
-	}
 
-	function _mouseDown(event) {
-		// don't let more than one widget handle mouseStart
-		if (primitives.common.Mouse.MouseHandled) {
-			return;
+		/**
+		 * Renders the value
+		 * 
+		 * @public
+		 * @override
+		 * @this {Markup}
+		 * @return {string} value
+		 */
+		Markup.prototype.toString = function () {
+			return this.value;
+		};
+
+		/**
+		 * @param {string} value
+		 * @return {Markup}
+		 */
+		JsonML.raw = function (value) {
+			return new Markup(value);
+		};
+
+		/**
+		 * @param {*} value
+		 * @return {boolean}
+		 */
+		var isMarkup = JsonML.isRaw = function (value) {
+			return (value instanceof Markup);
+		};
+
+		/**
+		 * Determines if the value is an Array
+		 * 
+		 * @private
+		 * @param {*} val the object being tested
+		 * @return {boolean}
+		 */
+		var isArray = Array.isArray || function (val) {
+			return (val instanceof Array);
+		};
+
+		/**
+		 * Determines if the value is a function
+		 * 
+		 * @private
+		 * @param {*} val the object being tested
+		 * @return {boolean}
+		 */
+		function isFunction(val) {
+			return (typeof val === 'function');
 		}
 
-		// we may have missed mouseup (out of window)
-		(mouseStarted && _mouseUp(event)); //ignore jslint
-
-		mouseDownEvent = event;
-
-		var btnIsLeft = (event.which === 1),
-			// event.target.nodeName works around a bug in IE 8 with
-			// disabled inputs (#7620)
-			elIsCancel = (typeof cancel === "string" && event.target.nodeName ? jQuery(event.target).closest(cancel).length : false);
-		if (!btnIsLeft || elIsCancel || !_mouseCapture(event)) {
-			return true;
-		}
-
-		mouseDelayMet = !data.delay; //ignore jslint
-		if (!mouseDelayMet) {
-			_mouseDelayTimer = setTimeout(function () { //ignore jslint
-				mouseDelayMet = true; //ignore jslint
-			}, data.delay);
-		}
-
-		if (_mouseDistanceMet(event) && _mouseDelayMet(event)) {
-			mouseStarted = (_mouseStart(event) !== false);
-			if (!mouseStarted) {
-				event.preventDefault();
-				return true;
+		/**
+		 * Determines the type of the value
+		 * 
+		 * @private
+		 * @param {*} val the object being tested
+		 * @return {number}
+		 */
+		function getType(val) {
+			switch (typeof val) {
+				case 'object':
+					return !val ? NUL : (isArray(val) ? ARY : (isMarkup(val) ? RAW : ((val instanceof Date) ? VAL : OBJ)));
+				case 'function':
+					return FUN;
+				case 'undefined':
+					return NUL;
+				default:
+					return VAL;
 			}
 		}
 
-		// Click event may never have fired (Gecko & Opera)
-		if (true === jQuery.data(event.target, data.name + ".preventClickEvent")) {
-			jQuery.removeData(event.target, data.name + ".preventClickEvent");
-		}
+		/**
+		 * Creates a DOM element 
+		 * 
+		 * @private
+		 * @param {string} tag The element's tag name
+		 * @return {Node}
+		 */
+		var createElement = function (tag) {
+			if (!tag) {
+				// create a document fragment to hold multiple-root elements
+				if (document.createDocumentFragment) {
+					return document.createDocumentFragment();
+				}
 
-		jQuery(document)
-			.bind("mousemove." + data.name, _mouseMoveDelegate)
-			.bind("mouseup." + data.name, _mouseUpDelegate);
+				tag = '';
 
-		event.preventDefault();
-
-		primitives.common.Mouse.MouseHandled = true;
-		return true;
-	}
-
-	// these delegates are required to keep context
-	function _mouseMoveDelegate(event) {
-		return _mouseMove(event);
-	}
-
-	function _mouseUpDelegate(event) {
-		return _mouseUp(event);
-	}
-
-	function _mouseMove(event) {
-		// IE mouseup check - mouseup happened when mouse was out of window
-		if (jQuery.ui.ie && (!document.documentMode || document.documentMode < 9) && !event.button) {
-			return _mouseUp(event);
-		}
-
-		if (mouseStarted) {
-			_mouseDrag(event);
-			return event.preventDefault();
-		}
-
-		if (_mouseDistanceMet(event) && _mouseDelayMet(event)) {
-			mouseStarted =
-				(_mouseStart(mouseDownEvent, event) !== false);
-			(mouseStarted ? _mouseDrag(event) : _mouseUp(event));//ignore jslint
-		}
-
-		return !mouseStarted;
-	}
-
-	function _mouseUp(event) {
-		jQuery(document)
-			.unbind("mousemove." + data.name, _mouseMoveDelegate)
-			.unbind("mouseup." + data.name, _mouseUpDelegate);
-
-		if (mouseStarted) {
-			mouseStarted = false;
-
-			if (event.target === mouseDownEvent.target) {
-				jQuery.data(event.target, data.name + ".preventClickEvent", true);
+			} else if (tag.charAt(0) === '!') {
+				return document.createComment(tag === '!' ? '' : tag.substr(1) + ' ');
 			}
 
-			_mouseStop(event);
-		}
+			if (tag.toLowerCase() === 'style' && document.createStyleSheet) {
+				// IE requires this interface for styles
+				return document.createStyleSheet();
+			}
 
-		return false;
-	}
+			return document.createElement(tag);
+		};
 
-	function _mouseDistanceMet(event) {
-		return (Math.max(
-				Math.abs(mouseDownEvent.pageX - event.pageX),
-				Math.abs(mouseDownEvent.pageY - event.pageY)
-			) >= data.distance
-		);
-	}
+		/**
+		 * Adds an event handler to an element
+		 * 
+		 * @private
+		 * @param {Node} elem The element
+		 * @param {string} name The event name
+		 * @param {function(Event)} handler The event handler
+		 */
+		var addHandler = function (elem, name, handler) {
+			if (name.substr(0, 2) === 'on') {
+				name = name.substr(2);
+			}
 
-	function _mouseDelayMet(/* event */) {
-		return mouseDelayMet;
-	}
+			switch (typeof handler) {
+				case 'function':
+					if (elem.addEventListener) {
+						// DOM Level 2
+						elem.addEventListener(name, handler, false);
 
-	function _mouseStart(event) {
-		if (data.onMouseStart != null) {
-			data.onMouseStart(event);
-		}
-	}
+					} else if (elem.attachEvent && getType(elem[name]) !== NUL) {
+						// IE legacy events
+						elem.attachEvent('on' + name, handler);
 
-	function _mouseDrag(event) {
-		if (data.onMouseDrag != null) {
-			data.onMouseDrag(event);
-		}
-	}
+					} else {
+						// DOM Level 0
+						var old = elem['on' + name] || elem[name];
+						elem['on' + name] = elem[name] = !isFunction(old) ? handler :
+							function (e) {
+								return (old.call(this, e) !== false) && (handler.call(this, e) !== false);
+							};
+					}
+					break;
 
-	function _mouseStop(event) {
-		if (data.onMouseStop != null) {
-			data.onMouseStop(event);
-		}
-	}
+				case 'string':
+					// inline functions are DOM Level 0
+					/*jslint evil:true */
+					elem['on' + name] = new Function('event', handler);
+					/*jslint evil:false */
+					break;
+			}
+		};
 
-	function _mouseCapture(event) {
-		if (data.onMouseCapture != null) {
-			return data.onMouseCapture(event);
-		}
-		return true;
-	}
+		/**
+		 * Apply styles to element
+		 * 
+		 * @public
+		 * @param {Node} elem The element
+		 * @param {Object} css styles object
+		 * @return {Node}
+		 */
+		var applyStyles = JsonML.applyStyles = function (elem, css) {
+			for (var key in css) {
+				if (css.hasOwnProperty(key)) {
+					elem.style[key] = css[key];
+				}
+			}
+			return elem;
+		};
 
-	function isStarted() {
-		return mouseStarted;
-	}
+		/**
+		 * Appends an attribute to an element
+		 * 
+		 * @private
+		 * @param {Node} elem The element
+		 * @param {Object} attr Attributes object
+		 * @return {Node}
+		 */
+		var addAttributes = function (elem, attr) {
+			if (attr.name && document.attachEvent && !elem.parentNode) {
+				try {
+					// IE fix for not being able to programatically change the name attribute
+					var alt = createElement('<' + elem.tagName + ' name="' + attr.name + '">');
+					// fix for Opera 8.5 and Netscape 7.1 creating malformed elements
+					if (elem.tagName === alt.tagName) {
+						elem = alt;
+					}
+				} catch (ex) { }
+			}
 
-	return {
-		init: _mouseInit,
-		destroy: _mouseDestroy,
-		isStarted: isStarted
-	};
-};
+			// for each attributeName
+			for (var name in attr) {
+				if (attr.hasOwnProperty(name)) {
+					// attributeValue
+					var value = attr[name],
+						type = getType(value);
 
-primitives.common.Mouse.MouseHandled = false;
+					if (name) {
+						if (type === NUL) {
+							value = '';
+							type = VAL;
+						}
 
-if (typeof jQuery != "undefined") {
-	jQuery(document).mouseup(function () {
-		primitives.common.Mouse.MouseHandled = false;
-	});
+						name = ATTR_MAP[name.toLowerCase()] || name;
+
+						if (name === '$') {
+							value(elem);
+						}
+						else if (name == 'className') {
+							if (isArray(value)) {
+								for (var index = 0; index < value.length; index += 1) {
+									elem.className += " " + value[index];
+								}
+							} else {
+								elem.className += " " + value;
+							}
+						}
+						else if (name === 'style') {
+							if (getType(elem.style.cssText) !== NUL) {
+								if (typeof value == "string") {
+									elem.style.cssText = value;
+								} else {
+									applyStyles(elem, value);
+								}
+							} else {
+								elem.style = value;
+							}
+
+						} else if (name.substr(0, 2) === 'on') {
+							addHandler(elem, name, value);
+
+							// also set duplicated events
+							name = ATTR_DUP[name];
+							if (name) {
+								addHandler(elem, name, value);
+							}
+
+						} else if (!ATTR_DOM[name.toLowerCase()] && (type !== VAL || name.charAt(0) === '$' || getType(elem[name]) !== NUL || getType(elem[ATTR_DUP[name]]) !== NUL)) {
+							// direct setting of existing properties
+							elem[name] = value;
+
+							// also set duplicated properties
+							name = ATTR_DUP[name];
+							if (name) {
+								elem[name] = value;
+							}
+
+						} else if (ATTR_BOOL[name.toLowerCase()]) {
+							if (value) {
+								// boolean attributes
+								elem.setAttribute(name, name);
+
+								// also set duplicated attributes
+								name = ATTR_DUP[name];
+								if (name) {
+									elem.setAttribute(name, name);
+								}
+							}
+
+						} else {
+							// http://www.quirksmode.org/dom/w3c_core.html#attributes
+
+							// custom and 'data-*' attributes
+							elem.setAttribute(name, value);
+
+							// also set duplicated attributes
+							name = ATTR_DUP[name];
+							if (name) {
+								elem.setAttribute(name, value);
+							}
+						}
+					}
+				}
+			}
+			return elem;
+		};
+
+		/**
+		 * Appends a child to an element
+		 * 
+		 * @private
+		 * @param {Node} elem The parent element
+		 * @param {Node} child The child
+		 */
+		var appendDOM = JsonML.appendDOM = function (elem, child) {
+			if (child) {
+				var tag = (elem.tagName || '').toLowerCase();
+				if (elem.nodeType === 8) { // comment
+					if (child.nodeType === 3) { // text node
+						elem.nodeValue += child.nodeValue;
+					}
+				} else if (tag === 'table' && elem.tBodies) {
+					if (!child.tagName) {
+						// must unwrap documentFragment for tables
+						if (child.nodeType === 11) {
+							while (child.firstChild) {
+								appendDOM(elem, child.removeChild(child.firstChild));
+							}
+						}
+						return;
+					}
+
+					// in IE must explicitly nest TRs in TBODY
+					var childTag = child.tagName.toLowerCase();// child tagName
+					if (childTag && childTag !== 'tbody' && childTag !== 'thead') {
+						// insert in last tbody
+						var tBody = elem.tBodies.length > 0 ? elem.tBodies[elem.tBodies.length - 1] : null;
+						if (!tBody) {
+							tBody = createElement(childTag === 'th' ? 'thead' : 'tbody');
+							elem.appendChild(tBody);
+						}
+						tBody.appendChild(child);
+					} else if (elem.canHaveChildren !== false) {
+						elem.appendChild(child);
+					}
+
+				} else if (tag === 'style' && document.createStyleSheet) {
+					// IE requires this interface for styles
+					elem.cssText = child;
+
+				} else if (elem.canHaveChildren !== false) {
+					elem.appendChild(child);
+
+				} else if (tag === 'object' &&
+					child.tagName && child.tagName.toLowerCase() === 'param') {
+					// IE-only path
+					try {
+						elem.appendChild(child);
+					} catch (ex1) { }
+					try {
+						if (elem.object) {
+							elem.object[child.name] = child.value;
+						}
+					} catch (ex2) { }
+				}
+			}
+		};
+
+		/**
+		 * Tests a node for whitespace
+		 * 
+		 * @private
+		 * @param {Node} node The node
+		 * @return {boolean}
+		 */
+		var isWhitespace = function (node) {
+			return !!node && (node.nodeType === 3) && (!node.nodeValue || !/\S/.exec(node.nodeValue));
+		};
+
+		/**
+		 * Trims whitespace pattern from the text node
+		 * 
+		 * @private
+		 * @param {Node} node The node
+		 */
+		var trimPattern = function (node, pattern) {
+			if (!!node && (node.nodeType === 3) && pattern.exec(node.nodeValue)) {
+				node.nodeValue = node.nodeValue.replace(pattern, '');
+			}
+		};
+
+		/**
+		 * Removes leading and trailing whitespace nodes
+		 * 
+		 * @private
+		 * @param {Node} elem The node
+		 */
+		var trimWhitespace = function (elem) {
+			if (elem) {
+				while (isWhitespace(elem.firstChild)) {
+					// trim leading whitespace text nodes
+					elem.removeChild(elem.firstChild);
+				}
+				// trim leading whitespace text
+				trimPattern(elem.firstChild, LEADING);
+				while (isWhitespace(elem.lastChild)) {
+					// trim trailing whitespace text nodes
+					elem.removeChild(elem.lastChild);
+				}
+				// trim trailing whitespace text
+				trimPattern(elem.lastChild, TRAILING);
+			}
+		};
+
+		/**
+		 * Converts the markup to DOM nodes
+		 * 
+		 * @private
+		 * @param {string|Markup} value The node
+		 * @return {Node}
+		 */
+		var toDOM = function (value) {
+			var wrapper = createElement('div');
+			wrapper.innerHTML = '' + value;
+
+			// trim extraneous whitespace
+			trimWhitespace(wrapper);
+
+			// eliminate wrapper for single nodes
+			if (wrapper.childNodes.length === 1) {
+				return wrapper.firstChild;
+			}
+
+			// create a document fragment to hold elements
+			var frag = createElement('');
+			while (wrapper.firstChild) {
+				frag.appendChild(wrapper.firstChild);
+			}
+			return frag;
+		};
+
+		/**
+		 * Default error handler
+		 * @param {Error} ex
+		 * @return {Node}
+		 */
+		var onError = function (ex) {
+			return document.createTextNode('[' + ex + ']');
+		};
+
+		/* override this to perform custom error handling during binding */
+		JsonML.onerror = null;
+
+		/**
+		 * also used by JsonML.BST
+		 * @param {Node} elem
+		 * @param {*} jml
+		 * @param {function} filter
+		 * @return {Node}
+		 */
+		var patch = JsonML.patch = function (elem, jml, filter) {
+
+			for (var i = 1; i < jml.length; i += 1) {
+				if (isArray(jml[i]) || 'string' === typeof jml[i]) {
+					// append children
+					appendDOM(elem, toHTML(jml[i], filter));
+
+				} else if (isMarkup(jml[i])) {
+					appendDOM(elem, toDOM(jml[i].value));
+
+				} else if ('object' === typeof jml[i] && jml[i] !== null && elem.nodeType === 1) {
+					// add attributes
+					elem = addAttributes(elem, jml[i]);
+				}
+			}
+
+			return elem;
+		};
+
+		/**
+		 * Main builder entry point
+		 * @param {string|array} jml
+		 * @param {function} filter
+		 * @return {Node}
+		 */
+		var toHTML = JsonML.toHTML = function (jml, filter) {
+			try {
+				if (!jml) {
+					return null;
+				}
+				if ('string' === typeof jml) {
+					return document.createTextNode(jml);
+				}
+				if (isMarkup(jml)) {
+					return toDOM(jml.value);
+				}
+				if (!isArray(jml) || ('string' !== typeof jml[0])) {
+					throw new SyntaxError('invalid JsonML');
+				}
+
+				var tagName = jml[0]; // tagName
+				if (!tagName) {
+					// correctly handle a list of JsonML trees
+					// create a document fragment to hold elements
+					var frag = createElement('');
+					for (var i = 1; i < jml.length; i += 1) {
+						appendDOM(frag, toHTML(jml[i], filter));
+					}
+
+					// trim extraneous whitespace
+					trimWhitespace(frag);
+
+					// eliminate wrapper for single nodes
+					if (frag.childNodes.length === 1) {
+						return frag.firstChild;
+					}
+					return frag;
+				}
+
+				if (tagName.toLowerCase() === 'style' && document.createStyleSheet) {
+					// IE requires this interface for styles
+					patch(document.createStyleSheet(), jml, filter);
+					// in IE styles are effective immediately
+					return null;
+				}
+
+				var elem = patch(createElement(tagName), jml, filter);
+
+				// trim extraneous whitespace
+				trimWhitespace(elem);
+				return (elem && isFunction(filter)) ? filter(elem) : elem;
+			} catch (ex) {
+				try {
+					// handle error with complete context
+					var err = isFunction(JsonML.onerror) ? JsonML.onerror : onError;
+					return err(ex, jml, filter);
+				} catch (ex2) {
+					return document.createTextNode('[' + ex2 + ']');
+				}
+			}
+		};
+
+		/**
+		 * Not super efficient.
+		 * TODO: port render.js from DUEL
+		 * @param {string|array} jml JsonML structure
+		 * @return {string} HTML text
+		 */
+		JsonML.toHTMLText = function (jml, filter) {
+			var elem = toHTML(jml, filter);
+			if (elem.outerHTML) {
+				return elem.outerHTML;
+			}
+
+			var parent = createElement('div');
+			parent.appendChild(elem);
+
+			var html = parent.innerHTML;
+			parent.removeChild(elem);
+
+			return html;
+		};
+
+	})(primitives.common.JsonML, document);
 }
 
 /* /enums/AdviserPlacementType.js*/
@@ -933,9 +1505,7 @@ primitives.common.VectorRelationType =
 		Defines redraw mode of diagram.
 	
 	Recreate - Forces widget to make a full chart redraw. It is equivalent to initial chart creation. 
-	It removes everything from chart layout and recreares all elements again. For example when you 
-	open chart in jQuery UI dDialog you have to use this mode, since jQuery UI invalidates VML graphics elements in the DOM, so
-	the only way to update chart is to recreate its contents.
+	It removes everything from chart layout and recreares all elements again. 
 	Refresh - This update mode is optimized for widget fast redraw caused by resize or changes of 
 	next options: <primitives.orgdiagram.Config.items>, <primitives.orgdiagram.Config.cursorItem> 
 	or <primitives.orgdiagram.Config.selectedItems>.
@@ -1545,15 +2115,13 @@ primitives.common.Enabled =
 	Enum: primitives.ocommon.GraphicsType
 		Graphics type. 
 	
-	VML - Vector Markup Language. It is only graphics mode available in IE6, IE7 and IE8.
-	SVG - Scalable Vector Graphics. Proportionally scales on majority of device. It is not available on Android 2.3 devices and earlier.
-	Canvas - HTML canvas graphics. It is available everywhere except IE6, IE7 and IE8. It requires widget redraw after zooming page.
+	SVG - Scalable Vector Graphics. Proportionally scales on majority of devices.
+	Canvas - HTML canvas graphics. It requires widget update after zooming page.
 */
 primitives.common.GraphicsType =
 {
 	SVG: 0,
-	Canvas: 1,
-	VML: 2
+	Canvas: 1
 };
 
 /* /enums/GroupByType.js*/
@@ -1661,8 +2229,13 @@ primitives.common.ZOrderType =
 */
 primitives.common.RenderEventArgs = function () {
 	/*
+	Property: id
+	*/
+	this.id = null;
+
+	/*
 	Property: element
-		jQuery selector referencing template's root element.
+		DOM element.
 	*/
 	this.element = null;
 
@@ -2552,7 +3125,7 @@ primitives.common.Point = function (arg0, arg1) {
 */
 primitives.common.Point.prototype.scale = function (scale) {
 	this.x = this.x * scale;
-	this.x = this.x * scale;
+	this.y = this.y * scale;
 	return this;
 };
 
@@ -4559,7 +5132,7 @@ primitives.common.Graphics.prototype.clean = function () {
 			for (layerKey in placeholder.layers) {
 				if (placeholder.layers.hasOwnProperty(layerKey)) {
 					layer = placeholder.layers[layerKey];
-					layer.canvas.remove();
+					layer.canvas.parentNode.removeChild(layer.canvas);
 					layer.canvas = null;
 				}
 			}
@@ -4593,7 +5166,7 @@ primitives.common.Graphics.prototype.resizePlaceholder = function (placeholder, 
 		if (placeholder.layers.hasOwnProperty(layerKey)) {
 			layer = placeholder.layers[layerKey];
 			if (layer.name !== -1) {
-				layer.canvas.css({
+				primitives.common.JsonML.applyStyles(layer.canvas, {
 					"position": "absolute",
 					"width": "0px",
 					"height": "0px"
@@ -4654,19 +5227,20 @@ primitives.common.Graphics.prototype.activate = function (arg0, arg1) {
 
 primitives.common.Graphics.prototype._activatePlaceholder = function (placeholderName) {
 	var placeholder = this.m_placeholders[placeholderName],
-		div;
+		div, divs;
 	if (placeholder === undefined) {
 		div = null;
 		if (placeholderName === "none") {
 			div = this.m_element;
 		}
 		else {
-			div = this.m_element.find("." + placeholderName);
+			divs = this.m_element.getElementsByClassName(placeholderName);
+			div = divs.length > 0 ? divs[0] : this.m_element;
 		}
 
 		placeholder = new primitives.common.Placeholder(placeholderName);
 		placeholder.div = div;
-		placeholder.size = new primitives.common.Size(div.innerWidth(), div.innerHeight());
+		placeholder.size = primitives.common.getInnerSize(div);
 		placeholder.rect = new primitives.common.Rect(0, 0, placeholder.size.width, placeholder.size.height);
 
 		this.m_placeholders[placeholderName] = placeholder;
@@ -4688,16 +5262,16 @@ primitives.common.Graphics.prototype._activateLayer = function (layerName) {
 			layer.canvas = placeholder.div;
 		}
 		else {
-			canvas = jQuery('<div></div>');
-			canvas.addClass("Layer" + layerName);
-			canvas.addClass("Layer" + this.layerNames[layerName]);
-			position = new primitives.common.Rect(placeholder.rect);
-
-			canvas.css({
-				"position": "absolute",
-				"width": "0px",
-				"height": "0px"
-			});
+			canvas = primitives.common.JsonML.toHTML(["div",
+				{
+					"style": {
+						"position": "absolute",
+						"width": "0px",
+						"height": "0px"
+					},
+					"class": ["Layer" + layerName, "Layer" + this.layerNames[layerName]]
+				}
+			]);
 
 			maximumLayer = null;
 			for (layerKey in placeholder.layers) {
@@ -4713,9 +5287,9 @@ primitives.common.Graphics.prototype._activateLayer = function (layerName) {
 			layer.canvas = canvas;
 
 			if (maximumLayer === null) {
-				placeholder.div.prepend(layer.canvas[0]);
+				this.prepend(placeholder.div, layer.canvas);
 			} else {
-				layer.canvas.insertAfter(placeholder.layers[maximumLayer].canvas);
+				this.insertAfter(placeholder.layers[maximumLayer].canvas, layer.canvas);
 			}
 		}
 		placeholder.layers[layerName] = layer;
@@ -4723,106 +5297,140 @@ primitives.common.Graphics.prototype._activateLayer = function (layerName) {
 	this.m_activePlaceholder.activeLayer = layer;
 };
 
+primitives.common.Graphics.prototype.prepend = function (parent, newElement) {
+	if (parent.firstChild == null) {
+		parent.appendChild(newElement);
+	} else {
+		parent.insertBefore(newElement, parent.firstChild);
+	}
+};
+
+primitives.common.Graphics.prototype.insertAfter = function (insertAfterElement, newElement) {
+	var parent = insertAfterElement.parentNode;
+	if (parent.lastChild == insertAfterElement) {
+		parent.appendChild(newElement);
+	} else {
+		parent.insertBefore(newElement, insertAfterElement.nextSibling);
+	}
+};
+
 primitives.common.Graphics.prototype.text = function (x, y, width, height, label, orientation, horizontalAlignment, verticalAlignment, attr) {
-    var placeholder = this.m_activePlaceholder,
-        style = {
-            "position": "absolute",
-            "padding": 0,
-            "margin": 0,
-            "text-align": this._getTextAlign(horizontalAlignment),
-            "font-size": attr["font-size"],
-            "font-family": attr["font-family"],
-            "font-weight": attr["font-weight"],
-            "font-style": attr["font-style"],
-            "color": attr["font-color"],
-            "line-height": 1
-        },
-        rotation = "",
-        element,
-        tdstyle;
+	var placeholder = this.m_activePlaceholder,
+		style = {
+			"position": "absolute",
+			"padding": 0,
+			"margin": 0,
+			"textAlign": this._getTextAlign(horizontalAlignment),
+			"fontSize": attr.fontSize,
+			"fontFamily": attr.fontFamily,
+			"fontWeight": attr.fontWeight,
+			"fontStyle": attr.fontStyle,
+			"color": attr.fontColor,
+			"lineHeight": 1
+		},
+		rotation = "",
+		element,
+		tdstyle;
 
-    switch (orientation) {
-        case 0/*primitives.text.TextOrientationType.Horizontal*/:
-        case 3/*primitives.text.TextOrientationType.Auto*/:
-            style.left = x;
-            style.top = y;
-            style.width = width;
-            style.height = height;
-            break;
-        case 1/*primitives.text.TextOrientationType.RotateLeft*/:
-            style.left = x + Math.round(width / 2.0 - height / 2.0);
-            style.top = y + Math.round(height / 2.0 - width / 2.0);
-            style.width = height;
-            style.height = width;
-            rotation = "rotate(-90deg)";
-            break;
-        case 2/*primitives.text.TextOrientationType.RotateRight*/:
-            style.left = x + Math.round(width / 2.0 - height / 2.0);
-            style.top = y + Math.round(height / 2.0 - width / 2.0);
-            style.width = height;
-            style.height = width;
-            rotation = "rotate(90deg)";
-            break;
-    }
+	switch (orientation) {
+		case 0/*primitives.text.TextOrientationType.Horizontal*/:
+		case 3/*primitives.text.TextOrientationType.Auto*/:
+			style.left = x + "px";
+			style.top = y + "px";
+			style.width = width + "px";
+			style.height = height + "px";
+			break;
+		case 1/*primitives.text.TextOrientationType.RotateLeft*/:
+			style.left = x + Math.round(width / 2.0 - height / 2.0) + "px";
+			style.top = y + Math.round(height / 2.0 - width / 2.0) + "px";
+			style.width = height + "px";
+			style.height = width + "px";
+			rotation = "rotate(-90deg)";
+			break;
+		case 2/*primitives.text.TextOrientationType.RotateRight*/:
+			style.left = x + Math.round(width / 2.0 - height / 2.0) + "px";
+			style.top = y + Math.round(height / 2.0 - width / 2.0) + "px";
+			style.width = height + "px";
+			style.height = width + "px";
+			rotation = "rotate(90deg)";
+			break;
+	}
 
-    style["-webkit-transform-origin"] = "center center";
-    style["-moz-transform-origin"] = "center center";
-    style["-o-transform-origin"] = "center center";
-    style["-ms-transform-origin"] = "center center";
-
-
-    style["-webkit-transform"] = rotation;
-    style["-moz-transform"] = rotation;
-    style["-o-transform"] = rotation;
-    style["-ms-transform"] = rotation;
-    style.transform = rotation;
+	style["-webkit-transform-origin"] = "center center";
+	style["-moz-transform-origin"] = "center center";
+	style["-o-transform-origin"] = "center center";
+	style["-ms-transform-origin"] = "center center";
 
 
-    style["max-width"] = style.width;
-    style["max-height"] = style.height;
+	style["-webkit-transform"] = rotation;
+	style["-moz-transform"] = rotation;
+	style["-o-transform"] = rotation;
+	style["-ms-transform"] = rotation;
+	style.transform = rotation;
 
-    label = label.replace(new RegExp("\n", 'g'), "<br/>");
-    switch (verticalAlignment) {
-        case 0/*primitives.common.VerticalAlignmentType.Top*/:
-            if (this.debug) {
-                style.border = "solid 1px black";
-            }
-            element = this.m_cache.get(placeholder.name, placeholder.activeLayer.name, "text");
-            if (element === null) {
-                element = jQuery("<div></div>");
-                element.css(style);
-                element.html(label);
-                placeholder.activeLayer.canvas.append(element);
-                this.m_cache.put(placeholder.name, placeholder.activeLayer.name, "text", element);
-            }
-            else {
-                element.css(style);
-                element.html(label);
-            }
-            break;
-        default:
-            style["border-collapse"] = "collapse";
-            tdstyle = {
-                "vertical-align": this._getVerticalAlignment(verticalAlignment),
-                "padding": 0
-            };
-            if (this.debug) {
-                tdstyle.border = "solid 1px black";
-            }
-            element = this.m_cache.get(placeholder.name, placeholder.activeLayer.name, "textintable");
-            if (element === null) {
-                element = jQuery('<table><tbody><tr><td></td></tr></tbody></table>');
-                primitives.common.css(element, style);
-                element.find("td").css(tdstyle).html(label);
-                placeholder.activeLayer.canvas.append(element);
-                this.m_cache.put(placeholder.name, placeholder.activeLayer.name, "textintable", element);
-            }
-            else {
-                primitives.common.css(element, style);
-                element.find("td").css(tdstyle).html(label);
-            }
-            break;
-    }
+
+	style.maxWidth = style.width;
+	style.maxHeight = style.height;
+
+	label = label.replace(new RegExp("\n", 'g'), "<br/>");
+	switch (verticalAlignment) {
+		case 0/*primitives.common.VerticalAlignmentType.Top*/:
+			if (this.debug) {
+				style.border = "solid 1px black";
+			}
+			element = this.m_cache.get(placeholder.name, placeholder.activeLayer.name, "text");
+			if (element === null) {
+				element = primitives.common.JsonML.toHTML(["div",
+					{
+						"style": style,
+						$: function (element) { element.innerHTML = label; }
+					}
+				]);
+				placeholder.activeLayer.canvas.appendChild(element);
+				this.m_cache.put(placeholder.name, placeholder.activeLayer.name, "text", element);
+			}
+			else {
+				primitives.common.JsonML.applyStyles(element, style);
+				element.innerHTML = label;
+			}
+			break;
+		default:
+			style.borderCollapse = "collapse";
+			tdstyle = {
+				"verticalAlign": this._getVerticalAlignment(verticalAlignment),
+				"padding": 0
+			};
+			if (this.debug) {
+				tdstyle.border = "solid 1px black";
+			}
+			element = this.m_cache.get(placeholder.name, placeholder.activeLayer.name, "textintable");
+			if (element === null) {
+				element = primitives.common.JsonML.toHTML(["table",
+					{
+						"style": style
+					},
+					["tbody",
+						["tr",
+							["td",
+								{
+									"style": tdstyle,
+									$: function (element) { element.innerHTML = label;}
+								}
+							]
+						]
+					]
+				]);
+				placeholder.activeLayer.canvas.appendChild(element);
+				this.m_cache.put(placeholder.name, placeholder.activeLayer.name, "textintable", element);
+			}
+			else {
+				primitives.common.JsonML.applyStyles(element, style);
+				var td = element.getElementsByTagName("td")[0];
+				primitives.common.JsonML.applyStyles(td, tdstyle);
+				td.innerHTML = label;
+			}
+			break;
+	}
 };
 
 primitives.common.Graphics.prototype._getTextAlign = function (alignment) {
@@ -4899,27 +5507,30 @@ primitives.common.Graphics.prototype.dot = function (cx, cy, width, height, corn
 			"left": Math.round(cx),
 			"padding": 0,
 			"margin": 0,
-			"line-height": "0px",
+			"lineHeight": "0px",
 			"overflow": "hidden",
 			"height": (height - (hasBorder ? 1 : 0)),
 			"background": attr.fillColor,
-			"-moz-border-radius": cornerRadius,
-			"-webkit-border-radius": cornerRadius,
+			"MozBorderRadius": cornerRadius,
+			"WebkitBorderRadius": cornerRadius,
 			"-khtml-border-radius": cornerRadius,
-			"border-radius": cornerRadius,
-			"font-size": "0px",
-			"border-style": (hasBorder ? "Solid" : "None"),
-			"border-width": (hasBorder ? "1px" : "0px"),
-			"border-color": (hasBorder ? attr.borderColor : "")
+			"borderRadius": cornerRadius,
+			"fontSize": "0px",
+			"borderStyle": (hasBorder ? "Solid" : "None"),
+			"borderWidth": (hasBorder ? "1px" : "0px"),
+			"borderColor": (hasBorder ? attr.borderColor : "")
 		};
 
 	if (element === null) {
-		element = jQuery('<div></div>');
-		primitives.common.css(element, style);
-		placeholder.activeLayer.canvas.append(element);
+		element = primitives.common.JsonML.toHTML(["div",
+			{
+				"style": style
+			}
+		]);
+		placeholder.activeLayer.canvas.appendChild(element);
 		this.m_cache.put(placeholder.name, placeholder.activeLayer.name, "dot", element);
 	} else {
-		primitives.common.css(element, style);
+		primitives.common.JsonML.applyStyles(element, style);
 	}
 };
 
@@ -4934,10 +5545,10 @@ primitives.common.Graphics.prototype.rightAngleLine = function (fromX, fromY, to
 			"padding": 0,
 			"margin": 0,
 			"opacity": 0.5,
-			"line-height": "0px",
+			"lineHeight": "0px",
 			"overflow": "hidden",
 			"background": attr.borderColor,
-			"font-size": "0px"
+			"fontSize": "0px"
 		},
 		element;
 
@@ -4951,12 +5562,15 @@ primitives.common.Graphics.prototype.rightAngleLine = function (fromX, fromY, to
 
 		element = this.m_cache.get(placeholder.name, placeholder.activeLayer.name, "rect");
 		if (element === null) {
-			element = jQuery("<div></div>");
-			primitives.common.css(element, style);
-			placeholder.activeLayer.canvas.append(element);
+			element = primitives.common.JsonML.toHTML(["div",
+				{
+					"style": style
+				}
+			]);
+			placeholder.activeLayer.canvas.appendChild(element);
 			this.m_cache.put(placeholder.name, placeholder.activeLayer.name, "rect", element);
 		} else {
-			primitives.common.css(element, style);
+			primitives.common.JsonML.applyStyles(element, style);
 		}
 };
 
@@ -4970,8 +5584,8 @@ primitives.common.Graphics.prototype.template = function (x, y, width, height, c
 		element = this.m_cache.get(placeholder.name, placeholder.activeLayer.name, templateKey);
 
 		if (attr !== null) {
-			if (attr["border-width"] !== undefined) {
-				gap = this.getPxSize(attr["border-width"]);
+			if (attr.borderWidth !== undefined) {
+				gap = this.getPxSize(attr.borderWidth);
 			}
 		}
 
@@ -4982,43 +5596,55 @@ primitives.common.Graphics.prototype.template = function (x, y, width, height, c
 			"left": (x + contentx) + "px"
 		};
 
-		jQuery.extend(style, attr);
+		primitives.common.mergeObjects(style, attr);
 
 		if (uiHash == null) {
 			uiHash = new primitives.common.RenderEventArgs();
-        }
+		}
 
-        uiHash.x = x + contentx;
-        uiHash.y = y + contenty;
-        uiHash.width = contentWidth - gap;
-        uiHash.height = contentHeight - gap;
+		uiHash.x = x + contentx;
+		uiHash.y = y + contenty;
+		uiHash.width = contentWidth - gap;
+		uiHash.height = contentHeight - gap;
 
 		if (element == null) {
-			element = jQuery(template);
-			jQuery.extend(style, {
+			element = this.getElementByTemplate(template);
+			style = primitives.common.mergeObjects(style, {
 				"position": "absolute",
 				"padding": "0px",
 				"margin": "0px"
 			}, attr);
-			primitives.common.css(element, style);
+			primitives.common.JsonML.applyStyles(element, style);
 
 			uiHash.element = element;
-            uiHash.renderingMode = 0/*primitives.common.RenderingMode.Create*/;
+			uiHash.renderingMode = 0/*primitives.common.RenderingMode.Create*/;
 
 			if (onRenderTemplate !== null) {
 				onRenderTemplate(null, uiHash);
 			}
-			placeholder.activeLayer.canvas.append(element);
+			placeholder.activeLayer.canvas.appendChild(element);
 			this.m_cache.put(placeholder.name, placeholder.activeLayer.name, templateKey, element);
 		} else {
 			uiHash.element = element;
 			uiHash.renderingMode = 1/*primitives.common.RenderingMode.Update*/;
-			primitives.common.css(element, style);
+			primitives.common.JsonML.applyStyles(element, style);
 			if (onRenderTemplate !== null) {
 				onRenderTemplate(null, uiHash);
 			}
 		}
 	return element;
+};
+
+primitives.common.Graphics.prototype.getElementByTemplate = function (template) {
+	var result = null;
+	if (primitives.common.isArray(template)) {
+		result = primitives.common.JsonML.toHTML(template);
+	} else {
+		var parent = document.createElement('div');
+		parent.innerHTML = template;
+		result = parent.firstChild;
+	}
+	return result;
 };
 
 primitives.common.Graphics.prototype.getPxSize = function (value, base) {
@@ -5057,7 +5683,7 @@ primitives.common.Cache.prototype.begin = function () {
 				if (this.m_visible[placeholder].hasOwnProperty(type)) {
 					for (index = this.m_visible[placeholder][type].length - 1; index >= 0; index -= 1) {
 						control = this.m_visible[placeholder][type][index];
-						control.css({ "visibility": "hidden" });
+						control.style.visibility = "hidden";
 						this.m_invisible[placeholder][type].push(control);
 					}
 					this.m_visible[placeholder][type].length = 0;
@@ -5078,7 +5704,7 @@ primitives.common.Cache.prototype.end = function () {
 					control = null;
 					if (this.m_invisible[placeholder][type].length > this.threshold) {
 						while ((control = this.m_invisible[placeholder][type].pop()) !== undefined) {
-							control.remove();
+							control.parentNode.removeChild(control);
 						}
 					}
 				}
@@ -5097,7 +5723,7 @@ primitives.common.Cache.prototype.reset = function (placeholder, layer) {
 			for (index = this.m_visible[placeholder][type].length - 1; index >= 0; index -= 1) {
 				control = this.m_visible[placeholder][type][index];
 				this.m_invisible[placeholder][type].push(control);
-				control.css({ "visibility": "hidden" });
+				control.style.visibility = "hidden";
 			}
 			this.m_visible[placeholder][type].length = 0;
 		}
@@ -5114,10 +5740,10 @@ primitives.common.Cache.prototype.clear = function () {
 				if (this.m_visible[placeholder].hasOwnProperty(type)) {
 					control = null;
 					while ((control = this.m_visible[placeholder][type].pop()) !== undefined) {
-						control.remove();
+						control.parentNode.removeChild(control);
 					}
 					while ((control = this.m_invisible[placeholder][type].pop()) !== undefined) {
-						control.remove();
+						control.parentNode.removeChild(control);
 					}
 				}
 			}
@@ -5139,7 +5765,7 @@ primitives.common.Cache.prototype.get = function (placeholder, layer, type) {
 	result = this.m_invisible[placeholder][type].pop() || null;
 	if (result !== null) {
 		this.m_visible[placeholder][type].push(result);
-		result.css({ "visibility": "inherit" });
+		result.style.visibility = "inherit";
 	}
 	return result;
 };
@@ -5173,7 +5799,7 @@ primitives.common.CanvasGraphics.prototype.clean = function () {
 				if (placeholder.layers.hasOwnProperty(layerKey)) {
 					layer = placeholder.layers[layerKey];
 					if (layer.canvascanvas !== null) {
-						layer.canvascanvas.remove();
+						layer.canvascanvas.parentNode.removeChild(layer.canvascanvas);
 						layer.canvascanvas = null;
 					}
 				}
@@ -5211,15 +5837,8 @@ primitives.common.CanvasGraphics.prototype.resizePlaceholder = function (placeho
 		if (placeholder.layers.hasOwnProperty(layerKey)) {
 			layer = placeholder.layers[layerKey];
 			if (layer.canvascanvas !== null) {
-				layer.canvascanvas.css({
-					"position": "absolute",
-					"width": width + "px",
-					"height": height + "px"
-				});
-				layer.canvascanvas.attr({
-					"width": width + "px",
-					"height": height + "px"
-				});
+				layer.canvascanvas.width = width;
+				layer.canvascanvas.height = height;
 			}
 		}
 	}
@@ -5257,14 +5876,11 @@ primitives.common.Graphics.prototype._getContext = function (placeholder, layer)
 		height = placeholder.size.height;
 
 	if (layer.canvascanvas === null) {
-		layer.canvascanvas = jQuery('<canvas></canvas>');
-
-		layer.canvascanvas.attr({
-			"width": width + "px",
-			"height": height + "px"
-		});
-		placeholder.activeLayer.canvas.prepend(layer.canvascanvas);
-		layer.canvascontext = layer.canvascanvas[0].getContext('2d');
+		layer.canvascanvas = document.createElement('canvas');
+		layer.canvascanvas.width = width;
+		layer.canvascanvas.height = height;
+		this.prepend(placeholder.activeLayer.canvas, layer.canvascanvas);
+		layer.canvascontext = layer.canvascanvas.getContext('2d');
 	}
 	return layer.canvascontext;
 };
@@ -5506,11 +6122,9 @@ primitives.common.Element.prototype.update = function (target, ie8mode) {
 		if (this.attr.hasOwnProperty(name)) {
 			value = this.attr[name];
 			if (ie8mode !== undefined) {
-				/* if you see exception here, it may be result of following situations:
-					1. You moved chart from one DOM node to another manually, it invalidates VML graphics in IE6, IE7 modes
-					so it is impossable to reuse VML items in DOM anymore. You have to update chart with Recreate option instead of refresh.
-					2. You made changes in Polyline graphics primitive and added extra sub nodes to it, so number and type of children for shape 
-						have been changed, so sub nodes mismatch is a reason for this exception.
+				/* if you see exception here, it may be result of following situation: 
+					You made changes in Polyline graphics primitive and added extra sub nodes to it, so number and type of children for shape 
+					have been changed, so sub nodes mismatch is a reason for this exception.
 				*/
 				if (target[name] !== value) {
 					target[name] = value;
@@ -5589,7 +6203,7 @@ primitives.common.SvgGraphics.prototype.clean = function () {
 				if (placeholder.layers.hasOwnProperty(layerKey)) {
 					layer = placeholder.layers[layerKey];
 					if (layer.svgcanvas !== null) {
-						layer.svgcanvas.remove();
+						layer.svgcanvas.parentNode.removeChild(layer.svgcanvas);
 						layer.svgcanvas = null;
 					}
 				}
@@ -5610,15 +6224,12 @@ primitives.common.SvgGraphics.prototype.resizePlaceholder = function (placeholde
 		if (placeholder.layers.hasOwnProperty(layerKey)) {
 			layer = placeholder.layers[layerKey];
 			if (layer.svgcanvas !== null) {
-				position = {
+				primitives.common.JsonML.applyStyles(layer.svgcanvas, {
 					"position": "absolute",
 					"width": width + "px",
 					"height": height + "px"
-				};
-				layer.svgcanvas.css(position);
-				layer.svgcanvas.attr({
-					"viewBox": "0 0 " + width + " " + height
 				});
+				layer.svgcanvas.viewBox = "0 0 " + width + " " + height;
 			}
 		}
 	}
@@ -5629,15 +6240,14 @@ primitives.common.SvgGraphics.prototype._getCanvas = function () {
 		layer = placeholder.activeLayer,
 		panelSize = placeholder.rect;
 	if (layer.svgcanvas === null) {
-		layer.svgcanvas = jQuery('<svg version = "1.1"></svg>');
-		layer.svgcanvas.attr({
-			"viewBox": panelSize.x + " " + panelSize.y + " " + panelSize.width + " " + panelSize.height
-		});
-		layer.svgcanvas.css({
+		layer.svgcanvas = document.createElementNS(this._svgxmlns, "svg");
+		layer.svgcanvas.viewBox = panelSize.x + " " + panelSize.y + " " + panelSize.width + " " + panelSize.height;
+		primitives.common.JsonML.applyStyles(layer.svgcanvas, {
 			"width": panelSize.width + "px",
 			"height": panelSize.height + "px"
 		});
-		placeholder.activeLayer.canvas.prepend(layer.svgcanvas);
+
+		this.prepend(placeholder.activeLayer.canvas, layer.svgcanvas);
 	}
 
 	return layer.svgcanvas;
@@ -5744,13 +6354,13 @@ primitives.common.SvgGraphics.prototype.polyline = function (polylineData) {
 	polyline.setAttribute("d", data);
 	element = this.m_cache.get(placeholder.name, placeholder.activeLayer.name, "path");
 	if (element === null) {
-		element = jQuery(polyline.create());
+		element = polyline.create();
 		svgcanvas = this._getCanvas();
-		svgcanvas.append(element);
+        svgcanvas.appendChild(element);
 		this.m_cache.put(placeholder.name, placeholder.activeLayer.name, "path", element);
 	}
 	else {
-		polyline.update(element[0]);
+		polyline.update(element);
 	}
 };
 
@@ -5980,268 +6590,6 @@ primitives.common.Transform.prototype.transformRect = function (x, y, width, hei
 	func.call(self, x, y, width, height);
 };
 
-/* /graphics/VmlGraphics.js*/
-primitives.common.VmlGraphics = function (element) {
-	var vmlStyle,
-		names,
-		index;
-	this.parent = primitives.common.Graphics.prototype;
-	this.parent.constructor.apply(this, arguments);
-
-
-	this.prefix = "rvml";
-	this.ie8mode = (document.documentMode && document.documentMode >= 8);
-
-	try {
-		/*ignore jslint start*/
-		eval('document.namespaces');
-		/*ignore jslint end*/
-	}
-	catch (ex) {
-
-	}
-
-	if (!document.namespaces[this.prefix]) {
-		document.namespaces.add(this.prefix, 'urn:schemas-microsoft-com:vml');
-	}
-
-	if (!primitives.common.VmlGraphics.prototype.vmlStyle) {
-		vmlStyle = primitives.common.VmlGraphics.prototype.vmlStyle = document.createStyleSheet();
-		names = [" *", "fill", "shape", "path", "textpath", "stroke"];
-		for (index = 0; index < names.length; index += 1) {
-			vmlStyle.addRule(this.prefix + "\\:" + names[index], "behavior:url(#default#VML); position:absolute;");
-		}
-	}
-
-	this.graphicsType = 2/*primitives.common.GraphicsType.VML*/;
-	this.hasGraphics = true;
-};
-
-primitives.common.VmlGraphics.prototype = new primitives.common.Graphics();
-
-primitives.common.VmlGraphics.prototype.text = function (x, y, width, height, label, orientation, horizontalAlignment, verticalAlignment, attr) {
-	var placeholder,
-		rotateLeft,
-		textRect,
-		textRectCoordSize,
-		line,
-		path,
-		lineHeight,
-		textHeight,
-		fromPoint,
-		toPoint,
-		textpath,
-		element;
-
-	switch (orientation) {
-		case 0/*primitives.text.TextOrientationType.Horizontal*/:
-		case 3/*primitives.text.TextOrientationType.Auto*/:
-			this.parent.text.call(this, x, y, width, height, label, orientation, horizontalAlignment, verticalAlignment, attr);
-			break;
-		default:
-			placeholder = this.m_activePlaceholder;
-
-			rotateLeft = (orientation === 1/*primitives.text.TextOrientationType.RotateLeft*/);
-			textRect = new primitives.common.Rect(x, y, width, height);
-			textRectCoordSize = new primitives.common.Rect(0, 0, width * 10, height * 10);
-
-			line = new primitives.common.Element(this.prefix + ":shape");
-			line.setAttribute("CoordSize", textRectCoordSize.width + "," + textRectCoordSize.height);
-			line.setAttribute("filled", true);
-			line.setAttribute("stroked", false);
-			line.setAttribute("fillcolor", attr["font-color"]);
-			line.style.top = textRect.y + "px";
-			line.style.left = textRect.x + "px";
-			line.style.width = textRect.width + "px";
-			line.style.height = textRect.height + "px";
-			line.style['font-family'] = attr['font-family'];
-
-
-			path = new primitives.common.Element(this.prefix + ":path");
-			path.setAttribute("TextPathOk", true);
-
-			lineHeight = 10 * Math.floor(this.getPxSize(attr['font-size'])) * 1.6 /* ~ line height*/;
-			textHeight = lineHeight * Math.max(label.split('\n').length - 1, 1);
-			fromPoint = null;
-			toPoint = null;
-
-			if (rotateLeft) {
-				switch (verticalAlignment) {
-					case 0/*primitives.common.VerticalAlignmentType.Top*/:
-						fromPoint = new primitives.common.Point(textRectCoordSize.x + textHeight / 2.0, textRectCoordSize.bottom());
-						toPoint = new primitives.common.Point(textRectCoordSize.x + textHeight / 2.0, textRectCoordSize.y);
-						break;
-					case 1/*primitives.common.VerticalAlignmentType.Middle*/:
-						fromPoint = new primitives.common.Point(textRectCoordSize.horizontalCenter(), textRectCoordSize.bottom());
-						toPoint = new primitives.common.Point(textRectCoordSize.horizontalCenter(), textRectCoordSize.y);
-						break;
-					case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
-						fromPoint = new primitives.common.Point(textRectCoordSize.right() - textHeight / 2.0, textRectCoordSize.bottom());
-						toPoint = new primitives.common.Point(textRectCoordSize.right() - textHeight / 2.0, textRectCoordSize.y);
-						break;
-				}
-			}
-			else {
-				switch (verticalAlignment) {
-					case 0/*primitives.common.VerticalAlignmentType.Top*/:
-						fromPoint = new primitives.common.Point(textRectCoordSize.right() - textHeight / 2.0, textRectCoordSize.y);
-						toPoint = new primitives.common.Point(textRectCoordSize.right() - textHeight / 2.0, textRectCoordSize.bottom());
-						break;
-					case 1/*primitives.common.VerticalAlignmentType.Middle*/:
-						fromPoint = new primitives.common.Point(textRectCoordSize.horizontalCenter(), textRectCoordSize.y);
-						toPoint = new primitives.common.Point(textRectCoordSize.horizontalCenter(), textRectCoordSize.bottom());
-						break;
-					case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
-						fromPoint = new primitives.common.Point(textRectCoordSize.x + textHeight / 2.0, textRectCoordSize.y);
-						toPoint = new primitives.common.Point(textRectCoordSize.x + textHeight / 2.0, textRectCoordSize.bottom());
-						break;
-				}
-			}
-			path.setAttribute("v", " m" + fromPoint.x + "," + fromPoint.y + " l" + toPoint.x + "," + toPoint.y + " e");
-
-			textpath = new primitives.common.Element(this.prefix + ":textpath");
-			textpath.setAttribute("on", true);
-			textpath.setAttribute("string", label);
-			textpath.style.trim = false;
-			textpath.style['v-text-align'] = this._getTextAlign(horizontalAlignment);
-			textpath.style['font'] = "normal normal normal " + attr['font-size'] + "pt " + attr['font-family']; //ignore jslint
-
-			line.appendChild(path);
-			line.appendChild(textpath);
-
-			element = this.m_cache.get(placeholder.name, placeholder.activeLayer.name, "vmltext");
-			if (element === null) {
-				element = jQuery(line.create(this.ie8mode));
-				placeholder.activeLayer.canvas.append(element);
-				this.m_cache.put(placeholder.name, placeholder.activeLayer.name, "vmltext", element);
-			}
-			else {
-				line.update(element[0], this.ie8mode);
-			}
-			break;
-	}
-};
-
-primitives.common.VmlGraphics.prototype.polyline = function (polylineData) {
-	var placeholder = this.m_activePlaceholder,
-		rect = new primitives.common.Rect(placeholder.rect),
-		rectCoordSize = new primitives.common.Rect(0, 0, rect.width * 10, rect.height * 10),
-		shape = new primitives.common.Element(this.prefix + ":shape"),
-		data,
-		path,
-		stroke,
-		fill,
-		element,
-		x, y, x2, y2, value,
-		signature,
-		attr = polylineData.paletteItem.toAttr();
-
-	if (attr.borderColor !== undefined && attr.lineWidth !== undefined) {
-		shape.setAttribute("strokecolor", attr.borderColor);
-		shape.setAttribute("strokeweight", attr.lineWidth);
-		shape.setAttribute("stroked", true);
-	}
-	else {
-		shape.setAttribute("stroked", false);
-	}
-	
-	shape.setAttribute("CoordSize", rectCoordSize.width + "," + rectCoordSize.height);
-	shape.style.top = rect.y + "px";
-	shape.style.left = rect.x + "px";
-	shape.style.width = rect.width + "px";
-	shape.style.height = rect.height + "px";
-
-	data = "";
-	polylineData.loop(this, function (segment) {
-		switch (segment.segmentType) {
-			case 1/*primitives.common.SegmentType.Move*/:
-				data += " m" + (10 * Math.round(segment.x)) + "," + (10 * Math.round(segment.y));
-				break;
-			case 0/*primitives.common.SegmentType.Line*/:
-				data += " l" + (10 * Math.round(segment.x)) + "," + (10 * Math.round(segment.y));
-				break;
-			case 4/*primitives.common.SegmentType.Dot*/:
-				x = Math.round(segment.x);
-				y = Math.round(segment.y);
-				x2 = Math.round(segment.x + segment.width);
-				y2 = Math.round(segment.y + segment.height);
-				if (x > x2) {
-					value = x;
-					x = x2;
-					x2 = value;
-				}
-				if (y > y2) {
-					value = y;
-					y = y2;
-					y2 = value;
-				}
-				x = 10 * x + 5;
-				y = 10 * y + 5;
-				x2 = 10 * x2 - 5;
-				y2 = 10 * y2 - 5;
-				data += " m" + x + "," + y;
-				data += " l" + x2 + "," + y;
-				data += " l" + x2 + "," + y2;
-				data += " l" + x + "," + y2;
-				data += " l" + x + "," + y;
-				break;
-			case 2/*primitives.common.SegmentType.QuadraticArc*/:
-				data += " qb" + (10 * Math.round(segment.cpX)) + "," + (10 * Math.round(segment.cpY)) +
-					" l" + (10 * Math.round(segment.x)) + "," + (10 * Math.round(segment.y));
-				break;
-			case 3/*primitives.common.SegmentType.CubicArc*/:
-				data += " c" + 10 * Math.round(segment.cpX1) + "," + 10 * Math.round(segment.cpY1) + "," + 10 * Math.round(segment.cpX2) + "," + 10 * Math.round(segment.cpY2) + "," + 10 * Math.round(segment.x) + "," + 10 * Math.round(segment.y); //ignore jslint
-				break;
-		}
-	});
-	data += " e";
-
-	signature = "shapepath";
-	path = new primitives.common.Element(this.prefix + ":path");
-	path.setAttribute("v", data);
-	shape.appendChild(path);
-
-	if (attr.lineType != null) {
-		stroke = new primitives.common.Element(this.prefix + ":stroke");
-		switch (attr.lineType) {
-			case 0/*primitives.common.LineType.Solid*/:
-				stroke.setAttribute("dashstyle", "Solid");
-				break;
-			case 1/*primitives.common.LineType.Dotted*/:
-				stroke.setAttribute("dashstyle", "ShortDot");
-				break;
-			case 2/*primitives.common.LineType.Dashed*/:
-				stroke.setAttribute("dashstyle", "Dash");
-				break;
-		}
-		shape.appendChild(stroke);
-		signature += "stroke";
-	}
-
-
-	if (attr.fillColor !== null) {
-		shape.setAttribute("filled", true);
-		fill = new primitives.common.Element(this.prefix + ":fill");
-		fill.setAttribute("opacity", attr.opacity);
-		fill.setAttribute("color", attr.fillColor);
-		shape.appendChild(fill);
-		signature += "fill";
-	}
-	else {
-		shape.setAttribute("filled", false);
-	}
-
-	element = this.m_cache.get(placeholder.name, placeholder.activeLayer.name, signature);
-	if (element === null) {
-		element = jQuery(shape.create(this.ie8mode));
-		placeholder.activeLayer.canvas.append(element);
-		this.m_cache.put(placeholder.name, placeholder.activeLayer.name, signature, element);
-	}
-	else {
-		shape.update(element[0], this.ie8mode);
-	}
-};
-
 /* /OptionsReaders/ArrayReader.js*/
 primitives.common.ArrayReader = function (itemTemplate, containsUniqueItems, uniquePropertyKey, createSourceHash, isOrdered) {
 	this.itemTemplate = itemTemplate;
@@ -6267,8 +6615,8 @@ primitives.common.ArrayReader.prototype.read = function (target, source, path, c
 	}
 
 	/* hash values for tracking changes */
-	hash = context.hash[path] || {};
-	sequence = context.hash[sequencePath] || {};
+	hash = context.hash.hasOwnProperty(path) ? context.hash[path] : {};
+	sequence = context.hash.hasOwnProperty(sequencePath) ? context.hash[sequencePath] : {};
 
 	for (index = 0, len = source.length; index < len; index += 1) {
 		item = source[index];
@@ -6276,7 +6624,7 @@ primitives.common.ArrayReader.prototype.read = function (target, source, path, c
 		itemid = this.containsUniqueItems ? (this.containsPrimitiveValues ? item : item[this.uniquePropertyKey]) : index;
 
 		if (!resultHash.hasOwnProperty(itemid)) {
-			newHashObject = this.itemTemplate.read(hash[itemid] || {}, item, path + "-" + index, context);
+			newHashObject = this.itemTemplate.read(hash.hasOwnProperty(itemid) ? hash[itemid] : {}, item, path + "-" + index, context);
 
 			result.push(newHashObject);
 			resultHash[itemid] = newHashObject;
@@ -6812,7 +7160,7 @@ primitives.famdiagram.ButtonConfig = function (name, icon, tooltip) {
 /* /Controls/FamDiagram/configs/Config.js*/
 /*
 	Class: primitives.famdiagram.Config
-		jQuery famDiagram Widget options class. Multi-parent hierarchical chart configuration.
+		famDiagram options class. Multi-parent hierarchical chart configuration.
 	
 */
 primitives.famdiagram.Config = function (name) {
@@ -7378,22 +7726,6 @@ primitives.famdiagram.Config = function (name) {
 		
 	*/
 	this.cousinsIntervalMultiplier = 5;
-
-	/*
-	method: update
-		Makes full redraw of diagram contents reevaluating all options. This method has to be called explisitly after all options are set in order to update widget contents.
-	
-	Parameters:
-		updateMode: This parameter defines severaty of update <primitives.common.UpdateMode>. 
-		For example <primitives.common.UpdateMode.Refresh> updates only 
-		items and selection reusing existing elements where ever it is possible.
-
-	See also:
-		<primitives.common.UpdateMode>
-
-	Default:
-		<primitives.common.UpdateMode.Recreate>
-	*/
 
 	/*
 	Property: itemTitleFirstFontColor
@@ -10822,14 +11154,18 @@ primitives.famdiagram.FamilyLayout.prototype.measure = function (panelSize) {
 
 				// Find minimal placeholder size to hold completly folded diagram
 				minimalPlaceholderSize = this.setTreeLevelsVisibilityAndPositionTreeItems(data, this.params, this.options, levelVisibilities, levelVisibilities.length - 1);
-				minimalPlaceholderSize.addRect(panelSize);
-				minimalPlaceholderSize.offset(0, 0, 5, 5);
-
-				// Find optimal diagram size
-				this.findOptimalSize(this, levelVisibilities.length - 1, function (index) {
-					placeholderSize = this.setTreeLevelsVisibilityAndPositionTreeItems(data, this.params, this.options, levelVisibilities, index);
-					return this.checkDiagramSize(placeholderSize, minimalPlaceholderSize, this.options.pageFitMode);
-				});
+				if (!this.checkDiagramSize(minimalPlaceholderSize, panelSize, this.options.pageFitMode)) {
+					placeholderSize = minimalPlaceholderSize;
+				}
+				else {
+					// Find optimal diagram size
+					minimalPlaceholderSize.addRect(panelSize);
+					minimalPlaceholderSize.offset(0, 0, 5, 5);
+					this.findOptimalSize(this, levelVisibilities.length - 1, function (index) {
+						placeholderSize = this.setTreeLevelsVisibilityAndPositionTreeItems(data, this.params, this.options, levelVisibilities, index);
+						return this.checkDiagramSize(placeholderSize, minimalPlaceholderSize, this.options.pageFitMode);
+					});
+				}
 				break;
 		}
 	}
@@ -10867,23 +11203,24 @@ primitives.famdiagram.FamilyLayout.prototype.getLevelVisibilities = function (tr
 };
 
 primitives.famdiagram.FamilyLayout.prototype.findOptimalSize = function (thisArg, maximum, funcCheckSize) {
-	var minimum = 0,
-		cursorIndex;
+    var minimum = 0,
+        cursorIndex;
+	// maximum condension is fit to page
 	if (!funcCheckSize.call(thisArg, minimum)) {
-		if (funcCheckSize.call(thisArg, maximum)) {
-			cursorIndex = maximum;
-			while (maximum - minimum > 1) {
-				cursorIndex = Math.floor((maximum + minimum) / 2.0);
-				if (funcCheckSize.call(thisArg, cursorIndex)) {
-					maximum = cursorIndex;
-				}
-				else {
-					minimum = cursorIndex;
-				}
+		// minimum condension does not fit to page
+		cursorIndex = maximum;
+		while (maximum - minimum > 1) {
+			cursorIndex = Math.floor((maximum + minimum) / 2.0);
+			if (funcCheckSize.call(thisArg, cursorIndex)) {
+				// middle point size fit to page
+				maximum = cursorIndex;
 			}
-			if (maximum !== cursorIndex) {
-				funcCheckSize.call(thisArg, maximum);
+			else {
+				minimum = cursorIndex;
 			}
+		}
+		if (maximum !== cursorIndex) {
+			funcCheckSize.call(thisArg, maximum);
 		}
 	}
 };
@@ -11469,22 +11806,33 @@ primitives.famdiagram.MatrixLayout.prototype.getItemPosition = function (visibil
 };
 
 /* /Controls/FamDiagram/Tasks/Transformations/Selection/CursorNeighboursTask.js*/
-primitives.famdiagram.CursorNeighboursTask = function (cursorItemTask, neighboursSelectionModeOptionTask, navigationFamilyTask) {
+primitives.famdiagram.CursorNeighboursTask = function (cursorItemTask, neighboursSelectionModeOptionTask, navigationFamilyTask, activeItemsTask) {
 	var _data = {
 		items: []
-	};
+	},
+	_hash = {};
+
+	var _dataTemplate = new primitives.common.ArrayReader(
+			new primitives.common.ValueReader(["string", "number"], true),
+			true
+		);
 
 	function process() {
-		var cursorTreeItemId = cursorItemTask.getCursorTreeItem(),
+		var context = {
+				isChanged: false,
+				hash: _hash
+			},
+			cursorTreeItemId = cursorItemTask.getCursorTreeItem(),
 			navigationFamily = navigationFamilyTask.getNavigationFamily(),
-			neighboursSelectionMode = neighboursSelectionModeOptionTask.getNeighboursSelectionMode();
+			neighboursSelectionMode = neighboursSelectionModeOptionTask.getNeighboursSelectionMode(),
+			activeItems = activeItemsTask.getActiveItems();
 
-		_data.items = getCursorNeighbours(cursorTreeItemId, neighboursSelectionMode, navigationFamily);
+		_data.items = _dataTemplate.read(_data.items, getCursorNeighbours(cursorTreeItemId, neighboursSelectionMode, navigationFamily, activeItems), "items", context);
 
-		return true;
+		return context.isChanged;
 	}
 
-	function getCursorNeighbours(cursorTreeItemId, neighboursSelectionMode, navigationFamily) {
+	function getCursorNeighbours(cursorTreeItemId, neighboursSelectionMode, navigationFamily, activeItems) {
 		var result = [],
 			processed = {},
 			treeItem;
@@ -11496,7 +11844,7 @@ primitives.famdiagram.CursorNeighboursTask = function (cursorItemTask, neighbour
 							processed[itemid] = true;
 							result.push(itemid);
 						}
-						if (orgItem.isActive) {
+						if (activeItems.hasOwnProperty(itemid)) {
 							return navigationFamily.SKIP;
 						}
 					});
@@ -11505,7 +11853,7 @@ primitives.famdiagram.CursorNeighboursTask = function (cursorItemTask, neighbour
 							processed[itemid] = true;
 							result.push(itemid);
 						}
-						if (orgItem.isActive) {
+						if (activeItems.hasOwnProperty(itemid)) {
 							return navigationFamily.SKIP;
 						}
 					});
@@ -11516,7 +11864,7 @@ primitives.famdiagram.CursorNeighboursTask = function (cursorItemTask, neighbour
 							processed[itemid] = true;
 							result.push(itemid);
 						}
-						if (orgItem.isActive) {
+						if (activeItems.hasOwnProperty(itemid)) {
 							return true;
 						}
 					});
@@ -12213,27 +12561,23 @@ primitives.famdiagram.RemoveLoopsTask = function (itemsOptionTask, addLabelAnnot
 
 /* /Controls/FamDiagram/Templates/LabelAnnotationTemplate.js*/
 primitives.common.LabelAnnotationTemplate = function () {
-	var _template = create(),
-		_hashCode = primitives.common.hashCode(_template);
-
-	function create() {
-		var template = jQuery('<div class="bp-label-annotation"></div>');
-		template.addClass("bp-item");
-
-		return template.wrap('<div>').parent().html();
-	}
+	var _template = ["div",
+		{
+			"class": ["bp-item", "bp-label-annotation"]
+		}
+	];
 
 	function template() {
 		return _template;
 	}
 
 	function getHashCode() {
-		return _hashCode;
+		return "defaultLabelAnnotationTemplate";
 	}
 
 	function render(event, data) {
 		var itemConfig = data.context;
-		data.element.text(itemConfig.title);
+		data.element.innerHTML = itemConfig.title;
 	}
 
 	return {
@@ -12244,225 +12588,259 @@ primitives.common.LabelAnnotationTemplate = function () {
 };
 
 /* /Controls/FamDiagram/Control.js*/
-primitives.famdiagram.Control = function (element, options) {
+/*
+	Class: primitives.famdiagram.Control
+	Constructs Family Diagram Control. 
 	
-	function createTaskManager(getOptions, getGraphics, getLayout) {
-		var tasks = new primitives.common.TaskManager();
+	Parameters:
+	element - reference to DOM element which is used as new control placeholder. 
+		Control renders diagram content inside of that DIV placeholder and  adds events listeners.
+	options - reference to primitives.famdiagram.Config class instance.
 
-		// Dependencies
-		tasks.addDependency('options', getOptions);
-		tasks.addDependency('graphics', getGraphics);
-		tasks.addDependency('layout', getLayout);
+	Returns: 
+	reference to new instance of the control. Control adds event listeners bound to its contents, so if you need to remove it from DOM call destroy() method on the control's instance.
+*/
+primitives.famdiagram.Control = function (element, options) {
+	return primitives.orgdiagram.BaseControl(element, options, primitives.famdiagram.TaskManagerFactory, primitives.famdiagram.EventArgsFactory, {
+		AnnotationLabelTemplate: primitives.common.AnnotationLabelTemplate,
+		ButtonsTemplate: primitives.common.ButtonsTemplate,
+		CheckBoxTemplate: primitives.common.CheckBoxTemplate,
+		CursorTemplate: primitives.common.CursorTemplate,
+		DotHighlightTemplate: primitives.common.DotHighlightTemplate,
+		GroupTitleTemplate: primitives.common.GroupTitleTemplate,
+		HighlightTemplate: primitives.common.HighlightTemplate,
+		ItemTemplate: primitives.common.ItemTemplate,
+		UserTemplate: primitives.common.UserTemplate,
+		/* famDiagram specific templates */
+		LabelAnnotationTemplate: primitives.common.LabelAnnotationTemplate
+	});
+};
 
-		tasks.addDependency('defaultConfig', new primitives.famdiagram.Config());
-		tasks.addDependency('defaultItemConfig', new primitives.famdiagram.ItemConfig());
-		tasks.addDependency('defaultTemplateConfig', new primitives.famdiagram.TemplateConfig());
-		tasks.addDependency('defaultButtonConfig', new primitives.famdiagram.ButtonConfig());
-		tasks.addDependency('defaultPaletteItemConfig', new primitives.famdiagram.PaletteItemConfig());
+/* /Controls/FamDiagram/EventArgsFactory.js*/
+primitives.famdiagram.EventArgsFactory = function (data, oldTreeItemId, newTreeItemId, name) {
+	var result = new primitives.famdiagram.EventArgs(),
+		combinedContextsTask = data.tasks.getTask("CombinedContextsTask"),
+		alignDiagramTask = data.tasks.getTask("AlignDiagramTask"),
+		logicalFamilyTask = data.tasks.getTask("LogicalFamilyTask"),
+		oldItemConfig = combinedContextsTask.getConfig(oldTreeItemId),
+		newItemConfig = combinedContextsTask.getConfig(newTreeItemId),
+		family = logicalFamilyTask.getLogicalFamily(),
+		itemPosition,
+		offset,
+		panelOffset;
 
-		tasks.addDependency('defaultBackgroundAnnotationConfig', new primitives.famdiagram.BackgroundAnnotationConfig());
-		tasks.addDependency('defaultConnectorAnnotationConfig', new primitives.famdiagram.ConnectorAnnotationConfig());
-		tasks.addDependency('defaultHighlightPathAnnotationConfig', new primitives.famdiagram.HighlightPathAnnotationConfig());
-		tasks.addDependency('defaultShapeAnnotationConfig', new primitives.famdiagram.ShapeAnnotationConfig());
-		tasks.addDependency('defaultLabelAnnotationConfig', new primitives.famdiagram.LabelAnnotationConfig());
+	if (oldItemConfig && oldItemConfig.id != null) {
+		result.oldContext = oldItemConfig;
+	}
 
-		tasks.addDependency('isFamilyChartMode', true);/* in regular org diagram we hide branch if it contains only invisible nodes, 
+	if (newItemConfig && newItemConfig.id != null) {
+		result.context = newItemConfig;
+
+		family.loopParents(this, newItemConfig.id, function (itemid, item, levelIndex) {
+			if (levelIndex > 0) {
+				return family.BREAK;
+			}
+			result.parentItems.push(combinedContextsTask.getConfig(itemid));
+		});
+
+		family.loopChildren(this, newItemConfig.id, function (itemid, item, levelIndex) {
+			if (levelIndex > 0) {
+				return family.BREAK;
+			}
+			result.childrenItems.push(combinedContextsTask.getConfig(itemid));
+		});
+
+		panelOffset = primitives.common.getElementOffset(data.layout.mousePanel);
+		offset = primitives.common.getElementOffset(data.layout.element);
+		itemPosition = alignDiagramTask.getItemPosition(newTreeItemId);
+		result.position = new primitives.common.Rect(itemPosition.actualPosition)
+				.translate(panelOffset.left, panelOffset.top)
+				.translate(-offset.left, -offset.top);
+	}
+
+	if (name != null) {
+		result.name = name;
+	}
+
+	return result;
+};
+
+/* /Controls/FamDiagram/getProcessDiagramConfig.js*/
+primitives.famdiagram.getProcessDiagramConfig = function () {
+	var dummyFunction = function () { };
+	var tasks = primitives.famdiagram.TaskManagerFactory(dummyFunction, dummyFunction, dummyFunction);
+	return tasks.getProcessDiagramConfig();
+};
+
+/* /Controls/FamDiagram/TaskManagerFactory.js*/
+primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, getLayout, templates) {
+	var tasks = new primitives.common.TaskManager();
+
+	// Dependencies
+	tasks.addDependency('options', getOptions);
+	tasks.addDependency('graphics', getGraphics);
+	tasks.addDependency('layout', getLayout);
+	tasks.addDependency('templates', templates);
+
+	tasks.addDependency('defaultConfig', new primitives.famdiagram.Config());
+	tasks.addDependency('defaultItemConfig', new primitives.famdiagram.ItemConfig());
+	tasks.addDependency('defaultTemplateConfig', new primitives.famdiagram.TemplateConfig());
+	tasks.addDependency('defaultButtonConfig', new primitives.famdiagram.ButtonConfig());
+	tasks.addDependency('defaultPaletteItemConfig', new primitives.famdiagram.PaletteItemConfig());
+
+	tasks.addDependency('defaultBackgroundAnnotationConfig', new primitives.famdiagram.BackgroundAnnotationConfig());
+	tasks.addDependency('defaultConnectorAnnotationConfig', new primitives.famdiagram.ConnectorAnnotationConfig());
+	tasks.addDependency('defaultHighlightPathAnnotationConfig', new primitives.famdiagram.HighlightPathAnnotationConfig());
+	tasks.addDependency('defaultShapeAnnotationConfig', new primitives.famdiagram.ShapeAnnotationConfig());
+	tasks.addDependency('defaultLabelAnnotationConfig', new primitives.famdiagram.LabelAnnotationConfig());
+
+	tasks.addDependency('isFamilyChartMode', true);/* in regular org diagram we hide branch if it contains only invisible nodes, 
 		in the family chart we use invisible items to draw connectors across multiple levels */
-		tasks.addDependency('showElbowDots', true);/* in regular org chart we don;t have situations when connector lines cross, but we have such situations in 
+	tasks.addDependency('showElbowDots', true);/* in regular org chart we don;t have situations when connector lines cross, but we have such situations in 
 		family tree so we need extra visual attribute to distinguish intersections betwen connectors */
-		tasks.addDependency('null', null);
-		tasks.addDependency('foreground', 2/*primitives.common.ZOrderType.Foreground*/);
-		tasks.addDependency('background', 1/*primitives.common.ZOrderType.Background*/);
+	tasks.addDependency('null', null);
+	tasks.addDependency('foreground', 2/*primitives.common.ZOrderType.Foreground*/);
+	tasks.addDependency('background', 1/*primitives.common.ZOrderType.Background*/);
 
-		// Options
-		tasks.addTask('OptionsTask', ['options'], primitives.famdiagram.OptionsTask, "#000000"/*primitives.common.Colors.Black*/);
+	// Options
+	tasks.addTask('OptionsTask', ['options'], primitives.famdiagram.OptionsTask, "#000000"/*primitives.common.Colors.Black*/);
 
-		// Layout
-		tasks.addTask('CurrentControlSizeTask', ['layout', 'OptionsTask', 'ItemsSizesOptionTask'], primitives.orgdiagram.CurrentControlSizeTask, "#000000"/*primitives.common.Colors.Black*/);
-		tasks.addTask('CurrentScrollPositionTask', ['layout', 'OptionsTask'], primitives.orgdiagram.CurrentScrollPositionTask, "#000000"/*primitives.common.Colors.Black*/);
+	// Layout
+	tasks.addTask('CurrentControlSizeTask', ['layout', 'OptionsTask', 'ItemsSizesOptionTask'], primitives.orgdiagram.CurrentControlSizeTask, "#000000"/*primitives.common.Colors.Black*/);
+	tasks.addTask('CurrentScrollPositionTask', ['layout', 'OptionsTask'], primitives.orgdiagram.CurrentScrollPositionTask, "#000000"/*primitives.common.Colors.Black*/);
 
-		tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.ItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('SpousesOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.SpousesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig', 'defaultButtonConfig'], primitives.orgdiagram.ItemsSizesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.LabelsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultButtonConfig', 'defaultTemplateConfig'], primitives.orgdiagram.TemplatesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.OrientationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('VisualTreeOptionTask', ['OptionsTask'], primitives.famdiagram.VisualTreeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('MinimizedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.MinimizedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('NormalizeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.famdiagram.NormalizeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('LinePaletteOptionTask', ['OptionsTask', 'defaultPaletteItemConfig'], primitives.famdiagram.LinePaletteOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.ItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('SpousesOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.SpousesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig', 'defaultButtonConfig'], primitives.orgdiagram.ItemsSizesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.LabelsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultButtonConfig', 'defaultTemplateConfig'], primitives.orgdiagram.TemplatesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.OrientationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('VisualTreeOptionTask', ['OptionsTask'], primitives.famdiagram.VisualTreeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('MinimizedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.MinimizedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('NormalizeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.famdiagram.NormalizeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('LinePaletteOptionTask', ['OptionsTask', 'defaultPaletteItemConfig'], primitives.famdiagram.LinePaletteOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-		tasks.addTask('CursorItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('HighlightItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.HighlightItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('SelectedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.SelectedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('CursorSelectionPathModeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorSelectionPathModeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('NeighboursSelectionModeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.famdiagram.NeighboursSelectionModeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('CursorItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('HighlightItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.HighlightItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('SelectedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.SelectedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('CursorSelectionPathModeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorSelectionPathModeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('NeighboursSelectionModeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.famdiagram.NeighboursSelectionModeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-		tasks.addTask('SplitAnnotationsOptionTask', ['OptionsTask'], primitives.orgdiagram.SplitAnnotationsOptionTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('SplitAnnotationsOptionTask', ['OptionsTask'], primitives.orgdiagram.SplitAnnotationsOptionTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('ForegroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'foreground'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'background'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ForegroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'foreground'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'background'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], primitives.orgdiagram.BackgroundAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('ForegroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'foreground'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('BackgroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'background'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('ForegroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'foreground'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('BackgroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'background'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], primitives.orgdiagram.BackgroundAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-		tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ScaleOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ScaleOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-		// Transformations
-		tasks.addTask('LogicalFamilyTask', ['ItemsOptionTask'], primitives.famdiagram.LogicalFamilyTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	// Transformations
+	tasks.addTask('LogicalFamilyTask', ['ItemsOptionTask'], primitives.famdiagram.LogicalFamilyTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('LabelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'LogicalFamilyTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('LabelAnnotationTemplateOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationTemplateOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('LabelAnnotationPlacementOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationPlacementOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('LabelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'LogicalFamilyTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('LabelAnnotationTemplateOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationTemplateOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('LabelAnnotationPlacementOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationPlacementOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-		tasks.addTask('CombinedContextsTask', ['ItemsOptionTask', 'LabelAnnotationOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('CombinedContextsTask', ['ItemsOptionTask', 'LabelAnnotationOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('AddLabelAnnotationsTask', ['LabelAnnotationPlacementOptionTask', 'LogicalFamilyTask'], primitives.famdiagram.AddLabelAnnotationsTask, "#ff0000"/*primitives.common.Colors.Red*/);
-		tasks.addTask('RemoveLoopsTask', ['ItemsOptionTask', 'AddLabelAnnotationsTask'], primitives.famdiagram.RemoveLoopsTask, "#ff0000"/*primitives.common.Colors.Red*/);
-		tasks.addTask('AddSpousesTask', ['SpousesOptionTask', 'RemoveLoopsTask'], primitives.famdiagram.AddSpousesTask, "#ff0000"/*primitives.common.Colors.Red*/);
-		tasks.addTask('NormalizeLogicalFamilyTask', ['NormalizeOptionTask', 'AddSpousesTask', 'defaultItemConfig'], primitives.famdiagram.NormalizeLogicalFamilyTask, "#ff0000"/*primitives.common.Colors.Red*/);
+	tasks.addTask('AddLabelAnnotationsTask', ['LabelAnnotationPlacementOptionTask', 'LogicalFamilyTask'], primitives.famdiagram.AddLabelAnnotationsTask, "#ff0000"/*primitives.common.Colors.Red*/);
+	tasks.addTask('RemoveLoopsTask', ['ItemsOptionTask', 'AddLabelAnnotationsTask'], primitives.famdiagram.RemoveLoopsTask, "#ff0000"/*primitives.common.Colors.Red*/);
+	tasks.addTask('AddSpousesTask', ['SpousesOptionTask', 'RemoveLoopsTask'], primitives.famdiagram.AddSpousesTask, "#ff0000"/*primitives.common.Colors.Red*/);
+	tasks.addTask('NormalizeLogicalFamilyTask', ['NormalizeOptionTask', 'AddSpousesTask', 'defaultItemConfig'], primitives.famdiagram.NormalizeLogicalFamilyTask, "#ff0000"/*primitives.common.Colors.Red*/);
 
-		// Transformations / Templates
-		tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask'], primitives.orgdiagram.ReadTemplatesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('ActiveItemsTask', ['ItemsSizesOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ActiveItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ItemTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('LabelAnnotationTemplateParamsTask', ['ItemsSizesOptionTask', 'LabelAnnotationTemplateOptionTask', 'ReadTemplatesTask'], primitives.famdiagram.LabelAnnotationTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('CombinedTemplateParamsTask', ['ItemTemplateParamsTask', 'LabelAnnotationTemplateParamsTask'], primitives.famdiagram.CombinedTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	// Transformations / Templates
+	tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask'], primitives.orgdiagram.ReadTemplatesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('ActiveItemsTask', ['ItemsSizesOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ActiveItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ItemTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('LabelAnnotationTemplateParamsTask', ['ItemsSizesOptionTask', 'LabelAnnotationTemplateOptionTask', 'ReadTemplatesTask'], primitives.famdiagram.LabelAnnotationTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('CombinedTemplateParamsTask', ['ItemTemplateParamsTask', 'LabelAnnotationTemplateParamsTask'], primitives.famdiagram.CombinedTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask'], primitives.orgdiagram.GroupTitleTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask'], primitives.orgdiagram.CheckBoxTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask'], primitives.orgdiagram.ButtonsTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask'], primitives.orgdiagram.AnnotationLabelTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask'], primitives.orgdiagram.GroupTitleTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask'], primitives.orgdiagram.CheckBoxTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask', 'templates'], primitives.orgdiagram.ButtonsTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask'], primitives.orgdiagram.AnnotationLabelTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'NormalizeLogicalFamilyTask', 'AlignDiagramTask'], primitives.orgdiagram.ConnectionsGraphTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'NormalizeLogicalFamilyTask', 'AlignDiagramTask'], primitives.orgdiagram.ConnectionsGraphTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		// Transformations/Selections
-		tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.HighlightItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	// Transformations/Selections
+	tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.HighlightItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'NeighboursSelectionModeOptionTask', 'AddLabelAnnotationsTask'], primitives.famdiagram.CursorNeighboursTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('SelectionPathItemsTask', ['AddLabelAnnotationsTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], primitives.orgdiagram.SelectionPathItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'NeighboursSelectionModeOptionTask', 'AddLabelAnnotationsTask', 'ActiveItemsTask'], primitives.famdiagram.CursorNeighboursTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('SelectionPathItemsTask', ['AddLabelAnnotationsTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], primitives.orgdiagram.SelectionPathItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('NormalVisibilityItemsByBackgroundShapeAnnotationTask', ['BackgroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('NormalVisibilityItemsByBackgroundAnnotationTask', ['BackgroundAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('NormalVisibilityItemsByForegroundHighlightPathAnnotationTask', ['ForegroundHighlightPathAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', ['BackgroundHighlightPathAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('NormalVisibilityItemsByForegroundConnectorAnnotationTask', ['ForegroundConnectorAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByConnectorAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('NormalVisibilityItemsByBackgroundConnectorAnnotationTask', ['BackgroundConnectorAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByConnectorAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('CombinedNormalVisibilityItemsTask', [
-			'ItemsSizesOptionTask',
-			'CursorItemTask',
-			'CursorNeighboursTask',
-			'SelectedItemsTask',
-			'SelectionPathItemsTask',
-			'NormalVisibilityItemsByForegroundShapeAnnotationTask',
-			'NormalVisibilityItemsByBackgroundShapeAnnotationTask',
-			'NormalVisibilityItemsByBackgroundAnnotationTask',
-			'NormalVisibilityItemsByForegroundHighlightPathAnnotationTask',
-			'NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask',
-			'NormalVisibilityItemsByForegroundConnectorAnnotationTask',
-			'NormalVisibilityItemsByBackgroundConnectorAnnotationTask'], primitives.orgdiagram.CombinedNormalVisibilityItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('NormalVisibilityItemsByBackgroundShapeAnnotationTask', ['BackgroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('NormalVisibilityItemsByBackgroundAnnotationTask', ['BackgroundAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('NormalVisibilityItemsByForegroundHighlightPathAnnotationTask', ['ForegroundHighlightPathAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', ['BackgroundHighlightPathAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('NormalVisibilityItemsByForegroundConnectorAnnotationTask', ['ForegroundConnectorAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByConnectorAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('NormalVisibilityItemsByBackgroundConnectorAnnotationTask', ['BackgroundConnectorAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByConnectorAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('CombinedNormalVisibilityItemsTask', [
+		'ItemsSizesOptionTask',
+		'CursorItemTask',
+		'CursorNeighboursTask',
+		'SelectedItemsTask',
+		'SelectionPathItemsTask',
+		'NormalVisibilityItemsByForegroundShapeAnnotationTask',
+		'NormalVisibilityItemsByBackgroundShapeAnnotationTask',
+		'NormalVisibilityItemsByBackgroundAnnotationTask',
+		'NormalVisibilityItemsByForegroundHighlightPathAnnotationTask',
+		'NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask',
+		'NormalVisibilityItemsByForegroundConnectorAnnotationTask',
+		'NormalVisibilityItemsByBackgroundConnectorAnnotationTask'], primitives.orgdiagram.CombinedNormalVisibilityItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask',
-			'NormalizeOptionTask', 'NormalizeLogicalFamilyTask',
-			'CombinedTemplateParamsTask',
-			'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], primitives.famdiagram.ItemsPositionsTask, "#ff0000"/*primitives.common.Colors.Red*/);
-		
-		tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], primitives.orgdiagram.AlignDiagramTask, "#ff0000"/*primitives.common.Colors.Red*/);
-		tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.CreateTransformTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('CenterOnCursorTask', ['layout', 'CurrentControlSizeTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], primitives.orgdiagram.CenterOnCursorTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask',
+		'NormalizeOptionTask', 'NormalizeLogicalFamilyTask',
+		'CombinedTemplateParamsTask',
+		'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], primitives.famdiagram.ItemsPositionsTask, "#ff0000"/*primitives.common.Colors.Red*/);
 
-		// Managers
-		tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'LinePaletteOptionTask'], primitives.orgdiagram.PaletteManagerTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], primitives.orgdiagram.AlignDiagramTask, "#ff0000"/*primitives.common.Colors.Red*/);
+	tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.CreateTransformTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('CenterOnCursorTask', ['layout', 'CurrentControlSizeTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], primitives.orgdiagram.CenterOnCursorTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		// Apply Layout Changes
-		tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'layout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.ApplyLayoutChangesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	// Managers
+	tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'LinePaletteOptionTask'], primitives.orgdiagram.PaletteManagerTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		// Renders
-		tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	// Apply Layout Changes
+	tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'layout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.ApplyLayoutChangesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'AddLabelAnnotationsTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawBackgroundAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+	// Renders
+	tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawCursorTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawHighlightAnnotationTask', ['layout', 'graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'AddLabelAnnotationsTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawBackgroundAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
 
-		tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask',
-			'ItemsSizesOptionTask',
-			'CombinedContextsTask',
-			'AlignDiagramTask', 'CombinedTemplateParamsTask',
-			'CursorItemTask', 'SelectedItemsTask',
-			'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask'
-		], primitives.orgdiagram.DrawTreeItemsTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawCursorTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawHighlightAnnotationTask', ['layout', 'graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
 
-		tasks.addTask('DrawMinimizedItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'MinimizedItemsOptionTask', 'CombinedTemplateParamsTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawMinimizedItemsTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask',
+		'ItemsSizesOptionTask',
+		'CombinedContextsTask',
+		'AlignDiagramTask', 'CenterOnCursorTask',
+		'CombinedTemplateParamsTask',
+		'CursorItemTask', 'SelectedItemsTask',
+		'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask'
+	], primitives.orgdiagram.DrawTreeItemsTask, "#008000"/*primitives.common.Colors.Green*/);
 
-		tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask'], primitives.orgdiagram.DrawConnectorsTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawItemLabelsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LabelsOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawItemLabelsTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawMinimizedItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'MinimizedItemsOptionTask', 'CombinedTemplateParamsTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawMinimizedItemsTask, "#008000"/*primitives.common.Colors.Green*/);
 
-		return tasks;
-	}
+	tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask'], primitives.orgdiagram.DrawConnectorsTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawItemLabelsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LabelsOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawItemLabelsTask, "#008000"/*primitives.common.Colors.Green*/);
 
-	function createEventArgs(data, oldTreeItemId, newTreeItemId, name) {
-		var result = new primitives.famdiagram.EventArgs(),
-			combinedContextsTask = data.tasks.getTask("CombinedContextsTask"),
-			alignDiagramTask = data.tasks.getTask("AlignDiagramTask"),
-			logicalFamilyTask = data.tasks.getTask("LogicalFamilyTask"),
-			oldItemConfig = combinedContextsTask.getConfig(oldTreeItemId),
-			newItemConfig = combinedContextsTask.getConfig(newTreeItemId),
-			family = logicalFamilyTask.getLogicalFamily(),
-			itemPosition,
-			offset,
-			panelOffset;
-
-		if (oldItemConfig && oldItemConfig.id != null) {
-			result.oldContext = oldItemConfig;
-		}
-
-		if (newItemConfig && newItemConfig.id != null) {
-			result.context = newItemConfig;
-
-			family.loopParents(this, newItemConfig.id, function (itemid, item, levelIndex) {
-				if (levelIndex > 0) {
-					return family.BREAK;
-				}
-				result.parentItems.push(combinedContextsTask.getConfig(itemid));
-			});
-
-			family.loopChildren(this, newItemConfig.id, function (itemid, item, levelIndex) {
-				if (levelIndex > 0) {
-					return family.BREAK;
-				}
-				result.childrenItems.push(combinedContextsTask.getConfig(itemid));
-			});
-
-			panelOffset = data.layout.mousePanel.offset();
-			offset = data.layout.element.offset();
-			itemPosition = alignDiagramTask.getItemPosition(newTreeItemId);
-			result.position = new primitives.common.Rect(itemPosition.actualPosition)
-					.translate(panelOffset.left, panelOffset.top)
-					.translate(-offset.left, -offset.top);
-		}
-
-		if (name != null) {
-			result.name = name;
-		}
-
-		return result;
-	}
-
-	return primitives.orgdiagram.BaseControl(element, options, createTaskManager, createEventArgs);
+	return tasks;
 };
 
 /* /Controls/OrgDiagram/Configs/TemplateConfig.js*/
@@ -14575,7 +14953,8 @@ primitives.orgdiagram.EventArgs = function () {
 
 /* /Controls/OrgDiagram/Models/ConnectorBundles/BaseConnectorBundle.js*/
 primitives.common.BaseConnectorBundle = function () {
-
+	this.NORMAL_ITEM_WEIGHT = 10010;
+	this.LINE_ITEM_WEIGHT = 10000;
 };
 
 
@@ -14751,7 +15130,7 @@ primitives.common.BaseConnectorBundle.prototype.traceFork = function (data, para
 			data.graph.addEdge(bundleid, connectorPoint.id, new this.ConnectorEdge(bundleid, connectorPoint.id, polyline,
 				isParents && isVisible ? connectorPoint.id : null,
 				!isParents && isVisible ? connectorPoint.id : null, null,
-				isVisible ? 1000.0 : 10 /* weight*/, fromOffset));
+				isVisible ? this.NORMAL_ITEM_WEIGHT : this.LINE_ITEM_WEIGHT /* weight*/, fromOffset));
 		}
 
 		/* draw segments on the right of parent point */
@@ -14861,7 +15240,7 @@ primitives.common.BaseConnectorBundle.prototype.traceAngularSegments = function 
 				break;
 		}
 		var isVisible = (point.visibility !== 4/*primitives.common.Visibility.Invisible*/);
-		data.graph.addEdge(bundlePoint.id, point.id, new this.ConnectorEdge(bundlePoint.id, point.id, polyline, null, isVisible ? point.id : null, isVisible ? 1000.0 : 10));
+		data.graph.addEdge(bundlePoint.id, point.id, new this.ConnectorEdge(bundlePoint.id, point.id, polyline, null, isVisible ? point.id : null, isVisible ? this.NORMAL_ITEM_WEIGHT : this.LINE_ITEM_WEIGHT));
 	}
 };
 
@@ -14896,7 +15275,7 @@ primitives.common.HorizontalConnectorBundle.prototype.trace = function (data, pa
 	var toItemIsVisible = toItemPosition.actualVisibility !== 4/*primitives.common.Visibility.Invisible*/;
 	var fromItemIsVisible = fromItemPosition.actualVisibility !== 4/*primitives.common.Visibility.Invisible*/;
 	data.graph.addEdge(fromItemId, toItemId, new this.ConnectorEdge(fromItemId, toItemId, polyline,
-		toItemIsVisible ? toItemId : null, fromItemIsVisible ? fromItemId : null, (toItemIsVisible || fromItemIsVisible) ? 1000.0 : 10));
+		toItemIsVisible ? toItemId : null, fromItemIsVisible ? fromItemId : null, (toItemIsVisible || fromItemIsVisible) ? this.NORMAL_ITEM_WEIGHT : this.LINE_ITEM_WEIGHT));
 };
 
 /* /Controls/OrgDiagram/Models/ConnectorBundles/MatrixConnectorBundle.js*/
@@ -15748,11 +16127,11 @@ primitives.orgdiagram.ApplyLayoutChangesTask = function (getGraphics, getLayout,
 		/* set size of panel with content */
 		var mousePanelSize = new primitives.common.Size(alignDiagramTask.getContentSize());
 		mousePanelSize.scale(1 * scale);
-		layout.mousePanel.css(mousePanelSize.getCSS());
+		primitives.common.JsonML.applyStyles(layout.mousePanel, mousePanelSize.getCSS());
 
 		/* set size of panel with content */
 		var panelSize = new primitives.common.Size(alignDiagramTask.getContentSize());
-		layout.placeholder.css(panelSize.getCSS());
+		primitives.common.JsonML.applyStyles(layout.placeholder, panelSize.getCSS());
 		graphics.resize("placeholder", panelSize.width, panelSize.height);
 
 		/* resize element to fit placeholder if control in autosize mode */
@@ -15761,10 +16140,7 @@ primitives.orgdiagram.ApplyLayoutChangesTask = function (getGraphics, getLayout,
 				_data.scrollPanelSize = new primitives.common.Size(mousePanelSize.width + 25, mousePanelSize.height + 25);
 				_data.scrollPanelSize.cropBySize(_itemsSizesOptions.autoSizeMaximum);
 				_data.scrollPanelSize.addSize(_itemsSizesOptions.autoSizeMinimum);//ignore jslint
-				layout.element.css({
-					"width": _data.scrollPanelSize.width + "px",
-					"height": _data.scrollPanelSize.height + "px"
-				});
+				primitives.common.JsonML.applyStyles(layout.element, _data.scrollPanelSize.getCSS());
 				break;
 			default:
 				_data.scrollPanelSize = new primitives.common.Size(currentControlSizeTask.getScrollPanelSize());
@@ -15772,24 +16148,23 @@ primitives.orgdiagram.ApplyLayoutChangesTask = function (getGraphics, getLayout,
 		}
 
 		/* set scroll of content */
-		/* pixel alignment of scroll panel */
-		var position = layout.element.offset();
+		var pixelAlignmentFix = primitives.common.getFixOfPixelALignment(layout.element);
 
-		layout.scrollPanel.css({
+		primitives.common.JsonML.applyStyles(layout.scrollPanel, {
 			"top": "0px",
 			"left": "0px",
 			"width": _data.scrollPanelSize.width + "px",
 			"height": _data.scrollPanelSize.height + "px",
-			"margin-bottom": "0px",
-			"margin-right": "0px",
-			"margin-top": (-position.top + Math.floor(position.top)) + "px",
-			"margin-left": (-position.left + Math.floor(position.left)) + "px"
+			"marginBottom": "0px",
+			"marginRight": "0px",
+			"marginLeft": pixelAlignmentFix.width + "px", /* fixes div pixel alignment */
+			"marginTop": pixelAlignmentFix.height + "px"
 		});
 
 		/* set CSS scale of content */
 		var scaletext = "scale(" + scale + "," + scale + ")";
 
-		layout.placeholder.css({
+		primitives.common.JsonML.applyStyles(layout.placeholder, {
 			"transform-origin": "0 0",
 			"transform": scaletext,
 			"-ms-transform": scaletext, /* IE 9 */
@@ -15934,7 +16309,7 @@ primitives.orgdiagram.CurrentControlSizeTask = function (getLayout, optionsTask,
 		},
 		layout = getLayout(),
 		currentLayout = {
-			scrollPanelSize: new primitives.common.Size(layout.element.outerWidth(), layout.element.outerHeight())
+			scrollPanelSize: primitives.common.getInnerSize(layout.element)
 		},
 		result = false,
 		options = itemsSizesOptionTask.getOptions();
@@ -15945,6 +16320,7 @@ primitives.orgdiagram.CurrentControlSizeTask = function (getLayout, optionsTask,
 			case 1/*primitives.common.PageFitMode.PageWidth*/:
 			case 2/*primitives.common.PageFitMode.PageHeight*/:
 			case 3/*primitives.common.PageFitMode.FitToPage*/:
+			case 0/*primitives.common.PageFitMode.None*/:
 				result = context.isChanged;
 				break;
 			default:
@@ -15990,7 +16366,7 @@ primitives.orgdiagram.CurrentScrollPositionTask = function (getLayout, optionsTa
 		},
 		layout = getLayout(),
 		currentLayout = {
-			placeholderOffset: new primitives.common.Point(layout.scrollPanel.scrollLeft(), layout.scrollPanel.scrollTop())
+			placeholderOffset: new primitives.common.Point(layout.scrollPanel.scrollLeft, layout.scrollPanel.scrollTop)
 		};
 		_data = _dataTemplate.read(_data, currentLayout, "layout", context);
 
@@ -16081,7 +16457,7 @@ primitives.orgdiagram.ConnectorAnnotationOptionTask = function (splitAnnotations
 				color: new primitives.common.ValueReader(["string"], false, defaultConnectorAnnotationConfig.color),
 				lineType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultConnectorAnnotationConfig.lineType),
 				selectItems: new primitives.common.ValueReader(["boolean"], false, defaultConnectorAnnotationConfig.selectItems),
-				label: new primitives.common.ValueReader(["string"], false, defaultConnectorAnnotationConfig.label),
+				label: new primitives.common.ValueReader(["string", "object"], false, defaultConnectorAnnotationConfig.label),
 				labelSize: new primitives.common.ObjectReader({
 					width: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.labelSize.width),
 					height: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.labelSize.height)
@@ -16182,7 +16558,7 @@ primitives.orgdiagram.ShapeAnnotationOptionTask = function (splitAnnotationsOpti
 				fillColor: new primitives.common.ValueReader(["string"], false, defaultShapeAnnotationConfig.fillColor),
 				lineType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultShapeAnnotationConfig.lineType),
 				selectItems: new primitives.common.ValueReader(["boolean"], false, defaultShapeAnnotationConfig.selectItems),
-				label: new primitives.common.ValueReader(["string"], false, defaultShapeAnnotationConfig.label),
+				label: new primitives.common.ValueReader(["string", "object"], false, defaultShapeAnnotationConfig.label),
 				labelSize: new primitives.common.ObjectReader({
 					width: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.labelSize.width),
 					height: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.labelSize.height)
@@ -16912,7 +17288,7 @@ primitives.orgdiagram.TemplatesOptionTask = function (optionsTask, defaultConfig
 						height: new primitives.common.ValueReader(["number"], false, defaultTemplateConfig.itemSize.height)
 					}, false, defaultTemplateConfig.itemSize),
 					itemBorderWidth: new primitives.common.ValueReader(["number"], false, defaultTemplateConfig.itemBorderWidth),
-					itemTemplate: new primitives.common.ValueReader(["string"], true),
+					itemTemplate: new primitives.common.ValueReader(["string", "object"], true),
 					minimizedItemShapeType: new primitives.common.EnumerationReader(primitives.common.ShapeType, true),
 					minimizedItemSize: new primitives.common.ObjectReader({
 						width: new primitives.common.ValueReader(["number"], false, defaultTemplateConfig.minimizedItemSize.width),
@@ -16931,7 +17307,7 @@ primitives.orgdiagram.TemplatesOptionTask = function (optionsTask, defaultConfig
 						bottom: new primitives.common.ValueReader(["number"], false, defaultTemplateConfig.highlightPadding.bottom)
 					}, false, defaultTemplateConfig.highlightPadding),
 					highlightBorderWidth: new primitives.common.ValueReader(["number"], false, defaultTemplateConfig.highlightBorderWidth),
-					highlightTemplate: new primitives.common.ValueReader(["string"], true),
+					highlightTemplate: new primitives.common.ValueReader(["string", "object"], true),
 					cursorPadding: new primitives.common.ObjectReader({
 						left: new primitives.common.ValueReader(["number"], false, defaultTemplateConfig.cursorPadding.left),
 						top: new primitives.common.ValueReader(["number"], false, defaultTemplateConfig.cursorPadding.top),
@@ -16939,7 +17315,7 @@ primitives.orgdiagram.TemplatesOptionTask = function (optionsTask, defaultConfig
 						bottom: new primitives.common.ValueReader(["number"], false, defaultTemplateConfig.cursorPadding.bottom)
 					}, false, defaultTemplateConfig.cursorPadding),
 					cursorBorderWidth: new primitives.common.ValueReader(["number"], false, defaultTemplateConfig.cursorBorderWidth),
-					cursorTemplate: new primitives.common.ValueReader(["string"], true),
+					cursorTemplate: new primitives.common.ValueReader(["string", "object"], true),
 					buttons: new primitives.common.ArrayReader(new primitives.common.ObjectReader({
 						name: new primitives.common.ValueReader(["string"], true),
 						icon: new primitives.common.ValueReader(["string"], true),
@@ -17496,7 +17872,7 @@ primitives.orgdiagram.DrawCursorTask = function (getGraphics, createTranfromTask
 					, template.cursorTemplate.getHashCode()
 					, template.cursorTemplate.render
 					, uiHash
-					, { "border-width": templateConfig.cursorBorderWidth }
+					, { "borderWidth": templateConfig.cursorBorderWidth }
 					);
 			});
 	}
@@ -17575,9 +17951,9 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getLayout, getGrap
 						this, function (x, y, width, height) {
 							var snapRect = new primitives.common.Rect(x, y, width, height),
 								snapPoint = new primitives.common.Point(snapRect.horizontalCenter(), snapRect.verticalCenter()),
-								panelPosition = getPanelPosition();
+								viewPortPosition = getViewPortPosition();
 
-							if ((treeItemPosition.actualVisibility >= _options.calloutMaximumVisibility && treeItemPosition.actualVisibility != 4/*primitives.common.Visibility.Invisible*/) || !panelPosition.overlaps(snapRect)) {
+							if ((treeItemPosition.actualVisibility >= _options.calloutMaximumVisibility && treeItemPosition.actualVisibility != 4/*primitives.common.Visibility.Invisible*/) || !viewPortPosition.overlaps(snapRect)) {
 
 								calloutTemplateName = !primitives.common.isNullOrEmpty(itemConfig.calloutTemplateName) ? itemConfig.calloutTemplateName :
 									!primitives.common.isNullOrEmpty(itemConfig.templateName) ? itemConfig.templateName :
@@ -17586,7 +17962,7 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getLayout, getGrap
 
 								calloutTemplate = readTemplatesTask.getTemplate(calloutTemplateName, readTemplatesTask.DefaultWidgetTemplateName);
 
-								position = getAnnotationPosition(snapPoint, panelPosition, calloutTemplate.templateConfig.itemSize);
+								position = getAnnotationPosition(snapPoint, viewPortPosition, calloutTemplate.templateConfig.itemSize);
 
 								/* position callout div placeholder */
 								calloutPanelPosition = new primitives.common.Rect(position);
@@ -17595,7 +17971,7 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getLayout, getGrap
 								style = calloutPanelPosition.getCSS();
 								style.display = "inherit";
 								style.visibility = "inherit";
-								_layout.calloutPlaceholder.css(style);
+								primitives.common.JsonML.applyStyles(_layout.calloutPlaceholder, style);
 
 								/* recalculate geometries */
 								snapPoint.x -= calloutPanelPosition.x;
@@ -17637,33 +18013,37 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getLayout, getGrap
 								_calloutShape.fillColor = _options.calloutfillColor;
 								_calloutShape.draw(snapPoint, position);
 							} else {
-								_layout.calloutPlaceholder.css({ "display": "none", "visibility": "hidden" });
+								hideHighlightAnnotation();
 							}
 						}
 					);
 				} else {
-					_layout.calloutPlaceholder.css({ "display": "none", "visibility": "hidden" });
+					hideHighlightAnnotation();
 				}
 				break;
 			case 4/*primitives.common.Visibility.Invisible*/:
-				_layout.calloutPlaceholder.css({ "display": "none", "visibility": "hidden" });
+				hideHighlightAnnotation();
 				break;
 		}
 	}
 
 	function hideHighlightAnnotation() {
-		_layout.calloutPlaceholder.css({ "display": "none", "visibility": "hidden" });
+		primitives.common.JsonML.applyStyles(_layout.calloutPlaceholder, {
+			"display": "none",
+			"visibility": "hidden"
+		});
 	}
 
-	function getPanelPosition() {
+	function getViewPortPosition() {
 		var scaleOptions = scaleOptionTask.getOptions(),
 			scale = scaleOptions.scale,
 			placeholderOffset = new primitives.common.Point(centerOnCursorTask.getPlaceholderOffset()),
-			panelSize = alignDiagramTask.getContentSize(),
+			panelSize = new primitives.common.Rect(alignDiagramTask.getContentSize()),
 			optimalPanelSize = applyLayoutChangesTask.getOptimalPanelSize();
 
 		placeholderOffset.scale(1.0 / scale);
 		optimalPanelSize.scale(1.0 / scale);
+		panelSize.scale(1.0 / scale);
 
 		return new primitives.common.Rect(
 							placeholderOffset.x,
@@ -18074,11 +18454,11 @@ primitives.orgdiagram.DrawItemLabelsTask = function (getGraphics, createTranfrom
 		/* Draw labels */
 		params.graphics.activate("placeholder", 10/*primitives.common.Layers.Label*/);
 		var attr = {
-			"font-size": options.labelFontSize,
-			"font-family": options.labelFontFamily,
-			"font-style": options.labelFontStyle,
-			"font-weight": options.labelFontWeight,
-			"font-color": options.labelColor
+			"fontSize": options.labelFontSize,
+			"fontFamily": options.labelFontFamily,
+			"fontStyle": options.labelFontStyle,
+			"fontWeight": options.labelFontWeight,
+			"fontColor": options.labelColor
 		};
 
 		for (var index = 0, len = labels.length; index < len; index += 1) {
@@ -18588,10 +18968,11 @@ primitives.orgdiagram.DrawShapeAnnotationTask = function (getGraphics, createTra
 };
 
 /* /Controls/OrgDiagram/Tasks/Renders/DrawTreeItemsTask.js*/
-primitives.orgdiagram.DrawTreeItemsTask = function (getGraphics, createTranfromTask, applyLayoutChangesTask,
+primitives.orgdiagram.DrawTreeItemsTask = function (getGraphics, createTranfromTask, applyLayoutChangesTask, scaleOptionTask,
 		itemsSizesOptionTask,
 		combinedContextsTask,
-		alignDiagramTask, itemTemplateParamsTask,
+		alignDiagramTask, centerOnCursorTask,
+		itemTemplateParamsTask,
 		cursorItemTask, selectedItemsTask,
 		groupTitleTemplateTask, checkBoxTemplateTask, buttonsTemplateTask) {
 
@@ -18634,7 +19015,8 @@ primitives.orgdiagram.DrawTreeItemsTask = function (getGraphics, createTranfromT
 			itemFillColor,
 			cursorItemId = cursorItemTask.getCursorTreeItem(),
 			treeItemPosition,
-			actualPosition;
+			actualPosition,
+			viewPortPosition = getViewPortPosition();
 
 		for (var treeItemId in _positions) {
 			if (_positions.hasOwnProperty(treeItemId)) {
@@ -18643,111 +19025,138 @@ primitives.orgdiagram.DrawTreeItemsTask = function (getGraphics, createTranfromT
 				if (treeItemPosition.actualVisibility == 1/*primitives.common.Visibility.Normal*/) {
 					_transform.transformRect(actualPosition.x, actualPosition.y, actualPosition.width, actualPosition.height, true,
 						this, function (x, y, width, height) {
-							var templateParams = itemTemplateParamsTask.getTemplateParams(treeItemId),
-								template = templateParams.template;
+							var nodePosition = new primitives.common.Rect(x, y, width, height);
+							if (viewPortPosition == null || viewPortPosition.overlaps(nodePosition)) {
+								var templateParams = itemTemplateParamsTask.getTemplateParams(treeItemId),
+									template = templateParams.template;
 
-							uiHash = new primitives.common.RenderEventArgs();
-							uiHash.context = combinedContextsTask.getConfig(treeItemId);
-							uiHash.isCursor = (treeItemId == cursorItemId);
-							uiHash.isSelected = selectedItemsTask.isSelected(treeItemId);
-							uiHash.templateName = template.templateConfig.name;
+								uiHash = new primitives.common.RenderEventArgs();
+								uiHash.id = treeItemId;
+								uiHash.context = combinedContextsTask.getConfig(treeItemId);
+								uiHash.isCursor = (treeItemId == cursorItemId);
+								uiHash.isSelected = selectedItemsTask.isSelected(treeItemId);
+								uiHash.templateName = template.templateConfig.name;
 
-							_graphics.activate("placeholder", 12/*primitives.common.Layers.Item*/);
-							element = _graphics.template(
-									x
-									, y
-									, width
-									, height
-									, treeItemPosition.contentPosition.x
-									, treeItemPosition.contentPosition.y
-									, treeItemPosition.contentPosition.width
-									, treeItemPosition.contentPosition.height
-									, template.itemTemplate.template()
-									, template.itemTemplate.getHashCode()
-									, template.itemTemplate.render
-									, uiHash
-									, { "border-width": template.templateConfig.itemBorderWidth }
-									);
+								_graphics.activate("placeholder", 12/*primitives.common.Layers.Item*/);
+								element = _graphics.template(
+										x
+										, y
+										, width
+										, height
+										, treeItemPosition.contentPosition.x
+										, treeItemPosition.contentPosition.y
+										, treeItemPosition.contentPosition.width
+										, treeItemPosition.contentPosition.height
+										, template.itemTemplate.template()
+										, template.itemTemplate.getHashCode()
+										, template.itemTemplate.render
+										, uiHash
+										, { "borderWidth": template.templateConfig.itemBorderWidth }
+										);
 
-							if (templateParams.hasGroupTitle) {
-								var groupTitlePosition = 0;
-								switch(_itemsSizesOptions.groupTitlePlacementType) {
-									case 2/*primitives.common.AdviserPlacementType.Left*/:
-									case 0/*primitives.common.AdviserPlacementType.Auto*/:
-										groupTitlePosition = 2;
-										break;
-									case 3/*primitives.common.AdviserPlacementType.Right*/:
-										groupTitlePosition = width - (_itemsSizesOptions.groupTitlePanelSize - 4);
-										break;
-									default:
+								if (templateParams.hasGroupTitle) {
+									var groupTitlePosition = 0;
+									switch (_itemsSizesOptions.groupTitlePlacementType) {
+										case 2/*primitives.common.AdviserPlacementType.Left*/:
+										case 0/*primitives.common.AdviserPlacementType.Auto*/:
+											groupTitlePosition = 2;
+											break;
+										case 3/*primitives.common.AdviserPlacementType.Right*/:
+											groupTitlePosition = width - (_itemsSizesOptions.groupTitlePanelSize - 4);
+											break;
+										default:
+									}
+									element = _graphics.template(
+											x,
+											y,
+											width,
+											height,
+											groupTitlePosition,
+											treeItemPosition.contentPosition.y,
+											_itemsSizesOptions.groupTitlePanelSize - 4,
+											treeItemPosition.contentPosition.height + 2,
+											_groupTitleTemplate.template(),
+											_groupTitleTemplate.getHashCode(),
+											_groupTitleTemplate.render,
+											uiHash,
+											null
+											);
 								}
-								element = _graphics.template(
-										x,
-										y,
-										width,
-										height,
-										groupTitlePosition,
-										treeItemPosition.contentPosition.y,
-										_itemsSizesOptions.groupTitlePanelSize - 4,
-										treeItemPosition.contentPosition.height + 2,
-										_groupTitleTemplate.template(),
-										_groupTitleTemplate.getHashCode(),
-										_groupTitleTemplate.render,
-										uiHash,
-										null
-										);
-							}
-							if (templateParams.hasSelectorCheckbox) {
-								_graphics.activate("placeholder", 16/*primitives.common.Layers.Controls*/);
-								element = _graphics.template(
-										x,
-										y,
-										width,
-										height,
-										treeItemPosition.contentPosition.x,
-										height - (_itemsSizesOptions.checkBoxPanelSize - 4),
-										treeItemPosition.contentPosition.width,
-										_itemsSizesOptions.checkBoxPanelSize - 4,
-										_checkBoxTemplate.template(),
-										_checkBoxTemplate.getHashCode(),
-										_checkBoxTemplate.render,
-										uiHash,
-										null
-										);
-							}
-							if (templateParams.hasButtons) {
-								_graphics.activate("placeholder", 16/*primitives.common.Layers.Controls*/);
-								var buttonsPanelPosition = 0;
-								switch (_itemsSizesOptions.groupTitlePlacementType) {
-									case 2/*primitives.common.AdviserPlacementType.Left*/:
-									case 0/*primitives.common.AdviserPlacementType.Auto*/:
-										buttonsPanelPosition = width - (_itemsSizesOptions.buttonsPanelSize - 4);
-										break;
-									case 3/*primitives.common.AdviserPlacementType.Right*/:
-										buttonsPanelPosition = 2;
-										break;
-									default:
+								if (templateParams.hasSelectorCheckbox) {
+									_graphics.activate("placeholder", 16/*primitives.common.Layers.Controls*/);
+									element = _graphics.template(
+											x,
+											y,
+											width,
+											height,
+											treeItemPosition.contentPosition.x,
+											height - (_itemsSizesOptions.checkBoxPanelSize - 4),
+											treeItemPosition.contentPosition.width,
+											_itemsSizesOptions.checkBoxPanelSize - 4,
+											_checkBoxTemplate.template(),
+											_checkBoxTemplate.getHashCode(),
+											_checkBoxTemplate.render,
+											uiHash,
+											null
+											);
 								}
-								element = _graphics.template(
-										x,
-										y,
-										width,
-										height,
-										buttonsPanelPosition,
-										treeItemPosition.contentPosition.y,
-										_itemsSizesOptions.buttonsPanelSize - 4,
-										Math.max(treeItemPosition.contentPosition.height, height - treeItemPosition.contentPosition.y),
-										_buttonsTemplate.template(),
-										template.templateConfig.name + _buttonsTemplate.getHashCode(),
-										_buttonsTemplate.render,
-										templateParams,
-										null
-										);
+								if (templateParams.hasButtons) {
+									_graphics.activate("placeholder", 16/*primitives.common.Layers.Controls*/);
+									var buttonsPanelPosition = 0;
+									switch (_itemsSizesOptions.groupTitlePlacementType) {
+										case 2/*primitives.common.AdviserPlacementType.Left*/:
+										case 0/*primitives.common.AdviserPlacementType.Auto*/:
+											buttonsPanelPosition = width - (_itemsSizesOptions.buttonsPanelSize - 4);
+											break;
+										case 3/*primitives.common.AdviserPlacementType.Right*/:
+											buttonsPanelPosition = 2;
+											break;
+										default:
+									}
+									element = _graphics.template(
+											x,
+											y,
+											width,
+											height,
+											buttonsPanelPosition,
+											treeItemPosition.contentPosition.y,
+											_itemsSizesOptions.buttonsPanelSize - 4,
+											Math.max(treeItemPosition.contentPosition.height, height - treeItemPosition.contentPosition.y),
+											_buttonsTemplate.template(),
+											template.templateConfig.name + _buttonsTemplate.getHashCode(),
+											_buttonsTemplate.render,
+											templateParams,
+											null
+											);
+								}
 							}
 						});//ignore jslint
 				}
 			}
 		}
+	}
+
+	function getViewPortPosition() {
+		var result = null;
+		if (centerOnCursorTask != null) {
+			var scaleOptions = scaleOptionTask.getOptions(),
+				scale = scaleOptions.scale,
+				placeholderOffset = new primitives.common.Point(centerOnCursorTask.getPlaceholderOffset()),
+				panelSize = new primitives.common.Rect(alignDiagramTask.getContentSize()),
+				optimalPanelSize = applyLayoutChangesTask.getOptimalPanelSize();
+
+			placeholderOffset.scale(1.0 / scale);
+			optimalPanelSize.scale(1.0 / scale);
+			panelSize.scale(1.0 / scale);
+
+			result = new primitives.common.Rect(
+								placeholderOffset.x,
+								placeholderOffset.y,
+								Math.min(optimalPanelSize.width, panelSize.width),
+								Math.min(optimalPanelSize.height, panelSize.height)
+							);
+		}
+		return result;
 	}
 
 	return {
@@ -18758,16 +19167,31 @@ primitives.orgdiagram.DrawTreeItemsTask = function (getGraphics, createTranfromT
 /* /Controls/OrgDiagram/Tasks/Templates/ActiveItemsTask.js*/
 primitives.orgdiagram.ActiveItemsTask = function (itemsSizesOptionTask, readTemplatesTask) {
 	var _data = {
-		items: {} // boolean
-	};
+		items: []
+	},
+	_hash = {};
+
+	var _dataTemplate = new primitives.common.ArrayReader(
+			new primitives.common.ValueReader(["string", "number"], true),
+			true
+		);
 
 	function process() {
-		var itemsSizesOptions = itemsSizesOptionTask.getOptions(),
-			items = itemsSizesOptions.items,
+		var context = {
+			isChanged: false,
+			hash: _hash
+		},
+			itemsSizesOptions = itemsSizesOptionTask.getOptions(),
+			items = itemsSizesOptions.items;
+
+		_data.items = _dataTemplate.read(_data.items, collectActiveItems(itemsSizesOptions, items), "items", context);
+
+		return context.isChanged;
+	}
+
+	function collectActiveItems(itemsSizesOptions, items) {
+		var result = [],
 			index, len;
-
-		_data.items = {};
-
 		for (index = 0, len = items.length; index < len; index += 1) {
 			var itemConfig = items[index],
 				template = readTemplatesTask.getTemplate(itemConfig.templateName, itemsSizesOptions.defaultTemplateName, readTemplatesTask.DefaultWidgetTemplateName),
@@ -18775,14 +19199,14 @@ primitives.orgdiagram.ActiveItemsTask = function (itemsSizesOptionTask, readTemp
 				isActive = itemConfig.isActive && templateConfig.isActive;
 
 			if (isActive) {
-				_data.items[itemConfig.id] = true;
+				result.push(itemConfig.id);
 			}
 		}
-		return true;
+		return result;
 	}
 
 	function getActiveItems() {
-		return _data.items;
+		return _hash.items;
 	}
 
 	return {
@@ -18815,7 +19239,7 @@ primitives.orgdiagram.AnnotationLabelTemplateTask = function (itemsSizesOptionTa
 };
 
 /* /Controls/OrgDiagram/Tasks/Templates/ButtonsTemplateTask.js*/
-primitives.orgdiagram.ButtonsTemplateTask = function (itemsSizesOptionTask) {
+primitives.orgdiagram.ButtonsTemplateTask = function (itemsSizesOptionTask, templates) {
 	var _data = {
 		template: null
 	};
@@ -18826,7 +19250,7 @@ primitives.orgdiagram.ButtonsTemplateTask = function (itemsSizesOptionTask) {
 
 	function getTemplate() {
 		if (_data.template == null) {
-			_data.template = new primitives.common.ButtonsTemplate();
+			_data.template = new templates.ButtonsTemplate;
 		}
 		return _data.template;
 	}
@@ -19398,7 +19822,7 @@ primitives.orgdiagram.SelectionPathItemsTask = function (navigationFamilyTask, c
 						}
 						if (parentItem.visibility != 4/*primitives.common.Visibility.Invisible*/) {
 							result.push(parentItemId);
-						};
+						}
 						processed[parentItemId] = true;
 					});
 					break;
@@ -21426,27 +21850,30 @@ primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, v
 /* /Controls/OrgDiagram/Templates/AnnotationLabelTemplate.js*/
 /* jshint latedef: true, unused: false */
 primitives.common.AnnotationLabelTemplate = function () {
-	var _template = create(),
-		_hashCode = primitives.common.hashCode(_template);
-
-	function create() {
-		var template = jQuery('<div></div>');
-		template.addClass("bp-item bp-corner-all bp-connector-label");
-
-		return template.wrap('<div>').parent().html();
-	}
+	var _template = ["div",
+		{
+			"type": "checkbox",
+			"name": "checkbox",
+			"class": ["bp-item", "bp-corner-all", "bp-connector-label"]
+		}
+	];
 
 	function template() {
 		return _template;
 	}
 
 	function getHashCode() {
-		return _hashCode;
+		return "defaultAnnotationLabelTemplate";
 	}
 
 	function render(event, data) {
 		var annotationConfig = data.context;
-		data.element.html(annotationConfig.label);
+		if (primitives.common.isArray(annotationConfig.label)) {
+			data.element.innerHTML = "";
+			data.element.appendChild(primitives.common.JsonML.toHTML(annotationConfig.label));
+		} else {
+			data.element.innerHTML = annotationConfig.label;
+		}
 	}
 
 	return {
@@ -21458,29 +21885,23 @@ primitives.common.AnnotationLabelTemplate = function () {
 
 /* /Controls/OrgDiagram/Templates/ButtonsTemplate.js*/
 primitives.common.ButtonsTemplate = function (options) {
-	var _template = create(),
-		_hashCode = primitives.common.hashCode(_template);
-
-	function create() {
-		var template = jQuery("<ul></ul>");
-
-		template.css({
+	var _template = ["div", {
+		"style": {
 			position: "absolute"
-		}).addClass("ui-widget ui-helper-clearfix");
-
-		return template.wrap('<div>').parent().html();
+		}
 	}
+	];
 
 	function template() {
 		return _template;
 	}
 
 	function getHashCode() {
-		return _hashCode;
+		return "defaultButtonsTemplate";
 	}
 
 	function render(event, data) {
-		var name = "orgdiagram",
+		var element = data.element,
 			topOffset = 0,
 			buttonsInterval = 10,
 			buttonConfig,
@@ -21489,37 +21910,37 @@ primitives.common.ButtonsTemplate = function (options) {
 			button,
 			index;
 
+
+
 		switch (data.renderingMode) {
 			case 0/*primitives.common.RenderingMode.Create*/:
 				for (index = 0; index < buttons.length; index += 1) {
 					buttonConfig = buttons[index];
-					button = jQuery('<li data-buttonname="' + buttonConfig.name + '"></li>')
-						.css({
-							position: "absolute",
-							top: topOffset + "px",
-							left: "0px",
-							width: buttonConfig.size.width + "px",
-							height: buttonConfig.size.height + "px",
-							padding: "3px"
-						})
-						.addClass(name + "button");
-					data.element.append(button);
-					buttonprop = {
-						icons: { primary: buttonConfig.icon },
-						label: buttonConfig.label
-					};
-					if (buttonConfig.text != "") {
-						buttonprop.text = buttonConfig.text;
-					}
-					button.button(buttonprop);
-
-					if (!primitives.common.isNullOrEmpty(buttonConfig.tooltip)) {
-						if (button.tooltip != null) {
-							button.tooltip({ content: buttonConfig.tooltip });
-						}
-					}
+					button = ["button",
+						{
+							"style": {
+								position: "absolute",
+								top: topOffset + "px",
+								left: "0px"
+							},
+							"class": ["orgdiagrambutton", "bp-button"],
+							"data-buttonname": buttonConfig.name
+						},
+						["span",
+							{
+								"style": {
+									width: buttonConfig.size.width + "px",
+									height: buttonConfig.size.height + "px"
+								},
+								"class": ["bp-icon", buttonConfig.icon]
+							}
+						]
+					];
+					data.element.appendChild(primitives.common.JsonML.toHTML(button));
 					topOffset += buttonsInterval + buttonConfig.size.height;
 				}
+				
+
 				break;
 			case 1/*primitives.common.RenderingMode.Update*/:
 				break;
@@ -21536,29 +21957,42 @@ primitives.common.ButtonsTemplate = function (options) {
 
 /* /Controls/OrgDiagram/Templates/CheckBoxTemplate.js*/
 primitives.common.CheckBoxTemplate = function (selectCheckBoxLabel) {
-	var _template = create(),
-		_hashCode = primitives.common.hashCode(_template);
-
-	function create() {
-		var template = jQuery('<div></div>');
-		template.addClass("bp-item bp-selectioncheckbox-frame");
-		template.append(jQuery('<label><nobr><input type="checkbox" name="checkbox" class="bp-selectioncheckbox" />&nbsp;<span name="selectiontext" class="bp-selectiontext">' +
-			selectCheckBoxLabel + '</span></nobr></label>'));
-
-		return template.wrap('<div>').parent().html();
-	}
+	var _template = ["div",
+		["label",
+			["nobr",
+				["input",
+					{
+						"type": "checkbox",
+						"name": "checkbox",
+						"class": "bp-selectioncheckbox"
+					}
+				],
+				'\xa0',
+				["span",
+					{
+						"name": "selectiontext",
+						"class": "bp-selectiontext"
+					},
+					selectCheckBoxLabel
+				]
+			]
+		]
+	];
 
 	function template() {
 		return _template;
 	}
 
 	function getHashCode() {
-		return _hashCode;
+		return "defaultCheckBoxTemplate";
 	}
 
 	function render(event, data) {
-		var checkBox = data.element.find("[name=checkbox]");
-		checkBox.prop("checked", data.isSelected);
+		var checkBox = data.element.firstChild.firstChild.firstChild;
+		checkBox.checked = data.isSelected;
+		checkBox.setAttribute("data-id", data.id);
+		var label = data.element.firstChild.firstChild.childNodes[2];
+		label.setAttribute("data-id", data.id);
 	}
 
 	return {
@@ -21570,18 +22004,19 @@ primitives.common.CheckBoxTemplate = function (selectCheckBoxLabel) {
 
 /* /Controls/OrgDiagram/Templates/CursorTemplate.js*/
 primitives.common.CursorTemplate = function (options, itemTemplateConfig) {
-	var _template = create(itemTemplateConfig),
-		_hashCode = primitives.common.hashCode(_template);
+	var _template = create(itemTemplateConfig);
 
 	function create(config) {
-		var cursorTemplate = jQuery("<div></div>")
-		.css({
-			width: (config.itemSize.width + config.cursorPadding.left + config.cursorPadding.right) + "px",
-			height: (config.itemSize.height + config.cursorPadding.top + config.cursorPadding.bottom) + "px",
-			"border-width": config.cursorBorderWidth + "px"
-		}).addClass("bp-item bp-corner-all bp-cursor-frame");
-
-		return cursorTemplate.wrap('<div>').parent().html();
+		return ["div",
+				{
+					"style": {
+						width: (config.itemSize.width + config.cursorPadding.left + config.cursorPadding.right) + "px",
+						height: (config.itemSize.height + config.cursorPadding.top + config.cursorPadding.bottom) + "px",
+						"borderWidth": config.cursorBorderWidth + "px"
+					},
+					"class": ["bp-item", "bp-corner-all", "bp-cursor-frame"]
+				}
+		];
 	}
 
 	function template() {
@@ -21589,7 +22024,7 @@ primitives.common.CursorTemplate = function (options, itemTemplateConfig) {
 	}
 
 	function getHashCode() {
-		return _hashCode;
+		return "defaultCursorTemplate";
 	}
 
 	function render(event, data) {
@@ -21605,21 +22040,22 @@ primitives.common.CursorTemplate = function (options, itemTemplateConfig) {
 
 /* /Controls/OrgDiagram/Templates/DotHighlightTemplate.js*/
 primitives.common.DotHighlightTemplate = function (options, itemTemplateConfig) {
-	var _template = create(itemTemplateConfig),
-		_hashCode = primitives.common.hashCode(_template);
+	var _template = create(itemTemplateConfig);
 
 	function create(config) {
-		var radius = config.minimizedItemCornerRadius + config.highlightPadding.left,
-		highlightTemplate = jQuery("<div></div>")
-		.css({
-			"border-width": config.highlightBorderWidth + "px",
-			"-moz-border-radius": radius,
-			"-webkit-border-radius": radius,
-			"-khtml-border-radius": radius,
-			"border-radius": radius
-		}).addClass("bp-item bp-highlight-dot-frame");
-
-		return highlightTemplate.wrap('<div>').parent().html();
+		var radius = config.minimizedItemCornerRadius + config.highlightPadding.left;
+		return ["div",
+				{
+					"style": {
+						"borderWidth": config.highlightBorderWidth + "px",
+						"MozBorderRadius": radius + "px",
+						"WebkitBorderRadius": radius + "px",
+						"-khtml-border-radius": radius + "px",
+						"borderRadius": radius + "px"
+					},
+					"class": ["bp-item", "bp-highlight-dot-frame"]
+				}
+		];
 	}
 
 	function template() {
@@ -21627,7 +22063,7 @@ primitives.common.DotHighlightTemplate = function (options, itemTemplateConfig) 
 	}
 
 	function getHashCode() {
-		return _hashCode;
+		return "defaultDotHighlightTemplate";
 	}
 
 	function render(event, data) {
@@ -21643,140 +22079,172 @@ primitives.common.DotHighlightTemplate = function (options, itemTemplateConfig) 
 
 /* /Controls/OrgDiagram/Templates/GroupTitleTemplate.js*/
 primitives.common.GroupTitleTemplate = function (options) {
-	var _template = create(),
-		_hashCode = primitives.common.hashCode(_template);
+	var _template = create();
 
-    function create() {
-        var template = jQuery('<div></div>'); //  style="position: absolute; padding: 0px; margin: 0px; background: rgb(65, 105, 225); overflow: hidden; padding: 0px; margin: 0px;"
-        template.addClass("bp-item bp-corner-all bp-grouptitle-frame");
-        var attr = {
-            "font-size": options.groupTitleFontSize,
-            "font-family": options.groupTitleFontFamily,
-            "font-weight": options.groupTitleFontWeight,
-            "font-style": options.groupTitleFontStyle
-        };
-        text(template, options.groupTitleOrientation, options.groupTitleHorizontalAlignment, options.groupTitleVerticalAlignment, attr);
-		return template.wrap('<div>').parent().html();
-    }
+	function create() {
+		return ["div",
+				{
+					"style": {
+						"fontSize": options.groupTitleFontSize,
+						"fontFamily": options.groupTitleFontFamily,
+						"fontWeight": options.groupTitleFontWeight,
+						"fontStyle": options.groupTitleFontStyle
+					},
+					"class": ["bp-item", "bp-corner-all", "bp-grouptitle-frame"]
+				},
+				text(options.groupTitleOrientation, options.groupTitleHorizontalAlignment, options.groupTitleVerticalAlignment)
+		];
+	}
 
-    function render(event, data) {
-        var itemConfig = data.context,
-            groupTitleColor = itemConfig.groupTitleColor || options.groupTitleColor,
-            style = {},
-            width = data.width,
-            height = data.height;
+	function text(orientation, horizontalAlignment, verticalAlignment) {
+		var rotation = "",
+			element;
 
-        style.left = Math.round(width / 2.0 - height / 2.0);
-        style.top = Math.round(height / 2.0 - width / 2.0);
-        style.width = height;
-        style.height = width;
-        style["max-width"] = style.width;
-        style["max-height"] = style.height;
+		switch (orientation) {
+			case 0/*primitives.text.TextOrientationType.Horizontal*/:
+			case 3/*primitives.text.TextOrientationType.Auto*/:
+				break;
+			case 1/*primitives.text.TextOrientationType.RotateLeft*/:
+				rotation = "rotate(-90deg)";
+				break;
+			case 2/*primitives.text.TextOrientationType.RotateRight*/:
+				rotation = "rotate(90deg)";
+				break;
+		}
 
-        primitives.common.css(jQuery(data.element[0].children[0]), style);
-        var title = data.element.find("[name=title]");
-        var label = itemConfig.groupTitle || "";
-        label = label.replace(new RegExp("\n", 'g'), "<br/>");
-        title.text(label);
-        primitives.common.css(title, { "color": primitives.common.highestContrast(groupTitleColor, options.itemTitleSecondFontColor, options.itemTitleFirstFontColor) });
-        primitives.common.css(data.element, { "background": groupTitleColor });
-    }
+		var style = {
+			"fontSize": options.groupTitleFontSize,
+			"fontFamily": options.groupTitleFontFamily,
+			"fontWeight": options.groupTitleFontWeight,
+			"fontStyle": options.groupTitleFontStyle,
+			"position": "absolute",
+			"padding": 0,
+			"margin": 0,
+			"textAlign": _getTextAlign(horizontalAlignment),
+			"lineHeight": 1,
+			"-webkit-transform-origin": "center center",
+			"-moz-transform-origin": "center center",
+			"-o-transform-origin": "center center",
+			"-ms-transform-origin": "center center",
+			"-webkit-transform": rotation,
+			"-moz-transform": rotation,
+			"-o-transform": rotation,
+			"-ms-transform": rotation,
+			"transform": rotation
+		};
 
-    function text(parent, orientation, horizontalAlignment, verticalAlignment, style) {
-        var rotation = "",
-            element,
-            tdstyle;
+		switch (verticalAlignment) {
+			case 0/*primitives.common.VerticalAlignmentType.Top*/:
+				element = ["div",
+					{
+						"style": style,
+						"class": ["bp-title-content", "bp-item", "bp-corner-all"]
+					}
+				];
+				break;
+			default:
+				style.borderCollapse = "collapse";
 
-        jQuery.extend(style, {
-            "position": "absolute",
-            "padding": 0,
-            "margin": 0,
-            "text-align": _getTextAlign(horizontalAlignment),
-            "line-height": 1
-        });
+				element = ["table",
+					{
+						"style": style
+					},
+					["tbody",
+						["tr",
+							["td",
+								{
+									"style": {
+										"verticalAlign": _getVerticalAlignment(verticalAlignment),
+										"padding": 0
+									},
+									"class": "bp-title-content"
+								}
+							]
+						]
+					]
+				];
+				break;
+		}
 
-        switch (orientation) {
-            case 0/*primitives.text.TextOrientationType.Horizontal*/:
-            case 3/*primitives.text.TextOrientationType.Auto*/:
-                break;
-            case 1/*primitives.text.TextOrientationType.RotateLeft*/:
-                rotation = "rotate(-90deg)";
-                break;
-            case 2/*primitives.text.TextOrientationType.RotateRight*/:
-                rotation = "rotate(90deg)";
-                break;
-        }
+		return element;
+	}
 
-        style["-webkit-transform-origin"] = "center center";
-        style["-moz-transform-origin"] = "center center";
-        style["-o-transform-origin"] = "center center";
-        style["-ms-transform-origin"] = "center center";
+	function _getTextAlign(alignment) {
+		var result = null;
+		switch (alignment) {
+			case 0/*primitives.common.HorizontalAlignmentType.Center*/:
+				result = "center";
+				break;
+			case 1/*primitives.common.HorizontalAlignmentType.Left*/:
+				result = "left";
+				break;
+			case 2/*primitives.common.HorizontalAlignmentType.Right*/:
+				result = "right";
+				break;
+		}
+		return result;
+	}
 
-
-        style["-webkit-transform"] = rotation;
-        style["-moz-transform"] = rotation;
-        style["-o-transform"] = rotation;
-        style["-ms-transform"] = rotation;
-        style.transform = rotation;
-
-        switch (verticalAlignment) {
-            case 0/*primitives.common.VerticalAlignmentType.Top*/:
-                element = jQuery('<div name="title"></div>');
-                primitives.common.css(element, style);
-                parent.append(element);
-                break;
-            default:
-                style["border-collapse"] = "collapse";
-                tdstyle = {
-                    "vertical-align": _getVerticalAlignment(verticalAlignment),
-                    "padding": 0
-                };
-                element = jQuery('<table><tbody><tr><td name="title"></td></tr></tbody></table>');
-                primitives.common.css(element, style);
-                element.find("td").css(tdstyle);
-                parent.append(element);
-                break;
-        }
-    }
-
-    function _getTextAlign(alignment) {
-        var result = null;
-        switch (alignment) {
-            case 0/*primitives.common.HorizontalAlignmentType.Center*/:
-                result = "center";
-                break;
-            case 1/*primitives.common.HorizontalAlignmentType.Left*/:
-                result = "left";
-                break;
-            case 2/*primitives.common.HorizontalAlignmentType.Right*/:
-                result = "right";
-                break;
-        }
-        return result;
-    };
-
-    function _getVerticalAlignment(alignment) {
-        var result = null;
-        switch (alignment) {
-            case 1/*primitives.common.VerticalAlignmentType.Middle*/:
-                result = "middle";
-                break;
-            case 0/*primitives.common.VerticalAlignmentType.Top*/:
-                result = "top";
-                break;
-            case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
-                result = "bottom";
-                break;
-        }
-        return result;
-    };
+	function _getVerticalAlignment(alignment) {
+		var result = null;
+		switch (alignment) {
+			case 1/*primitives.common.VerticalAlignmentType.Middle*/:
+				result = "middle";
+				break;
+			case 0/*primitives.common.VerticalAlignmentType.Top*/:
+				result = "top";
+				break;
+			case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
+				result = "bottom";
+				break;
+		}
+		return result;
+	}
 
 	function template() {
 		return _template;
 	}
 
 	function getHashCode() {
-		return _hashCode;
+		return "defaultGroupTitleTemplate";
+	}
+
+	function render(event, data) {
+		var itemConfig = data.context,
+			groupTitleColor = itemConfig.groupTitleColor || options.groupTitleColor,
+			style = {},
+			width = data.width,
+			height = data.height;
+
+		style.left = Math.round(width / 2.0 - height / 2.0) + "px";
+		style.top = Math.round(height / 2.0 - width / 2.0) + "px";
+		style.width = height + "px";
+		style.height = width + "px";
+		style.maxWidth = style.width;
+		style.maxHeight = style.height;
+
+		var container = data.element.firstChild;
+		primitives.common.JsonML.applyStyles(container, style);
+
+		var label = itemConfig.groupTitle || "";
+		label = label.replace(new RegExp("\n", 'g'), "<br/>");
+
+		var title;
+		switch (options.groupTitleVerticalAlignment) {
+			case 0/*primitives.common.VerticalAlignmentType.Top*/:
+				title = data.element.firstChild;
+				break;
+			default:
+				title = data.element.firstChild.firstChild.firstChild.firstChild;
+				title.style.borderCollapse = "collapse";
+				break;
+		}
+		title.style.color = primitives.common.highestContrast(groupTitleColor, options.itemTitleSecondFontColor, options.itemTitleFirstFontColor);
+		title.textContent = label;
+
+		primitives.common.JsonML.applyStyles(data.element, {
+			"backgroundColor": groupTitleColor
+		});
 	}
 
 	return {
@@ -21789,16 +22257,17 @@ primitives.common.GroupTitleTemplate = function (options) {
 
 /* /Controls/OrgDiagram/Templates/HighlightTemplate.js*/
 primitives.common.HighlightTemplate = function (options, itemTemplateConfig) {
-	var _template = create(itemTemplateConfig),
-		_hashCode = primitives.common.hashCode(template);
+	var _template = create(itemTemplateConfig);
 
 	function create(config) {
-		var highlightTemplate = jQuery("<div></div>")
-		.css({
-			"border-width": config.highlightBorderWidth + "px"
-		}).addClass("bp-item bp-corner-all bp-highlight-frame");
-
-		return highlightTemplate.wrap('<div>').parent().html();
+		return ["div",
+		{
+			"style": {
+				"borderWidth": config.highlightBorderWidth + "px"
+			},
+			"class": ["bp-item", "bp-corner-all", "bp-highlight-frame"]
+		}
+		];
 	}
 
 	function template() {
@@ -21806,7 +22275,7 @@ primitives.common.HighlightTemplate = function (options, itemTemplateConfig) {
 	}
 
 	function getHashCode() {
-		return _hashCode;
+		return "defaultHighlightTemplate";
 	}
 
 	function render(event, data) {
@@ -21822,8 +22291,7 @@ primitives.common.HighlightTemplate = function (options, itemTemplateConfig) {
 
 /* /Controls/OrgDiagram/Templates/ItemTemplate.js*/
 primitives.common.ItemTemplate = function (options, itemTemplateConfig) {
-	var _template = create(itemTemplateConfig),
-		_hashCode = primitives.common.hashCode(template);
+	var _template = create(itemTemplateConfig);
 
 	function create(config) {
 		var contentSize = new primitives.common.Size(config.itemSize),
@@ -21837,59 +22305,75 @@ primitives.common.ItemTemplate = function (options, itemTemplateConfig) {
 		contentSize.width -= config.itemBorderWidth * 2;
 		contentSize.height -= config.itemBorderWidth * 2;
 
-		itemTemplate = jQuery('<div></div>')
-			.css({
-				"border-width": config.itemBorderWidth + "px"
-			}).addClass("bp-item bp-corner-all bt-item-frame");
+		itemTemplate = ["div",
+				{
+					"style": {
+						"borderWidth": config.itemBorderWidth + "px"
+					},
+					"class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+				},
+				["div",
+					{
+						"name": "titleBackground",
+						"style": {
+							top: "2px",
+							left: "2px",
+							width: (contentSize.width - 4) + "px",
+							height: "18px"
+						},
+						"class": ["bp-item", "bp-corner-all", "bp-title-frame"]
+					},
+					["div",
+						{
+							"name": "title",
+							"style": {
+								top: "1px",
+								left: "4px",
+								width: (contentSize.width - 4 - 4 * 2) + "px",
+								height: "16px"
+							},
+							"class": ["bp-item", "bp-title"]
+						}
+					]
+				],
+                ["div", // photo border
+                    {
+                        "name": "photoBorder",
+						"style": {
+							top: "24px",
+							left: "2px",
+							width: "50px",
+							height: "60px"
+						},
+						"class": ["bp-item", "bp-photo-frame"]
+					},
+					["img", // photo
+						{
+							"name": "photo",
+							"alt": "",
+							"style": {
+								width: "50px",
+								height: "60px"
+							}
+						}
+					]
+				],
+				["div",
+					{
+						"name": "description",
+						"style": {
+							top: "24px",
+							left: "56px",
+							width: (contentSize.width - 4 - 56) + "px",
+							height: "74px"
+						},
+						"class": ["bp-item", "bp-description"]
+					}
 
-		titleBackground = jQuery('<div name="titleBackground"></div>')
-			.css({
-				top: "2px",
-				left: "2px",
-				width: (contentSize.width - 4) + "px",
-				height: "18px"
-			}).addClass("bp-item bp-corner-all bp-title-frame");
+				]
+		];
 
-		itemTemplate.append(titleBackground);
-
-		title = jQuery('<div name="title"></div>')
-			.css({
-				top: "1px",
-				left: "4px",
-				width: (contentSize.width - 4 - 4 * 2) + "px",
-				height: "16px"
-			}).addClass("bp-item bp-title");
-
-		titleBackground.append(title);
-
-		photoborder = jQuery("<div></div>")
-			.css({
-				top: "24px",
-				left: "2px",
-				width: "50px",
-				height: "60px"
-			}).addClass("bp-item bp-photo-frame");
-
-		itemTemplate.append(photoborder);
-
-		photo = jQuery('<img name="photo" alt=""></img>')
-			.css({
-				width: "50px",
-				height: "60px"
-			});
-		photoborder.append(photo);
-
-		description = jQuery('<div name="description"></div>')
-		.css({
-			top: "24px",
-			left: "56px",
-			width: (contentSize.width - 4 - 56) + "px",
-			height: "74px"
-		}).addClass("bp-item bp-description");
-
-		itemTemplate.append(description);
-
-		return itemTemplate.wrap('<div>').parent().html();
+		return itemTemplate;
 	}
 
 	function template() {
@@ -21897,18 +22381,30 @@ primitives.common.ItemTemplate = function (options, itemTemplateConfig) {
 	}
 
 	function getHashCode() {
-		return _hashCode;
+		return "defaultItemTemplate";
 	}
 
 	function render(event, data) {
-		var itemConfig = data.context,
-			itemTitleColor = itemConfig.itemTitleColor != null ? itemConfig.itemTitleColor : "#4169e1"/*primitives.common.Colors.RoyalBlue*/,
-			color = primitives.common.highestContrast(itemTitleColor, options.itemTitleSecondFontColor, options.itemTitleFirstFontColor);
-		data.element.find("[name=titleBackground]").css({ "background": itemTitleColor });
-		data.element.find("[name=photo]").attr({ "src": itemConfig.image, "alt": itemConfig.title });
-		data.element.find("[name=title]").css({ "color": color }).text(itemConfig.title);
-		data.element.find("[name=description]").text(itemConfig.description);
-	}
+        var itemConfig = data.context,
+            itemTitleColor = itemConfig.itemTitleColor != null ? itemConfig.itemTitleColor : "#4169e1"/*primitives.common.Colors.RoyalBlue*/,
+            color = primitives.common.highestContrast(itemTitleColor, options.itemTitleSecondFontColor, options.itemTitleFirstFontColor),
+            element = data.element,
+            titleBackground = element.firstChild,
+            photo = element.childNodes[1].firstChild,
+            title = titleBackground.firstChild,
+            description = element.childNodes[2];
+
+        primitives.common.JsonML.applyStyles(titleBackground, {
+            "backgroundColor": itemTitleColor
+        });
+        photo.src = itemConfig.image;
+        photo.alt = itemConfig.title;
+        primitives.common.JsonML.applyStyles(title, {
+            "color": color
+        });
+        title.textContent = itemConfig.title;
+        description.textContent = itemConfig.description;
+    }
 
 	return {
 		template: template,
@@ -21919,7 +22415,7 @@ primitives.common.ItemTemplate = function (options, itemTemplateConfig) {
 
 /* /Controls/OrgDiagram/Templates/UserTemplate.js*/
 primitives.common.UserTemplate = function (options, content, onRender) {
-	var _hashCode = primitives.common.hashCode(content);
+	var _hashCode = primitives.common.hashCode(JSON.stringify(content));
 
 	function template() {
 		return content;
@@ -21936,10 +22432,28 @@ primitives.common.UserTemplate = function (options, content, onRender) {
 			var itemConfig = data.context,
 				itemTitleColor = itemConfig.itemTitleColor != null ? itemConfig.itemTitleColor : "#4169e1"/*primitives.common.Colors.RoyalBlue*/,
 				color = primitives.common.highestContrast(itemTitleColor, options.itemTitleSecondFontColor, options.itemTitleFirstFontColor);
-			data.element.find("[name=titleBackground]").css({ "background": itemTitleColor });
-			data.element.find("[name=photo]").attr({ "src": itemConfig.image, "alt": itemConfig.title });
-			data.element.find("[name=title]").css({ "color": color }).text(itemConfig.title);
-			data.element.find("[name=description]").text(itemConfig.description);
+
+			primitives.common.getElementsByName(this, data.element, "photo", function(node) {
+				node.src = itemConfig.image;
+				node.alt = itemConfig.title;
+			});
+
+			primitives.common.getElementsByName(this, data.element, "titleBackground", function(node) {
+				primitives.common.JsonML.applyStyles(node, {
+					"background": itemTitleColor
+				});
+			});
+
+			primitives.common.getElementsByName(this, data.element, "title", function(node) {
+				primitives.common.JsonML.applyStyles(node, {
+					"color": color
+				});
+				node.textContent = itemConfig.title;
+			});
+
+			primitives.common.getElementsByName(this, data.element, "description", function(node) {
+				node.textContent = itemConfig.description;
+			});
 		}
 	}
 
@@ -21951,27 +22465,46 @@ primitives.common.UserTemplate = function (options, content, onRender) {
 };
 
 /* /Controls/OrgDiagram/BaseControl.js*/
-primitives.orgdiagram.BaseControl = function (element, options, taskManagerFactory, eventArgsFactory) {
+primitives.orgdiagram.BaseControl = function (element, options, taskManagerFactory, eventArgsFactory, templates) {
 	var _data = {
-			name: "orgdiagram",
-			options: options,
-			tasks: null,
-			graphics: null,
-			mouse: null,
-			layout: {
-					element: element,
-					scrollPanel: null,
-					mousePanel: null,
-					placeholder: null,
-					calloutPlaceholder: null,
-					forceCenterOnCursor: true
-				}
-		},
-		_dragStartPosition,
-		_cancelMouseClick,
-		_scale,
-		_debug = false;
+		name: "orgdiagram",
+		options: options,
+		tasks: null,
+		graphics: null,
+		mouse: null,
+		layout: {
+			element: element,
+			scrollPanel: null,
+			mousePanel: null,
+			placeholder: null,
+			calloutPlaceholder: null,
+			forceCenterOnCursor: true
+		}
+	},
+	_dragFrom,
+	_scrollFrom,
+	_scrollTo,
+	_dragImage,
+	_dragTimer,
+	_scale,
+	_debug = false,
+	_timer = null;
 
+	/*
+		method: update
+			Makes full redraw of diagram contents reevaluating all options. This method has to be called explisitly after all options are set in order to update controls contents.
+	
+		Parameters:
+			updateMode: This parameter defines severaty of update <primitives.common.UpdateMode>. 
+			For example <primitives.common.UpdateMode.Refresh> updates only 
+			items and selection reusing existing elements where ever it is possible.
+
+		See also:
+			<primitives.common.UpdateMode>
+
+		Default:
+			<primitives.common.UpdateMode.Recreate>
+	*/
 	function update(updateMode) {
 		switch (updateMode) {
 			case 1/*primitives.common.UpdateMode.Refresh*/:
@@ -21986,23 +22519,25 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 		}
 	}
 
+	/*
+		method: destroy
+			Removes all elements control added to DOM incluidng event listeners.
+	*/
 	function destroy() {
 		unbind(_data.layout);
-		cleanLayout(_data.layout, _data.name);
+		cleanLayout(_data.layout);
 
 		_data.tasks = null;
 		_data.graphics = null;
 	}
 
 	function redraw() {
-		destroyMouse();
 		unbind(_data.layout);
-		cleanLayout(_data.layout, _data.name);
+		cleanLayout(_data.layout);
 
 		createLayout(_data.layout, _data.name);
-		createMouse();
 		bind(_data.layout);
-		_data.tasks = taskManagerFactory(getOptions, getGraphics, getLayout);
+		_data.tasks = taskManagerFactory(getOptions, getGraphics, getLayout, templates);
 		_data.graphics = primitives.common.createGraphics(_data.options.graphicsType, _data.layout.element);
 		_data.graphics.debug = _debug;
 
@@ -22033,8 +22568,8 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 			/* scroll to offset */
 			centerOnCursorTask = _data.tasks.getTask("CenterOnCursorTask");
 			placeholderOffset = centerOnCursorTask.getPlaceholderOffset();
-			_data.layout.scrollPanel.scrollLeft(placeholderOffset.x);
-			_data.layout.scrollPanel.scrollTop(placeholderOffset.y);
+			_data.layout.scrollPanel.scrollLeft = placeholderOffset.x;
+			_data.layout.scrollPanel.scrollTop = placeholderOffset.y;
 		}
 		//_data.layout.scrollPanel.css({
 		//	"-webkit-overflow-scrolling": "touch"
@@ -22048,6 +22583,30 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 		_data.graphics.end();
 	}
 
+	function redrawCurrentViewPort(debug) {
+		_data.layout.forceCenterOnCursor = false;
+		_data.tasks.process('CurrentScrollPositionTask', null, debug);
+
+		_data.graphics.end();
+	}
+
+	function onScroll(event) {
+		if (_timer == null) {
+			_timer = window.setTimeout(function () {
+				redrawCurrentViewPort(_debug);
+				window.clearTimeout(_timer);
+				_timer = null;
+			}, 200);
+		}
+	}
+
+	/*
+		method: setOptions
+			Call this method to update controls configuration. Control uses default Config instance to initialize itself, so it sets only options provided in the options parameter.
+
+		Parameters:
+		options - JavaScript object containing options.
+	*/
 	function setOptions(options) {
 		for (var option in options) {
 			if (options.hasOwnProperty(option)) {
@@ -22056,14 +22615,36 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 		}
 	}
 
+	/*
+		method: getOptions
+			This method returns current configuration object.
+
+		Returns:
+		Reference to current configuration object
+	*/
 	function getOptions() {
 		return _data.options;
 	}
 
+	/*
+		method: getOption
+			This method returns configuration option by name.
+
+		Returns:
+		Option value by name
+	*/
 	function getOption(option) {
 		return _data.options[option];
 	}
 
+	/*
+		method: setOption
+			Method to set configuration option of the control by name.
+
+		Parameters:
+		option - option name
+		value - value
+	*/
 	function setOption(option, value) {
 		return _data.options[option] = value;
 	}
@@ -22077,213 +22658,199 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 	}
 
 	function createLayout(layout, name) {
-		var scrollPanelRect = new primitives.common.Rect(0, 0, layout.element.outerWidth(), layout.element.outerHeight()),
+		var elementSize = primitives.common.getInnerSize(layout.element),
+			scrollPanelRect = new primitives.common.Rect(0, 0, elementSize.width, elementSize.height),
 			placeholderRect = new primitives.common.Rect(scrollPanelRect),
-			position = layout.element.offset(),
-			scrollPanel,
-			mousePanel,
-			placeholder,
-			calloutPlaceholder;
+			pixelAlignmentFix = primitives.common.getFixOfPixelALignment(element);
 
-		/* root scroll panel */
-		scrollPanel = jQuery('<div tabindex="0"></div>');
-		scrollPanel.css({
-			"position": "relative",
-			"overflow": "auto",
-			"-webkit-overflow-scrolling": "touch",
-			"top": "0px",
-			"left": "0px",
-			"width": scrollPanelRect.width + "px",
-			"height": scrollPanelRect.height + "px",
-			"padding": "0px",
-			"margin-bottom": "0px",
-			"margin-right": "0px",
-			"margin-top": (-position.top + Math.floor(position.top)) + "px", /* fixes div pixel alignment */
-			"margin-left": (-position.left + Math.floor(position.left)) + "px"
-		});
-		scrollPanel.addClass(name);
-
-		/* mouse tracking events panel */
-		mousePanel = jQuery('<div></div>');
-		mousePanel.css({
-			position: "absolute",
-			overflow: "hidden",
-			top: "0px",
-			left: "0px"
-		});
-		mousePanel.addClass(name);
-		mousePanel.css(placeholderRect.getCSS());
-
-		/* contents scalable panel */
-		placeholder = jQuery('<div></div>');
-		placeholder.css({
-			position: "absolute",
-			overflow: "hidden",
-			top: "0px",
-			left: "0px"
-		});
-		placeholder.addClass("placeholder");
-		placeholder.addClass(name);
-		placeholder.css(placeholderRect.getCSS());
 		
-
-		/* callout panel */
-		calloutPlaceholder = jQuery('<div></div>');
-		calloutPlaceholder.css({
-			position: "absolute",
-			overflow: "visible"
-		});
-		calloutPlaceholder.addClass("calloutplaceholder");
-		calloutPlaceholder.addClass(name);
-		calloutPlaceholder.css({
-			top: "0px",
-			left: "0px",
-			width: "0px",
-			height: "0px"
-		});
-		
-		/* append panels */
-		scrollPanel.append(mousePanel);
-		mousePanel.append(placeholder);
-		placeholder.append(calloutPlaceholder);
-		layout.element.append(scrollPanel);
-
-		/* save references */
-		layout.scrollPanel = scrollPanel;
-		layout.mousePanel = mousePanel;
-		layout.placeholder = placeholder;
-		layout.calloutPlaceholder = calloutPlaceholder;
+		primitives.common.JsonML.appendDOM(layout.element, primitives.common.JsonML.toHTML(
+			["div", /* scrollPanel - root scroll panel */
+				{
+					"tabindex": 0,
+					"style": {
+						"position": "relative",
+						"overflow": "auto",
+						"-webkit-overflow-scrolling": "touch",
+						"top": "0px",
+						"left": "0px",
+						"width": scrollPanelRect.width + "px",
+						"height": scrollPanelRect.height + "px",
+						"padding": "0px",
+						"marginBottom": "0px",
+						"marginRight": "0px",
+						"marginLeft": pixelAlignmentFix.width + "px", /* fixes div pixel alignment */
+						"marginTop": pixelAlignmentFix.height + "px"
+					},
+					"class": name,
+					"$": function (element) { layout.scrollPanel = element; }
+				},
+				["div", /* mousePanel - mouse tracking events panel */
+					{
+						"style": primitives.common.mergeObjects({
+							position: "absolute",
+							overflow: "hidden"
+						},
+						placeholderRect.getCSS()),
+						"class": name,
+						"$": function (element) { layout.mousePanel = element; }
+					},
+					["div", /* placeholder - contents scalable panel */
+						{
+							"style": primitives.common.mergeObjects({
+								position: "absolute",
+								overflow: "hidden"
+							},
+							placeholderRect.getCSS()),
+							"class": ["placeholder", name],
+							"$": function (element) { layout.placeholder = element; }
+						},
+						["div", /* calloutPlaceholder - callout panel */
+							{
+								"style": {
+									position: "absolute",
+									overflow: "visible",
+									top: "0px",
+									left: "0px",
+									width: "0px",
+									height: "0px"
+								},
+								"class": ["calloutplaceholder", name],
+								"$": function (element) { layout.calloutPlaceholder = element; }
+							}
+						]
+					]
+				]
+			])
+		);
 	}
 
-	function cleanLayout(layout, name) {
-		layout.element.find("." + name).remove();
-	}
-
-	function createMouse() {
-		if (_data.options.enablePanning) {
-			_data.mouse = new primitives.common.Mouse();
-			_data.mouse.init(_data.layout.mousePanel, {
-				name: _data.name,
-				onMouseDrag: mouseDrag,
-				onMouseStop: mouseStop,
-				onMouseCapture: mouseCapture
-			});
-		}
-	}
-
-	function destroyMouse() {
-		if (_data.mouse != null) {
-			_data.mouse.destroy();
+	function cleanLayout(layout) {
+		if (_data.layout.scrollPanel != null) {
+			var parent = _data.layout.scrollPanel.parentNode;
+			if (parent != null) {
+				parent.removeChild(_data.layout.scrollPanel);
+			}
 		}
 	}
 
 	function bind(layout) {
-		layout.mousePanel
-			.mousemove(function (e) { onMouseMove(e); })
-			.click(function (e) { onMouseClick(e); })
-			.dblclick(function (e) { onMouseDblClick(e); });
-		layout.scrollPanel
-			.keydown(function (e) { onKeyDown(e); });
+		layout.mousePanel.addEventListener('mousemove', onMouseMove);
+		layout.mousePanel.addEventListener('click', onMouseClick);
+		layout.mousePanel.addEventListener('dblclick', onMouseDblClick);
+		layout.mousePanel.addEventListener('change', onCheckboxChange);
 
-		//if ('ontouchstart' in document.documentElement) {//ignore jslint
-		//	layout.scrollPanel[0].addEventListener("gesturestart", onGestureStart, false);
-		//	layout.scrollPanel[0].addEventListener("gesturechange", onGestureChange, false);
-		//}
+		layout.scrollPanel.addEventListener('keydown', onKeyDown);
+		layout.scrollPanel.addEventListener('scroll', onScroll);
+		if (_data.options.enablePanning && primitives.common.isChrome()) {
+			layout.scrollPanel.draggable = true;
+			layout.scrollPanel.addEventListener('dragstart', onDragStart);
+			layout.scrollPanel.addEventListener('drag', onDragScroll);
+			layout.scrollPanel.addEventListener('dragend', onDragScroll);
+			layout.scrollPanel.addEventListener('dragover', onDragOver);
+		}
 	}
 
 	function unbind(layout) {
 		if (layout.mousePanel != null) {
-			layout.mousePanel.unbind("mousemove");
-			layout.mousePanel.unbind("click");
-			layout.mousePanel.unbind("dblclick");
+			layout.mousePanel.removeEventListener("mousemove", onMouseMove);
+			layout.mousePanel.removeEventListener("click", onMouseClick);
+			layout.mousePanel.removeEventListener("dblclick", onMouseDblClick);
+			layout.mousePanel.removeEventListener("change", onCheckboxChange);
 		}
 		if (layout.scrollPanel != null) {
-			layout.scrollPanel.unbind("keydown");
-		}
+			layout.scrollPanel.removeEventListener("keydown", onKeyDown);
+			layout.scrollPanel.removeEventListener("scroll", onScroll);
 
-		//if ('ontouchstart' in document.documentElement) {//ignore jslint
-		//	layout.scrollPanel[0].removeEventListener("gesturestart", onGestureStart, false);
-		//	layout.scrollPanel[0].removeEventListener("gesturechange", onGestureChange, false);
-		//}
+			layout.scrollPanel.removeEventListener('dragstart', onDragStart);
+			layout.scrollPanel.removeEventListener('drag', onDragScroll);
+			layout.scrollPanel.removeEventListener('dragend', onDragScroll);
+			layout.scrollPanel.removeEventListener('dragover', onDragOver);
+		}
 	}
 
 	function onMouseMove(event) {
-		var placeholderOffset = _data.layout.mousePanel.offset(),
+		var placeholderOffset = primitives.common.getElementOffset(_data.layout.mousePanel),
 			x = event.pageX - placeholderOffset.left,
 			y = event.pageY - placeholderOffset.top,
 			createTransformTask = _data.tasks.getTask("CreateTransformTask"),
 			highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
 			itemId;
 
-		if (!_data.mouse || !_data.mouse.isStarted()) {
-			_cancelMouseClick = false;
+		if (highlightItemOptionTask.hasHighlightEnabled()) {
+			itemId = createTransformTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius());
+			setHighlightItem(event, itemId);
+		}
+	}
 
-			if (highlightItemOptionTask.hasHighlightEnabled()) {
-				itemId = createTransformTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius());
-				setHighlightItem(event, itemId);
+	function onCheckboxChange(event) {
+		var target = event.target;
+		var selectedId = target.getAttribute("data-id");
+		if (selectedId != null) {
+			var selectedItems = (_data.options.selectedItems || []).slice();
+			var eventArgs = getEventArgs(null, selectedId);
+			var position = primitives.common.indexOf(selectedItems, selectedId);
+			trigger("onSelectionChanging", event, eventArgs);
+			if (!eventArgs.cancel) {
+				if (position >= 0) {
+					selectedItems.splice(position, 1);
+				}
+				else {
+					selectedItems.push(selectedId);
+				}
+				_data.options.selectedItems = selectedItems;
+
+				if (position < 0) {
+					target.setAttribute("checked", "checked");
+				} else {
+					target.removeAttribute("checked");
+				}
+
+				//refresh(false, false);
+
+				trigger("onSelectionChanged", event, eventArgs);
 			}
 		}
 	}
 
 	function onMouseClick(event) {
-		if (!_data.mouse || !_data.mouse.isStarted()) {
-			var placeholderOffset = _data.layout.mousePanel.offset(),
-				x = event.pageX - placeholderOffset.left,
-				y = event.pageY - placeholderOffset.top,
-				createTransformTask = _data.tasks.getTask("CreateTransformTask"),
-				cursorItemOptionTask = _data.tasks.getTask("CursorItemOptionTask"),
-				highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
-				item,
-				newCursorItemId = createTransformTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius()),
-				target,
-				button,
-				buttonname,
-				eventArgs,
-				position,
-				selectedItems;
-			if (!_cancelMouseClick) {
-				if (newCursorItemId !== null) {
-					target = jQuery(event.target);
-					if (target.hasClass(_data.name + "button") || target.parent("." + _data.name + "button").length > 0) {
-						button = target.hasClass(_data.name + "button") ? target : target.parent("." + _data.name + "button");
-						buttonname = button.data("buttonname");
+		var placeholderOffset = primitives.common.getElementOffset(_data.layout.mousePanel),
+			x = event.pageX - placeholderOffset.left,
+			y = event.pageY - placeholderOffset.top,
+			createTransformTask = _data.tasks.getTask("CreateTransformTask"),
+			cursorItemOptionTask = _data.tasks.getTask("CursorItemOptionTask"),
+			highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
+			item,
+			newCursorItemId = createTransformTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius()),
+			target,
+			button,
+			buttonname,
+			eventArgs,
+			position,
+			selectedItems;
+		target = event.target;
+		if (newCursorItemId !== null) {
+			if (primitives.common.hasClass(target, _data.name + "button") || primitives.common.hasClass(target.parentNode, _data.name + "button")) {
+				button = primitives.common.hasClass(target, _data.name + "button") ? target : target.parentNode;
+				buttonname = button.getAttribute("data-buttonname");
 
-						eventArgs = getEventArgs(null, newCursorItemId, buttonname);
-						trigger("onButtonClick", event, eventArgs);
-					}
-					else if (target.attr("name") === "checkbox" || target.attr("name") === "selectiontext") {//ignore jslint
-						selectedItems = (_data.options.selectedItems || []).slice(0);
-						eventArgs = getEventArgs(null, newCursorItemId, buttonname);
-						trigger("onSelectionChanging", event, eventArgs);
-
-						position = primitives.common.indexOf(selectedItems, newCursorItemId);
-						if (position >= 0) {
-							selectedItems.splice(position, 1);
-						}
-						else {
-							selectedItems.push(newCursorItemId);
-						}
-						_data.options.selectedItems = selectedItems;
-						trigger("onSelectionChanged", event, eventArgs);
-
-						_cancelMouseClick = true;
-						return;
-					}
-					else {
-						eventArgs = getEventArgs(null, newCursorItemId);
-
-						trigger("onMouseClick", event, eventArgs);
-						if (!eventArgs.cancel) {
-							if (cursorItemOptionTask.hasCursorEnabled()) {
-								setCursorItem(event, newCursorItemId);
-								_data.layout.scrollPanel.focus();
-							}
-						}
+				eventArgs = getEventArgs(null, newCursorItemId, buttonname);
+				trigger("onButtonClick", event, eventArgs);
+			}
+			else if (target.getAttribute("name") === "checkbox" || target.getAttribute("name") === "selectiontext") { //ignore jslint
+				
+			}
+			else {
+				eventArgs = getEventArgs(null, newCursorItemId);
+				trigger("onMouseClick", event, eventArgs);
+				if (!eventArgs.cancel) {
+					if (cursorItemOptionTask.hasCursorEnabled()) {
+						setCursorItem(event, newCursorItemId);
+						_data.layout.scrollPanel.focus();
 					}
 				}
 			}
 		}
-		_cancelMouseClick = false;
 	}
 
 	function onMouseDblClick(event) {
@@ -22292,13 +22859,9 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 			highlightTreeItem = highlightItemTask.getHighlightTreeItem();
 
 		if (highlightTreeItem !== null) {
-			if (!_cancelMouseClick) {
 				eventArgs = getEventArgs(null, highlightTreeItem);
-
 				trigger("onMouseDblClick", event, eventArgs);
-			}
 		}
-		_cancelMouseClick = false;
 	}
 
 	function onKeyDown(event) {
@@ -22375,53 +22938,30 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 		}
 	}
 
-	function onGestureStart(e) {
-		var scaleOptionTask = _data.taks.getTask("ScaleOptionTask"),
-			options = scaleOptionTask.getOptions();
-
-		_scale = options.scale;
-		e.preventDefault();
-	}
-
-	function onGestureChange(e) {
-		var scale = Math.round(_scale * e.scale * 10.0) / 10.0,
-			scaleOptionTask = _data.taks.getTask("ScaleOptionTask"),
-			options = scaleOptionTask.getOptions();
-
-		if (scale > options.maximumScale) {
-			scale = options.maximumScale;
-		} else if (scale < options.minimumScale) {
-			scale = options.minimumScale;
-		}
-
-		_data.options.scale = scale;
-
-		refresh(false, false);
-
-		e.preventDefault();
-	}
-
-	function mouseDrag(event) {
-		var position = new primitives.common.Point(event.pageX, event.pageY),
-			left = -position.x + _dragStartPosition.x,
-			top = -position.y + _dragStartPosition.y,
-			scrollPanel = _data.layout.scrollPanel;
-		scrollPanel.css('visibility', 'hidden');
-		scrollPanel
-			.scrollLeft(left)
-			.scrollTop(top);
-		scrollPanel.css('visibility', 'inherit');
-		return false;
-	}
-
-	function mouseStop(event) {//ignore jslint
-		_cancelMouseClick = true;
-	}
-
-	function mouseCapture(event) {
+	function onDragStart(event) {
 		var scrollPanel = _data.layout.scrollPanel;
-		_dragStartPosition = new primitives.common.Point(scrollPanel.scrollLeft() + event.pageX, scrollPanel.scrollTop() + event.pageY);
-		return true;
+		_dragFrom = new primitives.common.Point(event.clientX, event.clientY);
+		_scrollFrom = new primitives.common.Point(scrollPanel.scrollLeft, scrollPanel.scrollTop);
+		_dragImage = _dragImage || new Image(); //ignore jslint
+		event.dataTransfer.setDragImage(_dragImage, 0, 0);
+	}
+
+	function onDragOver(event) {
+		event.preventDefault();
+		event.dataTransfer.dropEffect = "move";
+	}
+
+	function onDragScroll(event) {
+		_scrollTo = new primitives.common.Point(_scrollFrom.x - (event.clientX - _dragFrom.x), _scrollFrom.y - (event.clientY - _dragFrom.y));
+		if (_dragTimer == null) {
+			_dragTimer = window.setTimeout(function () {
+				var scrollPanel = _data.layout.scrollPanel;
+				scrollPanel.scrollLeft = _scrollTo.x;
+				scrollPanel.scrollTop = _scrollTo.y;
+				window.clearTimeout(_dragTimer);
+				_dragTimer = null;
+			}, 50);
+		}
 	}
 
 	function setHighlightItem(event, newHighlightItemId) {
@@ -22491,12 +23031,6 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 		}
 	}
 
-	function getProcessDiagramConfig() {
-		var tasks = taskManagerFactory(getOptions, getGraphics, getLayout);
-
-		return tasks.getProcessDiagramConfig();
-	}
-
 	update(); /* init control on create */
 
 	return {
@@ -22505,202 +23039,233 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 		getOptions: getOptions,
 		setOption: setOption,
 		getOption: getOption,
-		update: update,
-		getProcessDiagramConfig: getProcessDiagramConfig
+		update: update
 	};
 };
 
 /* /Controls/OrgDiagram/Control.js*/
-primitives.orgdiagram.Control = function (element, options) {
+/*
+	Class: primitives.orgdiagram.Control
+	JavaScript Organizational Diagram Control. 
 	
-	function createTaskManager(getOptions, getGraphics, getLayout) {
-		var tasks = new primitives.common.TaskManager();
+	Parameters:
+	element - reference to DOM element which is used as new control placeholder. 
+		Control renders diagram content inside of that DIV placeholder and  adds events listeners.
+	options - reference to primitives.orgdiagram.Config class instance.
 
-		// Dependencies
-		tasks.addDependency('options', getOptions);
-		tasks.addDependency('graphics', getGraphics);
-		tasks.addDependency('layout', getLayout);
+	Returns: 
+	reference to new instance of the control. Control adds event listeners bound to its contents, so if you need to remove it from DOM call destroy() method on the control's instance.
+*/
+primitives.orgdiagram.Control = function (element, options) {
+	return primitives.orgdiagram.BaseControl(element, options, primitives.orgdiagram.TaskManagerFactory, primitives.orgdiagram.EventArgsFactory, {
+		AnnotationLabelTemplate: primitives.common.AnnotationLabelTemplate,
+		ButtonsTemplate: primitives.common.ButtonsTemplate,
+		CheckBoxTemplate: primitives.common.CheckBoxTemplate,
+		CursorTemplate: primitives.common.CursorTemplate,
+		DotHighlightTemplate: primitives.common.DotHighlightTemplate,
+		GroupTitleTemplate: primitives.common.GroupTitleTemplate,
+		HighlightTemplate: primitives.common.HighlightTemplate,
+		ItemTemplate: primitives.common.ItemTemplate,
+		UserTemplate: primitives.common.UserTemplate
+	});
+};
 
-		tasks.addDependency('defaultConfig', new primitives.orgdiagram.Config());
-		tasks.addDependency('defaultItemConfig', new primitives.orgdiagram.ItemConfig());
-		tasks.addDependency('defaultTemplateConfig', new primitives.orgdiagram.TemplateConfig());
-		tasks.addDependency('defaultButtonConfig', new primitives.orgdiagram.ButtonConfig());
+/* /Controls/OrgDiagram/EventArgsFactory.js*/
+primitives.orgdiagram.EventArgsFactory = function (data, oldTreeItemId, newTreeItemId, name) {
+	var result = new primitives.orgdiagram.EventArgs(),
+		combinedContextsTask = data.tasks.getTask("CombinedContextsTask"),
+		alignDiagramTask = data.tasks.getTask("AlignDiagramTask"),
+		oldItemConfig = combinedContextsTask.getConfig(oldTreeItemId),
+		newItemConfig = combinedContextsTask.getConfig(newTreeItemId),
+		itemPosition,
+		actualPosition,
+		offset,
+		panelOffset;
 
-		tasks.addDependency('defaultBackgroundAnnotationConfig', new primitives.orgdiagram.BackgroundAnnotationConfig());
-		tasks.addDependency('defaultConnectorAnnotationConfig', new primitives.orgdiagram.ConnectorAnnotationConfig());
-		tasks.addDependency('defaultHighlightPathAnnotationConfig', new primitives.orgdiagram.HighlightPathAnnotationConfig());
-		tasks.addDependency('defaultShapeAnnotationConfig', new primitives.orgdiagram.ShapeAnnotationConfig());
-
-		tasks.addDependency('isFamilyChartMode', false);
-		tasks.addDependency('showElbowDots', false);
-		tasks.addDependency('null', null);
-		tasks.addDependency('foreground', 2/*primitives.common.ZOrderType.Foreground*/);
-		tasks.addDependency('background', 1/*primitives.common.ZOrderType.Background*/);
-
-		// Options
-		tasks.addTask('OptionsTask', ['options'], primitives.orgdiagram.OptionsTask, "#000000"/*primitives.common.Colors.Black*/);
-
-		// Layout
-		tasks.addTask('CurrentControlSizeTask', ['layout', 'OptionsTask', 'ItemsSizesOptionTask'], primitives.orgdiagram.CurrentControlSizeTask, "#000000"/*primitives.common.Colors.Black*/);
-		tasks.addTask('CurrentScrollPositionTask', ['layout', 'OptionsTask'], primitives.orgdiagram.CurrentScrollPositionTask, "#000000"/*primitives.common.Colors.Black*/);
-
-		tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.orgdiagram.ItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig', 'defaultButtonConfig'], primitives.orgdiagram.ItemsSizesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.LabelsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultButtonConfig', 'defaultTemplateConfig'], primitives.orgdiagram.TemplatesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.OrientationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('VisualTreeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.VisualTreeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('MinimizedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.MinimizedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-
-		tasks.addTask('CursorItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('HighlightItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.HighlightItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('SelectedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.SelectedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('CursorSelectionPathModeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorSelectionPathModeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-
-		tasks.addTask('SplitAnnotationsOptionTask', ['OptionsTask'], primitives.orgdiagram.SplitAnnotationsOptionTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-
-		tasks.addTask('ForegroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'foreground'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'background'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ForegroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'foreground'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'background'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], primitives.orgdiagram.BackgroundAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-
-		tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ScaleOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-
-		// Transformations
-		tasks.addTask('CombinedContextsTask', ['ItemsOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('OrgTreeTask', ['ItemsOptionTask'], primitives.orgdiagram.OrgTreeTask, "#ff0000"/*primitives.common.Colors.Red*/);
-
-		// Transformations / Templates
-		tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask'], primitives.orgdiagram.ReadTemplatesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('ActiveItemsTask', ['ItemsSizesOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ActiveItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ItemTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask'], primitives.orgdiagram.GroupTitleTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask'], primitives.orgdiagram.CheckBoxTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask'], primitives.orgdiagram.ButtonsTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask'], primitives.orgdiagram.AnnotationLabelTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-
-		tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'ActiveItemsTask', 'VisualTreeOptionTask', 'isFamilyChartMode'], primitives.orgdiagram.VisualTreeTask, "#ff0000"/*primitives.common.Colors.Red*/);
-		tasks.addTask('VisualTreeLevelsTask', ['VisualTreeTask', 'ItemTemplateParamsTask'], primitives.orgdiagram.VisualTreeLevelsTask, "#ff0000"/*primitives.common.Colors.Red*/);
-
-		tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'VisualTreeLevelsTask', 'AlignDiagramTask'], primitives.orgdiagram.ConnectionsGraphTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-
-		// Transformations/Selections
-		tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.HighlightItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-
-		tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'VisualTreeTask'], primitives.orgdiagram.CursorNeighboursTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('SelectionPathItemsTask', ['VisualTreeTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], primitives.orgdiagram.SelectionPathItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-
-		tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('NormalVisibilityItemsByBackgroundShapeAnnotationTask', ['BackgroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('NormalVisibilityItemsByBackgroundAnnotationTask', ['BackgroundAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('NormalVisibilityItemsByForegroundHighlightPathAnnotationTask', ['ForegroundHighlightPathAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', ['BackgroundHighlightPathAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('NormalVisibilityItemsByForegroundConnectorAnnotationTask', ['ForegroundConnectorAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByConnectorAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('NormalVisibilityItemsByBackgroundConnectorAnnotationTask', ['BackgroundConnectorAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByConnectorAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('CombinedNormalVisibilityItemsTask', [
-			'ItemsSizesOptionTask',
-			'CursorItemTask',
-			'CursorNeighboursTask',
-			'SelectedItemsTask',
-			'SelectionPathItemsTask',
-			'NormalVisibilityItemsByForegroundShapeAnnotationTask',
-			'NormalVisibilityItemsByBackgroundShapeAnnotationTask',
-			'NormalVisibilityItemsByBackgroundAnnotationTask',
-			'NormalVisibilityItemsByForegroundHighlightPathAnnotationTask',
-			'NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask',
-			'NormalVisibilityItemsByForegroundConnectorAnnotationTask',
-			'NormalVisibilityItemsByBackgroundConnectorAnnotationTask'], primitives.orgdiagram.CombinedNormalVisibilityItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-
-		tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'VisualTreeOptionTask',
-			'VisualTreeTask', 'VisualTreeLevelsTask',
-			'ItemTemplateParamsTask',
-			'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], primitives.orgdiagram.ItemsPositionsTask, "#ff0000"/*primitives.common.Colors.Red*/);
-
-		tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], primitives.orgdiagram.AlignDiagramTask, "#ff0000"/*primitives.common.Colors.Red*/);
-		tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.CreateTransformTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('CenterOnCursorTask', ['layout', 'CurrentControlSizeTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], primitives.orgdiagram.CenterOnCursorTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-
-		// Managers
-		tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'null'], primitives.orgdiagram.PaletteManagerTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-
-		// Apply Layout Changes
-		tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'layout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.ApplyLayoutChangesTask, "#008000"/*primitives.common.Colors.Green*/);
-
-		// Renders
-		tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'VisualTreeTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawBackgroundAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-
-		tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-
-		tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-
-		tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawCursorTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawHighlightAnnotationTask', ['layout', 'graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-
-		tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask',
-			'ItemsSizesOptionTask',
-			'CombinedContextsTask',
-			'AlignDiagramTask', 'ItemTemplateParamsTask',
-			'CursorItemTask', 'SelectedItemsTask',
-			'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask'
-		], primitives.orgdiagram.DrawTreeItemsTask, "#008000"/*primitives.common.Colors.Green*/);
-
-		tasks.addTask('DrawMinimizedItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'MinimizedItemsOptionTask', 'ItemTemplateParamsTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawMinimizedItemsTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask'], primitives.orgdiagram.DrawConnectorsTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawItemLabelsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LabelsOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawItemLabelsTask, "#008000"/*primitives.common.Colors.Green*/);
-
-		return tasks;
+	if (oldItemConfig && oldItemConfig.id != null) {
+		result.oldContext = oldItemConfig;
 	}
 
-	function createEventArgs(data, oldTreeItemId, newTreeItemId, name) {
-		var result = new primitives.orgdiagram.EventArgs(),
-			combinedContextsTask = data.tasks.getTask("CombinedContextsTask"),
-			alignDiagramTask = data.tasks.getTask("AlignDiagramTask"),
-			oldItemConfig = combinedContextsTask.getConfig(oldTreeItemId),
-			newItemConfig = combinedContextsTask.getConfig(newTreeItemId),
-			itemPosition,
-			actualPosition,
-			offset,
-			panelOffset;
+	if (newItemConfig && newItemConfig.id != null) {
+		result.context = newItemConfig;
 
-		if (oldItemConfig && oldItemConfig.id != null) {
-			result.oldContext = oldItemConfig;
+		if (newItemConfig.parent !== null) {
+			result.parentItem = combinedContextsTask.getConfig(newItemConfig.parent);
 		}
 
-		if (newItemConfig && newItemConfig.id != null) {
-			result.context = newItemConfig;
-
-			if (newItemConfig.parent !== null) {
-				result.parentItem = combinedContextsTask.getConfig(newItemConfig.parent);
-			}
-
-			panelOffset = data.layout.mousePanel.offset();
-			offset = data.layout.element.offset();
-			itemPosition = alignDiagramTask.getItemPosition(newTreeItemId),
-			result.position = new primitives.common.Rect(itemPosition.actualPosition)
-					.translate(panelOffset.left, panelOffset.top)
-					.translate(-offset.left, -offset.top);
-		}
-
-		if (name != null) {
-			result.name = name;
-		}
-
-		return result;
+		panelOffset = primitives.common.getElementOffset(data.layout.mousePanel);
+		offset = primitives.common.getElementOffset(data.layout.element);
+		itemPosition = alignDiagramTask.getItemPosition(newTreeItemId),
+		result.position = new primitives.common.Rect(itemPosition.actualPosition)
+				.translate(panelOffset.left, panelOffset.top)
+				.translate(-offset.left, -offset.top);
 	}
 
-	return primitives.orgdiagram.BaseControl(element, options, createTaskManager, createEventArgs);
+	if (name != null) {
+		result.name = name;
+	}
+
+	return result;
+};
+
+/* /Controls/OrgDiagram/getProcessDiagramConfig.js*/
+primitives.orgdiagram.getProcessDiagramConfig = function () {
+	var dummyFunction = function () { };
+	var tasks = primitives.orgdiagram.TaskManagerFactory(dummyFunction, dummyFunction, dummyFunction);
+	return tasks.getProcessDiagramConfig();
+};
+
+/* /Controls/OrgDiagram/TaskManagerFactory.js*/
+primitives.orgdiagram.TaskManagerFactory = function (getOptions, getGraphics, getLayout, templates) {
+	var tasks = new primitives.common.TaskManager();
+
+	// Dependencies
+	tasks.addDependency('options', getOptions);
+	tasks.addDependency('graphics', getGraphics);
+	tasks.addDependency('layout', getLayout);
+	tasks.addDependency('templates', templates);
+
+	tasks.addDependency('defaultConfig', new primitives.orgdiagram.Config());
+	tasks.addDependency('defaultItemConfig', new primitives.orgdiagram.ItemConfig());
+	tasks.addDependency('defaultTemplateConfig', new primitives.orgdiagram.TemplateConfig());
+	tasks.addDependency('defaultButtonConfig', new primitives.orgdiagram.ButtonConfig());
+
+	tasks.addDependency('defaultBackgroundAnnotationConfig', new primitives.orgdiagram.BackgroundAnnotationConfig());
+	tasks.addDependency('defaultConnectorAnnotationConfig', new primitives.orgdiagram.ConnectorAnnotationConfig());
+	tasks.addDependency('defaultHighlightPathAnnotationConfig', new primitives.orgdiagram.HighlightPathAnnotationConfig());
+	tasks.addDependency('defaultShapeAnnotationConfig', new primitives.orgdiagram.ShapeAnnotationConfig());
+
+	tasks.addDependency('isFamilyChartMode', false);
+	tasks.addDependency('showElbowDots', false);
+	tasks.addDependency('null', null);
+	tasks.addDependency('foreground', 2/*primitives.common.ZOrderType.Foreground*/);
+	tasks.addDependency('background', 1/*primitives.common.ZOrderType.Background*/);
+
+	// Options
+	tasks.addTask('OptionsTask', ['options'], primitives.orgdiagram.OptionsTask, "#000000"/*primitives.common.Colors.Black*/);
+
+	// Layout
+	tasks.addTask('CurrentControlSizeTask', ['layout', 'OptionsTask', 'ItemsSizesOptionTask'], primitives.orgdiagram.CurrentControlSizeTask, "#000000"/*primitives.common.Colors.Black*/);
+	tasks.addTask('CurrentScrollPositionTask', ['layout', 'OptionsTask'], primitives.orgdiagram.CurrentScrollPositionTask, "#000000"/*primitives.common.Colors.Black*/);
+
+	tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.orgdiagram.ItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig', 'defaultButtonConfig'], primitives.orgdiagram.ItemsSizesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.LabelsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultButtonConfig', 'defaultTemplateConfig'], primitives.orgdiagram.TemplatesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.OrientationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('VisualTreeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.VisualTreeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('MinimizedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.MinimizedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+
+	tasks.addTask('CursorItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('HighlightItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.HighlightItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('SelectedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.SelectedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('CursorSelectionPathModeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorSelectionPathModeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+
+	tasks.addTask('SplitAnnotationsOptionTask', ['OptionsTask'], primitives.orgdiagram.SplitAnnotationsOptionTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+
+	tasks.addTask('ForegroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'foreground'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('BackgroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'background'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('ForegroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'foreground'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('BackgroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'background'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], primitives.orgdiagram.BackgroundAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+
+	tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ScaleOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+
+	// Transformations
+	tasks.addTask('CombinedContextsTask', ['ItemsOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('OrgTreeTask', ['ItemsOptionTask'], primitives.orgdiagram.OrgTreeTask, "#ff0000"/*primitives.common.Colors.Red*/);
+
+	// Transformations / Templates
+	tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask'], primitives.orgdiagram.ReadTemplatesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('ActiveItemsTask', ['ItemsSizesOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ActiveItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ItemTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask'], primitives.orgdiagram.GroupTitleTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask'], primitives.orgdiagram.CheckBoxTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask', 'templates'], primitives.orgdiagram.ButtonsTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask'], primitives.orgdiagram.AnnotationLabelTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+
+	tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'ActiveItemsTask', 'VisualTreeOptionTask', 'isFamilyChartMode'], primitives.orgdiagram.VisualTreeTask, "#ff0000"/*primitives.common.Colors.Red*/);
+	tasks.addTask('VisualTreeLevelsTask', ['VisualTreeTask', 'ItemTemplateParamsTask'], primitives.orgdiagram.VisualTreeLevelsTask, "#ff0000"/*primitives.common.Colors.Red*/);
+
+	tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'VisualTreeLevelsTask', 'AlignDiagramTask'], primitives.orgdiagram.ConnectionsGraphTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+
+	// Transformations/Selections
+	tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.HighlightItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+
+	tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'VisualTreeTask'], primitives.orgdiagram.CursorNeighboursTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('SelectionPathItemsTask', ['VisualTreeTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], primitives.orgdiagram.SelectionPathItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+
+	tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('NormalVisibilityItemsByBackgroundShapeAnnotationTask', ['BackgroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('NormalVisibilityItemsByBackgroundAnnotationTask', ['BackgroundAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('NormalVisibilityItemsByForegroundHighlightPathAnnotationTask', ['ForegroundHighlightPathAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', ['BackgroundHighlightPathAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('NormalVisibilityItemsByForegroundConnectorAnnotationTask', ['ForegroundConnectorAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByConnectorAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('NormalVisibilityItemsByBackgroundConnectorAnnotationTask', ['BackgroundConnectorAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByConnectorAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('CombinedNormalVisibilityItemsTask', [
+		'ItemsSizesOptionTask',
+		'CursorItemTask',
+		'CursorNeighboursTask',
+		'SelectedItemsTask',
+		'SelectionPathItemsTask',
+		'NormalVisibilityItemsByForegroundShapeAnnotationTask',
+		'NormalVisibilityItemsByBackgroundShapeAnnotationTask',
+		'NormalVisibilityItemsByBackgroundAnnotationTask',
+		'NormalVisibilityItemsByForegroundHighlightPathAnnotationTask',
+		'NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask',
+		'NormalVisibilityItemsByForegroundConnectorAnnotationTask',
+		'NormalVisibilityItemsByBackgroundConnectorAnnotationTask'], primitives.orgdiagram.CombinedNormalVisibilityItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+
+	tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'VisualTreeOptionTask',
+		'VisualTreeTask', 'VisualTreeLevelsTask',
+		'ItemTemplateParamsTask',
+		'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], primitives.orgdiagram.ItemsPositionsTask, "#ff0000"/*primitives.common.Colors.Red*/);
+
+	tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], primitives.orgdiagram.AlignDiagramTask, "#ff0000"/*primitives.common.Colors.Red*/);
+	tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.CreateTransformTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('CenterOnCursorTask', ['layout', 'CurrentControlSizeTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], primitives.orgdiagram.CenterOnCursorTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+
+	// Managers
+	tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'null'], primitives.orgdiagram.PaletteManagerTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+
+	// Apply Layout Changes
+	tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'layout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.ApplyLayoutChangesTask, "#008000"/*primitives.common.Colors.Green*/);
+
+	// Renders
+	tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'VisualTreeTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawBackgroundAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+
+	tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+
+	tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+
+	tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawCursorTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawHighlightAnnotationTask', ['layout', 'graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+
+	tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask',
+		'ItemsSizesOptionTask',
+		'CombinedContextsTask',
+		'AlignDiagramTask', 'CenterOnCursorTask',
+		'ItemTemplateParamsTask',
+		'CursorItemTask', 'SelectedItemsTask',
+		'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask'
+	], primitives.orgdiagram.DrawTreeItemsTask, "#008000"/*primitives.common.Colors.Green*/);
+
+	tasks.addTask('DrawMinimizedItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'MinimizedItemsOptionTask', 'ItemTemplateParamsTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawMinimizedItemsTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask'], primitives.orgdiagram.DrawConnectorsTask, "#008000"/*primitives.common.Colors.Green*/);
+	tasks.addTask('DrawItemLabelsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LabelsOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawItemLabelsTask, "#008000"/*primitives.common.Colors.Green*/);
+
+	return tasks;
 };
 
 /* /algorithms/binarySearch.js*/
@@ -28770,8 +29335,8 @@ primitives.pdf.graphics.prototype.template = function (x, y, width, height, cont
 	var gap = 0;
 
 	if (attr !== null) {
-		if (attr["border-width"] !== undefined) {
-			gap = this.getPxSize(attr["border-width"]);
+		if (attr.borderWidth !== undefined) {
+			gap = this.getPxSize(attr.borderWidth);
 		}
 	}
 
@@ -28936,10 +29501,11 @@ primitives.pdf.famdiagram.Plugin = function (options) {
 		tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask', 'DrawBackgroundHighlightPathAnnotationTask'], primitives.orgdiagram.DrawConnectorsTask, "#008000"/*primitives.common.Colors.Green*/);
 		tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background', 'DrawConnectorsTask'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask',
+		tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'null',
 			'ItemsSizesOptionTask',
 			'CombinedContextsTask',
-			'AlignDiagramTask', 'CombinedTemplateParamsTask',
+			'AlignDiagramTask', 'null',
+			'CombinedTemplateParamsTask',
 			'CursorItemTask', 'SelectedItemsTask',
 			'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask',
 			'DrawForegroundHighlightPathAnnotationTask'
@@ -29371,10 +29937,11 @@ primitives.pdf.orgdiagram.Plugin = function (options) {
 		tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundAnnotationTask' /*dummy dependency enforeces drawing order */], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
 		tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundShapeAnnotationTask'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
 
-		tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask',
+		tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'null',
 			'ItemsSizesOptionTask',
 			'CombinedContextsTask',
-			'AlignDiagramTask', 'ItemTemplateParamsTask',
+			'AlignDiagramTask', 'null',
+			'ItemTemplateParamsTask',
 			'CursorItemTask', 'SelectedItemsTask',
 			'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask',
 			'DrawBackgroundConnectorAnnotationTask'
@@ -29611,8 +30178,7 @@ primitives.pdf.GroupTitleTemplate = function (itemTitleFirstFontColor, itemTitle
 	}
 
 	function render(doc, position, data) {
-		var config = new primitives.text.Config(),
-			itemConfig = data.context,
+		var itemConfig = data.context,
 			groupTitleColor = itemConfig.groupTitleColor || "#4169e1"/*primitives.common.Colors.RoyalBlue*/,
 			color = primitives.common.highestContrast(groupTitleColor, itemTitleSecondFontColor, itemTitleFirstFontColor);
 
@@ -29804,1308 +30370,7 @@ primitives.pdf.UserTemplate = function (options, itemTemplateConfig, onRender) {
 	};
 };
 
-/* /Widgets/callout/configs/Config.js*/
-/*
-	Class: primitives.callout.Config
-		Callout options class.
-	
-*/
-primitives.callout.Config = function () {
-	this.classPrefix = "bpcallout";
 
-	/*
-		Property: graphicsType
-			Preferable graphics type. If preferred graphics type is not supported widget switches to first available. 
 
-		Default:
-			<primitives.common.GraphicsType.SVG>
-	*/
-	this.graphicsType = 1/*primitives.common.GraphicsType.Canvas*/;
-
-	/*
-		Property: pointerPlacement
-			Defines pointer connection side or corner.
-
-		Default:
-			<primitives.common.PlacementType.Auto>
-	*/
-	this.pointerPlacement = 0/*primitives.common.PlacementType.Auto*/;
-
-	/*
-	Property: position
-		Defines callout body position. 
-		
-	Type:
-		<primitives.common.Rect>.
-	*/
-	this.position = null;
-
-	/*
-	Property: snapPoint
-		Callout snap point. 
-		
-	Type:
-		<primitives.common.Point>.
-	*/
-	this.snapPoint = null;
-
-	/*
-	Property: cornerRadius
-		Body corner radius in percents or pixels. 
-	*/
-	this.cornerRadius = "10%";
-
-	/*
-	Property: offset
-		Body rectangle offset. 
-	*/
-	this.offset = 0;
-
-	/*
-	Property: opacity
-		Background color opacity. 
-	*/
-	this.opacity = 1;
-
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 1;
-
-	/*
-	Property: lineType
-		Connector's line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-
-	/*
-	Property: pointerWidth
-		Pointer base width in percents or pixels. 
-	*/
-	this.pointerWidth = "10%";
-
-	/*
-	Property: borderColor
-		Border Color. 
-	
-	Default:
-		<primitives.common.Colors.Black>
-	*/
-	this.borderColor = "#000000"/*primitives.common.Colors.Black*/;
-
-	/*
-	Property: fillColor
-		Fill Color. 
-		
-	Default:
-		<primitives.common.Colors.Gray>
-	*/
-	this.fillColor = "#d3d3d3"/*primitives.common.Colors.LightGray*/;
-
-	/*
-	method: update
-		Makes full redraw of callout widget contents reevaluating all options.
-	*/
-};
-
-/* /Widgets/callout/controllers/Controller.js*/
-primitives.callout.Controller = function () {
-	this.widgetEventPrefix = "bpcallout";
-
-	this.options = new primitives.callout.Config();
-
-	this.m_placeholder = null;
-	this.m_panelSize = null;
-
-	this.m_graphics = null;
-
-	this.m_shape = null;
-};
-
-primitives.callout.Controller.prototype._create = function () {
-	this.element
-			.addClass("ui-widget");
-
-	this._createLayout();
-
-	this._redraw();
-};
-
-primitives.callout.Controller.prototype.destroy = function () {
-	this._cleanLayout();
-};
-
-primitives.callout.Controller.prototype._createLayout = function () {
-	this.m_panelSize = new primitives.common.Rect(0, 0, this.element.outerWidth(), this.element.outerHeight());
-
-	this.m_placeholder = jQuery('<div></div>');
-	this.m_placeholder.css({
-		"position": "relative",
-		"overflow": "hidden",
-		"top": "0px",
-		"left": "0px",
-		"padding": "0px",
-		"margin": "0px"
-	});
-	this.m_placeholder.css(this.m_panelSize.getCSS());
-	this.m_placeholder.addClass("placeholder");
-	this.m_placeholder.addClass(this.widgetEventPrefix);
-
-	this.element.append(this.m_placeholder);
-
-	this.m_graphics = primitives.common.createGraphics(this.options.graphicsType, this.element);
-
-	this.m_shape = new primitives.common.Callout(this.m_graphics);
-};
-
-primitives.callout.Controller.prototype._cleanLayout = function () {
-	if (this.m_graphics !== null) {
-		this.m_graphics.clean();
-	}
-	this.m_graphics = null;
-
-	this.element.find("." + this.widgetEventPrefix).remove();
-};
-
-primitives.callout.Controller.prototype._updateLayout = function () {
-	this.m_panelSize = new primitives.common.Rect(0, 0, this.element.innerWidth(), this.element.innerHeight());
-	this.m_placeholder.css(this.m_panelSize.getCSS());
-};
-
-primitives.callout.Controller.prototype.update = function (recreate) {
-	if (recreate) {
-		this._cleanLayout();
-		this._createLayout();
-		this._redraw();
-	}
-	else {
-		this._updateLayout();
-		this.m_graphics.resize("placeholder", this.m_panelSize.width, this.m_panelSize.height);
-		this.m_graphics.begin();
-		this._redraw();
-		this.m_graphics.end();
-	}
-};
-
-primitives.callout.Controller.prototype._redraw = function () {
-	var names = ["pointerPlacement", "cornerRadius", "offset", "opacity", "lineWidth", "lineType", "pointerWidth", "borderColor", "fillColor"],
-		index,
-		name;
-	this.m_graphics.activate("placeholder");
-	for (index = 0; index < names.length; index += 1) {
-		name = names[index];
-		this.m_shape[name] = this.options[name];
-	}
-	this.m_shape.draw(this.options.snapPoint, this.options.position);
-};
-
-primitives.callout.Controller.prototype._setOption = function (key, value) {
-	jQuery.Widget.prototype._setOption.apply(this, arguments);
-
-	switch (key) {
-		case "disabled":
-			var handles = jQuery([]);
-			if (value) {
-				handles.filter(".ui-state-focus").blur();
-				handles.removeClass("ui-state-hover");
-				handles.propAttr("disabled", true);
-				this.element.addClass("ui-disabled");
-			} else {
-				handles.propAttr("disabled", false);
-				this.element.removeClass("ui-disabled");
-			}
-			break;
-		default:
-			break;
-	}
-};
-
-/* /Widgets/callout/callout.js*/
-/*
- * jQuery UI Callout
- *
- * Basic Primitives Callout.
- *
- * Depends:
- *	jquery.ui.core.js
- *	jquery.ui.widget.js
- */
-if (typeof jQuery != "undefined") {
-	(function ($) {
-		$.widget("ui.bpCallout", new primitives.callout.Controller());
-	}(jQuery));
-}; //ignore jslint
-
-/* /Widgets/connector/configs/Config.js*/
-/*
-	Class: primitives.connector.Config
-		Connector options class.
-	
-*/
-primitives.connector.Config = function () {
-	this.classPrefix = "bpconnector";
-
-	/*
-		Property: graphicsType
-			Preferable graphics type. If preferred graphics type is not supported widget switches to first available. 
-
-		Default:
-			<primitives.common.GraphicsType.SVG>
-	*/
-	this.graphicsType = 1/*primitives.common.GraphicsType.Canvas*/;
-
-	/*
-		Property: orientationType
-			Diagram orientation. 
-
-		Default:
-			<primitives.common.OrientationType.Top>
-	*/
-	this.orientationType = 0/*primitives.common.OrientationType.Top*/;
-
-	/*
-		Property: connectorPlacementType
-			Defines connector annotation shape placement mode between two rectangles. 
-			It uses off beat placement mode as default in order to avoid overlapping
-			of base hierarchy connector lines.
-
-		Default:
-			<primitives.common.ConnectorPlacementType.Offbeat>
-	*/
-	this.connectorPlacementType = 0/*primitives.common.ConnectorPlacementType.Offbeat*/;
-
-	/*
-		Property: connectorShapeType
-			Connector shape type. 
-
-		Default:
-			<primitives.common.ConnectorShapeType.OneWay>
-	*/
-	this.connectorShapeType = 0/*primitives.common.ConnectorShapeType.OneWay*/;
-
-	/*
-	Property: position
-		Defines connectors starting rectangle position. 
-		
-	Type:
-		<primitives.common.Rect>.
-	*/
-	this.fromRectangle = null;
-
-	/*
-	Property: position
-		Defines connectors ending rectangle position. 
-		
-	Type:
-		<primitives.common.Rect>.
-	*/
-	this.toRectangle = null;
-
-
-	/*
-	Property: offset
-		Connector's from and to points offset off the rectangles side. Connectors connection points can be outside of rectangles and inside for negative offset value.
-	See also:
-		<primitives.common.Thickness>
-	*/
-	this.offset = new primitives.common.Thickness(0, 0, 0, 0);
-
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 3;
-
-	/*
-	Property: color
-		Connector's color.
-	
-	Default:
-		<primitives.common.Colors.Black>
-	*/
-	this.color = "#000000"/*primitives.common.Colors.Black*/;
-
-	/*
-	Property: lineType
-		Connector's line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-
-
-	/*
-	Property: label
-		Annotation label text. Label styled with css class name "bp-connector-label".
-	*/
-	this.label = null;
-
-	/*
-	Property: labelSize
-		Defines label size. It is needed to preserve space for label without overlapping connected items.
-
-	Default:
-		new <primitives.common.Size>(60, 30);
-	*/
-	this.labelSize = new primitives.common.Size(60, 30);
-
-	/*
-	Property: labelPlacementType
-		Defines conector label placement. Label can be placed between rectangles along connector line or close to one of them.
-
-	Default:
-		new <primitives.common.Size>(60, 30);
-	*/
-	this.labelPlacementType = 1/*primitives.common.ConnectorLabelPlacementType.Between*/;
-
-	/*
-	method: update
-		Makes full redraw of connector widget contents reevaluating all options.
-	*/
-};
-
-/* /Widgets/connector/controllers/AnnotationLabelTemplate.js*/
-primitives.connector.AnnotationLabelTemplate = function (options) {
-	var _template = create(),
-		_hashCode = primitives.common.hashCode(_template);
-
-	function create() {
-		var template = jQuery('<div></div>');
-		template.addClass("bp-item bp-corner-all bp-connector-label");
-
-		return template.wrap('<div>').parent().html();
-	}
-
-	function template() {
-		return _template;
-	}
-
-	function getHashCode() {
-		return _hashCode;
-	}
-
-	function render(event, data) {
-		data.element.html(options.label);
-	}
-
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
-};
-
-
-/* /Widgets/connector/controllers/Controller.js*/
-primitives.connector.Controller = function () {
-	this.widgetEventPrefix = "bpconnector";
-
-	this.options = new primitives.connector.Config();
-
-	this._placeholder = null;
-	this._panelSize = null;
-	this._graphics = null;
-	this._labelTemplate = null;
-};
-
-primitives.connector.Controller.prototype._create = function () {
-	var self = this;
-
-	this.element
-			.addClass("ui-widget");
-
-	this._labelTemplate = primitives.connector.AnnotationLabelTemplate(this.options);
-
-	this._createLayout();
-
-	this._redraw();
-};
-
-primitives.connector.Controller.prototype.destroy = function () {
-	this._cleanLayout();
-};
-
-primitives.connector.Controller.prototype._createLayout = function () {
-	this._panelSize = new primitives.common.Rect(0, 0, this.element.outerWidth(), this.element.outerHeight());
-
-	this._placeholder = jQuery('<div></div>');
-	this._placeholder.css({
-		"position": "relative",
-		"overflow": "hidden",
-		"top": "0px",
-		"left": "0px",
-		"padding": "0px",
-		"margin": "0px"
-	});
-	this._placeholder.css(this._panelSize.getCSS());
-	this._placeholder.addClass("placeholder");
-	this._placeholder.addClass(this.widgetEventPrefix);
-
-	this.element.append(this._placeholder);
-
-	this._graphics = primitives.common.createGraphics(this.options.graphicsType, this.element);
-};
-
-primitives.connector.Controller.prototype._cleanLayout = function () {
-	if (this._graphics !== null) {
-		this._graphics.clean();
-	}
-	this._graphics = null;
-
-	this.element.find("." + this.widgetEventPrefix).remove();
-};
-
-primitives.connector.Controller.prototype._updateLayout = function () {
-	this._panelSize = new primitives.common.Rect(0, 0, this.element.innerWidth(), this.element.innerHeight());
-	this._placeholder.css(this._panelSize.getCSS());
-};
-
-primitives.connector.Controller.prototype.update = function (recreate) {
-	if (recreate) {
-		this._cleanLayout();
-		this._createLayout();
-		this._redraw();
-	}
-	else {
-		this._updateLayout();
-		this._graphics.resize("placeholder", this._panelSize.width, this._panelSize.height);
-		this._graphics.begin();
-		this._redraw();
-		this._graphics.end();
-	}
-};
-
-primitives.connector.Controller.prototype._redraw = function () {
-	var annotationConfig = this.options,
-		shape,
-		uiHash,
-		transform = new primitives.common.Transform(),
-		panel = this._graphics.activate("placeholder"),
-		buffer = new primitives.common.PolylinesBuffer(),
-		self = this,
-		connectorAnnotationOffsetResolver = primitives.orgdiagram.ConnectorAnnotationOffsetResolver();
-
-	transform.size = new primitives.common.Size(this._panelSize.width, this._panelSize.height);
-	transform.setOrientation(annotationConfig.orientationType);
-
-	if (annotationConfig.fromRectangle != null && annotationConfig.toRectangle != null) {
-		var fromRect = annotationConfig.fromRectangle,
-			toRect = annotationConfig.toRectangle;
-
-		/* translate rectangles to Top orientation */
-		/* from rectangle */
-		transform.transformRect(fromRect.x, fromRect.y, fromRect.width, fromRect.height, false,
-			this, function (x, y, width, height) {
-				fromRect = new primitives.common.Rect(x, y, width, height);
-			});
-
-		/* to rectangle */
-		transform.transformRect(toRect.x, toRect.y, toRect.width, toRect.height, false,
-			this, function (x, y, width, height) {
-				toRect = new primitives.common.Rect(x, y, width, height);
-			});
-
-		switch (annotationConfig.connectorPlacementType) {
-			case 0/*primitives.common.ConnectorPlacementType.Offbeat*/:
-				shape = new primitives.common.ConnectorOffbeat();
-				break;
-			case 1/*primitives.common.ConnectorPlacementType.Straight*/:
-				shape = new primitives.common.ConnectorStraight();
-				break;
-		}
-
-		/* rotate label size to user orientation */
-		var labelSize;
-		transform.transformRect(0, 0, annotationConfig.labelSize.width, annotationConfig.labelSize.height, false,
-		this, function (x, y, width, height) {
-			labelSize = new primitives.common.Size(width, height);
-		});
-
-		/* rotate panel size to user orientation */
-		var panelSize = null;
-		transform.transformRect(0, 0, panel.size.width, panel.size.height, false,
-		this, function (x, y, width, height) {
-			panelSize = new primitives.common.Size(width, height);
-		});
-
-		var linePaletteItem = new primitives.common.PaletteItem({
-			lineColor: annotationConfig.color,
-			lineWidth: annotationConfig.lineWidth,
-			lineType: annotationConfig.lineType
-		});
-
-		var hasLabel = !primitives.common.isNullOrEmpty(annotationConfig.label);
-
-		/* offset rectangles */
-		fromRect = new primitives.common.Rect(fromRect).offset(annotationConfig.offset);
-		toRect = new primitives.common.Rect(toRect).offset(annotationConfig.offset);
-
-		var linesOffset = annotationConfig.lineWidth * 6;
-
-		/* create connection lines */
-		shape.draw(buffer, linePaletteItem, fromRect, toRect, linesOffset, 0, labelSize, panelSize,
-			annotationConfig.connectorShapeType, 4 /*labelOffset*/, annotationConfig.labelPlacementType, hasLabel,
-			connectorAnnotationOffsetResolver, function (labelPlacement) {
-				if (hasLabel && labelPlacement != null) {
-					/* translate result label placement back to users orientation */
-					transform.transformRect(labelPlacement.x, labelPlacement.y, labelPlacement.width, labelPlacement.height, true,
-						self, function (x, y, width, height) {
-							labelPlacement = new primitives.common.Rect(x, y, width, height);
-						});
-
-					uiHash = new primitives.common.RenderEventArgs();
-					uiHash.context = annotationConfig;
-
-					/* draw label */
-					self._graphics.template(
-						labelPlacement.x
-						, labelPlacement.y
-						, 0
-						, 0
-						, 0
-						, 0
-						, labelPlacement.width
-						, labelPlacement.height
-						, self._labelTemplate.template()
-						, self._labelTemplate.getHashCode()
-						, self._labelTemplate.render
-						, uiHash
-						, null
-					);
-				}
-			});
-		connectorAnnotationOffsetResolver.resolve();
-	}
-
-	/* translate result polylines back to users orientation */
-	buffer.transform(transform, true);
-	/* draw background polylines */
-	this._graphics.polylinesBuffer(buffer);
-
-};
-
-primitives.connector.Controller.prototype._setOption = function (key, value) {
-	jQuery.Widget.prototype._setOption.apply(this, arguments);
-
-	switch (key) {
-		case "disabled":
-			var handles = jQuery([]);
-			if (value) {
-				handles.filter(".ui-state-focus").blur();
-				handles.removeClass("ui-state-hover");
-				handles.propAttr("disabled", true);
-				this.element.addClass("ui-disabled");
-			} else {
-				handles.propAttr("disabled", false);
-				this.element.removeClass("ui-disabled");
-			}
-			break;
-		default:
-			break;
-	}
-};
-
-/* /Widgets/connector/connector.js*/
-/*
- * jQuery UI Connector
- *
- * Basic Primitives Connector.
- *
- * Depends:
- *	jquery.ui.core.js
- *	jquery.ui.widget.js
- */
-if (typeof jQuery != "undefined") {
-	(function ($) {
-		$.widget("ui.bpConnector", new primitives.connector.Controller());
-	}(jQuery));
-}; //ignore jslint
-
-/* /Widgets/diagrams/Widget.js*/
-primitives.orgdiagram.Widget = function (Config, controlFactory) {
-	this.widgetEventPrefix = "orgdiagram";
-
-	this.options = new Config();
-
-	this.control = null;
-
-	this.controlFactory = controlFactory;
-};
-
-primitives.orgdiagram.Widget.prototype._create = function () {
-	this.element.addClass("ui-widget");
-
-	this.control = new this.controlFactory(this.element, this._readOptions(this.options));
-};
-
-primitives.orgdiagram.Widget.prototype.destroy = function () {
-	this.control.destroy();
-};
-
-primitives.orgdiagram.Widget.prototype.update = function (updateMode) {
-	this.control.update(updateMode);
-};
-
-primitives.orgdiagram.Widget.prototype._setOption = function (key, value) {
-	jQuery.Widget.prototype._setOption.apply(this, arguments);
-
-	switch (key) {
-		case "disabled":
-			var handles = jQuery([]);
-			if (value) {
-				handles.filter(".ui-state-focus").blur();
-				handles.removeClass("ui-state-hover");
-				handles.propAttr("disabled", true);
-				this.element.addClass("ui-disabled");
-			} else {
-				handles.propAttr("disabled", false);
-				this.element.removeClass("ui-disabled");
-			}
-			break;
-		default:
-			break;
-	}
-
-	this.control.setOptions(this._readOptions(this.options));
-};
-
-primitives.orgdiagram.Widget.prototype._readOptions = function (options) {
-	var result = {},
-		self = this;
-	/* shallow copy */
-	for (var property in options) {
-		if (options.hasOwnProperty(property)) {
-			switch(property) {
-				case 'onHighlightChanged':
-				case 'onCursorChanged':
-				case 'onSelectionChanging':
-				case 'onButtonClick':
-				case 'onMouseClick':
-				case 'onMouseDblClick':
-				case 'onItemRender':
-				case 'onHighlightRender':
-					result[property] = function(property) { 
-						return function (event, eventArgs) {
-							self._trigger(property, event, eventArgs);
-						};
-					}(property);
-					break;
-				case 'onHighlightChanging':
-					result[property] = function (event, eventArgs) {
-						var options = self.control.getOptions();
-						self.options.highlightItem = options.highlightItem;
-
-						self._trigger("onHighlightChanging", event, eventArgs);
-					};
-					break;
-				case 'onCursorChanging':
-					result[property] = function (event, eventArgs) {
-						var options = self.control.getOptions();
-						self.options.cursorItem = options.cursorItem;
-
-						self._trigger("onCursorChanging", event, eventArgs);
-					};
-					break;
-				case 'onSelectionChanged':
-					result[property] = function (event, eventArgs) {
-						var options = self.control.getOptions();
-						self.options.selectedItems = options.selectedItems;
-
-						self._trigger("onSelectionChanged", event, eventArgs);
-					};
-					break;
-				default:
-					result[property] = options[property];
-					break;
-			}
-		}
-	}
-	return result;
-};
-
-/* /Widgets/diagrams/orgDiagram.js*/
-/*
- * jQuery UI Diagram
- *
- * Basic Primitives organization diagram.
- *
- * Depends:
- *	jquery.ui.core.js
- *	jquery.ui.widget.js
- */
-if (typeof jQuery != "undefined") {
-	(function ($) {
-		$.widget("ui.orgDiagram", new primitives.orgdiagram.Widget(primitives.orgdiagram.Config, primitives.orgdiagram.Control));
-	}(jQuery));
-}; //ignore jslint
-
-/* /Widgets/diagrams/famDiagram.js*/
-/*
- * jQuery UI Diagram
- *
- * Basic Primitives family diagram.
- *
- * Depends:
- *	jquery.ui.core.js
- *	jquery.ui.widget.js
- */
-if (typeof jQuery != "undefined") {
-	(function ($) {
-		$.widget("ui.famDiagram", new primitives.orgdiagram.Widget(primitives.famdiagram.Config, primitives.famdiagram.Control));
-	}(jQuery));
-}; //ignore jslint
-
-/* /Widgets/shape/configs/Config.js*/
-/*
-	Class: primitives.connector.Config
-		Connector options class.
-	
-*/
-primitives.shape.Config = function () {
-	this.classPrefix = "bpconnector";
-
-	/*
-		Property: graphicsType
-			Preferable graphics type. If preferred graphics type is not supported widget switches to first available. 
-
-		Default:
-			<primitives.common.GraphicsType.SVG>
-	*/
-	this.graphicsType = 1/*primitives.common.GraphicsType.Canvas*/;
-
-	/*
-		Property: orientationType
-			Diagram orientation. 
-
-		Default:
-			<primitives.common.OrientationType.Top>
-	*/
-	this.orientationType = 0/*primitives.common.OrientationType.Top*/;
-
-	/*
-		Property: shapeType
-			Shape type. 
-
-		Default:
-			<primitives.common.ShapeType.Rectangle>
-	*/
-	this.shapeType = 0/*primitives.common.ShapeType.Rectangle*/;
-
-	/*
-	Property: position
-		Defines shapes rectangle position. 
-		
-	Type:
-		<primitives.common.Rect>.
-	*/
-	this.position = null;
-
-	/*
-	Property: offset
-		Connector's from and to points offset off the rectangles side. Connectors connection points can be outside of rectangles and inside for negative offset value.
-	See also:
-		<primitives.common.Thickness>
-	*/
-	this.offset = new primitives.common.Thickness(0, 0, 0, 0);
-
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 2;
-
-	/*
-	Property: cornerRadius
-		Body corner radius in percents or pixels. 
-	*/
-	this.cornerRadius = "10%";
-
-	/*
-	Property: opacity
-		Background color opacity. 
-	*/
-	this.opacity = 1;
-
-	/*
-	Property: borderColor
-		Shape border line color.
-	
-	Default:
-		<primitives.common.Colors.Black>
-	*/
-	this.borderColor = null;
-
-	/*
-	Property: fillColor
-		Fill Color. 
-	
-	Default:
-		<primitives.common.Colors.Gray>
-	*/
-	this.fillColor = null;
-
-	/*
-	Property: lineType
-		Connector's line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-
-
-	/*
-	Property: label
-		Annotation label text. Label styled with css class name "bp-connector-label".
-	*/
-	this.label = null;
-
-	/*
-	Property: labelSize
-		Defines label size. It is needed to preserve space for label without overlapping connected items.
-
-	Default:
-		new <primitives.common.Size>(60, 30);
-	*/
-	this.labelSize = new primitives.common.Size(60, 30);
-
-	/*
-	Property: labelPlacement
-		Defines label placement relative to the shape. 
-
-	See Also:
-		<primitives.orgdiagram.Config.labelPlacement>
-		<primitives.common.PlacementType>
-
-	Default:
-		<primitives.common.PlacementType.Auto>
-	*/
-	this.labelPlacement = 0/*primitives.common.PlacementType.Auto*/;
-
-	/*
-	Property: labelOffset
-		Defines label offset from shape in pixels.
-
-	Default:
-		4;
-	*/
-	this.labelOffset = 4;
-
-	/*
-	method: update
-		Makes full redraw of connector widget contents reevaluating all options.
-	*/
-};
-
-/* /Widgets/shape/controllers/AnnotationLabelTemplate.js*/
-primitives.shape.AnnotationLabelTemplate = function (options) {
-	var _template = create(),
-		_hashCode = primitives.common.hashCode(_template);
-
-	function create() {
-		var template = jQuery('<div></div>');
-		template.addClass("bp-item bp-corner-all bp-connector-label");
-
-		return template.wrap('<div>').parent().html();
-	}
-
-	function template() {
-		return _template;
-	}
-
-	function getHashCode() {
-		return _hashCode;
-	}
-
-	function render(event, data) {
-		data.element.html(options.label);
-	}
-
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
-};
-
-
-/* /Widgets/shape/controllers/Controller.js*/
-primitives.shape.Controller = function () {
-	this.widgetEventPrefix = "bpshape";
-
-	this.options = new primitives.shape.Config();
-
-	this.m_placeholder = null;
-	this.m_panelSize = null;
-
-	this.m_graphics = null;
-
-	this.m_shape = null;
-
-	this._labelTemplate = null;
-};
-
-primitives.shape.Controller.prototype._create = function () {
-	var self = this;
-
-	this.element
-			.addClass("ui-widget");
-
-	this._labelTemplate = primitives.shape.AnnotationLabelTemplate(this.options);
-
-	this._createLayout();
-
-	this._redraw();
-};
-
-primitives.shape.Controller.prototype.destroy = function () {
-	this._cleanLayout();
-};
-
-primitives.shape.Controller.prototype._createLayout = function () {
-	this.m_panelSize = new primitives.common.Rect(0, 0, this.element.outerWidth(), this.element.outerHeight());
-
-	this.m_placeholder = jQuery('<div></div>');
-	this.m_placeholder.css({
-		"position": "relative",
-		"overflow": "hidden",
-		"top": "0px",
-		"left": "0px",
-		"padding": "0px",
-		"margin": "0px"
-	});
-	this.m_placeholder.css(this.m_panelSize.getCSS());
-	this.m_placeholder.addClass("placeholder");
-	this.m_placeholder.addClass(this.widgetEventPrefix);
-
-	this.element.append(this.m_placeholder);
-
-	this.m_graphics = primitives.common.createGraphics(this.options.graphicsType, this.element);
-};
-
-primitives.shape.Controller.prototype._cleanLayout = function () {
-	if (this.m_graphics !== null) {
-		this.m_graphics.clean();
-	}
-	this.m_graphics = null;
-
-	this.element.find("." + this.widgetEventPrefix).remove();
-};
-
-primitives.shape.Controller.prototype._updateLayout = function () {
-	this.m_panelSize = new primitives.common.Rect(0, 0, this.element.innerWidth(), this.element.innerHeight());
-	this.m_placeholder.css(this.m_panelSize.getCSS());
-};
-
-primitives.shape.Controller.prototype.update = function (recreate) {
-	if (recreate) {
-		this._cleanLayout();
-		this._createLayout();
-		this._redraw();
-	}
-	else {
-		this._updateLayout();
-		this.m_graphics.resize("placeholder", this.m_panelSize.width, this.m_panelSize.height);
-		this.m_graphics.begin();
-		this._redraw();
-		this.m_graphics.end();
-	}
-};
-
-primitives.shape.Controller.prototype._redraw = function () {
-	var names = ["orientationType", "shapeType", "offset", "lineWidth", "borderColor", "lineType", "labelSize", "labelOffset", "labelPlacement", "cornerRadius", "opacity", "fillColor"],
-		index,
-		name;
-	this.m_graphics.activate("placeholder");
-
-	this.m_shape = new primitives.common.Shape(this.m_graphics);
-	for (index = 0; index < names.length; index += 1) {
-		name = names[index];
-		this.m_shape[name] = this.options[name];
-	}
-	this.m_shape.hasLabel = !primitives.common.isNullOrEmpty(this.options.label);
-	this.m_shape.labelTemplate = this._labelTemplate;
-	this.m_shape.panelSize = new primitives.common.Size(this.m_panelSize.width, this.m_panelSize.height);
-	this.m_shape.draw(this.options.position);
-};
-
-primitives.shape.Controller.prototype._setOption = function (key, value) {
-	jQuery.Widget.prototype._setOption.apply(this, arguments);
-
-	switch (key) {
-		case "disabled":
-			var handles = jQuery([]);
-			if (value) {
-				handles.filter(".ui-state-focus").blur();
-				handles.removeClass("ui-state-hover");
-				handles.propAttr("disabled", true);
-				this.element.addClass("ui-disabled");
-			} else {
-				handles.propAttr("disabled", false);
-				this.element.removeClass("ui-disabled");
-			}
-			break;
-		default:
-			break;
-	}
-};
-
-/* /Widgets/shape/shape.js*/
-/*
- * jQuery UI Shape
- *
- * Basic Primitives Shape.
- *
- * Depends:
- *	jquery.ui.core.js
- *	jquery.ui.widget.js
- */
-if (typeof jQuery != "undefined") {
-	(function ($) {
-		$.widget("ui.bpShape", new primitives.shape.Controller());
-	}(jQuery));
-}; //ignore jslint
-
-/* /Widgets/text/configs/Config.js*/
-/*
-	Class: primitives.text.Config
-		Text options class.
-	
-*/
-primitives.text.Config = function () {
-	this.classPrefix = "bptext";
-
-	/*
-		Property: graphicsType
-			Preferable graphics type. If preferred graphics type is not supported widget switches to first available. 
-
-		Default:
-			<primitives.common.GraphicsType.SVG>
-	*/
-	this.graphicsType = 0/*primitives.common.GraphicsType.SVG*/;
-
-	/*
-		Property: textDirection
-			Direction style. 
-
-		Default:
-			<primitives.text.TextDirection.Auto>
-	*/
-	this.orientation = 0/*primitives.text.TextOrientationType.Horizontal*/;
-
-	/*
-		Property: text
-			Text
-	*/
-	this.text = "";
-
-
-	/*
-		Property: verticalAlignment
-			Vertical alignment. 
-
-		Default:
-			<primitives.common.VerticalAlignmentType.Center>
-	*/
-	this.verticalAlignment = 1/*primitives.common.VerticalAlignmentType.Middle*/;
-
-	/*
-		Property: horizontalAlignment
-			Horizontal alignment. 
-
-		Default:
-			<primitives.common.HorizontalAlignmentType.Center>
-	*/
-	this.horizontalAlignment = 0/*primitives.common.HorizontalAlignmentType.Center*/;
-
-	/*
-		Property: fontSize
-			Font size. 
-
-		Default:
-			15
-	*/
-	this.fontSize = "16px";
-
-	/*
-		Property: fontFamily
-			Font family. 
-
-		Default:
-			"Arial"
-	*/
-	this.fontFamily = "Arial";
-
-	/*
-		Property: color
-			Color. 
-
-		Default:
-			<primitives.common.Colors.Black>
-	*/
-	this.color = "#000000"/*primitives.common.Colors.Black*/;
-
-	/*
-		Property: fontWeight
-			Font weight: normal | bold
-
-		Default:
-			"normal"
-	*/
-	this.fontWeight = "normal";
-
-	/*
-		Property: fontStyle
-			Font style: normal | italic
-		
-		Default:
-			"normal"
-	*/
-	this.fontStyle = "normal";
-
-	/*
-	method: update
-		Makes full redraw of text widget contents reevaluating all options.
-	*/
-};
-
-/* /Widgets/text/controllers/Controller.js*/
-primitives.text.Controller = function () {
-	this.widgetEventPrefix = "bptext";
-
-	this.options = new primitives.text.Config();
-
-	this.m_placeholder = null;
-	this.m_panelSize = null;
-
-	this.m_graphics = null;
-};
-
-primitives.text.Controller.prototype._create = function () {
-	this.element
-			.addClass("ui-widget");
-
-	this._createLayout();
-
-	this._redraw();
-};
-
-primitives.text.Controller.prototype.destroy = function () {
-	this._cleanLayout();
-};
-
-primitives.text.Controller.prototype._createLayout = function () {
-	this.m_panelSize = new primitives.common.Rect(0, 0, this.element.outerWidth(), this.element.outerHeight());
-		
-
-	this.m_placeholder = jQuery('<div></div>');
-	this.m_placeholder.css({
-		"position": "relative",
-		"overflow": "hidden",
-		"top": "0px",
-		"left": "0px",
-		"padding": "0px",
-		"margin": "0px"
-	});
-	this.m_placeholder.css(this.m_panelSize.getCSS());
-	this.m_placeholder.addClass("placeholder");
-	this.m_placeholder.addClass(this.widgetEventPrefix);
-
-	this.element.append(this.m_placeholder);
-
-	this.m_graphics = primitives.common.createGraphics(this.options.graphicsType, this.element);
-};
-
-primitives.text.Controller.prototype._cleanLayout = function () {
-	if (this.m_graphics !== null) {
-		this.m_graphics.clean();
-	}
-	this.m_graphics = null;
-
-	this.element.find("." + this.widgetEventPrefix).remove();
-};
-
-primitives.text.Controller.prototype._updateLayout = function () {
-	this.m_panelSize = new primitives.common.Rect(0, 0, this.element.innerWidth(), this.element.innerHeight());
-	this.m_placeholder.css(this.m_panelSize.getCSS());
-};
-
-primitives.text.Controller.prototype.update = function (recreate) {
-	if (recreate) {
-		this._cleanLayout();
-		this._createLayout();
-		this._redraw();
-	}
-	else {
-		this._updateLayout();
-		this.m_graphics.resize("placeholder", this.m_panelSize.width, this.m_panelSize.height);
-		this.m_graphics.begin();
-		this._redraw();
-		this.m_graphics.end();
-	}
-};
-
-primitives.text.Controller.prototype._redraw = function () {
-	var panel = this.m_graphics.activate("placeholder"),
-		attr = {
-			"font-size": this.options.fontSize,
-			"font-family": this.options.fontFamily,
-			"font-style": this.options.fontStyle,
-			"font-weight": this.options.fontWeight,
-			"font-color": this.options.color
-		};
-	this.m_graphics.text(
-	panel.rect.x,
-	panel.rect.y,
-	panel.rect.width,
-	panel.rect.height,
-	this.options.text,
-	this.options.orientation,
-	this.options.horizontalAlignment,
-	this.options.verticalAlignment,
-	attr
-	);
-};
-
-primitives.text.Controller.prototype._setOption = function (key, value) {
-	jQuery.Widget.prototype._setOption.apply(this, arguments);
-
-	switch (key) {
-		case "disabled":
-			var handles = jQuery([]);
-			if (value) {
-				handles.filter(".ui-state-focus").blur();
-				handles.removeClass("ui-state-hover");
-				handles.propAttr("disabled", true);
-				this.element.addClass("ui-disabled");
-			} else {
-				handles.propAttr("disabled", false);
-				this.element.removeClass("ui-disabled");
-			}
-			break;
-		default:
-			break;
-	}
-};
-
-/* /Widgets/text/text.js*/
-/*
- * jQuery UI Text
- *
- * Basic Primitives Text.
- *
- * Depends:
- *	jquery.ui.core.js
- *	jquery.ui.widget.js
- */
-if (typeof jQuery != "undefined") {
-	(function ($) {
-		$.widget("ui.bpText", new primitives.text.Controller());
-	}(jQuery));
-}; //ignore jslint
-
+return primitives;
+}));

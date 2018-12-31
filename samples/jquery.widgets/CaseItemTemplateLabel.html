@@ -11,12 +11,13 @@
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
 
 	<script type="text/javascript" src="../../min/primitives.min.js"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
 	<link href="../../min/primitives.latest.css" media="screen" rel="stylesheet" type="text/css" />
 
 	<style type="text/css">
 		.bp-item {
 			position: absolute;
-			overflow: visible;/* redefine this atttribute in bp-item class*/
+			overflow: visible; /* redefine this atttribute in bp-item class*/
 			font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
 			-webkit-tap-highlight-color: rgba(0,0,0,0);
 			-webkit-user-select: none;
@@ -25,12 +26,12 @@
 			-moz-user-select: none;
 			-ms-user-select: none;
 			user-select: none;
-			box-sizing:content-box;
+			box-sizing: content-box;
 		}
 	</style>
 
-	<script type='text/javascript'>//<![CDATA[ 
-		jQuery(document).ready( function () {
+	<script type='text/javascript'>
+		jQuery(document).ready(function () {
 			var options = new primitives.orgdiagram.Config();
 
 			var items = [
@@ -121,19 +122,19 @@
 
 
 				var itemTemplate = jQuery(
-				  '<div class="bp-item bp-corner-all bt-item-frame">'
+					'<div class="bp-item bp-corner-all bt-item-frame">'
 					+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 216px; height: 20px; overflow: hidden;">'
-						+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px; overflow: hidden;">'
-						+ '</div>'
+					+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px; overflow: hidden;">'
+					+ '</div>'
 					+ '</div>'
 					+ '<div class="bp-item bp-photo-frame" style="top: 26px; left: 2px; width: 50px; height: 60px; overflow: hidden;">'
-						+ '<img name="photo" style="height:60px; width:50px;" />'
+					+ '<img name="photo" style="height:60px; width:50px;" />'
 					+ '</div>'
 					+ '<div name="phone" class="bp-item" style="top: 26px; left: 56px; width: 162px; height: 18px; font-size: 12px; overflow: hidden;"></div>'
 					+ '<div name="email" class="bp-item" style="top: 44px; left: 56px; width: 162px; height: 18px; font-size: 12px; overflow: hidden;"></div>'
 					+ '<div name="description" class="bp-item" style="top: 62px; left: 56px; width: 162px; height: 36px; font-size: 10px; overflow: hidden;"></div>'
 					+ '<div name="label" class="bp-item" style="top: -20px; left: 3px; width: 208px; height: 20px; font-size: 14px; text-align:center;"></div>'
-				+ '</div>'
+					+ '</div>'
 				).css({
 					width: result.itemSize.width + "px",
 					height: result.itemSize.height + "px"
@@ -143,7 +144,7 @@
 				return result;
 			}
 
-		});//]]>  
+		});
 	</script>
 </head>
 <body>

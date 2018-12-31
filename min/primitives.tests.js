@@ -1423,7 +1423,7 @@ QUnit.test("primitives.common.getMergedRectangles", function (assert) {
 
 		fixture.append(placeholder);
 
-		var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder);
+		var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder[0]);
 		graphics.begin();
 		graphics.resize("placeholder", width, height);
 		graphics.activate("placeholder");
@@ -5258,14 +5258,112 @@ QUnit.test("primitives.common.TreeLevels", function (assert) {
 	})();
 });
 
+/* /Cases/common/helpers.js*/
+(function () {
+
+	var namespace = function (name) {
+		var namespaces = name.split('.'),
+			namespace = window,
+			index;
+		for (index = 0; index < namespaces.length; index += 1) {
+			namespace = namespace[namespaces[index]] = namespace[namespaces[index]] || {};
+		}
+		return namespace;
+	};
+
+	namespace("primitives.helpers.tests");
+
+}());
+
+primitives.helpers.tests.CreateFearture = function () {
+	var $fixture = document.getElementById("qunit-fixture");
+	$fixture.appendChild(primitives.common.JsonML.toHTML(["div",
+		{
+			id: "basicdiagram",
+			style: {
+				width: "640px",
+				height: "480px",
+				borderStyle: "dotted",
+				borderWidth: "1px"
+			}
+		}
+	]));
+
+	primitives.common.JsonML.applyStyles(document.getElementById("qunit-fixture"), {
+		position: "relative",
+		left: "0px",
+		top: "0px",
+		height: "Auto"
+	});
+};
+
+
+primitives.helpers.tests.CreateOrgDiagram = function(options){
+	return primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+};
+
+primitives.helpers.tests.CreateFamDiagram = function (options) {
+	return primitives.famdiagram.Control(document.getElementById("basicdiagram"), options);
+};
+
+primitives.helpers.tests.getPosition = function (element) {
+	var offset = primitives.common.getElementOffset(element);
+	var size = primitives.common.getInnerSize(element);
+	return new primitives.common.Rect(offset.left, offset.top, size.width, size.height);
+};
+
+primitives.helpers.tests.getItemsPlacements = function (control, items) {
+	// Find items placements
+	var itemsPlacements = {};
+	for (var index = 0; index < items.length; index += 1) {
+		var item = items[index];
+		var id = item.hasOwnProperty("id") ? item.id : item;
+		control.setOption("highlightItem", id);
+		control.update(primitives.common.UpdateMode.PositonHighlight);
+		var highlight = document.getElementsByClassName("bp-highlight-frame")[0];
+		var placement = primitives.helpers.tests.getPosition(highlight);
+		itemsPlacements[id] = placement;
+	}
+	return itemsPlacements;
+};
+
+
 /* /Cases/CaseFirstOrganizationalChart.Tests.js*/
 QUnit.module('Cases');
-QUnit.test("It renders simple organizational chart", function (assert) {
-	var done = assert.async();
-	assert.expect(1);
+QUnit.test("First organizational chart", function (assert) {
+	function getItemsTitles(control, items) {
+		// Collect available titles
+		var positions = [];
+		var elements = document.getElementsByClassName("bp-title");
+		for (var index = 0; index < elements.length; index += 1) {
+			var element = elements[index];
+			var position = primitives.helpers.tests.getPosition(element);
+			positions.push({
+				position: position,
+				title: element.textContent
+			});
+		}
 
-	var $fixture = jQuery("#qunit-fixture");
-	$fixture.append('<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />');
+		var itemsPlacements = primitives.helpers.tests.getItemsPlacements(control, items);
+
+		var result = {};
+		for (var index = 0; index < items.length; index += 1) {
+			var id = items[index].id;
+			var placement = itemsPlacements[id];
+
+			result[id] = 0;
+			for (var bIndex = 0; bIndex < positions.length; bIndex += 1) {
+				var position = positions[bIndex].position;
+
+				if (placement.contains(position)) {
+					result[id] = positions[bIndex].title;
+				}
+			}
+		}
+		return result;
+	}
+
+	primitives.helpers.tests.CreateFearture();
 
 	var options = new primitives.orgdiagram.Config();
 
@@ -5275,21 +5373,21 @@ QUnit.test("It renders simple organizational chart", function (assert) {
 			parent: null,
 			title: "Scott Aasrud",
 			description: "VP, Public Sector",
-			image: "../images/photos/a.png"
+			image: "samples/images/photos/a.png"
 		}),
 		new primitives.orgdiagram.ItemConfig({
 			id: 1,
 			parent: 0,
 			title: "Ted Lucas",
 			description: "VP, Human Resources",
-			image: "../images/photos/b.png"
+			image: "samples/images/photos/b.png"
 		}),
 		new primitives.orgdiagram.ItemConfig({
 			id: 2,
 			parent: 0,
 			title: "Fritz Stuger",
 			description: "Business Solutions, US",
-			image: "../images/photos/c.png"
+			image: "samples/images/photos/c.png"
 		})
 	];
 
@@ -5297,29 +5395,719 @@ QUnit.test("It renders simple organizational chart", function (assert) {
 	options.cursorItem = 0;
 	options.hasSelectorCheckbox = primitives.common.Enabled.True;
 
-	jQuery("#basicdiagram").orgDiagram(options);
+	var control = primitives.helpers.tests.CreateOrgDiagram(options);
 
-	jQuery("#qunit-fixture").css({
-		position: "relative",
-		left: "0px",
-		top: "0px",
-		height: "Auto"
-	});
+	var result = getItemsTitles(control, items);
 
-	var titles = jQuery(".bp-title");
-	var tedLucasTitle = null;
-	var result = [];
-	jQuery(".bp-title").each(function (index) {
-		var title = jQuery(this).text();
-		result.push(title);
-		if (title == "Ted Lucas") {
-			tedLucasTitle = jQuery(this);
+	var expectedResult = {};
+	for (var index = 0; index < items.length; index += 1) {
+		var item = items[index];
+		expectedResult[item.id] = item.title;
+	}
+	assert.deepEqual(result, expectedResult, "Items contain correct titles.")
+});
+
+/* /Cases/CaseInactiveFamilyItems.Tests.js*/
+QUnit.module('Cases');
+QUnit.test("Inactive Family Items", function (assert) {
+	function getItemsTitles(control, items) {
+		// Collect available titles
+		var positions = [];
+		var elements = document.getElementsByClassName("bp-title");
+		for (var index = 0; index < elements.length; index += 1) {
+			var element = elements[index];
+			var position = primitives.helpers.tests.getPosition(element);
+			positions.push({
+				position: position,
+				title: element.textContent
+			});
 		}
-	});
-	var expectedResult = jQuery.map(items, function (a) { return a.title });
-	assert.deepEqual(result, expectedResult, "Chart should contain 3 title elements in layout.")
 
-	done();
+		var itemsPlacements = primitives.helpers.tests.getItemsPlacements(control, items);
+
+		var result = {};
+		for (var index = 0; index < items.length; index += 1) {
+			var id = items[index];
+			var placement = itemsPlacements[id];
+
+			result[id] = 0;
+			for (var bIndex = 0; bIndex < positions.length; bIndex += 1) {
+				var position = positions[bIndex].position;
+
+				if (placement.contains(position)) {
+					result[id] = positions[bIndex].title;
+				}
+			}
+		}
+		return result;
+	}
+
+	function getInactiveItemTemplate() {
+		var result = new primitives.famdiagram.TemplateConfig();
+		result.name = "InactiveItemTemplate";
+		result.isActive = false;
+		return result;
+	}
+
+	primitives.helpers.tests.CreateFearture();
+
+	var options = new primitives.famdiagram.Config();
+
+	var items = [
+		new primitives.famdiagram.ItemConfig({
+			id: 0,
+			parents: null,
+			title: "Scott Aasrud",
+			description: "Cursor Item",
+			image: "samples/images/photos/a.png"
+		}),
+		new primitives.famdiagram.ItemConfig({
+			id: 1,
+			parents: null,
+			title: "Scott Aasrud 2",
+			description: "Spouse of cursor item",
+			image: "samples/images/photos/a.png"
+		}),
+		new primitives.famdiagram.ItemConfig({
+			id: 2,
+			parents: [0, 1],
+			templateName: "InactiveItemTemplate",
+			title: "Finance",
+			itemTitleColor: "Green",
+			description: "Item has inactive template",
+			image: "samples/images/photos/i.png"
+		}),
+		new primitives.famdiagram.ItemConfig({
+			id: 3,
+			parents: [2],
+			title: "Ted Lucas",
+			description: "VP, Human Resources",
+			image: "samples/images/photos/b.png"
+		}),
+		new primitives.famdiagram.ItemConfig({
+			id: 4,
+			parents: [0, 1],
+			templateName: "InactiveItemTemplate",
+			title: "Sales",
+			itemTitleColor: "Green",
+			description: "Item has inactive template",
+			image: "samples/images/photos/i.png"
+		}),
+		new primitives.famdiagram.ItemConfig({
+			id: 5,
+			parents: [4],
+			title: "Fritz Stuger",
+			description: "VP, Human Resources",
+			image: "samples/images/photos/b.png"
+		}),
+		new primitives.famdiagram.ItemConfig({
+			id: 6,
+			parents: [0, 1],
+			templateName: "InactiveItemTemplate",
+			title: "Operations",
+			itemTitleColor: "Green",
+			description: "Item has inactive template",
+			image: "samples/images/photos/i.png"
+		}),
+		new primitives.famdiagram.ItemConfig({
+			id: 7,
+			parents: [6],
+			title: "Brad Whitt",
+			description: "VP, Human Resources",
+			image: "samples/images/photos/b.png"
+		}),
+		new primitives.famdiagram.ItemConfig({
+			id: 8,
+			parents: [0, 1],
+			templateName: "InactiveItemTemplate",
+			title: "IT",
+			itemTitleColor: "Green",
+			description: "Item has inactive template",
+			image: "samples/images/photos/i.png"
+		}),
+		new primitives.famdiagram.ItemConfig({
+			id: 9,
+			parents: [8],
+			title: "Ted Whitt",
+			description: "VP, Human Resources",
+			image: "samples/images/photos/b.png"
+		}),
+		new primitives.famdiagram.ItemConfig({
+			id: 19,
+			parents: [8],
+			title: "Ted Whitt 2",
+			description: "VP, Human Resources",
+			image: "samples/images/photos/b.png"
+		}),
+		{
+			id: 20,
+			parents: [3],
+			description: "VP, Security Technology Unit (STU)",
+			image: "samples/images/photos/c.png",
+			title: "Robert Morgan"
+		},
+		{
+			id: 21,
+			parents: [3],
+			description: "GM, Software Serviceability",
+			image: "samples/images/photos/c.png",
+			title: "Ida Benefield"
+		},
+		{
+			id: 22,
+			parents: [5],
+			description: "GM, Core Operating System Test",
+			image: "samples/images/photos/c.png",
+			title: "Vada Duhon"
+		},
+		{
+			id: 23,
+			parents: [5],
+			description: "GM, Global Platform Technologies and Services",
+			image: "samples/images/photos/c.png",
+			title: "William Loyd"
+		},
+		{
+			id: 24,
+			parents: [7],
+			description: "Sr. VP, NAME & Personal Services Division",
+			image: "samples/images/photos/c.png",
+			title: "Craig Blue"
+		},
+		{
+			id: 25,
+			parents: [7],
+			description: "VP, NAME Communications Services and Member Platform",
+			image: "samples/images/photos/c.png",
+			title: "Joel Crawford"
+		},
+		{
+			id: 26,
+			parents: [9],
+			description: "VP & CFO, NAME",
+			image: "samples/images/photos/c.png",
+			title: "Barbara Lang"
+		},
+		{
+			id: 27,
+			parents: [9],
+			description: "VP, NAME Operations",
+			image: "samples/images/photos/c.png",
+			title: "Barbara Faulk"
+		},
+		{
+			id: 28,
+			parents: [19],
+			description: "VP, NAME Global Sales & Marketing", 
+			image: "samples/images/photos/c.png",
+			title: "Stewart Williams"
+		},
+		{
+			id: 29,
+			parents: [19],
+			description: "Sr. VP, NAME Information Services & Merchant Platform",
+			image: "samples/images/photos/c.png",
+			title: "Robert Lemieux"
+		}
+	];
+
+	options.items = items;
+	options.cursorItem = 0;
+	options.neighboursSelectionMode = primitives.common.NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses;
+	options.templates = [getInactiveItemTemplate()];
+	options.hasSelectorCheckbox = primitives.common.Enabled.False;
+	options.normalLevelShift = 20;
+	options.dotLevelShift = 20;
+	options.lineLevelShift = 10;
+	options.normalItemsInterval = 10;
+	options.dotItemsInterval = 10;
+	options.lineItemsInterval = 4;
+
+	var control = primitives.helpers.tests.CreateFamDiagram(options);
+
+	var itemsToCheck = [0, 1, 3, 5, 7, 9, 19];
+	var result = getItemsTitles(control, itemsToCheck);
+
+	var itemsToCheckHash = {};
+	for(var index = 0; index < itemsToCheck.length; index+=1) {
+		itemsToCheckHash[itemsToCheck[index]] = true;
+	}
+
+	var expectedResult = {};
+	for (var index = 0; index < items.length; index += 1) {
+		var item = items[index];
+		if (itemsToCheckHash.hasOwnProperty(item.id)) {
+			expectedResult[item.id] = item.title;
+		}
+	}
+	assert.deepEqual(result, expectedResult, "Children of inactive items have normal size.")
+});
+
+/* /Cases/CaseInactiveItems.Tests.js*/
+QUnit.module('Cases');
+QUnit.test("Inactive Organizational Chart Items", function (assert) {
+	function getItemsTitles(control, items) {
+		// Collect available titles
+		var positions = [];
+		var elements = document.getElementsByClassName("bp-title");
+		for (var index = 0; index < elements.length; index += 1) {
+			var element = elements[index];
+			var position = primitives.helpers.tests.getPosition(element);
+			positions.push({
+				position: position,
+				title: element.textContent
+			});
+		}
+
+		var itemsPlacements = primitives.helpers.tests.getItemsPlacements(control, items);
+
+		var result = {};
+		for (var index = 0; index < items.length; index += 1) {
+			var id = items[index];
+			var placement = itemsPlacements[id];
+
+			result[id] = 0;
+			for (var bIndex = 0; bIndex < positions.length; bIndex += 1) {
+				var position = positions[bIndex].position;
+
+				if (placement.contains(position)) {
+					result[id] = positions[bIndex].title;
+				}
+			}
+		}
+		return result;
+	}
+
+	function getInactiveItemTemplate() {
+		var result = new primitives.orgdiagram.TemplateConfig();
+		result.name = "InactiveItemTemplate";
+		result.isActive = false;
+		return result;
+	}
+
+	primitives.helpers.tests.CreateFearture();
+
+	var options = new primitives.orgdiagram.Config();
+
+	var items = [
+		new primitives.orgdiagram.ItemConfig({
+			id: 0,
+			parents: null,
+			title: "Scott Aasrud",
+			description: "Cursor Item",
+			image: "samples/images/photos/a.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 2,
+			parent: 0,
+			templateName: "InactiveItemTemplate",
+			title: "Finance",
+			itemTitleColor: "Green",
+			description: "Item has inactive template",
+			image: "samples/images/photos/i.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 3,
+			parent: 2,
+			title: "Ted Lucas",
+			description: "VP, Human Resources",
+			image: "samples/images/photos/b.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 4,
+			parent: 0,
+			templateName: "InactiveItemTemplate",
+			title: "Sales",
+			itemTitleColor: "Green",
+			description: "Item has inactive template",
+			image: "samples/images/photos/i.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 5,
+			parent: 4,
+			title: "Fritz Stuger",
+			description: "VP, Human Resources",
+			image: "samples/images/photos/b.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 6,
+			parent: 0,
+			templateName: "InactiveItemTemplate",
+			title: "Operations",
+			itemTitleColor: "Green",
+			description: "Item has inactive template",
+			image: "samples/images/photos/i.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 7,
+			parent: 6,
+			title: "Brad Whitt",
+			description: "VP, Human Resources",
+			image: "samples/images/photos/b.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 8,
+			parent: 0,
+			templateName: "InactiveItemTemplate",
+			title: "IT",
+			itemTitleColor: "Green",
+			description: "Item has inactive template",
+			image: "samples/images/photos/i.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 9,
+			parent: 8,
+			title: "Ted Whitt",
+			description: "VP, Human Resources",
+			image: "samples/images/photos/b.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 19,
+			parent: 8,
+			title: "Ted Whitt 2",
+			description: "VP, Human Resources",
+			image: "samples/images/photos/b.png"
+		}),
+		{
+			id: 20,
+			parent: 3,
+			description: "VP, Security Technology Unit (STU)",
+			image: "samples/images/photos/c.png",
+			title: "Robert Morgan"
+		},
+		{
+			id: 21,
+			parent: 3,
+			description: "GM, Software Serviceability",
+			image: "samples/images/photos/c.png",
+			title: "Ida Benefield"
+		},
+		{
+			id: 22,
+			parent: 5,
+			description: "GM, Core Operating System Test",
+			image: "samples/images/photos/c.png",
+			title: "Vada Duhon"
+		},
+		{
+			id: 23,
+			parent: 5,
+			description: "GM, Global Platform Technologies and Services",
+			image: "samples/images/photos/c.png",
+			title: "William Loyd"
+		},
+		{
+			id: 24,
+			parent: 7,
+			description: "Sr. VP, NAME & Personal Services Division",
+			image: "samples/images/photos/c.png",
+			title: "Craig Blue"
+		},
+		{
+			id: 25,
+			parent: 7,
+			description: "VP, NAME Communications Services and Member Platform",
+			image: "samples/images/photos/c.png",
+			title: "Joel Crawford"
+		},
+		{
+			id: 26,
+			parent: 9,
+			description: "VP & CFO, NAME",
+			image: "samples/images/photos/c.png",
+			title: "Barbara Lang"
+		},
+		{
+			id: 27,
+			parent: 9,
+			description: "VP, NAME Operations",
+			image: "samples/images/photos/c.png",
+			title: "Barbara Faulk"
+		},
+		{
+			id: 28,
+			parent: 19,
+			description: "VP, NAME Global Sales & Marketing", 
+			image: "samples/images/photos/c.png",
+			title: "Stewart Williams"
+		},
+		{
+			id: 29,
+			parent: 19,
+			description: "Sr. VP, NAME Information Services & Merchant Platform",
+			image: "samples/images/photos/c.png",
+			title: "Robert Lemieux"
+		}
+	];
+
+	options.items = items;
+	options.cursorItem = 0;
+	options.templates = [getInactiveItemTemplate()];
+	options.hasSelectorCheckbox = primitives.common.Enabled.False;
+	options.normalLevelShift = 20;
+	options.dotLevelShift = 20;
+	options.lineLevelShift = 10;
+	options.normalItemsInterval = 10;
+	options.dotItemsInterval = 10;
+	options.lineItemsInterval = 4;
+
+	var control = primitives.helpers.tests.CreateOrgDiagram(options);
+
+	var itemsToCheck = [0, 3, 5, 7, 9, 19];
+	var result = getItemsTitles(control, itemsToCheck);
+
+	var itemsToCheckHash = {};
+	for(var index = 0; index < itemsToCheck.length; index+=1) {
+		itemsToCheckHash[itemsToCheck[index]] = true;
+	}
+
+	var expectedResult = {};
+	for (var index = 0; index < items.length; index += 1) {
+		var item = items[index];
+		if (itemsToCheckHash.hasOwnProperty(item.id)) {
+			expectedResult[item.id] = item.title;
+		}
+	}
+	assert.deepEqual(result, expectedResult, "Children of inactive items have normal size.")
+});
+
+/* /Cases/hasButtons.Tests.js*/
+QUnit.module('Cases');
+QUnit.test("hasButtons", function (assert) {
+	function getButtonsCount(items) {
+		// Collect available buttons
+		var buttonsPositions = [];
+		var buttons = document.getElementsByClassName("bp-button");
+		for (var index = 0; index < buttons.length; index += 1) {
+			var position = primitives.helpers.tests.getPosition(buttons[index]);
+			buttonsPositions.push(position);
+		}
+
+		var itemsPlacements = primitives.helpers.tests.getItemsPlacements(control, items);
+
+		var result = {};
+		for (var index = 0; index < items.length; index += 1) {
+			var id = items[index].id;
+			var placement = itemsPlacements[id];
+
+			result[id] = 0;
+			for (var bIndex = 0; bIndex < buttonsPositions.length; bIndex += 1) {
+				var position = buttonsPositions[bIndex];
+
+				if (placement.contains(position)) {
+					result[id] += 1;
+				}
+			}
+		}
+		return result;
+	}
+
+	primitives.helpers.tests.CreateFearture();
+
+	var options = new primitives.orgdiagram.Config();
+
+	var items = [
+		new primitives.orgdiagram.ItemConfig({
+			id: 0,
+			parent: null,
+			title: "Scott Aasrud",
+			description: "VP, Public Sector",
+			image: "samples/images/photos/a.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 1,
+			parent: 0,
+			title: "Ted Lucas",
+			description: "VP, Human Resources",
+			image: "samples/images/photos/b.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 2,
+			parent: 0,
+			title: "Fritz Stuger",
+			description: "Business Solutions, US",
+			image: "samples/images/photos/c.png"
+		})
+	];
+
+	var buttons = [];
+	buttons.push(new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"));
+	buttons.push(new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"));
+	buttons.push(new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add"));
+
+	options.items = items;
+	options.buttons = buttons;
+	options.cursorItem = 0;
+	options.hasButtons = primitives.common.Enabled.True;
+
+	var control = primitives.helpers.tests.CreateOrgDiagram(options);
+
+	var result = getButtonsCount(items);
+
+	assert.deepEqual(result, { "0": 3, "1": 3, "2": 3 }, "Every item should contain 3 buttons.");
+
+	control.setOptions({
+		items: items,
+		buttons: buttons,
+		cursorItem: 0,
+		hasButtons: primitives.common.Enabled.Auto
+	});
+	control.update();
+
+	var result = getButtonsCount(items);
+
+	assert.deepEqual(result, { "0": 3, "1": 0, "2": 0 }, "Only cursor item should contain 3 buttons.");
+
+	control.setOptions({
+		items: items,
+		buttons: buttons,
+		cursorItem: 2,
+		hasButtons: primitives.common.Enabled.Auto
+	});
+	control.update();
+
+	var result = getButtonsCount(items);
+
+	assert.deepEqual(result, { "0": 0, "1": 0, "2": 3 }, "Only new cursor item should contain 3 buttons.");
+
+	control.setOptions({
+		items: items,
+		buttons: buttons,
+		cursorItem: 2,
+		hasButtons: primitives.common.Enabled.False
+	});
+	control.update();
+
+	var result = getButtonsCount(items);
+
+	assert.deepEqual(result, { "0": 0, "1": 0, "2": 0 }, "Buttons should be hidden.");
+});
+
+/* /Cases/hasSelectorCheckbox.Tests.js*/
+QUnit.module('Cases');
+QUnit.test("hasSelectorCheckbox", function (assert) {
+	primitives.helpers.tests.CreateFearture();
+
+	var options = new primitives.orgdiagram.Config();
+	var items = [
+		new primitives.orgdiagram.ItemConfig({
+			id: 0,
+			parent: null,
+			title: "Scott Aasrud",
+			description: "VP, Public Sector",
+			image: "samples/images/photos/a.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 1,
+			parent: 0,
+			title: "Ted Lucas",
+			description: "VP, Human Resources",
+			image: "samples/images/photos/b.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 2,
+			parent: 0,
+			title: "Fritz Stuger",
+			description: "Business Solutions, US",
+			image: "samples/images/photos/c.png"
+		})
+	];
+
+	options.items = items;
+	options.cursorItem = 0;
+	options.hasSelectorCheckbox = primitives.common.Enabled.True;
+
+	var control = primitives.helpers.tests.CreateOrgDiagram(options);
+
+	var checkboxes = document.getElementsByClassName("bp-selectioncheckbox");
+	var result = [];
+	for (var index = 0; index < checkboxes.length; index += 1) {
+		var id = checkboxes[index].getAttribute("data-id");
+		result.push(id);
+	}
+	assert.deepEqual(result, ["0", "1", "2"], "Chart should contain 3 selection check boxes.")
+
+	control.setOptions({
+		hasSelectorCheckbox: primitives.common.Enabled.Auto
+	});
+	control.update();
+
+	var checkboxes = document.getElementsByClassName("bp-selectioncheckbox");
+	var result = [];
+	for (var index = 0; index < checkboxes.length; index += 1) {
+		var id = checkboxes[index].getAttribute("data-id");
+		result.push(id);
+	}
+	assert.deepEqual(result, ["0"], "Chart should contain selection check box only for cursor item.")
+
+	control.setOptions({
+		cursorItem: "2"
+	});
+	control.update();
+
+	var checkboxes = document.getElementsByClassName("bp-selectioncheckbox");
+	var result = [];
+	for (var index = 0; index < checkboxes.length; index += 1) {
+		var id = checkboxes[index].getAttribute("data-id");
+		result.push(id);
+	}
+	assert.deepEqual(result, ["2"], "If cursor item changed then selection check box should be shown for selected cursor item.")
+
+	control.setOptions({
+		hasSelectorCheckbox: primitives.common.Enabled.False,
+		cursorItem: "2"
+	});
+	control.update();
+
+	var checkboxes = document.getElementsByClassName("bp-selectioncheckbox");
+	assert.equal(checkboxes.length, 0, "If checboxes disabled, chart should not contain them.")
+});
+
+/* /Cases/selectCheckBoxLabel.Tests.js*/
+QUnit.module('Cases');
+QUnit.test("selectCheckBoxLabel", function (assert) {
+	primitives.helpers.tests.CreateFearture();
+
+	var options = new primitives.orgdiagram.Config();
+	var items = [
+		new primitives.orgdiagram.ItemConfig({
+			id: 0,
+			parent: null,
+			title: "Scott Aasrud",
+			description: "VP, Public Sector",
+			image: "samples/images/photos/a.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 1,
+			parent: 0,
+			title: "Ted Lucas",
+			description: "VP, Human Resources",
+			image: "samples/images/photos/b.png"
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 2,
+			parent: 0,
+			title: "Fritz Stuger",
+			description: "Business Solutions, US",
+			image: "samples/images/photos/c.png"
+		})
+	];
+
+	options.items = items;
+	options.cursorItem = 2;
+	options.selectCheckBoxLabel = "custom";
+	options.hasSelectorCheckbox = primitives.common.Enabled.True;
+
+	var control = primitives.helpers.tests.CreateOrgDiagram(options);
+
+	var checkboxes = document.getElementsByClassName("bp-selectiontext");
+	var result = [];
+	for (var index = 0; index < checkboxes.length; index += 1) {
+		var id = checkboxes[index].textContent;
+		result.push(id);
+	}
+	assert.deepEqual(result, ["custom", "custom", "custom"], "Custom slection checkbox label test.")
+
 });
 
 /* /Common/Functions.Tests.js*/
@@ -5509,7 +6297,7 @@ QUnit.test("primitives.common.MergedRectangles", function (assert) {
 
 		fixture.append(placeholder);
 
-		var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder);
+		var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder[0]);
 		graphics.begin();
 		graphics.resize("placeholder", size.width, size.height);
 		graphics.activate("placeholder");
@@ -6025,7 +6813,7 @@ QUnit.test("primitives.common.Graphics.polyline", function (assert) {
 
 		fixture.append(placeholder);
 
-		var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder);
+		var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder[0]);
 		graphics.begin();
 		graphics.resize("placeholder", width, height);
 		graphics.activate("placeholder");
@@ -6413,6 +7201,7 @@ QUnit.test("primitives.common.ArrayReader - Reads Array of distinct objects and 
 	var target = [];
 
 	var items = [
+		{ name: 0, descriptions: "0" },
 		{ name: 1, descriptions: "1" },
 		{ name: 2, descriptions: "2" },
 		{ name: 3, descriptions: "3" },
@@ -6428,6 +7217,7 @@ QUnit.test("primitives.common.ArrayReader - Reads Array of distinct objects and 
 	context.isChanged = false;
 
 	var items = [
+		{ name: 0, descriptions: "0" },
 		{ name: 1, descriptions: "1" },
 		{ name: 5, descriptions: "5" },
 		{ name: 2, descriptions: "2" },
@@ -6443,6 +7233,7 @@ QUnit.test("primitives.common.ArrayReader - Reads Array of distinct objects and 
 	context.isChanged = false;
 
 	var items = [
+		{ name: 0, descriptions: "0" },
 		{ name: 1, descriptions: "1" },
 		{ name: 5, descriptions: "5" },
 		{ name: 2, descriptions: "2" },
@@ -6461,15 +7252,16 @@ QUnit.test("primitives.common.ArrayReader - Reads Array of distinct objects and 
 	context.isChanged = false;
 
 	var items = [
-	{ name: 1, descriptions: "1" },
-	{ name: 5, descriptions: "5" },
-	{ name: 2, descriptions: "2" },
-	{ name: 4, descriptions: "4" },
-	{ name: 6, descriptions: "6" },
-	{ name: 6, descriptions: "6" },
-	{ name: 3, descriptions: "3" },
-	{ name: 1, descriptions: "1" },
-	{ name: 10, descriptions: "10" }
+		{ name: 0, descriptions: "0" },
+		{ name: 1, descriptions: "1" },
+		{ name: 5, descriptions: "5" },
+		{ name: 2, descriptions: "2" },
+		{ name: 4, descriptions: "4" },
+		{ name: 6, descriptions: "6" },
+		{ name: 6, descriptions: "6" },
+		{ name: 3, descriptions: "3" },
+		{ name: 1, descriptions: "1" },
+		{ name: 10, descriptions: "10" }
 	];
 
 	var result = reader.read(result, items, "items", context);
@@ -6479,6 +7271,7 @@ QUnit.test("primitives.common.ArrayReader - Reads Array of distinct objects and 
 	context.isChanged = false;
 
 	var items = [
+	{ name: 0, descriptions: "0" },
 	{ name: 1, descriptions: "1" },
 	{ name: 5, descriptions: "5" },
 	{ name: 2, descriptions: "2" },
@@ -6516,6 +7309,7 @@ QUnit.test("primitives.common.ArrayReader - Reads Array of non distinct objects 
 	var target = [];
 
 	var items = [
+		{ name: 0, descriptions: "0" },
 		{ name: 1, descriptions: "1" },
 		{ name: 2, descriptions: "2" },
 		{ name: 3, descriptions: "3" },
@@ -6531,6 +7325,7 @@ QUnit.test("primitives.common.ArrayReader - Reads Array of non distinct objects 
 	context.isChanged = false;
 
 	var items = [
+		{ name: 0, descriptions: "0" },
 		{ name: 1, descriptions: "1" },
 		{ name: 5, descriptions: "5" },
 		{ name: 2, descriptions: "2" },
@@ -6546,6 +7341,7 @@ QUnit.test("primitives.common.ArrayReader - Reads Array of non distinct objects 
 	context.isChanged = false;
 
 	var items = [
+		{ name: 0, descriptions: "0" },
 		{ name: 1, descriptions: "1" },
 		{ name: 5, descriptions: "5" },
 		{ name: 2, descriptions: "2" },
@@ -6562,6 +7358,7 @@ QUnit.test("primitives.common.ArrayReader - Reads Array of non distinct objects 
 	context.isChanged = false;
 
 	var items = [
+		{ name: 0, descriptions: "0" },
 		{ name: 1, descriptions: "1" },
 		{ name: 5, descriptions: "5" },
 		{ name: 2, descriptions: "2" },
@@ -6579,6 +7376,7 @@ QUnit.test("primitives.common.ArrayReader - Reads Array of non distinct objects 
 	context.isChanged = false;
 
 	var items = [
+		{ name: 0, descriptions: "0" },
 		{ name: 1, descriptions: "1" },
 		{ name: 5, descriptions: "5" },
 		{ name: 2, descriptions: "2" },

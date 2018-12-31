@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Limited Partner Item Type</title>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+		var control;
+
+		document.addEventListener('DOMContentLoaded', function () {
+			var options = new primitives.orgdiagram.Config();
+
+			var items = [
+				new primitives.orgdiagram.ItemConfig({
+					id: 0,
+					parent: null,
+					title: "Scott Aasrud",
+					description: "VP, Public Sector",
+					image: "../images/photos/a.png"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 1,
+					parent: 0,
+					title: "Robert Canon",
+					description: "General Partner",
+					image: "../images/photos/z.png",
+					itemType: primitives.orgdiagram.ItemType.LimitedPartner,
+					adviserPlacementType: primitives.orgdiagram.AdviserPlacementType.Right,
+					groupTitle: "Partner"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 2,
+					parent: 0,
+					title: "Ted Lucas",
+					description: "VP, Human Resources",
+					image: "../images/photos/b.png"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 3,
+					parent: 2,
+					title: "Fritz Stuger",
+					description: "General Partner item",
+					image: "../images/photos/z.png",
+					itemType: primitives.orgdiagram.ItemType.LimitedPartner,
+					adviserPlacementType: primitives.orgdiagram.AdviserPlacementType.Right,
+					groupTitle: "Partner"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 4,
+					parent: 2,
+					title: "Ted Lucas 2",
+					description: "VP, Human Resources",
+					image: "../images/photos/b.png"
+				})
+			];
+
+			options.items = items;
+			options.cursorItem = 0;
+			options.hasSelectorCheckbox = primitives.common.Enabled.True;
+			options.pageFitMode = primitives.orgdiagram.PageFitMode.None;
+			options.arrowsDirection = primitives.common.GroupByType.Parents;
+
+			control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+		});
+
+	</script>
+</head>
+<body>
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+</html>

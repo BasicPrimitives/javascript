@@ -1,0 +1,276 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Item Template</title>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+		var control;
+
+		document.addEventListener('DOMContentLoaded', function () {
+			var options = new primitives.orgdiagram.Config();
+
+			var items = [
+				new primitives.orgdiagram.ItemConfig({
+					id: 0,
+					parent: null,
+					title: "Scott Aasrud",
+					description: "VP, Public Sector",
+					image: "../images/photos/a.png",
+					phone: "(123) 456-78-90",
+					email: "itema@org.com",
+					image: "../images/photos/a.png",
+					templateName: "contactTemplate",
+					itemTitleColor: "red",
+					groupTitle: "Group 2"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 1,
+					parent: 0,
+					title: "Ted Lucas",
+					description: "VP, Human Resources",
+					image: "../images/photos/b.png",
+					groupTitle: "Group 1"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 2,
+					parent: 0,
+					title: "Fritz Stuger",
+					phone: "(123) 654-78-90",
+					email: "itemc@org.com",
+					description: "Business Solutions, US",
+					image: "../images/photos/c.png",
+					templateName: "contactTemplate2",
+					groupTitle: "Group 3"
+				})
+			];
+
+			var buttons = [];
+
+			buttons.push(new primitives.orgdiagram.ButtonConfig("home", "ui-icon-home", "Home"));
+			buttons.push(new primitives.orgdiagram.ButtonConfig("wrench", "ui-icon-wrench", "Wrench"));
+
+			options.buttons = buttons;
+
+
+			options.items = items;
+			options.cursorItem = 0;
+			options.templates = [getContactTemplate(), getContactTemplate2()];
+			options.onItemRender = onTemplateRender;
+			options.hasButtons = primitives.common.Enabled.True;
+			options.onButtonClick = function (e, data) {
+				var message = "User clicked '" + data.name + "' button for item '" + data.context.title + "'.";
+				alert(message);
+			};
+
+			control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+
+
+			function onTemplateRender(event, data) {
+				switch (data.renderingMode) {
+					case primitives.common.RenderingMode.Create:
+						/* Initialize widgets here */
+						break;
+					case primitives.common.RenderingMode.Update:
+						/* Update widgets here */
+						break;
+				}
+
+				var itemConfig = data.context;
+
+				if (data.templateName == "contactTemplate2") {
+					var photo = data.element.childNodes[1].firstChild;
+					photo.src = itemConfig.image;
+					photo.alt = itemConfig.title;
+
+					var titleBackground = data.element.firstChild;
+					titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+
+					var title = data.element.firstChild.firstChild;
+					title.textContent = itemConfig.title;
+
+					var phone = data.element.childNodes[2];
+					phone.textContent = itemConfig.phone;
+
+					var email = data.element.childNodes[3];
+					email.textContent = itemConfig.email;
+
+					var description = data.element.childNodes[4];
+					description.textContent = itemConfig.description;
+				} else if (data.templateName == "contactTemplate") {
+					var photo = data.element.childNodes[1].firstChild;
+					photo.src = itemConfig.image;
+					photo.alt = itemConfig.title;
+
+					var titleBackground = data.element.firstChild;
+					titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+
+					var title = data.element.firstChild.firstChild;
+					title.textContent = itemConfig.title;
+
+					var phone = data.element.childNodes[2];
+					phone.textContent = itemConfig.phone;
+
+					var email = data.element.childNodes[3];
+					email.textContent = itemConfig.email;
+
+					var description = data.element.childNodes[4];
+					description.textContent = itemConfig.description;
+				}
+			}
+
+			function getContactTemplate2() {
+				var result = new primitives.orgdiagram.TemplateConfig();
+				result.name = "contactTemplate2";
+
+				var buttons = [];
+				buttons.push(new primitives.orgdiagram.ButtonConfig("revert", "ui-icon-transferthick-e-w", "Revert"));
+				buttons.push(new primitives.orgdiagram.ButtonConfig("email", "ui-icon-mail-closed", "E-Mail"));
+				buttons.push(new primitives.orgdiagram.ButtonConfig("help", "ui-icon-help", "Help"));
+
+				result.buttons = buttons;
+
+				result.itemSize = new primitives.common.Size(220, 120);
+				result.minimizedItemSize = new primitives.common.Size(3, 3);
+				result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
+
+				/* this template demonstrates template definition in form of regular text, see: https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML for details */
+				result.itemTemplate = 
+					'<div class="bp-item bp-corner-all bt-item-frame" style="width:' + result.itemSize.width + 'px; height: ' + result.itemSize.height + 'px;">'
+					+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 216px; height: 20px;">'
+						+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px;">'
+						+ '</div>'
+					+ '</div>'
+					+ '<div class="bp-item bp-photo-frame" style="top: 26px; left: 164px; width: 50px; height: 60px;">'
+						+ '<img name="photo" style="height:60px; width:50px;" />'
+					+ '</div>'
+					+ '<div name="phone" class="bp-item" style="top: 26px; left: 6px; width: 162px; height: 18px; font-size: 12px;"></div>'
+					+ '<div name="email" class="bp-item" style="top: 44px; left: 6px; width: 162px; height: 18px; font-size: 12px;"></div>'
+					+ '<div name="description" class="bp-item" style="top: 62px; left: 6px; width: 162px; height: 36px; font-size: 10px;"></div>'
+				+ '</div>'
+
+				return result;
+			}
+
+			function getContactTemplate() {
+				var result = new primitives.orgdiagram.TemplateConfig();
+				result.name = "contactTemplate";
+
+				var buttons = [];
+				buttons.push(new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"));
+				buttons.push(new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"));
+				buttons.push(new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add"));
+				buttons.push(new primitives.orgdiagram.ButtonConfig("notice", "ui-icon-notice", "Notice"));
+				result.buttons = buttons;
+
+				result.itemSize = new primitives.common.Size(220, 120);
+				result.minimizedItemSize = new primitives.common.Size(3, 3);
+				result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
+
+				/* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
+				result.itemTemplate = ["div",
+					{
+						"style": {
+							"width": result.itemSize.width + "px",
+							"height": result.itemSize.height + "px"
+						},
+						"class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+					},
+					["div",
+						{
+							"name": "titleBackground",
+							"class": ["bp-item", "bp-corner-all", "bt-title-frame"],
+							"style": {
+								top: "2px",
+								left: "2px",
+								width: "216px",
+								height: "20px"
+							}
+						},
+						["div",
+							{
+								"name": "title",
+								"class": ["bp-item", "bp-title"],
+								"style": {
+									top: "3px",
+									left: "6px",
+									width: "208px",
+									height: "18px"
+								}
+							}
+						]
+					],
+					["div",
+						{
+							"class": ["bp-item", "bp-photo-frame"],
+							"style": {
+								top: "26px",
+								left: "2px",
+								width: "50px",
+								height: "60px"
+							}
+						},
+						["img",
+							{
+								"name": "photo",
+								"class": ["bp-item", "bp-title"],
+								"style": {
+									width: "50px",
+									height: "60px"
+								}
+							}
+						]
+					],
+					["div",
+						{
+							"name": "phone",
+							"class": "bp-item",
+							"style": {
+								top: "26px",
+								left: "56px",
+								width: "162px",
+								height: "18px",
+								fontSize: "12px"
+							}
+						}
+					],
+					["div",
+						{
+							"name": "email",
+							"class": "bp-item",
+							"style": {
+								top: "44px",
+								left: "56px",
+								width: "162px",
+								height: "18px",
+								fontSize: "12px"
+							}
+						}
+					],
+					["div",
+						{
+							"name": "description",
+							"class": "bp-item",
+							"style": {
+								top: "62px",
+								left: "56px",
+								width: "162px",
+								height: "36px",
+								fontSize: "12px"
+							}
+						}
+					]
+				];
+				return result;
+			}
+		});
+	</script>
+</head>
+<body>
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+</html>

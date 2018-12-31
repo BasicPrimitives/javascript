@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Lables with item template</title>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+
+	<script type="text/javascript" src="../../min/primitives.min.js"></script>
+	<link href="../../min/primitives.latest.css" media="screen" rel="stylesheet" type="text/css" />
+
+	<style type="text/css">
+		.bp-item {
+			position: absolute;
+			overflow: visible;/* redefine this atttribute in bp-item class*/
+			font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+			-webkit-tap-highlight-color: rgba(0,0,0,0);
+			-webkit-user-select: none;
+			-webkit-touch-callout: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			box-sizing:content-box;
+		}
+	</style>
+
+	<script type='text/javascript'>
+		var control;
+
+		document.addEventListener('DOMContentLoaded', function () {
+			var options = new primitives.orgdiagram.Config();
+
+			var items = [
+				new primitives.orgdiagram.ItemConfig({
+					id: 0,
+					parent: null,
+					title: "Scott Aasrud",
+					description: "VP, Public Sector",
+					image: "../images/photos/a.png",
+					phone: "(123) 456-78-90",
+					email: "itema@org.com",
+					image: "../images/photos/a.png",
+					itemTitleColor: "red",
+					percent: 1
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 1,
+					parent: 0,
+					title: "Ted Lucas",
+					description: "VP, Human Resources",
+					image: "../images/photos/b.png",
+					phone: "(123) 456-78-90",
+					email: "itema@org.com",
+					percent: 0.5
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 2,
+					parent: 0,
+					title: "Fritz Stuger",
+					description: "Business Solutions, US",
+					image: "../images/photos/c.png",
+					phone: "(123) 456-78-90",
+					email: "itema@org.com",
+					percent: 0.5
+				})
+			];
+
+
+
+			options.items = items;
+			options.cursorItem = 0;
+			options.templates = [getContactTemplate()];
+			options.onItemRender = onTemplateRender;
+			options.defaultTemplateName = "contactTemplate";
+			options.normalItemsInterval = 10;
+			options.normalLevelShift = 44;
+
+			control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+
+
+			function onTemplateRender(event, data) {
+				switch (data.renderingMode) {
+					case primitives.common.RenderingMode.Create:
+						/* Initialize widgets here */
+						break;
+					case primitives.common.RenderingMode.Update:
+						/* Update widgets here */
+						break;
+				}
+
+				var itemConfig = data.context;
+
+				if (data.templateName == "contactTemplate") {
+					var element = data.element;
+
+					element.firstChild.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+					element.firstChild.firstChild.textContent = itemConfig.title;
+
+					var photo = element.childNodes[1].firstChild;
+					photo.src = itemConfig.image;
+					photo.alt = itemConfig.title;
+
+					element.childNodes[2].textContent = itemConfig.phone;
+					element.childNodes[3].textContent = itemConfig.email;
+					element.childNodes[4].textContent = itemConfig.description;
+					element.childNodes[5].textContent = itemConfig.percent * 100.0 + '%';
+				}
+			}
+
+			function getContactTemplate() {
+				var result = new primitives.orgdiagram.TemplateConfig();
+				result.name = "contactTemplate";
+
+				result.itemSize = new primitives.common.Size(220, 120);
+				result.minimizedItemSize = new primitives.common.Size(3, 3);
+				result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
+
+				result.itemTemplate = ["div",
+					{
+						"style": {
+							width: result.itemSize.width + "px",
+							height: result.itemSize.height + "px"
+						},
+						"class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+					},
+					["div",
+						{
+							name: "titleBackground",
+							style: {
+								top: "2px",
+								left: "2px",
+								width: "216px",
+								height: "20px",
+								overflow: "hidden"
+							},
+							"class": ["bp-item", "bp-corner-all", "bp-title-frame"]
+						},
+						["div",
+							{
+								name: "title",
+								style: {
+									top: "2px",
+									left: "2px",
+									width: "208px",
+									height: "18px",
+									fontSize: "14px",
+									overflow: "hidden"
+								},
+								"class": ["bp-item", "bp-title"]
+							}
+						]
+					],
+					["div",
+						{
+							style: {
+								top: "26px",
+								left: "2px",
+								width: "50px",
+								height: "60px",
+								overflow: "hidden"
+							},
+							"class": ["bp-item", "bp-photo-frame"]
+						},
+						["img",
+							{
+								name: "photo",
+								style: {
+									width: "50px",
+									height: "60px"
+								},
+							}
+						]
+					],
+					["div",
+						{
+							name: "phone",
+							style: {
+								top: "26px",
+								left: "56px",
+								width: "162px",
+								height: "18px",
+								fontSize: "12px",
+								overflow: "hidden"
+							},
+							"class": "bp-item"
+						}
+					],
+					["div",
+						{
+							name: "email",
+							style: {
+								top: "44px",
+								left: "56px",
+								width: "162px",
+								height: "18px",
+								fontSize: "12px",
+								overflow: "hidden"
+							},
+							"class": "bp-item"
+						}
+					],
+					["div",
+						{
+							name: "description",
+							style: {
+								top: "62px",
+								left: "56px",
+								width: "162px",
+								height: "36px",
+								fontSize: "10px",
+								overflow: "hidden"
+							},
+							"class": "bp-item"
+						}
+					],
+					["div",
+						{
+							name: "label",
+							style: {
+								top: "-20px",
+								left: "3px",
+								width: "208px",
+								height: "20px",
+								fontSize: "14px",
+								textAlign: "center",
+								overflow: "hidden"
+							},
+							"class": "bp-item"
+						}
+					]
+				];
+
+				return result;
+			}
+
+		});
+	</script>
+</head>
+<body>
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+</html>

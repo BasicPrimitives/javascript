@@ -1,0 +1,776 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<title>JavaScript Control Organizational Chart Dynamic Items Loading Demo</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<!-- header -->
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="common/helpers.js"></script>
+	<script type="text/javascript" src="../data/largedataset.js"></script>
+
+
+	<style type="text/css">
+		.bp-item2 {
+			position: absolute;
+			overflow: visible;/* redefine this atttribute in bp-item class in order to place items outside of boudaries*/
+			font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+			-webkit-tap-highlight-color: rgba(0,0,0,0);
+			-webkit-user-select: none;
+			-webkit-touch-callout: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			box-sizing:content-box;
+		}
+
+		.bp-badge2 {
+			-moz-border-radius: 16px;
+			-webkit-border-radius: 16px;
+			-khtml-border-radius: 16px;
+			border-radius: 16px;
+			font-size: 14px;
+			line-height: 14px;
+			text-align: center;
+			text-decoration: none;
+			vertical-align: middle;
+			font-weight: bold;
+			font-family: Arial;
+			padding: 4px;
+			float: left;
+			width:16px; 
+			height:16px;
+		}
+	</style>
+
+	<script type="text/javascript">
+		var control;
+		var timer = null;
+		var timer2 = null;
+		var children = {};
+		var treeItems = {};
+
+		var optionsRender = primitives.helpers.controls.getOrgDiagramOptionsRender({
+			/* Layout */
+			pageFitMode: primitives.common.PageFitMode.FitToPage,
+			orientationType: primitives.common.OrientationType.Top,
+			verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
+			horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+			childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+			leavesPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+			maximumColumnsInMatrix: 6,
+			minimalVisibility: primitives.common.Visibility.Dot,
+			selectionPathMode: primitives.common.SelectionPathMode.FullStack,
+
+			hasButtons: primitives.common.Enabled.Auto,
+			hasSelectorCheckbox: primitives.common.Enabled.True,
+			selectCheckBoxLabel: "Selected",
+			itemTitleFirstFontColor: primitives.common.Colors.White,
+			itemTitleSecondFontColor: primitives.common.Colors.White,
+			buttonsPanelSize: 28,
+			groupTitlePanelSize: 24,
+			checkBoxPanelSize: 24,
+
+			/* group title options */
+			groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
+			groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
+			groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
+			groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+			groupTitleFontSize: "12px",
+			groupTitleFontFamily: "Arial",
+			groupTitleColor: primitives.common.Colors.RoyalBlue,
+			groupTitleFontWeight: "normal",
+			groupTitleFontStyle: "normal",
+
+			/* Template */
+			DefaultTemplateOptions: {
+				minimizedItemCornerRadius: 10,
+				minimizedItemSize: new primitives.common.Size(10, 10),
+				highlightPadding: 6,
+				minimizedItemShapeType: primitives.common.ShapeType.Circle,
+				minimizedItemLineWidth: 1,
+				minimizedItemLineType: primitives.common.LineType.Solid,
+				minimizedItemBorderColor: null,
+				minimizedItemFillColor: null,
+				minimizedItemOpacity: 1.0
+			},
+
+			/* Intervals */
+			normalLevelShift: 20,
+			dotLevelShift: 20,
+			lineLevelShift: 10,
+			normalItemsInterval: 20,
+			dotItemsInterval: 6,
+			lineItemsInterval: 2,
+			cousinsIntervalMultiplier: 2,
+
+			/* Connectors */
+			arrowsDirection: primitives.common.GroupByType.None,
+			showExtraArrows: false,
+			extraArrowsMinimumSpace: 30,
+			connectorType: primitives.common.ConnectorType.Squared,
+			elbowType: primitives.common.ElbowType.None,
+			bevelSize: 4,
+			elbowDotSize: 4,
+			linesType: primitives.common.LineType.Solid,
+			linesColor: primitives.common.Colors.Silver,
+			linesWidth: 1,
+
+			/* Labels */
+			showLabels: primitives.common.Enabled.Auto,
+			labelSize: new primitives.common.Size(80, 24),
+			labelOrientation: primitives.text.TextOrientationType.Horizontal,
+			labelPlacement: primitives.common.PlacementType.Top,
+			labelOffset: 2,
+			labelFontSize: "10px",
+			labelFontFamily: "Arial",
+			labelColor: primitives.common.Colors.Black,
+			labelFontWeight: "normal",
+			labelFontStyle: "normal",
+
+			/* Callout */
+			calloutMaximumVisibility: primitives.common.Visibility.Dot,
+			showCallout: "true",
+			calloutPlacementOffset: 100,
+			calloutfillColor: "#000000",
+			calloutBorderColor: null,
+			calloutOffset: 4,
+			calloutCornerRadius: 4,
+			calloutPointerWidth: "10%",
+			calloutLineWidth: 1,
+			calloutOpacity: 0.2,
+
+			/* Interactivity */
+			navigationMode: primitives.common.NavigationMode.Default,
+			highlightGravityRadius: 40,
+			enablePanning: true,
+
+			/* Graphics */
+			graphicsType: primitives.common.GraphicsType.SVG,
+
+			scale: 1.0
+		},
+		/* On property change event handler */
+		function () {
+			control.setOptions(GetDiagramConfig());
+			control.update(primitives.common.UpdateMode.Recreate);
+		});
+
+		document.addEventListener('DOMContentLoaded', function () {
+			optionsRender.render(document.getElementById("westpanel"));
+
+			InitData();
+
+			control = primitives.orgdiagram.Control(document.getElementById("centerpanel"),
+				primitives.common.mergeObjects(GetDiagramConfig())
+			);
+
+			/* Load data */
+			LoadData(0, []);
+
+			window.addEventListener('resize', function (event) {
+				onWindowResize();
+			});
+		});
+
+		function InitData() {
+			for (var index = 0; index < data.length; index += 1) {
+				var item = data[index];
+				treeItems[item.id] = item;
+				if (item.parent != null) {
+					if (children[item.parent] == null) {
+						children[item.parent] = [];
+					}
+					children[item.parent].push(item);
+				}
+			}
+		}
+
+		function LoadData(cursorItem, selectedItems) {
+			var items = [];
+
+			/* Load first 3 layers */
+			var currentLevel = 0;
+			var itemsToLoad = [treeItems[0]];
+			var preloadedItems = {};
+
+			while (itemsToLoad.length > 0) {
+				currentLevel += 1;
+				var newItemsToLoad = [];
+				for (var index = 0; index < itemsToLoad.length; index += 1) {
+					var itemToLoad = primitives.common.mergeObjects({}, itemsToLoad[index]);
+					items.push(itemToLoad);
+					itemToLoad.hasChildren = children[itemToLoad.id] != null;
+					itemToLoad.childrencount = children[itemToLoad.id] != null ? children[itemToLoad.id].length : '0';
+					preloadedItems[itemToLoad.id] = itemToLoad;
+
+					if (currentLevel < 3) {
+						itemToLoad.hasLoaded = true;
+
+						if (itemToLoad.hasChildren) {
+							newItemsToLoad = newItemsToLoad.concat(children[itemToLoad.id]);
+						}
+					} else {
+						itemToLoad.hasLoaded = false;
+					}
+				}
+				itemsToLoad = newItemsToLoad;
+			}
+
+			/* load cursor and selected items */
+			var itemsToLoad = [];
+			itemsToLoad.push(cursorItem);
+			itemsToLoad = itemsToLoad.concat(selectedItems);
+
+			for (var index = 0; index < itemsToLoad.length; index += 1) {
+				var parentId = itemsToLoad[index];
+				while (parentId != null && (!preloadedItems[parentId] || !preloadedItems[parentId].hasLoaded)) {
+					var parentItem = primitives.common.mergeObjects({}, treeItems[parentId]);
+					var parentChildren = children[parentId];
+					if (parentChildren != null) {
+						for (var childIndex = 0; childIndex < parentChildren.length; childIndex += 1) {
+							var childItem = primitives.common.mergeObjects({}, parentChildren[childIndex]);
+							if (!preloadedItems[childItem.id]) {
+								items.push(childItem);
+								preloadedItems[childItem.id] = childItem;
+								childItem.hasChildren = (children[childItem.id] != null);
+								childItem.childrencount = children[childItem.id] != null ? children[childItem.id].length : '0';
+							}
+						}
+					}
+					parentItem.hasLoaded = true;
+					parentId = parentItem.parent;
+				}
+			}
+
+			/* set template for cursor item */
+			preloadedItems[cursorItem].templateName = "contactTemplate";
+
+			control.setOptions({
+				items: items,
+				cursorItem: cursorItem,
+				highlightItem: null
+			});
+			control.update();
+		}
+
+		function GetDiagramConfig() {
+			var options = optionsRender.getValues();
+
+			primitives.common.mergeObjects(options, {
+				buttons: [
+					new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"),
+					new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"),
+					new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add")
+				],
+				templates: [
+					getContactTemplate(options),
+					getRegularTemplate(options),
+					getLoaderTemplate(options) /* dummy item indicating children loading process */
+				],
+				defaultTemplateName: "regularTemplate"
+			})
+
+			primitives.common.mergeObjects(options, {
+				onButtonClick: onButtonClick,
+				onCursorChanging: onCursorChanging,
+				onCursorChanged: onCursorChanged,
+				onHighlightChanging: onHighlightChanging,
+				onHighlightChanged: onHighlightChanged,
+				onSelectionChanged: onSelectionChanged,
+				onItemRender: onTemplateRender,
+				onHighlightRender: onHighlightRender
+			});
+
+			return options;
+		}
+
+		function getContactTemplate(options) {
+			var result = new primitives.orgdiagram.TemplateConfig();
+			result.name = "contactTemplate";
+
+			result.itemSize = new primitives.common.Size(220, 120);
+
+			primitives.common.mergeObjects(result, options.DefaultTemplateOptions);
+
+			/* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
+			result.itemTemplate = ["div",
+					{
+						"style": {
+							width: result.itemSize.width + "px",
+							height: result.itemSize.height + "px"
+						},
+						"class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+					},
+					["div",
+						{
+							"name": "titleBackground",
+							"class": ["bp-item", "bp-corner-all", "bt-title-frame"],
+							"style": {
+								top: "2px",
+								left: "2px",
+								width: "216px",
+								height: "20px"
+							}
+						},
+						["div",
+							{
+								"name": "title",
+								"class": ["bp-item", "bp-title"],
+								"style": {
+									top: "3px",
+									left: "6px",
+									width: "208px",
+									height: "18px"
+								}
+							}
+						]
+					],
+					["div",
+						{
+							"class": ["bp-item", "bp-photo-frame"],
+							"style": {
+								top: "26px",
+								left: "2px",
+								width: "50px",
+								height: "60px"
+							}
+						},
+						["img",
+							{
+								"name": "photo",
+								"class": ["bp-item", "bp-title"],
+								"style": {
+									width: "50px",
+									height: "60px"
+								}
+							}
+						]
+					],
+					["div",
+						{
+							"name": "phone",
+							"class": "bp-item",
+							"style": {
+								top: "26px",
+								left: "56px",
+								width: "162px",
+								height: "18px",
+								fontSize: "12px"
+							}
+						}
+					],
+					["a",
+						{
+							"name": "email",
+							"class": "bp-item",
+							"style": {
+								top: "44px",
+								left: "56px",
+								width: "162px",
+								height: "18px",
+								fontSize: "12px"
+							}
+						}
+					],
+					["div",
+						{
+							"name": "description",
+							"class": "bp-item",
+							"style": {
+								top: "62px",
+								left: "56px",
+								width: "162px",
+								height: "36px",
+								fontSize: "12px"
+							}
+						}
+					]
+			];
+
+			return result;
+		}
+
+		function getRegularTemplate(options) {
+			var result = new primitives.orgdiagram.TemplateConfig();
+			result.name = "regularTemplate";
+
+			result.itemSize = new primitives.common.Size(180, 90);
+
+			primitives.common.mergeObjects(result, options.DefaultTemplateOptions);
+
+			result.itemTemplate = ["div",
+				{
+					style: {
+						width: result.itemSize.width + "px",
+						height: result.itemSize.height + "px"
+					},
+					"class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+				},
+				["div",
+					{
+						"name": "titleBackground",
+						"class": ["bp-item", "bp-corner-all", "bp-title-frame"],
+						"style": {
+							top: "2px",
+							left: "2px",
+							width: "176px",
+							height: "18px",
+							overflow: "hidden",
+							textAlign: "center"
+						},
+					},
+					["div",
+						{
+							name: "title",
+							"class": ["bp-item", "bp-title"],
+							"style": {
+								top: "2px",
+								left: "2px",
+								width: "172px",
+								height: "14px",
+								fontSize: "12px",
+								overflow: "hidden"
+							}
+						}
+					],
+				],
+				["div",
+					{
+						"class": ["bp-item", "bp-photo-frame"],
+						"style": {
+							top: "22px",
+							left: "2px",
+							width: "50px",
+							height: "60px",
+							overflow: "hidden"
+						}
+					},
+					["img",
+						{
+							name: "photo",
+							style: {
+								height: "60px",
+								width: "50px"
+							}
+						}
+					]
+				],
+				["div",
+					{
+						"class": "bp-item",
+						style: {
+							top: "22px",
+							left: "56px",
+							width: "118px",
+							height: "13px",
+							fontSize: "11px"
+						}
+					},
+					["a",
+						{
+							name: "email",
+							href: "",
+							target: "_top"
+						}
+					]
+				],
+				["div",
+					{
+						name: "description",
+						"class": "bp-item",
+						style: {
+							top: "37px",
+							left: "56px",
+							width: "118px",
+							height: "39px",
+							fontSize: "11px",
+							overflow: "hidden"
+						}
+					}
+				]
+			];
+
+			result.highlightTemplate = ["div",
+				{
+					style: {
+						position: "absolute",
+						overflow: "visible",
+						width: (result.itemSize.width + result.highlightPadding.left + result.highlightPadding.right) + "px",
+						height: (result.itemSize.height + result.highlightPadding.top + result.highlightPadding.bottom) + "px",
+						borderStyle: "solid",
+						borderWidth: "1px"
+					},
+					"class": ["bp-item2", "bp-corner-all", "bp-cursor-frame"]
+				},
+				["div",
+					{
+						name: 'badge',
+						"class": ["bp-badge2", "bp-item"],
+						"style": {
+							top: "45px",
+							left: "114px",
+							zIndex: 1000,
+							backgroundColor: "green",
+							color: "white"
+						}
+					}
+				]
+			];
+
+			return result;
+		}
+
+		function getLoaderTemplate(options) {
+			var result = new primitives.orgdiagram.TemplateConfig();
+			result.name = "loaderTemplate";
+
+			result.itemSize = new primitives.common.Size(32, 32);
+
+			primitives.common.mergeObjects(result, options.DefaultTemplateOptions);
+
+
+			result.itemTemplate = ["div",
+				{
+					"style": {
+						width: result.itemSize.width + "px",
+						height: result.itemSize.height + "px"
+					},
+					"class": ["bp-item", "bp-item2"]
+				},
+				["div", 
+					{ 
+						name: "badge",
+						"class": ["bp-badge2", "bp-item"],
+						"style": {
+							top: "0px",
+							left: "6px",
+							backgroundColor: "green",
+							color: "white"
+						}
+					}
+				]
+			];
+
+			result.highlightTemplate = ["div",
+				{
+					"style": {
+						position: "absolute",
+						overflow: "hidden",
+						borderStyle: "none"
+					}
+				}
+			];
+
+			return result;
+		}
+
+		function onTemplateRender(event, data) {
+			var itemConfig = data.context,
+				itemTitleColor = itemConfig.itemTitleColor != null ? itemConfig.itemTitleColor : primitives.common.Colors.RoyalBlue,
+				element = data.element;
+
+
+			if (data.templateName == "regularTemplate") {
+				var titleBackground = element.firstChild;
+				titleBackground.style.backgroundColor = itemTitleColor;
+
+				var title = element.firstChild.firstChild;
+				title.textContent = itemConfig.title;
+
+				var photo = element.childNodes[1].firstChild;
+				photo.src = itemConfig.image;
+				photo.alt = itemConfig.title;
+
+				var email = element.childNodes[2];
+				email.textContent = itemConfig.email;
+				email.href = ("mailto:" + itemConfig.email + "?Subject=Hello%20again");
+
+				var description = element.childNodes[3];
+				description.textContent = itemConfig.description;
+
+				switch (data.renderingMode) {
+					case primitives.common.RenderingMode.Create:
+						/* Initialize widgets here */
+						email.addEventListener("click", function (e) {
+							/* Block mouse click propogation in order to avoid layout updates before server postback*/
+							primitives.common.stopPropagation(e);
+						});
+						break;
+					case primitives.common.RenderingMode.Update:
+						/* Update widgets here */
+						break;
+				}
+			}
+
+			if (data.templateName == "contactTemplate") {
+				var photo = element.childNodes[1].firstChild;
+				photo.src = itemConfig.image;
+				photo.alt = itemConfig.title;
+
+				var titleBackground = element.firstChild;
+				titleBackground.style.backgroundColor = itemTitleColor;
+
+				var title = element.firstChild.firstChild;
+				title.textContent = itemConfig.title;
+
+				var phone = element.childNodes[2];
+				phone.textContent = itemConfig.phone;
+
+				var email = element.childNodes[3];
+				email.textContent = itemConfig.email;
+				email.href = ("mailto:" + itemConfig.email + "?Subject=Hello%20again");
+
+				var description = element.childNodes[4];
+				description.textContent = itemConfig.description;
+
+				switch (data.renderingMode) {
+					case primitives.common.RenderingMode.Create:
+						/* Initialize widgets here */
+						email.addEventListener("click", function (e) {
+							/* Block mouse click propogation in order to avoid layout updates before server postback*/
+							primitives.common.stopPropagation(e);
+						});
+						break;
+					case primitives.common.RenderingMode.Update:
+						/* Update widgets here */
+						break;
+				}
+			}
+
+			if (data.templateName == "loaderTemplate") {
+				var itemConfig = data.context;
+
+				var badge = element.firstChild;
+				badge.textContent = itemConfig['childrencount'];
+				badge.style.backgroundColor = itemTitleColor;
+			}
+		}
+
+		function onHighlightRender(event, data) {
+			var element = data.element;
+
+			switch (data.renderingMode) {
+				case primitives.common.RenderingMode.Create:
+					/* Initialize controls here */
+					break;
+				case primitives.common.RenderingMode.Update:
+					/* Update control here */
+					break;
+			}
+			if (data.templateName == "regularTemplate") {
+				var itemConfig = data.context;
+
+				var badge = element.firstChild;
+				badge.textContent = itemConfig['childrencount'];
+				badge.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+
+				var size = primitives.common.getInnerSize(element)
+				badge.style.left = (Math.round(size.width / 2) - 16) + "px";
+				badge.style.top = (size.height - 16) + "px";
+			}
+		}
+
+		function onSelectionChanged(e, data) {
+			var selectedItems = control.getOption("selectedItems");
+			var message = "";
+			for (var index = 0; index < selectedItems.length; index += 1) {
+				var itemConfig = treeItems[selectedItems[index]];
+				if (message != "") {
+					message += ", ";
+				}
+				message += "<b>'" + itemConfig.title + "'</b>";
+			}
+			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+
+			document.getElementById("southpanel").innerHTML = "User selected following items: " + message
+		}
+
+		function onHighlightChanging(e, data) {
+			var message = (data.context != null) ? "User is hovering mouse over item <b>'" + data.context.title + "'</b>." : "";
+			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+
+			document.getElementById("southpanel").innerHTML = message;
+		}
+
+		function onHighlightChanged(e, data) {
+			var message = (data.context != null) ? "User hovers mouse over item <b>'" + data.context.title + "'</b>." : "";
+			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+
+			document.getElementById("southpanel").innerHTML = message;
+		}
+
+		function onCursorChanging(e, data) {
+			var message = "User is clicking on item '" + data.context.title + "'.";
+			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+
+			document.getElementById("southpanel").innerHTML = message;
+
+			data.oldContext.templateName = null;
+			data.context.templateName = "contactTemplate";
+
+			if (!data.context.hasLoaded && data.context.childrencount > 0) {
+				/* add dummy item indicating children loading process */
+				var items = control.getOption("items");
+				items.push(new primitives.orgdiagram.ItemConfig({
+					id: 'badgeitem',
+					parent: data.context.id,
+					itemTitleColor: data.context.itemTitleColor,
+					childrencount: data.context.childrencount,
+					hasSelectorCheckbox: primitives.common.Enabled.False,
+					hasButtons: primitives.common.Enabled.False,
+					templateName: "loaderTemplate"
+				}));
+			}
+		}
+
+		function onCursorChanged(e, data) {
+			var message = "User clicked on item '" + data.context.title + "'.";
+			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+			document.getElementById("southpanel").innerHTML = message;
+
+			if (!data.context.hasLoaded && data.context.childrencount > 0) {
+				if (timer2 == null) {
+					timer2 = window.setTimeout(function () {
+						window.clearTimeout(timer2);
+						LoadData(control.getOption("cursorItem"), control.getOption("selectedItems"));
+						timer2 = null;
+					}, 250);
+				}
+			}
+		}
+
+		function onButtonClick(e, data) {
+			var message = "User clicked <b>'" + data.name + "'</b> button for item <b>'" + data.context.title + "'</b>.";
+			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+			document.getElementById("southpanel").innerHTML = message;
+		}
+
+		function onWindowResize() {
+			if (timer == null) {
+				timer = window.setTimeout(function () {
+					control.update(primitives.orgdiagram.UpdateMode.Refresh);
+					window.clearTimeout(timer);
+					timer = null;
+				}, 300);
+			}
+		}
+
+	</script>
+	<!-- /header -->
+</head>
+<body>
+	<div style="position: absolute; width: 400px; left: 0px; top: 0px; bottom: 50px; padding: 0px; margin: 0px; border-style: none; font-size: 14px; overflow: scroll; -webkit-overflow-scrolling: touch;">
+		<div id="westpanel" style="padding: 5px; margin: 5px; font: normal 12px verdana, areal;">
+			<h2>Large Hierarchy Dynamic Data Loading Demo</h2>
+			<p>This demo imitates dynamic nodes loading. It has hardcoded 1/4 second delay. It loads items as you navigate around. The top 3 levels stay preloaded permanently. All other levels are loaded only as you browse down into them and they are discarded as you navigate to any other branch of hierarchy.</p>
+			<p> If item is check marked then it stays loaded.</p>
+		</div>
+	</div>
+	<div id="centerpanel" style="position: absolute; border-style: dotted; border-width: 0px; top: 0; right: 0; bottom: 50px; left: 400px;"></div>
+	<div id="southpanel" style="position: absolute; border-style: dotted; border-width: 0px; height: 50px; right: 0; bottom: 0; left: 0;"></div>
+</body>
+</html>

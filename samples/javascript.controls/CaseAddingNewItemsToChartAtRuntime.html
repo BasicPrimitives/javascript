@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Adding new items at run time</title>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+		var control;
+		document.addEventListener('DOMContentLoaded', function () {
+			var maximumId = 3;
+			var options = new primitives.orgdiagram.Config();
+
+			var items = [
+				new primitives.orgdiagram.ItemConfig({
+					id: 0,
+					parent: null,
+					title: "Scott Aasrud",
+					description: "VP, Public Sector",
+					image: "../images/photos/a.png"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 1,
+					parent: 0,
+					title: "Ted Lucas",
+					description: "VP, Human Resources",
+					image: "../images/photos/b.png"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 2,
+					parent: 0,
+					title: "Fritz Stuger",
+					description: "Business Solutions, US",
+					image: "../images/photos/c.png"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 3,
+					parent: 0,
+					title: "Lynne Rathinam",
+					description: "GM, Enterprise Services",
+					image: "../images/photos/c.png"
+				})
+			];
+
+			var buttons = [];
+			buttons.push(new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"));
+			buttons.push(new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add"));
+
+			options.items = items;
+			options.cursorItem = 0;
+			options.buttons = buttons;
+			options.hasButtons = primitives.common.Enabled.Auto;
+			options.hasSelectorCheckbox = primitives.common.Enabled.True;
+			options.leavesPlacementType = primitives.orgdiagram.ChildrenPlacementType.Matrix;
+			options.pageFitMode = primitives.common.PageFitMode.None;
+			options.onButtonClick = function (e, /*primitives.orgdiagram.EventArgs*/ data) {
+				switch (data.name) {
+					case "delete":
+						if (/*parentItem: primitives.orgdiagram.ItemConfig*/data.parentItem == null) {
+							alert("You are trying to delete root item!");
+						}
+						else {
+							var items = control.getOption("items");
+							var newItems = [];
+							/* collect all children of deleted items, we are going to delete them as well. */
+							var itemsToBeDeleted = getSubItemsForParent(items, /*context: primitives.orgdiagram.ItemConfig*/data.context);
+							/* add deleted item to that collection*/
+							itemsToBeDeleted[data.context.id] = true;
+
+							/* copy to newItems collection only remaining items */
+							for (var index = 0, len = items.length; index < len; index += 1) {
+								var item = items[index];
+								if (!itemsToBeDeleted.hasOwnProperty(item.id)) {
+									newItems.push(item);
+								}
+							}
+							/* update items list in chart */
+							control.setOptions({
+								items: newItems,
+								cursorItem: data.parentItem.id
+							});
+							control.update(/*Refresh: use fast refresh to update chart*/ primitives.orgdiagram.UpdateMode.Refresh);
+
+						}
+						break;
+					case "add":
+						/* get items collection */
+						var items = control.getOption("items");
+						/* create new item */
+						var newItem = new primitives.orgdiagram.ItemConfig({
+							id: ++maximumId,
+							parent: data.context.id,
+							title: "New Title",
+							description: "New Description",
+							image: "../images/photos/z.png"
+						});
+						/* add it to items collection and put it back to chart, actually it is the same reference*/
+						items.push(newItem);
+						control.setOptions({
+							items: items,
+							cursorItem: newItem.id
+						});
+						/* updating chart options does not fire its referesh, so it should be call explicitly */
+						control.update(/*Refresh: use fast refresh to update chart*/ primitives.orgdiagram.UpdateMode.Refresh);
+						break;
+				}
+			};
+
+			control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+		});
+
+		function getSubItemsForParent(items, parentItem) {
+			var children = {},
+				itemsById = {},
+				index, len, item;
+			for (index = 0, len = items.length; index < len; index += 1) {
+				var item = items[index];
+				if (children[item.parent] == null) {
+					children[item.parent] = [];
+				}
+				children[item.parent].push(item);
+			}
+			var newChildren = children[parentItem.id];
+			var result = {};
+			if (newChildren != null) {
+				while (newChildren.length > 0) {
+					var tempChildren = [];
+					for (var index = 0; index < newChildren.length; index++) {
+						var item = newChildren[index];
+						result[item.id] = item;
+						if (children[item.id] != null) {
+							tempChildren = tempChildren.concat(children[item.id]);
+						}
+					}
+					newChildren = tempChildren;
+				}
+			}
+			return result;
+		};
+
+	</script>
+
+</head>
+<body>
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+</html>

@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Selected items</title>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+		var control;
+		var treeItems = {};
+		var selectedItems = [];
+
+		document.addEventListener('DOMContentLoaded', function () {
+			var options = new primitives.orgdiagram.Config();
+
+			var items = [
+				new primitives.orgdiagram.ItemConfig({
+					id: 0,
+					parent: null,
+					title: "Scott Aasrud",
+					description: "VP, Public Sector",
+					image: "../images/photos/a.png"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 1,
+					parent: 0,
+					title: "Ted Lucas",
+					description: "VP, Human Resources",
+					image: "../images/photos/b.png"
+				}),
+				new primitives.orgdiagram.ItemConfig({
+					id: 2,
+					parent: 0,
+					title: "Fritz Stuger",
+					description: "Business Solutions, US",
+					image: "../images/photos/c.png"
+				})
+			];
+
+			/* Create hash table where key = id & value = ItemConfig */
+			for (var index = 0, len = items.length; index < len; index += 1) {
+				treeItems[items[index].id] = items[index];
+			}
+
+			options.items = items;
+			options.cursorItem = 0;
+			options.hasSelectorCheckbox = primitives.common.Enabled.True
+			options.onSelectionChanged = onSelectionChanged;
+
+			control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+		});
+
+		function onSelectionChanged() {
+			selectedItems = control.getOption("selectedItems");
+
+			UpdateCheckboxes();
+			UpdateMessage();
+		}
+
+		function onCheckboxClick(e) {
+			selectedItems = [];
+
+			for (var index = 0; index <= 2; index += 1) {
+				var checkbox = document.getElementById("button" + index);
+				if (checkbox.checked) {
+					selectedItems.push(index);
+				}
+			}
+
+			UpdateControl();
+			UpdateMessage();
+		};
+
+		function UpdateCheckboxes() {
+			var hash = {};
+			for (var index = 0; index < selectedItems.length; index += 1) {
+				hash[selectedItems[index]] = true;
+			}
+
+			for (var index = 0; index <= 2; index += 1) {
+				var checkbox = document.getElementById("button" + index);
+				if(hash.hasOwnProperty(index)) {
+					checkbox.setAttribute("checked", "checked");
+				} else {
+					checkbox.removeAttribute("checked");
+				}
+			}
+		}
+
+		function UpdateControl() {
+			control.setOption("selectedItems", selectedItems);
+			control.update(primitives.orgdiagram.UpdateMode.Refresh);
+		}
+
+		function UpdateMessage() {
+			var message = "";
+			for (var index = 0; index < selectedItems.length; index++) {
+				var itemId = selectedItems[index];
+				var itemConfig = treeItems[itemId];
+				if (message != "") {
+					message += ", ";
+				}
+				message += "<b>'" + itemConfig.title + "'</b>";
+			}
+			var messagePanel = document.getElementById("message");
+			messagePanel.innerHTML = "User selected following items: " + message;
+		}
+	</script>
+
+</head>
+<body>
+	<div>
+		<p> Select following items:
+		<input id="button0" onclick="onCheckboxClick()" type="checkbox" />&nbsp;Scott Aasrud
+		<input id="button1" onclick="onCheckboxClick()" type="checkbox" />&nbsp;Ted Lucas
+		<input id="button2" onclick="onCheckboxClick()" type="checkbox" />&nbsp;Fritz Stuger
+		</p>
+		<p id="message"></p>
+		<div id="basicdiagram" style="width: 640px; height: 400px; border-style: dotted; border-width: 1px;" />
+	</div>
+</body>
+</html>

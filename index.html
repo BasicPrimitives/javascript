@@ -1,7 +1,7 @@
 <!DOCTYPE html> 
 <html xmlns="http://www.w3.org/1999/xhtml" style="margin: 0; padding: 0; height: 100%; overflow: hidden;">
 <head>
-	<title>Test Layout</title>
+	<title>Basic Primitives Diagrams</title>
 	<link rel="stylesheet" href="packages/jquery-ui/jquery-ui.min.css" />
 	<script type="text/javascript" src="packages/jquery/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="packages/jquery-ui/jquery-ui.min.js"></script>
@@ -9,121 +9,624 @@
 	<!-- # include file="src.primitives/src.primitives.html"-->
 	<!-- # include file="src.tests/src.tests.html"-->
 
-	<script type="text/javascript" src="min/primitives.min.js?4300"></script>
-	<link href="min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
-</head>
-<script>
-	jQuery(document).ready( function () {
-		jQuery("#version").text(primitives.common.version);
-		jQuery("#combobox").change(function () {
-            jQuery("#content").attr('src', jQuery("#combobox").val());
-            jQuery("#link").attr('href', jQuery("#combobox").val());
+	<script type="text/javascript" src="min/primitives.min.js?5100"></script>
+	<link href="min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+	<script>
+		var frameworks = ["javascript", "jquery"];
+		var frameworksLabels = {
+			"javascript": "JavaScript",
+			"jquery": "jQuery"
+		};
+		var preferedFramework = "javascript";
+		var files = [
+			{
+				label: "Organizational Chart",
+				items: [
+					{
+						label: "Large Hierarchy",
+						frameworks: {
+							javascript: "samples/javascript.controls/DemoLargeHierarchy.html",
+							jquery: "samples/jquery.widgets/DemoLargeHierarchy.html"
+						}
+					},
+					{
+						label: "Dynamic Data Loading",
+						frameworks: {
+							javascript: "samples/javascript.controls/DemoDynamicLoading.html",
+							jquery: "samples/jquery.widgets/DemoDynamicLoading.html"
+						}
+					},
+					{
+						label: "Vertical Layout",
+						frameworks: {
+							javascript: "samples/javascript.controls/DemoVerticalLayout.html",
+							jquery: "samples/jquery.widgets/DemoVerticalLayout.html"
+						}
+					},
+					{
+						label: "Cross Team Working Group",
+						frameworks: {
+							javascript: "samples/javascript.controls/DemoCrossTeamGroup.html",
+							jquery: "samples/jquery.widgets/DemoCrossTeamGroup.html"
+						}
+					},
+					{
+						label: "Partners & Annotations",
+						frameworks: {
+							javascript: "samples/javascript.controls/DemoPartners.html",
+							jquery: "samples/jquery.widgets/DemoPartners.html"
+						}
+					},
+					{
+						label: "Demo Highlight & Connector Annotations",
+						frameworks: {
+							javascript: "samples/javascript.controls/DemoHighlightAndAnnotations.html",
+							jquery: "samples/jquery.widgets/DemoHighlightAndAnnotations.html"
+						}
+					}
+				]
+			},
+			{
+				label: "Family Chart",
+				items: [
+					{
+						label: "Family Chart with Annotations",
+						frameworks: {
+							javascript: "samples/javascript.controls/DemoFamily.html",
+							jquery: "samples/jquery.widgets/DemoFamily.html"
+						}
+					},
+					{
+						label: "Financial Ownership Chart",
+						frameworks: {
+							javascript: "samples/javascript.controls/DemoFinancialOwnership.html",
+							jquery: "samples/jquery.widgets/DemoFinancialOwnership.html"
+						}
+					},
+					{
+						label: "Dependencies Chart",
+						frameworks: {
+							javascript: "samples/javascript.controls/DemoDependencies.html",
+							jquery: "samples/jquery.widgets/DemoDependencies.html"
+						}
+					},
+					{
+						label: "Patents & Hiding grand parents connectors",
+						frameworks: {
+							javascript: "samples/javascript.controls/DemoPatents.html",
+							jquery: "samples/jquery.widgets/DemoPatents.html"
+						}
+					}
+				]
+			},
+			{
+				label: "jQuery specific Demos & Samples",
+				items: [
+					{
+						label: "Organizational Chart Editor using jQuery UI bpOrgEditor Widget",
+						frameworks: {
+							jquery: "samples/jquery.widgets/DemoEditor.html"
+						}
+					},
+					{
+						label: "Drag & Drop Demo using jQuery UI Draggable & Droppable Widgets",
+						frameworks: {
+							jquery: "samples/jquery.widgets/DemoDragNDrop.html"
+						}
+					},
+					{
+						label: "Organizational Chart inside jQuery UI Dialog",
+						frameworks: {
+							jquery: "samples/jquery.widgets/CaseOrganizationalChartInsidejQueryUIDialog.html"
+						}
+					},
+					{
+						label: "Nesting jQuery UI Widgets inside Item template",
+						frameworks: {
+							jquery: "samples/jquery.widgets/CaseCustomControlTemplate.html"
+						}
+					}
+				]
+			},
+			{
+				label: "Integration",
+				items: [
+					{
+						label: "Client side PDF Generation and Download Samples",
+						frameworks: {
+							javascript: "samples/pdfkit.plugins/DemoPDFKitPlugins.html"
+						}
+					},
+					{
+						label: "AngularJS Directive Example",
+						frameworks: {
+							javascript: "samples/angularjs.directives/CaseAngularJSFirstOrganizationalChartDirective.html"
+						}
+					}
+				]
+			},
+			{
+				label: "Create & Update use cases",
+				items: [
+					{
+						label: "First Organizational Chart",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseFirstOrganizationalChart.html",
+							jquery: "samples/jquery.widgets/CaseFirstOrganizationalChart.html"
+						}
+					},
+					{
+						label: "First Family Chart",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseFirstFamilyChart.html",
+							jquery: "samples/jquery.widgets/CaseFirstFamilyChart.html"
+						}
+					},
+					{
+						label: "Adding new items to chart at runtime",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseAddingNewItemsToChartAtRuntime.html",
+							jquery: "samples/jquery.widgets/CaseAddingNewItemsToChartAtRuntime.html"
+						}
+					},
+					{
+						label: "Page Size Diagram",
+						frameworks: {
+							javascript: "samples/javascript.controls/CasePageSizeDiagram.html",
+							jquery: "samples/jquery.widgets/CasePageSizeDiagramWithoutUILayoutWidget.html"
+						}
+					},
+					{
+						label: "Auto size diagram in article",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseAutoSize.html",
+							jquery: "samples/jquery.widgets/CaseAutoSize.html"
+						}
+					}
+				]
+			},
+			{
+				label: "User interface events & options",
+				items: [
+					{
+						label: "Selecting cursor item",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseSelectingCursorItem.html",
+							jquery: "samples/jquery.widgets/CaseSelectingCursorItem.html"
+						}
+					},
+					{
+						label: "Selecting highlight item",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseSelectingHighlightItem.html",
+							jquery: "samples/jquery.widgets/CaseSelectingHighlightItem.html"
+						}
+					},
+					{
+						label: "Selected items & Check boxes",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseSelectedItems.html",
+							jquery: "samples/jquery.widgets/CaseSelectedItems.html"
+						}
+					},
+					{
+						label: "Buttons panel",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseButtonsPanel.html",
+							jquery: "samples/jquery.widgets/CaseButtonsPanel.html"
+						}
+					},
+					{
+						label: "Item and group title colors",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseItemAndGroupTitleColors.html",
+							jquery: "samples/jquery.widgets/CaseItemAndGroupTitleColors.html"
+						}
+					}
+				]
+			},
+			{
+				label: "Organizational Chart Layout Options",
+				items: [
+					{
+						label: "Children Placement",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseChildrenPlacementType.html",
+							jquery: "samples/jquery.widgets/CaseChildrenPlacementType.html"
+						}
+					},
+					{
+						label: "Adviser and Assistant item types",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseAdviserAndAssistantItemTypes.html",
+							jquery: "samples/jquery.widgets/CaseAdviserAndAssistantItemTypes.html"
+						}
+					},
+					{
+						label: "SubAdviser and SubAssistant item types",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseSubAdviserAndSubAssistantItemTypes.html",
+							jquery: "samples/jquery.widgets/CaseSubAdviserAndSubAssistantItemTypes.html"
+						}
+					},
+					{
+						label: "General Partner item type",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseGeneralPartnerItemType.html",
+							jquery: "samples/jquery.widgets/CaseGeneralPartnerItemType.html"
+						}
+					},
+					{
+						label: "Limited Partner item type",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseLimitedPartnerItemType.html",
+							jquery: "samples/jquery.widgets/CaseLimitedPartnerItemType.html"
+						}
+					},
+					{
+						label: "Adviser Partner item type",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseAdviserPartnerItemType.html",
+							jquery: "samples/jquery.widgets/CaseAdviserPartnerItemType.html"
+						}
+					},
+					{
+						label: "Multiple root items in chart",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseMultipleRootItemsInChart.html",
+							jquery: "samples/jquery.widgets/CaseMultipleRootItemsInChart.html"
+						}
+					},
+					{
+						label: "Matrix layout of multiple root items in chart",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseMatrixLayoutOfMultipleRootItemsInChart.html",
+							jquery: "samples/jquery.widgets/CaseMatrixLayoutOfMultipleRootItemsInChart.html"
+						}
+					},
+					{
+						label: "Selection path mode",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseSelectionPathMode.html",
+							jquery: "samples/jquery.widgets/CaseSelectionPathMode.html"
+						}
+					},
+					{
+						label: "Inactive Items in layout",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseInactiveItems.html",
+							jquery: "samples/jquery.widgets/CaseInactiveItems.html"
+						}
+					},
+					{
+						label: "Custom layout with invisible items",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseCustomLayoutWithInvisibleItems.html",
+							jquery: "samples/jquery.widgets/CaseCustomLayoutWithInvisibleItems.html"
+						}
+					},
+					{
+						label: "Skip levels",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseSkippedLevels.html",
+							jquery: "samples/jquery.widgets/CaseSkippedLevels.html"
+						}
+					}
+				]
+			},
+			{
+				label: "Family Diagram Laout Use Cases",
+				items: [
+					{
+						label: "Inactive Family Items in layout",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseInactiveFamilyItems.html",
+							jquery: "samples/jquery.widgets/CaseInactiveFamilyItems.html"
+						}
+					},
+					{
+						label: "Spouses having no children in Family Layout",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseSpousesInFamilyLayout.html",
+							jquery: "samples/jquery.widgets/CaseSpousesInFamilyLayout.html"
+						}
+					},
+					{
+						label: "Matrix Nodes layout in Family Chart",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseMatrixLayoutInFamilyChart.html",
+							jquery: "samples/jquery.widgets/CaseMatrixLayoutInFamilyChart.html"
+						}
+					},
+					{
+						label: "Labels cascades over connection lines in family chart",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseLabelsCascadesInFamilyChart.html",
+							jquery: "samples/jquery.widgets/CaseLabelsCascadesInFamilyChart.html"
+						}
+					}
+				]
+			},
+			{
+				label: "Item Template Use Cases",
+				items: [
+					{
+						label: "Item template",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseItemTemplate.html",
+							jquery: "samples/jquery.widgets/CaseItemTemplate.html"
+						}
+					},
+					{
+						label: "Adding Link To Item Template",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseAddingLinkToItemTemplate.html",
+							jquery: "samples/jquery.widgets/CaseAddingLinkToItemTemplate.html"
+						}
+					},
+					{
+						label: "Zoom using item template",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseZoomWithItemTemplate.html",
+							jquery: "samples/jquery.widgets/CaseZoomWithItemTemplate.html"
+						}
+					},
+					{
+						label: "Zoom using CSS Scale Transform",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseZoomWithCSSScaleTransform.html",
+							jquery: "samples/jquery.widgets/CaseZoomWithCSSScaleTransform.html"
+						}
+					},
+					{
+						label: "Labels & Item Template",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseItemTemplateLabel.html",
+							jquery: "samples/jquery.widgets/CaseItemTemplateLabel.html"
+						}
+					},
+					{
+						label: "Selection Checkbox Inside Item Template",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseSelectionCheckboxInItemTemplate.html",
+							jquery: "samples/jquery.widgets/CaseSelectionCheckboxInItemTemplate.html"
+						}
+					},
+					{
+						label: "Cursor template & Twitter Bootstrap Buttons",
+						frameworks: {
+							javascript: "samples/bootstrap.styles/CaseCursorTemplateAndTwitterBootstrap.html",
+							jquery: "samples/bootstrap.styles/CaseCursorTemplateAndTwitterBootstrap.html"
+						}
+					},
+					{
+						label: "Cursor Template",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseCursorTemplate.html",
+							jquery: "samples/jquery.widgets/CaseCursorTemplate.html"
+						}
+					},
+					{
+						label: "Highlight template",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseHighlightTemplate.html",
+							jquery: "samples/jquery.widgets/CaseHighlightTemplate.html"
+						}
+					},
+					{
+						label: "Item specific context buttons",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseButtonsInCursorTemplate.html",
+							jquery: "samples/jquery.widgets/CaseButtonsInCursorTemplate.html"
+						}
+					}
+				]
+			},
+			{
+				label: "Annotations",
+				items: [
+					{
+						label: "On-screen Connector Annotation",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseConnectorAnnotation.html",
+							jquery: "samples/jquery.widgets/CaseConnectorAnnotation.html"
+						}
+					},
+					{
+						label: "Shape & Background Annotations",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseShapeAnnotation.html",
+							jquery: "samples/jquery.widgets/CaseShapeAnnotation.html"
+						}
+					},
+					{
+						label: "Highlight Path Annotation",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseHighlightPathAnnotation.html",
+							jquery: "samples/jquery.widgets/CaseHighlightPathAnnotation.html"
+						}
+					},
+					{
+						label: "PERT chart & Critical Path Visualization",
+						frameworks: {
+							javascript: "samples/javascript.controls/CasePERTChart.html",
+							jquery: "samples/jquery.widgets/CasePERTChart.html"
+						}
+					},
+					{
+						label: "Routing Highlight Path Annotation for hidden grand parents connections",
+						frameworks: {
+							javascript: "samples/javascript.controls/CaseFamilyHideGrandParentsConnections.html"
+						}
+					}
+				]
+			},
+			{
+				label: "Helper Widgets",
+				items: [
+					{
+						label: "Rotated Text",
+						frameworks: {
+							jquery: "samples/jquery.widgets/DemoText.html"
+						}
+					},
+					{
+						label: "Callout",
+						frameworks: {
+							jquery: "samples/jquery.widgets/DemoCallout.html"
+						}
+					},
+					{
+						label: "Shape Annotation",
+						frameworks: {
+							jquery: "samples/jquery.widgets/DemoShape.html"
+						}
+					},
+					{
+						label: "Connector Annotation",
+						frameworks: {
+							jquery: "samples/jquery.widgets/DemoConnector.html"
+						}
+					}
+				]
+			},
+			{
+				label: "Reference",
+				items: [
+					{
+						label: "Controls Processing Diagram",
+						frameworks: {
+							jquery: "ReferenceControlsProcessingDiagram.html"
+						}
+					},
+					{
+						label: "Unit Tests",
+						frameworks: {
+							jquery: "Tests.html"
+						}
+					}
+				]
+			}
+		];
+
+		jQuery(document).ready(function () {
+			jQuery("#version").text(primitives.common.version);
+
+			createFiles();
+			createFrameworks();
+			UpdateFrameworks();
+			Update();
+
+			var height = $("#selector").height();
+
+			var placeholder = $("#placeholder");
+			var pixelAlignmentFix = primitives.common.getFixOfPixelALignment(placeholder[0]);
+			placeholder.css({
+				top: height + "px",
+				height: "expression(document.body.clientHeight-" + height + ")",
+				"marginLeft": pixelAlignmentFix.width + "px", /* fixes div pixel alignment */
+				"marginTop": pixelAlignmentFix.height + "px"
+			});
 		});
-	});
-</script>
 
-<body style="margin: 0; padding: 0; height: 100%; overflow: hidden;">
-	<div style="position: absolute; left: 0; top: 0; right: 0; height: 30px;">
-		<div class="ui-widget">
-			<label>&nbsp;<a href="http://www.basicprimitives.com">BASIC PRIMITIVES</a>&nbsp;v<label id="version"></label>:</label>
-			<select id="combobox" style="margin-top:2px;">
-				<option disabled>ORGANIZATIONAL CHART DEMOS:</option>
-				<option value="samples/jquery.widgets/DemoLargeHierarchy.html">Large Hierarchy</option>
-				<option value="samples/jquery.widgets/DemoDynamicLoading.html">Dynamic Data Loading</option>
-				<option value="samples/jquery.widgets/DemoEditor.html">Editor</option>
-				<option value="samples/jquery.widgets/DemoVerticalLayout.html">Vertical Layout</option>
-				<option value="samples/jquery.widgets/DemoCrossTeamGroup.html">Cross Team Working Group</option>
-				<option value="samples/jquery.widgets/DemoDragNDrop.html">Drag & Drop</option>
-				<option value="samples/jquery.widgets/DemoPartners.html">Partners & Annotations</option>
-				<option value="samples/jquery.widgets/DemoHighlightAndAnnotations.html">Demo Highlight & Connector Annotations</option>
-				<option value="samples/bootstrap.styles/DemoBootstrap.html">Bootstrap</option>
-				<option value="samples/pdfkit.plugins/DemoPDFKitPlugins.html">PDF Generation and Download</option>
 
-				<option disabled></option>
-				<option disabled>FAMILY CHART DEMOS:</option>
-				<option value="samples/jquery.widgets/DemoFamily.html">Family Chart with Annotations</option>
-				<option value="samples/jquery.widgets/DemoFinancialOwnership.html">Financial Ownership Chart</option>
-				<option value="samples/jquery.widgets/DemoDependencies.html">Dependencies Chart</option>
-				<option value="samples/jquery.widgets/DemoPatents.html">Patents & Hiding grand parents connectors</option>
+		function createFiles() {
+			var filesElement = jQuery("#files");
+			for (var index = 0; index < files.length; index += 1) {
+				var optgroup = files[index];
+				var optgroupElement = jQuery("<optgroup></optgroup>");
+				optgroupElement.attr({ label: optgroup.label });
 
-				<option disabled></option>
-				<option disabled>CREATE & UPDATE USE CASES:</option>
-				<option value="samples/jquery.widgets/CaseFirstOrganizationalChart.html">First Organizational Chart</option>
-				<option value="samples/jquery.widgets/CaseFirstFamilyChart.html">First Family Chart</option>
-				<option value="samples/jquery.widgets/CaseAddingNewItemsToChartAtRuntime.html">Adding new items to chart at runtime</option>
-				<option value="samples/jquery.widgets/CasePageSizeDiagramWithoutUILayoutWidget.html">Page Size Diagram without UI Layout Widget</option>
-				<option value="samples/jquery.widgets/CaseAutoSize.html">Auto size diagram in article</option>
-				<option value="samples/jquery.widgets/CaseOrganizationalChartInsidejQueryUIDialog.html">Organizational Chart inside jQuery UI Dialog</option>
-				<option value="samples/jquery.widgets/CaseCSSScaleTransform.html">Zoom using CSS Scale Transform</option>
-				<option value="samples/angularjs.directives/CaseAngularJSFirstOrganizationalChartDirective.html">AngularJS Directive Example</option>
+				for (var itemIndex = 0; itemIndex < optgroup.items.length; itemIndex += 1) {
+					var option = optgroup.items[itemIndex];
+					var optionElement = jQuery("<option></option>");
+					optionElement.text(option.label);
+					for (var framework in option.frameworks) {
+						if (option.frameworks.hasOwnProperty(framework)) {
+							optionElement.data(framework, option.frameworks[framework]);
+						}
+					}
+					optgroupElement.append(optionElement);
+				}
+				filesElement.append(optgroupElement);
+			}
+			filesElement.change(onFileChange);
+		}
 
-				<option disabled></option>
-				<option disabled>USER INTERFACE EVENTS & OPTIONS:</option>
-				<option value="samples/jquery.widgets/CaseSelectingCursorItem.html">Selecting cursor item</option>
-				<option value="samples/jquery.widgets/CaseSelectingHighlightItem.html">Selecting highlight item</option>
-				<option value="samples/jquery.widgets/CaseSelectedItems.html">Selected items & Check boxes</option>
-				<option value="samples/jquery.widgets/CaseButtonsPanel.html">Buttons panel</option>
-				<option value="samples/jquery.widgets/CaseItemAndGroupTitleColors.html">Item and group title colors</option>
+		function onFileChange() {
+			var file = jQuery("#files").find(':selected');
+			UpdateFrameworks(file);
+			Update();
+		}
 
-				<option disabled></option>
-				<option disabled>ORGANIZATIONAL CHART LAYOUT OPTIONS:</option>
-				<option value="samples/jquery.widgets/CaseChildrenPlacementType.html">Children Placement</option>
-				<option value="samples/jquery.widgets/CaseAdviserAndAssistantItemTypes.html">Adviser and Assistant item types</option>
-				<option value="samples/jquery.widgets/CaseSubAdviserAndSubAssistantItemTypes.html">SubAdviser and SubAssistant item types</option>
-				<option value="samples/jquery.widgets/CaseGeneralPartnerItemType.html">General Partner item type</option>
-				<option value="samples/jquery.widgets/CaseLimitedPartnerItemType.html">Limited Partner item type</option>
-				<option value="samples/jquery.widgets/CaseAdviserPartnerItemType.html">Adviser Partner item type</option>
-				<option value="samples/jquery.widgets/CaseMultipleRootItemsInChart.html">Multiple root items in chart</option>
-				<option value="samples/jquery.widgets/CaseMatrixLayoutOfMultipleRootItemsInChart.html">Matrix layout of multiple root items in chart</option>
-				<option value="samples/jquery.widgets/CaseSelectionPathMode.html">Selection path mode</option>
-				<option value="samples/jquery.widgets/CaseInactiveItems.html">Inactive Items in layout</option>
-				<option value="samples/jquery.widgets/CaseCustomLayoutWithInvisibleItems.html">Custom layout with invisible items</option>
-				<option value="samples/jquery.widgets/DemoInvisibleItems.html">Demo Invisibles Items</option>
-				<option value="samples/jquery.widgets/CaseSkippedLevels.html">Skip levels</option>
-
-				<option disabled></option>
-				<option disabled>FAMILY DIAGRAM LAOUT USE CASES:</option>
-				<option value="samples/jquery.widgets/CaseSkippedParentInFamilyChartChart.html">Skipped Parent In Family Chart</option>
-				<option value="samples/jquery.widgets/CaseLabelsCascadesInFamilyChart.html">Labels cascades over connection lines in family chart</option>
-				<option value="samples/jquery.widgets/CaseInactiveFamilyItems.html">Inactive Family Items in layout</option>
-
-				<option disabled></option>
-				<option disabled>ITEM TEMPLATE USE CASES:</option>
-				<option value="samples/jquery.widgets/CaseItemTemplate.html">Item template</option>
-				<option value="samples/jquery.widgets/CaseAddingLinkToItemTemplate.html">Adding Link To Item Template</option>
-				<option value="samples/jquery.widgets/CaseZoomWithItemTemplate.html">Zoom using item template</option>
-				<option value="samples/jquery.widgets/CaseItemTemplateLabel.html">Labels & Item Template</option>
-				<option value="samples/jquery.widgets/CaseSelectionCheckboxInItemTemplate.html">Selection Checkbox Inside Item Template</option>
-				<option value="samples/jquery.widgets/CaseCustomControlTemplate.html">jQuery UI Widget inside Item template</option>
-				<option value="samples/bootstrap.styles/CaseCursorTemplateAndTwitterBootstrap.html">Cursor template & Twitter Bootstrap Buttons</option>
-				<option value="samples/jquery.widgets/CaseCursorAnimation.html">Cursor animation</option>
-				<option value="samples/jquery.widgets/CaseHighlightTemplate.html">Highlight template</option>
-				<option value="samples/jquery.widgets/CaseButtonsInCursorTemplate.html">Item specific context buttons</option>
+		function createFrameworks() {
+			var frameworksElement = jQuery("#frameworks");
+			for (var index = 0; index < frameworks.length; index += 1) {
+				var framework = frameworks[index];
+				var frameworkElement = jQuery('<input type="radio" name="code"/>');
+				frameworkElement.attr({
+					id: framework,
+					value: framework
+				});
+				frameworksElement.append(frameworkElement);
+				var frameworkLabel = jQuery('<label></label>')
+				frameworkLabel.text(frameworksLabels[framework]);
+				frameworkLabel.attr({
+					"for": framework
+				});
+				frameworksElement.append(frameworkLabel);
 				
-				<option disabled></option>
-				<option disabled>ANNOTATIONS:</option>
-				<option value="samples/jquery.widgets/CaseConnectorAnnotation.html">On-screen Connector Annotation</option>
-				<option value="samples/jquery.widgets/CaseShapeAnnotation.html">Shape & Background Annotations</option>
-				<option value="samples/jquery.widgets/CaseHighlightPathAnnotation.html">Highlight Path Annotation</option>
-				<option value="samples/jquery.widgets/CasePERTChart.html">PERT chart & Critical Path Visualization</option>
+			}
+			frameworksElement.change(onFrameworkChange);
+		}
 
-				<option disabled></option>
-				<option disabled>HELPER WIDGETS:</option>
-				<option value="samples/jquery.widgets/DemoText.html">Rotated Text</option>
-				<option value="samples/jquery.widgets/DemoCallout.html">Callout</option>
-				<option value="samples/jquery.widgets/DemoShape.html">Shape Annotation</option>
-				<option value="samples/jquery.widgets/DemoConnector.html">Connector Annotation</option>
+		function onFrameworkChange() {
+			var framework = jQuery("input[name='code']:checked").val();
+			preferedFramework = framework;
+			Update();
+		}
 
-				<option disabled></option>
-				<option disabled>Reference:</option>
-				<option value="ReferenceControlsProcessingDiagram.html">Controls Processing Diagram</option>
-				<option value="Tests.html">Unit Tests</option>
-			</select>
-			<label>&nbsp;<a id="link" href="samples/jquery.widgets/DemoLargeHierarchy.html">>>></a></label>
+		function UpdateFrameworks() {
+			var file = jQuery("#files").find(':selected');
+			var isActivePreferedFramework = file.data(preferedFramework) != null;
+			for (var index = 0; index < frameworks.length; index += 1) {
+				var framework = frameworks[index];
+				var frameworkElement = jQuery("#" + framework);
+				var isActive = file.data(framework) != null;
+				frameworkElement.prop('disabled', !isActive);
+
+				if (!isActivePreferedFramework || framework == preferedFramework) {
+					if (isActive) {
+						frameworkElement.prop({
+							"checked": "checked"
+						});
+					}
+				}
+			}
+		}
+
+		function Update() {
+			var file = jQuery("#files").find(':selected');
+			var framework = jQuery("input[name='code']:checked").val();
+
+			var url = file.data(framework);
+			jQuery("#content").attr('src', url);
+			jQuery("#link").attr('href', url);
+		}
+	</script>
+</head>
+<body style="margin: 0; padding: 0; height: 100%; overflow: hidden;">
+	<div id="selector" style="position: absolute; left: 0; top: 0; right: 0;">
+		<div class="ui-widget" style="padding: 4px 7px 4px 4px">
+			<label>&nbsp;<a href="http://www.basicprimitives.com">BASIC PRIMITIVES</a>&nbsp;v<label id="version"></label>:</label>
+			<select id="files"></select>
+			<span id="frameworks"></span>
+			<label>&nbsp;<a id="link" href="">&gt;&gt;&gt;</a></label>
 		</div>
 	</div>
-	<div style="position: absolute; left: 0; right: 0; bottom: 0; top: 30px; height: expression(document.body.clientHeight-30);">
-		<iframe id="content" width="100%" height="100%" src="samples/jquery.widgets/DemoLargeHierarchy.html" />
+	<div id="placeholder" style="position: absolute; left: 0; right: 0; bottom: 0;">
+		<iframe id="content" width="100%" height="100%" src=""></iframe>
 	</div>
 </body>
 </html>

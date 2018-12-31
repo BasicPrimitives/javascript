@@ -12,21 +12,21 @@
 	<link rel="stylesheet" type="text/css" href="../../packages/jquerylayout/layout-default-latest.css" />
 
 	<script type="text/javascript">
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			jQuery('body').layout(
-			{
-				center__paneSelector: "#contentpanel"
-			});
+				{
+					center__paneSelector: "#contentpanel"
+				});
 		});
 	</script>
 
 	<!-- header -->
-
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
 
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<script type="text/javascript" src="../../min/bporgeditor.min.js?4300"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/bporgeditor.min.js?5100"></script>
 
 	<script type="text/javascript">
 		var optionsRender = new primitives.helpers.controls.Render([
@@ -47,21 +47,21 @@
 				new primitives.helpers.controls.RadioBoxConfig("graphicsType", primitives.common.GraphicsType.SVG, "Graphics", primitives.common.GraphicsType, primitives.helpers.controls.ValueType.Integer, onUpdate)
 			])
 		], {
-			orientationType: primitives.common.OrientationType.Top,
-			connectorPlacementType: primitives.common.ConnectorPlacementType.Offbeat,
-			connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-			offset: 0,
-			labelPlacementType: primitives.common.ConnectorLabelPlacementType.Between,
+				orientationType: primitives.common.OrientationType.Top,
+				connectorPlacementType: primitives.common.ConnectorPlacementType.Offbeat,
+				connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
+				offset: 0,
+				labelPlacementType: primitives.common.ConnectorLabelPlacementType.Between,
 
-			lineType: primitives.common.LineType.Solid,
-			color: primitives.common.Colors.Black,
-			lineWidth: 2,
+				lineType: primitives.common.LineType.Solid,
+				color: primitives.common.Colors.Black,
+				lineWidth: 2,
 
-			graphicsType: primitives.common.GraphicsType.SVG
-		});
+				graphicsType: primitives.common.GraphicsType.SVG
+			});
 		var widget = null;
 
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			jQuery.ajaxSetup({
 				cache: false
 			});
@@ -73,17 +73,17 @@
 			jQuery("#toRect").draggable({ stop: function (event, ui) { Update(jQuery("#annotation")); } });
 
 			jQuery('#contentpanel').layout(
-			{
-				center__paneSelector: "#centerpanel"
-				, west__size: 400
-				, west__paneSelector: "#westpanel"
-				, west__resizable: true
-				, center__onresize: function () {
-					if (widget != null) {
-						Update(jQuery("#annotation"));
+				{
+					center__paneSelector: "#centerpanel"
+					, west__size: 400
+					, west__paneSelector: "#westpanel"
+					, west__resizable: true
+					, center__onresize: function () {
+						if (widget != null) {
+							Update(jQuery("#annotation"));
+						}
 					}
-				}
-			});
+				});
 
 			optionsRender.render(jQuery("#westpanel"));
 
@@ -133,7 +133,7 @@
 		<!--bpcontent-->
 		<div id="westpanel" style="visibility:hidden;padding: 0px; margin: 0px; border-style: solid; font-size: 12px; overflow: scroll; -webkit-overflow-scrolling: touch;">
 			<h2>Connector Shape</h2>
-			<p>This is helper jQuery UI widget draws connector shape in all major graphics formats: SVG, Canvas & VML.</p>
+			<p>This is helper jQuery UI widget draws connector shape using SVG or Canvas.</p>
 		</div>
 		<div id="centerpanel" style="padding: 0px; margin: 0px; overflow: hidden;">
 			<div id="annotation" style="position: absolute; padding: 0px; margin: 0px;"></div>

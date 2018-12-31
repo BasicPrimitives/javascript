@@ -9,11 +9,12 @@
 	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
 
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
-	<script type='text/javascript'>//<![CDATA[ 
-		jQuery(document).ready( function () {
+	<script type='text/javascript'>
+		jQuery(document).ready(function () {
 			var options = new primitives.orgdiagram.Config();
 
 			var items = [
@@ -27,16 +28,16 @@
 					email: "itema@org.com",
 					image: "../images/photos/a.png",
 					templateName: "contactTemplate",
-                    itemTitleColor: "red",
-                    groupTitle: "Group 2"
+					itemTitleColor: "red",
+					groupTitle: "Group 2"
 				}),
 				new primitives.orgdiagram.ItemConfig({
 					id: 1,
 					parent: 0,
 					title: "Ted Lucas",
 					description: "VP, Human Resources",
-                    image: "../images/photos/b.png",
-                    groupTitle: "Group 1"
+					image: "../images/photos/b.png",
+					groupTitle: "Group 1"
 				}),
 				new primitives.orgdiagram.ItemConfig({
 					id: 2,
@@ -46,8 +47,8 @@
 					email: "itemc@org.com",
 					description: "Business Solutions, US",
 					image: "../images/photos/c.png",
-                    templateName: "contactTemplate2",
-                    groupTitle: "Group 3"
+					templateName: "contactTemplate2",
+					groupTitle: "Group 3"
 				})
 			];
 
@@ -130,18 +131,18 @@
 
 
 				var itemTemplate = jQuery(
-				  '<div class="bp-item bp-corner-all bt-item-frame">'
+					'<div class="bp-item bp-corner-all bt-item-frame">'
 					+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 216px; height: 20px;">'
-						+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px;">'
-						+ '</div>'
+					+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px;">'
+					+ '</div>'
 					+ '</div>'
 					+ '<div class="bp-item bp-photo-frame" style="top: 26px; left: 164px; width: 50px; height: 60px;">'
-						+ '<img name="photo" style="height:60px; width:50px;" />'
+					+ '<img name="photo" style="height:60px; width:50px;" />'
 					+ '</div>'
 					+ '<div name="phone" class="bp-item" style="top: 26px; left: 6px; width: 162px; height: 18px; font-size: 12px;"></div>'
 					+ '<div name="email" class="bp-item" style="top: 44px; left: 6px; width: 162px; height: 18px; font-size: 12px;"></div>'
 					+ '<div name="description" class="bp-item" style="top: 62px; left: 6px; width: 162px; height: 36px; font-size: 10px;"></div>'
-				+ '</div>'
+					+ '</div>'
 				).css({
 					width: result.itemSize.width + "px",
 					height: result.itemSize.height + "px"
@@ -168,18 +169,18 @@
 
 
 				var itemTemplate = jQuery(
-				  '<div class="bp-item bp-corner-all bt-item-frame">'
+					'<div class="bp-item bp-corner-all bt-item-frame">'
 					+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 216px; height: 20px;">'
-						+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px;">'
-						+ '</div>'
+					+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px;">'
+					+ '</div>'
 					+ '</div>'
 					+ '<div class="bp-item bp-photo-frame" style="top: 26px; left: 2px; width: 50px; height: 60px;">'
-						+ '<img name="photo" style="height:60px; width:50px;" />'
+					+ '<img name="photo" style="height:60px; width:50px;" />'
 					+ '</div>'
 					+ '<div name="phone" class="bp-item" style="top: 26px; left: 56px; width: 162px; height: 18px; font-size: 12px;"></div>'
 					+ '<div name="email" class="bp-item" style="top: 44px; left: 56px; width: 162px; height: 18px; font-size: 12px;"></div>'
 					+ '<div name="description" class="bp-item" style="top: 62px; left: 56px; width: 162px; height: 36px; font-size: 10px;"></div>'
-				+ '</div>'
+					+ '</div>'
 				).css({
 					width: result.itemSize.width + "px",
 					height: result.itemSize.height + "px"
@@ -189,7 +190,7 @@
 				return result;
 			}
 
-		});//]]>  
+		});
 	</script>
 </head>
 <body>

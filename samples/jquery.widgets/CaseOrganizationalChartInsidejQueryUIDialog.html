@@ -8,10 +8,11 @@
 	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
 
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
-	<script type='text/javascript'>//<![CDATA[ 
+	<script type='text/javascript'>
 		$(document).ready(function () {
 			var panel = jQuery("#panel");
 			var orgchartform = panel.find("[name=orgchartform]");
@@ -96,8 +97,8 @@
 						var panelSize = new primitives.common.Rect(0, 0, orgchartform.outerWidth(), orgchartform.outerHeight());
 						orgchart.css(panelSize.getCSS());
 						/* Chart is already created, so in regular situation we have to use Refresh update mode,
-							but here jQuery removes dialog contents and adds them back, so that procedure invalidates
-							invalidates VML in IE6 mode, so when we open dialog we use full Redraw update mode. */
+							but here jQuery removes dialog contents and adds them back, so that procedure
+							invalidates graphics element, so when we open dialog we use full Redraw update mode. */
 						orgchart.orgDiagram("update", primitives.orgdiagram.UpdateMode.Recreate);
 					}
 				}).dialog("open");
@@ -140,13 +141,13 @@
 						orgchart.css(panelSize.getCSS());
 						/* Chart is already created, so in regular situation we have to use Refresh update mode,
 							but here jQuery removes dialog contents and adds them back, so that procedure invalidates
-							invalidates VML in IE6 mode, so when we open dialog we use full Redraw update mode. */
+							graphics element, so when we open dialog we use full Redraw update mode. */
 						orgchart.orgDiagram("update", primitives.orgdiagram.UpdateMode.Recreate);
 					}
 				}).dialog("open");
 			})
 
-		});//]]>  
+		});
 
 	</script>
 </head>

@@ -12,21 +12,21 @@
 	<link rel="stylesheet" type="text/css" href="../../packages/jquerylayout/layout-default-latest.css" />
 
 	<script type="text/javascript">
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			jQuery('body').layout(
-			{
-				center__paneSelector: "#contentpanel"
-			});
+				{
+					center__paneSelector: "#contentpanel"
+				});
 		});
 	</script>
 
 	<!-- header -->
-
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
 
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<script type="text/javascript" src="../../min/bporgeditor.min.js?4300"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/bporgeditor.min.js?5100"></script>
 	<script type="text/javascript" src="../data/dependencies.js"></script>
 
 	<script type="text/javascript">
@@ -109,7 +109,7 @@
 			elbowType: primitives.common.ElbowType.Round,
 			bevelSize: 4,
 			elbowDotSize: 4,
-			lineType: primitives.common.LineType.Solid,
+			linesType: primitives.common.LineType.Solid,
 			linesColor: primitives.common.Colors.Black,
 			linesWidth: 1,
 
@@ -147,36 +147,36 @@
 
 			scale: 1.0
 		},
-		/* On property change event handler */
-		onUpdate
+			/* On property change event handler */
+			onUpdate
 		);
 
 		var famDiagram = null;
 		var fromItem = 0;
 		var toItem = 0;
 
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			jQuery.ajaxSetup({
 				cache: false
 			});
 
 			jQuery('#contentpanel').layout(
-			{
-				center__paneSelector: "#centerpanel"
-				, south__paneSelector: "#southpanel"
-				, south__resizable: false
-				, south__closable: false
-				, south__spacing_open: 0
-				, south__size: 50
-				, west__size: 400
-				, west__paneSelector: "#westpanel"
-				, west__resizable: true
-				, center__onresize: function () {
-					if (famDiagram != null) {
-						jQuery("#centerpanel").famDiagram("update", primitives.common.UpdateMode.Refresh);
+				{
+					center__paneSelector: "#centerpanel"
+					, south__paneSelector: "#southpanel"
+					, south__resizable: false
+					, south__closable: false
+					, south__spacing_open: 0
+					, south__size: 50
+					, west__size: 400
+					, west__paneSelector: "#westpanel"
+					, west__resizable: true
+					, center__onresize: function () {
+						if (famDiagram != null) {
+							jQuery("#centerpanel").famDiagram("update", primitives.common.UpdateMode.Refresh);
+						}
 					}
-				}
-			});
+				});
 
 			optionsRender.render(jQuery("#westpanel"));
 
@@ -185,11 +185,11 @@
 		});
 
 		function Setup(selector) {
-			famDiagram = selector.famDiagram(GetOrgDiagramConfig());
+			famDiagram = selector.famDiagram(GetDiagramConfig());
 		}
 
 		function Update(selector, updateMode) {
-			selector.famDiagram("option", GetOrgDiagramConfig());
+			selector.famDiagram("option", GetDiagramConfig());
 			selector.famDiagram("update", updateMode);
 		}
 
@@ -197,7 +197,7 @@
 			Update(jQuery("#centerpanel"), primitives.common.UpdateMode.Recreate);
 		};
 
-		function GetOrgDiagramConfig() {
+		function GetDiagramConfig() {
 			var options = optionsRender.getValues();
 
 			jQuery.extend(options, {
@@ -229,7 +229,7 @@
 				annotationType: primitives.common.AnnotationType.Connector,
 				fromItem: 5,
 				toItem: 8,
-				label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation", // security issue! don't do this in real life scenarious
+				label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
 				labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
 				connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
 				color: primitives.common.Colors.Red,
@@ -350,9 +350,9 @@
 			var annotations = selector.famDiagram("option", "annotations");
 
 			var newAnnotations = [];
-			for(var index = 0, len = annotations.length; index < len; index+=1) {
+			for (var index = 0, len = annotations.length; index < len; index += 1) {
 				var annotation = annotations[index];
-				if(annotation.annotationType != primitives.common.AnnotationType.HighlightPath) {
+				if (annotation.annotationType != primitives.common.AnnotationType.HighlightPath) {
 					newAnnotations.push(annotation);
 				}
 			}

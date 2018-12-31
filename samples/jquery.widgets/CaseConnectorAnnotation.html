@@ -9,22 +9,23 @@
 	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
 
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
-	<script type='text/javascript'>//<![CDATA[ 
+	<script type='text/javascript'>
 		$(document).ready(function () {
 			/* This sample verifies JSON form of items & connector annotation creation */
 			jQuery("#basicdiagram").orgDiagram({
 				items: [
 					/* JSON noname objects equivalent to primitives.orgdiagram.ItemConfig */
 					{ id: 0, parent: null, title: "Scott Aasrud", description: "VP, Public Sector", image: "../images/photos/a.png" },
-					{id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: "../images/photos/b.png" },
-					{id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: "../images/photos/c.png" }
+					{ id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: "../images/photos/b.png" },
+					{ id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: "../images/photos/c.png" }
 				],
 				annotations: [
 					/* JSON noname object equivalent to primitives.orgdiagram.ConnectorAnnotationConfig */
-					{ 
+					{
 						annotationType: primitives.common.AnnotationType.Connector,
 						fromItem: 0,
 						toItem: 2,
@@ -56,7 +57,7 @@
 				arrowsDirection: primitives.common.GroupByType.Parents,
 				pageFitMode: primitives.orgdiagram.PageFitMode.None
 			});
-		});//]]>  
+		});
 
 	</script>
 </head>

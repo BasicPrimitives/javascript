@@ -10,10 +10,11 @@
 
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
 
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
-	<script type='text/javascript'>//<![CDATA[ 
+	<script type='text/javascript'>
 		$(document).ready(function () {
 			var options = new primitives.orgdiagram.Config();
 
@@ -174,9 +175,9 @@
 
 
 				var itemTemplate = jQuery(
-				  '<div class="bp-item">'
+					'<div class="bp-item">'
 					+ '<div name="title" class="bp-item" style="top: 0px; left: 0px; width: 100px; height: 10px; font-size: 8px; text-align:center;"></div>'
-				+ '</div>'
+					+ '</div>'
 				).css({
 					width: result.itemSize.width + "px",
 					height: result.itemSize.height + "px"
@@ -196,10 +197,10 @@
 
 
 				var itemTemplate = jQuery(
-				  '<div class="bp-item">'
+					'<div class="bp-item">'
 					+ '<div name="title" class="bp-item" style="top: 0px; left: 0px; width: 120px; height: 12px; font-size: 10px; text-align:center;"></div>'
 					+ '<div name="description" class="bp-item" style="top: 14px; left: 0px; width: 120px; height: 12px; font-size: 10px; text-align:center;"></div>'
-				+ '</div>'
+					+ '</div>'
 				).css({
 					width: result.itemSize.width + "px",
 					height: result.itemSize.height + "px"
@@ -219,14 +220,14 @@
 
 
 				var itemTemplate = jQuery(
-				  '<div class="bp-item">'
+					'<div class="bp-item">'
 					+ '<div class="bp-item bp-photo-frame" style="top: 0px; left: 0px; width: 50px; height: 60px; overflow: hidden;">'
-						+ '<img name="photo" style="height:60px; width:50px;" />'
+					+ '<img name="photo" style="height:60px; width:50px;" />'
 					+ '</div>'
 					+ '<div name="title" class="bp-item" style="top: 2px; left: 56px; width: 84px; height: 12px; font-size: 10px; overflow: hidden;"></div>'
 					+ '<div name="email" class="bp-item" style="top: 14px; left: 56px; width: 84px; height: 12px; font-size: 10px; overflow: hidden;"></div>'
 					+ '<div name="description" class="bp-item" style="top: 28px; left: 56px; width: 84px; height: 62px; font-size: 10px; overflow: hidden;"></div>'
-				+ '</div>'
+					+ '</div>'
 				).css({
 					width: result.itemSize.width + "px",
 					height: result.itemSize.height + "px"
@@ -246,17 +247,17 @@
 
 
 				var itemTemplate = jQuery(
-				  '<div class="bp-item bp-corner-all bt-item-frame">'
+					'<div class="bp-item bp-corner-all bt-item-frame">'
 					+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 156px; height: 18px; overflow: hidden; text-align:center;">'
-						+ '<div name="title" class="bp-item bp-title" style="top: 2px; left: 2px; width: 152px; height: 14px; font-size: 11px; overflow: hidden;">'
-						+ '</div>'
+					+ '<div name="title" class="bp-item bp-title" style="top: 2px; left: 2px; width: 152px; height: 14px; font-size: 11px; overflow: hidden;">'
+					+ '</div>'
 					+ '</div>'
 					+ '<div class="bp-item bp-photo-frame" style="top: 22px; left: 2px; width: 50px; height: 60px; overflow: hidden;">'
-						+ '<img name="photo" style="height:60px; width:50px;" />'
+					+ '<img name="photo" style="height:60px; width:50px;" />'
 					+ '</div>'
 					+ '<div name="email" class="bp-item" style="top: 22px; left: 56px; width: 98px; height: 13px; font-size: 11px; overflow: hidden;"></div>'
 					+ '<div name="description" class="bp-item" style="top: 37px; left: 56px; width: 98px; height: 39px; font-size: 11px; overflow: hidden;"></div>'
-				+ '</div>'
+					+ '</div>'
 				).css({
 					width: result.itemSize.width + "px",
 					height: result.itemSize.height + "px"
@@ -276,18 +277,18 @@
 
 
 				var itemTemplate = jQuery(
-				  '<div class="bp-item bp-corner-all bt-item-frame">'
+					'<div class="bp-item bp-corner-all bt-item-frame">'
 					+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 216px; height: 20px; overflow: hidden;">'
-						+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px; overflow: hidden;">'
-						+ '</div>'
+					+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px; overflow: hidden;">'
+					+ '</div>'
 					+ '</div>'
 					+ '<div class="bp-item bp-photo-frame" style="top: 26px; left: 2px; width: 50px; height: 60px; overflow: hidden;">'
-						+ '<img name="photo" style="height:60px; width:50px;" />'
+					+ '<img name="photo" style="height:60px; width:50px;" />'
 					+ '</div>'
 					+ '<div name="phone" class="bp-item" style="top: 26px; left: 56px; width: 162px; height: 18px; font-size: 12px; overflow: hidden;"></div>'
 					+ '<div name="email" class="bp-item" style="top: 44px; left: 56px; width: 162px; height: 18px; font-size: 12px; overflow: hidden;"></div>'
 					+ '<div name="description" class="bp-item" style="top: 62px; left: 56px; width: 162px; height: 36px; font-size: 10px; overflow: hidden;"></div>'
-				+ '</div>'
+					+ '</div>'
 				).css({
 					width: result.itemSize.width + "px",
 					height: result.itemSize.height + "px"
@@ -309,7 +310,7 @@
 					jQuery("#basicdiagram").orgDiagram("update", primitives.orgdiagram.UpdateMode.Refresh);
 				}
 			});
-		});//]]>  
+		});
 
 	</script>
 </head>

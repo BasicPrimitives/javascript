@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Children Placement Type</title>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+		var control;
+		document.addEventListener('DOMContentLoaded', function () {
+			var options = new primitives.orgdiagram.Config();
+
+			var items = [
+				/* matrix layout example */
+				new primitives.orgdiagram.ItemConfig({
+					id: 1,
+					parent: null,
+					title: "Matrix Layout",
+					childrenPlacementType: primitives.common.ChildrenPlacementType.Matrix
+				}),
+				new primitives.orgdiagram.ItemConfig({ id: 2, parent: 1, title: "Child 1" }),
+				new primitives.orgdiagram.ItemConfig({ id: 3, parent: 1, title: "Child 2" }),
+				new primitives.orgdiagram.ItemConfig({ id: 4, parent: 1, title: "Child 3" }),
+				new primitives.orgdiagram.ItemConfig({ id: 5, parent: 1, title: "Child 4" }),
+				new primitives.orgdiagram.ItemConfig({ id: 6, parent: 1, title: "Child 5" }),
+				new primitives.orgdiagram.ItemConfig({ id: 7, parent: 1, title: "Child 6" }),
+				new primitives.orgdiagram.ItemConfig({ id: 8, parent: 1, title: "Child 7" }),
+				new primitives.orgdiagram.ItemConfig({ id: 9, parent: 1, title: "Child 8" }),
+
+				/* vertical layout example */
+				new primitives.orgdiagram.ItemConfig({
+					id: 101,
+					parent: null,
+					title: "Vertical Layout",
+					childrenPlacementType: primitives.common.ChildrenPlacementType.Vertical
+				}),
+				new primitives.orgdiagram.ItemConfig({ id: 102, parent: 101, title: "Child 1" }),
+				new primitives.orgdiagram.ItemConfig({ id: 103, parent: 101, title: "Child 2", childrenPlacementType: primitives.common.ChildrenPlacementType.Vertical }),
+					new primitives.orgdiagram.ItemConfig({ id: 104, parent: 103, title: "Sub Child 3" }),
+					new primitives.orgdiagram.ItemConfig({ id: 105, parent: 103, title: "Sub Child 4" }),
+				new primitives.orgdiagram.ItemConfig({ id: 106, parent: 101, title: "Child 5" }),
+				new primitives.orgdiagram.ItemConfig({ id: 107, parent: 101, title: "Child 6" }),
+
+				/* horizontal layout example */
+				new primitives.orgdiagram.ItemConfig({
+					id: 201,
+					parent: null,
+					title: "Horizontal Layout",
+					childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal
+				}),
+				new primitives.orgdiagram.ItemConfig({ id: 202, parent: 201, title: "Child 1" }),
+				new primitives.orgdiagram.ItemConfig({ id: 203, parent: 201, title: "Child 2" }),
+				new primitives.orgdiagram.ItemConfig({ id: 204, parent: 201, title: "Child 3" })
+			];
+
+			options.items = items;
+			options.hasSelectorCheckbox = primitives.common.Enabled.False;
+			options.maximumColumnsInMatrix = 2;
+			options.cursorItem = 1;
+			options.normalItemsInterval = 20;
+			options.cousinsIntervalMultiplier = 1;
+			options.defaultTemplateName = "info";
+			options.templates = [getInfoTemplate()];
+			options.onItemRender = onTemplateRender;
+			options.pageFitMode = primitives.common.PageFitMode.None;
+
+			control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+		});
+
+		function onTemplateRender(event, data) {
+			switch (data.renderingMode) {
+				case primitives.common.RenderingMode.Create:
+					/* Initialize widgets here */
+					break;
+				case primitives.common.RenderingMode.Update:
+					/* Update widgets here */
+					break;
+			}
+
+			var itemConfig = data.context;
+
+			if (data.templateName == "info") {
+				data.element.firstChild.textContent = itemConfig.title;
+			}
+		}
+
+		function getInfoTemplate() {
+			var result = new primitives.orgdiagram.TemplateConfig();
+			result.name = "info";
+
+			result.itemSize = new primitives.common.Size(80, 36);
+			result.minimizedItemSize = new primitives.common.Size(3, 3);
+			result.highlightPadding = new primitives.common.Thickness(4, 4, 4, 4);
+
+
+			result.itemTemplate = ["div",
+				{
+					"style": {
+						"width": result.itemSize.width + "px",
+						"height":result.itemSize.height + "px"
+					},
+					"class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+				},
+				["div",
+					{
+						"name": "title",
+						"class": "bp-item",
+						"style": {
+							"top": "3px",
+							"left": "6px",
+							"width": "68px",
+							"height": "28px",
+							"font-size": "12px"
+						}
+					}
+				]
+			];
+			return result;
+		}
+	</script>
+</head>
+<body>
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+</html>

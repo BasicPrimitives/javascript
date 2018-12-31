@@ -8,10 +8,11 @@
 	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
 
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
-	<script type='text/javascript'>//<![CDATA[ 
+	<script type='text/javascript'>
 		$(document).ready(function () {
 			var options = new primitives.orgdiagram.Config();
 
@@ -58,16 +59,16 @@
 
 			jQuery("input:radio[name=selectionPathMode]").change(function () {
 				jQuery("#basicdiagram").orgDiagram("option",
-				{
-					"selectionPathMode": parseInt(jQuery("input:radio[name=selectionPathMode]:checked").val()),
-					"cursorItem": null
-				});
+					{
+						"selectionPathMode": parseInt(jQuery("input:radio[name=selectionPathMode]:checked").val()),
+						"cursorItem": null
+					});
 				jQuery("#basicdiagram").orgDiagram("update", primitives.orgdiagram.UpdateMode.Refresh);
 			});
 
 
 
-		});//]]>  
+		});
 
 	</script>
 

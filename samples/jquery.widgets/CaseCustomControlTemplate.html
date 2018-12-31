@@ -10,11 +10,12 @@
 	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
 
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
-	<script type='text/javascript'>//<![CDATA[ 
-		jQuery(document).ready( function () {
+	<script type='text/javascript'>
+		jQuery(document).ready(function () {
 			var options = new primitives.orgdiagram.Config();
 
 			var items = [
@@ -96,7 +97,6 @@
 							fillColor: null,
 							cornerRadius: 5
 						});
-
 						break;
 					case primitives.common.RenderingMode.Update:
 						/* Update widgets here */
@@ -132,13 +132,13 @@
 
 
 				var itemTemplate = jQuery(
-				  '<div class="bp-item">'
+					'<div class="bp-item">'
 					+ '<div name="title" class="bp-item" style="top: 3px; left: 6px; width: 162px; height: 24px; text-align:center;"></div>'
 					+ '<div name="phone" class="bp-item" style="top: 26px; left: 6px; width: 162px; height: 18px; font-size: 12px; text-align:center;"></div>'
 					+ '<div name="email" class="bp-item" style="top: 44px; left: 6px; width: 162px; height: 18px; font-size: 12px; text-align:center;"></div>'
 					+ '<div name="description" class="bp-item" style="top: 62px; left: 6px; width: 162px; height: 18px; font-size: 10px; text-align:center;"></div>'
 					+ '<div name="shape" class="bp-item" style="top: 1px; left: 1px; width: 172px; height: 80px;"></div>'
-				+ '</div>'
+					+ '</div>'
 				).css({
 					width: result.itemSize.width + "px",
 					height: result.itemSize.height + "px"
@@ -148,7 +148,7 @@
 				return result;
 			}
 
-		});//]]>  
+		});
 	</script>
 </head>
 <body>

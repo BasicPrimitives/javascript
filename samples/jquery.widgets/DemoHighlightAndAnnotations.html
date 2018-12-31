@@ -12,156 +12,156 @@
 	<link rel="stylesheet" type="text/css" href="../../packages/jquerylayout/layout-default-latest.css" />
 
 	<script type="text/javascript">
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			jQuery('body').layout(
-			{
-				center__paneSelector: "#contentpanel"
-			});
+				{
+					center__paneSelector: "#contentpanel"
+				});
 		});
 	</script>
 
 	<!-- header -->
-
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<script type="text/javascript" src="../../min/bporgeditor.min.js?4300"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/bporgeditor.min.js?5100"></script>
 	<script type="text/javascript" src="../data/smalldataset.js"></script>
-	
+
 	<script type="text/javascript">
 		var /* Layout */
 			optionsRender = primitives.helpers.controls.getOrgDiagramOptionsRender({
-			pageFitMode: primitives.common.PageFitMode.FitToPage,
-			orientationType: primitives.common.OrientationType.Top,
-			verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-			horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
-			childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
-			leavesPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
-			maximumColumnsInMatrix: 6,
-			minimalVisibility: primitives.common.Visibility.Dot,
-			selectionPathMode: primitives.common.SelectionPathMode.FullStack,
+				pageFitMode: primitives.common.PageFitMode.FitToPage,
+				orientationType: primitives.common.OrientationType.Top,
+				verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
+				horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+				childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+				leavesPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+				maximumColumnsInMatrix: 6,
+				minimalVisibility: primitives.common.Visibility.Dot,
+				selectionPathMode: primitives.common.SelectionPathMode.FullStack,
 
-			hasButtons: primitives.common.Enabled.Auto,
-			hasSelectorCheckbox: primitives.common.Enabled.True,
-			selectCheckBoxLabel: "Selected",
-			itemTitleFirstFontColor: primitives.common.Colors.White,
-			itemTitleSecondFontColor: primitives.common.Colors.White,
-			buttonsPanelSize: 28,
-			groupTitlePanelSize: 24,
-			checkBoxPanelSize: 24,
+				hasButtons: primitives.common.Enabled.Auto,
+				hasSelectorCheckbox: primitives.common.Enabled.True,
+				selectCheckBoxLabel: "Selected",
+				itemTitleFirstFontColor: primitives.common.Colors.White,
+				itemTitleSecondFontColor: primitives.common.Colors.White,
+				buttonsPanelSize: 28,
+				groupTitlePanelSize: 24,
+				checkBoxPanelSize: 24,
 
 				/* group title options */
-			groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
-			groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
-			groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-			groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
-			groupTitleFontSize: "12px",
-			groupTitleFontFamily: "Arial",
-			groupTitleColor: primitives.common.Colors.RoyalBlue,
-			groupTitleFontWeight: "normal",
-			groupTitleFontStyle: "normal",
+				groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
+				groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
+				groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
+				groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+				groupTitleFontSize: "12px",
+				groupTitleFontFamily: "Arial",
+				groupTitleColor: primitives.common.Colors.RoyalBlue,
+				groupTitleFontWeight: "normal",
+				groupTitleFontStyle: "normal",
 
-			/* Template */
-			DefaultTemplateOptions: {
-				minimizedItemCornerRadius: 8,
-				minimizedItemSize: new primitives.common.Size(6, 6),
-				highlightPadding: 6,
-				minimizedItemShapeType: primitives.common.ShapeType.None,
-				minimizedItemLineWidth: 0,
-				minimizedItemLineType: primitives.common.LineType.Solid,
-				minimizedItemBorderColor: null,
-				minimizedItemFillColor: null,
-				minimizedItemOpacity: 1
+				/* Template */
+				DefaultTemplateOptions: {
+					minimizedItemCornerRadius: 8,
+					minimizedItemSize: new primitives.common.Size(6, 6),
+					highlightPadding: 6,
+					minimizedItemShapeType: primitives.common.ShapeType.None,
+					minimizedItemLineWidth: 0,
+					minimizedItemLineType: primitives.common.LineType.Solid,
+					minimizedItemBorderColor: null,
+					minimizedItemFillColor: null,
+					minimizedItemOpacity: 1
+				},
+
+				/* Intervals */
+				normalLevelShift: 30,
+				dotLevelShift: 20,
+				lineLevelShift: 10,
+				normalItemsInterval: 10,
+				dotItemsInterval: 4,
+				lineItemsInterval: 4,
+				cousinsIntervalMultiplier: 0,
+
+				/* Connectors */
+				arrowsDirection: primitives.common.GroupByType.None,
+				showExtraArrows: false,
+				extraArrowsMinimumSpace: 30,
+				connectorType: primitives.common.ConnectorType.Squared,
+				elbowType: primitives.common.ElbowType.None,
+				bevelSize: 4,
+				elbowDotSize: 4,
+				linesType: primitives.common.LineType.Solid,
+				linesColor: primitives.common.Colors.Silver,
+				linesWidth: 1,
+
+				/* Labels */
+				showLabels: primitives.common.Enabled.Auto,
+				labelSize: new primitives.common.Size(80, 24),
+				labelOrientation: primitives.text.TextOrientationType.Horizontal,
+				labelPlacement: primitives.common.PlacementType.Bottom,
+				labelOffset: 2,
+				labelFontSize: "10px",
+				labelFontFamily: "Arial",
+				labelColor: primitives.common.Colors.Black,
+				labelFontWeight: "normal",
+				labelFontStyle: "normal",
+
+				/* Callout */
+				calloutMaximumVisibility: primitives.common.Visibility.Dot,
+				showCallout: "true",
+				calloutPlacementOffset: 100,
+				calloutfillColor: "#000000",
+				calloutBorderColor: null,
+				calloutOffset: 4,
+				calloutCornerRadius: 4,
+				calloutPointerWidth: "10%",
+				calloutLineWidth: 1,
+				calloutOpacity: 0.2,
+
+				/* Interactivity */
+				navigationMode: primitives.common.NavigationMode.Default,
+				highlightGravityRadius: 40,
+				enablePanning: true,
+
+				/* Graphics */
+				graphicsType: primitives.common.GraphicsType.SVG,
+
+				scale: 1.0
 			},
+				/* On property change event handler */
+				function () {
+					var options = getOptions();
 
-			/* Intervals */
-			normalLevelShift: 30,
-			dotLevelShift: 20,
-			lineLevelShift: 10,
-			normalItemsInterval: 10,
-			dotItemsInterval: 4,
-			lineItemsInterval: 4,
-			cousinsIntervalMultiplier: 0,
-
-			/* Connectors */
-			arrowsDirection: primitives.common.GroupByType.None,
-			showExtraArrows: false,
-			extraArrowsMinimumSpace: 30,
-			connectorType: primitives.common.ConnectorType.Squared,
-			elbowType: primitives.common.ElbowType.None,
-			bevelSize: 4,
-			elbowDotSize: 4,
-			linesType: primitives.common.LineType.Solid,
-			linesColor: primitives.common.Colors.Silver,
-			linesWidth: 1,
-
-			/* Labels */
-			showLabels: primitives.common.Enabled.Auto,
-			labelSize: new primitives.common.Size(80, 24),
-			labelOrientation: primitives.text.TextOrientationType.Horizontal,
-			labelPlacement: primitives.common.PlacementType.Bottom,
-			labelOffset: 2,
-			labelFontSize: "10px",
-			labelFontFamily: "Arial",
-			labelColor: primitives.common.Colors.Black,
-			labelFontWeight: "normal",
-			labelFontStyle: "normal",
-
-			/* Callout */
-			calloutMaximumVisibility: primitives.common.Visibility.Dot,
-			showCallout: "true",
-			calloutPlacementOffset: 100,
-			calloutfillColor: "#000000",
-			calloutBorderColor: null,
-			calloutOffset: 4,
-			calloutCornerRadius: 4,
-			calloutPointerWidth: "10%",
-			calloutLineWidth: 1,
-			calloutOpacity: 0.2,
-
-			/* Interactivity */
-			navigationMode: primitives.common.NavigationMode.Default,
-			highlightGravityRadius: 40,
-			enablePanning: true,
-
-			/* Graphics */
-			graphicsType: primitives.common.GraphicsType.SVG,
-
-			scale: 1.0
-		},
-		/* On property change event handler */
-		function () {
-			var options = getOptions();
-
-			orgDiagram.orgDiagram("option", options);
-			orgDiagram.orgDiagram("update", primitives.common.UpdateMode.Recreate);
-		});
+					orgDiagram.orgDiagram("option", options);
+					orgDiagram.orgDiagram("update", primitives.common.UpdateMode.Recreate);
+				});
 
 		var orgDiagram = null;
 		var treeItems = {};
 
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			jQuery.ajaxSetup({
 				cache: false
 			});
 
 			jQuery('#contentpanel').layout(
-			{
-				center__paneSelector: "#centerpanel"
-				, south__paneSelector: "#southpanel"
-				, south__resizable: false
-				, south__closable: false
-				, south__spacing_open: 0
-				, south__size: 50
-				, west__size: 400
-				, west__paneSelector: "#westpanel"
-				, west__resizable: true
-				, center__onresize: function () {
-					if (orgDiagram != null) {
-						orgDiagram.orgDiagram("update", primitives.common.UpdateMode.Refresh);
+				{
+					center__paneSelector: "#centerpanel"
+					, south__paneSelector: "#southpanel"
+					, south__resizable: false
+					, south__closable: false
+					, south__spacing_open: 0
+					, south__size: 50
+					, west__size: 400
+					, west__paneSelector: "#westpanel"
+					, west__resizable: true
+					, center__onresize: function () {
+						if (orgDiagram != null) {
+							orgDiagram.orgDiagram("update", primitives.common.UpdateMode.Refresh);
+						}
 					}
-				}
-			});
+				});
 
 			optionsRender.render(jQuery("#westpanel"));
 
@@ -196,8 +196,8 @@
 			jQuery.extend(options, {
 				onButtonClick: onButtonClick,
 				buttons: [new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"),
-					new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"),
-					new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add")
+				new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"),
+				new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add")
 				],
 
 				onItemRender: onTemplateRender,
@@ -263,18 +263,18 @@
 			jQuery.extend(result, options.DefaultTemplateOptions);
 
 			var itemTemplate = jQuery(
-			  '<div class="bp-item bp-corner-all bt-item-frame">'
+				'<div class="bp-item bp-corner-all bt-item-frame">'
 				+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 216px; height: 20px;">'
-					+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px;">'
-					+ '</div>'
+				+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px;">'
+				+ '</div>'
 				+ '</div>'
 				+ '<div class="bp-item bp-photo-frame" style="top: 26px; left: 2px; width: 50px; height: 60px;">'
-					+ '<img name="photo" style="height: 60px; width:50px;" />'
+				+ '<img name="photo" style="height: 60px; width:50px;" />'
 				+ '</div>'
 				+ '<div name="phone" class="bp-item" style="top: 26px; left: 56px; width: 162px; height: 18px; font-size: 12px;"></div>'
 				+ '<div class="bp-item" style="top: 44px; left: 56px; width: 162px; height: 18px; font-size: 12px;"><a name="email" href="" target="_top"></a></div>'
 				+ '<div name="description" class="bp-item" style="top: 62px; left: 56px; width: 162px; height: 36px; font-size: 10px;"></div>'
-			+ '</div>'
+				+ '</div>'
 			).css({
 				width: result.itemSize.width + "px",
 				height: result.itemSize.height + "px"
@@ -341,9 +341,9 @@
 
 			var cursorItem = jQuery("#centerpanel").orgDiagram("option", "cursorItem");
 
-            if (data.context != null) {
-                UpdateAnnotations(cursorItem, data.context.id)
-            }
+			if (data.context != null) {
+				UpdateAnnotations(cursorItem, data.context.id)
+			}
 		}
 
 		function onHighlightChanged(e, data) {

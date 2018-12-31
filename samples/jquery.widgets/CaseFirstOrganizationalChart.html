@@ -2,18 +2,19 @@
 <html>
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<title>The very first organization diagram</title>
+	<title>First organization diagram</title>
 
 	<link rel="stylesheet" href="../../packages/jquery-ui/jquery-ui.min.css" />
 	<script type="text/javascript" src="../../packages/jquery/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
 
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
-	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
-	<script type='text/javascript'>//<![CDATA[ 
-		$(document).ready( function () {
+	<script type='text/javascript'>
+		$(document).ready(function () {
 			var options = new primitives.orgdiagram.Config();
 
 			var items = [
@@ -45,7 +46,7 @@
 			options.hasSelectorCheckbox = primitives.common.Enabled.True;
 
 			jQuery("#basicdiagram").orgDiagram(options);
-		});//]]>  
+		});
 
 	</script>
 </head>

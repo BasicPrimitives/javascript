@@ -8,13 +8,14 @@
 	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
 
 	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
+	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+	<script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
 	<link href="../../min/primitives.latest.css?2106" media="screen" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript">
 		var m_timer = null;
 
-		jQuery(document).ready( function () {
+		jQuery(document).ready(function () {
 			ResizePlaceholder();
 
 			var options = new primitives.orgdiagram.Config();
@@ -76,10 +77,10 @@
 			var bodyWidth = Math.round($(window).width() - 40);
 			var bodyHeight = Math.round($(window).height() - 20);
 			jQuery("#orgdiagram").css(
-			{
-				"width": bodyWidth + "px",
-				"height": bodyHeight + "px"
-			});
+				{
+					"width": bodyWidth + "px",
+					"height": bodyHeight + "px"
+				});
 		}
 
 	</script>

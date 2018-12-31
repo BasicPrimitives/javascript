@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Connector Annotation</title>
+
+	<link rel="stylesheet" href="../../packages/jquery-ui/jquery-ui.min.css" />
+	<script type="text/javascript" src="../../packages/jquery/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
+	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>//<![CDATA[ 
+		$(document).ready(function () {
+			/* This sample verifies JSON form of items & connector annotation creation */
+			jQuery("#basicdiagram").orgDiagram({
+				items: [
+					/* JSON noname objects equivalent to primitives.orgdiagram.ItemConfig */
+					{ id: 0, parent: null, title: "Scott Aasrud", description: "VP, Public Sector", image: "../images/photos/a.png" },
+					{id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: "../images/photos/b.png" },
+					{id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: "../images/photos/c.png" }
+				],
+				annotations: [
+					/* JSON noname object equivalent to primitives.orgdiagram.ConnectorAnnotationConfig */
+					{ 
+						annotationType: primitives.common.AnnotationType.Connector,
+						fromItem: 0,
+						toItem: 2,
+						label: "<div class='bp-badge' style='width:10px; height:10px;background-color:green; color: white;'>2</div>",
+						labelSize: { width: 80, height: 30 },
+						connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
+						color: primitives.common.Colors.Green,
+						offset: 0,
+						lineWidth: 2,
+						lineType: primitives.common.LineType.Dashed,
+						selectItems: false
+					},
+					/* prototype based instantiation */
+					new primitives.orgdiagram.ConnectorAnnotationConfig({
+						fromItem: 0,
+						toItem: 1,
+						label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>",
+						labelSize: new primitives.common.Size(80, 30),
+						connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
+						color: primitives.common.Colors.Red,
+						offset: 0,
+						lineWidth: 2,
+						lineType: primitives.common.LineType.Dashed,
+						selectItems: false
+					})
+				],
+				cursorItem: 0,
+				hasSelectorCheckbox: primitives.common.Enabled.True,
+				arrowsDirection: primitives.common.GroupByType.Parents,
+				pageFitMode: primitives.orgdiagram.PageFitMode.None
+			});
+		});//]]>  
+
+	</script>
+</head>
+<body>
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+</html>

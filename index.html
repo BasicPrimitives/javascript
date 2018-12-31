@@ -1,0 +1,129 @@
+<!DOCTYPE html> 
+<html xmlns="http://www.w3.org/1999/xhtml" style="margin: 0; padding: 0; height: 100%; overflow: hidden;">
+<head>
+	<title>Test Layout</title>
+	<link rel="stylesheet" href="packages/jquery-ui/jquery-ui.min.css" />
+	<script type="text/javascript" src="packages/jquery/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="packages/jquery-ui/jquery-ui.min.js"></script>
+
+	<!-- # include file="src.primitives/src.primitives.html"-->
+	<!-- # include file="src.tests/src.tests.html"-->
+
+	<script type="text/javascript" src="min/primitives.min.js?4300"></script>
+	<link href="min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<script>
+	jQuery(document).ready( function () {
+		jQuery("#version").text(primitives.common.version);
+		jQuery("#combobox").change(function () {
+            jQuery("#content").attr('src', jQuery("#combobox").val());
+            jQuery("#link").attr('href', jQuery("#combobox").val());
+		});
+	});
+</script>
+
+<body style="margin: 0; padding: 0; height: 100%; overflow: hidden;">
+	<div style="position: absolute; left: 0; top: 0; right: 0; height: 30px;">
+		<div class="ui-widget">
+			<label>&nbsp;<a href="http://www.basicprimitives.com">BASIC PRIMITIVES</a>&nbsp;v<label id="version"></label>:</label>
+			<select id="combobox" style="margin-top:2px;">
+				<option disabled>ORGANIZATIONAL CHART DEMOS:</option>
+				<option value="samples/jquery.widgets/DemoLargeHierarchy.html">Large Hierarchy</option>
+				<option value="samples/jquery.widgets/DemoDynamicLoading.html">Dynamic Data Loading</option>
+				<option value="samples/jquery.widgets/DemoEditor.html">Editor</option>
+				<option value="samples/jquery.widgets/DemoVerticalLayout.html">Vertical Layout</option>
+				<option value="samples/jquery.widgets/DemoCrossTeamGroup.html">Cross Team Working Group</option>
+				<option value="samples/jquery.widgets/DemoDragNDrop.html">Drag & Drop</option>
+				<option value="samples/jquery.widgets/DemoPartners.html">Partners & Annotations</option>
+				<option value="samples/jquery.widgets/DemoHighlightAndAnnotations.html">Demo Highlight & Connector Annotations</option>
+				<option value="samples/bootstrap.styles/DemoBootstrap.html">Bootstrap</option>
+				<option value="samples/pdfkit.plugins/DemoPDFKitPlugins.html">PDF Generation and Download</option>
+
+				<option disabled></option>
+				<option disabled>FAMILY CHART DEMOS:</option>
+				<option value="samples/jquery.widgets/DemoFamily.html">Family Chart with Annotations</option>
+				<option value="samples/jquery.widgets/DemoFinancialOwnership.html">Financial Ownership Chart</option>
+				<option value="samples/jquery.widgets/DemoDependencies.html">Dependencies Chart</option>
+				<option value="samples/jquery.widgets/DemoPatents.html">Patents & Hiding grand parents connectors</option>
+
+				<option disabled></option>
+				<option disabled>CREATE & UPDATE USE CASES:</option>
+				<option value="samples/jquery.widgets/CaseFirstOrganizationalChart.html">First Organizational Chart</option>
+				<option value="samples/jquery.widgets/CaseFirstFamilyChart.html">First Family Chart</option>
+				<option value="samples/jquery.widgets/CaseAddingNewItemsToChartAtRuntime.html">Adding new items to chart at runtime</option>
+				<option value="samples/jquery.widgets/CasePageSizeDiagramWithoutUILayoutWidget.html">Page Size Diagram without UI Layout Widget</option>
+				<option value="samples/jquery.widgets/CaseAutoSize.html">Auto size diagram in article</option>
+				<option value="samples/jquery.widgets/CaseOrganizationalChartInsidejQueryUIDialog.html">Organizational Chart inside jQuery UI Dialog</option>
+				<option value="samples/jquery.widgets/CaseCSSScaleTransform.html">Zoom using CSS Scale Transform</option>
+				<option value="samples/angularjs.directives/CaseAngularJSFirstOrganizationalChartDirective.html">AngularJS Directive Example</option>
+
+				<option disabled></option>
+				<option disabled>USER INTERFACE EVENTS & OPTIONS:</option>
+				<option value="samples/jquery.widgets/CaseSelectingCursorItem.html">Selecting cursor item</option>
+				<option value="samples/jquery.widgets/CaseSelectingHighlightItem.html">Selecting highlight item</option>
+				<option value="samples/jquery.widgets/CaseSelectedItems.html">Selected items & Check boxes</option>
+				<option value="samples/jquery.widgets/CaseButtonsPanel.html">Buttons panel</option>
+				<option value="samples/jquery.widgets/CaseItemAndGroupTitleColors.html">Item and group title colors</option>
+
+				<option disabled></option>
+				<option disabled>ORGANIZATIONAL CHART LAYOUT OPTIONS:</option>
+				<option value="samples/jquery.widgets/CaseChildrenPlacementType.html">Children Placement</option>
+				<option value="samples/jquery.widgets/CaseAdviserAndAssistantItemTypes.html">Adviser and Assistant item types</option>
+				<option value="samples/jquery.widgets/CaseSubAdviserAndSubAssistantItemTypes.html">SubAdviser and SubAssistant item types</option>
+				<option value="samples/jquery.widgets/CaseGeneralPartnerItemType.html">General Partner item type</option>
+				<option value="samples/jquery.widgets/CaseLimitedPartnerItemType.html">Limited Partner item type</option>
+				<option value="samples/jquery.widgets/CaseAdviserPartnerItemType.html">Adviser Partner item type</option>
+				<option value="samples/jquery.widgets/CaseMultipleRootItemsInChart.html">Multiple root items in chart</option>
+				<option value="samples/jquery.widgets/CaseMatrixLayoutOfMultipleRootItemsInChart.html">Matrix layout of multiple root items in chart</option>
+				<option value="samples/jquery.widgets/CaseSelectionPathMode.html">Selection path mode</option>
+				<option value="samples/jquery.widgets/CaseInactiveItems.html">Inactive Items in layout</option>
+				<option value="samples/jquery.widgets/CaseCustomLayoutWithInvisibleItems.html">Custom layout with invisible items</option>
+				<option value="samples/jquery.widgets/DemoInvisibleItems.html">Demo Invisibles Items</option>
+				<option value="samples/jquery.widgets/CaseSkippedLevels.html">Skip levels</option>
+
+				<option disabled></option>
+				<option disabled>FAMILY DIAGRAM LAOUT USE CASES:</option>
+				<option value="samples/jquery.widgets/CaseSkippedParentInFamilyChartChart.html">Skipped Parent In Family Chart</option>
+				<option value="samples/jquery.widgets/CaseLabelsCascadesInFamilyChart.html">Labels cascades over connection lines in family chart</option>
+				<option value="samples/jquery.widgets/CaseInactiveFamilyItems.html">Inactive Family Items in layout</option>
+
+				<option disabled></option>
+				<option disabled>ITEM TEMPLATE USE CASES:</option>
+				<option value="samples/jquery.widgets/CaseItemTemplate.html">Item template</option>
+				<option value="samples/jquery.widgets/CaseAddingLinkToItemTemplate.html">Adding Link To Item Template</option>
+				<option value="samples/jquery.widgets/CaseZoomWithItemTemplate.html">Zoom using item template</option>
+				<option value="samples/jquery.widgets/CaseItemTemplateLabel.html">Labels & Item Template</option>
+				<option value="samples/jquery.widgets/CaseSelectionCheckboxInItemTemplate.html">Selection Checkbox Inside Item Template</option>
+				<option value="samples/jquery.widgets/CaseCustomControlTemplate.html">jQuery UI Widget inside Item template</option>
+				<option value="samples/bootstrap.styles/CaseCursorTemplateAndTwitterBootstrap.html">Cursor template & Twitter Bootstrap Buttons</option>
+				<option value="samples/jquery.widgets/CaseCursorAnimation.html">Cursor animation</option>
+				<option value="samples/jquery.widgets/CaseHighlightTemplate.html">Highlight template</option>
+				<option value="samples/jquery.widgets/CaseButtonsInCursorTemplate.html">Item specific context buttons</option>
+				
+				<option disabled></option>
+				<option disabled>ANNOTATIONS:</option>
+				<option value="samples/jquery.widgets/CaseConnectorAnnotation.html">On-screen Connector Annotation</option>
+				<option value="samples/jquery.widgets/CaseShapeAnnotation.html">Shape & Background Annotations</option>
+				<option value="samples/jquery.widgets/CaseHighlightPathAnnotation.html">Highlight Path Annotation</option>
+				<option value="samples/jquery.widgets/CasePERTChart.html">PERT chart & Critical Path Visualization</option>
+
+				<option disabled></option>
+				<option disabled>HELPER WIDGETS:</option>
+				<option value="samples/jquery.widgets/DemoText.html">Rotated Text</option>
+				<option value="samples/jquery.widgets/DemoCallout.html">Callout</option>
+				<option value="samples/jquery.widgets/DemoShape.html">Shape Annotation</option>
+				<option value="samples/jquery.widgets/DemoConnector.html">Connector Annotation</option>
+
+				<option disabled></option>
+				<option disabled>Reference:</option>
+				<option value="ReferenceControlsProcessingDiagram.html">Controls Processing Diagram</option>
+				<option value="Tests.html">Unit Tests</option>
+			</select>
+			<label>&nbsp;<a id="link" href="samples/jquery.widgets/DemoLargeHierarchy.html">>>></a></label>
+		</div>
+	</div>
+	<div style="position: absolute; left: 0; right: 0; bottom: 0; top: 30px; height: expression(document.body.clientHeight-30);">
+		<iframe id="content" width="100%" height="100%" src="samples/jquery.widgets/DemoLargeHierarchy.html" />
+	</div>
+</body>
+</html>

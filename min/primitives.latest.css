@@ -1,0 +1,144 @@
+.bp-item {
+	position: absolute;
+	overflow: hidden;
+	font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	box-sizing:content-box;
+}
+
+.bp-corner-all {
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-khtml-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.bt-item-frame {
+	border: 1px solid #dddddd;
+	background: #eeeeee url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png) 50% top repeat-x;
+	color: #333333;
+}
+
+.bp-title {
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 14px;
+	line-height: 16px;
+	color: white;
+	padding: 0;
+}
+
+.bp-title-frame {
+	background: #0000ff;
+	border-width: 0;
+	color: white;
+	padding: 0;
+}
+
+.bp-photo-frame {
+	border: 1px solid #cccccc;
+	background: #f6f6f6 url(images/ui-bg_glass_100_f6f6f6_1x400.png) 50% 50% repeat-x;
+	color: #1c94c4;
+}
+
+.bp-description {
+	font-size: 10px;
+	line-height: 12px;
+}
+
+.bp-cursor-frame {
+	border: 2px solid #fbd850;
+	background: #ffffff url(images/ui-bg_glass_65_ffffff_1x400.png) 50% 50% repeat-x;
+	color: #eb8f00;
+}
+
+.bp-highlight-frame {
+	border: 1px solid #fbcb09;
+	background: #fdf5ce url(images/ui-bg_glass_100_fdf5ce_1x400.png) 50% 50% repeat-x;
+	color: #c77405;
+}
+
+.bp-highlight-dot-frame {
+	border: 1px solid #fbcb09;
+	background: #fdf5ce;
+	color: #c77405;
+}
+
+.bp-grouptitle-frame {
+	background: #0000ff;
+	border-width: 0;
+	color: white;
+	padding: 0;
+}
+
+.bp-selectioncheckbox-frame {
+	font-size: 12px;
+	line-height: 14px;
+}
+
+.bp-selectioncheckbox {
+	font-size: 12px;
+	line-height: 14px;
+	vertical-align: middle;
+}
+
+.bp-selectiontext {
+	font-size: 12px;
+	line-height: 14px;
+	vertical-align: middle;
+}
+
+.bp-readmore
+{
+	font-size: 10px;
+	line-height: 12px;
+	text-align: right;
+	text-decoration: none;
+}
+
+.bp-label {
+	font-size: 10px;
+	line-height: 12px;
+	vertical-align: middle;
+}
+
+.bp-connector-label
+{
+	font-size: 12px;
+	line-height: 14px;
+	text-align: center;
+	text-decoration: none;
+	vertical-align: middle;
+	color: black;
+	font-weight:bold;
+}
+
+.bp-label-annotation 
+{
+	font-size: 16px; 
+	text-align:center;
+}
+
+.bp-badge
+{
+	-moz-border-radius: 10px; 
+	-webkit-border-radius: 10px; 
+	-khtml-border-radius: 10px; 
+	border-radius: 10px;
+	font-size: 12px;
+	line-height: 12px;
+	text-align: center;
+	text-decoration: none;
+	vertical-align: middle;
+	font-weight: bold;
+	font-family: Arial;
+	padding: 4px;
+	float:left;
+}

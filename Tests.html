@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Basic Primitives QUnit Tests</title>
+
+	<!-- header -->
+
+	<link rel="stylesheet" href="packages/jquery-ui/jquery-ui.min.css" />
+	<script type="text/javascript" src="packages/jquery/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="packages/jquery-ui/jquery-ui.min.js"></script>
+
+	<link rel="stylesheet" href="//code.jquery.com/qunit/qunit-2.6.0.css">
+	<script src="//code.jquery.com/qunit/qunit-2.6.0.js"></script>
+
+	<script type="text/javascript" src="samples/data/dependencies.js"></script>
+
+	<!-- # include file="src.primitives/src.primitives.html"-->
+	
+	<script type="text/javascript" src="min/primitives.min.js?4300"></script>
+
+	<link href="min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+
+	<!-- /header -->
+</head>
+<body>
+	<!--bpcontent-->
+	<script>
+		var $j = jQuery.noConflict();
+	</script>
+
+	<div id="qunit"></div>
+	<div id="qunit-fixture" style="visibility:visible"></div>
+
+	<!-- # include file="tests/src.tests.html"-->
+
+	<script type="text/javascript" src="min/primitives.tests.js?4300"></script>
+
+	<!--/bpcontent-->
+</body>
+</html>

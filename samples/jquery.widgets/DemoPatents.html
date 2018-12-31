@@ -1,0 +1,291 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<title>jQuery Widget Dependencies Chart Demo</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="../../packages/jquery/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="../../packages/jquery-ui/jquery-ui.min.js"></script>
+	<link href="../../packages/jquery-ui/jquery-ui.min.css" media="screen" rel="stylesheet" type="text/css" />
+
+	<!-- jQuery UI Layout -->
+	<script type="text/javascript" src="../../packages/jquerylayout/jquery.layout-latest.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../packages/jquerylayout/layout-default-latest.css" />
+
+	<script type="text/javascript">
+		jQuery(document).ready( function () {
+			jQuery('body').layout(
+			{
+				center__paneSelector: "#contentpanel"
+			});
+		});
+	</script>
+
+	<!-- header -->
+
+	<!-- # include file="../../src.primitives/src.primitives.html"-->
+
+	<link href="../../min/primitives.latest.css?4300" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../min/primitives.min.js?4300"></script>
+	<script type="text/javascript" src="../../min/bporgeditor.min.js?4300"></script>
+	<script type="text/javascript" src="../data/patents.js"></script>
+
+	<script type="text/javascript">
+		var optionsRender = new primitives.helpers.controls.Render([
+			new primitives.helpers.controls.PanelConfig("Options", [
+				new primitives.helpers.controls.DropDownBoxConfig("hideGrandParentsConnectors", "true", "The hideGrandParentsConnectors option hides direct connectors to grand parents. It helps to reduce diagrams connectors layout complexity. This option should be used together with dynamic highlighting of connectors to grandparents via immidiate parents, so information is not lost.", ["true", "false"], primitives.helpers.controls.ValueType.Boolean, onUpdate),
+				new primitives.helpers.controls.CaptionConfig("Page Fit Mode defines rule of fitting chart into available screen space. Set it to None if you want to disable it.", false),
+				new primitives.helpers.controls.RadioBoxConfig("pageFitMode", primitives.common.PageFitMode.FitToPage, "Page Fit Mode", { None: 0, PageWidth: 1, PageHeight: 2, FitToPage: 3, SelectionOnly: 6 }, primitives.helpers.controls.ValueType.Integer, onUpdate),
+				new primitives.helpers.controls.RadioBoxConfig("neighboursSelectionMode", primitives.common.NeighboursSelectionMode.ParentsAndChildren, "Cursor Neighbours Selection Mode", primitives.common.NeighboursSelectionMode, primitives.helpers.controls.ValueType.Integer, onUpdate)
+				
+			])
+		], {
+			diagramType: 1,
+			pageFitMode: primitives.common.PageFitMode.None,
+			neighboursSelectionMode: primitives.common.NeighboursSelectionMode.ParentsAndChildren,
+			hideGrandParentsConnectors: false
+		});
+
+
+		var famDiagram = null;
+		var fromItem = 0;
+		var toItem = 0;
+
+		jQuery(document).ready( function () {
+			jQuery.ajaxSetup({
+				cache: false
+			});
+
+			jQuery('#contentpanel').layout(
+			{
+				center__paneSelector: "#centerpanel"
+				, south__paneSelector: "#southpanel"
+				, south__resizable: false
+				, south__closable: false
+				, south__spacing_open: 0
+				, south__size: 50
+				, west__size: 400
+				, west__paneSelector: "#westpanel"
+				, west__resizable: true
+				, center__onresize: function () {
+					if (famDiagram != null) {
+						jQuery("#centerpanel").famDiagram("update", primitives.common.UpdateMode.Refresh);
+					}
+				}
+			});
+
+			optionsRender.render(jQuery("#westpanel"));
+
+			/* Setup & Run */
+			Setup(jQuery("#centerpanel"));
+		});
+
+		function Setup(selector) {
+			famDiagram = selector.famDiagram(GetOrgDiagramConfig());
+		}
+
+		function Update(selector, updateMode) {
+			selector.famDiagram("option", GetOrgDiagramConfig());
+			selector.famDiagram("update", updateMode);
+		}
+
+		function onUpdate() {
+			Update(jQuery("#centerpanel"), primitives.common.UpdateMode.Recreate);
+		};
+
+		function GetOrgDiagramConfig() {
+			var options = optionsRender.getValues();
+
+			jQuery.extend(options, {
+				templates: [getDefaultTemplate(options)],
+				defaultTemplateName: "defaultTemplate",
+				buttons: [
+					new primitives.famdiagram.ButtonConfig("to", "ui-icon-circle-triangle-w", "to"),
+					new primitives.famdiagram.ButtonConfig("from", "ui-icon-circle-triangle-e", "from")
+				],
+				linesPalette: [
+					new primitives.famdiagram.PaletteItemConfig({ lineColor: "#C6C6C6", lineWidth: 1, lineType: primitives.common.LineType.Solid }), //1
+					new primitives.famdiagram.PaletteItemConfig({ lineColor: "#A5A5A5", lineWidth: 1, lineType: primitives.common.LineType.Dashed }), //4
+					new primitives.famdiagram.PaletteItemConfig({ lineColor: "#848484", lineWidth: 1, lineType: primitives.common.LineType.Solid }), //7
+					new primitives.famdiagram.PaletteItemConfig({ lineColor: "#646464", lineWidth: 1, lineType: primitives.common.LineType.Dashed }), //10
+					new primitives.famdiagram.PaletteItemConfig({ lineColor: "#454545", lineWidth: 1, lineType: primitives.common.LineType.Solid }) //13
+				],
+				linesWidth: 1,
+				linesColor: "black",
+				cousinsIntervalMultiplier: 1,
+				normalLevelShift: 20,
+				dotLevelShift: 20,
+				lineLevelShift: 20,
+				normalItemsInterval: 5,
+				dotItemsInterval: 10,
+				lineItemsInterval: 10,
+				arrowsDirection: primitives.common.GroupByType.Parents
+			})
+
+			jQuery.extend(options, {
+				onButtonClick: onButtonClick,
+				onCursorChanging: onCursorChanging,
+				onCursorChanged: onCursorChanged,
+				onHighlightChanging: onHighlightChanging,
+				onHighlightChanged: onHighlightChanged,
+				onSelectionChanged: onSelectionChanged
+			});
+
+			jQuery.extend(options, {
+				items: famdata,
+				cursorItem: 18,
+				annotations: []
+			}); // See patents.js
+
+			return options;
+		}
+
+		function getDefaultTemplate(options) {
+			var result = new primitives.orgdiagram.TemplateConfig();
+			result.name = "defaultTemplate";
+
+			// If we don't change anything in template then all its properties stays default
+			// So we change only minimized item properties
+			jQuery.extend(result, options.DefaultTemplateOptions);
+
+			return result;
+		}
+
+		function getParentsList(data) {
+			var message = "",
+				index, len;
+
+			if (data.parentItems.length > 0) {
+				message += " Parent item <b>";
+				for (index = 0, len = data.parentItems.length; index < len; index += 1) {
+					if (index > 0) {
+						message += ", ";
+					}
+					message += "'" + data.parentItems[index].title + "'";
+				}
+				message += "</b>";
+			}
+
+			return message;
+		};
+
+		function onSelectionChanged(e, data) {
+			var selectedItems = jQuery("#centerpanel").famDiagram("option", "selectedItems");
+			var message = "";
+			for (var index = 0; index < selectedItems.length; index += 1) {
+				var itemConfig = selectedItems[index];
+				if (message != "") {
+					message += ", ";
+				}
+				message += "<b>'" + itemConfig.title + "'</b>";
+			}
+			message += getParentsList(data);
+			jQuery("#southpanel").empty().append("User selected following items: " + message);
+		}
+
+		function onHighlightChanging(e, data) {
+			var message = (data.context != null) ? "User is hovering mouse over item <b>'" + data.context.title + "'</b>." : "";
+			message += getParentsList(data);
+			updateHighlightPathAnnotations(data);
+			jQuery("#southpanel").empty().append(message);
+		}
+
+		function onHighlightChanged(e, data) {
+			var message = (data.context != null) ? "User hovers mouse over item <b>'" + data.context.title + "'</b>." : "";
+			message += getParentsList(data);
+			jQuery("#southpanel").empty().append(message);
+		}
+
+		function onCursorChanging(e, data) {
+			var message = "User is clicking on item '" + data.context.title + "'.";
+			message += getParentsList(data);
+			jQuery("#southpanel").empty().append(message);
+		}
+
+		function onCursorChanged(e, data) {
+			var message = "User clicked on item '" + data.context.title + "'.";
+			message += getParentsList(data);
+			jQuery("#southpanel").empty().append(message);
+		}
+
+		function onButtonClick(e, data) {
+			switch (data.name) {
+				case "from":
+					fromItem = data.context.id;
+					break;
+				case "to":
+					toItem = data.context.id;
+					break;
+			}
+
+			var options = optionsRender.getValues();
+
+			updateAnnotation(fromItem, toItem, options);
+
+			jQuery("#centerpanel").famDiagram("update", primitives.common.UpdateMode.Refresh);
+		}
+
+		function updateAnnotation(fromItem, toItem, options) {
+			if (connectorAnnotation != null) {
+				// this is ugly jQuery hack, we update annotation definition inside of the widget :-)
+				// jQuery makes shallow copy of config object, so we can preserve reference to objects and collections inside of it
+				if (fromItem != null && toItem != null) {
+					connectorAnnotation.fromItem = fromItem;
+					connectorAnnotation.toItem = toItem;
+				}
+
+				jQuery.extend(connectorAnnotation, options.AnnotationOptions);
+			}
+		}
+
+		function updateHighlightPathAnnotations(data) {
+			var selector = jQuery("#centerpanel");
+			var annotations = selector.famDiagram("option", "annotations");
+
+			var newAnnotations = [];
+			for(var index = 0, len = annotations.length; index < len; index+=1) {
+				var annotation = annotations[index];
+				if(annotation.annotationType != primitives.common.AnnotationType.HighlightPath) {
+					newAnnotations.push(annotation);
+				}
+			}
+
+			var items = [];
+			items = items.concat(data.parentItems);
+			items = items.concat(data.childrenItems);
+			for (index = 0, len = items.length; index < len; index += 1) {
+				var parent = items[index];
+				var highlightid = data.context.id;
+				var annotation = new primitives.famdiagram.HighlightPathAnnotationConfig({
+					items: [highlightid, parent.id],
+					color: primitives.common.Colors.Navy,
+					opacity: 0.4,
+					lineWidth: 6,
+					zOrderType: primitives.common.ZOrderType.Background,
+					showArrows: false
+				});
+				newAnnotations.push(annotation);
+			}
+			selector.famDiagram("option", { annotations: newAnnotations });
+		}
+
+
+	</script>
+	<!-- /header -->
+</head>
+<body style="font-size: 12px">
+	<div id="contentpanel" style="padding: 0px;">
+		<!--bpcontent-->
+		<div id="westpanel" style="visibility:hidden;padding: 5px; margin: 0px; border-style: solid; font-size: 12px; border-color: grey; border-width: 1px; overflow: scroll; -webkit-overflow-scrolling: touch;">
+			<h2>Patents Diagram Demo</h2>
+			<p>Patents data has massive number of references to grandparents, so diagram connectors become visually untracable. The famDiagram control provides hideGrandParentsConnectors option to hide grand parents connectors on diagram. The dependency stays valid since nodes reference grand parents via their immidiate parents.</p>
+			<p> If you still need explisit reference, then try to use other means, for example all referenced grand parents may be highlighted with special type of item template or connectors annotations can be used to trace grand parents references.</p>
+			<p><b> Try to set hideGrandParentsConnectors into true in the following options:</b></p>
+		</div>
+		<div id="centerpanel" style="overflow: hidden; padding: 0px; margin: 0px; border: 0px;">
+		</div>
+		<div id="southpanel">
+		</div>
+		<!--/bpcontent-->
+	</div>
+</body>
+</html>

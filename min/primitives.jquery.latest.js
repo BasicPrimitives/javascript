@@ -1,8 +1,8 @@
 
 /* /common/init.js*/
 /**
- * @preserve jQuery Widgets for Basic Primitives Diagram v5.1.1
- * Copyright (c) 2013 - 2018 Basic Primitives Inc
+ * @preserve jQuery Widgets for Basic Primitives Diagram v5.2.0
+ * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
  * http://creativecommons.org/licenses/by-nc/3.0/
@@ -114,8 +114,8 @@ primitives.orgdiagram.Widget.prototype.destroy = function () {
 	this.control.destroy();
 };
 
-primitives.orgdiagram.Widget.prototype.update = function (updateMode) {
-	this.control.update(updateMode);
+primitives.orgdiagram.Widget.prototype.update = function (updateMode, centerOnCursor) {
+	this.control.update(updateMode, centerOnCursor);
 };
 
 primitives.orgdiagram.Widget.prototype._setOption = function (key, value) {

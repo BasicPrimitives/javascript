@@ -20,8 +20,8 @@ primitives.orgdiagram.Widget.prototype.destroy = function () {
 	this.control.destroy();
 };
 
-primitives.orgdiagram.Widget.prototype.update = function (updateMode) {
-	this.control.update(updateMode);
+primitives.orgdiagram.Widget.prototype.update = function (updateMode, centerOnCursor) {
+	this.control.update(updateMode, centerOnCursor);
 };
 
 primitives.orgdiagram.Widget.prototype._setOption = function (key, value) {

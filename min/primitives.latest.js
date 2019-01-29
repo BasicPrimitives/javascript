@@ -1,6 +1,6 @@
 /**
- * @preserve Basic Primitives Diagram v5.1.1
- * Copyright (c) 2013 - 2018 Basic Primitives Inc
+ * @preserve Basic Primitives Diagram v5.2.0
+ * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
  * http://creativecommons.org/licenses/by-nc/3.0/
@@ -27,7 +27,7 @@
 /* /common/init.js*/
 var primitives = {
     common: {
-        version: "5.1.1"
+        version: "5.2.0"
     },
     orgdiagram: {},
     famdiagram: {},
@@ -14599,12 +14599,6 @@ primitives.orgdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	this.childrenPlacementType = 0/*primitives.common.ChildrenPlacementType.Auto*/;
 
 	/*
-	Property: groupName
-		Defines group name for applicabale item types, every group of items placed as separate level.
-	*/
-	this.groupName = null;
-
-	/*
 	Property: templateName
 		This is template name used to render this item.
 
@@ -22498,6 +22492,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 			updateMode: This parameter defines severaty of update <primitives.common.UpdateMode>. 
 			For example <primitives.common.UpdateMode.Refresh> updates only 
 			items and selection reusing existing elements where ever it is possible.
+			forceCenterOnCursor: Set this paramter to false, if you don't need to recenter diagram on cursor item.
 
 		See also:
 			<primitives.common.UpdateMode>
@@ -22505,10 +22500,13 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 		Default:
 			<primitives.common.UpdateMode.Recreate>
 	*/
-	function update(updateMode) {
+	function update(updateMode, forceCenterOnCursor) {
+		if (forceCenterOnCursor == null) {
+			forceCenterOnCursor = true;
+		}
 		switch (updateMode) {
 			case 1/*primitives.common.UpdateMode.Refresh*/:
-				refresh(true, _debug);
+				refresh(forceCenterOnCursor, _debug);
 				break;
 			case 2/*primitives.common.UpdateMode.PositonHighlight*/:
 				positionHighlight(_debug);

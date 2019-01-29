@@ -31,6 +31,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 			updateMode: This parameter defines severaty of update <primitives.common.UpdateMode>. 
 			For example <primitives.common.UpdateMode.Refresh> updates only 
 			items and selection reusing existing elements where ever it is possible.
+			forceCenterOnCursor: Set this paramter to false, if you don't need to recenter diagram on cursor item.
 
 		See also:
 			<primitives.common.UpdateMode>
@@ -38,10 +39,13 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 		Default:
 			<primitives.common.UpdateMode.Recreate>
 	*/
-	function update(updateMode) {
+	function update(updateMode, forceCenterOnCursor) {
+		if (forceCenterOnCursor == null) {
+			forceCenterOnCursor = true;
+		}
 		switch (updateMode) {
 			case primitives.common.UpdateMode.Refresh:
-				refresh(true, _debug);
+				refresh(forceCenterOnCursor, _debug);
 				break;
 			case primitives.common.UpdateMode.PositonHighlight:
 				positionHighlight(_debug);

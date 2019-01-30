@@ -771,7 +771,8 @@ primitives.connector.Controller.prototype._redraw = function () {
 		/* create connection lines */
 		shape.draw(buffer, linePaletteItem, fromRect, toRect, linesOffset, 0, labelSize, panelSize,
 			annotationConfig.connectorShapeType, 4 /*labelOffset*/, annotationConfig.labelPlacementType, hasLabel,
-			connectorAnnotationOffsetResolver, function (labelPlacement) {
+			connectorAnnotationOffsetResolver, function (labelPlacement, labelConfig) {
+				var hasLabel = !primitives.common.isNullOrEmpty(labelConfig.label);
 				if (hasLabel && labelPlacement != null) {
 					/* translate result label placement back to users orientation */
 					transform.transformRect(labelPlacement.x, labelPlacement.y, labelPlacement.width, labelPlacement.height, true,
@@ -780,7 +781,7 @@ primitives.connector.Controller.prototype._redraw = function () {
 						});
 
 					uiHash = new primitives.common.RenderEventArgs();
-					uiHash.context = annotationConfig;
+					uiHash.context = labelConfig;
 
 					/* draw label */
 					self._graphics.template(
@@ -799,7 +800,7 @@ primitives.connector.Controller.prototype._redraw = function () {
 						, null
 					);
 				}
-			});
+			}, annotationConfig);
 		connectorAnnotationOffsetResolver.resolve();
 	}
 

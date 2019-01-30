@@ -2486,7 +2486,7 @@ primitives.common.ConnectorOffbeat = function () {
 primitives.common.ConnectorOffbeat.prototype = new primitives.common.BaseShape();
 
 primitives.common.ConnectorOffbeat.prototype.draw = function (buffer, linePaletteItem, fromRect, toRect, linesOffset, bundleOffset, labelSize, panelSize, connectorShapeType, labelOffset, labelPlacementType, hasLabel,
-	connectorAnnotationOffsetResolver, onLabelPlacement) {
+	connectorAnnotationOffsetResolver, onLabelPlacement, labelConfig) {
 	var minimalGap,
 		connectorRect,
 		fromPoint, toPoint,
@@ -2689,7 +2689,7 @@ primitives.common.ConnectorOffbeat.prototype.draw = function (buffer, linePalett
 	}
 
 	if (onLabelPlacement != null) {
-		onLabelPlacement(labelPlacement);
+		onLabelPlacement(labelPlacement, labelConfig);
 	}
 };
 
@@ -2701,7 +2701,7 @@ primitives.common.ConnectorStraight = function () {
 primitives.common.ConnectorStraight.prototype = new primitives.common.BaseShape();
 
 primitives.common.ConnectorStraight.prototype.draw = function (buffer, linePaletteItem, fromRect, toRect, linesOffset, bundleOffset, labelSize, panelSize, connectorShapeType, labelOffset, labelPlacementType, hasLabel,
-	connectorAnnotationOffsetResolver, onLabelPlacement) {
+	connectorAnnotationOffsetResolver, onLabelPlacement, labelConfig) {
 	var fromPoint, toPoint, betweenPoint,
 		vector, newVector,
 		offset = linesOffset / 2,
@@ -2768,7 +2768,7 @@ primitives.common.ConnectorStraight.prototype.draw = function (buffer, linePalet
 				}
 
 				if (onLabelPlacement != null) {
-					onLabelPlacement.call(this, labelPlacement);
+					onLabelPlacement.call(this, labelPlacement, labelConfig);
 				}
 			}
 		});
@@ -17665,7 +17665,8 @@ primitives.orgdiagram.DrawConnectorAnnotationTask = function (getGraphics, creat
 					/* create connection lines */
 					shape.draw(buffer, linePaletteItem, fromRect, toRect, linesOffset, bundleOffset, labelSize, panelSize,
 						annotationConfig.connectorShapeType, 4 /*labelOffset*/, annotationConfig.labelPlacementType, hasLabel,
-						connectorAnnotationOffsetResolver, function (labelPlacement) {
+						connectorAnnotationOffsetResolver, function (labelPlacement, labelConfig) {
+							var hasLabel = !primitives.common.isNullOrEmpty(labelConfig.label);
 							if (hasLabel && labelPlacement != null) {
 								/* translate result label placement back to users orientation */
 								_transform.transformRect(labelPlacement.x, labelPlacement.y, labelPlacement.width, labelPlacement.height, true,
@@ -17674,7 +17675,7 @@ primitives.orgdiagram.DrawConnectorAnnotationTask = function (getGraphics, creat
 									});
 
 								uiHash = new primitives.common.RenderEventArgs();
-								uiHash.context = annotationConfig;
+								uiHash.context = labelConfig;
 
 								/* draw label */
 								_graphics.template(
@@ -17693,7 +17694,7 @@ primitives.orgdiagram.DrawConnectorAnnotationTask = function (getGraphics, creat
 									, null
 								);
 							}
-						});
+						}, annotationConfig);
 				}
 			}
 		}

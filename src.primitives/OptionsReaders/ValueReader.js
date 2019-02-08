@@ -21,7 +21,7 @@ primitives.common.ValueReader.prototype.read = function (target, source, path, c
 
 	result = source;
 
-	if (target !== source) {
+	if (JSON.stringify(target) !== JSON.stringify(source)) {
 		context.isChanged = true;
 	}
 

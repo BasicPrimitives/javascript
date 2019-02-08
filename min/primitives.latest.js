@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagram v5.2.0
+ * @preserve Basic Primitives Diagram v5.2.1
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -27,7 +27,7 @@
 /* /common/init.js*/
 var primitives = {
     common: {
-        version: "5.2.0"
+        version: "5.2.1"
     },
     orgdiagram: {},
     famdiagram: {},
@@ -1456,6 +1456,7 @@ if (typeof document !== 'undefined') {
 	})(primitives.common.JsonML, document);
 }
 
+
 /* /enums/AdviserPlacementType.js*/
 /*
 	Enum: primitives.common.AdviserPlacementType
@@ -1473,322 +1474,6 @@ primitives.common.AdviserPlacementType =
 };
 
 primitives.orgdiagram.AdviserPlacementType = primitives.common.AdviserPlacementType;
-
-/* /enums/VerticalAlignmentType.js*/
-/*
-	Enum: primitives.common.VerticalAlignmentType
-	Defines text label alignment inside text box boundaries.
-	
-	Top - Positined at the top of text box
-	Middle - Aligned to the middle
-	Bottom - Aligned to the bottom of text box
-*/
-primitives.common.VerticalAlignmentType =
-{
-	Top: 0,
-	Middle: 1,
-	Bottom: 2
-};
-
-/* /enums/VectorRelationType.js*/
-primitives.common.VectorRelationType =
-{
-	None: 0,
-	Null: 1,
-	Collinear: 2,
-	Opposite: 3
-};
-
-/* /enums/UpdateMode.js*/
-/*
-	Enum: primitives.common.UpdateMode
-		Defines redraw mode of diagram.
-	
-	Recreate - Forces widget to make a full chart redraw. It is equivalent to initial chart creation. 
-	It removes everything from chart layout and recreares all elements again. 
-	Refresh - This update mode is optimized for widget fast redraw caused by resize or changes of 
-	next options: <primitives.orgdiagram.Config.items>, <primitives.orgdiagram.Config.cursorItem> 
-	or <primitives.orgdiagram.Config.selectedItems>.
-	PositonHighlight - This update mode redraws only <primitives.orgdiagram.Config.highlightItem>.
-
-	See Also:
-		<primitives.orgdiagram.Config.update>
-*/
-primitives.common.UpdateMode =
-{
-	Recreate: 0,
-	Refresh: 1,
-	PositonHighlight: 2
-};
-
-primitives.orgdiagram.UpdateMode = primitives.common.UpdateMode;
-
-/* /enums/TextOrientationType.js*/
-/*
-	Enum: primitives.text.TextOrientationType
-		Defines label orientation type.
-	
-	Horizontal - Regular horizontal text.
-	RotateLeft - Rotate all text 90 degree.
-	RotateRight - Rotate all text 270 degree.
-*/
-primitives.text.TextOrientationType =
-{
-	Horizontal: 0,
-	RotateLeft: 1,
-	RotateRight: 2,
-	Auto: 3
-};
-
-/* /enums/SideFlag.js*/
-primitives.common.SideFlag =
-{
-	Top: 1,
-	Right: 2,
-	Bottom: 4,
-	Left: 8
-};
-
-/* /enums/ShapeType.js*/
-/*
-	Enum: primitives.common.ShapeType
-		Defines shape type.
-	
-	Rectangle - rectangle
-	Oval - oval
-	Triangle - triangle
-	CrossOut - cross out
-	Circle - circle
-	Rhombus - rhombus
-	Wedge - wedge
-	FramedOval - Framed Oval
-	FramedTriangle - Framed Triangle
-	FramedWedge - Framed Wedge
-	FramedRhombus - Framed Rhombus
-*/
-primitives.common.ShapeType =
-{
-	Rectangle: 0,
-	Oval: 1,
-	Triangle: 2,
-	CrossOut: 3,
-	Circle: 4,
-	Rhombus: 5,
-	Wedge: 7,
-	FramedOval: 8,
-	FramedTriangle: 9,
-	FramedWedge: 10,
-	FramedRhombus: 11,
-	None: 6
-};
-
-/* /enums/SelectionPathMode.js*/
-/*
-	Enum: primitives.common.SelectionPathMode
-		Defines the display mode for items between root item of diagram and selected items.
-	
-	None - Selection path items placed and sized as regular diagram items.
-	FullStack - Selection path items are shown in normal template mode.
-*/
-primitives.common.SelectionPathMode =
-{
-	None: 0,
-	FullStack: 1
-};
-
-primitives.orgdiagram.SelectionPathMode = primitives.common.SelectionPathMode;
-
-/* /enums/SegmentType.js*/
-primitives.common.SegmentType =
-{
-	Line: 0,
-	Move: 1,
-	QuadraticArc: 2,
-	CubicArc: 3,
-	Dot: 4
-};
-
-/* /enums/RenderingMode.js*/
-/*
-	Enum: primitives.common.RenderingMode
-	This enumeration is used as option in arguments of rendering events.
-	It helps to tell template initialization stage, 
-	for example user can widgitize some parts of template on create
-	and update and refresh them in template update stage.
-	
-	Create - Template is just created.
-	Update - Template is reused and update needed.
-*/
-primitives.common.RenderingMode =
-{
-	Create: 0,
-	Update: 1
-};
-
-/* /enums/PlacementType.js*/
-/*
-	Enum: primitives.common.PlacementType
-		Defines element placement relative to rectangular area.
-	
-	Auto - Depends on implementation
-	Left - Left side
-	Top - Top side
-	Right - Right side
-	Bottom - Bottom side
-	TopLeft - Top left side
-	TopRight - Top right side
-	BottomLeft - Bottom left side
-	BottomRight - Bottom right side
-	LeftTop - Left Top side
-	LeftBottom - Left Bottom side
-	RightTop - Right Top side
-	RightBottom - Right Bottom side
-*/
-primitives.common.PlacementType =
-{
-	Auto: 0,
-	TopLeft: 8,
-	Top: 1,
-	TopRight: 2,
-	RightTop: 11,
-	Right: 3,
-	RightBottom: 12,
-	BottomRight: 4,
-	Bottom: 5,
-	BottomLeft: 6,
-	LeftBottom: 10,
-	Left: 7,
-	LeftTop: 9
-};
-
-/* /enums/PageFitMode.js*/
-/*
-	Enum: primitives.common.PageFitMode
-		Defines diagram auto fit mode.
-	
-	None - All diagram items are shown in normal template mode.
-	PageWidth - Diagram tries to layout and auto size items in order to fit diagram into available page width.
-	PageHeight - Diagram tries to layout and auto size items in order to fit diagram into available page height.
-	FitToPage - Diagram tries to layout and auto size items in order to fit diagram into available page size.
-	AutoSize - Chart sets its placeholder div size to fit its contents without minimizing items.
-*/
-primitives.common.PageFitMode =
-{
-	None: 0,
-	PageWidth: 1,
-	PageHeight: 2,
-	FitToPage: 3,
-	AutoSize: 5,
-	SelectionOnly: 6
-};
-
-primitives.orgdiagram.PageFitMode = primitives.common.PageFitMode;
-
-/* /enums/OrientationType.js*/
-/*
-	Enum: primitives.common.OrientationType
-		Defines diagram orientation type.
-	
-	Top - Vertical orientation having root item at the top.
-	Bottom - Vertical orientation having root item at the bottom.
-	Left - Horizontal orientation having root item on the left.
-	Right - Horizontal orientation having root item on the right.
-*/
-primitives.common.OrientationType =
-{
-	Top: 0,
-	Bottom: 1,
-	Left: 2,
-	Right: 3,
-	None: 4
-};
-
-primitives.orgdiagram.OrientationType = primitives.common.OrientationType;
-
-/* /enums/NeighboursSelectionMode.js*/
-/*
-	Enum: primitives.common.NeighboursSelectionMode
-		Defines the display mode for items related to current cursor item in diagram.
-	
-	ParentsAndChildren - Parents and children of cursor item placed and sized as regular diagram items.
-	ParentsChildrenSiblingsAndSpouses - Parents, children, siblings and spouses of cursor item placed and sized as regular diagram items.
-*/
-primitives.common.NeighboursSelectionMode =
-{
-	ParentsAndChildren: 0,
-	ParentsChildrenSiblingsAndSpouses: 1
-};
-
-
-/* /enums/NavigationMode.js*/
-/*
-	Enum: primitives.common.NavigationMode
-		Defines control navigation mode. By default control replicates interactivity of regular Tree control. 
-		It has highlight for mouse over feedback over nodes and it has cursor for showing currently selected single node in diagram.
-		In order to avoid children nodes folding and unfolding, this functionality is done automatically for current cursor item.
-		So cursor plays vital role for unfolding of nodes and zooming into area of user interest in diagram.
-
-	Default - Highlight & Cursor 
-	CursorOnly - Cursor only.
-	HighlightOnly - Highlight only. This mode is usefull for touch devices. Since it requires minimal layout changes and renderings.
-	Inactive - No user interactivity.
-
-	See Also:
-		<primitives.orgdiagram.Config.navigationMode>
-		<primitives.famdiagram.Config.navigationMode>
-*/
-primitives.common.NavigationMode =
-{
-	Default: 0,
-	CursorOnly: 1,
-	HighlightOnly: 3,
-	Inactive: 2
-};
-
-/* /enums/LineType.js*/
-/*
-	Enum: primitives.common.LineType
-		Defines type of line pattern. Dash and dot intervals depend on line width. 
-	
-	Solid - Regular solid line.
-	Dotted - Dots.
-	Dashed - Dashes.
-*/
-primitives.common.LineType =
-{
-	Solid: 0,
-	Dotted: 1,
-	Dashed: 2
-};
-
-/* /enums/Layers.js*/
-primitives.common.Layers = 
-{
-	BackgroundAnnotation: 2,
-	BackgroundAnnotations: 3,
-	BackgroundConnectorAnnotation: 4,
-	BackgroundHighlightPathAnnotations: 5,
-	Connector: 6,
-	ForegroundHighlightPathAnnotations: 7,
-	Highlight: 8,
-	Marker: 9,
-	Label : 10,
-	Cursor: 11,
-	Item: 12,
-	ForegroundAnnotations: 13,
-	ForegroundConnectorAnnotation: 14,
-	Annotation: 15,
-	Controls: 16
-};
-
-/* /enums/LabelType.js*/
-primitives.common.LabelType =
-{
-	Regular: 0,
-	Dummy: 1,
-	Fixed: 2,
-	None: 3
-};
 
 /* /enums/AnnotationType.js*/
 /*
@@ -2045,30 +1730,6 @@ primitives.common.ConnectorShapeType =
 	BothWay: 2
 };
 
-/* /enums/Visibility.js*/
-/*
-	Enum: primitives.common.Visibility
-		Defines nodes visibility mode.
-	
-	Auto - Auto select best visibility mode.
-	Normal - Show node in normal template mode.
-	Dot - Show node as dot.
-	Line - Show node as line.
-	Invisible - Make node invisible.
-
-	See Also:
-
-		<primitives.orgdiagram.Config.minimalVisibility>
-*/
-primitives.common.Visibility =
-{
-	Auto: 0,
-	Normal: 1,
-	Dot: 2,
-	Line: 3,
-	Invisible: 4
-};
-
 /* /enums/ConnectorStyleType.js*/
 primitives.common.ConnectorStyleType =
 {
@@ -2076,6 +1737,24 @@ primitives.common.ConnectorStyleType =
 	Regular: 1,
 	Highlight: 2
 };
+
+/* /enums/ConnectorType.js*/
+/*
+	Enum: primitives.common.ConnectorType
+		Defines diagram connectors style for dot and line elements.
+	
+	Squared - Connector lines use only right angles.
+	Angular - Connector lines use angular lines comming from common vertex.
+	Curved - Connector lines are splines comming from common vertex.
+*/
+primitives.common.ConnectorType =
+{
+	Squared: 0,
+	Angular: 1,
+	Curved: 2
+};
+
+primitives.orgdiagram.ConnectorType = primitives.common.ConnectorType;
 
 /* /enums/ElbowType.js*/
 /*
@@ -2093,6 +1772,7 @@ primitives.common.ElbowType =
 	Bevel: 2,
 	Round: 3
 };
+
 
 /* /enums/Enabled.js*/
 /*
@@ -2188,23 +1868,347 @@ primitives.orgdiagram.ItemType =
 	AdviserPartner: 8
 };
 
-/* /enums/ConnectorType.js*/
-/*
-	Enum: primitives.common.ConnectorType
-		Defines diagram connectors style for dot and line elements.
-	
-	Squared - Connector lines use only right angles.
-	Angular - Connector lines use angular lines comming from common vertex.
-	Curved - Connector lines are splines comming from common vertex.
-*/
-primitives.common.ConnectorType =
+/* /enums/LabelType.js*/
+primitives.common.LabelType =
 {
-	Squared: 0,
-	Angular: 1,
-	Curved: 2
+	Regular: 0,
+	Dummy: 1,
+	Fixed: 2,
+	None: 3
 };
 
-primitives.orgdiagram.ConnectorType = primitives.common.ConnectorType;
+/* /enums/Layers.js*/
+primitives.common.Layers = 
+{
+	BackgroundAnnotation: 2,
+	BackgroundAnnotations: 3,
+	BackgroundConnectorAnnotation: 4,
+	BackgroundHighlightPathAnnotations: 5,
+	Connector: 6,
+	ForegroundHighlightPathAnnotations: 7,
+	Highlight: 8,
+	Marker: 9,
+	Label : 10,
+	Cursor: 11,
+	Item: 12,
+	ForegroundAnnotations: 13,
+	ForegroundConnectorAnnotation: 14,
+	Annotation: 15,
+	Controls: 16
+};
+
+/* /enums/LineType.js*/
+/*
+	Enum: primitives.common.LineType
+		Defines type of line pattern. Dash and dot intervals depend on line width. 
+	
+	Solid - Regular solid line.
+	Dotted - Dots.
+	Dashed - Dashes.
+*/
+primitives.common.LineType =
+{
+	Solid: 0,
+	Dotted: 1,
+	Dashed: 2
+};
+
+
+/* /enums/NavigationMode.js*/
+/*
+	Enum: primitives.common.NavigationMode
+		Defines control navigation mode. By default control replicates interactivity of regular Tree control. 
+		It has highlight for mouse over feedback over nodes and it has cursor for showing currently selected single node in diagram.
+		In order to avoid children nodes folding and unfolding, this functionality is done automatically for current cursor item.
+		So cursor plays vital role for unfolding of nodes and zooming into area of user interest in diagram.
+
+	Default - Highlight & Cursor 
+	CursorOnly - Cursor only.
+	HighlightOnly - Highlight only. This mode is usefull for touch devices. Since it requires minimal layout changes and renderings.
+	Inactive - No user interactivity.
+
+	See Also:
+		<primitives.orgdiagram.Config.navigationMode>
+		<primitives.famdiagram.Config.navigationMode>
+*/
+primitives.common.NavigationMode =
+{
+	Default: 0,
+	CursorOnly: 1,
+	HighlightOnly: 3,
+	Inactive: 2
+};
+
+/* /enums/NeighboursSelectionMode.js*/
+/*
+	Enum: primitives.common.NeighboursSelectionMode
+		Defines the display mode for items related to current cursor item in diagram.
+	
+	ParentsAndChildren - Parents and children of cursor item placed and sized as regular diagram items.
+	ParentsChildrenSiblingsAndSpouses - Parents, children, siblings and spouses of cursor item placed and sized as regular diagram items.
+*/
+primitives.common.NeighboursSelectionMode =
+{
+	ParentsAndChildren: 0,
+	ParentsChildrenSiblingsAndSpouses: 1
+};
+
+
+
+/* /enums/OrientationType.js*/
+/*
+	Enum: primitives.common.OrientationType
+		Defines diagram orientation type.
+	
+	Top - Vertical orientation having root item at the top.
+	Bottom - Vertical orientation having root item at the bottom.
+	Left - Horizontal orientation having root item on the left.
+	Right - Horizontal orientation having root item on the right.
+*/
+primitives.common.OrientationType =
+{
+	Top: 0,
+	Bottom: 1,
+	Left: 2,
+	Right: 3,
+	None: 4
+};
+
+primitives.orgdiagram.OrientationType = primitives.common.OrientationType;
+
+/* /enums/PageFitMode.js*/
+/*
+	Enum: primitives.common.PageFitMode
+		Defines diagram auto fit mode.
+	
+	None - All diagram items are shown in normal template mode.
+	PageWidth - Diagram tries to layout and auto size items in order to fit diagram into available page width.
+	PageHeight - Diagram tries to layout and auto size items in order to fit diagram into available page height.
+	FitToPage - Diagram tries to layout and auto size items in order to fit diagram into available page size.
+	AutoSize - Chart sets its placeholder div size to fit its contents without minimizing items.
+*/
+primitives.common.PageFitMode =
+{
+	None: 0,
+	PageWidth: 1,
+	PageHeight: 2,
+	FitToPage: 3,
+	AutoSize: 5,
+	SelectionOnly: 6
+};
+
+primitives.orgdiagram.PageFitMode = primitives.common.PageFitMode;
+
+/* /enums/PlacementType.js*/
+/*
+	Enum: primitives.common.PlacementType
+		Defines element placement relative to rectangular area.
+	
+	Auto - Depends on implementation
+	Left - Left side
+	Top - Top side
+	Right - Right side
+	Bottom - Bottom side
+	TopLeft - Top left side
+	TopRight - Top right side
+	BottomLeft - Bottom left side
+	BottomRight - Bottom right side
+	LeftTop - Left Top side
+	LeftBottom - Left Bottom side
+	RightTop - Right Top side
+	RightBottom - Right Bottom side
+*/
+primitives.common.PlacementType =
+{
+	Auto: 0,
+	TopLeft: 8,
+	Top: 1,
+	TopRight: 2,
+	RightTop: 11,
+	Right: 3,
+	RightBottom: 12,
+	BottomRight: 4,
+	Bottom: 5,
+	BottomLeft: 6,
+	LeftBottom: 10,
+	Left: 7,
+	LeftTop: 9
+};
+
+/* /enums/RenderingMode.js*/
+/*
+	Enum: primitives.common.RenderingMode
+	This enumeration is used as option in arguments of rendering events.
+	It helps to tell template initialization stage, 
+	for example user can widgitize some parts of template on create
+	and update and refresh them in template update stage.
+	
+	Create - Template is just created.
+	Update - Template is reused and update needed.
+*/
+primitives.common.RenderingMode =
+{
+	Create: 0,
+	Update: 1
+};
+
+/* /enums/SegmentType.js*/
+primitives.common.SegmentType =
+{
+	Line: 0,
+	Move: 1,
+	QuadraticArc: 2,
+	CubicArc: 3,
+	Dot: 4
+};
+
+/* /enums/SelectionPathMode.js*/
+/*
+	Enum: primitives.common.SelectionPathMode
+		Defines the display mode for items between root item of diagram and selected items.
+	
+	None - Selection path items placed and sized as regular diagram items.
+	FullStack - Selection path items are shown in normal template mode.
+*/
+primitives.common.SelectionPathMode =
+{
+	None: 0,
+	FullStack: 1
+};
+
+primitives.orgdiagram.SelectionPathMode = primitives.common.SelectionPathMode;
+
+/* /enums/ShapeType.js*/
+/*
+	Enum: primitives.common.ShapeType
+		Defines shape type.
+	
+	Rectangle - rectangle
+	Oval - oval
+	Triangle - triangle
+	CrossOut - cross out
+	Circle - circle
+	Rhombus - rhombus
+	Wedge - wedge
+	FramedOval - Framed Oval
+	FramedTriangle - Framed Triangle
+	FramedWedge - Framed Wedge
+	FramedRhombus - Framed Rhombus
+*/
+primitives.common.ShapeType =
+{
+	Rectangle: 0,
+	Oval: 1,
+	Triangle: 2,
+	CrossOut: 3,
+	Circle: 4,
+	Rhombus: 5,
+	Wedge: 7,
+	FramedOval: 8,
+	FramedTriangle: 9,
+	FramedWedge: 10,
+	FramedRhombus: 11,
+	None: 6
+};
+
+/* /enums/SideFlag.js*/
+primitives.common.SideFlag =
+{
+	Top: 1,
+	Right: 2,
+	Bottom: 4,
+	Left: 8
+};
+
+/* /enums/TextOrientationType.js*/
+/*
+	Enum: primitives.text.TextOrientationType
+		Defines label orientation type.
+	
+	Horizontal - Regular horizontal text.
+	RotateLeft - Rotate all text 90 degree.
+	RotateRight - Rotate all text 270 degree.
+*/
+primitives.text.TextOrientationType =
+{
+	Horizontal: 0,
+	RotateLeft: 1,
+	RotateRight: 2,
+	Auto: 3
+};
+
+/* /enums/UpdateMode.js*/
+/*
+	Enum: primitives.common.UpdateMode
+		Defines redraw mode of diagram.
+	
+	Recreate - Forces widget to make a full chart redraw. It is equivalent to initial chart creation. 
+	It removes everything from chart layout and recreares all elements again. 
+	Refresh - This update mode is optimized for widget fast redraw caused by resize or changes of 
+	next options: <primitives.orgdiagram.Config.items>, <primitives.orgdiagram.Config.cursorItem> 
+	or <primitives.orgdiagram.Config.selectedItems>.
+	PositonHighlight - This update mode redraws only <primitives.orgdiagram.Config.highlightItem>.
+
+	See Also:
+		<primitives.orgdiagram.Config.update>
+*/
+primitives.common.UpdateMode =
+{
+	Recreate: 0,
+	Refresh: 1,
+	PositonHighlight: 2
+};
+
+primitives.orgdiagram.UpdateMode = primitives.common.UpdateMode;
+
+/* /enums/VectorRelationType.js*/
+primitives.common.VectorRelationType =
+{
+	None: 0,
+	Null: 1,
+	Collinear: 2,
+	Opposite: 3
+};
+
+/* /enums/VerticalAlignmentType.js*/
+/*
+	Enum: primitives.common.VerticalAlignmentType
+	Defines text label alignment inside text box boundaries.
+	
+	Top - Positined at the top of text box
+	Middle - Aligned to the middle
+	Bottom - Aligned to the bottom of text box
+*/
+primitives.common.VerticalAlignmentType =
+{
+	Top: 0,
+	Middle: 1,
+	Bottom: 2
+};
+
+/* /enums/Visibility.js*/
+/*
+	Enum: primitives.common.Visibility
+		Defines nodes visibility mode.
+	
+	Auto - Auto select best visibility mode.
+	Normal - Show node in normal template mode.
+	Dot - Show node as dot.
+	Line - Show node as line.
+	Invisible - Make node invisible.
+
+	See Also:
+
+		<primitives.orgdiagram.Config.minimalVisibility>
+*/
+primitives.common.Visibility =
+{
+	Auto: 0,
+	Normal: 1,
+	Dot: 2,
+	Line: 3,
+	Invisible: 4
+};
 
 /* /enums/ZOrderType.js*/
 /*
@@ -2478,6 +2482,7 @@ primitives.common.Callout.prototype._drawSegment = function (polyline, pointA, p
 	}
 };
 
+
 /* /graphics/shapes/ConnectorOffbeat.js*/
 primitives.common.ConnectorOffbeat = function () {
 
@@ -2692,6 +2697,7 @@ primitives.common.ConnectorOffbeat.prototype.draw = function (buffer, linePalett
 		onLabelPlacement(labelPlacement);
 	}
 };
+
 
 /* /graphics/shapes/ConnectorStraight.js*/
 primitives.common.ConnectorStraight = function () {
@@ -2933,6 +2939,7 @@ primitives.common.Marker.prototype.draw = function (polylinesBuffer, shapeType, 
 };
 
 
+
 /* /graphics/shapes/MergedRectangles.js*/
 primitives.common.MergedRectangles = function (graphics) {
 	this.graphics = graphics;
@@ -3071,6 +3078,7 @@ primitives.common.Shape.prototype.draw = function (position, uiHash) {
 		);
 	}
 };
+
 
 /* /graphics/structs/Point.js*/
 /*
@@ -3672,6 +3680,7 @@ primitives.common.Rect.prototype.equalTo = function (rect) {
 };
 
 
+
 /* /graphics/structs/MoveSegment.js*/
 primitives.common.MoveSegment = function () {
 	this.parent = primitives.common.Point.prototype;
@@ -3712,6 +3721,7 @@ primitives.common.MoveSegment.prototype.transform = function (transform, forward
 		self.y = y;
 	});//ignore jslint
 };
+
 
 /* /graphics/structs/CubicArcSegment.js*/
 primitives.common.CubicArcSegment = function (arg0, arg1, arg2, arg3, arg4, arg5) {
@@ -3839,6 +3849,7 @@ primitives.common.DotSegment = function (x, y, width, height, cornerRadius) {
 	this.cornerRadius = cornerRadius;
 };
 
+
 /* /graphics/structs/Label.js*/
 primitives.common.Label = function () {
 	this.text = null;
@@ -3857,6 +3868,7 @@ primitives.common.Label = function () {
 };
 
 primitives.common.Label.prototype = new primitives.common.Rect();
+
 
 /* /graphics/structs/LineSegment.js*/
 primitives.common.LineSegment = function () {
@@ -5094,6 +5106,7 @@ primitives.common.Vector.prototype._contains = function (x, y, rounding) {
 
 	return x1 - rounding <= x && x <= x2 + rounding && y1 - rounding <= y && y <= y2 + rounding;
 };
+
 
 
 /* /graphics/Graphics.js*/
@@ -6590,6 +6603,7 @@ primitives.common.Transform.prototype.transformRect = function (x, y, width, hei
 	func.call(self, x, y, width, height);
 };
 
+
 /* /OptionsReaders/ArrayReader.js*/
 primitives.common.ArrayReader = function (itemTemplate, containsUniqueItems, uniquePropertyKey, createSourceHash, isOrdered) {
 	this.itemTemplate = itemTemplate;
@@ -6684,6 +6698,7 @@ primitives.common.EnumerationReader.prototype.read = function (target, source, p
 	return result;
 };
 
+
 /* /OptionsReaders/FunctionReader.js*/
 primitives.common.FunctionReader = function () {
 
@@ -6696,6 +6711,7 @@ primitives.common.FunctionReader.prototype.read = function (target, source, path
 
 	return result;
 };
+
 
 /* /OptionsReaders/ObjectReader.js*/
 primitives.common.ObjectReader = function (dataTemplate, isNullable, defaultValue) {
@@ -6757,7 +6773,7 @@ primitives.common.ValueReader.prototype.read = function (target, source, path, c
 
 	result = source;
 
-	if (target !== source) {
+	if (JSON.stringify(target) !== JSON.stringify(source)) {
 		context.isChanged = true;
 	}
 
@@ -6979,6 +6995,7 @@ primitives.famdiagram.TemplateConfig = function () {
 	*/
 	this.buttons = null;
 };
+
 
 /* /Controls/FamDiagram/configs/BackgroundAnnotationConfig.js*/
 /*
@@ -8704,6 +8721,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	}
 };
 
+
 /* /Controls/FamDiagram/configs/LabelAnnotationConfig.js*/
 /*
 	Class: primitives.famdiagram.LabelAnnotationConfig
@@ -8847,6 +8865,7 @@ primitives.famdiagram.PaletteItemConfig = function (arg0, arg1, arg2) {
 			break;
 	}
 };
+
 
 /* /Controls/FamDiagram/configs/ShapeAnnotationConfig.js*/
 /*
@@ -9672,6 +9691,7 @@ primitives.famdiagram.BaseTransformer.prototype.validate = function (logicalFami
 		});
 	});
 };
+
 
 /* /Controls/FamDiagram/Tasks/Transformations/FamilyTransformations/FamilyBalance.js*/
 /*  This class transforms normalized logical family into levels of nodes.
@@ -12435,6 +12455,7 @@ primitives.famdiagram.NormalizeLogicalFamilyTask = function (normalizeOptionTask
 	};
 };
 
+
 /* /Controls/FamDiagram/Tasks/Transformations/RemoveLoopsTask.js*/
 primitives.famdiagram.RemoveLoopsTask = function (itemsOptionTask, addLabelAnnotationsTask) {
 	var _data = {
@@ -12615,6 +12636,7 @@ primitives.famdiagram.Control = function (element, options) {
 		LabelAnnotationTemplate: primitives.common.LabelAnnotationTemplate
 	});
 };
+
 
 /* /Controls/FamDiagram/EventArgsFactory.js*/
 primitives.famdiagram.EventArgsFactory = function (data, oldTreeItemId, newTreeItemId, name) {
@@ -12843,6 +12865,7 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 	return tasks;
 };
 
+
 /* /Controls/OrgDiagram/Configs/TemplateConfig.js*/
 /*
 	Class: primitives.orgdiagram.TemplateConfig
@@ -13003,6 +13026,7 @@ primitives.orgdiagram.TemplateConfig = function () {
 	*/
 	this.buttons = null;
 };
+
 
 /* /Controls/OrgDiagram/Configs/BackgroundAnnotationConfig.js*/
 /*
@@ -14720,6 +14744,7 @@ primitives.orgdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	}
 };
 
+
 /* /Controls/OrgDiagram/Configs/ShapeAnnotationConfig.js*/
 /*
 	Class: primitives.orgdiagram.ShapeAnnotationConfig
@@ -15517,6 +15542,7 @@ primitives.common.MatrixConnectorBundle.prototype.getNodeIndex = function (block
 };
 
 
+
 /* /Controls/OrgDiagram/Models/ConnectorBundles/VerticalConnectorBundle.js*/
 primitives.common.VerticalConnectorBundle = function (fromItems, toItems) {
 	this.fromItems = fromItems;
@@ -15660,6 +15686,7 @@ primitives.orgdiagram.LevelVisibility = function (level, currentvisibility) {
 	this.currentvisibility = currentvisibility;
 };
 
+
 /* /Controls/OrgDiagram/Models/OrgItem.js*/
 /* This is model class is used to define intermediate organizational chart structure */
 primitives.orgdiagram.OrgItem = function (options) {
@@ -15726,6 +15753,7 @@ primitives.orgdiagram.Template = function (options, templateConfig) {
 			new primitives.common.UserTemplate(options, templateConfig.cursorTemplate, options.onCursorRender);
 	}
 };
+
 
 /* /Controls/OrgDiagram/Models/TemplateParams.js*/
 primitives.orgdiagram.TemplateParams = function () {
@@ -15802,6 +15830,7 @@ primitives.orgdiagram.TreeItemPosition = function (source) {
 		}
 	}
 };
+
 
 /* /Controls/OrgDiagram/Models/TreeLevelConnectorStackSize.js*/
 primitives.orgdiagram.TreeLevelConnectorStackSize = function () {
@@ -21949,6 +21978,7 @@ primitives.common.ButtonsTemplate = function (options) {
 };
 
 
+
 /* /Controls/OrgDiagram/Templates/CheckBoxTemplate.js*/
 primitives.common.CheckBoxTemplate = function (selectCheckBoxLabel) {
 	var _template = ["div",
@@ -22247,6 +22277,7 @@ primitives.common.GroupTitleTemplate = function (options) {
 		render: render
 	};
 };
+
 
 
 /* /Controls/OrgDiagram/Templates/HighlightTemplate.js*/
@@ -23041,6 +23072,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 	};
 };
 
+
 /* /Controls/OrgDiagram/Control.js*/
 /*
 	Class: primitives.orgdiagram.Control
@@ -23067,6 +23099,7 @@ primitives.orgdiagram.Control = function (element, options) {
 		UserTemplate: primitives.common.UserTemplate
 	});
 };
+
 
 /* /Controls/OrgDiagram/EventArgsFactory.js*/
 primitives.orgdiagram.EventArgsFactory = function (data, oldTreeItemId, newTreeItemId, name) {
@@ -23105,6 +23138,7 @@ primitives.orgdiagram.EventArgsFactory = function (data, oldTreeItemId, newTreeI
 
 	return result;
 };
+
 
 /* /Controls/OrgDiagram/getProcessDiagramConfig.js*/
 primitives.orgdiagram.getProcessDiagramConfig = function () {
@@ -23266,6 +23300,7 @@ primitives.orgdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 	return tasks;
 };
 
+
 /* /algorithms/binarySearch.js*/
 /*
 	Function: primitives.common.binarySearch
@@ -23331,3645 +23366,6 @@ primitives.common.binarySearch = function (items, funcDistance, startMinimum, st
 };
 
 
-/* /algorithms/SpatialIndex.js*/
-primitives.common.SpatialIndex = function (sizes) {
-	var _buckets = [];
-
-	sizes.sort(function (a, b) { return a - b;});
-
-	switch (sizes.length) {
-		case 0:
-			_buckets.push(new Bucket(0, 1000000));
-			break;
-		case 1:
-			var size1 = sizes[0];
-			_buckets.push(new Bucket(0, size1));
-			break;
-		case 2:
-			size1 = sizes[0];
-			var size2 = sizes[1];
-			if (size2 > size1 * 2) {
-				_buckets.push(new Bucket(0, size1));
-				_buckets.push(new Bucket(size1, size2));
-			} else {
-				_buckets.push(new Bucket(0, size2));
-			}
-			break;
-		default:
-			var breaks = primitives.common.getLiniarBreaks(sizes);
-			var minimum = 0;
-			for (var index = 0; index < breaks.length; index += 1) {
-				var maximum = sizes[breaks[index]];
-				_buckets.push(new Bucket(minimum, maximum));
-				minimum = maximum;
-			}
-			break;
-	}
-
-	function Bucket(minimum, maximum) {
-		this.minimum = minimum;
-		this.maximum = maximum;
-		this.quadTree = primitives.common.QuadTree(maximum * 2);
-	}
-
-	function addRect(rect) {
-		var size = Math.max(rect.width, rect.height);
-		var point = rect.centerPoint();
-
-		for (var index = 0, len = _buckets.length; index < len; index += 1) {
-			var bucket = _buckets[index];
-
-			if (size <= bucket.maximum || index == len - 1) {
-				point.context = rect;
-				bucket.quadTree.addPoint(point);
-				break;
-			}
-		}
-	}
-
-	function loopArea(thisArg, rect, onItem) { // onItem = function(itemid) {}
-		if (onItem != null) {
-			for (var index = 0, len = _buckets.length; index < len; index += 1) {
-				var bucket = _buckets[index];
-				var bucketRect = new primitives.common.Rect(rect);
-				bucketRect.offset(bucket.maximum / 2.0);
-				bucket.quadTree.loopArea(this, bucketRect, function (point) {
-					var pointRect = point.context;
-
-					if (rect.overlaps(pointRect)) {
-						return onItem.call(thisArg, pointRect);
-					}
-				});
-			}
-		}
-	}
-
-	function validate() {
-		var result = true;
-		for (var index = 0, len = _buckets.length; index < len; index += 1) {
-			var bucket = _buckets[index];
-
-			result = result && bucket.quadTree.validate();
-		}
-		return result;
-	}
-
-	function getPositions(selection) {
-		var result = [];
-		for (var index = 0, len = _buckets.length; index < len; index += 1) {
-			var bucket = _buckets[index];
-
-			result = result.concat(bucket.quadTree.getPositions(selection));
-		}
-		return result;
-	}
-
-	return {
-		addRect: addRect,
-		loopArea: loopArea,
-		validate: validate,
-		getPositions: getPositions
-	};
-};
-
-/* /algorithms/SortedList.js*/
-primitives.common.SortedList = function () {
-	var _rootNode = null;
-
-	function Node(value, context) {
-		this.value = value;
-		this.context = context;
-
-		this.left = null;
-		this.right = null;
-
-		this.balance = 0;
-	}
-
-	function _rebalance(node) {
-		var balance;
-		if (node.balance == 2) {
-			var right = node.right;
-			balance = right.balance;
-			if (balance >= 0) {
-				_rotateSmallLeft(right, node);
-			} else {
-				_rotateBigLeft(right, node);
-			}
-		} else if (node.balance == -2) {
-			var left = node.left;
-			balance = left.balance;
-			if (balance <= 0) {
-				_rotateSmallRight(node.left, node);
-			} else {
-				_rotateBigRight(node.left, node);
-			}
-		}
-		return balance;
-	}
-
-	function _rotateSmallLeft(node, parent) {
-		_rotateLeft(node, parent);
-
-		if (node.balance == 1) {
-			parent.balance = 0;
-			node.balance = 0;
-		} else {
-			parent.balance = -1;
-			node.balance = 1;
-		}
-	}
-
-	function _rotateLeft(node, parent) {
-		_swap(node, parent);
-		parent.right = node.right;
-		node.right = node.left;
-		node.left = parent.left;
-		parent.left = node;
-	}
-
-	function _rotateSmallRight(node, parent) {
-		_rotateRight(node, parent);
-
-		if (node.balance == -1) {
-			parent.balance = 0;
-			node.balance = 0;
-		} else {
-			parent.balance = 1;
-			node.balance = -1;
-		}
-	}
-
-	function _rotateRight(node, parent) {
-		_swap(node, parent);
-		parent.left = node.left;
-		node.left = node.right;
-		node.right = parent.right;
-		parent.right = node;
-	}
-
-	function _rotateBigLeft(node, parent) {
-		var bottom = node.left;
-		_rotateRight(bottom, node);
-		_rotateLeft(node, parent);
-
-		parent.balance = 0;
-		switch (bottom.balance) {
-			case 1:
-				node.balance = -1;
-				bottom.balance = 0;
-				break;
-			case 0:
-				bottom.balance = 0;
-				node.balance = 0;
-				break;
-			default:
-				bottom.balance = 1;
-				node.balance = 0;
-				break;
-		}
-	}
-
-	function _rotateBigRight(node, parent) {
-		var bottom = node.right;
-		_rotateLeft(bottom, node);
-		_rotateRight(node, parent);
-
-		parent.balance = 0;
-		switch (bottom.balance) {
-			case -1:
-				bottom.balance = 0;
-				node.balance = 1;
-				break;
-			case 0:
-				bottom.balance = 0;
-				node.balance = 0;
-				break;
-			default:
-				bottom.balance = -1;
-				node.balance = 0;
-				break;
-		}
-	}
-
-	function add(value, context, thisArg, onDuplicate) {
-		if (_rootNode == null) {
-			_rootNode = new Node(value, context);
-		} else {
-			var trace = [];
-			var node = null;
-			var next = _rootNode;
-			while (next != null) {
-				if (node != null) {
-					trace.push(node);
-				}
-				node = next;
-				if (node.value == value) {
-					if (onDuplicate != null) {
-						onDuplicate.call(thisArg, node.context);
-					} else {
-						throw "Structure does not support duplicates.";
-					}
-				} else {
-					if (node.value > value) {
-						next = node.left;
-					} else {
-						next = node.right;
-					}
-				}
-			}
-			trace.push(node);
-			var newNode = new Node(value, context);
-			if (node.value > value) {
-				node.left = newNode;
-			} else {
-				node.right = newNode;
-			}
-			node = newNode;
-
-			while ((next = trace.pop()) != null) {
-				if (node.value < next.value) {
-					if (next.balance < 0) {
-						next.balance -= 1;
-						_rebalance(next);
-						break;
-					} else {
-						if (next.balance > 0) {
-							next.balance -= 1;
-							break;
-						}
-						next.balance -= 1;
-					}
-				} else {
-					if (next.balance > 0) {
-						next.balance += 1;
-						_rebalance(next);
-						break;
-					} else {
-						if (next.balance < 0) {
-							next.balance += 1;
-							break;
-						}
-						next.balance += 1;
-					}
-				}
-				node = next;
-			}
-		}
-	}
-
-	function _delete(node, parent) {
-		var child = node.right != null ? node.right : node.left;
-		if (parent != null) {
-			if (parent.value > node.value) {
-				parent.left = child;
-			} else {
-				parent.right = child;
-			}
-		} else {
-			_rootNode = child;
-		}
-	}
-
-	function _swap(node1, node2) {
-		var value = node1.value;
-		node1.value = node2.value;
-		node2.value = value;
-
-		var context = node1.context;
-		node1.context = node2.context;
-		node2.context = context;
-	}
-
-	function _copy(fromNode, toNode) {
-		toNode.value = fromNode.value;
-		toNode.context = fromNode.context;
-	}
-
-	function remove(value) {
-		var trace = [];
-		var node = _rootNode;
-		while (node != null) {
-			if (node.value == value) {
-				if (node.right != null && node.left != null) {
-					trace.push(node);
-					var next = node.right;
-					while (next.left != null) {
-						trace.push(next);
-						next = next.left;
-					}
-					_copy(next, node);
-					_delete(next, trace[trace.length - 1]);
-					trace.push(next);
-				} else {
-					_delete(node, trace[trace.length - 1]);
-					trace.push(node);
-				}
-				for (var index = trace.length - 2; index >= 0; index -= 1) {
-					var parent = trace[index];
-					node = trace[index + 1];
-					if (parent.value > node.value) {
-						if (parent.balance > 0) {
-							parent.balance += 1;
-							if (_rebalance(parent) === 0) {
-								break;
-							}
-						} else {
-							if (parent.balance === 0) {
-								parent.balance += 1;
-								break;
-							}
-							parent.balance += 1;
-						}
-					} else {
-						if (parent.balance < 0) {
-							parent.balance -= 1;
-							if (_rebalance(parent) === 0) {
-								break;
-							}
-						} else {
-							if (parent.balance === 0) {
-								parent.balance -= 1;
-								break;
-							}
-							parent.balance -= 1;
-						}
-					}
-				}
-				break;
-			} else {
-				trace.push(node);
-				if (node.value > value) {
-					node = node.left;
-				} else {
-					node = node.right;
-				}
-			}
-		}
-	}
-
-	function nextContext(fromValue) {
-		var result = null;
-		loopForward(this, fromValue, function (value, context) {
-			result = context;
-			return true;
-		});
-		return result;
-	}
-
-	function loopForward(thisArg, fromValue, onItem) { //function onItem(value, context)
-		if (onItem != null) {
-			var trace = [];
-			var node = null;
-			var next = _rootNode;
-			while (next != null) {
-				node = next;
-				if (node.value >= fromValue || fromValue == null) {
-					trace.push(node);
-					next = node.left;
-				} else {
-					next = node.right;
-				}
-			}
-			while ((node = trace.pop()) != null) {
-				if (onItem.call(thisArg, node.value, node.context)) {
-					return;
-				}
-				next = node.right;
-				while (next != null) {
-					node = next;
-					if (node.left != null) {
-						trace.push(node);
-						next = node.left;
-					} else {
-						if (onItem.call(thisArg, node.value, node.context)) {
-							return;
-						}
-						next = node.right;
-					}
-				}
-			}
-		}
-	}
-
-	function previousContext(fromValue) {
-		var result = null;
-		loopBackward(this, fromValue, function (nextValue, context) {
-			result = context;
-			return true;
-		});
-		return result;
-	}
-
-	function loopBackward(thisArg, fromValue, onItem) {
-		if (onItem != null) {
-			var trace = [];
-			var node = null;
-			var next = _rootNode;
-			while (next != null) {
-				node = next;
-				if (node.value <= fromValue || fromValue == null) {
-					trace.push(node);
-					next = node.right;
-				} else {
-					next = node.left;
-				}
-			}
-			while ((node = trace.pop()) != null) {
-				if (onItem.call(thisArg, node.value, node.context)) {
-					return;
-				}
-				next = node.left;
-				while (next != null) {
-					node = next;
-					if (node.right != null) {
-						trace.push(node);
-						next = node.right;
-					} else {
-						if (onItem.call(thisArg, node.value, node.context)) {
-							return;
-						}
-						next = node.left;
-					}
-				}
-			}
-		}
-	}
-
-	function _getValidationDepth(node) {
-		var level = [],
-			result = 0;
-		if (node != null) {
-			level.push(node);
-			while (level.length > 0) {
-				var newLevel = [];
-
-				for (var index = 0; index < level.length; index += 1) {
-					node = level[index];
-
-					if (node.left != null) {
-						newLevel.push(node.left);
-					}
-
-					if (node.right != null) {
-						newLevel.push(node.right);
-					}
-				}
-
-				level = newLevel;
-				result += 1;
-			}
-		}
-		return result;
-	}
-
-	function validate() {
-		if (_rootNode != null) {
-			var level = [_rootNode];
-			while (level.length > 0) {
-				var newLevel = [];
-
-				for (var index = 0; index < level.length; index += 1) {
-					var node = level[index];
-
-					if (node.value == null) {
-						return false;
-					}
-
-					if (node.left != null) {
-						newLevel.push(node.left);
-						if (node.left.value >= node.value) {
-							return false;
-						}
-					}
-
-					if (node.right != null) {
-						newLevel.push(node.right);
-						if (node.right.value <= node.value) {
-							return false;
-						}
-					}
-
-					if (node.balance != (_getValidationDepth(node.right) - _getValidationDepth(node.left))) {
-						console.log("Disbalanced node: " + node.value + " - " + JSON.stringify(_rootNode));
-						return false;
-					}
-				}
-
-				level = newLevel;
-			}
-		}
-		return true;
-	}
-
-	return {
-		add: add,
-		remove: remove,
-		loopForward: loopForward,
-		loopBackward: loopBackward,
-		nextContext: nextContext,
-		previousContext: previousContext,
-		validate: validate
-	};
-};
-
-/* /algorithms/RMQ.js*/
-primitives.common.RMQ = function (items) {
-	var _lookup = [];
-	var _log2 = Math.log(2);
-
-	preprocess();
-
-	function preprocess() {
-		var power;
-
-		for (var index = 0, len = items.length; index < len; index += 1) {
-			_lookup[index] = [index];
-		}
-		for (power = 1, len = items.length; (1 << power) < len; power += 1) {
-			for (index = 0; (index + (1 << power) - 1) < len; index += 1) {
-				if (items[_lookup[index][power - 1]] < items[_lookup[index + (1 << (power - 1))][power - 1]]) {
-					_lookup[index][power] = _lookup[index][power - 1];
-				} else {
-					_lookup[index][power] = _lookup[index + (1 << (power - 1))][power - 1];
-				}
-			}
-		}
-	}
-
-	function getRangeMinimumIndex(from, to) {
-		var power = Math.floor(Math.log(to - from + 1) / _log2);
-
-		if (items[_lookup[from][power]] <= items[_lookup[to - (1 << power) + 1][power]]) {
-			return _lookup[from][power];
-		} else {
-			return _lookup[to - (1 << power) + 1][power];
-		}
-	}
-
-	function getRangeMinimum(from, to) {
-		return items[getRangeMinimumIndex(from, to)];
-	}
-
-	return {
-		getRangeMinimumIndex: getRangeMinimumIndex,
-		getRangeMinimum: getRangeMinimum
-	};
-};
-
-/* /algorithms/QuadTree.js*/
-primitives.common.QuadTree = function (minimalSize) {
-	var _minimalScale = Math.max(1, scale(minimalSize)),
-		_rootScale = 8,
-		_rootSize = 256,
-		_rootCell = null;
-
-	// Create root cell
-	_rootCell = new Cell(0, 0, _rootScale, _rootSize);
-
-	function Cell(x, y, scale, size) {
-		this.x = x;
-		this.y = y;
-		this.scale = scale;
-		this.size = size;
-		this.quadrants = [];
-		this.points = [];
-	}
-
-	Cell.prototype.notEnclosed = function (rect) {
-		if (this.x < rect.x || this.x + this.size > rect.x + rect.width || this.y < rect.y || this.y + this.size > rect.y + rect.height) {
-			return true;
-		}
-		return false;
-	};
-
-	Cell.prototype.overlaps = function (rect) {
-		if (this.x + this.size < rect.x || rect.x + rect.width < this.x || this.y + this.size < rect.y || rect.y + rect.height < this.y) {
-			return false;
-		}
-		return true;
-	};
-
-	Cell.prototype.getQuadrantIndex = function (x, y) {
-		var shift = this.scale - 1;
-		return ((x >> shift) & 1) | (((y >> shift) & 1) << 1);
-	};
-
-	function scale(value) {
-		return Math.floor(Math.log(value) / Math.log(2));
-	}
-
-	function addPoint(point) {
-		var x = Math.floor(point.x),
-			y = Math.floor(point.y),
-			size = Math.max(x, y);
-
-		while (_rootSize <= size) {
-			_rootScale += 1;
-			_rootSize *= 2;
-			var parent = new Cell(0, 0, _rootScale, _rootSize);
-			_splitCell(parent);
-			parent.quadrants[0] = _rootCell;
-			_rootCell = parent;
-		}
-		_addPoint(point);
-	}
-
-	function _addPoint(point) {
-		var x = Math.floor(point.x),
-			y = Math.floor(point.y),
-			cell = _rootCell;
-		if (x < 0 || y < 0) {
-			throw "Negative values are not supported in the quad tree.";
-		}
-		while (cell.points == null || cell.points.length > 0) {
-			if (cell.scale == _minimalScale && cell.points != null) {
-				break;
-			}
-			if (cell.points != null && cell.points.length > 0) {
-				_splitCell(cell);
-			}
-			cell = cell.quadrants[cell.getQuadrantIndex(x, y)];
-		}
-		cell.points.push(point);
-	}
-
-	function _splitCell(parent) {
-		var size = parent.size / 2;
-		parent.quadrants = [
-			new Cell(parent.x, parent.y, parent.scale - 1, size),
-			new Cell(parent.x + size, parent.y, parent.scale - 1, size),
-			new Cell(parent.x, parent.y + size, parent.scale - 1, size),
-			new Cell(parent.x + size, parent.y + size, parent.scale - 1, size)
-		];
-		for (var index = 0, len = parent.points.length; index < len; index += 1) {
-			var point = parent.points[index],
-				x = Math.floor(point.x),
-				y = Math.floor(point.y);
-
-			parent.quadrants[parent.getQuadrantIndex(x, y)].points.push(point);
-		}
-
-		// indicates that cell has quadrants
-		parent.points = null;
-	}
-
-	function loopArea(thisArg, rect, onItem) { // onItem = function(itemid) {}
-		var cell,
-			index, len;
-		if (onItem != null) {
-			var check = [_rootCell],
-				nocheck = [];
-			while (check.length > 0 || nocheck.length > 0) {
-				var newCheck = [],
-					newNocheck = [];
-				for (index = 0, len = check.length; index < len; index += 1) {
-					cell = check[index];
-					if (cell.overlaps(rect)) {
-						if (cell.notEnclosed(rect)) {
-							if (cell.points == null) {
-								for (var quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
-									newCheck.push(cell.quadrants[quadrantIndex]);
-								}
-							} else {
-								for (var pointIndex = 0, pointsLen = cell.points.length; pointIndex < pointsLen; pointIndex += 1) {
-									var point = cell.points[pointIndex];
-									if (rect.contains(point)) {
-										if (onItem.call(thisArg, point)) {
-											return;
-										}
-									}
-								}
-							}
-						} else {
-							nocheck.push(cell);
-						}
-					}
-				}
-				for (index = 0, len = nocheck.length; index < len; index += 1) {
-					cell = nocheck[index];
-					if (cell.points == null) {
-						for (quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
-							newNocheck.push(cell.quadrants[quadrantIndex]);
-						}
-					} else {
-						for (pointIndex = 0, pointsLen = cell.points.length; pointIndex < pointsLen; pointIndex += 1) {
-							if (onItem.call(thisArg, cell.points[pointIndex])) {
-								return;
-							}
-						}
-					}
-				}
-				check = newCheck;
-				nocheck = newNocheck;
-			}
-		}
-	}
-
-	function validate() {
-		var level = [_rootCell];
-		while (level.length > 0) {
-			var newLevel = [];
-			for (var index = 0, len = level.length; index < len; index += 1) {
-				var cell = level[index];
-				var rect = new primitives.common.Rect(cell.x, cell.y, cell.size, cell.size);
-				if (cell.points != null && cell.quadrants.length > 0) {
-					return false;
-				}
-				if (cell.points == null) {
-					for (var quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
-						newLevel.push(cell.quadrants[quadrantIndex]);
-					}
-				} else {
-					for (var pointIndex = 0, pointsLen = cell.points.length; pointIndex < pointsLen; pointIndex += 1) {
-						var point = cell.points[pointIndex];
-						if (!rect.contains(point)) {
-							return false;
-						}
-					}
-				}
-			}
-			level = newLevel;
-		}
-		return true;
-	}
-
-	function getPositions(selection) {
-		var result = [];
-		var count = 0;
-		var level = [_rootCell];
-		while (level.length > 0) {
-			var newLevel = [];
-			for (var index = 0, len = level.length; index < len; index += 1) {
-				var cell = level[index];
-				var rect = new primitives.common.Rect(cell.x, cell.y, cell.size, cell.size);
-				rect.context = {
-					isHighlighted: false
-				};
-				count += 1;
-				if (selection != null && selection.overlaps(rect) && cell.points != null && cell.points.length > 0) {
-					rect.context.isHighlighted = true;
-				}
-
-				result.push(rect);
-				for (var quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
-					var quadrant = cell.quadrants[quadrantIndex];
-					if (quadrant != null) {
-						newLevel.push(quadrant);
-					}
-				}
-			}
-			level = newLevel;
-		}
-		return result;
-	}
-
-	return {
-		addPoint: addPoint,
-		loopArea: loopArea,
-		validate: validate,
-		getPositions: getPositions
-	};
-};
-
-/* /algorithms/pile.js*/
-/*
-	Class: primitives.common.pile
-		Sorts and stack segments on top of each other so they occupy minimum number of rows.
-*/
-primitives.common.pile = function () {
-	var _items = [];
-
-	/*
-		Function: add
-			Add segment to pile object.
-	
-		Parameters:
-			from - Left margin of segment.
-			to - Right margin of segment.
-			context - Any reference to user object. It is returned as parameter in callback function of resolve method.
-
-		See Also:
-			<primitives.common.pile>
-	*/
-	function add(from, to, context) {
-		if (from < to) {
-			_items.push(new Segment(from, to, context, 1));
-		} else {
-			_items.push(new Segment(to, from, context, -1));
-		}
-	}
-
-	/*
-		Function: resolve
-			Sorts and stack segments on top of each other so they occupy minimum number of rows.
-	
-		Parameters:
-			thisArg - Context of onItemStacked callback function call.
-			onItemStacked - Call back function used to set segment offset. function(from, to, context, offset) {}
-
-		Returns: 
-			Number of stacked rows in pile.
-
-		See Also:
-			<primitives.common.pile>
-	*/
-	function resolve(thisArg, onItem) { // function(from, to, context, offset) {}
-		var hash,
-			backtraceNext,
-			backtraceTaken,
-			items, item,
-			rowItems,
-			rows,
-			rowIndex, index,
-			offset = 0;
-
-		if (onItem != null) {
-			items = _items.slice(0);
-			items.sort(function (a, b) {
-				return a.from - b.from;
-			});
-
-			rows = [];
-			while (items.length > 0) {
-				hash = {};
-				backtraceNext = {};
-				backtraceTaken = {};
-
-				getMax(0, items, hash, backtraceNext, backtraceTaken);
-
-				rowItems = [];
-				rows[offset] = [];
-				index = 0;
-				while (backtraceNext.hasOwnProperty(index)) {
-					if (backtraceTaken[index]) {
-						rowItems.push(index);
-
-						rows[offset].push(items[index]);
-					}
-					index = backtraceNext[index];
-				}
-
-				for (index = rowItems.length - 1; index >= 0; index -= 1) {
-					items.splice(rowItems[index], 1);
-				}
-				offset += 1;
-			}
-
-			for (rowIndex = 0; rowIndex < offset; rowIndex += 1) {
-				rowItems = rows[rowIndex];
-				for (index = 0; index < rowItems.length; index += 1) {
-					item = rowItems[index];
-					if (onItem.call(thisArg, item.from, item.to, item.context, rowIndex, offset, item.direction)) {
-						return offset;
-					}
-				}
-			}
-		}
-
-		return offset;
-	}
-
-	function Segment(from, to, context, direction) {
-		this.context = context;
-		this.from = from;
-		this.to = to;
-		this.offset = null;
-		this.direction = direction;
-	}
-
-	function getMax(index, items, hash, backtraceNext, backtraceTaken) {
-		var result = 0;
-
-		if (index >= items.length) {
-			return 0;
-		}
-
-		if (hash.hasOwnProperty(index)) {
-			return hash[index];
-		}
-
-		var item = items[index];
-		var withoutItem = getMax(index + 1, items, hash, backtraceNext, backtraceTaken);
-
-		var nextIndex = index + 1;
-		while (nextIndex < items.length) {
-			var nextItem = items[nextIndex];
-			if (nextItem.from >= item.to) {
-				break;
-			}
-			nextIndex += 1;
-		}
-		var withItem = 1 + getMax(nextIndex, items, hash, backtraceNext, backtraceTaken);
-
-		if (withItem > withoutItem) {
-			hash[index] = withItem;
-			backtraceNext[index] = nextIndex;
-			backtraceTaken[index] = true;
-		} else {
-			hash[index] = withoutItem;
-			backtraceNext[index] = index + 1;
-			backtraceTaken[index] = false;
-		}
-
-		return hash[index];
-	}
-
-	return {
-		add: add,
-		resolve: resolve
-	};
-};
-
-/* /algorithms/mergeSort.js*/
-/*
-	Function: primitives.common.mergeSort
-		Merges array of sorted arrays into one using call back function for comparison.
-	
-	Parameters:
-		arrays - Array of sorted arrays of objects.
-		getItemWeight - Call back function used to get items weight. 
-		ignoreDuplicates - return distinct items only.
-
-	Returns: 
-		Array of merged sorted items. 
-*/
-primitives.common.mergeSort = function (arrays, getItemWeight, ignoreDuplicates) {
-	var result = null,
-		firstArray, secondArray, mergedArray, arrayIndex,
-		firstIndex, secondIndex, firstLen, secondLen, firstItem, secondItem,
-		firstItemWeight, secondItemWeight,
-		currentValue;
-
-	switch (arrays.length) {
-		case 0:
-			result = [];
-			break;
-		default:
-			firstArray = [];
-			for (arrayIndex = 0; arrayIndex < arrays.length; arrayIndex += 1) {
-				secondArray = arrays[arrayIndex];
-				mergedArray = [];
-
-				firstLen = firstArray.length;
-				secondLen = secondArray.length;
-
-				firstIndex = 0;
-				secondIndex = 0;
-
-				firstItem = null;
-				firstItemWeight = null;
-				secondItem = null;
-				secondItemWeight = null;
-
-				if (firstLen > 0) {
-					firstItem = firstArray[firstIndex];
-					firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
-				}
-
-				if (secondLen > 0) {
-					secondItem = secondArray[secondIndex];
-					secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
-				}
-				currentValue = null;
-				while (firstIndex < firstLen || secondIndex < secondLen) {
-
-					if (firstIndex >= firstLen) {
-						if (!ignoreDuplicates || currentValue != secondItem) {
-							mergedArray.push(secondItem);
-							currentValue = secondItem;
-						}
-						secondIndex += 1;
-
-						
-						if (secondIndex < secondLen) {
-							secondItem = secondArray[secondIndex];
-							secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
-						}
-					} else {
-						if (secondIndex >= secondLen) {
-							if (!ignoreDuplicates || currentValue != firstItem) {
-								mergedArray.push(firstItem);
-								currentValue = firstItem;
-							}
-							firstIndex += 1;
-
-							
-							if (firstIndex < firstLen) {
-								firstItem = firstArray[firstIndex];
-								firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
-							}
-						} else {
-							if (firstItemWeight < secondItemWeight) {
-								if (!ignoreDuplicates || currentValue != firstItem) {
-									mergedArray.push(firstItem);
-									currentValue = firstItem;
-								}
-								firstIndex += 1;
-
-								if (firstIndex < firstLen) {
-									firstItem = firstArray[firstIndex];
-									firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
-								}
-							} else {
-								if (!ignoreDuplicates || currentValue != secondItem) {
-									mergedArray.push(secondItem);
-									currentValue = secondItem;
-								}
-								secondIndex += 1;
-								
-								if (secondIndex < secondLen) {
-									secondItem = secondArray[secondIndex];
-									secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
-								}
-							}
-						}
-					}
-				}
-				firstArray = mergedArray;
-			}
-			result = firstArray;
-			break;
-	}
-	return result;
-};
-
-/* /algorithms/LinkedHashItems.js*/
-primitives.common.LinkedHashItems = function () {
-	var segmentsHash = {},
-	nextKeys = {},
-	prevKeys = {},
-	startSegmentKey = null,
-	endSegmentKey = null;
-
-	function add(key, item) {
-		if (segmentsHash.hasOwnProperty(key)) {
-			throw "Duplicate segments are not supported!";
-		}
-		segmentsHash[key] = item;
-		nextKeys[key] = null;
-		if (endSegmentKey == null) {
-			startSegmentKey = key;
-			prevKeys[key] = null;
-		} else {
-			nextKeys[endSegmentKey] = key;
-			prevKeys[key] = endSegmentKey;
-		}
-		endSegmentKey = key;
-	}
-
-	function isEmpty() {
-		return startSegmentKey == null;
-	}
-
-	function item(key) {
-		return segmentsHash[key];
-	}
-
-	function nextKey(key) {
-		return nextKeys[key];
-	}
-
-	function prevKey(key) {
-		return prevKeys[key];
-	}
-
-	function  startKey() {
-		return startSegmentKey;
-	}
-
-	function endKey() {
-		return endSegmentKey;
-	}
-
-	function unshift(key, item) {
-		if (segmentsHash.hasOwnProperty(key)) {
-			throw "Duplicate segments are not supported!";
-		}
-		segmentsHash[key] = item;
-		prevKeys[key] = null;
-		if (startSegmentKey == null) {
-			endSegmentKey = key;
-			nextKeys[key] = null;
-		} else {
-			prevKeys[startSegmentKey] = key;
-			nextKeys[key] = startSegmentKey;
-		}
-		startSegmentKey = key;
-	}
-
-	function insertAfter(afterKey, key, item) {
-		if (segmentsHash.hasOwnProperty(key)) {
-			throw "Duplicate segments are not supported!";
-		}
-
-		if (afterKey == null) {
-			unshift(key, item);
-		} else {
-			var nextKey = nextKeys[afterKey];
-			if (nextKey == null) {
-				add(key, item);
-			} else {
-				segmentsHash[key] = item;
-				nextKeys[afterKey] = key;
-				nextKeys[key] = nextKey;
-				prevKeys[nextKey] = key;
-				prevKeys[key] = afterKey;
-			}
-		}
-	}
-
-	function remove(key) {
-		var prevKey = prevKeys[key],
-			nextKey = nextKeys[key];
-
-		if (prevKey != null) {
-			nextKeys[prevKey] = nextKey;
-		} else {
-			startSegmentKey = nextKey;
-		}
-
-		if (nextKey != null) {
-			prevKeys[nextKey] = prevKey;
-		} else {
-			endSegmentKey = prevKey;
-		}
-
-		delete segmentsHash[key];
-		delete nextKeys[key];
-		delete prevKeys[key];
-	}
-
-	function empty() {
-		segmentsHash = {};
-		nextKeys = {};
-		prevKeys = {};
-		startSegmentKey = null;
-		endSegmentKey = null;
-	}
-
-	function _iterate(forward, onItem, startKey, endKey) {
-		var key = startKey,
-			segment;
-
-		if (key == null) {
-			key = forward ? startSegmentKey : endSegmentKey;
-		}
-
-		if (onItem != null) {
-			while (key != null) {
-				segment = segmentsHash[key];
-				if (segment != null) {
-					if (onItem(segment, key)) {
-						return;
-					}
-				}
-
-				if (key == endKey) {
-					key = null;
-				} else {
-					key = forward ? nextKeys[key] : prevKeys[key];
-				}
-			}
-		}
-	}
-
-	function attach(list) {
-		list.iterate(function (segment, key) {
-			add(key, segment);
-		});
-	}
-
-	function iterate(onItem, startKey, endKey) {
-		_iterate(true, onItem, startKey, endKey);
-	}
-
-	function iterateBack(onItem, startKey, endKey) {
-		_iterate(false, onItem, startKey, endKey);
-	}
-
-	function validate(info) {
-		var key, prevKey, nextKey;
-		for (key in segmentsHash) {
-			if (segmentsHash.hasOwnProperty(key)) {
-				if (!nextKeys.hasOwnProperty(key) || !prevKeys.hasOwnProperty(key)) {
-					if (info != null) {
-						info.message = "Orphant key found!";
-					}
-					return false;
-				}
-			}
-		}
-		if (!segmentsHash.hasOwnProperty(startSegmentKey) || !segmentsHash.hasOwnProperty(endSegmentKey)) {
-			if (info != null) {
-				info.message = "Start or end values are missing!";
-			}
-			return false;
-		}
-		for (key in nextKeys) {
-			if (nextKeys.hasOwnProperty(key)) {
-				if (!segmentsHash.hasOwnProperty(key) || !prevKeys.hasOwnProperty(key)) {
-					if (info != null) {
-						info.message = "Orphant key found!";
-					}
-					return false;
-				}
-				nextKey = nextKeys[key];
-				if (nextKey && !nextKeys.hasOwnProperty(nextKey)) {
-					if (info != null) {
-						info.message = "Next key not found!";
-					}
-					return false;
-				}
-			}
-		}
-		for (key in prevKeys) {
-			if (prevKeys.hasOwnProperty(key)) {
-				if (!segmentsHash.hasOwnProperty(key) || !nextKeys.hasOwnProperty(key)) {
-					if (info != null) {
-						info.message = "Orphant key found!";
-					}
-					return false;
-				}
-				prevKey = prevKeys[key];
-				if (prevKey && !prevKeys.hasOwnProperty(prevKey)) {
-					if (info != null) {
-						info.message = "Prev key not found!";
-					}
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	function toArray() {
-		var result = [];
-
-		iterate(function (item) {
-			result.push(item);
-		});
-
-		return result;
-	}
-
-	return {
-		add: add,
-		item: item,
-		nextKey: nextKey,
-		prevKey: prevKey,
-		startKey: startKey,
-		endKey: endKey,
-		unshift:unshift,
-		insertAfter:insertAfter,
-		remove: remove,
-		isEmpty: isEmpty,
-		attach: attach,
-
-		iterate: iterate,
-		iterateBack: iterateBack,
-		empty: empty,
-		toArray: toArray,
-		validate: validate
-	};
-};
-
-
-/* /algorithms/LCA.js*/
-primitives.common.LCA = function (tree) {
-	var _eulerSequence = [];
-	var _levels = [];
-	var _fai = {};
-	var _rmq;
-	
-
-	preprocess();
-
-	function preprocess() {
-		var counter = 0;
-		tree.loopEulerWalk(this, function (nodeid, node, level) {
-			_eulerSequence.push(nodeid);
-			_levels.push(level);
-
-			if (!_fai.hasOwnProperty(nodeid)) {
-				_fai[nodeid] = counter;
-			}
-			counter += 1;
-		});
-		_rmq = primitives.common.RMQ(_levels);
-	}
-
-	function getLowestCommonAncestor(from, to) {
-		var fromIndex = _fai[from],
-			toIndex = _fai[to],
-			index;
-
-		if (fromIndex < toIndex) {
-			index = _rmq.getRangeMinimumIndex(fromIndex, toIndex);
-		} else {
-			index = _rmq.getRangeMinimumIndex(toIndex, fromIndex);
-		}
-
-		return _eulerSequence[index];
-	}
-
-	return {
-		getLowestCommonAncestor: getLowestCommonAncestor
-	};
-};
-
-/* /algorithms/tree.js*/
-primitives.common.tree = function (source) {
-	var _nodes = {},        // objects attached to nodes
-		_parents = {},      // parent node id for every node id. Both of them should exists in the tree.
-		_children = {},     // children node ids for every node id. All children and node itself should be in the tree.
-		_roots = {},        // id of non existing parent. If parent does not exists in the tree this hash contains its id.
-		_rootChildren = {}, // children of non existing parent. If parent id does not exists in the tree this collection contains it existing children.
-		BREAK = 1,
-		SKIP = 2;
-
-	_init(source);
-
-	function _init(source) {
-		if (primitives.common.isObject(source)) {
-			_nodes = primitives.common.cloneObject(source.nodes, true);
-			_parents = primitives.common.cloneObject(source.parents, true);
-			_children = primitives.common.cloneObject(source.children, false);
-			_roots = primitives.common.cloneObject(source.roots, false);
-			_rootChildren = primitives.common.cloneObject(source.rootChildren, true);
-		}
-	}
-
-	function loop(thisArg, onItem) {
-		var item;
-		if (onItem != null) {
-			for (item in _nodes) {
-				if (_nodes.hasOwnProperty(item)) {
-					if (onItem.call(thisArg, item, _nodes[item])) {
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	function loopLevels(thisArg, arg0, arg1) { // onItem(nodeid, node, levelid) if function returns true loop is continued on item's children 
-		var levelIndex = 0,
-			items = [],
-			itemid,
-			onItem,
-			newItems,
-			key,
-			index, len;
-
-		switch (arguments.length) {
-			case 2:
-				onItem = arg0;
-				break;
-			case 3:
-				itemid = arg0;
-				onItem = arg1;
-				break;
-		}
-
-		if (onItem != null) {
-
-			if (itemid == null) {
-				for (key in _rootChildren) {
-					if (_rootChildren.hasOwnProperty(key)) {
-						items = items.concat(_rootChildren[key]);
-					}
-				}
-			} else {
-				if (_children[itemid] != null) {
-					items = items.concat(_children[itemid]);
-				}
-			}
-
-			while (items.length > 0) {
-				newItems = [];
-
-				for (index = 0, len = items.length; index < len; index += 1) {
-					itemid = items[index];
-					switch (onItem.call(thisArg, itemid, _nodes[itemid], levelIndex)) {
-						case BREAK:
-							newItems = [];
-							break;
-						case SKIP:
-							break;
-						default:
-							if (_children[itemid] != null) {
-								newItems = newItems.concat(_children[itemid]);
-							}
-							break;
-					}
-				}
-
-				items = newItems;
-				levelIndex += 1;
-			}
-		}
-	}
-
-	/* children first - parent last */
-	function loopPostOrder(thisArg, onItem) { // onItem(nodeid, node, parentid, parent) if function returns true loop exits
-		var stack = [], nodeid,
-			key,
-			index,
-			prevParent,
-			children;
-
-		if (onItem != null) {
-
-			for (key in _rootChildren) {
-				if (_rootChildren.hasOwnProperty(key)) {
-					stack = stack.concat(_rootChildren[key]);
-				}
-			}
-
-			while (stack.length > 0) {
-				nodeid = stack[stack.length - 1];
-				if (nodeid != prevParent && (children = _children[nodeid]) != null) {
-					for (index = children.length - 1; index >= 0; index -= 1) {
-						stack.push(children[index]);
-					}
-				} else {
-					stack.pop();
-					prevParent = _parents[nodeid];
-
-					if (onItem.call(thisArg, nodeid, _nodes[nodeid], prevParent, _nodes[prevParent])) {
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	/* parent first - children next */
-	function loopPreOrder(thisArg, onItem) { // onItem(nodeid, node, parentid, parent) if function returns true loop exits
-		var stack = [], nodeid,
-			key,
-			index,
-			parentid,
-			prevParent,
-			children;
-
-		if (onItem != null) {
-
-			for (key in _rootChildren) {
-				if (_rootChildren.hasOwnProperty(key)) {
-					stack = stack.concat(_rootChildren[key]);
-				}
-			}
-
-			while (stack.length > 0) {
-				nodeid = stack[stack.length - 1];
-				if (nodeid != prevParent) {
-					parentid =  _parents[nodeid];
-					if (onItem.call(thisArg, nodeid, _nodes[nodeid], parentid, _nodes[parentid])) {
-						break;
-					}
-				}
-				if (nodeid != prevParent && (children = _children[nodeid]) != null) {
-					for (index = children.length - 1; index >= 0; index -= 1) {
-						stack.push(children[index]);
-					}
-				} else {
-					stack.pop();
-					prevParent = _parents[nodeid];
-				}
-			}
-		}
-	}
-
-	/* Euler Walk */
-	function loopEulerWalk(thisArg, onItem) { // onItem(nodeid, node, level) if function returns true loop exits
-		var stack = [],
-			nodeid,
-			levels = [],
-			level = 0,
-			key,
-			index, len,
-			prevParent,
-			children;
-
-		if (onItem != null) {
-
-			for (key in _rootChildren) {
-				if (_rootChildren.hasOwnProperty(key)) {
-					children = _rootChildren[key];
-					for (index = 0, len = children.length; index < len; index += 1) {
-						stack.push(children[index]);
-						levels.push(0);
-					}
-				}
-			}
-			while (stack.length > 0) {
-				index = stack.length - 1;
-				nodeid = stack[index];
-				level = levels[index];
-
-				if (onItem.call(thisArg, nodeid, _nodes[nodeid], level)) {
-					break;
-				}
-
-				if (nodeid != prevParent && (children = _children[nodeid]) != null) {
-					for (index = children.length - 1; index >= 0; index -= 1) {
-						stack.push(children[index]);
-						levels.push(level + 1);
-						if (index > 0) {
-							stack.push(nodeid);
-							levels.push(level);
-						}
-					}
-				} else {
-					stack.pop();
-					levels.pop();
-
-					prevParent = _parents[nodeid];
-				}
-			}
-		}
-	}
-
-	function zipUp(thisArg, firstNodeId, secondNodeid, onZip) { // onZip(firstNodeId, firstParentId, secondNodeid, secondParentId)
-		var firstParentId,
-			secondParentId;
-
-		if (onZip != null) {
-			while (firstNodeId != null && secondNodeid != null && firstNodeId != secondNodeid) {
-				firstParentId = _parents[firstNodeId];
-				secondParentId = _parents[secondNodeid];
-				if (onZip.call(thisArg, firstNodeId, firstParentId, secondNodeid, secondParentId)) {
-					break;
-				}
-				firstNodeId = firstParentId;
-				secondNodeid = secondParentId;
-			}
-		}
-	}
-
-	function loopParents(thisArg, nodeid, onItem, includingStartItem) { // onItem(nodeid, node)
-		var parentid = nodeid;
-		if (_nodes[parentid] != null) {
-			if (onItem != null) {
-				if (includingStartItem === true) {
-					if (onItem.call(thisArg, parentid, _nodes[parentid])) {
-						return;
-					}
-				}
-				while ((parentid = _parents[parentid]) != null) {
-					if (onItem.call(thisArg, parentid, _nodes[parentid])) {
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	function loopChildren(thisArg, nodeid, onItem) { // onItem(nodeid, node, index, lastIndex)
-		var items,
-			itemid,
-			index, len;
-		if (_nodes[nodeid] != null) {
-			items = _children[nodeid];
-			if (items != null) {
-				for (index = 0, len = items.length; index < len; index += 1) {
-					itemid = items[index];
-					if (onItem.call(thisArg, itemid, _nodes[itemid], index, len - 1)) {
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	function loopChildrenRange(thisArg, nodeid, fromIndex, toIndex, onItem) { // onItem(nodeid, node, index)
-		var items,
-			itemid,
-			index, len;
-		if (_nodes[nodeid] != null) {
-			items = _children[nodeid];
-			if (items != null) {
-				if (fromIndex < toIndex) {
-					fromIndex = Math.max(fromIndex, 0);
-					toIndex = Math.min(toIndex, items.length - 1);
-					for (index = fromIndex; index <= toIndex; index += 1) {
-						itemid = items[index];
-						if (onItem.call(thisArg, itemid, _nodes[itemid], index, len - 1)) {
-							break;
-						}
-					}
-				} else {
-					fromIndex = Math.min(fromIndex, items.length - 1);
-					toIndex = Math.max(0, toIndex);
-					for (index = fromIndex; index >= toIndex; index -= 1) {
-						itemid = items[index];
-						if (onItem.call(thisArg, itemid, _nodes[itemid], index, len - 1)) {
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	function loopChildrenReversed(thisArg, nodeid, onItem) { // onItem(nodeid, node, index, lastIndex)
-		var items,
-			itemid,
-			index, lastIndex;
-		if (_nodes[nodeid] != null) {
-			items = _children[nodeid];
-			lastIndex = items.length - 1;
-			if (items != null) {
-				for (index = lastIndex; index >= 0; index -= 1) {
-					itemid = items[index];
-					if (onItem.call(thisArg, itemid, _nodes[itemid], index, lastIndex)) {
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	function arrangeChildren(nodeid, children) {
-		var childid,
-			index, len;
-
-		children = children.slice(0);
-		if (_nodes[nodeid] != null) {
-			if (_children[nodeid] != null) {
-				if (_children[nodeid].length == children.length) {
-					for (index = 0, len = children.length; index < len; index += 1) {
-						childid = children[index];
-						if (_parents[childid] != nodeid) {
-							throw "Child " + childid + " does not belong to given node!";
-						}
-					}
-					_children[nodeid] = children;
-				} else {
-					throw "Collections of children don't match each other!";
-				}
-			} else {
-				if (children.length > 0) {
-					throw "Collections of children don't match each other!";
-				}
-			}
-		}
-	}
-
-	function add(parentid, nodeid, node, position) {
-		var index, len, children, childid;
-
-		if (_nodes[nodeid] != null) {
-			throw "Node already exists";
-		}
-
-		if (nodeid != null && node != null && _nodes[nodeid] == null) {
-
-			if (_nodes[parentid] != null) {
-				_parents[nodeid] = parentid;
-
-				// existing parent
-				if (_children[parentid] != null) {
-					if (position == null) {
-						_children[parentid].push(nodeid);
-					} else {
-						_children[parentid].splice(position, 0, nodeid);
-					}
-				} else {
-					_children[parentid] = [nodeid];
-				}
-			} else {
-				_roots[nodeid] = parentid;
-
-				// missing parent
-				if (_rootChildren[parentid] != null) {
-					if (position == null) {
-						_rootChildren[parentid].push(nodeid);
-					} else {
-						_rootChildren[parentid].splice(position, 0, nodeid);
-					}
-				} else {
-					_rootChildren[parentid] = [nodeid];
-				}
-			}
-
-			_nodes[nodeid] = node;
-
-			if (_rootChildren[nodeid] != null) {
-				_children[nodeid] = _rootChildren[nodeid];
-				delete _rootChildren[nodeid];
-
-				children = _children[nodeid];
-				for (index = 0, len = children.length; index < len; index += 1) {
-					childid = children[index];
-
-					delete _roots[childid];
-
-					_parents[childid] = nodeid;
-				}
-				
-			}
-
-		}
-	}
-
-	function insert(nodeid, bundleid, bundle) {
-		if (_nodes[nodeid] != null && bundleid != null && _nodes[bundleid] == null && bundle != null) {
-
-			_nodes[bundleid] = bundle;
-
-			if (_children[nodeid] != null) {
-				_children[bundleid] = _children[nodeid];
-			}
-			_children[nodeid] = [bundleid];
-
-			loopChildren(this, bundleid, function (childid, node, index) {
-				_parents[childid] = bundleid;
-			});
-			_parents[bundleid] = nodeid;
-		}
-	}
-
-	function moveChildren(fromNodeid, toNodeId) {
-		if (_nodes[fromNodeid] != null && _nodes[toNodeId] != null && fromNodeid != toNodeId) {
-
-			if (_children[fromNodeid] != null) {
-
-				loopChildren(this, fromNodeid, function (childid, node, index) {
-					_parents[childid] = toNodeId;
-				});
-
-				if (_children[toNodeId] != null) {
-					_children[toNodeId] = _children[toNodeId].concat(_children[fromNodeid]);
-				} else {
-					_children[toNodeId] = _children[fromNodeid];
-				}
-				delete _children[fromNodeid];
-			}
-		}
-	}
-
-	function hasNodes() {
-		return !primitives.common.isEmptyObject(_rootChildren);
-	}
-
-	function parentid(nodeid) {
-		var result = null;
-
-		if (_parents[nodeid] != null) {
-			result = _parents[nodeid];
-		}
-
-		return result;
-	}
-
-	function parent(nodeid) {
-		var result = null;
-
-		if (_parents[nodeid] != null) {
-			result = _nodes[_parents[nodeid]];
-		}
-
-		return result;
-	}
-
-	function hasChildren(nodeid) {
-		return _children[nodeid] != null;
-	}
-
-	function countChildren(nodeid) {
-		return _children[nodeid] != null ? _children[nodeid].length : 0;
-	}
-
-	function countSiblings(nodeid) {
-		var parent = parentid(nodeid);
-		return parent != null ? _children[parent].length : 0;
-	}
-
-	function indexOf(nodeid) {
-		var parent = parentid(nodeid);
-		return parent != null ? primitives.common.indexOf(_children[parent], nodeid) : null;
-	}
-
-	function getChild(parentid, index) {
-		var result = null,
-			children;
-		if ((children = _children[parentid]) != null) {
-			result = _nodes[children[index]];
-		}
-		return result;
-	}
-
-	function _splice(collection, nodeid) {
-		var index, len = collection.length;
-		for (index = 0; index < len; index += 1) {
-			if(collection[index] == nodeid) {
-				collection.splice(index, 1);
-				return len - 1;
-			}
-		}
-		return len;
-	}
-
-	function adopt(parentid, nodeid) {
-		if (_nodes[parentid] != null && _nodes[nodeid] != null) {
-			if (parentid != nodeid) {
-				if (_roots.hasOwnProperty(nodeid)) {
-					if (!_splice(_rootChildren[_roots[nodeid]], nodeid)) {
-						delete _rootChildren[_roots[nodeid]];
-					}
-					delete _roots[nodeid];
-				}
-
-				if (_parents.hasOwnProperty(nodeid)) {
-					if (!_splice(_children[_parents[nodeid]], nodeid)) {
-						delete _children[_parents[nodeid]];
-					}
-				}
-
-				_parents[nodeid] = parentid;
-				if (_children[parentid] != null) {
-					_children[parentid].push(nodeid);
-				} else {
-					_children[parentid] = [nodeid];
-				}
-			}
-			else {
-				throw "Item cannot be parent of itself!";
-			}
-		} else {
-			throw "Both parent and child should be in hierarchy!";
-		}
-	}
-
-	function node(nodeid) {
-		return _nodes[nodeid];
-	}
-
-	function validate() {
-		var result = true,
-			key;
-
-		for (key in _roots) {
-			if (_roots.hasOwnProperty(key)) {
-				if (_roots[key] != null) {
-					result = false;
-					break;
-				}
-			}
-		}
-
-		return result;
-	}
-
-	function clone() {
-		return primitives.common.family({
-			nodes: _nodes,
-			parents: _parents,
-			children: _children,
-			roots: _roots,
-			rootChildren: _rootChildren
-		});
-	}
-	
-	function loopNeighbours(thisArg, itemid, distance, onItem) {
-		var processed = {},
-			margin = [itemid],
-			newMargin,
-			currentDistance = 0;
-
-		if (onItem != null) {
-			if (_nodes.hasOwnProperty(itemid)) {
-				processed[itemid] = true;
-				while (margin.length > 0) {
-					newMargin = [];
-					for (var index = 0, len = margin.length; index < len; index += 1) {
-						var marginid = margin[index];
-						if (currentDistance > 0) {
-							if (onItem.call(thisArg, marginid, _nodes[marginid], currentDistance)) {
-								return;
-							}
-						}
-						if (currentDistance < distance) {
-							_loopNeighbours(this, marginid, function (neighbourid, neighbour) {
-								if (!processed.hasOwnProperty(neighbourid)) {
-									newMargin.push(neighbourid);
-									processed[neighbourid] = true;
-								}
-							});
-						}
-					}
-					margin = newMargin;
-					currentDistance += 1;
-				}
-			}
-		}
-	}
-
-	function _loopNeighbours(thisArg, itemid, onItem) {
-		if (onItem != null) {
-			if (_nodes.hasOwnProperty(itemid)) {
-				/* loop parent */
-				var parentItemId = parentid(itemid);
-				if (parentItemId != null) {
-					if (onItem.call(thisArg, parentItemId, _nodes[parentItemId])) {
-						return;
-					}
-				}
-				/* loop siblings */
-				loopChildren(thisArg, parentItemId, function (childItemId, childItem) {
-					if (childItemId != itemid) {
-						if (onItem.call(thisArg, childItemId, childItem)) {
-							return;
-						}
-					}
-				});
-				/* loop actual children */
-				loopChildren(thisArg, itemid, function (childItemId, childItem) {
-					if (onItem.call(thisArg, childItemId, childItem)) {
-						return;
-					}
-				});
-			}
-		}
-	}
-
-	return {
-		loop: loop,
-		loopLevels: loopLevels,
-		loopParents: loopParents,
-		loopChildren: loopChildren,
-		loopChildrenRange: loopChildrenRange,
-		loopChildrenReversed: loopChildrenReversed,
-		loopPostOrder: loopPostOrder, /* children first - parent last */
-		loopPreOrder: loopPreOrder, /* parent first - children next */
-		loopEulerWalk: loopEulerWalk, /* pre order loop with every parent revisited for every child */
-		loopNeighbours: loopNeighbours, /* loop items by distance. Siblings are as far as parent and children */
-		zipUp: zipUp,
-		parentid: parentid,
-		parent: parent,
-		adopt: adopt,
-		moveChildren: moveChildren,
-		node: node,
-		add: add,
-		insert: insert,
-		hasNodes: hasNodes,
-		hasChildren: hasChildren,
-		countChildren: countChildren,
-		countSiblings: countSiblings,
-		indexOf: indexOf,
-		getChild: getChild,
-		arrangeChildren: arrangeChildren,
-
-		/* force validation */
-		validate: validate,
-		clone: clone,
-
-		// callback return codes
-		BREAK: BREAK, // break loop immidiatly
-		SKIP: SKIP // skip loop of current node children 
-	};
-};
-
-/* /algorithms/graph.js*/
-primitives.common.graph = function () {
-	var _edges = {},
-		MAXIMUMTOTALWEIGHT = 1,
-		MINIMUMWEIGHT = 2;
-
-	function addEdge(from, to, edge) {
-		if ((_edges[from] == null || _edges[from][to] == null)  && edge != null) {
-
-			if(_edges[from] == null) {
-				_edges[from] = {};
-			}
-			_edges[from][to] = edge;
-
-			if (_edges[to] == null) {
-				_edges[to] = {};
-			}
-			_edges[to][from] = edge;
-		}
-	}
-
-	function edge(from, to) {
-		var result = null;
-		if (_edges[from] != null && _edges[from][to]) {
-			result = _edges[from][to];
-		}
-		return result;
-	}
-
-	function hasNode(from) {
-		return _edges.hasOwnProperty(from);
-	}
-
-	function loopNodeEdges(thisArg, itemid, onEdge) { // onEdge = function(to, edge) {}
-		var neighbours, neighbourKey;
-		if (onEdge != null) {
-			neighbours = _edges[itemid];
-			if (neighbours != null) {
-				for (neighbourKey in neighbours) {
-					if (neighbours.hasOwnProperty(neighbourKey)) {
-						onEdge.call(thisArg, neighbourKey, neighbours[neighbourKey]);
-					}
-				}
-			}
-		}
-	}
-
-	function loopNodes(thisArg, startNode, onItem) { // onItem = function(itemid) {}
-		var processed = {};
-		if (startNode == null) {
-			for (startNode in _edges) {
-				if (_edges.hasOwnProperty(startNode)) {
-					if (!processed.hasOwnProperty[startNode]) {
-						_loopNodes(this, startNode, processed, onItem);
-					}
-				}
-			}
-		} else {
-			_loopNodes(this, startNode, processed, onItem);
-		}
-	}
-
-	function _loopNodes(thisArg, startNode, processed, onItem) { // onItem = function(itemid) {}
-		/* Graph */
-		var margin = [],
-			marginKey,
-			newMargin,
-			index, len,
-			neighbours, neighbourKey;
-
-		margin.push(startNode);
-		processed[startNode] = true;
-		if (onItem != null) {
-			while (margin.length > 0) {
-				newMargin = [];
-
-				/* itterate neighbours of every node on margin */
-				for (index = 0, len = margin.length; index < len; index += 1) {
-					marginKey = margin[index];
-
-					onItem.call(thisArg, marginKey);
-
-					neighbours = _edges[marginKey];
-					for (neighbourKey in neighbours) {
-						if (neighbours.hasOwnProperty(neighbourKey) && !processed.hasOwnProperty(neighbourKey)) {
-							processed[neighbourKey] = true;
-							newMargin.push(neighbourKey);
-						}
-					}
-				}
-				margin = newMargin;
-			}
-		}
-	}
-
-	/*
-		Function: primitives.common.graph.getSpanningTree
-			Get maximum spanning tree. Graph may have disconnected sub graphs, so start node is nessasary.
-	
-		Parameters:
-		startNode - The node to start searching for maximum spanning tree. Graph is not nessasary connected
-		getWeightFunc - Call back function to get weight of edge. function(edge)
-
-		Returns: 
-			primitives.common.tree structure
-	*/
-	function getSpanningTree(startNode, getWeightFunc) {
-		var result = primitives.common.tree(),
-			margin = primitives.common.FibonacciHeap(true),
-			marginNode,
-			parents = {}, /* if parent for item is set then it was laready visited */
-			neighbours, neighbourKey, neighbourWeight, currentWeight;
-
-		/* add start node to margin */
-		margin.add(startNode, 0, null /*parent of root node is null*/);
-		parents[startNode] = null;
-
-		/* search graph */
-		while ((marginNode = margin.extractRoot()) != null) {
-
-			/* itterate neighbours of every node on margin */
-			neighbours = _edges[marginNode.key];
-
-			for (neighbourKey in neighbours) {
-				if (neighbours.hasOwnProperty(neighbourKey) && !result.node(neighbourKey)) {
-					neighbourWeight = getWeightFunc != null ? getWeightFunc(neighbours[neighbourKey]) : neighbours[neighbourKey];
-
-					currentWeight = margin.getPriority(neighbourKey);
-					if (currentWeight == null) {
-						margin.add(neighbourKey, neighbourWeight, null);
-						parents[neighbourKey] = marginNode.key.toString();
-					} else {
-						if (currentWeight <= neighbourWeight) {
-							/* improve node distance */
-							margin.setPriority(neighbourKey, neighbourWeight);
-							parents[neighbourKey] = marginNode.key.toString();
-						}
-					}
-				}
-			}
-
-			/* add next margin item to resul tree */
-			result.add(parents[marginNode.key], marginNode.key.toString(), {});
-		}
-
-		return result;
-	}
-
-	function _findStartNode(thisArg, onEdgeWeight) {
-		var result = null,
-			fromItem, toItems, toItem,
-			weight = 0,
-			maxWeight = null;
-		
-		for (fromItem in _edges) {
-			if (_edges.hasOwnProperty(fromItem)) {
-				toItems = _edges[fromItem];
-
-				weight = 0;
-				for (toItem in toItems) {
-					if (toItems.hasOwnProperty(toItem)) {
-						weight += onEdgeWeight.call(thisArg, toItems[toItem], fromItem, toItem);
-					}
-				}
-				if (weight > maxWeight || maxWeight == null) {
-					result = fromItem;
-					maxWeight = weight;
-				}
-			}
-		}
-		return result;
-	}
-
-	/*
-		Function: primitives.common.graph.getTotalWeightGrowthSequence
-			Get graph growth sequence. The sequence of graph traversing order.
-	
-		Parameters:
-			thisArg - call back functions context
-			onEdgeWeight - Call back function to weight edge of graph. function(edge)
-			onItem - Call back function on next item found
-	*/
-	function getTotalWeightGrowthSequence(thisArg, onEdgeWeight, onItem) {
-		var startNode = _findStartNode(thisArg, onEdgeWeight);
-
-		_getGrowthSequence(thisArg, startNode, onEdgeWeight, onItem, MAXIMUMTOTALWEIGHT);
-	}
-
-	/*
-	Function: primitives.common.graph.getMinimumWeightGrowthSequence
-		Get graph growth sequence. The sequence of graph traversing order.
-
-	Parameters:
-		thisArg - call back functions context
-		startNode - The node to start searching for grows sequence.
-		onEdgeWeight - Call back function to weight edge of graph. function(edge)
-		onItem - Call back function on next item found
-	*/
-	function getMinimumWeightGrowthSequence(thisArg, startNode, onEdgeWeight, onItem) {
-		_getGrowthSequence(thisArg, startNode, onEdgeWeight, onItem, MINIMUMWEIGHT);
-	}
-
-	function _getGrowthSequence(thisArg, startNode, onEdgeWeight, onItem, growsMode) {
-		var margin = {}, marginKey,
-			itemsToRemove = [], /* if margin item has no neighbours to expand we remove it from margin*/
-			hasNeighbours,
-			processed = {}, /* if item is set then it was already visited */
-			marginLength = 0, /* curent margin length */
-			nextMarginKey,
-			nextMarginWeight,
-			bestWeight,
-			neighbours, neighbourKey, neighbourWeight,
-			index, len;
-
-		if (onEdgeWeight != null && onItem != null) {
-			if (startNode == null) {
-				startNode = _findStartNode(thisArg, onEdgeWeight);
-			}
-
-			if (startNode != null) {
-
-				onItem.call(thisArg, startNode);
-
-				/* add start node to margin */
-				margin[startNode] = true;
-				marginLength += 1;
-
-				/* add startNode to result tree */
-				processed[startNode] = null;
-
-				/* search graph */
-				while (marginLength > 0) {
-					itemsToRemove = [];
-					nextMarginKey = null;
-					nextMarginWeight = null;
-					bestWeight = {};
-					/* itterate neighbours of every node on margin */
-					for (marginKey in margin) {
-						if (margin.hasOwnProperty(marginKey)) {
-							neighbours = _edges[marginKey];
-							hasNeighbours = false;
-
-							for (neighbourKey in neighbours) {
-								if (neighbours.hasOwnProperty(neighbourKey) && !processed.hasOwnProperty(neighbourKey)) {
-									neighbourWeight = onEdgeWeight.call(thisArg, neighbours[neighbourKey], marginKey, neighbourKey);
-									hasNeighbours = true;
-
-									switch (growsMode) {
-										case MAXIMUMTOTALWEIGHT:
-											if (bestWeight[neighbourKey] == null) {
-												bestWeight[neighbourKey] = 0;
-											}
-											bestWeight[neighbourKey] += neighbourWeight;
-
-											if (!nextMarginWeight || bestWeight[neighbourKey] > nextMarginWeight) {
-												nextMarginKey = neighbourKey;
-												nextMarginWeight = bestWeight[neighbourKey];
-											}
-											break;
-										case MINIMUMWEIGHT:
-											if (bestWeight[neighbourKey] == null) {
-												bestWeight[neighbourKey] = neighbourWeight;
-											} else {
-												bestWeight[neighbourKey] = Math.min(bestWeight[neighbourKey], neighbourWeight);
-											}
-
-											if (!nextMarginWeight || bestWeight[neighbourKey] < nextMarginWeight) {
-												nextMarginKey = neighbourKey;
-												nextMarginWeight = bestWeight[neighbourKey];
-											}
-											break;
-									}
-								}
-							}
-
-							if (!hasNeighbours) {
-								itemsToRemove.push(marginKey);
-							}
-						}
-					}
-
-					if (nextMarginKey == null) {
-						/* no items to expand to exit*/
-						break;
-					} else {
-						margin[nextMarginKey] = true;
-						marginLength += 1;
-						processed[nextMarginKey] = true;
-
-						/* add next margin item to result sequence */
-						onItem.call(thisArg, nextMarginKey);
-					}
-
-					for (index = 0, len = itemsToRemove.length; index < len; index += 1) {
-						/* delete visited node from margin */
-						delete margin[itemsToRemove[index]];
-						marginLength -= 1;
-					}
-				}
-			}
-		}
-	}
-
-	/*
-		Function: primitives.common.graph.getShortestPath
-		Get shortest path between two nodes in graph. Start and end nodes supposed to have connection path. All connections have the same weight.
-	
-		Parameters:
-		startNode - The node to start.
-		endNode - The end node.
-		getWeightFunc - Call back function to weight edge of graph. function(edge, fromItem, toItem)
-	
-		Returns: 
-			Array containing nodes names of connection path.
-	*/
-	function getShortestPath(thisArg, startNode, endNodes, getWeightFunc, onPathFound) { // getWeightFunc = function(edge, fromItem, toItem), onPathFound = function(path, to)
-		var margin = primitives.common.FibonacciHeap(false),
-			distance = {},
-			breadcramps = {},
-			bestNodeOnMargin,
-			key,
-			children,
-			newDistance,
-			path,
-			currentNode,
-			endNodesHash = {},
-			index, len, 
-			endsCount = 0, endsFound = 0;
-
-		/* create hash table of end nodes to find */
-		for (index = 0, len = endNodes.length; index < len; index += 1) {
-			key = endNodes[index];
-
-			if (!endNodesHash.hasOwnProperty(key)) {
-				endsCount += 1;
-				endNodesHash[key] = true;
-			}
-		}
-
-		/* add start node to margin */
-		margin.add(startNode, 0, null);
-		breadcramps[startNode] = null;
-
-		/* search graph */
-		while ((bestNodeOnMargin = margin.extractRoot()) != null) {
-			/* itterate neighbours of selected node on margin */
-			children = _edges[bestNodeOnMargin.key];
-			for (key in children) {
-				if (children.hasOwnProperty(key)) {
-					newDistance = bestNodeOnMargin.priority + (getWeightFunc != null ? getWeightFunc.call(thisArg, children[key], bestNodeOnMargin, key) : 1);
-					distance = margin.getPriority(key);
-					if (distance != null) {
-						if (distance > newDistance) {
-							margin.setPriority(key, newDistance);
-							breadcramps[key] = bestNodeOnMargin.key;
-						}
-					} else {
-						if (!breadcramps.hasOwnProperty(key)) {
-							margin.add(key, newDistance, null);
-							breadcramps[key] = bestNodeOnMargin.key;
-						}
-					}
-				}
-			}
-
-			if (endNodesHash.hasOwnProperty(bestNodeOnMargin.key)) {
-				/* trace path */
-				path = [];
-				currentNode = bestNodeOnMargin.key;
-				while (currentNode != null) {
-					path.push(currentNode);
-					currentNode = breadcramps[currentNode];
-				}
-				onPathFound.call(thisArg, path, bestNodeOnMargin.key);
-
-				endsFound += 1;
-				if (endsFound >= endsCount) {
-					break;
-				}
-			}
-		}
-	}
-
-	return {
-		addEdge: addEdge,
-		edge: edge,
-		hasNode: hasNode,
-		loopNodes: loopNodes,
-		loopNodeEdges: loopNodeEdges,
-		getSpanningTree: getSpanningTree,
-		getTotalWeightGrowthSequence: getTotalWeightGrowthSequence,
-		getMinimumWeightGrowthSequence: getMinimumWeightGrowthSequence,
-		getShortestPath: getShortestPath
-	};
-};
-
-/* /algorithms/getMergedRectangles.js*/
-primitives.common.getMergedRectangles = function (thisArg, items, onItem) {
-	var index, len,
-		index2, len2,
-		point;
-
-	items.sort(function (a, b) {
-		if (a.x == b.x) {
-			return a.y - b.y;
-		}
-		return a.x - b.x;
-	});
-
-	var points = [];
-	var pointsHash = {};
-
-	for (index = 0, len = items.length; index < len; index += 1) {
-		var item = items[index];
-		var xs = [item.x, item.right()];
-		for (var k = 0; k < xs.length; k += 1) {
-			var x = xs[k];
-			point = pointsHash[x];
-			if (point == null) {
-				point = {
-					x: x,
-					add: [],
-					remove: []
-				};
-				pointsHash[x] = point;
-				points.push(point);
-			}
-			if (x == item.x) {
-				point.add.push(index);
-			} else {
-				point.remove.push(index);
-			}
-		}
-	}
-
-	points.sort(function (a, b) {
-		return a.x - b.x;
-	});
-
-	function Range(start, end) {
-		this.start = start;
-		this.startHead = null;
-
-		this.end = end;
-		this.endHead = null;
-
-		this.overlap = function (range) {
-			return !(this.end < range.start || this.start > range.end);
-		};
-	}
-
-	function Stripe(x, ranges) {
-		this.x = x;
-		this.ranges = ranges;
-	}
-
-	var active = {};
-	var stripes = [];
-	stripes.push(new Stripe(null, []));
-
-	for (index = 0, len = points.length; index < len; index += 1) {
-		point = points[index];
-
-		for (index2 = 0, len2 = point.add.length; index2 < len2; index2 += 1) {
-			active[point.add[index2]] = true;
-		}
-		for (index2 = 0, len2 = point.remove.length; index2 < len2; index2 += 1) {
-			delete active[point.remove[index2]];
-		}
-
-		var activeRects = [];
-		for (var key in active) {
-			if (active.hasOwnProperty(key)) {
-				activeRects.push(items[key]);
-			}
-		}
-
-		activeRects.sort(function (a, b) {
-			return a.y - b.y;
-		});
-
-		var ranges = [];
-
-		var start = null;
-		var end = null;
-
-		for (index2 = 0, len2 = activeRects.length; index2 < len2; index2 += 1) {
-			var activeRect = activeRects[index2];
-
-			if (start == null) {
-				start = activeRect.y;
-				end = activeRect.bottom();
-			} else {
-				if (end < activeRect.y) {
-					ranges.push(new Range(start, end));
-					start = activeRect.y;
-					end = activeRect.bottom();
-				} else {
-					end = Math.max(end, activeRect.bottom());
-				}
-			}
-		}
-		if (start != null) {
-			ranges.push(new Range(start, end));
-		}
-
-		stripes.push(new Stripe(point.x, ranges));
-	}
-
-	var lists = [];
-	var heads = {};
-	var counter = 1;
-
-	function Head(isHead, list) {
-		this.isHead = isHead;
-		this.list = list;
-
-		if (!heads.hasOwnProperty(list)) {
-			heads[list] = [];
-		}
-		heads[list].push(this);
-
-		this.add = function (segment) {
-			if (!segment.from.equalTo(segment.to)) {
-				if (this.isHead) {
-					lists[this.list].add(counter, segment);
-					counter += 1;
-				} else {
-					lists[this.list].unshift(counter, segment);
-					counter += 1;
-				}
-			}
-		};
-
-		this.getTail = function () {
-			return new Head(!this.isHead, this.list);
-		};
-
-		this.attach = function (head) {
-			if (this.list != head.list) {
-				lists[this.list].attach(lists[head.list]);
-
-				var refs = heads[head.list];
-				delete heads[head.list];
-				if (refs != null) {
-					for (var index = 0, len = refs.length; index < len; index += 1) {
-						var ref = refs[index];
-						if (ref != head) {
-							ref.list = this.list;
-							heads[this.list].push(ref);
-						}
-					}
-				}
-			}
-		};
-	}
-
-	function createHead(isHead) {
-		lists.push(new primitives.common.LinkedHashItems());
-		return new Head(isHead, lists.length - 1);
-	}
-
-	for (index = 1, len = stripes.length; index < len; index += 1) {
-		var prev = stripes[index - 1];
-		var curr = stripes[index];
-
-		var pi = 0, ci = 0;
-		while (pi < prev.ranges.length || ci < curr.ranges.length) {
-			var pr = pi < prev.ranges.length ? prev.ranges[pi] : null;
-			var cr = ci < curr.ranges.length ? curr.ranges[ci] : null;
-
-			if (cr == null) {
-				// close pr
-				points = [
-					new primitives.common.Point(prev.x, pr.end),
-					new primitives.common.Point(curr.x, pr.end),
-					new primitives.common.Point(curr.x, pr.start),
-					new primitives.common.Point(prev.x, pr.start)
-				];
-				for (var pindex = 1; pindex < points.length; pindex += 1) {
-					pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
-				}
-				pr.endHead.attach(pr.startHead);
-				pi += 1;
-				continue;
-			}
-
-			if (pr == null) {
-				// open cr
-				cr.endHead = createHead(true);
-				cr.endHead.add(new primitives.common.Vector(new primitives.common.Point(curr.x, cr.start), new primitives.common.Point(curr.x, cr.end)));
-				cr.startHead = cr.endHead.getTail();
-				ci += 1;
-				continue;
-			}
-
-			if (!cr.overlap(pr)) {
-				if (pr.start < cr.start) {
-					// close pr
-					points = [
-						new primitives.common.Point(prev.x, pr.end),
-						new primitives.common.Point(curr.x, pr.end),
-						new primitives.common.Point(curr.x, pr.start),
-						new primitives.common.Point(prev.x, pr.start)
-					];
-					for (pindex = 1; pindex < points.length; pindex += 1) {
-						pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
-					}
-					pr.endHead.attach(pr.startHead);
-					pi += 1;
-					continue;
-				} else {
-					// open cr
-					cr.endHead = createHead(true);
-					cr.endHead.add(new primitives.common.Vector(new primitives.common.Point(curr.x, cr.start), new primitives.common.Point(curr.x, cr.end)));
-					cr.startHead = cr.endHead.getTail();
-					ci += 1;
-					continue;
-				}
-			} else {
-				// ovelaps
-				// extend pr.start to cr.start
-				points = [
-					new primitives.common.Point(prev.x, pr.start),
-					new primitives.common.Point(curr.x, pr.start),
-					new primitives.common.Point(curr.x, cr.start)
-				];
-				for (pindex = 1; pindex < points.length; pindex += 1) {
-					pr.startHead.add(new primitives.common.Vector(points[pindex], points[pindex - 1]));
-				}
-				cr.startHead = pr.startHead;
-
-				var loop = true;
-				while (loop) {
-					loop = false;
-
-					if (pr.end > cr.end) {
-						var nextcr = (ci + 1) < curr.ranges.length ? curr.ranges[ci + 1] : null;
-						if (nextcr != null && nextcr.overlap(pr)) {
-							// open loop cr.end to nextcr.start
-							var p1 = new primitives.common.Point(curr.x, nextcr.start);
-							var p2 = new primitives.common.Point(curr.x, cr.end);
-							cr.endHead = createHead(true);
-							cr.endHead.add(new primitives.common.Vector(p1, p2));
-							nextcr.startHead = cr.endHead.getTail();
-
-							ci += 1;
-							cr = nextcr;
-							loop = true;
-						}
-					} else {
-						var nextpr = (pi + 1) < prev.ranges.length ? prev.ranges[pi + 1] : null;
-						if (nextpr != null && nextpr.overlap(cr)) {
-							// close loop pr.end to nextpr.start
-							points = [
-								new primitives.common.Point(prev.x, pr.end),
-								new primitives.common.Point(curr.x, pr.end),
-								new primitives.common.Point(curr.x, nextpr.start),
-								new primitives.common.Point(prev.x, nextpr.start)
-							];
-							for (pindex = 1; pindex < points.length; pindex += 1) {
-								pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
-							}
-							pr.endHead.attach(nextpr.startHead);
-							pi += 1;
-							pr = nextpr;
-							loop = true;
-						}
-					}
-				}
-				// extend pr.end to cr.end
-				points = [
-					new primitives.common.Point(prev.x, pr.end),
-					new primitives.common.Point(curr.x, pr.end),
-					new primitives.common.Point(curr.x, cr.end)
-				];
-				for (pindex = 1; pindex < points.length; pindex += 1) {
-					pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
-				}
-				cr.endHead = pr.endHead;
-				pi += 1;
-				ci += 1;
-			}
-		}
-	}
-	if (onItem != null) {
-		for (index = 0; index < lists.length; index += 1) {
-			if (heads.hasOwnProperty(index)) {
-				var list = lists[index];
-				points = [];
-				list.iterate(function (segment, key) {
-					if (points.length == 0) {
-						points.push(segment.from);
-						points.push(segment.to);
-					} else {
-						points.push(segment.to);
-					}
-				});
-				onItem.call(thisArg, points);
-			}
-		}
-	}
-};
-
-/* /algorithms/getLiniarBreaks.js*/
-primitives.common.getLiniarBreaks = function (values) {
-	var _leftTotal = [],
-		_rightTotal = [],
-		_len = values.length;
-
-	// Sum up values from left to right
-	var total = 0;
-	for(var index = 0; index < _len; index += 1) {
-		total += values[index];
-		_leftTotal[index] = total;
-	}
-
-	function getLinearDeviation(leftIndex, rightIndex) {
-		var result = 0;
-
-		var avg = (_leftTotal[rightIndex] - _leftTotal[leftIndex] + values[leftIndex]) / (rightIndex - leftIndex + 1);
-
-		var median = primitives.common.binarySearch(values, function (item) {
-			return avg - item;
-		}, leftIndex, rightIndex);
-
-		if (median.item <= avg) {
-			result += (avg * (median.index + 1 - leftIndex) - (_leftTotal[median.index] - _leftTotal[leftIndex] + values[leftIndex]));
-			result += (_leftTotal[rightIndex] - _leftTotal[median.index] - avg * (rightIndex - median.index));
-		} else {
-			result += (avg * (median.index - leftIndex) - (_leftTotal[median.index] - _leftTotal[leftIndex] - values[median.index] + values[leftIndex]));
-			result += (_leftTotal[rightIndex] - _leftTotal[median.index] + values[median.index] - avg * (rightIndex - median.index + 1));
-		}
-
-		return result;
-	}
-
-	function getScore(leftIndex, rightIndex) {
-		var score = 0;
-
-		score += getLinearDeviation(0, leftIndex);
-		if (rightIndex > leftIndex + 1) {
-			score += getLinearDeviation(leftIndex + 1, rightIndex - 1);
-		}
-		score += getLinearDeviation(rightIndex, _len - 1);
-
-		return score;
-	}
-
-	var leftIndex = 0,
-		rightIndex = _len - 1;
-
-	var score = getScore(leftIndex, rightIndex);
-
-	while (leftIndex < rightIndex + 1) {
-		var leftScore = getScore(leftIndex + 1, rightIndex);
-		var rightScore = getScore(leftIndex, rightIndex - 1);
-
-		if (leftScore < rightScore) {
-			if (leftScore >= score) {
-				break;
-			}
-			leftIndex += 1;
-			score = leftScore;
-		} else {
-			if (rightScore >= score) {
-				break;
-			}
-			rightIndex -= 1;
-			score = rightScore;
-		}
-	}
-
-	return [leftIndex, rightIndex - 1, _len - 1];
-};
-
-
-/* /algorithms/getFamilyUnits.js*/
-primitives.common.getFamilyUnits = function (family) {
-	var familyUnits = [],
-		familyUnitByParent = {},
-		index,
-		len;
-
-	function FamilySiblings() {
-		this.fromIndex = 0;
-		this.toIndex = 0;
-		this.items = [];
-		this.hash = {};
-	}
-
-	function FamilyUnit(id) {
-		this.id = id;
-		this.parents = new FamilySiblings();
-		this.children = new FamilySiblings();
-
-		this.loopSiblings = function (thisArg, itemid, onItem) {
-			this._loop(thisArg, this.parents.hash.hasOwnProperty(itemid) ? this.parents.items : this.children.items, onItem);
-		};
-
-		this.loopNonSiblings = function (thisArg, itemid, onItem) {
-			this._loop(thisArg, !this.parents.hash.hasOwnProperty(itemid) ? this.parents.items : this.children.items, onItem);
-		};
-
-		this.loop = function (thisArg, onItem) {
-			this._loop(thisArg, this.parents.items, onItem);
-			this._loop(thisArg, this.children.items, onItem);
-		};
-
-		this._loop = function (thisArg, items, onItem) {
-			if (onItem != null) {
-				for (var index = 0, len = items.length; index < len; index += 1) {
-					var sibling = items[index];
-					onItem.call(thisArg, sibling);
-				}
-			}
-		};
-
-		this.addParent = function (itemid) {
-			this._add(itemid, this.parents);
-		};
-
-		this.addChild = function (itemid) {
-			this._add(itemid, this.children);
-		};
-
-		this._add = function (itemid, siblings) {
-			if (!siblings.hash.hasOwnProperty(itemid)) {
-				siblings.items.push(itemid);
-				siblings.hash[itemid] = true;
-			}
-		};
-	}
-
-	index = 0;
-	family.loop(this, function (itemid, item) {
-		var childrenCount = family.countChildren(itemid);
-		if (childrenCount > 0) {
-			if (!familyUnitByParent.hasOwnProperty(itemid)) {
-				var familyUnit = new FamilyUnit(index);
-				index += 1;
-				familyUnit.addParent(itemid);
-				family.loopChildren(this, itemid, function (childid, child) {
-					familyUnit.addChild(childid);
-					if (childrenCount == 1) {
-						family.loopParents(this, childid, function (parentid) {
-							familyUnit.addParent(parentid);
-							familyUnitByParent[parentid] = familyUnit;
-							return family.SKIP;
-						});
-					}
-					return family.SKIP;
-				});
-				familyUnits.push(familyUnit);
-				familyUnitByParent[itemid] = familyUnit;
-			}
-		}
-	});
-
-	var familyUnitByItemId = {};
-	for (index = 0, len = familyUnits.length; index < len; index += 1) {
-		var familyUnit = familyUnits[index];
-		familyUnit.loop(this, function (itemid) {
-			if (!familyUnitByItemId.hasOwnProperty(itemid)) {
-				familyUnitByItemId[itemid] = [familyUnit];
-			} else {
-				familyUnitByItemId[itemid].push(familyUnit);
-			}
-		});
-	}
-
-	return familyUnitByItemId;
-};
-
-/* /algorithms/getCrossingRectangles.js*/
-primitives.common.getCrossingRectangles = function (thisArg, rectangles, onCrossing) { // function onCrossing(rect1, rect2)
-	function Action(isStart, index, x, rect) {
-		this.isStart = isStart;
-		this.index = index;
-		this.x = x;
-		this.rect = rect;
-	}
-
-	function Level() {
-		this.count = 0;
-		this.rectangles = {};
-
-		this.add = function (index) {
-			this.count += 1;
-			this.rectangles[index] = true;
-		};
-
-		this.remove = function (index) {
-			this.count -= 1;
-			delete this.rectangles[index];
-			return this.count == 0;
-		};
-	}
-
-	function _findCrossedRectangles(buffer, from, to, rectIndex, rect) {
-		buffer.loopForward(this, from, function (value, level) {
-			if (value > to) {
-				return true;
-			}
-			for (var index in level.rectangles) {
-				if (level.rectangles.hasOwnProperty(index)) {
-					var key = rectIndex > index ? rectIndex + "-" + index : index + "-" + rectIndex;
-					if (!processed.hasOwnProperty(key)) {
-						processed[key] = true;
-						onCrossing.call(thisArg, rect, rectangles[index]);
-					}
-				}
-			}
-		});
-	}
-
-	if (onCrossing != null) {
-
-		// Create action items out of rectangles
-		var actions = [];
-		for (var index = 0; index < rectangles.length; index += 1) {
-			var rect = rectangles[index];
-
-			actions.push(new Action(1, index, rect.x, rect));
-			actions.push(new Action(0, index, rect.right(), rect));
-		}
-
-		actions.sort(function (a, b) {
-			if (a.x == b.x) {
-				return b.isStart - a.isStart;
-			}
-			return a.x - b.x;
-		});
-
-		/* find intersections */
-		var buffer = primitives.common.SortedList();
-		var levels = {};
-		var processed = {};
-
-		for (index = 0; index < actions.length; index += 1) {
-			var action = actions[index];
-			var actionLevels = [action.rect.y, action.rect.bottom()];
-
-			if (action.isStart == 1) {
-				// Search for intersections of the left side of the rectangle with existing horizontal segments
-				_findCrossedRectangles(buffer, actionLevels[0], actionLevels[1], action.index, action.rect);
-
-				// add rectangle's horizontal segments
-				for (var index2 = 0, len2 = actionLevels.length; index2 < len2; index2 += 1) {
-					var value = actionLevels[index2];
-					var level = levels[value];
-					if (level == null) {
-						level = new Level();
-						levels[value] = level;
-
-						buffer.add(value, level);
-					}
-					level.add(action.index);
-				}
-			} else {
-				// remove rectangle's horizontal segments
-				for (index2 = 0, len2 = actionLevels.length; index2 < len2; index2 += 1) {
-					value = actionLevels[index2];
-					level = levels[value];
-					if (level.remove(action.index)) {
-						delete levels[value];
-						buffer.remove(value);
-					}
-				}
-
-				// Search for intersections of the right side of rectangle with exisitng horizontal segments
-				_findCrossedRectangles(buffer, actionLevels[0], actionLevels[1], action.index, action.rect);
-			}
-		}
-	}
-};
-
-
-/* /algorithms/FibonacciHeap.js*/
-primitives.common.FibonacciHeap = function (isMaximum) {
-	var root = null,
-		count = 0,
-		nodes = {};
-
-	function Result(node) {
-		this.key = node.key;
-		this.priority = node.priority;
-		this.item = node.item;
-	}
-
-	function Node(key, priority, item) {
-		this.key = key;
-		this.priority = priority;
-		this.item = item;
-		this.degree = 0;
-		this.marked = false;
-
-		this.parent = null;
-		this.child = null;
-		this.left = null;
-		this.right = null;
-	}
-
-	function validate() {
-		var totalNodes = 0;
-		for (var key in nodes) {
-			if (nodes.hasOwnProperty(key)) {
-				var node = nodes[key];
-
-				totalNodes += 1;
-
-				if (node.child != null) {
-					if (!nodes.hasOwnProperty(node.child)) {
-						throw "Child does not exists";
-					}
-					var ref = nodes[node.child];
-					if (ref.parent != node.key) {
-						throw "Child references wrong parent";
-					}
-				}
-				if (node.parent != null) {
-					if (!nodes.hasOwnProperty(node.parent)) {
-						throw "Parent does not exists";
-					}
-
-				}
-				if (node.left != null) {
-					if (!nodes.hasOwnProperty(node.left)) {
-						throw "Left does not exists";
-					}
-					ref = nodes[node.left];
-					if (ref.right != node.key) {
-						throw "Left references wrong right";
-					}
-				}
-
-				if (node.right != null) {
-					if (!nodes.hasOwnProperty(node.right)) {
-						throw "Right does not exists";
-					}
-					ref = nodes[node.right];
-					if (ref.left != node.key) {
-						throw "Right references wrong left";
-					}
-				}
-			}
-		}
-		if (root == null && totalNodes > 0) {
-			throw "Orphans";
-		}
-
-		if (root != null) {
-			if (!nodes.hasOwnProperty(root)) {
-				throw "Root node does not exists";
-			}
-
-			node = nodes[root];
-			if (node.parent != null) {
-				throw "Root node has parent reference";
-			}
-
-			var children = [root];
-			var processed = {};
-			var totalChildren = 0;
-			while (children.length > 0) {
-				var newChildren = [];
-				for (var index = 0, len = children.length; index < len; index += 1) {
-					var child = nodes[children[index]];
-					while (!processed.hasOwnProperty(child.key)) {
-						processed[child.key] = true;
-						totalChildren += 1;
-						if (child.child != null) {
-							newChildren.push(child.child);
-						}
-						child = nodes[child.right];
-					}
-				}
-				children = newChildren;
-			}
-
-			if (totalNodes != totalChildren) {
-				throw "Tree has loops or orpants";
-			}
-		}
-	}
-
-	function add(key, priority, item) {
-		if (nodes.hasOwnProperty(key)) {
-			throw "Duplicate keys are not supported!";
-		}
-
-		var newNode = new Node(key, priority, item);
-		nodes[key] = newNode;
-
-		if (root == null) {
-			newNode.left = key;
-			newNode.right = key;
-			root = key;
-		} else {
-			var rootNode = nodes[root];
-			_insert(rootNode, newNode);
-			if (isMaximum ? rootNode.priority < newNode.priority : rootNode.priority > newNode.priority) {
-				root = key;
-			}
-		}
-		count += 1;
-	}
-
-	function _insert(node, newNode) {
-		var rightNode = nodes[node.right];
-		newNode.right = node.right;
-		newNode.left = node.key;
-		node.right = newNode.key;
-		rightNode.left = newNode.key;
-	}
-
-	function _exclude(node) {
-		var prevNode = nodes[node.left],
-			nextNode = nodes[node.right];
-
-		prevNode.right = nextNode.key;
-		nextNode.left = prevNode.key;
-		node.right = node.key;
-		node.left = node.key;
-	}
-
-	function getPriority(key) {
-		var result = null;
-		if (nodes.hasOwnProperty(key)) {
-			result = nodes[key].priority;
-		}
-		return result;
-	}
-
-	function heapRoot() {
-		var result = null;
-		if (root != null) {
-			result = new Result(nodes[root]);
-		}
-		return result;
-	}
-
-	function extractRoot() {
-		var result = heapRoot();
-		if (result != null) {
-			var rootNode = nodes[root],
-				nextNode = nodes[rootNode.right];
-
-			if (rootNode.child != null) {
-				var childNode = nodes[rootNode.child],
-					childNodeLeft = nodes[childNode.left];
-
-				rootNode.right = childNode.key;
-				nextNode.left = childNodeLeft.key;
-				childNode.left = rootNode.key;
-				childNodeLeft.right = nextNode.key;
-
-				_exclude(rootNode);
-				delete nodes[rootNode.key];
-
-				root = null;
-				_consolidate(childNode.key);
-			} else {
-				_exclude(rootNode);
-				delete nodes[rootNode.key];
-
-				root = null;
-				if (nextNode.key != rootNode.key) {
-					_consolidate(nextNode.key);
-				}
-			}
-			count -= 1;
-		}
-		return result;
-	}
-
-	function _consolidate(startKey) {
-		var pairs = [], pairedNode,
-			processed = {},
-			key = startKey;
-		while (!processed.hasOwnProperty(key)) {
-			var node = nodes[key],
-				nextKey = node.right;
-
-			processed[key] = true;
-			node.parent = null;
-
-			while ((pairedNode = pairs[node.degree]) != null) {
-				if (isMaximum ? node.priority > pairedNode.priority : node.priority < pairedNode.priority) {
-					_union(node, pairedNode);
-				} else {
-					_union(pairedNode, node);
-					node = pairedNode;
-				}
-				pairs[node.degree - 1] = null;
-			}
-			pairs[node.degree] = node;
-
-			if (root == null || nodes[root] == null || (isMaximum ? nodes[root].priority <= node.priority : nodes[root].priority >= node.priority)) {
-				root = node.key;
-			}
-
-			key = nextKey;
-		}
-	}
-
-	function _union(node1, node2) {
-		node1.degree += 1;
-		_exclude(node2);
-		var child = nodes[node1.child];
-		if (child != null) {
-			_insert(child, node2);
-			if (isMaximum ? child.priority < node2.priority : child.priority > node2.priority) {
-				node1.child = node2.key;
-			}
-		} else {
-			node1.child = node2.key;
-		}
-		node2.parent = node1.key;
-	}
-
-	function setPriority(key, priority) {
-		var node = nodes[key];
-		if (isMaximum ? node.priority > priority : node.priority < priority) {
-			throw "Priority increase is not supported";
-		}
-		node.priority = priority;
-
-		if (node.parent != null) {
-			var parentNode = nodes[node.parent];
-			if (isMaximum ? parentNode.priority < node.priority : parentNode.priority > node.priority) {
-				_cut(parentNode, node);
-				_cascadeCut(parentNode);
-			}
-		}
-		if (isMaximum ? nodes[root].priority < node.priority : nodes[root].priority > node.priority) {
-			root = node.key;
-		}
-	}
-
-	function _cut(parentNode, node) {
-		node.marked = false;
-		node.parent = null;
-		if (node.right == node.key) {
-			parentNode.child = null;
-		} else {
-			parentNode.child = node.right;
-			_exclude(node);
-		}
-		parentNode.degree -= 1;
-		_insert(nodes[root], node);
-	}
-
-	function _cascadeCut(node) {
-		if (node.parent != null) {
-			if (node.marked) {
-				var parentNode = nodes[node.parent];
-				_cut(parentNode, node);
-				_cascadeCut(parentNode);
-			} else {
-				node.marked = true;
-			}
-		}
-	}
-
-	function deleteKey(key) {
-		setPriority(key, isMaximum ? Infinity : -1);
-		extractRoot();
-	}
-
-	return {
-		add: add,
-		getPriority: getPriority,
-		setPriority: setPriority,
-		heapRoot: heapRoot,
-		extractRoot: extractRoot,
-		deleteKey: deleteKey,
-		validate: validate
-	};
-};
-
-
-/* /algorithms/FamilyMargins.js*/
-primitives.common.FamilyMargins = function () {
-	this.items = [];
-
-	function Margin(left, right, leftIndex, rightIndex) {
-		this.left = left;
-		this.right = right;
-		this.leftIndex = leftIndex;
-		this.rightIndex = rightIndex;
-	}
-
-	this.add = function (arg0, arg1, arg2, arg3) {
-		switch (arguments.length) {
-			case 2:
-				this.items.push(new Margin(-arg0 / 2, arg0 / 2, arg1, arg1));
-				break;
-			case 4:
-				this.items.push(new Margin(arg0, arg1, arg2, arg3));
-				break;
-		}
-	};
-
-	this.merge = function (from, interval) {
-		var distance = this.getDistanceTo(from);
-		var leftOffset = 0;
-		var rightOffset = 0;
-
-		var len1 = this.items.length;
-		var len2 = from.items.length;
-		var min = Math.min(len1, len2);
-		var max = Math.max(len1, len2);
-
-		for (var index = 0; index < min; index += 1) {
-			var leftMargin = this.items[len1 - 1 - index];
-			var rightMargin = from.items[len2 - 1 - index];
-
-			if (index === 0) {
-				var width = (leftMargin.right - leftMargin.left + (distance || 0) + (interval || 0) + rightMargin.right - rightMargin.left);
-				leftOffset = width / 2 + leftMargin.left;
-				rightOffset = width / 2 - rightMargin.right;
-			}
-			leftMargin.left -= leftOffset;
-			leftMargin.right = rightMargin.right + rightOffset;
-
-			leftMargin.rightIndex = rightMargin.rightIndex;
-
-			this.items[max - 1 - index] = leftMargin;
-		}
-		for (index = min; index < max; index += 1) {
-			leftMargin = this.items[len1 - 1 - index];
-			rightMargin = from.items[len2 - 1 - index];
-
-			if (leftMargin == null) {
-				this.items[max - 1 - index] = new Margin(rightMargin.left + rightOffset, rightMargin.right + rightOffset,
-					rightMargin.leftIndex, rightMargin.rightIndex);
-			} else {
-				leftMargin.left -= leftOffset;
-				leftMargin.right -= leftOffset;
-			}
-
-		}
-		return distance;
-	};
-
-	this.attach = function (from, interval) {
-		var distance = this.getDistanceTo(from);
-		var rightOffset = interval || 0;
-
-		var len1 = this.items.length;
-		var len2 = from.items.length;
-		var min = Math.min(len1, len2);
-		var max = Math.max(len1, len2);
-
-		for (var index = 0; index < min; index += 1) {
-			var leftMargin = this.items[len1 - 1 - index];
-			var rightMargin = from.items[len2 - 1 - index];
-
-			if (index === 0) {
-				rightOffset = (leftMargin.right + (distance || 0) + (interval || 0) - rightMargin.left);
-			}
-			leftMargin.right = rightMargin.right + rightOffset;
-
-			leftMargin.rightIndex = rightMargin.rightIndex;
-
-			this.items[max - 1 - index] = leftMargin;
-		}
-		for (index = min; index < max; index += 1) {
-			leftMargin = this.items[len1 - 1 - index];
-			if (leftMargin == null) {
-				rightMargin = from.items[len2 - 1 - index];
-
-				this.items[max - 1 - index] = new Margin(rightMargin.left + rightOffset, rightMargin.right + rightOffset,
-					rightMargin.leftIndex, rightMargin.rightIndex);
-			}
-		}
-		return distance;
-	};
-
-	this.getDistanceTo = function (to) {
-		var distance = null;
-		var baseDistance = 0;
-		var len1 = this.items.length;
-		var len2 = to.items.length;
-		var len = Math.min(len1, len2);
-		if (len > 0) {
-			for (var index = 0; index < len; index += 1) {
-				var leftMargins = this.items[len1 - 1 - index];
-				var rightMargins = to.items[len2 - 1 - index];
-
-
-				if (index === 0) {
-					baseDistance = leftMargins.right - rightMargins.left;
-					distance = baseDistance;
-				} else {
-					if (leftMargins.rightIndex < rightMargins.leftIndex) {
-						distance = Math.max(distance, leftMargins.right - rightMargins.left);
-					}
-				}
-			}
-			distance = distance - baseDistance;
-		}
-
-		return distance;
-	};
-
-	this.loop = function (thisArg, onItem) {
-		if (onItem != null) {
-			for (var index = 0, len = this.items.length; index < len; index += 1) {
-				var margin = this.items[len - 1 - index];
-				if (onItem.call(thisArg, index, margin.left, margin.right, margin.leftIndex, margin.rightIndex)) {
-					break;
-				}
-			}
-		}
-	};
-
-	this.getLeft = function (level) {
-		var maximum = this.items.length - 1;
-		if (maximum >= level) {
-			return this.items[maximum - level].left;
-		}
-	};
-};
-
-/* /algorithms/FamilyAlignment.js*/
-primitives.common.FamilyAlignment = function (thisArg, family, treeLevels, onItemSize) {
-	var offsets,
-		sizes = {},
-		childrenDistances;
-
-	if (onItemSize != null) {
-		treeLevels.loopItems(this, function (itemid, item, position, levelIndex, level) {
-			sizes[itemid] = onItemSize.call(thisArg, itemid, item);
-		});
-	}
-
-	childrenDistances = getDistancesBetweenChildren(family, treeLevels);
-	offsets = getTreeLevelsOffsets(family, treeLevels, childrenDistances);
-
-	function _getNodeMargins(margins, nodeid) {
-		// create margins for node if it does not exists
-		var nodeMargins = margins[nodeid];
-		if (nodeMargins == null) {
-			nodeMargins = new primitives.common.FamilyMargins();
-			margins[nodeid] = nodeMargins;
-		}
-		return nodeMargins;
-	}
-
-	function getDistancesBetweenChildren(family, treeLevels) {
-		var distances = {};
-		var margins = {};
-		var levelMargins = null;
-
-		treeLevels.loopLevelsReversed(this, function (levelIndex, level) {
-			var newMargins = new primitives.common.FamilyMargins();
-			if (levelMargins != null) {
-				levelMargins.add(0, Number.MAX_VALUE);
-				newMargins.merge(levelMargins, 0);
-			}
-			levelMargins = newMargins;
-
-			var previousParentMargins = levelMargins;
-			treeLevels.loopLevelItems(this, levelIndex, function (nodeid, node, position) {
-				var nodeMargins = _getNodeMargins(margins, nodeid);
-
-				// add node size into its margin
-				nodeMargins.add(sizes[nodeid], position);
-
-				switch (family.countParents(nodeid)) {
-					case 0:
-						if (previousParentMargins != null) {
-							distances[nodeid] = previousParentMargins.attach(nodeMargins);
-						}
-						break;
-					case 1:
-						family.loopParents(this, nodeid, function (parentid, parent, levelIndex) {
-							var parentMargins = _getNodeMargins(margins, parentid);
-							distances[nodeid] = parentMargins.merge(nodeMargins);
-
-							previousParentMargins = parentMargins;
-							return family.BREAK;
-						});
-						break;
-					default:
-						// loop parents and find total size of them
-						var totalSize = 0;
-						var fromIndex = null;
-						var toIndex = null;
-						var hash = {};
-						family.loopParents(this, nodeid, function (parentid, parent, levelIndex) {
-							if (levelIndex > 0) {
-								return family.BREAK;
-							}
-							totalSize += sizes[parentid];
-
-							var position = treeLevels.getItemPosition(parentid);
-							fromIndex = fromIndex == null ? position : Math.min(fromIndex, position);
-							toIndex = toIndex == null ? position : Math.max(toIndex, position);
-							hash[position] = parentid;
-						});
-
-						var offset = -totalSize / 2;
-						for (var index = fromIndex; index <= toIndex; index += 1) {
-							var parentid = hash[index];
-
-							offset += sizes[parentid] / 2.0;
-
-							var parentMargins = _getNodeMargins(margins, parentid);
-
-							parentMargins.attach(nodeMargins, -offset);
-
-							previousParentMargins = parentMargins;
-
-							offset += sizes[parentid] / 2.0;
-						}
-						break;
-				}
-			});
-		});
-
-		return distances;
-	}
-
-	function getTreeLevelsOffsets(family, treeLevels, childrenDistances) {
-		var offsets = {};
-
-		var familyUnitsById = primitives.common.getFamilyUnits(family);
-		var processedFamilyUnits = {};
-
-		treeLevels.loopLevels(this, function (levelIndex, level) {
-			treeLevels.loopLevelItems(this, levelIndex, function (nodeid, node, position) {
-				if (!offsets.hasOwnProperty(nodeid)) {
-					var offset = 0;
-					if (position === 0) {
-						if (childrenDistances[nodeid] != null) {
-							offset += childrenDistances[nodeid] + sizes[nodeid] / 2;
-						}
-					} else {
-						var prevNodeId = treeLevels.getItemAtPosition(levelIndex, position - 1);
-						offset += offsets[prevNodeId] + sizes[prevNodeId] / 2 + (childrenDistances[nodeid] || 0) + sizes[nodeid] / 2;
-					}
-					offsets[nodeid] = offset;
-				}
-				var familyUnits = familyUnitsById[nodeid];
-				if (familyUnits != null) {
-					for (var index = 0; index < familyUnits.length; index += 1) {
-						var familyUnit = familyUnits[index];
-						if (!processedFamilyUnits.hasOwnProperty(familyUnit.id)) {
-							processedFamilyUnits[familyUnit.id] = true;
-
-							setFamilyOffsets(offsets, nodeid, familyUnit, levelIndex, levelIndex + 1, position, treeLevels, childrenDistances);
-						}
-					}
-				}
-			});
-		});
-
-		return offsets;
-	}
-
-	function setFamilyOffsets(offsets, itemid, familyUnit, fromLevel, toLevel, itemIndex, treeLevels, childrenDistances) {
-		var fromIndex = itemIndex;
-		var toIndex = itemIndex;
-
-		familyUnit.loopSiblings(this, itemid, function (siblingid) {
-			var position = treeLevels.getItemPosition(siblingid);
-			fromIndex = Math.min(fromIndex, position);
-			toIndex = Math.max(toIndex, position);
-		});
-
-		// Place nodes on the left side of start node
-		for (var index = itemIndex - 1; index >= fromIndex; index -= 1) {
-			var siblingid = treeLevels.getItemAtPosition(fromLevel, index);
-
-			if (!offsets.hasOwnProperty(siblingid)) {
-				var nodeid = treeLevels.getItemAtPosition(fromLevel, index + 1);
-				offsets[siblingid] = offsets[nodeid] - (sizes[siblingid] / 2 + (childrenDistances[nodeid] || 0) + sizes[nodeid] / 2);
-			}
-		}
-		// Place nodes on the right side of start node
-		for (index = itemIndex + 1; index <= toIndex; index += 1) {
-			siblingid = treeLevels.getItemAtPosition(fromLevel, index);
-
-			if (!offsets.hasOwnProperty(siblingid)) {
-				nodeid = treeLevels.getItemAtPosition(fromLevel, index - 1);
-				offsets[siblingid] = offsets[nodeid] + (sizes[nodeid] / 2 + (childrenDistances[siblingid] || 0) + sizes[siblingid] / 2);
-			}
-		}
-		siblingid = treeLevels.getItemAtPosition(fromLevel, fromIndex);
-		var siblingsMedian = offsets[siblingid] - sizes[siblingid] / 2;
-		siblingid = treeLevels.getItemAtPosition(fromLevel, toIndex);
-		siblingsMedian += offsets[siblingid] + sizes[siblingid] / 2;
-
-		siblingsMedian /= 2;
-
-		fromIndex = null;
-		toIndex = null;
-		familyUnit.loopNonSiblings(this, itemid, function (siblingid) {
-			var position = treeLevels.getItemPosition(siblingid);
-			fromIndex = fromIndex != null ? Math.min(fromIndex, position) : position;
-			toIndex = toIndex != null ? Math.max(toIndex, position) : position;
-		});
-
-		var nonSiblingsWidth = 0;
-		for (index = fromIndex; index <= toIndex; index += 1) {
-			var relatedItemId = treeLevels.getItemAtPosition(toLevel, index);
-			nonSiblingsWidth += sizes[relatedItemId];
-			if (index > fromIndex) {
-				nonSiblingsWidth += (childrenDistances[relatedItemId] || 0);
-			}
-		}
-
-		var offset = siblingsMedian - nonSiblingsWidth / 2;
-		relatedItemId = treeLevels.getItemAtPosition(toLevel, fromIndex);
-		if (!offsets.hasOwnProperty(relatedItemId)) {
-			offsets[relatedItemId] = offset + sizes[relatedItemId] / 2;
-		}
-		for (index = fromIndex + 1; index <= toIndex; index += 1) {
-			relatedItemId = treeLevels.getItemAtPosition(toLevel, index);
-			if (!offsets.hasOwnProperty(relatedItemId)) {
-				nodeid = treeLevels.getItemAtPosition(toLevel, index - 1);
-				offsets[relatedItemId] = offsets[nodeid] + (sizes[nodeid] / 2 + (childrenDistances[relatedItemId] || 0) + sizes[relatedItemId] / 2);
-			}
-		}
-	}
-
-	function getOffset(nodeid) {
-		return offsets[nodeid];
-	}
-
-	return {
-		getOffset: getOffset
-	};
-};
 
 /* /algorithms/family.js*/
 primitives.common.family = function (source) {
@@ -28516,6 +24912,1253 @@ primitives.common.family = function (source) {
 	};
 };
 
+
+/* /algorithms/FamilyAlignment.js*/
+primitives.common.FamilyAlignment = function (thisArg, family, treeLevels, onItemSize) {
+	var offsets,
+		sizes = {},
+		childrenDistances;
+
+	if (onItemSize != null) {
+		treeLevels.loopItems(this, function (itemid, item, position, levelIndex, level) {
+			sizes[itemid] = onItemSize.call(thisArg, itemid, item);
+		});
+	}
+
+	childrenDistances = getDistancesBetweenChildren(family, treeLevels);
+	offsets = getTreeLevelsOffsets(family, treeLevels, childrenDistances);
+
+	function _getNodeMargins(margins, nodeid) {
+		// create margins for node if it does not exists
+		var nodeMargins = margins[nodeid];
+		if (nodeMargins == null) {
+			nodeMargins = new primitives.common.FamilyMargins();
+			margins[nodeid] = nodeMargins;
+		}
+		return nodeMargins;
+	}
+
+	function getDistancesBetweenChildren(family, treeLevels) {
+		var distances = {};
+		var margins = {};
+		var levelMargins = null;
+
+		treeLevels.loopLevelsReversed(this, function (levelIndex, level) {
+			var newMargins = new primitives.common.FamilyMargins();
+			if (levelMargins != null) {
+				levelMargins.add(0, Number.MAX_VALUE);
+				newMargins.merge(levelMargins, 0);
+			}
+			levelMargins = newMargins;
+
+			var previousParentMargins = levelMargins;
+			treeLevels.loopLevelItems(this, levelIndex, function (nodeid, node, position) {
+				var nodeMargins = _getNodeMargins(margins, nodeid);
+
+				// add node size into its margin
+				nodeMargins.add(sizes[nodeid], position);
+
+				switch (family.countParents(nodeid)) {
+					case 0:
+						if (previousParentMargins != null) {
+							distances[nodeid] = previousParentMargins.attach(nodeMargins);
+						}
+						break;
+					case 1:
+						family.loopParents(this, nodeid, function (parentid, parent, levelIndex) {
+							var parentMargins = _getNodeMargins(margins, parentid);
+							distances[nodeid] = parentMargins.merge(nodeMargins);
+
+							previousParentMargins = parentMargins;
+							return family.BREAK;
+						});
+						break;
+					default:
+						// loop parents and find total size of them
+						var totalSize = 0;
+						var fromIndex = null;
+						var toIndex = null;
+						var hash = {};
+						family.loopParents(this, nodeid, function (parentid, parent, levelIndex) {
+							if (levelIndex > 0) {
+								return family.BREAK;
+							}
+							totalSize += sizes[parentid];
+
+							var position = treeLevels.getItemPosition(parentid);
+							fromIndex = fromIndex == null ? position : Math.min(fromIndex, position);
+							toIndex = toIndex == null ? position : Math.max(toIndex, position);
+							hash[position] = parentid;
+						});
+
+						var offset = -totalSize / 2;
+						for (var index = fromIndex; index <= toIndex; index += 1) {
+							var parentid = hash[index];
+
+							offset += sizes[parentid] / 2.0;
+
+							var parentMargins = _getNodeMargins(margins, parentid);
+
+							parentMargins.attach(nodeMargins, -offset);
+
+							previousParentMargins = parentMargins;
+
+							offset += sizes[parentid] / 2.0;
+						}
+						break;
+				}
+			});
+		});
+
+		return distances;
+	}
+
+	function getTreeLevelsOffsets(family, treeLevels, childrenDistances) {
+		var offsets = {};
+
+		var familyUnitsById = primitives.common.getFamilyUnits(family);
+		var processedFamilyUnits = {};
+
+		treeLevels.loopLevels(this, function (levelIndex, level) {
+			treeLevels.loopLevelItems(this, levelIndex, function (nodeid, node, position) {
+				if (!offsets.hasOwnProperty(nodeid)) {
+					var offset = 0;
+					if (position === 0) {
+						if (childrenDistances[nodeid] != null) {
+							offset += childrenDistances[nodeid] + sizes[nodeid] / 2;
+						}
+					} else {
+						var prevNodeId = treeLevels.getItemAtPosition(levelIndex, position - 1);
+						offset += offsets[prevNodeId] + sizes[prevNodeId] / 2 + (childrenDistances[nodeid] || 0) + sizes[nodeid] / 2;
+					}
+					offsets[nodeid] = offset;
+				}
+				var familyUnits = familyUnitsById[nodeid];
+				if (familyUnits != null) {
+					for (var index = 0; index < familyUnits.length; index += 1) {
+						var familyUnit = familyUnits[index];
+						if (!processedFamilyUnits.hasOwnProperty(familyUnit.id)) {
+							processedFamilyUnits[familyUnit.id] = true;
+
+							setFamilyOffsets(offsets, nodeid, familyUnit, levelIndex, levelIndex + 1, position, treeLevels, childrenDistances);
+						}
+					}
+				}
+			});
+		});
+
+		return offsets;
+	}
+
+	function setFamilyOffsets(offsets, itemid, familyUnit, fromLevel, toLevel, itemIndex, treeLevels, childrenDistances) {
+		var fromIndex = itemIndex;
+		var toIndex = itemIndex;
+
+		familyUnit.loopSiblings(this, itemid, function (siblingid) {
+			var position = treeLevels.getItemPosition(siblingid);
+			fromIndex = Math.min(fromIndex, position);
+			toIndex = Math.max(toIndex, position);
+		});
+
+		// Place nodes on the left side of start node
+		for (var index = itemIndex - 1; index >= fromIndex; index -= 1) {
+			var siblingid = treeLevels.getItemAtPosition(fromLevel, index);
+
+			if (!offsets.hasOwnProperty(siblingid)) {
+				var nodeid = treeLevels.getItemAtPosition(fromLevel, index + 1);
+				offsets[siblingid] = offsets[nodeid] - (sizes[siblingid] / 2 + (childrenDistances[nodeid] || 0) + sizes[nodeid] / 2);
+			}
+		}
+		// Place nodes on the right side of start node
+		for (index = itemIndex + 1; index <= toIndex; index += 1) {
+			siblingid = treeLevels.getItemAtPosition(fromLevel, index);
+
+			if (!offsets.hasOwnProperty(siblingid)) {
+				nodeid = treeLevels.getItemAtPosition(fromLevel, index - 1);
+				offsets[siblingid] = offsets[nodeid] + (sizes[nodeid] / 2 + (childrenDistances[siblingid] || 0) + sizes[siblingid] / 2);
+			}
+		}
+		siblingid = treeLevels.getItemAtPosition(fromLevel, fromIndex);
+		var siblingsMedian = offsets[siblingid] - sizes[siblingid] / 2;
+		siblingid = treeLevels.getItemAtPosition(fromLevel, toIndex);
+		siblingsMedian += offsets[siblingid] + sizes[siblingid] / 2;
+
+		siblingsMedian /= 2;
+
+		fromIndex = null;
+		toIndex = null;
+		familyUnit.loopNonSiblings(this, itemid, function (siblingid) {
+			var position = treeLevels.getItemPosition(siblingid);
+			fromIndex = fromIndex != null ? Math.min(fromIndex, position) : position;
+			toIndex = toIndex != null ? Math.max(toIndex, position) : position;
+		});
+
+		var nonSiblingsWidth = 0;
+		for (index = fromIndex; index <= toIndex; index += 1) {
+			var relatedItemId = treeLevels.getItemAtPosition(toLevel, index);
+			nonSiblingsWidth += sizes[relatedItemId];
+			if (index > fromIndex) {
+				nonSiblingsWidth += (childrenDistances[relatedItemId] || 0);
+			}
+		}
+
+		var offset = siblingsMedian - nonSiblingsWidth / 2;
+		relatedItemId = treeLevels.getItemAtPosition(toLevel, fromIndex);
+		if (!offsets.hasOwnProperty(relatedItemId)) {
+			offsets[relatedItemId] = offset + sizes[relatedItemId] / 2;
+		}
+		for (index = fromIndex + 1; index <= toIndex; index += 1) {
+			relatedItemId = treeLevels.getItemAtPosition(toLevel, index);
+			if (!offsets.hasOwnProperty(relatedItemId)) {
+				nodeid = treeLevels.getItemAtPosition(toLevel, index - 1);
+				offsets[relatedItemId] = offsets[nodeid] + (sizes[nodeid] / 2 + (childrenDistances[relatedItemId] || 0) + sizes[relatedItemId] / 2);
+			}
+		}
+	}
+
+	function getOffset(nodeid) {
+		return offsets[nodeid];
+	}
+
+	return {
+		getOffset: getOffset
+	};
+};
+
+/* /algorithms/FamilyMargins.js*/
+primitives.common.FamilyMargins = function () {
+	this.items = [];
+
+	function Margin(left, right, leftIndex, rightIndex) {
+		this.left = left;
+		this.right = right;
+		this.leftIndex = leftIndex;
+		this.rightIndex = rightIndex;
+	}
+
+	this.add = function (arg0, arg1, arg2, arg3) {
+		switch (arguments.length) {
+			case 2:
+				this.items.push(new Margin(-arg0 / 2, arg0 / 2, arg1, arg1));
+				break;
+			case 4:
+				this.items.push(new Margin(arg0, arg1, arg2, arg3));
+				break;
+		}
+	};
+
+	this.merge = function (from, interval) {
+		var distance = this.getDistanceTo(from);
+		var leftOffset = 0;
+		var rightOffset = 0;
+
+		var len1 = this.items.length;
+		var len2 = from.items.length;
+		var min = Math.min(len1, len2);
+		var max = Math.max(len1, len2);
+
+		for (var index = 0; index < min; index += 1) {
+			var leftMargin = this.items[len1 - 1 - index];
+			var rightMargin = from.items[len2 - 1 - index];
+
+			if (index === 0) {
+				var width = (leftMargin.right - leftMargin.left + (distance || 0) + (interval || 0) + rightMargin.right - rightMargin.left);
+				leftOffset = width / 2 + leftMargin.left;
+				rightOffset = width / 2 - rightMargin.right;
+			}
+			leftMargin.left -= leftOffset;
+			leftMargin.right = rightMargin.right + rightOffset;
+
+			leftMargin.rightIndex = rightMargin.rightIndex;
+
+			this.items[max - 1 - index] = leftMargin;
+		}
+		for (index = min; index < max; index += 1) {
+			leftMargin = this.items[len1 - 1 - index];
+			rightMargin = from.items[len2 - 1 - index];
+
+			if (leftMargin == null) {
+				this.items[max - 1 - index] = new Margin(rightMargin.left + rightOffset, rightMargin.right + rightOffset,
+					rightMargin.leftIndex, rightMargin.rightIndex);
+			} else {
+				leftMargin.left -= leftOffset;
+				leftMargin.right -= leftOffset;
+			}
+
+		}
+		return distance;
+	};
+
+	this.attach = function (from, interval) {
+		var distance = this.getDistanceTo(from);
+		var rightOffset = interval || 0;
+
+		var len1 = this.items.length;
+		var len2 = from.items.length;
+		var min = Math.min(len1, len2);
+		var max = Math.max(len1, len2);
+
+		for (var index = 0; index < min; index += 1) {
+			var leftMargin = this.items[len1 - 1 - index];
+			var rightMargin = from.items[len2 - 1 - index];
+
+			if (index === 0) {
+				rightOffset = (leftMargin.right + (distance || 0) + (interval || 0) - rightMargin.left);
+			}
+			leftMargin.right = rightMargin.right + rightOffset;
+
+			leftMargin.rightIndex = rightMargin.rightIndex;
+
+			this.items[max - 1 - index] = leftMargin;
+		}
+		for (index = min; index < max; index += 1) {
+			leftMargin = this.items[len1 - 1 - index];
+			if (leftMargin == null) {
+				rightMargin = from.items[len2 - 1 - index];
+
+				this.items[max - 1 - index] = new Margin(rightMargin.left + rightOffset, rightMargin.right + rightOffset,
+					rightMargin.leftIndex, rightMargin.rightIndex);
+			}
+		}
+		return distance;
+	};
+
+	this.getDistanceTo = function (to) {
+		var distance = null;
+		var baseDistance = 0;
+		var len1 = this.items.length;
+		var len2 = to.items.length;
+		var len = Math.min(len1, len2);
+		if (len > 0) {
+			for (var index = 0; index < len; index += 1) {
+				var leftMargins = this.items[len1 - 1 - index];
+				var rightMargins = to.items[len2 - 1 - index];
+
+
+				if (index === 0) {
+					baseDistance = leftMargins.right - rightMargins.left;
+					distance = baseDistance;
+				} else {
+					if (leftMargins.rightIndex < rightMargins.leftIndex) {
+						distance = Math.max(distance, leftMargins.right - rightMargins.left);
+					}
+				}
+			}
+			distance = distance - baseDistance;
+		}
+
+		return distance;
+	};
+
+	this.loop = function (thisArg, onItem) {
+		if (onItem != null) {
+			for (var index = 0, len = this.items.length; index < len; index += 1) {
+				var margin = this.items[len - 1 - index];
+				if (onItem.call(thisArg, index, margin.left, margin.right, margin.leftIndex, margin.rightIndex)) {
+					break;
+				}
+			}
+		}
+	};
+
+	this.getLeft = function (level) {
+		var maximum = this.items.length - 1;
+		if (maximum >= level) {
+			return this.items[maximum - level].left;
+		}
+	};
+};
+
+/* /algorithms/FibonacciHeap.js*/
+primitives.common.FibonacciHeap = function (isMaximum) {
+	var root = null,
+		count = 0,
+		nodes = {};
+
+	function Result(node) {
+		this.key = node.key;
+		this.priority = node.priority;
+		this.item = node.item;
+	}
+
+	function Node(key, priority, item) {
+		this.key = key;
+		this.priority = priority;
+		this.item = item;
+		this.degree = 0;
+		this.marked = false;
+
+		this.parent = null;
+		this.child = null;
+		this.left = null;
+		this.right = null;
+	}
+
+	function validate() {
+		var totalNodes = 0;
+		for (var key in nodes) {
+			if (nodes.hasOwnProperty(key)) {
+				var node = nodes[key];
+
+				totalNodes += 1;
+
+				if (node.child != null) {
+					if (!nodes.hasOwnProperty(node.child)) {
+						throw "Child does not exists";
+					}
+					var ref = nodes[node.child];
+					if (ref.parent != node.key) {
+						throw "Child references wrong parent";
+					}
+				}
+				if (node.parent != null) {
+					if (!nodes.hasOwnProperty(node.parent)) {
+						throw "Parent does not exists";
+					}
+
+				}
+				if (node.left != null) {
+					if (!nodes.hasOwnProperty(node.left)) {
+						throw "Left does not exists";
+					}
+					ref = nodes[node.left];
+					if (ref.right != node.key) {
+						throw "Left references wrong right";
+					}
+				}
+
+				if (node.right != null) {
+					if (!nodes.hasOwnProperty(node.right)) {
+						throw "Right does not exists";
+					}
+					ref = nodes[node.right];
+					if (ref.left != node.key) {
+						throw "Right references wrong left";
+					}
+				}
+			}
+		}
+		if (root == null && totalNodes > 0) {
+			throw "Orphans";
+		}
+
+		if (root != null) {
+			if (!nodes.hasOwnProperty(root)) {
+				throw "Root node does not exists";
+			}
+
+			node = nodes[root];
+			if (node.parent != null) {
+				throw "Root node has parent reference";
+			}
+
+			var children = [root];
+			var processed = {};
+			var totalChildren = 0;
+			while (children.length > 0) {
+				var newChildren = [];
+				for (var index = 0, len = children.length; index < len; index += 1) {
+					var child = nodes[children[index]];
+					while (!processed.hasOwnProperty(child.key)) {
+						processed[child.key] = true;
+						totalChildren += 1;
+						if (child.child != null) {
+							newChildren.push(child.child);
+						}
+						child = nodes[child.right];
+					}
+				}
+				children = newChildren;
+			}
+
+			if (totalNodes != totalChildren) {
+				throw "Tree has loops or orpants";
+			}
+		}
+	}
+
+	function add(key, priority, item) {
+		if (nodes.hasOwnProperty(key)) {
+			throw "Duplicate keys are not supported!";
+		}
+
+		var newNode = new Node(key, priority, item);
+		nodes[key] = newNode;
+
+		if (root == null) {
+			newNode.left = key;
+			newNode.right = key;
+			root = key;
+		} else {
+			var rootNode = nodes[root];
+			_insert(rootNode, newNode);
+			if (isMaximum ? rootNode.priority < newNode.priority : rootNode.priority > newNode.priority) {
+				root = key;
+			}
+		}
+		count += 1;
+	}
+
+	function _insert(node, newNode) {
+		var rightNode = nodes[node.right];
+		newNode.right = node.right;
+		newNode.left = node.key;
+		node.right = newNode.key;
+		rightNode.left = newNode.key;
+	}
+
+	function _exclude(node) {
+		var prevNode = nodes[node.left],
+			nextNode = nodes[node.right];
+
+		prevNode.right = nextNode.key;
+		nextNode.left = prevNode.key;
+		node.right = node.key;
+		node.left = node.key;
+	}
+
+	function getPriority(key) {
+		var result = null;
+		if (nodes.hasOwnProperty(key)) {
+			result = nodes[key].priority;
+		}
+		return result;
+	}
+
+	function heapRoot() {
+		var result = null;
+		if (root != null) {
+			result = new Result(nodes[root]);
+		}
+		return result;
+	}
+
+	function extractRoot() {
+		var result = heapRoot();
+		if (result != null) {
+			var rootNode = nodes[root],
+				nextNode = nodes[rootNode.right];
+
+			if (rootNode.child != null) {
+				var childNode = nodes[rootNode.child],
+					childNodeLeft = nodes[childNode.left];
+
+				rootNode.right = childNode.key;
+				nextNode.left = childNodeLeft.key;
+				childNode.left = rootNode.key;
+				childNodeLeft.right = nextNode.key;
+
+				_exclude(rootNode);
+				delete nodes[rootNode.key];
+
+				root = null;
+				_consolidate(childNode.key);
+			} else {
+				_exclude(rootNode);
+				delete nodes[rootNode.key];
+
+				root = null;
+				if (nextNode.key != rootNode.key) {
+					_consolidate(nextNode.key);
+				}
+			}
+			count -= 1;
+		}
+		return result;
+	}
+
+	function _consolidate(startKey) {
+		var pairs = [], pairedNode,
+			processed = {},
+			key = startKey;
+		while (!processed.hasOwnProperty(key)) {
+			var node = nodes[key],
+				nextKey = node.right;
+
+			processed[key] = true;
+			node.parent = null;
+
+			while ((pairedNode = pairs[node.degree]) != null) {
+				if (isMaximum ? node.priority > pairedNode.priority : node.priority < pairedNode.priority) {
+					_union(node, pairedNode);
+				} else {
+					_union(pairedNode, node);
+					node = pairedNode;
+				}
+				pairs[node.degree - 1] = null;
+			}
+			pairs[node.degree] = node;
+
+			if (root == null || nodes[root] == null || (isMaximum ? nodes[root].priority <= node.priority : nodes[root].priority >= node.priority)) {
+				root = node.key;
+			}
+
+			key = nextKey;
+		}
+	}
+
+	function _union(node1, node2) {
+		node1.degree += 1;
+		_exclude(node2);
+		var child = nodes[node1.child];
+		if (child != null) {
+			_insert(child, node2);
+			if (isMaximum ? child.priority < node2.priority : child.priority > node2.priority) {
+				node1.child = node2.key;
+			}
+		} else {
+			node1.child = node2.key;
+		}
+		node2.parent = node1.key;
+	}
+
+	function setPriority(key, priority) {
+		var node = nodes[key];
+		if (isMaximum ? node.priority > priority : node.priority < priority) {
+			throw "Priority increase is not supported";
+		}
+		node.priority = priority;
+
+		if (node.parent != null) {
+			var parentNode = nodes[node.parent];
+			if (isMaximum ? parentNode.priority < node.priority : parentNode.priority > node.priority) {
+				_cut(parentNode, node);
+				_cascadeCut(parentNode);
+			}
+		}
+		if (isMaximum ? nodes[root].priority < node.priority : nodes[root].priority > node.priority) {
+			root = node.key;
+		}
+	}
+
+	function _cut(parentNode, node) {
+		node.marked = false;
+		node.parent = null;
+		if (node.right == node.key) {
+			parentNode.child = null;
+		} else {
+			parentNode.child = node.right;
+			_exclude(node);
+		}
+		parentNode.degree -= 1;
+		_insert(nodes[root], node);
+	}
+
+	function _cascadeCut(node) {
+		if (node.parent != null) {
+			if (node.marked) {
+				var parentNode = nodes[node.parent];
+				_cut(parentNode, node);
+				_cascadeCut(parentNode);
+			} else {
+				node.marked = true;
+			}
+		}
+	}
+
+	function deleteKey(key) {
+		setPriority(key, isMaximum ? Infinity : -1);
+		extractRoot();
+	}
+
+	return {
+		add: add,
+		getPriority: getPriority,
+		setPriority: setPriority,
+		heapRoot: heapRoot,
+		extractRoot: extractRoot,
+		deleteKey: deleteKey,
+		validate: validate
+	};
+};
+
+
+
+/* /algorithms/getCrossingRectangles.js*/
+primitives.common.getCrossingRectangles = function (thisArg, rectangles, onCrossing) { // function onCrossing(rect1, rect2)
+	function Action(isStart, index, x, rect) {
+		this.isStart = isStart;
+		this.index = index;
+		this.x = x;
+		this.rect = rect;
+	}
+
+	function Level() {
+		this.count = 0;
+		this.rectangles = {};
+
+		this.add = function (index) {
+			this.count += 1;
+			this.rectangles[index] = true;
+		};
+
+		this.remove = function (index) {
+			this.count -= 1;
+			delete this.rectangles[index];
+			return this.count == 0;
+		};
+	}
+
+	function _findCrossedRectangles(buffer, from, to, rectIndex, rect) {
+		buffer.loopForward(this, from, function (value, level) {
+			if (value > to) {
+				return true;
+			}
+			for (var index in level.rectangles) {
+				if (level.rectangles.hasOwnProperty(index)) {
+					var key = rectIndex > index ? rectIndex + "-" + index : index + "-" + rectIndex;
+					if (!processed.hasOwnProperty(key)) {
+						processed[key] = true;
+						onCrossing.call(thisArg, rect, rectangles[index]);
+					}
+				}
+			}
+		});
+	}
+
+	if (onCrossing != null) {
+
+		// Create action items out of rectangles
+		var actions = [];
+		for (var index = 0; index < rectangles.length; index += 1) {
+			var rect = rectangles[index];
+
+			actions.push(new Action(1, index, rect.x, rect));
+			actions.push(new Action(0, index, rect.right(), rect));
+		}
+
+		actions.sort(function (a, b) {
+			if (a.x == b.x) {
+				return b.isStart - a.isStart;
+			}
+			return a.x - b.x;
+		});
+
+		/* find intersections */
+		var buffer = primitives.common.SortedList();
+		var levels = {};
+		var processed = {};
+
+		for (index = 0; index < actions.length; index += 1) {
+			var action = actions[index];
+			var actionLevels = [action.rect.y, action.rect.bottom()];
+
+			if (action.isStart == 1) {
+				// Search for intersections of the left side of the rectangle with existing horizontal segments
+				_findCrossedRectangles(buffer, actionLevels[0], actionLevels[1], action.index, action.rect);
+
+				// add rectangle's horizontal segments
+				for (var index2 = 0, len2 = actionLevels.length; index2 < len2; index2 += 1) {
+					var value = actionLevels[index2];
+					var level = levels[value];
+					if (level == null) {
+						level = new Level();
+						levels[value] = level;
+
+						buffer.add(value, level);
+					}
+					level.add(action.index);
+				}
+			} else {
+				// remove rectangle's horizontal segments
+				for (index2 = 0, len2 = actionLevels.length; index2 < len2; index2 += 1) {
+					value = actionLevels[index2];
+					level = levels[value];
+					if (level.remove(action.index)) {
+						delete levels[value];
+						buffer.remove(value);
+					}
+				}
+
+				// Search for intersections of the right side of rectangle with exisitng horizontal segments
+				_findCrossedRectangles(buffer, actionLevels[0], actionLevels[1], action.index, action.rect);
+			}
+		}
+	}
+};
+
+
+
+/* /algorithms/getFamilyUnits.js*/
+primitives.common.getFamilyUnits = function (family) {
+	var familyUnits = [],
+		familyUnitByParent = {},
+		index,
+		len;
+
+	function FamilySiblings() {
+		this.fromIndex = 0;
+		this.toIndex = 0;
+		this.items = [];
+		this.hash = {};
+	}
+
+	function FamilyUnit(id) {
+		this.id = id;
+		this.parents = new FamilySiblings();
+		this.children = new FamilySiblings();
+
+		this.loopSiblings = function (thisArg, itemid, onItem) {
+			this._loop(thisArg, this.parents.hash.hasOwnProperty(itemid) ? this.parents.items : this.children.items, onItem);
+		};
+
+		this.loopNonSiblings = function (thisArg, itemid, onItem) {
+			this._loop(thisArg, !this.parents.hash.hasOwnProperty(itemid) ? this.parents.items : this.children.items, onItem);
+		};
+
+		this.loop = function (thisArg, onItem) {
+			this._loop(thisArg, this.parents.items, onItem);
+			this._loop(thisArg, this.children.items, onItem);
+		};
+
+		this._loop = function (thisArg, items, onItem) {
+			if (onItem != null) {
+				for (var index = 0, len = items.length; index < len; index += 1) {
+					var sibling = items[index];
+					onItem.call(thisArg, sibling);
+				}
+			}
+		};
+
+		this.addParent = function (itemid) {
+			this._add(itemid, this.parents);
+		};
+
+		this.addChild = function (itemid) {
+			this._add(itemid, this.children);
+		};
+
+		this._add = function (itemid, siblings) {
+			if (!siblings.hash.hasOwnProperty(itemid)) {
+				siblings.items.push(itemid);
+				siblings.hash[itemid] = true;
+			}
+		};
+	}
+
+	index = 0;
+	family.loop(this, function (itemid, item) {
+		var childrenCount = family.countChildren(itemid);
+		if (childrenCount > 0) {
+			if (!familyUnitByParent.hasOwnProperty(itemid)) {
+				var familyUnit = new FamilyUnit(index);
+				index += 1;
+				familyUnit.addParent(itemid);
+				family.loopChildren(this, itemid, function (childid, child) {
+					familyUnit.addChild(childid);
+					if (childrenCount == 1) {
+						family.loopParents(this, childid, function (parentid) {
+							familyUnit.addParent(parentid);
+							familyUnitByParent[parentid] = familyUnit;
+							return family.SKIP;
+						});
+					}
+					return family.SKIP;
+				});
+				familyUnits.push(familyUnit);
+				familyUnitByParent[itemid] = familyUnit;
+			}
+		}
+	});
+
+	var familyUnitByItemId = {};
+	for (index = 0, len = familyUnits.length; index < len; index += 1) {
+		var familyUnit = familyUnits[index];
+		familyUnit.loop(this, function (itemid) {
+			if (!familyUnitByItemId.hasOwnProperty(itemid)) {
+				familyUnitByItemId[itemid] = [familyUnit];
+			} else {
+				familyUnitByItemId[itemid].push(familyUnit);
+			}
+		});
+	}
+
+	return familyUnitByItemId;
+};
+
+/* /algorithms/getLiniarBreaks.js*/
+primitives.common.getLiniarBreaks = function (values) {
+	var _leftTotal = [],
+		_rightTotal = [],
+		_len = values.length;
+
+	// Sum up values from left to right
+	var total = 0;
+	for(var index = 0; index < _len; index += 1) {
+		total += values[index];
+		_leftTotal[index] = total;
+	}
+
+	function getLinearDeviation(leftIndex, rightIndex) {
+		var result = 0;
+
+		var avg = (_leftTotal[rightIndex] - _leftTotal[leftIndex] + values[leftIndex]) / (rightIndex - leftIndex + 1);
+
+		var median = primitives.common.binarySearch(values, function (item) {
+			return avg - item;
+		}, leftIndex, rightIndex);
+
+		if (median.item <= avg) {
+			result += (avg * (median.index + 1 - leftIndex) - (_leftTotal[median.index] - _leftTotal[leftIndex] + values[leftIndex]));
+			result += (_leftTotal[rightIndex] - _leftTotal[median.index] - avg * (rightIndex - median.index));
+		} else {
+			result += (avg * (median.index - leftIndex) - (_leftTotal[median.index] - _leftTotal[leftIndex] - values[median.index] + values[leftIndex]));
+			result += (_leftTotal[rightIndex] - _leftTotal[median.index] + values[median.index] - avg * (rightIndex - median.index + 1));
+		}
+
+		return result;
+	}
+
+	function getScore(leftIndex, rightIndex) {
+		var score = 0;
+
+		score += getLinearDeviation(0, leftIndex);
+		if (rightIndex > leftIndex + 1) {
+			score += getLinearDeviation(leftIndex + 1, rightIndex - 1);
+		}
+		score += getLinearDeviation(rightIndex, _len - 1);
+
+		return score;
+	}
+
+	var leftIndex = 0,
+		rightIndex = _len - 1;
+
+	var score = getScore(leftIndex, rightIndex);
+
+	while (leftIndex < rightIndex + 1) {
+		var leftScore = getScore(leftIndex + 1, rightIndex);
+		var rightScore = getScore(leftIndex, rightIndex - 1);
+
+		if (leftScore < rightScore) {
+			if (leftScore >= score) {
+				break;
+			}
+			leftIndex += 1;
+			score = leftScore;
+		} else {
+			if (rightScore >= score) {
+				break;
+			}
+			rightIndex -= 1;
+			score = rightScore;
+		}
+	}
+
+	return [leftIndex, rightIndex - 1, _len - 1];
+};
+
+
+
+/* /algorithms/getMergedRectangles.js*/
+primitives.common.getMergedRectangles = function (thisArg, items, onItem) {
+	var index, len,
+		index2, len2,
+		point;
+
+	items.sort(function (a, b) {
+		if (a.x == b.x) {
+			return a.y - b.y;
+		}
+		return a.x - b.x;
+	});
+
+	var points = [];
+	var pointsHash = {};
+
+	for (index = 0, len = items.length; index < len; index += 1) {
+		var item = items[index];
+		var xs = [item.x, item.right()];
+		for (var k = 0; k < xs.length; k += 1) {
+			var x = xs[k];
+			point = pointsHash[x];
+			if (point == null) {
+				point = {
+					x: x,
+					add: [],
+					remove: []
+				};
+				pointsHash[x] = point;
+				points.push(point);
+			}
+			if (x == item.x) {
+				point.add.push(index);
+			} else {
+				point.remove.push(index);
+			}
+		}
+	}
+
+	points.sort(function (a, b) {
+		return a.x - b.x;
+	});
+
+	function Range(start, end) {
+		this.start = start;
+		this.startHead = null;
+
+		this.end = end;
+		this.endHead = null;
+
+		this.overlap = function (range) {
+			return !(this.end < range.start || this.start > range.end);
+		};
+	}
+
+	function Stripe(x, ranges) {
+		this.x = x;
+		this.ranges = ranges;
+	}
+
+	var active = {};
+	var stripes = [];
+	stripes.push(new Stripe(null, []));
+
+	for (index = 0, len = points.length; index < len; index += 1) {
+		point = points[index];
+
+		for (index2 = 0, len2 = point.add.length; index2 < len2; index2 += 1) {
+			active[point.add[index2]] = true;
+		}
+		for (index2 = 0, len2 = point.remove.length; index2 < len2; index2 += 1) {
+			delete active[point.remove[index2]];
+		}
+
+		var activeRects = [];
+		for (var key in active) {
+			if (active.hasOwnProperty(key)) {
+				activeRects.push(items[key]);
+			}
+		}
+
+		activeRects.sort(function (a, b) {
+			return a.y - b.y;
+		});
+
+		var ranges = [];
+
+		var start = null;
+		var end = null;
+
+		for (index2 = 0, len2 = activeRects.length; index2 < len2; index2 += 1) {
+			var activeRect = activeRects[index2];
+
+			if (start == null) {
+				start = activeRect.y;
+				end = activeRect.bottom();
+			} else {
+				if (end < activeRect.y) {
+					ranges.push(new Range(start, end));
+					start = activeRect.y;
+					end = activeRect.bottom();
+				} else {
+					end = Math.max(end, activeRect.bottom());
+				}
+			}
+		}
+		if (start != null) {
+			ranges.push(new Range(start, end));
+		}
+
+		stripes.push(new Stripe(point.x, ranges));
+	}
+
+	var lists = [];
+	var heads = {};
+	var counter = 1;
+
+	function Head(isHead, list) {
+		this.isHead = isHead;
+		this.list = list;
+
+		if (!heads.hasOwnProperty(list)) {
+			heads[list] = [];
+		}
+		heads[list].push(this);
+
+		this.add = function (segment) {
+			if (!segment.from.equalTo(segment.to)) {
+				if (this.isHead) {
+					lists[this.list].add(counter, segment);
+					counter += 1;
+				} else {
+					lists[this.list].unshift(counter, segment);
+					counter += 1;
+				}
+			}
+		};
+
+		this.getTail = function () {
+			return new Head(!this.isHead, this.list);
+		};
+
+		this.attach = function (head) {
+			if (this.list != head.list) {
+				lists[this.list].attach(lists[head.list]);
+
+				var refs = heads[head.list];
+				delete heads[head.list];
+				if (refs != null) {
+					for (var index = 0, len = refs.length; index < len; index += 1) {
+						var ref = refs[index];
+						if (ref != head) {
+							ref.list = this.list;
+							heads[this.list].push(ref);
+						}
+					}
+				}
+			}
+		};
+	}
+
+	function createHead(isHead) {
+		lists.push(new primitives.common.LinkedHashItems());
+		return new Head(isHead, lists.length - 1);
+	}
+
+	for (index = 1, len = stripes.length; index < len; index += 1) {
+		var prev = stripes[index - 1];
+		var curr = stripes[index];
+
+		var pi = 0, ci = 0;
+		while (pi < prev.ranges.length || ci < curr.ranges.length) {
+			var pr = pi < prev.ranges.length ? prev.ranges[pi] : null;
+			var cr = ci < curr.ranges.length ? curr.ranges[ci] : null;
+
+			if (cr == null) {
+				// close pr
+				points = [
+					new primitives.common.Point(prev.x, pr.end),
+					new primitives.common.Point(curr.x, pr.end),
+					new primitives.common.Point(curr.x, pr.start),
+					new primitives.common.Point(prev.x, pr.start)
+				];
+				for (var pindex = 1; pindex < points.length; pindex += 1) {
+					pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
+				}
+				pr.endHead.attach(pr.startHead);
+				pi += 1;
+				continue;
+			}
+
+			if (pr == null) {
+				// open cr
+				cr.endHead = createHead(true);
+				cr.endHead.add(new primitives.common.Vector(new primitives.common.Point(curr.x, cr.start), new primitives.common.Point(curr.x, cr.end)));
+				cr.startHead = cr.endHead.getTail();
+				ci += 1;
+				continue;
+			}
+
+			if (!cr.overlap(pr)) {
+				if (pr.start < cr.start) {
+					// close pr
+					points = [
+						new primitives.common.Point(prev.x, pr.end),
+						new primitives.common.Point(curr.x, pr.end),
+						new primitives.common.Point(curr.x, pr.start),
+						new primitives.common.Point(prev.x, pr.start)
+					];
+					for (pindex = 1; pindex < points.length; pindex += 1) {
+						pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
+					}
+					pr.endHead.attach(pr.startHead);
+					pi += 1;
+					continue;
+				} else {
+					// open cr
+					cr.endHead = createHead(true);
+					cr.endHead.add(new primitives.common.Vector(new primitives.common.Point(curr.x, cr.start), new primitives.common.Point(curr.x, cr.end)));
+					cr.startHead = cr.endHead.getTail();
+					ci += 1;
+					continue;
+				}
+			} else {
+				// ovelaps
+				// extend pr.start to cr.start
+				points = [
+					new primitives.common.Point(prev.x, pr.start),
+					new primitives.common.Point(curr.x, pr.start),
+					new primitives.common.Point(curr.x, cr.start)
+				];
+				for (pindex = 1; pindex < points.length; pindex += 1) {
+					pr.startHead.add(new primitives.common.Vector(points[pindex], points[pindex - 1]));
+				}
+				cr.startHead = pr.startHead;
+
+				var loop = true;
+				while (loop) {
+					loop = false;
+
+					if (pr.end > cr.end) {
+						var nextcr = (ci + 1) < curr.ranges.length ? curr.ranges[ci + 1] : null;
+						if (nextcr != null && nextcr.overlap(pr)) {
+							// open loop cr.end to nextcr.start
+							var p1 = new primitives.common.Point(curr.x, nextcr.start);
+							var p2 = new primitives.common.Point(curr.x, cr.end);
+							cr.endHead = createHead(true);
+							cr.endHead.add(new primitives.common.Vector(p1, p2));
+							nextcr.startHead = cr.endHead.getTail();
+
+							ci += 1;
+							cr = nextcr;
+							loop = true;
+						}
+					} else {
+						var nextpr = (pi + 1) < prev.ranges.length ? prev.ranges[pi + 1] : null;
+						if (nextpr != null && nextpr.overlap(cr)) {
+							// close loop pr.end to nextpr.start
+							points = [
+								new primitives.common.Point(prev.x, pr.end),
+								new primitives.common.Point(curr.x, pr.end),
+								new primitives.common.Point(curr.x, nextpr.start),
+								new primitives.common.Point(prev.x, nextpr.start)
+							];
+							for (pindex = 1; pindex < points.length; pindex += 1) {
+								pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
+							}
+							pr.endHead.attach(nextpr.startHead);
+							pi += 1;
+							pr = nextpr;
+							loop = true;
+						}
+					}
+				}
+				// extend pr.end to cr.end
+				points = [
+					new primitives.common.Point(prev.x, pr.end),
+					new primitives.common.Point(curr.x, pr.end),
+					new primitives.common.Point(curr.x, cr.end)
+				];
+				for (pindex = 1; pindex < points.length; pindex += 1) {
+					pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
+				}
+				cr.endHead = pr.endHead;
+				pi += 1;
+				ci += 1;
+			}
+		}
+	}
+	if (onItem != null) {
+		for (index = 0; index < lists.length; index += 1) {
+			if (heads.hasOwnProperty(index)) {
+				var list = lists[index];
+				points = [];
+				list.iterate(function (segment, key) {
+					if (points.length == 0) {
+						points.push(segment.from);
+						points.push(segment.to);
+					} else {
+						points.push(segment.to);
+					}
+				});
+				onItem.call(thisArg, points);
+			}
+		}
+	}
+};
+
+
 /* /algorithms/getMinimumCrossingRows.js*/
 primitives.common.getMinimumCrossingRows = function (thisArg, rectangles, onItem) { // function onItem(row)
 	var from = null;
@@ -28553,6 +26196,2407 @@ primitives.common.getMinimumCrossingRows = function (thisArg, rectangles, onItem
 	}
 };
 
+
+
+/* /algorithms/graph.js*/
+primitives.common.graph = function () {
+	var _edges = {},
+		MAXIMUMTOTALWEIGHT = 1,
+		MINIMUMWEIGHT = 2;
+
+	function addEdge(from, to, edge) {
+		if ((_edges[from] == null || _edges[from][to] == null)  && edge != null) {
+
+			if(_edges[from] == null) {
+				_edges[from] = {};
+			}
+			_edges[from][to] = edge;
+
+			if (_edges[to] == null) {
+				_edges[to] = {};
+			}
+			_edges[to][from] = edge;
+		}
+	}
+
+	function edge(from, to) {
+		var result = null;
+		if (_edges[from] != null && _edges[from][to]) {
+			result = _edges[from][to];
+		}
+		return result;
+	}
+
+	function hasNode(from) {
+		return _edges.hasOwnProperty(from);
+	}
+
+	function loopNodeEdges(thisArg, itemid, onEdge) { // onEdge = function(to, edge) {}
+		var neighbours, neighbourKey;
+		if (onEdge != null) {
+			neighbours = _edges[itemid];
+			if (neighbours != null) {
+				for (neighbourKey in neighbours) {
+					if (neighbours.hasOwnProperty(neighbourKey)) {
+						onEdge.call(thisArg, neighbourKey, neighbours[neighbourKey]);
+					}
+				}
+			}
+		}
+	}
+
+	function loopNodes(thisArg, startNode, onItem) { // onItem = function(itemid) {}
+		var processed = {};
+		if (startNode == null) {
+			for (startNode in _edges) {
+				if (_edges.hasOwnProperty(startNode)) {
+					if (!processed.hasOwnProperty[startNode]) {
+						_loopNodes(this, startNode, processed, onItem);
+					}
+				}
+			}
+		} else {
+			_loopNodes(this, startNode, processed, onItem);
+		}
+	}
+
+	function _loopNodes(thisArg, startNode, processed, onItem) { // onItem = function(itemid) {}
+		/* Graph */
+		var margin = [],
+			marginKey,
+			newMargin,
+			index, len,
+			neighbours, neighbourKey;
+
+		margin.push(startNode);
+		processed[startNode] = true;
+		if (onItem != null) {
+			while (margin.length > 0) {
+				newMargin = [];
+
+				/* itterate neighbours of every node on margin */
+				for (index = 0, len = margin.length; index < len; index += 1) {
+					marginKey = margin[index];
+
+					onItem.call(thisArg, marginKey);
+
+					neighbours = _edges[marginKey];
+					for (neighbourKey in neighbours) {
+						if (neighbours.hasOwnProperty(neighbourKey) && !processed.hasOwnProperty(neighbourKey)) {
+							processed[neighbourKey] = true;
+							newMargin.push(neighbourKey);
+						}
+					}
+				}
+				margin = newMargin;
+			}
+		}
+	}
+
+	/*
+		Function: primitives.common.graph.getSpanningTree
+			Get maximum spanning tree. Graph may have disconnected sub graphs, so start node is nessasary.
+	
+		Parameters:
+		startNode - The node to start searching for maximum spanning tree. Graph is not nessasary connected
+		getWeightFunc - Call back function to get weight of edge. function(edge)
+
+		Returns: 
+			primitives.common.tree structure
+	*/
+	function getSpanningTree(startNode, getWeightFunc) {
+		var result = primitives.common.tree(),
+			margin = primitives.common.FibonacciHeap(true),
+			marginNode,
+			parents = {}, /* if parent for item is set then it was laready visited */
+			neighbours, neighbourKey, neighbourWeight, currentWeight;
+
+		/* add start node to margin */
+		margin.add(startNode, 0, null /*parent of root node is null*/);
+		parents[startNode] = null;
+
+		/* search graph */
+		while ((marginNode = margin.extractRoot()) != null) {
+
+			/* itterate neighbours of every node on margin */
+			neighbours = _edges[marginNode.key];
+
+			for (neighbourKey in neighbours) {
+				if (neighbours.hasOwnProperty(neighbourKey) && !result.node(neighbourKey)) {
+					neighbourWeight = getWeightFunc != null ? getWeightFunc(neighbours[neighbourKey]) : neighbours[neighbourKey];
+
+					currentWeight = margin.getPriority(neighbourKey);
+					if (currentWeight == null) {
+						margin.add(neighbourKey, neighbourWeight, null);
+						parents[neighbourKey] = marginNode.key.toString();
+					} else {
+						if (currentWeight <= neighbourWeight) {
+							/* improve node distance */
+							margin.setPriority(neighbourKey, neighbourWeight);
+							parents[neighbourKey] = marginNode.key.toString();
+						}
+					}
+				}
+			}
+
+			/* add next margin item to resul tree */
+			result.add(parents[marginNode.key], marginNode.key.toString(), {});
+		}
+
+		return result;
+	}
+
+	function _findStartNode(thisArg, onEdgeWeight) {
+		var result = null,
+			fromItem, toItems, toItem,
+			weight = 0,
+			maxWeight = null;
+		
+		for (fromItem in _edges) {
+			if (_edges.hasOwnProperty(fromItem)) {
+				toItems = _edges[fromItem];
+
+				weight = 0;
+				for (toItem in toItems) {
+					if (toItems.hasOwnProperty(toItem)) {
+						weight += onEdgeWeight.call(thisArg, toItems[toItem], fromItem, toItem);
+					}
+				}
+				if (weight > maxWeight || maxWeight == null) {
+					result = fromItem;
+					maxWeight = weight;
+				}
+			}
+		}
+		return result;
+	}
+
+	/*
+		Function: primitives.common.graph.getTotalWeightGrowthSequence
+			Get graph growth sequence. The sequence of graph traversing order.
+	
+		Parameters:
+			thisArg - call back functions context
+			onEdgeWeight - Call back function to weight edge of graph. function(edge)
+			onItem - Call back function on next item found
+	*/
+	function getTotalWeightGrowthSequence(thisArg, onEdgeWeight, onItem) {
+		var startNode = _findStartNode(thisArg, onEdgeWeight);
+
+		_getGrowthSequence(thisArg, startNode, onEdgeWeight, onItem, MAXIMUMTOTALWEIGHT);
+	}
+
+	/*
+	Function: primitives.common.graph.getMinimumWeightGrowthSequence
+		Get graph growth sequence. The sequence of graph traversing order.
+
+	Parameters:
+		thisArg - call back functions context
+		startNode - The node to start searching for grows sequence.
+		onEdgeWeight - Call back function to weight edge of graph. function(edge)
+		onItem - Call back function on next item found
+	*/
+	function getMinimumWeightGrowthSequence(thisArg, startNode, onEdgeWeight, onItem) {
+		_getGrowthSequence(thisArg, startNode, onEdgeWeight, onItem, MINIMUMWEIGHT);
+	}
+
+	function _getGrowthSequence(thisArg, startNode, onEdgeWeight, onItem, growsMode) {
+		var margin = {}, marginKey,
+			itemsToRemove = [], /* if margin item has no neighbours to expand we remove it from margin*/
+			hasNeighbours,
+			processed = {}, /* if item is set then it was already visited */
+			marginLength = 0, /* curent margin length */
+			nextMarginKey,
+			nextMarginWeight,
+			bestWeight,
+			neighbours, neighbourKey, neighbourWeight,
+			index, len;
+
+		if (onEdgeWeight != null && onItem != null) {
+			if (startNode == null) {
+				startNode = _findStartNode(thisArg, onEdgeWeight);
+			}
+
+			if (startNode != null) {
+
+				onItem.call(thisArg, startNode);
+
+				/* add start node to margin */
+				margin[startNode] = true;
+				marginLength += 1;
+
+				/* add startNode to result tree */
+				processed[startNode] = null;
+
+				/* search graph */
+				while (marginLength > 0) {
+					itemsToRemove = [];
+					nextMarginKey = null;
+					nextMarginWeight = null;
+					bestWeight = {};
+					/* itterate neighbours of every node on margin */
+					for (marginKey in margin) {
+						if (margin.hasOwnProperty(marginKey)) {
+							neighbours = _edges[marginKey];
+							hasNeighbours = false;
+
+							for (neighbourKey in neighbours) {
+								if (neighbours.hasOwnProperty(neighbourKey) && !processed.hasOwnProperty(neighbourKey)) {
+									neighbourWeight = onEdgeWeight.call(thisArg, neighbours[neighbourKey], marginKey, neighbourKey);
+									hasNeighbours = true;
+
+									switch (growsMode) {
+										case MAXIMUMTOTALWEIGHT:
+											if (bestWeight[neighbourKey] == null) {
+												bestWeight[neighbourKey] = 0;
+											}
+											bestWeight[neighbourKey] += neighbourWeight;
+
+											if (!nextMarginWeight || bestWeight[neighbourKey] > nextMarginWeight) {
+												nextMarginKey = neighbourKey;
+												nextMarginWeight = bestWeight[neighbourKey];
+											}
+											break;
+										case MINIMUMWEIGHT:
+											if (bestWeight[neighbourKey] == null) {
+												bestWeight[neighbourKey] = neighbourWeight;
+											} else {
+												bestWeight[neighbourKey] = Math.min(bestWeight[neighbourKey], neighbourWeight);
+											}
+
+											if (!nextMarginWeight || bestWeight[neighbourKey] < nextMarginWeight) {
+												nextMarginKey = neighbourKey;
+												nextMarginWeight = bestWeight[neighbourKey];
+											}
+											break;
+									}
+								}
+							}
+
+							if (!hasNeighbours) {
+								itemsToRemove.push(marginKey);
+							}
+						}
+					}
+
+					if (nextMarginKey == null) {
+						/* no items to expand to exit*/
+						break;
+					} else {
+						margin[nextMarginKey] = true;
+						marginLength += 1;
+						processed[nextMarginKey] = true;
+
+						/* add next margin item to result sequence */
+						onItem.call(thisArg, nextMarginKey);
+					}
+
+					for (index = 0, len = itemsToRemove.length; index < len; index += 1) {
+						/* delete visited node from margin */
+						delete margin[itemsToRemove[index]];
+						marginLength -= 1;
+					}
+				}
+			}
+		}
+	}
+
+	/*
+		Function: primitives.common.graph.getShortestPath
+		Get shortest path between two nodes in graph. Start and end nodes supposed to have connection path. All connections have the same weight.
+	
+		Parameters:
+		startNode - The node to start.
+		endNode - The end node.
+		getWeightFunc - Call back function to weight edge of graph. function(edge, fromItem, toItem)
+	
+		Returns: 
+			Array containing nodes names of connection path.
+	*/
+	function getShortestPath(thisArg, startNode, endNodes, getWeightFunc, onPathFound) { // getWeightFunc = function(edge, fromItem, toItem), onPathFound = function(path, to)
+		var margin = primitives.common.FibonacciHeap(false),
+			distance = {},
+			breadcramps = {},
+			bestNodeOnMargin,
+			key,
+			children,
+			newDistance,
+			path,
+			currentNode,
+			endNodesHash = {},
+			index, len, 
+			endsCount = 0, endsFound = 0;
+
+		/* create hash table of end nodes to find */
+		for (index = 0, len = endNodes.length; index < len; index += 1) {
+			key = endNodes[index];
+
+			if (!endNodesHash.hasOwnProperty(key)) {
+				endsCount += 1;
+				endNodesHash[key] = true;
+			}
+		}
+
+		/* add start node to margin */
+		margin.add(startNode, 0, null);
+		breadcramps[startNode] = null;
+
+		/* search graph */
+		while ((bestNodeOnMargin = margin.extractRoot()) != null) {
+			/* itterate neighbours of selected node on margin */
+			children = _edges[bestNodeOnMargin.key];
+			for (key in children) {
+				if (children.hasOwnProperty(key)) {
+					newDistance = bestNodeOnMargin.priority + (getWeightFunc != null ? getWeightFunc.call(thisArg, children[key], bestNodeOnMargin, key) : 1);
+					distance = margin.getPriority(key);
+					if (distance != null) {
+						if (distance > newDistance) {
+							margin.setPriority(key, newDistance);
+							breadcramps[key] = bestNodeOnMargin.key;
+						}
+					} else {
+						if (!breadcramps.hasOwnProperty(key)) {
+							margin.add(key, newDistance, null);
+							breadcramps[key] = bestNodeOnMargin.key;
+						}
+					}
+				}
+			}
+
+			if (endNodesHash.hasOwnProperty(bestNodeOnMargin.key)) {
+				/* trace path */
+				path = [];
+				currentNode = bestNodeOnMargin.key;
+				while (currentNode != null) {
+					path.push(currentNode);
+					currentNode = breadcramps[currentNode];
+				}
+				onPathFound.call(thisArg, path, bestNodeOnMargin.key);
+
+				endsFound += 1;
+				if (endsFound >= endsCount) {
+					break;
+				}
+			}
+		}
+	}
+
+	return {
+		addEdge: addEdge,
+		edge: edge,
+		hasNode: hasNode,
+		loopNodes: loopNodes,
+		loopNodeEdges: loopNodeEdges,
+		getSpanningTree: getSpanningTree,
+		getTotalWeightGrowthSequence: getTotalWeightGrowthSequence,
+		getMinimumWeightGrowthSequence: getMinimumWeightGrowthSequence,
+		getShortestPath: getShortestPath
+	};
+};
+
+/* /algorithms/LCA.js*/
+primitives.common.LCA = function (tree) {
+	var _eulerSequence = [];
+	var _levels = [];
+	var _fai = {};
+	var _rmq;
+	
+
+	preprocess();
+
+	function preprocess() {
+		var counter = 0;
+		tree.loopEulerWalk(this, function (nodeid, node, level) {
+			_eulerSequence.push(nodeid);
+			_levels.push(level);
+
+			if (!_fai.hasOwnProperty(nodeid)) {
+				_fai[nodeid] = counter;
+			}
+			counter += 1;
+		});
+		_rmq = primitives.common.RMQ(_levels);
+	}
+
+	function getLowestCommonAncestor(from, to) {
+		var fromIndex = _fai[from],
+			toIndex = _fai[to],
+			index;
+
+		if (fromIndex < toIndex) {
+			index = _rmq.getRangeMinimumIndex(fromIndex, toIndex);
+		} else {
+			index = _rmq.getRangeMinimumIndex(toIndex, fromIndex);
+		}
+
+		return _eulerSequence[index];
+	}
+
+	return {
+		getLowestCommonAncestor: getLowestCommonAncestor
+	};
+};
+
+/* /algorithms/LinkedHashItems.js*/
+primitives.common.LinkedHashItems = function () {
+	var segmentsHash = {},
+	nextKeys = {},
+	prevKeys = {},
+	startSegmentKey = null,
+	endSegmentKey = null;
+
+	function add(key, item) {
+		if (segmentsHash.hasOwnProperty(key)) {
+			throw "Duplicate segments are not supported!";
+		}
+		segmentsHash[key] = item;
+		nextKeys[key] = null;
+		if (endSegmentKey == null) {
+			startSegmentKey = key;
+			prevKeys[key] = null;
+		} else {
+			nextKeys[endSegmentKey] = key;
+			prevKeys[key] = endSegmentKey;
+		}
+		endSegmentKey = key;
+	}
+
+	function isEmpty() {
+		return startSegmentKey == null;
+	}
+
+	function item(key) {
+		return segmentsHash[key];
+	}
+
+	function nextKey(key) {
+		return nextKeys[key];
+	}
+
+	function prevKey(key) {
+		return prevKeys[key];
+	}
+
+	function  startKey() {
+		return startSegmentKey;
+	}
+
+	function endKey() {
+		return endSegmentKey;
+	}
+
+	function unshift(key, item) {
+		if (segmentsHash.hasOwnProperty(key)) {
+			throw "Duplicate segments are not supported!";
+		}
+		segmentsHash[key] = item;
+		prevKeys[key] = null;
+		if (startSegmentKey == null) {
+			endSegmentKey = key;
+			nextKeys[key] = null;
+		} else {
+			prevKeys[startSegmentKey] = key;
+			nextKeys[key] = startSegmentKey;
+		}
+		startSegmentKey = key;
+	}
+
+	function insertAfter(afterKey, key, item) {
+		if (segmentsHash.hasOwnProperty(key)) {
+			throw "Duplicate segments are not supported!";
+		}
+
+		if (afterKey == null) {
+			unshift(key, item);
+		} else {
+			var nextKey = nextKeys[afterKey];
+			if (nextKey == null) {
+				add(key, item);
+			} else {
+				segmentsHash[key] = item;
+				nextKeys[afterKey] = key;
+				nextKeys[key] = nextKey;
+				prevKeys[nextKey] = key;
+				prevKeys[key] = afterKey;
+			}
+		}
+	}
+
+	function remove(key) {
+		var prevKey = prevKeys[key],
+			nextKey = nextKeys[key];
+
+		if (prevKey != null) {
+			nextKeys[prevKey] = nextKey;
+		} else {
+			startSegmentKey = nextKey;
+		}
+
+		if (nextKey != null) {
+			prevKeys[nextKey] = prevKey;
+		} else {
+			endSegmentKey = prevKey;
+		}
+
+		delete segmentsHash[key];
+		delete nextKeys[key];
+		delete prevKeys[key];
+	}
+
+	function empty() {
+		segmentsHash = {};
+		nextKeys = {};
+		prevKeys = {};
+		startSegmentKey = null;
+		endSegmentKey = null;
+	}
+
+	function _iterate(forward, onItem, startKey, endKey) {
+		var key = startKey,
+			segment;
+
+		if (key == null) {
+			key = forward ? startSegmentKey : endSegmentKey;
+		}
+
+		if (onItem != null) {
+			while (key != null) {
+				segment = segmentsHash[key];
+				if (segment != null) {
+					if (onItem(segment, key)) {
+						return;
+					}
+				}
+
+				if (key == endKey) {
+					key = null;
+				} else {
+					key = forward ? nextKeys[key] : prevKeys[key];
+				}
+			}
+		}
+	}
+
+	function attach(list) {
+		list.iterate(function (segment, key) {
+			add(key, segment);
+		});
+	}
+
+	function iterate(onItem, startKey, endKey) {
+		_iterate(true, onItem, startKey, endKey);
+	}
+
+	function iterateBack(onItem, startKey, endKey) {
+		_iterate(false, onItem, startKey, endKey);
+	}
+
+	function validate(info) {
+		var key, prevKey, nextKey;
+		for (key in segmentsHash) {
+			if (segmentsHash.hasOwnProperty(key)) {
+				if (!nextKeys.hasOwnProperty(key) || !prevKeys.hasOwnProperty(key)) {
+					if (info != null) {
+						info.message = "Orphant key found!";
+					}
+					return false;
+				}
+			}
+		}
+		if (!segmentsHash.hasOwnProperty(startSegmentKey) || !segmentsHash.hasOwnProperty(endSegmentKey)) {
+			if (info != null) {
+				info.message = "Start or end values are missing!";
+			}
+			return false;
+		}
+		for (key in nextKeys) {
+			if (nextKeys.hasOwnProperty(key)) {
+				if (!segmentsHash.hasOwnProperty(key) || !prevKeys.hasOwnProperty(key)) {
+					if (info != null) {
+						info.message = "Orphant key found!";
+					}
+					return false;
+				}
+				nextKey = nextKeys[key];
+				if (nextKey && !nextKeys.hasOwnProperty(nextKey)) {
+					if (info != null) {
+						info.message = "Next key not found!";
+					}
+					return false;
+				}
+			}
+		}
+		for (key in prevKeys) {
+			if (prevKeys.hasOwnProperty(key)) {
+				if (!segmentsHash.hasOwnProperty(key) || !nextKeys.hasOwnProperty(key)) {
+					if (info != null) {
+						info.message = "Orphant key found!";
+					}
+					return false;
+				}
+				prevKey = prevKeys[key];
+				if (prevKey && !prevKeys.hasOwnProperty(prevKey)) {
+					if (info != null) {
+						info.message = "Prev key not found!";
+					}
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	function toArray() {
+		var result = [];
+
+		iterate(function (item) {
+			result.push(item);
+		});
+
+		return result;
+	}
+
+	return {
+		add: add,
+		item: item,
+		nextKey: nextKey,
+		prevKey: prevKey,
+		startKey: startKey,
+		endKey: endKey,
+		unshift:unshift,
+		insertAfter:insertAfter,
+		remove: remove,
+		isEmpty: isEmpty,
+		attach: attach,
+
+		iterate: iterate,
+		iterateBack: iterateBack,
+		empty: empty,
+		toArray: toArray,
+		validate: validate
+	};
+};
+
+
+
+/* /algorithms/mergeSort.js*/
+/*
+	Function: primitives.common.mergeSort
+		Merges array of sorted arrays into one using call back function for comparison.
+	
+	Parameters:
+		arrays - Array of sorted arrays of objects.
+		getItemWeight - Call back function used to get items weight. 
+		ignoreDuplicates - return distinct items only.
+
+	Returns: 
+		Array of merged sorted items. 
+*/
+primitives.common.mergeSort = function (arrays, getItemWeight, ignoreDuplicates) {
+	var result = null,
+		firstArray, secondArray, mergedArray, arrayIndex,
+		firstIndex, secondIndex, firstLen, secondLen, firstItem, secondItem,
+		firstItemWeight, secondItemWeight,
+		currentValue;
+
+	switch (arrays.length) {
+		case 0:
+			result = [];
+			break;
+		default:
+			firstArray = [];
+			for (arrayIndex = 0; arrayIndex < arrays.length; arrayIndex += 1) {
+				secondArray = arrays[arrayIndex];
+				mergedArray = [];
+
+				firstLen = firstArray.length;
+				secondLen = secondArray.length;
+
+				firstIndex = 0;
+				secondIndex = 0;
+
+				firstItem = null;
+				firstItemWeight = null;
+				secondItem = null;
+				secondItemWeight = null;
+
+				if (firstLen > 0) {
+					firstItem = firstArray[firstIndex];
+					firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
+				}
+
+				if (secondLen > 0) {
+					secondItem = secondArray[secondIndex];
+					secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
+				}
+				currentValue = null;
+				while (firstIndex < firstLen || secondIndex < secondLen) {
+
+					if (firstIndex >= firstLen) {
+						if (!ignoreDuplicates || currentValue != secondItem) {
+							mergedArray.push(secondItem);
+							currentValue = secondItem;
+						}
+						secondIndex += 1;
+
+						
+						if (secondIndex < secondLen) {
+							secondItem = secondArray[secondIndex];
+							secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
+						}
+					} else {
+						if (secondIndex >= secondLen) {
+							if (!ignoreDuplicates || currentValue != firstItem) {
+								mergedArray.push(firstItem);
+								currentValue = firstItem;
+							}
+							firstIndex += 1;
+
+							
+							if (firstIndex < firstLen) {
+								firstItem = firstArray[firstIndex];
+								firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
+							}
+						} else {
+							if (firstItemWeight < secondItemWeight) {
+								if (!ignoreDuplicates || currentValue != firstItem) {
+									mergedArray.push(firstItem);
+									currentValue = firstItem;
+								}
+								firstIndex += 1;
+
+								if (firstIndex < firstLen) {
+									firstItem = firstArray[firstIndex];
+									firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
+								}
+							} else {
+								if (!ignoreDuplicates || currentValue != secondItem) {
+									mergedArray.push(secondItem);
+									currentValue = secondItem;
+								}
+								secondIndex += 1;
+								
+								if (secondIndex < secondLen) {
+									secondItem = secondArray[secondIndex];
+									secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
+								}
+							}
+						}
+					}
+				}
+				firstArray = mergedArray;
+			}
+			result = firstArray;
+			break;
+	}
+	return result;
+};
+
+
+/* /algorithms/pile.js*/
+/*
+	Class: primitives.common.pile
+		Sorts and stack segments on top of each other so they occupy minimum number of rows.
+*/
+primitives.common.pile = function () {
+	var _items = [];
+
+	/*
+		Function: add
+			Add segment to pile object.
+	
+		Parameters:
+			from - Left margin of segment.
+			to - Right margin of segment.
+			context - Any reference to user object. It is returned as parameter in callback function of resolve method.
+
+		See Also:
+			<primitives.common.pile>
+	*/
+	function add(from, to, context) {
+		if (from < to) {
+			_items.push(new Segment(from, to, context, 1));
+		} else {
+			_items.push(new Segment(to, from, context, -1));
+		}
+	}
+
+	/*
+		Function: resolve
+			Sorts and stack segments on top of each other so they occupy minimum number of rows.
+	
+		Parameters:
+			thisArg - Context of onItemStacked callback function call.
+			onItemStacked - Call back function used to set segment offset. function(from, to, context, offset) {}
+
+		Returns: 
+			Number of stacked rows in pile.
+
+		See Also:
+			<primitives.common.pile>
+	*/
+	function resolve(thisArg, onItem) { // function(from, to, context, offset) {}
+		var hash,
+			backtraceNext,
+			backtraceTaken,
+			items, item,
+			rowItems,
+			rows,
+			rowIndex, index,
+			offset = 0;
+
+		if (onItem != null) {
+			items = _items.slice(0);
+			items.sort(function (a, b) {
+				return a.from - b.from;
+			});
+
+			rows = [];
+			while (items.length > 0) {
+				hash = {};
+				backtraceNext = {};
+				backtraceTaken = {};
+
+				getMax(0, items, hash, backtraceNext, backtraceTaken);
+
+				rowItems = [];
+				rows[offset] = [];
+				index = 0;
+				while (backtraceNext.hasOwnProperty(index)) {
+					if (backtraceTaken[index]) {
+						rowItems.push(index);
+
+						rows[offset].push(items[index]);
+					}
+					index = backtraceNext[index];
+				}
+
+				for (index = rowItems.length - 1; index >= 0; index -= 1) {
+					items.splice(rowItems[index], 1);
+				}
+				offset += 1;
+			}
+
+			for (rowIndex = 0; rowIndex < offset; rowIndex += 1) {
+				rowItems = rows[rowIndex];
+				for (index = 0; index < rowItems.length; index += 1) {
+					item = rowItems[index];
+					if (onItem.call(thisArg, item.from, item.to, item.context, rowIndex, offset, item.direction)) {
+						return offset;
+					}
+				}
+			}
+		}
+
+		return offset;
+	}
+
+	function Segment(from, to, context, direction) {
+		this.context = context;
+		this.from = from;
+		this.to = to;
+		this.offset = null;
+		this.direction = direction;
+	}
+
+	function getMax(index, items, hash, backtraceNext, backtraceTaken) {
+		var result = 0;
+
+		if (index >= items.length) {
+			return 0;
+		}
+
+		if (hash.hasOwnProperty(index)) {
+			return hash[index];
+		}
+
+		var item = items[index];
+		var withoutItem = getMax(index + 1, items, hash, backtraceNext, backtraceTaken);
+
+		var nextIndex = index + 1;
+		while (nextIndex < items.length) {
+			var nextItem = items[nextIndex];
+			if (nextItem.from >= item.to) {
+				break;
+			}
+			nextIndex += 1;
+		}
+		var withItem = 1 + getMax(nextIndex, items, hash, backtraceNext, backtraceTaken);
+
+		if (withItem > withoutItem) {
+			hash[index] = withItem;
+			backtraceNext[index] = nextIndex;
+			backtraceTaken[index] = true;
+		} else {
+			hash[index] = withoutItem;
+			backtraceNext[index] = index + 1;
+			backtraceTaken[index] = false;
+		}
+
+		return hash[index];
+	}
+
+	return {
+		add: add,
+		resolve: resolve
+	};
+};
+
+/* /algorithms/QuadTree.js*/
+primitives.common.QuadTree = function (minimalSize) {
+	var _minimalScale = Math.max(1, scale(minimalSize)),
+		_rootScale = 8,
+		_rootSize = 256,
+		_rootCell = null;
+
+	// Create root cell
+	_rootCell = new Cell(0, 0, _rootScale, _rootSize);
+
+	function Cell(x, y, scale, size) {
+		this.x = x;
+		this.y = y;
+		this.scale = scale;
+		this.size = size;
+		this.quadrants = [];
+		this.points = [];
+	}
+
+	Cell.prototype.notEnclosed = function (rect) {
+		if (this.x < rect.x || this.x + this.size > rect.x + rect.width || this.y < rect.y || this.y + this.size > rect.y + rect.height) {
+			return true;
+		}
+		return false;
+	};
+
+	Cell.prototype.overlaps = function (rect) {
+		if (this.x + this.size < rect.x || rect.x + rect.width < this.x || this.y + this.size < rect.y || rect.y + rect.height < this.y) {
+			return false;
+		}
+		return true;
+	};
+
+	Cell.prototype.getQuadrantIndex = function (x, y) {
+		var shift = this.scale - 1;
+		return ((x >> shift) & 1) | (((y >> shift) & 1) << 1);
+	};
+
+	function scale(value) {
+		return Math.floor(Math.log(value) / Math.log(2));
+	}
+
+	function addPoint(point) {
+		var x = Math.floor(point.x),
+			y = Math.floor(point.y),
+			size = Math.max(x, y);
+
+		while (_rootSize <= size) {
+			_rootScale += 1;
+			_rootSize *= 2;
+			var parent = new Cell(0, 0, _rootScale, _rootSize);
+			_splitCell(parent);
+			parent.quadrants[0] = _rootCell;
+			_rootCell = parent;
+		}
+		_addPoint(point);
+	}
+
+	function _addPoint(point) {
+		var x = Math.floor(point.x),
+			y = Math.floor(point.y),
+			cell = _rootCell;
+		if (x < 0 || y < 0) {
+			throw "Negative values are not supported in the quad tree.";
+		}
+		while (cell.points == null || cell.points.length > 0) {
+			if (cell.scale == _minimalScale && cell.points != null) {
+				break;
+			}
+			if (cell.points != null && cell.points.length > 0) {
+				_splitCell(cell);
+			}
+			cell = cell.quadrants[cell.getQuadrantIndex(x, y)];
+		}
+		cell.points.push(point);
+	}
+
+	function _splitCell(parent) {
+		var size = parent.size / 2;
+		parent.quadrants = [
+			new Cell(parent.x, parent.y, parent.scale - 1, size),
+			new Cell(parent.x + size, parent.y, parent.scale - 1, size),
+			new Cell(parent.x, parent.y + size, parent.scale - 1, size),
+			new Cell(parent.x + size, parent.y + size, parent.scale - 1, size)
+		];
+		for (var index = 0, len = parent.points.length; index < len; index += 1) {
+			var point = parent.points[index],
+				x = Math.floor(point.x),
+				y = Math.floor(point.y);
+
+			parent.quadrants[parent.getQuadrantIndex(x, y)].points.push(point);
+		}
+
+		// indicates that cell has quadrants
+		parent.points = null;
+	}
+
+	function loopArea(thisArg, rect, onItem) { // onItem = function(itemid) {}
+		var cell,
+			index, len;
+		if (onItem != null) {
+			var check = [_rootCell],
+				nocheck = [];
+			while (check.length > 0 || nocheck.length > 0) {
+				var newCheck = [],
+					newNocheck = [];
+				for (index = 0, len = check.length; index < len; index += 1) {
+					cell = check[index];
+					if (cell.overlaps(rect)) {
+						if (cell.notEnclosed(rect)) {
+							if (cell.points == null) {
+								for (var quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
+									newCheck.push(cell.quadrants[quadrantIndex]);
+								}
+							} else {
+								for (var pointIndex = 0, pointsLen = cell.points.length; pointIndex < pointsLen; pointIndex += 1) {
+									var point = cell.points[pointIndex];
+									if (rect.contains(point)) {
+										if (onItem.call(thisArg, point)) {
+											return;
+										}
+									}
+								}
+							}
+						} else {
+							nocheck.push(cell);
+						}
+					}
+				}
+				for (index = 0, len = nocheck.length; index < len; index += 1) {
+					cell = nocheck[index];
+					if (cell.points == null) {
+						for (quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
+							newNocheck.push(cell.quadrants[quadrantIndex]);
+						}
+					} else {
+						for (pointIndex = 0, pointsLen = cell.points.length; pointIndex < pointsLen; pointIndex += 1) {
+							if (onItem.call(thisArg, cell.points[pointIndex])) {
+								return;
+							}
+						}
+					}
+				}
+				check = newCheck;
+				nocheck = newNocheck;
+			}
+		}
+	}
+
+	function validate() {
+		var level = [_rootCell];
+		while (level.length > 0) {
+			var newLevel = [];
+			for (var index = 0, len = level.length; index < len; index += 1) {
+				var cell = level[index];
+				var rect = new primitives.common.Rect(cell.x, cell.y, cell.size, cell.size);
+				if (cell.points != null && cell.quadrants.length > 0) {
+					return false;
+				}
+				if (cell.points == null) {
+					for (var quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
+						newLevel.push(cell.quadrants[quadrantIndex]);
+					}
+				} else {
+					for (var pointIndex = 0, pointsLen = cell.points.length; pointIndex < pointsLen; pointIndex += 1) {
+						var point = cell.points[pointIndex];
+						if (!rect.contains(point)) {
+							return false;
+						}
+					}
+				}
+			}
+			level = newLevel;
+		}
+		return true;
+	}
+
+	function getPositions(selection) {
+		var result = [];
+		var count = 0;
+		var level = [_rootCell];
+		while (level.length > 0) {
+			var newLevel = [];
+			for (var index = 0, len = level.length; index < len; index += 1) {
+				var cell = level[index];
+				var rect = new primitives.common.Rect(cell.x, cell.y, cell.size, cell.size);
+				rect.context = {
+					isHighlighted: false
+				};
+				count += 1;
+				if (selection != null && selection.overlaps(rect) && cell.points != null && cell.points.length > 0) {
+					rect.context.isHighlighted = true;
+				}
+
+				result.push(rect);
+				for (var quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
+					var quadrant = cell.quadrants[quadrantIndex];
+					if (quadrant != null) {
+						newLevel.push(quadrant);
+					}
+				}
+			}
+			level = newLevel;
+		}
+		return result;
+	}
+
+	return {
+		addPoint: addPoint,
+		loopArea: loopArea,
+		validate: validate,
+		getPositions: getPositions
+	};
+};
+
+/* /algorithms/RMQ.js*/
+primitives.common.RMQ = function (items) {
+	var _lookup = [];
+	var _log2 = Math.log(2);
+
+	preprocess();
+
+	function preprocess() {
+		var power;
+
+		for (var index = 0, len = items.length; index < len; index += 1) {
+			_lookup[index] = [index];
+		}
+		for (power = 1, len = items.length; (1 << power) < len; power += 1) {
+			for (index = 0; (index + (1 << power) - 1) < len; index += 1) {
+				if (items[_lookup[index][power - 1]] < items[_lookup[index + (1 << (power - 1))][power - 1]]) {
+					_lookup[index][power] = _lookup[index][power - 1];
+				} else {
+					_lookup[index][power] = _lookup[index + (1 << (power - 1))][power - 1];
+				}
+			}
+		}
+	}
+
+	function getRangeMinimumIndex(from, to) {
+		var power = Math.floor(Math.log(to - from + 1) / _log2);
+
+		if (items[_lookup[from][power]] <= items[_lookup[to - (1 << power) + 1][power]]) {
+			return _lookup[from][power];
+		} else {
+			return _lookup[to - (1 << power) + 1][power];
+		}
+	}
+
+	function getRangeMinimum(from, to) {
+		return items[getRangeMinimumIndex(from, to)];
+	}
+
+	return {
+		getRangeMinimumIndex: getRangeMinimumIndex,
+		getRangeMinimum: getRangeMinimum
+	};
+};
+
+/* /algorithms/SortedList.js*/
+primitives.common.SortedList = function () {
+	var _rootNode = null;
+
+	function Node(value, context) {
+		this.value = value;
+		this.context = context;
+
+		this.left = null;
+		this.right = null;
+
+		this.balance = 0;
+	}
+
+	function _rebalance(node) {
+		var balance;
+		if (node.balance == 2) {
+			var right = node.right;
+			balance = right.balance;
+			if (balance >= 0) {
+				_rotateSmallLeft(right, node);
+			} else {
+				_rotateBigLeft(right, node);
+			}
+		} else if (node.balance == -2) {
+			var left = node.left;
+			balance = left.balance;
+			if (balance <= 0) {
+				_rotateSmallRight(node.left, node);
+			} else {
+				_rotateBigRight(node.left, node);
+			}
+		}
+		return balance;
+	}
+
+	function _rotateSmallLeft(node, parent) {
+		_rotateLeft(node, parent);
+
+		if (node.balance == 1) {
+			parent.balance = 0;
+			node.balance = 0;
+		} else {
+			parent.balance = -1;
+			node.balance = 1;
+		}
+	}
+
+	function _rotateLeft(node, parent) {
+		_swap(node, parent);
+		parent.right = node.right;
+		node.right = node.left;
+		node.left = parent.left;
+		parent.left = node;
+	}
+
+	function _rotateSmallRight(node, parent) {
+		_rotateRight(node, parent);
+
+		if (node.balance == -1) {
+			parent.balance = 0;
+			node.balance = 0;
+		} else {
+			parent.balance = 1;
+			node.balance = -1;
+		}
+	}
+
+	function _rotateRight(node, parent) {
+		_swap(node, parent);
+		parent.left = node.left;
+		node.left = node.right;
+		node.right = parent.right;
+		parent.right = node;
+	}
+
+	function _rotateBigLeft(node, parent) {
+		var bottom = node.left;
+		_rotateRight(bottom, node);
+		_rotateLeft(node, parent);
+
+		parent.balance = 0;
+		switch (bottom.balance) {
+			case 1:
+				node.balance = -1;
+				bottom.balance = 0;
+				break;
+			case 0:
+				bottom.balance = 0;
+				node.balance = 0;
+				break;
+			default:
+				bottom.balance = 1;
+				node.balance = 0;
+				break;
+		}
+	}
+
+	function _rotateBigRight(node, parent) {
+		var bottom = node.right;
+		_rotateLeft(bottom, node);
+		_rotateRight(node, parent);
+
+		parent.balance = 0;
+		switch (bottom.balance) {
+			case -1:
+				bottom.balance = 0;
+				node.balance = 1;
+				break;
+			case 0:
+				bottom.balance = 0;
+				node.balance = 0;
+				break;
+			default:
+				bottom.balance = -1;
+				node.balance = 0;
+				break;
+		}
+	}
+
+	function add(value, context, thisArg, onDuplicate) {
+		if (_rootNode == null) {
+			_rootNode = new Node(value, context);
+		} else {
+			var trace = [];
+			var node = null;
+			var next = _rootNode;
+			while (next != null) {
+				if (node != null) {
+					trace.push(node);
+				}
+				node = next;
+				if (node.value == value) {
+					if (onDuplicate != null) {
+						onDuplicate.call(thisArg, node.context);
+					} else {
+						throw "Structure does not support duplicates.";
+					}
+				} else {
+					if (node.value > value) {
+						next = node.left;
+					} else {
+						next = node.right;
+					}
+				}
+			}
+			trace.push(node);
+			var newNode = new Node(value, context);
+			if (node.value > value) {
+				node.left = newNode;
+			} else {
+				node.right = newNode;
+			}
+			node = newNode;
+
+			while ((next = trace.pop()) != null) {
+				if (node.value < next.value) {
+					if (next.balance < 0) {
+						next.balance -= 1;
+						_rebalance(next);
+						break;
+					} else {
+						if (next.balance > 0) {
+							next.balance -= 1;
+							break;
+						}
+						next.balance -= 1;
+					}
+				} else {
+					if (next.balance > 0) {
+						next.balance += 1;
+						_rebalance(next);
+						break;
+					} else {
+						if (next.balance < 0) {
+							next.balance += 1;
+							break;
+						}
+						next.balance += 1;
+					}
+				}
+				node = next;
+			}
+		}
+	}
+
+	function _delete(node, parent) {
+		var child = node.right != null ? node.right : node.left;
+		if (parent != null) {
+			if (parent.value > node.value) {
+				parent.left = child;
+			} else {
+				parent.right = child;
+			}
+		} else {
+			_rootNode = child;
+		}
+	}
+
+	function _swap(node1, node2) {
+		var value = node1.value;
+		node1.value = node2.value;
+		node2.value = value;
+
+		var context = node1.context;
+		node1.context = node2.context;
+		node2.context = context;
+	}
+
+	function _copy(fromNode, toNode) {
+		toNode.value = fromNode.value;
+		toNode.context = fromNode.context;
+	}
+
+	function remove(value) {
+		var trace = [];
+		var node = _rootNode;
+		while (node != null) {
+			if (node.value == value) {
+				if (node.right != null && node.left != null) {
+					trace.push(node);
+					var next = node.right;
+					while (next.left != null) {
+						trace.push(next);
+						next = next.left;
+					}
+					_copy(next, node);
+					_delete(next, trace[trace.length - 1]);
+					trace.push(next);
+				} else {
+					_delete(node, trace[trace.length - 1]);
+					trace.push(node);
+				}
+				for (var index = trace.length - 2; index >= 0; index -= 1) {
+					var parent = trace[index];
+					node = trace[index + 1];
+					if (parent.value > node.value) {
+						if (parent.balance > 0) {
+							parent.balance += 1;
+							if (_rebalance(parent) === 0) {
+								break;
+							}
+						} else {
+							if (parent.balance === 0) {
+								parent.balance += 1;
+								break;
+							}
+							parent.balance += 1;
+						}
+					} else {
+						if (parent.balance < 0) {
+							parent.balance -= 1;
+							if (_rebalance(parent) === 0) {
+								break;
+							}
+						} else {
+							if (parent.balance === 0) {
+								parent.balance -= 1;
+								break;
+							}
+							parent.balance -= 1;
+						}
+					}
+				}
+				break;
+			} else {
+				trace.push(node);
+				if (node.value > value) {
+					node = node.left;
+				} else {
+					node = node.right;
+				}
+			}
+		}
+	}
+
+	function nextContext(fromValue) {
+		var result = null;
+		loopForward(this, fromValue, function (value, context) {
+			result = context;
+			return true;
+		});
+		return result;
+	}
+
+	function loopForward(thisArg, fromValue, onItem) { //function onItem(value, context)
+		if (onItem != null) {
+			var trace = [];
+			var node = null;
+			var next = _rootNode;
+			while (next != null) {
+				node = next;
+				if (node.value >= fromValue || fromValue == null) {
+					trace.push(node);
+					next = node.left;
+				} else {
+					next = node.right;
+				}
+			}
+			while ((node = trace.pop()) != null) {
+				if (onItem.call(thisArg, node.value, node.context)) {
+					return;
+				}
+				next = node.right;
+				while (next != null) {
+					node = next;
+					if (node.left != null) {
+						trace.push(node);
+						next = node.left;
+					} else {
+						if (onItem.call(thisArg, node.value, node.context)) {
+							return;
+						}
+						next = node.right;
+					}
+				}
+			}
+		}
+	}
+
+	function previousContext(fromValue) {
+		var result = null;
+		loopBackward(this, fromValue, function (nextValue, context) {
+			result = context;
+			return true;
+		});
+		return result;
+	}
+
+	function loopBackward(thisArg, fromValue, onItem) {
+		if (onItem != null) {
+			var trace = [];
+			var node = null;
+			var next = _rootNode;
+			while (next != null) {
+				node = next;
+				if (node.value <= fromValue || fromValue == null) {
+					trace.push(node);
+					next = node.right;
+				} else {
+					next = node.left;
+				}
+			}
+			while ((node = trace.pop()) != null) {
+				if (onItem.call(thisArg, node.value, node.context)) {
+					return;
+				}
+				next = node.left;
+				while (next != null) {
+					node = next;
+					if (node.right != null) {
+						trace.push(node);
+						next = node.right;
+					} else {
+						if (onItem.call(thisArg, node.value, node.context)) {
+							return;
+						}
+						next = node.left;
+					}
+				}
+			}
+		}
+	}
+
+	function _getValidationDepth(node) {
+		var level = [],
+			result = 0;
+		if (node != null) {
+			level.push(node);
+			while (level.length > 0) {
+				var newLevel = [];
+
+				for (var index = 0; index < level.length; index += 1) {
+					node = level[index];
+
+					if (node.left != null) {
+						newLevel.push(node.left);
+					}
+
+					if (node.right != null) {
+						newLevel.push(node.right);
+					}
+				}
+
+				level = newLevel;
+				result += 1;
+			}
+		}
+		return result;
+	}
+
+	function validate() {
+		if (_rootNode != null) {
+			var level = [_rootNode];
+			while (level.length > 0) {
+				var newLevel = [];
+
+				for (var index = 0; index < level.length; index += 1) {
+					var node = level[index];
+
+					if (node.value == null) {
+						return false;
+					}
+
+					if (node.left != null) {
+						newLevel.push(node.left);
+						if (node.left.value >= node.value) {
+							return false;
+						}
+					}
+
+					if (node.right != null) {
+						newLevel.push(node.right);
+						if (node.right.value <= node.value) {
+							return false;
+						}
+					}
+
+					if (node.balance != (_getValidationDepth(node.right) - _getValidationDepth(node.left))) {
+						console.log("Disbalanced node: " + node.value + " - " + JSON.stringify(_rootNode));
+						return false;
+					}
+				}
+
+				level = newLevel;
+			}
+		}
+		return true;
+	}
+
+	return {
+		add: add,
+		remove: remove,
+		loopForward: loopForward,
+		loopBackward: loopBackward,
+		nextContext: nextContext,
+		previousContext: previousContext,
+		validate: validate
+	};
+};
+
+/* /algorithms/SpatialIndex.js*/
+primitives.common.SpatialIndex = function (sizes) {
+	var _buckets = [];
+
+	sizes.sort(function (a, b) { return a - b;});
+
+	switch (sizes.length) {
+		case 0:
+			_buckets.push(new Bucket(0, 1000000));
+			break;
+		case 1:
+			var size1 = sizes[0];
+			_buckets.push(new Bucket(0, size1));
+			break;
+		case 2:
+			size1 = sizes[0];
+			var size2 = sizes[1];
+			if (size2 > size1 * 2) {
+				_buckets.push(new Bucket(0, size1));
+				_buckets.push(new Bucket(size1, size2));
+			} else {
+				_buckets.push(new Bucket(0, size2));
+			}
+			break;
+		default:
+			var breaks = primitives.common.getLiniarBreaks(sizes);
+			var minimum = 0;
+			for (var index = 0; index < breaks.length; index += 1) {
+				var maximum = sizes[breaks[index]];
+				_buckets.push(new Bucket(minimum, maximum));
+				minimum = maximum;
+			}
+			break;
+	}
+
+	function Bucket(minimum, maximum) {
+		this.minimum = minimum;
+		this.maximum = maximum;
+		this.quadTree = primitives.common.QuadTree(maximum * 2);
+	}
+
+	function addRect(rect) {
+		var size = Math.max(rect.width, rect.height);
+		var point = rect.centerPoint();
+
+		for (var index = 0, len = _buckets.length; index < len; index += 1) {
+			var bucket = _buckets[index];
+
+			if (size <= bucket.maximum || index == len - 1) {
+				point.context = rect;
+				bucket.quadTree.addPoint(point);
+				break;
+			}
+		}
+	}
+
+	function loopArea(thisArg, rect, onItem) { // onItem = function(itemid) {}
+		if (onItem != null) {
+			for (var index = 0, len = _buckets.length; index < len; index += 1) {
+				var bucket = _buckets[index];
+				var bucketRect = new primitives.common.Rect(rect);
+				bucketRect.offset(bucket.maximum / 2.0);
+				bucket.quadTree.loopArea(this, bucketRect, function (point) {
+					var pointRect = point.context;
+
+					if (rect.overlaps(pointRect)) {
+						return onItem.call(thisArg, pointRect);
+					}
+				});
+			}
+		}
+	}
+
+	function validate() {
+		var result = true;
+		for (var index = 0, len = _buckets.length; index < len; index += 1) {
+			var bucket = _buckets[index];
+
+			result = result && bucket.quadTree.validate();
+		}
+		return result;
+	}
+
+	function getPositions(selection) {
+		var result = [];
+		for (var index = 0, len = _buckets.length; index < len; index += 1) {
+			var bucket = _buckets[index];
+
+			result = result.concat(bucket.quadTree.getPositions(selection));
+		}
+		return result;
+	}
+
+	return {
+		addRect: addRect,
+		loopArea: loopArea,
+		validate: validate,
+		getPositions: getPositions
+	};
+};
+
+/* /algorithms/tree.js*/
+primitives.common.tree = function (source) {
+	var _nodes = {},        // objects attached to nodes
+		_parents = {},      // parent node id for every node id. Both of them should exists in the tree.
+		_children = {},     // children node ids for every node id. All children and node itself should be in the tree.
+		_roots = {},        // id of non existing parent. If parent does not exists in the tree this hash contains its id.
+		_rootChildren = {}, // children of non existing parent. If parent id does not exists in the tree this collection contains it existing children.
+		BREAK = 1,
+		SKIP = 2;
+
+	_init(source);
+
+	function _init(source) {
+		if (primitives.common.isObject(source)) {
+			_nodes = primitives.common.cloneObject(source.nodes, true);
+			_parents = primitives.common.cloneObject(source.parents, true);
+			_children = primitives.common.cloneObject(source.children, false);
+			_roots = primitives.common.cloneObject(source.roots, false);
+			_rootChildren = primitives.common.cloneObject(source.rootChildren, true);
+		}
+	}
+
+	function loop(thisArg, onItem) {
+		var item;
+		if (onItem != null) {
+			for (item in _nodes) {
+				if (_nodes.hasOwnProperty(item)) {
+					if (onItem.call(thisArg, item, _nodes[item])) {
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	function loopLevels(thisArg, arg0, arg1) { // onItem(nodeid, node, levelid) if function returns true loop is continued on item's children 
+		var levelIndex = 0,
+			items = [],
+			itemid,
+			onItem,
+			newItems,
+			key,
+			index, len;
+
+		switch (arguments.length) {
+			case 2:
+				onItem = arg0;
+				break;
+			case 3:
+				itemid = arg0;
+				onItem = arg1;
+				break;
+		}
+
+		if (onItem != null) {
+
+			if (itemid == null) {
+				for (key in _rootChildren) {
+					if (_rootChildren.hasOwnProperty(key)) {
+						items = items.concat(_rootChildren[key]);
+					}
+				}
+			} else {
+				if (_children[itemid] != null) {
+					items = items.concat(_children[itemid]);
+				}
+			}
+
+			while (items.length > 0) {
+				newItems = [];
+
+				for (index = 0, len = items.length; index < len; index += 1) {
+					itemid = items[index];
+					switch (onItem.call(thisArg, itemid, _nodes[itemid], levelIndex)) {
+						case BREAK:
+							newItems = [];
+							break;
+						case SKIP:
+							break;
+						default:
+							if (_children[itemid] != null) {
+								newItems = newItems.concat(_children[itemid]);
+							}
+							break;
+					}
+				}
+
+				items = newItems;
+				levelIndex += 1;
+			}
+		}
+	}
+
+	/* children first - parent last */
+	function loopPostOrder(thisArg, onItem) { // onItem(nodeid, node, parentid, parent) if function returns true loop exits
+		var stack = [], nodeid,
+			key,
+			index,
+			prevParent,
+			children;
+
+		if (onItem != null) {
+
+			for (key in _rootChildren) {
+				if (_rootChildren.hasOwnProperty(key)) {
+					stack = stack.concat(_rootChildren[key]);
+				}
+			}
+
+			while (stack.length > 0) {
+				nodeid = stack[stack.length - 1];
+				if (nodeid != prevParent && (children = _children[nodeid]) != null) {
+					for (index = children.length - 1; index >= 0; index -= 1) {
+						stack.push(children[index]);
+					}
+				} else {
+					stack.pop();
+					prevParent = _parents[nodeid];
+
+					if (onItem.call(thisArg, nodeid, _nodes[nodeid], prevParent, _nodes[prevParent])) {
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	/* parent first - children next */
+	function loopPreOrder(thisArg, onItem) { // onItem(nodeid, node, parentid, parent) if function returns true loop exits
+		var stack = [], nodeid,
+			key,
+			index,
+			parentid,
+			prevParent,
+			children;
+
+		if (onItem != null) {
+
+			for (key in _rootChildren) {
+				if (_rootChildren.hasOwnProperty(key)) {
+					stack = stack.concat(_rootChildren[key]);
+				}
+			}
+
+			while (stack.length > 0) {
+				nodeid = stack[stack.length - 1];
+				if (nodeid != prevParent) {
+					parentid =  _parents[nodeid];
+					if (onItem.call(thisArg, nodeid, _nodes[nodeid], parentid, _nodes[parentid])) {
+						break;
+					}
+				}
+				if (nodeid != prevParent && (children = _children[nodeid]) != null) {
+					for (index = children.length - 1; index >= 0; index -= 1) {
+						stack.push(children[index]);
+					}
+				} else {
+					stack.pop();
+					prevParent = _parents[nodeid];
+				}
+			}
+		}
+	}
+
+	/* Euler Walk */
+	function loopEulerWalk(thisArg, onItem) { // onItem(nodeid, node, level) if function returns true loop exits
+		var stack = [],
+			nodeid,
+			levels = [],
+			level = 0,
+			key,
+			index, len,
+			prevParent,
+			children;
+
+		if (onItem != null) {
+
+			for (key in _rootChildren) {
+				if (_rootChildren.hasOwnProperty(key)) {
+					children = _rootChildren[key];
+					for (index = 0, len = children.length; index < len; index += 1) {
+						stack.push(children[index]);
+						levels.push(0);
+					}
+				}
+			}
+			while (stack.length > 0) {
+				index = stack.length - 1;
+				nodeid = stack[index];
+				level = levels[index];
+
+				if (onItem.call(thisArg, nodeid, _nodes[nodeid], level)) {
+					break;
+				}
+
+				if (nodeid != prevParent && (children = _children[nodeid]) != null) {
+					for (index = children.length - 1; index >= 0; index -= 1) {
+						stack.push(children[index]);
+						levels.push(level + 1);
+						if (index > 0) {
+							stack.push(nodeid);
+							levels.push(level);
+						}
+					}
+				} else {
+					stack.pop();
+					levels.pop();
+
+					prevParent = _parents[nodeid];
+				}
+			}
+		}
+	}
+
+	function zipUp(thisArg, firstNodeId, secondNodeid, onZip) { // onZip(firstNodeId, firstParentId, secondNodeid, secondParentId)
+		var firstParentId,
+			secondParentId;
+
+		if (onZip != null) {
+			while (firstNodeId != null && secondNodeid != null && firstNodeId != secondNodeid) {
+				firstParentId = _parents[firstNodeId];
+				secondParentId = _parents[secondNodeid];
+				if (onZip.call(thisArg, firstNodeId, firstParentId, secondNodeid, secondParentId)) {
+					break;
+				}
+				firstNodeId = firstParentId;
+				secondNodeid = secondParentId;
+			}
+		}
+	}
+
+	function loopParents(thisArg, nodeid, onItem, includingStartItem) { // onItem(nodeid, node)
+		var parentid = nodeid;
+		if (_nodes[parentid] != null) {
+			if (onItem != null) {
+				if (includingStartItem === true) {
+					if (onItem.call(thisArg, parentid, _nodes[parentid])) {
+						return;
+					}
+				}
+				while ((parentid = _parents[parentid]) != null) {
+					if (onItem.call(thisArg, parentid, _nodes[parentid])) {
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	function loopChildren(thisArg, nodeid, onItem) { // onItem(nodeid, node, index, lastIndex)
+		var items,
+			itemid,
+			index, len;
+		if (_nodes[nodeid] != null) {
+			items = _children[nodeid];
+			if (items != null) {
+				for (index = 0, len = items.length; index < len; index += 1) {
+					itemid = items[index];
+					if (onItem.call(thisArg, itemid, _nodes[itemid], index, len - 1)) {
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	function loopChildrenRange(thisArg, nodeid, fromIndex, toIndex, onItem) { // onItem(nodeid, node, index)
+		var items,
+			itemid,
+			index, len;
+		if (_nodes[nodeid] != null) {
+			items = _children[nodeid];
+			if (items != null) {
+				if (fromIndex < toIndex) {
+					fromIndex = Math.max(fromIndex, 0);
+					toIndex = Math.min(toIndex, items.length - 1);
+					for (index = fromIndex; index <= toIndex; index += 1) {
+						itemid = items[index];
+						if (onItem.call(thisArg, itemid, _nodes[itemid], index, len - 1)) {
+							break;
+						}
+					}
+				} else {
+					fromIndex = Math.min(fromIndex, items.length - 1);
+					toIndex = Math.max(0, toIndex);
+					for (index = fromIndex; index >= toIndex; index -= 1) {
+						itemid = items[index];
+						if (onItem.call(thisArg, itemid, _nodes[itemid], index, len - 1)) {
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	function loopChildrenReversed(thisArg, nodeid, onItem) { // onItem(nodeid, node, index, lastIndex)
+		var items,
+			itemid,
+			index, lastIndex;
+		if (_nodes[nodeid] != null) {
+			items = _children[nodeid];
+			lastIndex = items.length - 1;
+			if (items != null) {
+				for (index = lastIndex; index >= 0; index -= 1) {
+					itemid = items[index];
+					if (onItem.call(thisArg, itemid, _nodes[itemid], index, lastIndex)) {
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	function arrangeChildren(nodeid, children) {
+		var childid,
+			index, len;
+
+		children = children.slice(0);
+		if (_nodes[nodeid] != null) {
+			if (_children[nodeid] != null) {
+				if (_children[nodeid].length == children.length) {
+					for (index = 0, len = children.length; index < len; index += 1) {
+						childid = children[index];
+						if (_parents[childid] != nodeid) {
+							throw "Child " + childid + " does not belong to given node!";
+						}
+					}
+					_children[nodeid] = children;
+				} else {
+					throw "Collections of children don't match each other!";
+				}
+			} else {
+				if (children.length > 0) {
+					throw "Collections of children don't match each other!";
+				}
+			}
+		}
+	}
+
+	function add(parentid, nodeid, node, position) {
+		var index, len, children, childid;
+
+		if (_nodes[nodeid] != null) {
+			throw "Node already exists";
+		}
+
+		if (nodeid != null && node != null && _nodes[nodeid] == null) {
+
+			if (_nodes[parentid] != null) {
+				_parents[nodeid] = parentid;
+
+				// existing parent
+				if (_children[parentid] != null) {
+					if (position == null) {
+						_children[parentid].push(nodeid);
+					} else {
+						_children[parentid].splice(position, 0, nodeid);
+					}
+				} else {
+					_children[parentid] = [nodeid];
+				}
+			} else {
+				_roots[nodeid] = parentid;
+
+				// missing parent
+				if (_rootChildren[parentid] != null) {
+					if (position == null) {
+						_rootChildren[parentid].push(nodeid);
+					} else {
+						_rootChildren[parentid].splice(position, 0, nodeid);
+					}
+				} else {
+					_rootChildren[parentid] = [nodeid];
+				}
+			}
+
+			_nodes[nodeid] = node;
+
+			if (_rootChildren[nodeid] != null) {
+				_children[nodeid] = _rootChildren[nodeid];
+				delete _rootChildren[nodeid];
+
+				children = _children[nodeid];
+				for (index = 0, len = children.length; index < len; index += 1) {
+					childid = children[index];
+
+					delete _roots[childid];
+
+					_parents[childid] = nodeid;
+				}
+				
+			}
+
+		}
+	}
+
+	function insert(nodeid, bundleid, bundle) {
+		if (_nodes[nodeid] != null && bundleid != null && _nodes[bundleid] == null && bundle != null) {
+
+			_nodes[bundleid] = bundle;
+
+			if (_children[nodeid] != null) {
+				_children[bundleid] = _children[nodeid];
+			}
+			_children[nodeid] = [bundleid];
+
+			loopChildren(this, bundleid, function (childid, node, index) {
+				_parents[childid] = bundleid;
+			});
+			_parents[bundleid] = nodeid;
+		}
+	}
+
+	function moveChildren(fromNodeid, toNodeId) {
+		if (_nodes[fromNodeid] != null && _nodes[toNodeId] != null && fromNodeid != toNodeId) {
+
+			if (_children[fromNodeid] != null) {
+
+				loopChildren(this, fromNodeid, function (childid, node, index) {
+					_parents[childid] = toNodeId;
+				});
+
+				if (_children[toNodeId] != null) {
+					_children[toNodeId] = _children[toNodeId].concat(_children[fromNodeid]);
+				} else {
+					_children[toNodeId] = _children[fromNodeid];
+				}
+				delete _children[fromNodeid];
+			}
+		}
+	}
+
+	function hasNodes() {
+		return !primitives.common.isEmptyObject(_rootChildren);
+	}
+
+	function parentid(nodeid) {
+		var result = null;
+
+		if (_parents[nodeid] != null) {
+			result = _parents[nodeid];
+		}
+
+		return result;
+	}
+
+	function parent(nodeid) {
+		var result = null;
+
+		if (_parents[nodeid] != null) {
+			result = _nodes[_parents[nodeid]];
+		}
+
+		return result;
+	}
+
+	function hasChildren(nodeid) {
+		return _children[nodeid] != null;
+	}
+
+	function countChildren(nodeid) {
+		return _children[nodeid] != null ? _children[nodeid].length : 0;
+	}
+
+	function countSiblings(nodeid) {
+		var parent = parentid(nodeid);
+		return parent != null ? _children[parent].length : 0;
+	}
+
+	function indexOf(nodeid) {
+		var parent = parentid(nodeid);
+		return parent != null ? primitives.common.indexOf(_children[parent], nodeid) : null;
+	}
+
+	function getChild(parentid, index) {
+		var result = null,
+			children;
+		if ((children = _children[parentid]) != null) {
+			result = _nodes[children[index]];
+		}
+		return result;
+	}
+
+	function _splice(collection, nodeid) {
+		var index, len = collection.length;
+		for (index = 0; index < len; index += 1) {
+			if(collection[index] == nodeid) {
+				collection.splice(index, 1);
+				return len - 1;
+			}
+		}
+		return len;
+	}
+
+	function adopt(parentid, nodeid) {
+		if (_nodes[parentid] != null && _nodes[nodeid] != null) {
+			if (parentid != nodeid) {
+				if (_roots.hasOwnProperty(nodeid)) {
+					if (!_splice(_rootChildren[_roots[nodeid]], nodeid)) {
+						delete _rootChildren[_roots[nodeid]];
+					}
+					delete _roots[nodeid];
+				}
+
+				if (_parents.hasOwnProperty(nodeid)) {
+					if (!_splice(_children[_parents[nodeid]], nodeid)) {
+						delete _children[_parents[nodeid]];
+					}
+				}
+
+				_parents[nodeid] = parentid;
+				if (_children[parentid] != null) {
+					_children[parentid].push(nodeid);
+				} else {
+					_children[parentid] = [nodeid];
+				}
+			}
+			else {
+				throw "Item cannot be parent of itself!";
+			}
+		} else {
+			throw "Both parent and child should be in hierarchy!";
+		}
+	}
+
+	function node(nodeid) {
+		return _nodes[nodeid];
+	}
+
+	function validate() {
+		var result = true,
+			key;
+
+		for (key in _roots) {
+			if (_roots.hasOwnProperty(key)) {
+				if (_roots[key] != null) {
+					result = false;
+					break;
+				}
+			}
+		}
+
+		return result;
+	}
+
+	function clone() {
+		return primitives.common.family({
+			nodes: _nodes,
+			parents: _parents,
+			children: _children,
+			roots: _roots,
+			rootChildren: _rootChildren
+		});
+	}
+	
+	function loopNeighbours(thisArg, itemid, distance, onItem) {
+		var processed = {},
+			margin = [itemid],
+			newMargin,
+			currentDistance = 0;
+
+		if (onItem != null) {
+			if (_nodes.hasOwnProperty(itemid)) {
+				processed[itemid] = true;
+				while (margin.length > 0) {
+					newMargin = [];
+					for (var index = 0, len = margin.length; index < len; index += 1) {
+						var marginid = margin[index];
+						if (currentDistance > 0) {
+							if (onItem.call(thisArg, marginid, _nodes[marginid], currentDistance)) {
+								return;
+							}
+						}
+						if (currentDistance < distance) {
+							_loopNeighbours(this, marginid, function (neighbourid, neighbour) {
+								if (!processed.hasOwnProperty(neighbourid)) {
+									newMargin.push(neighbourid);
+									processed[neighbourid] = true;
+								}
+							});
+						}
+					}
+					margin = newMargin;
+					currentDistance += 1;
+				}
+			}
+		}
+	}
+
+	function _loopNeighbours(thisArg, itemid, onItem) {
+		if (onItem != null) {
+			if (_nodes.hasOwnProperty(itemid)) {
+				/* loop parent */
+				var parentItemId = parentid(itemid);
+				if (parentItemId != null) {
+					if (onItem.call(thisArg, parentItemId, _nodes[parentItemId])) {
+						return;
+					}
+				}
+				/* loop siblings */
+				loopChildren(thisArg, parentItemId, function (childItemId, childItem) {
+					if (childItemId != itemid) {
+						if (onItem.call(thisArg, childItemId, childItem)) {
+							return;
+						}
+					}
+				});
+				/* loop actual children */
+				loopChildren(thisArg, itemid, function (childItemId, childItem) {
+					if (onItem.call(thisArg, childItemId, childItem)) {
+						return;
+					}
+				});
+			}
+		}
+	}
+
+	return {
+		loop: loop,
+		loopLevels: loopLevels,
+		loopParents: loopParents,
+		loopChildren: loopChildren,
+		loopChildrenRange: loopChildrenRange,
+		loopChildrenReversed: loopChildrenReversed,
+		loopPostOrder: loopPostOrder, /* children first - parent last */
+		loopPreOrder: loopPreOrder, /* parent first - children next */
+		loopEulerWalk: loopEulerWalk, /* pre order loop with every parent revisited for every child */
+		loopNeighbours: loopNeighbours, /* loop items by distance. Siblings are as far as parent and children */
+		zipUp: zipUp,
+		parentid: parentid,
+		parent: parent,
+		adopt: adopt,
+		moveChildren: moveChildren,
+		node: node,
+		add: add,
+		insert: insert,
+		hasNodes: hasNodes,
+		hasChildren: hasChildren,
+		countChildren: countChildren,
+		countSiblings: countSiblings,
+		indexOf: indexOf,
+		getChild: getChild,
+		arrangeChildren: arrangeChildren,
+
+		/* force validation */
+		validate: validate,
+		clone: clone,
+
+		// callback return codes
+		BREAK: BREAK, // break loop immidiatly
+		SKIP: SKIP // skip loop of current node children 
+	};
+};
 
 /* /algorithms/TreeLevels.js*/
 primitives.common.TreeLevels = function (source) {
@@ -29607,6 +29651,7 @@ primitives.pdf.famdiagram.Plugin = function (options) {
 	};
 };
 
+
 /* /pdf/Models/Template.js*/
 primitives.pdf.Template = function (options, templateConfig) {
 	this.templateConfig = null;
@@ -29633,6 +29678,7 @@ primitives.pdf.Template = function (options, templateConfig) {
 			new primitives.pdf.UserTemplate(options, templateConfig, options.onCursorRender);
 	}
 };
+
 
 /* /pdf/OrgDiagram/Tasks/Layout/DummyCurrentControlSizeTask.js*/
 primitives.pdf.orgdiagram.DummyCurrentControlSizeTask = function (optionsTask) {
@@ -30044,6 +30090,7 @@ primitives.pdf.orgdiagram.Plugin = function (options) {
 	};
 };
 
+
 /* /pdf/Templates/AnnotationLabelTemplate.js*/
 /* jshint latedef: true, unused: false */
 primitives.pdf.AnnotationLabelTemplate = function () {
@@ -30210,6 +30257,7 @@ primitives.pdf.GroupTitleTemplate = function (itemTitleFirstFontColor, itemTitle
 };
 
 
+
 /* /pdf/Templates/HighlightTemplate.js*/
 primitives.pdf.HighlightTemplate = function (options, itemTemplateConfig) {
 	var _config = itemTemplateConfig;
@@ -30367,8 +30415,6 @@ primitives.pdf.UserTemplate = function (options, itemTemplateConfig, onRender) {
 		render: render
 	};
 };
-
-
 
 return primitives;
 }));

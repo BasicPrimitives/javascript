@@ -1,0 +1,12 @@
+{
+  "folder": "src.primitives.jquery\\",
+  "jsfilename": "min\\primitives.jquery.latest.js",
+  "jsminfilename": "min\\primitives.jquery.min.js",
+  "htmlfilename": "src.primitives.jquery\\src.primitives.jquery.html",
+  "priorities": {
+    "common": 100,
+    "orgdiagram": 90,
+    "Widget.js": 100
+  },
+  "enums": []
+}

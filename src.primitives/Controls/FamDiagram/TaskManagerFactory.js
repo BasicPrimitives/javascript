@@ -37,6 +37,7 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 	tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, primitives.common.Colors.Navy);
 	tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, primitives.common.Colors.Navy);
 	tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.ItemsOptionTask, primitives.common.Colors.Navy);
+	tasks.addTask('ItemsContentOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.orgdiagram.ItemsContentOptionTask, primitives.common.Colors.Navy);
 	tasks.addTask('SpousesOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.SpousesOptionTask, primitives.common.Colors.Navy);
 	tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig', 'defaultButtonConfig'], primitives.orgdiagram.ItemsSizesOptionTask, primitives.common.Colors.Navy);
 	tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.LabelsOptionTask, primitives.common.Colors.Navy);
@@ -72,7 +73,7 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 	tasks.addTask('LabelAnnotationTemplateOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationTemplateOptionTask, primitives.common.Colors.Navy);
 	tasks.addTask('LabelAnnotationPlacementOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationPlacementOptionTask, primitives.common.Colors.Navy);
 
-	tasks.addTask('CombinedContextsTask', ['ItemsOptionTask', 'LabelAnnotationOptionTask'], primitives.orgdiagram.CombinedContextsTask, primitives.common.Colors.Cyan);
+	tasks.addTask('CombinedContextsTask', ['ItemsContentOptionTask', 'LabelAnnotationOptionTask'], primitives.orgdiagram.CombinedContextsTask, primitives.common.Colors.Cyan);
 
 	tasks.addTask('AddLabelAnnotationsTask', ['LabelAnnotationPlacementOptionTask', 'LogicalFamilyTask'], primitives.famdiagram.AddLabelAnnotationsTask, primitives.common.Colors.Red);
 	tasks.addTask('RemoveLoopsTask', ['ItemsOptionTask', 'AddLabelAnnotationsTask'], primitives.famdiagram.RemoveLoopsTask, primitives.common.Colors.Red);

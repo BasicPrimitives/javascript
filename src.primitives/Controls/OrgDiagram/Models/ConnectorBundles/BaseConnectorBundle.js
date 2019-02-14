@@ -200,7 +200,7 @@ primitives.common.BaseConnectorBundle.prototype.traceFork = function (data, para
 					showHorizontalArrows, isParents ? toPointId : fromPointId)
 				);
 
-				fromPoint = toPoint;
+				fromPoint = toPoint.elbowPoint2 || toPoint;
 				fromPointId = toPointId;
 			}
 		}
@@ -223,7 +223,7 @@ primitives.common.BaseConnectorBundle.prototype.traceFork = function (data, para
 					showHorizontalArrows, isParents ? toPointId : fromPointId)
 					);
 
-				fromPoint = toPoint;
+				fromPoint = toPoint.elbowPoint2 || toPoint;
 				fromPointId = toPointId;
 			}
 		}

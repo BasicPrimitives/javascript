@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagram v5.2.1
+ * @preserve Basic Primitives Diagram v5.2.2
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -27,7 +27,7 @@
 /* /common/init.js*/
 var primitives = {
     common: {
-        version: "5.2.1"
+        version: "5.2.2"
     },
     orgdiagram: {},
     famdiagram: {},
@@ -12734,6 +12734,7 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 	tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 	tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 	tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.ItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('ItemsContentOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.orgdiagram.ItemsContentOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 	tasks.addTask('SpousesOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.SpousesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 	tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig', 'defaultButtonConfig'], primitives.orgdiagram.ItemsSizesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 	tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.LabelsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
@@ -12769,7 +12770,7 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 	tasks.addTask('LabelAnnotationTemplateOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationTemplateOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 	tasks.addTask('LabelAnnotationPlacementOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationPlacementOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-	tasks.addTask('CombinedContextsTask', ['ItemsOptionTask', 'LabelAnnotationOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('CombinedContextsTask', ['ItemsContentOptionTask', 'LabelAnnotationOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
 	tasks.addTask('AddLabelAnnotationsTask', ['LabelAnnotationPlacementOptionTask', 'LogicalFamilyTask'], primitives.famdiagram.AddLabelAnnotationsTask, "#ff0000"/*primitives.common.Colors.Red*/);
 	tasks.addTask('RemoveLoopsTask', ['ItemsOptionTask', 'AddLabelAnnotationsTask'], primitives.famdiagram.RemoveLoopsTask, "#ff0000"/*primitives.common.Colors.Red*/);
@@ -15173,7 +15174,7 @@ primitives.common.BaseConnectorBundle.prototype.traceFork = function (data, para
 					showHorizontalArrows, isParents ? toPointId : fromPointId)
 				);
 
-				fromPoint = toPoint;
+				fromPoint = toPoint.elbowPoint2 || toPoint;
 				fromPointId = toPointId;
 			}
 		}
@@ -15196,7 +15197,7 @@ primitives.common.BaseConnectorBundle.prototype.traceFork = function (data, para
 					showHorizontalArrows, isParents ? toPointId : fromPointId)
 					);
 
-				fromPoint = toPoint;
+				fromPoint = toPoint.elbowPoint2 || toPoint;
 				fromPointId = toPointId;
 			}
 		}
@@ -16936,6 +16937,59 @@ primitives.orgdiagram.ConnectorsOptionTask = function (optionsTask, defaultConfi
 		process: process,
 		getOptions: getOptions,
 		description: "Checks connector lines drawing options."
+	};
+};
+
+/* /Controls/OrgDiagram/Tasks/Options/ItemsContentOptionTask.js*/
+primitives.orgdiagram.ItemsContentOptionTask = function (optionsTask, defaultItemConfig) {
+	var _data = {},
+		_hash = {},
+		_sourceHash = {};
+
+	var _dataTemplate = new primitives.common.ObjectReader({
+			items: new primitives.common.ArrayReader(
+				new primitives.common.ObjectReader({
+					id: new primitives.common.ValueReader(["string", "number"], true),
+					title: new primitives.common.ValueReader(["string"], true),
+					description: new primitives.common.ValueReader(["string"], true),
+					image: new primitives.common.ValueReader(["string"], true),
+					context: new primitives.common.ValueReader(["string", "number", "object"], true),
+					itemTitleColor: new primitives.common.ValueReader(["string"], false, defaultItemConfig.itemTitleColor),
+					groupTitle: new primitives.common.ValueReader(["string"], false, defaultItemConfig.groupTitle),
+					groupTitleColor: new primitives.common.ValueReader(["string"], false, defaultItemConfig.groupTitleColor)
+				}),
+				true,
+				"id",
+				true,
+				true
+				)
+		});
+
+	function process() {
+		var context = {
+			isChanged: false,
+			hash: _hash,
+			sourceHash: _sourceHash
+		};
+
+		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+
+		return context.isChanged;
+	}
+
+	function getItems() {
+		return _data.items;
+	}
+
+	function getConfig(itemId) {
+		return _sourceHash["options-items"][itemId];
+	}
+
+	return {
+		process: process,
+		getItems: getItems,
+		getConfig: getConfig,
+		description: "Checks items configuration options effecting their placement in layout."
 	};
 };
 
@@ -23183,6 +23237,7 @@ primitives.orgdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 	tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 	tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 	tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.orgdiagram.ItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+	tasks.addTask('ItemsContentOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.orgdiagram.ItemsContentOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 	tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig', 'defaultButtonConfig'], primitives.orgdiagram.ItemsSizesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 	tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.LabelsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 	tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultButtonConfig', 'defaultTemplateConfig'], primitives.orgdiagram.TemplatesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
@@ -23208,7 +23263,7 @@ primitives.orgdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 	tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ScaleOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
 	// Transformations
-	tasks.addTask('CombinedContextsTask', ['ItemsOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+	tasks.addTask('CombinedContextsTask', ['ItemsContentOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 	tasks.addTask('OrgTreeTask', ['ItemsOptionTask'], primitives.orgdiagram.OrgTreeTask, "#ff0000"/*primitives.common.Colors.Red*/);
 
 	// Transformations / Templates

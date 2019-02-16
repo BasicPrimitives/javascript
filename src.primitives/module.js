@@ -1,5 +1,5 @@
 ﻿/**
- * @preserve Basic Primitives Diagram v5.2.2
+ * @preserve Basic Primitives Diagram v5.2.3
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -11,18 +11,18 @@
  */
 /* File: Basic Primitives (primitives.latest.js)*/
 (function (root, factory) {
-    if (typeof define === "function" && define.amd) {
-        define([], function () {
-            return (root.primitives = factory());
-        });
-    } else if (typeof module === "object" && module.exports) {
-        module.exports = (root.primitives = factory());
-    } else {
-        root.primitives = factory();
-    }
+  if (typeof define === "function" && define.amd) {
+    define([], function () {
+      return (root.primitives = factory());
+    });
+  } else if (typeof module === "object" && module.exports) {
+    module.exports = (root.primitives = factory());
+  } else {
+    root.primitives = factory();
+  }
 }(this, function () {
 
-//placeholder
+  //placeholder
 
-return primitives;
+  return primitives;
 }));

@@ -22567,7 +22567,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     _dragImage,
     _dragTimer,
     _scale,
-    _debug = true,
+    _debug = false,
     _timer = null;
 
 	/*

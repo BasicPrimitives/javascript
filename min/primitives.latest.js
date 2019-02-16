@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagram v5.2.3
+ * @preserve Basic Primitives Diagram v5.2.4
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -27,7 +27,7 @@
 /* /common/init.js*/
 var primitives = {
   common: {
-    version: "5.2.3"
+    version: "5.2.4"
   },
   orgdiagram: {},
   famdiagram: {},

@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagram v5.2.2
+ * @preserve Basic Primitives Diagram v5.2.3
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -11,34 +11,34 @@
  */
 /* File: Basic Primitives (primitives.latest.js)*/
 (function (root, factory) {
-    if (typeof define === "function" && define.amd) {
-        define([], function () {
-            return (root.primitives = factory());
-        });
-    } else if (typeof module === "object" && module.exports) {
-        module.exports = (root.primitives = factory());
-    } else {
-        root.primitives = factory();
-    }
+  if (typeof define === "function" && define.amd) {
+    define([], function () {
+      return (root.primitives = factory());
+    });
+  } else if (typeof module === "object" && module.exports) {
+    module.exports = (root.primitives = factory());
+  } else {
+    root.primitives = factory();
+  }
 }(this, function () {
 
-
+  
 
 /* /common/init.js*/
 var primitives = {
-    common: {
-        version: "5.2.2"
-    },
+  common: {
+    version: "5.2.3"
+  },
+  orgdiagram: {},
+  famdiagram: {},
+  text: {},
+  callout: {},
+  connector: {},
+  shape: {},
+  pdf: {
     orgdiagram: {},
-    famdiagram: {},
-    text: {},
-    callout: {},
-    connector: {},
-    shape: {},
-    pdf: {
-        orgdiagram: {},
-        famdiagram: {}
-    }
+    famdiagram: {}
+  }
 };
 
 /* /common/dom.js*/
@@ -2491,211 +2491,211 @@ primitives.common.ConnectorOffbeat = function () {
 primitives.common.ConnectorOffbeat.prototype = new primitives.common.BaseShape();
 
 primitives.common.ConnectorOffbeat.prototype.draw = function (buffer, linePaletteItem, fromRect, toRect, linesOffset, bundleOffset, labelSize, panelSize, connectorShapeType, labelOffset, labelPlacementType, hasLabel,
-	connectorAnnotationOffsetResolver, onLabelPlacement, labelConfig) {
-	var minimalGap,
-		connectorRect,
-		fromPoint, toPoint,
-		snapPoint,
-		index, len,
-		offsets, tempOffset,
-		invertX, invertY,
-		fromLabelPlacement = 0/*primitives.common.PlacementType.Auto*/,
-		toLabelPlacement = 0/*primitives.common.PlacementType.Auto*/,
-		labelPlacement = null,
-		polyline,
-		bothWay;
-	
-	polyline = buffer.getPolyline(linePaletteItem);
+  connectorAnnotationOffsetResolver, onLabelPlacement, labelConfig) {
+  var minimalGap,
+    connectorRect,
+    fromPoint, toPoint,
+    snapPoint,
+    index, len,
+    offsets, tempOffset,
+    invertX, invertY,
+    fromLabelPlacement = 0/*primitives.common.PlacementType.Auto*/,
+    toLabelPlacement = 0/*primitives.common.PlacementType.Auto*/,
+    labelPlacement = null,
+    polyline,
+    bothWay;
 
-	offsets = [];
-	switch (connectorShapeType) {
-		case 1/*primitives.common.ConnectorShapeType.TwoWay*/:
-			offsets = [-linesOffset / 2, linesOffset / 2];
-			bothWay = false;
-			break;
-		case 0/*primitives.common.ConnectorShapeType.OneWay*/:
-			offsets = [0];
-			bothWay = false;
-			break;
-		case 2/*primitives.common.ConnectorShapeType.BothWay*/:
-			offsets = [0];
-			bothWay = true;
-			break;
-	}
+  polyline = buffer.getPolyline(linePaletteItem);
 
-	minimalGap = Math.max(hasLabel ? labelSize.width : 0, linesOffset * 5);
-	if (fromRect.right() + minimalGap < toRect.left() || fromRect.left() > toRect.right() + minimalGap) {
-		if (fromRect.left() > toRect.right()) {
-			fromPoint = new primitives.common.Point(fromRect.left(), fromRect.verticalCenter());
-			toPoint = new primitives.common.Point(toRect.right(), toRect.verticalCenter());
-		} else {
-			fromPoint = new primitives.common.Point(fromRect.right(), fromRect.verticalCenter());
-			toPoint = new primitives.common.Point(toRect.left(), toRect.verticalCenter());
-		}
-		if (hasLabel) {
-			if (fromRect.left() > toRect.right()) {
-				fromLabelPlacement = 7/*primitives.common.PlacementType.Left*/;
-				toLabelPlacement = 3/*primitives.common.PlacementType.Right*/;
-			} else {
-				fromLabelPlacement = 3/*primitives.common.PlacementType.Right*/;
-				toLabelPlacement = 7/*primitives.common.PlacementType.Left*/;
-			}
-		}
-		connectorRect = new primitives.common.Rect(fromPoint, toPoint);
-		invertY = (fromPoint.y <= toPoint.y);
-		invertX = (fromPoint.x < toPoint.x);
-		if (connectorRect.height < connectorRect.width) {
-			/* horizontal single bended connector between boxes from right side to left side */
-			if (connectorRect.height < linesOffset * 2) {
-				connectorRect.offset(0, invertY ? linesOffset * 2 : 0, 0, invertY ? 0 : linesOffset * 2);
-			}
+  offsets = [];
+  switch (connectorShapeType) {
+    case 1/*primitives.common.ConnectorShapeType.TwoWay*/:
+      offsets = [-linesOffset / 2, linesOffset / 2];
+      bothWay = false;
+      break;
+    case 0/*primitives.common.ConnectorShapeType.OneWay*/:
+      offsets = [0];
+      bothWay = false;
+      break;
+    case 2/*primitives.common.ConnectorShapeType.BothWay*/:
+      offsets = [0];
+      bothWay = true;
+      break;
+  }
 
-			for (index = 0, len = offsets.length; index < len; index += 1) {
-				tempOffset = offsets[index];
-				buffer.addInverted(function (invertedBuffer) {
-					var polyline = invertedBuffer.getPolyline(linePaletteItem);
-					polyline.addSegment(new primitives.common.MoveSegment(fromPoint.x, fromPoint.y + tempOffset));
-					polyline.addSegment(new primitives.common.QuadraticArcSegment(connectorRect.horizontalCenter(), (invertY ? connectorRect.top() : connectorRect.bottom()) + tempOffset,
-						toPoint.x, toPoint.y + tempOffset));
+  minimalGap = Math.max(hasLabel ? labelSize.width : 0, linesOffset * 5);
+  if (fromRect.right() + minimalGap < toRect.left() || fromRect.left() > toRect.right() + minimalGap) {
+    if (fromRect.left() > toRect.right()) {
+      fromPoint = new primitives.common.Point(fromRect.left(), fromRect.verticalCenter());
+      toPoint = new primitives.common.Point(toRect.right(), toRect.verticalCenter());
+    } else {
+      fromPoint = new primitives.common.Point(fromRect.right(), fromRect.verticalCenter());
+      toPoint = new primitives.common.Point(toRect.left(), toRect.verticalCenter());
+    }
+    if (hasLabel) {
+      if (fromRect.left() > toRect.right()) {
+        fromLabelPlacement = 7/*primitives.common.PlacementType.Left*/;
+        toLabelPlacement = 3/*primitives.common.PlacementType.Right*/;
+      } else {
+        fromLabelPlacement = 3/*primitives.common.PlacementType.Right*/;
+        toLabelPlacement = 7/*primitives.common.PlacementType.Left*/;
+      }
+    }
+    connectorRect = new primitives.common.Rect(fromPoint, toPoint);
+    invertY = (fromPoint.y <= toPoint.y);
+    invertX = (fromPoint.x < toPoint.x);
+    if (connectorRect.height < connectorRect.width) {
+      /* horizontal single bended connector between boxes from right side to left side */
+      if (connectorRect.height < linesOffset * 2) {
+        connectorRect.offset(0, invertY ? linesOffset * 2 : 0, 0, invertY ? 0 : linesOffset * 2);
+      }
 
-					if (bothWay) {
-						polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
-							polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
-						});//ignore jslint
-					}
-				}, index || (connectorShapeType == 0/*primitives.common.ConnectorShapeType.OneWay*/));//ignore jslint
+      for (index = 0, len = offsets.length; index < len; index += 1) {
+        tempOffset = offsets[index];
+        buffer.addInverted(function (invertedBuffer) {
+          var polyline = invertedBuffer.getPolyline(linePaletteItem);
+          polyline.addSegment(new primitives.common.MoveSegment(fromPoint.x, fromPoint.y + tempOffset));
+          polyline.addSegment(new primitives.common.QuadraticArcSegment(connectorRect.horizontalCenter(), (invertY ? connectorRect.top() : connectorRect.bottom()) + tempOffset,
+            toPoint.x, toPoint.y + tempOffset));
 
-				polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
-					polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
-				}); //ignore jslint
-			}
+          if (bothWay) {
+            polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
+              polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
+            });//ignore jslint
+          }
+        }, index || (connectorShapeType == 0/*primitives.common.ConnectorShapeType.OneWay*/));//ignore jslint
 
-			if (hasLabel) {
-				if (labelSize.width < connectorRect.width / 5 * 2) {
-					snapPoint = primitives.common.QuadraticArcSegment.prototype.offsetPoint(fromPoint.x, fromPoint.y, connectorRect.horizontalCenter(), (invertY ? connectorRect.top() : connectorRect.bottom()), toPoint.x, toPoint.y, 0.5);
-				} else {
-					snapPoint = new primitives.common.Point(fromPoint.x, invertY ? connectorRect.top() : connectorRect.bottom());
-				}
-				labelPlacement = new primitives.common.Rect(snapPoint.x + (invertX ? linesOffset : -labelSize.width - linesOffset), (invertY ? snapPoint.y - labelSize.height - linesOffset : snapPoint.y + linesOffset), labelSize.width, labelSize.height);
-			}
-		} else {
-			/* horizontal double bended connector between boxes from right side to left side */
-			for (index = 0, len = offsets.length; index < len; index += 1) {
-				tempOffset = offsets[index];
-				buffer.addInverted(function (invertedBuffer) {
-					var polyline = invertedBuffer.getPolyline(linePaletteItem);
-					polyline.addSegment(new primitives.common.MoveSegment(fromPoint.x, fromPoint.y + tempOffset));
-					polyline.addSegment(new primitives.common.QuadraticArcSegment(connectorRect.horizontalCenter() + tempOffset * (invertY != invertX ? 1 : -1), (invertY ? connectorRect.top() : connectorRect.bottom()) + tempOffset,
-						connectorRect.horizontalCenter() + tempOffset * (invertY != invertX ? 1 : -1), connectorRect.verticalCenter() + tempOffset));
-					polyline.addSegment(new primitives.common.QuadraticArcSegment(connectorRect.horizontalCenter() + tempOffset * (invertY != invertX ? 1 : -1), (invertY ? connectorRect.bottom() : connectorRect.top()) + tempOffset,
-						toPoint.x, toPoint.y + tempOffset));
+        polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
+          polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
+        }); //ignore jslint
+      }
 
-					if (bothWay) {
-						polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
-							polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
-						});//ignore jslint
-					}
-				}, index || (connectorShapeType == 0/*primitives.common.ConnectorShapeType.OneWay*/));//ignore jslint
+      if (hasLabel) {
+        if (labelSize.width < connectorRect.width / 5 * 2) {
+          snapPoint = primitives.common.QuadraticArcSegment.prototype.offsetPoint(fromPoint.x, fromPoint.y, connectorRect.horizontalCenter(), (invertY ? connectorRect.top() : connectorRect.bottom()), toPoint.x, toPoint.y, 0.5);
+        } else {
+          snapPoint = new primitives.common.Point(fromPoint.x, invertY ? connectorRect.top() : connectorRect.bottom());
+        }
+        labelPlacement = new primitives.common.Rect(snapPoint.x + (invertX ? linesOffset : -labelSize.width - linesOffset), (invertY ? snapPoint.y - labelSize.height - linesOffset : snapPoint.y + linesOffset), labelSize.width, labelSize.height);
+      }
+    } else {
+      /* horizontal double bended connector between boxes from right side to left side */
+      for (index = 0, len = offsets.length; index < len; index += 1) {
+        tempOffset = offsets[index];
+        buffer.addInverted(function (invertedBuffer) {
+          var polyline = invertedBuffer.getPolyline(linePaletteItem);
+          polyline.addSegment(new primitives.common.MoveSegment(fromPoint.x, fromPoint.y + tempOffset));
+          polyline.addSegment(new primitives.common.QuadraticArcSegment(connectorRect.horizontalCenter() + tempOffset * (invertY != invertX ? 1 : -1), (invertY ? connectorRect.top() : connectorRect.bottom()) + tempOffset,
+            connectorRect.horizontalCenter() + tempOffset * (invertY != invertX ? 1 : -1), connectorRect.verticalCenter() + tempOffset));
+          polyline.addSegment(new primitives.common.QuadraticArcSegment(connectorRect.horizontalCenter() + tempOffset * (invertY != invertX ? 1 : -1), (invertY ? connectorRect.bottom() : connectorRect.top()) + tempOffset,
+            toPoint.x, toPoint.y + tempOffset));
 
-				polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
-					polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
-				}); //ignore jslint
-			}
+          if (bothWay) {
+            polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
+              polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
+            });//ignore jslint
+          }
+        }, index || (connectorShapeType == 0/*primitives.common.ConnectorShapeType.OneWay*/));//ignore jslint
 
-			if (hasLabel) {
-				labelPlacement = new primitives.common.Rect(connectorRect.horizontalCenter() + (invertY != invertX ? linesOffset : -(linesOffset + labelSize.width)),
-					connectorRect.verticalCenter() - labelSize.height / 2, labelSize.width, labelSize.height);
-			}
-		}
-	} else {
-		if (fromRect.verticalCenter() < toRect.top() || fromRect.verticalCenter() > toRect.bottom()) {
-			/* vertical single bended connector between boxes from right side to right side */
-			invertX = fromRect.x < panelSize.width / 2;
-			fromPoint = new primitives.common.Point(invertX ? fromRect.right() : fromRect.left(), fromRect.verticalCenter());
-			toPoint = new primitives.common.Point(invertX ? toRect.right() : toRect.left(), toRect.verticalCenter());
-			connectorRect = new primitives.common.Rect(fromPoint, toPoint);
-			connectorRect.offset(linesOffset * 10, 0, linesOffset * 10, 0);
-			invertY = (fromPoint.y <= toPoint.y);
-			for (index = 0, len = offsets.length; index < len; index += 1) {
-				tempOffset = offsets[index];
-				buffer.addInverted(function (invertedBuffer) {
-					var polyline = invertedBuffer.getPolyline(linePaletteItem);
-					polyline.addSegment(new primitives.common.MoveSegment(fromPoint.x, fromPoint.y + tempOffset));
-					polyline.addSegment(new primitives.common.QuadraticArcSegment(invertX ? connectorRect.right() + tempOffset * (invertY ? -1 : 1) : connectorRect.left() - tempOffset * (invertY ? -1 : 1), connectorRect.verticalCenter(),
-						invertX ? toRect.right() : toRect.left(), toRect.verticalCenter() - tempOffset));
+        polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
+          polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
+        }); //ignore jslint
+      }
 
-					if (bothWay) {
-						polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
-							polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
-						});//ignore jslint
-					}
-				}, index || (connectorShapeType == 0/*primitives.common.ConnectorShapeType.OneWay*/));//ignore jslint
+      if (hasLabel) {
+        labelPlacement = new primitives.common.Rect(connectorRect.horizontalCenter() + (invertY != invertX ? linesOffset : -(linesOffset + labelSize.width)),
+          connectorRect.verticalCenter() - labelSize.height / 2, labelSize.width, labelSize.height);
+      }
+    }
+  } else {
+    if (fromRect.verticalCenter() < toRect.top() || fromRect.verticalCenter() > toRect.bottom()) {
+      /* vertical single bended connector between boxes from right side to right side */
+      invertX = fromRect.x < panelSize.width / 2;
+      fromPoint = new primitives.common.Point(invertX ? fromRect.right() : fromRect.left(), fromRect.verticalCenter());
+      toPoint = new primitives.common.Point(invertX ? toRect.right() : toRect.left(), toRect.verticalCenter());
+      connectorRect = new primitives.common.Rect(fromPoint, toPoint);
+      connectorRect.offset(linesOffset * 10, 0, linesOffset * 10, 0);
+      invertY = (fromPoint.y <= toPoint.y);
+      for (index = 0, len = offsets.length; index < len; index += 1) {
+        tempOffset = offsets[index];
+        buffer.addInverted(function (invertedBuffer) {
+          var polyline = invertedBuffer.getPolyline(linePaletteItem);
+          polyline.addSegment(new primitives.common.MoveSegment(fromPoint.x, fromPoint.y + tempOffset));
+          polyline.addSegment(new primitives.common.QuadraticArcSegment(invertX ? connectorRect.right() + tempOffset * (invertY ? -1 : 1) : connectorRect.left() - tempOffset * (invertY ? -1 : 1), connectorRect.verticalCenter(),
+            invertX ? toRect.right() : toRect.left(), toRect.verticalCenter() - tempOffset));
 
-				polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
-					polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
-				});//ignore jslint
-			}
+          if (bothWay) {
+            polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
+              polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
+            });//ignore jslint
+          }
+        }, index || (connectorShapeType == 0/*primitives.common.ConnectorShapeType.OneWay*/));//ignore jslint
 
-			if (hasLabel) {
-				fromLabelPlacement = invertX ? 3/*primitives.common.PlacementType.Right*/ : 7/*primitives.common.PlacementType.Left*/;
-				toLabelPlacement = fromLabelPlacement;
+        polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
+          polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
+        });//ignore jslint
+      }
 
-				snapPoint = primitives.common.QuadraticArcSegment.prototype.offsetPoint(fromPoint.x, fromPoint.y, (invertX ? connectorRect.right() : connectorRect.left()), connectorRect.verticalCenter(), toPoint.x, toPoint.y, 0.5);
-				labelPlacement = new primitives.common.Rect(snapPoint.x + (invertX ? linesOffset / 2 : -linesOffset / 2 - labelSize.width), snapPoint.y - labelSize.height / 2, labelSize.width, labelSize.height);
-			}
-		} else {
-			fromPoint = new primitives.common.Point(fromRect.horizontalCenter(), fromRect.top());
-			toPoint = new primitives.common.Point(toRect.horizontalCenter(), toRect.top());
-			connectorRect = new primitives.common.Rect(fromPoint, toPoint);
-			connectorRect.offset(0, linesOffset * 7, 0, 0);
-			invertX = (fromPoint.x < toPoint.x);
-			for (index = 0, len = offsets.length; index < len; index += 1) {
-				tempOffset = offsets[index];
-				buffer.addInverted(function (invertedBuffer) {
-					var polyline = invertedBuffer.getPolyline(linePaletteItem);
-					polyline.addSegment(new primitives.common.MoveSegment(fromPoint.x + tempOffset, fromPoint.y));
-					polyline.addSegment(new primitives.common.QuadraticArcSegment(connectorRect.horizontalCenter(), connectorRect.top() - tempOffset * (invertX ? -1 : 1),
-						toRect.horizontalCenter() - tempOffset, toRect.top()));
+      if (hasLabel) {
+        fromLabelPlacement = invertX ? 3/*primitives.common.PlacementType.Right*/ : 7/*primitives.common.PlacementType.Left*/;
+        toLabelPlacement = fromLabelPlacement;
 
-					if (bothWay) {
-						polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
-							polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
-						});//ignore jslint
-					}
-				}, index || (connectorShapeType == 0/*primitives.common.ConnectorShapeType.OneWay*/));//ignore jslint
+        snapPoint = primitives.common.QuadraticArcSegment.prototype.offsetPoint(fromPoint.x, fromPoint.y, (invertX ? connectorRect.right() : connectorRect.left()), connectorRect.verticalCenter(), toPoint.x, toPoint.y, 0.5);
+        labelPlacement = new primitives.common.Rect(snapPoint.x + (invertX ? linesOffset / 2 : -linesOffset / 2 - labelSize.width), snapPoint.y - labelSize.height / 2, labelSize.width, labelSize.height);
+      }
+    } else {
+      fromPoint = new primitives.common.Point(fromRect.horizontalCenter(), fromRect.top());
+      toPoint = new primitives.common.Point(toRect.horizontalCenter(), toRect.top());
+      connectorRect = new primitives.common.Rect(fromPoint, toPoint);
+      connectorRect.offset(0, linesOffset * 7, 0, 0);
+      invertX = (fromPoint.x < toPoint.x);
+      for (index = 0, len = offsets.length; index < len; index += 1) {
+        tempOffset = offsets[index];
+        buffer.addInverted(function (invertedBuffer) {
+          var polyline = invertedBuffer.getPolyline(linePaletteItem);
+          polyline.addSegment(new primitives.common.MoveSegment(fromPoint.x + tempOffset, fromPoint.y));
+          polyline.addSegment(new primitives.common.QuadraticArcSegment(connectorRect.horizontalCenter(), connectorRect.top() - tempOffset * (invertX ? -1 : 1),
+            toRect.horizontalCenter() - tempOffset, toRect.top()));
 
-				polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
-					polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
-				}); //ignore jslint
-			}
+          if (bothWay) {
+            polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
+              polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
+            });//ignore jslint
+          }
+        }, index || (connectorShapeType == 0/*primitives.common.ConnectorShapeType.OneWay*/));//ignore jslint
 
-			if (hasLabel) {
-				fromLabelPlacement = 1/*primitives.common.PlacementType.Top*/;
-				toLabelPlacement = 1/*primitives.common.PlacementType.Top*/;
+        polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
+          polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
+        }); //ignore jslint
+      }
 
-				snapPoint = primitives.common.QuadraticArcSegment.prototype.offsetPoint(fromPoint.x, fromPoint.y, connectorRect.horizontalCenter(), connectorRect.top(), toPoint.x, toPoint.y, 0.5);
-				labelPlacement = new primitives.common.Rect(snapPoint.x - labelSize.width / 2, snapPoint.y - (labelOffset + labelSize.height), labelSize.width, labelSize.height);
-			}
-		}
-	}
+      if (hasLabel) {
+        fromLabelPlacement = 1/*primitives.common.PlacementType.Top*/;
+        toLabelPlacement = 1/*primitives.common.PlacementType.Top*/;
 
-	if (hasLabel) {
-		/* end points labels placement */
-		switch (labelPlacementType) {
-			case 0/*primitives.common.ConnectorLabelPlacementType.From*/:
-				labelPlacement = this._getLabelPosition(fromRect.x, fromRect.y, fromRect.width, fromRect.height, labelPlacement.width, labelPlacement.height, labelOffset, fromLabelPlacement);
-				break;
-			case 2/*primitives.common.ConnectorLabelPlacementType.To*/:
-				labelPlacement = this._getLabelPosition(toRect.x, toRect.y, toRect.width, toRect.height, labelPlacement.width, labelPlacement.height, labelOffset, toLabelPlacement);
-				break;
-			default:
-				break;
-		}
-	}
+        snapPoint = primitives.common.QuadraticArcSegment.prototype.offsetPoint(fromPoint.x, fromPoint.y, connectorRect.horizontalCenter(), connectorRect.top(), toPoint.x, toPoint.y, 0.5);
+        labelPlacement = new primitives.common.Rect(snapPoint.x - labelSize.width / 2, snapPoint.y - (labelOffset + labelSize.height), labelSize.width, labelSize.height);
+      }
+    }
+  }
 
-	if (onLabelPlacement != null) {
-		onLabelPlacement(labelPlacement, labelConfig);
-	}
+  if (hasLabel) {
+    /* end points labels placement */
+    switch (labelPlacementType) {
+      case 0/*primitives.common.ConnectorLabelPlacementType.From*/:
+        labelPlacement = this._getLabelPosition(fromRect.x, fromRect.y, fromRect.width, fromRect.height, labelPlacement.width, labelPlacement.height, labelOffset, fromLabelPlacement);
+        break;
+      case 2/*primitives.common.ConnectorLabelPlacementType.To*/:
+        labelPlacement = this._getLabelPosition(toRect.x, toRect.y, toRect.width, toRect.height, labelPlacement.width, labelPlacement.height, labelOffset, toLabelPlacement);
+        break;
+      default:
+        break;
+    }
+  }
+
+  if (onLabelPlacement != null) {
+    onLabelPlacement(labelPlacement, labelConfig);
+  }
 };
 
 
@@ -2707,120 +2707,120 @@ primitives.common.ConnectorStraight = function () {
 primitives.common.ConnectorStraight.prototype = new primitives.common.BaseShape();
 
 primitives.common.ConnectorStraight.prototype.draw = function (buffer, linePaletteItem, fromRect, toRect, linesOffset, bundleOffset, labelSize, panelSize, connectorShapeType, labelOffset, labelPlacementType, hasLabel,
-	connectorAnnotationOffsetResolver, onLabelPlacement, labelConfig) {
-	var fromPoint, toPoint, betweenPoint,
-		vector, newVector,
-		offset = linesOffset / 2,
-		labelPlacement = null,
-		fromLabelPlacement = 0/*primitives.common.PlacementType.Auto*/,
-		toLabelPlacement = 0/*primitives.common.PlacementType.Auto*/,
-		self = this;
+  connectorAnnotationOffsetResolver, onLabelPlacement, labelConfig) {
+  var fromPoint, toPoint, betweenPoint,
+    vector, newVector,
+    offset = linesOffset / 2,
+    labelPlacement = null,
+    fromLabelPlacement = 0/*primitives.common.PlacementType.Auto*/,
+    toLabelPlacement = 0/*primitives.common.PlacementType.Auto*/,
+    self = this;
 
-	vector = new primitives.common.Vector(fromRect.centerPoint(), toRect.centerPoint());
+  vector = new primitives.common.Vector(fromRect.centerPoint(), toRect.centerPoint());
 
-	fromRect.loopEdges(function (sideVector, placementType) {
-		fromPoint = sideVector.getIntersectionPoint(vector, true, 1.0);
-		fromLabelPlacement = placementType;
-		return (fromPoint != null);
-	});
+  fromRect.loopEdges(function (sideVector, placementType) {
+    fromPoint = sideVector.getIntersectionPoint(vector, true, 1.0);
+    fromLabelPlacement = placementType;
+    return (fromPoint != null);
+  });
 
-	toRect.loopEdges(function (sideVector, placementType) {
-		toPoint = sideVector.getIntersectionPoint(vector, true, 1.0);
-		toLabelPlacement = placementType;
-		return (toPoint != null);
-	});
+  toRect.loopEdges(function (sideVector, placementType) {
+    toPoint = sideVector.getIntersectionPoint(vector, true, 1.0);
+    toLabelPlacement = placementType;
+    return (toPoint != null);
+  });
 
-	if (fromPoint != null && toPoint != null) {
-		var baseVector = new primitives.common.Vector(fromPoint, toPoint);
-		connectorAnnotationOffsetResolver.getOffset(baseVector, function (offsetIndex, bundleSize, direction) {
-			var tempOffset = (offsetIndex * bundleOffset - (bundleSize - 1) * bundleOffset / 2.0) * direction;
-			baseVector.offset(tempOffset);
-			fromPoint = baseVector.from;
-			toPoint = baseVector.to;
+  if (fromPoint != null && toPoint != null) {
+    var baseVector = new primitives.common.Vector(fromPoint, toPoint);
+    connectorAnnotationOffsetResolver.getOffset(baseVector, function (offsetIndex, bundleSize, direction) {
+      var tempOffset = (offsetIndex * bundleOffset - (bundleSize - 1) * bundleOffset / 2.0) * direction;
+      baseVector.offset(tempOffset);
+      fromPoint = baseVector.from;
+      toPoint = baseVector.to;
 
-			switch (connectorShapeType) {
-				case 1/*primitives.common.ConnectorShapeType.TwoWay*/:
-					newVector = new primitives.common.Vector(toPoint.clone(), fromPoint.clone());
-					newVector.offset(offset);
-					self._drawLine(buffer, linePaletteItem, newVector.from, newVector.to, false);
+      switch (connectorShapeType) {
+        case 1/*primitives.common.ConnectorShapeType.TwoWay*/:
+          newVector = new primitives.common.Vector(toPoint.clone(), fromPoint.clone());
+          newVector.offset(offset);
+          self._drawLine(buffer, linePaletteItem, newVector.from, newVector.to, false);
 
-					newVector = new primitives.common.Vector(fromPoint.clone(), toPoint.clone());
-					newVector.offset(offset);
-					self._drawLine(buffer, linePaletteItem, newVector.from, newVector.to, false);
-					break;
-				case 0/*primitives.common.ConnectorShapeType.OneWay*/:
-					self._drawLine(buffer, linePaletteItem, fromPoint, toPoint, false);
-					break;
-				case 2/*primitives.common.ConnectorShapeType.BothWay*/:
-					self._drawLine(buffer, linePaletteItem, fromPoint, toPoint, true);
-					break;
-			}
+          newVector = new primitives.common.Vector(fromPoint.clone(), toPoint.clone());
+          newVector.offset(offset);
+          self._drawLine(buffer, linePaletteItem, newVector.from, newVector.to, false);
+          break;
+        case 0/*primitives.common.ConnectorShapeType.OneWay*/:
+          self._drawLine(buffer, linePaletteItem, fromPoint, toPoint, false);
+          break;
+        case 2/*primitives.common.ConnectorShapeType.BothWay*/:
+          self._drawLine(buffer, linePaletteItem, fromPoint, toPoint, true);
+          break;
+      }
 
-			if (hasLabel) {
-				/* end points labels placement */
-				switch (labelPlacementType) {
-					case 0/*primitives.common.ConnectorLabelPlacementType.From*/:
-						labelPlacement = self._getLabelPositionBySnapPoint(fromPoint.x, fromPoint.y, labelSize.width, labelSize.height, labelOffset, fromLabelPlacement);
-						break;
-					case 1/*primitives.common.ConnectorLabelPlacementType.Between*/:
-						betweenPoint = self._betweenPoint(fromPoint, toPoint);
-						labelPlacement = self._getLabelPositionBySnapPoint(betweenPoint.x, betweenPoint.y, labelSize.width, labelSize.height, labelOffset, 3/*primitives.common.PlacementType.Right*/);
-						break;
-					case 2/*primitives.common.ConnectorLabelPlacementType.To*/:
-						labelPlacement = self._getLabelPositionBySnapPoint(toPoint.x, toPoint.y, labelSize.width, labelSize.height, labelOffset, toLabelPlacement);
-						break;
-					default:
-						break;
-				}
+      if (hasLabel) {
+        /* end points labels placement */
+        switch (labelPlacementType) {
+          case 0/*primitives.common.ConnectorLabelPlacementType.From*/:
+            labelPlacement = self._getLabelPositionBySnapPoint(fromPoint.x, fromPoint.y, labelSize.width, labelSize.height, labelOffset, fromLabelPlacement);
+            break;
+          case 1/*primitives.common.ConnectorLabelPlacementType.Between*/:
+            betweenPoint = self._betweenPoint(fromPoint, toPoint);
+            labelPlacement = self._getLabelPositionBySnapPoint(betweenPoint.x, betweenPoint.y, labelSize.width, labelSize.height, labelOffset, 3/*primitives.common.PlacementType.Right*/);
+            break;
+          case 2/*primitives.common.ConnectorLabelPlacementType.To*/:
+            labelPlacement = self._getLabelPositionBySnapPoint(toPoint.x, toPoint.y, labelSize.width, labelSize.height, labelOffset, toLabelPlacement);
+            break;
+          default:
+            break;
+        }
 
-				if (onLabelPlacement != null) {
-					onLabelPlacement.call(this, labelPlacement, labelConfig);
-				}
-			}
-		});
+        if (onLabelPlacement != null) {
+          onLabelPlacement.call(this, labelPlacement, labelConfig);
+        }
+      }
+    });
 
-	}
+  }
 };
 
 primitives.common.ConnectorStraight.prototype._drawLine = function (buffer, linePaletteItem, fromPoint, toPoint, bothWays) {
-	var polyline;
+  var polyline;
 
-	buffer.addInverted(function (invertedBuffer) {
-		polyline = invertedBuffer.getPolyline(linePaletteItem);
-		polyline.addSegment(new primitives.common.MoveSegment(fromPoint));
-		polyline.addSegment(new primitives.common.LineSegment(toPoint));
+  buffer.addInverted(function (invertedBuffer) {
+    polyline = invertedBuffer.getPolyline(linePaletteItem);
+    polyline.addSegment(new primitives.common.MoveSegment(fromPoint));
+    polyline.addSegment(new primitives.common.LineSegment(toPoint));
 
-		polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
-			polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
-		}); //ignore jslint
-	}, false);//ignore jslint
+    polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
+      polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
+    }); //ignore jslint
+  }, false);//ignore jslint
 
-	if (bothWays) {
-		polyline = buffer.getPolyline(linePaletteItem);
-		polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
-			polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
-		}); //ignore jslint
-	}
+  if (bothWays) {
+    polyline = buffer.getPolyline(linePaletteItem);
+    polyline.addArrow(linePaletteItem.lineWidth, function (polyline) {
+      polyline.mergeTo(buffer.getPolyline(polyline.paletteItem));
+    }); //ignore jslint
+  }
 };
 
 primitives.common.ConnectorStraight.prototype._getLabelPositionBySnapPoint = function (x, y, labelWidth, labelHeight, labelOffset, placementType) {
-	var result = null;
-	switch (placementType) {
-		case 0/*primitives.common.PlacementType.Auto*/:
-		case 1/*primitives.common.PlacementType.Top*/:
-			result = new primitives.common.Rect(x - labelWidth / 2.0, y - labelOffset - labelHeight, labelWidth, labelHeight);
-			break;
-		case 3/*primitives.common.PlacementType.Right*/:
-			result = new primitives.common.Rect(x + labelOffset, y - labelHeight / 2.0, labelWidth, labelHeight);
-			break;
-		case 5/*primitives.common.PlacementType.Bottom*/:
-			result = new primitives.common.Rect(x - labelWidth / 2.0, y + labelOffset, labelWidth, labelHeight);
-			break;
-		case 7/*primitives.common.PlacementType.Left*/:
-			result = new primitives.common.Rect(x - labelWidth - labelOffset, y - labelHeight / 2.0, labelWidth, labelHeight);
-			break;
-	}
-	return result;
+  var result = null;
+  switch (placementType) {
+    case 0/*primitives.common.PlacementType.Auto*/:
+    case 1/*primitives.common.PlacementType.Top*/:
+      result = new primitives.common.Rect(x - labelWidth / 2.0, y - labelOffset - labelHeight, labelWidth, labelHeight);
+      break;
+    case 3/*primitives.common.PlacementType.Right*/:
+      result = new primitives.common.Rect(x + labelOffset, y - labelHeight / 2.0, labelWidth, labelHeight);
+      break;
+    case 5/*primitives.common.PlacementType.Bottom*/:
+      result = new primitives.common.Rect(x - labelWidth / 2.0, y + labelOffset, labelWidth, labelHeight);
+      break;
+    case 7/*primitives.common.PlacementType.Left*/:
+      result = new primitives.common.Rect(x - labelWidth - labelOffset, y - labelHeight / 2.0, labelWidth, labelHeight);
+      break;
+  }
+  return result;
 };
 
 /* /graphics/shapes/Marker.js*/
@@ -17637,163 +17637,163 @@ primitives.orgdiagram.DrawBackgroundAnnotationTask = function (getGraphics, crea
 
 /* /Controls/OrgDiagram/Tasks/Renders/DrawConnectorAnnotationTask.js*/
 primitives.orgdiagram.DrawConnectorAnnotationTask = function (getGraphics, createTranfromTask, applyLayoutChangesTask,
-	orientationOptionTask, connectorAnnotationOptionTask, alignDiagramTask, annotationLabelTemplateTask, zOrderType) {
-	var _graphics,
-		_transform,
-		_orientationOptions,
-		_annotationLabelTemplate,
-		_panelSize;
+  orientationOptionTask, connectorAnnotationOptionTask, alignDiagramTask, annotationLabelTemplateTask, zOrderType) {
+  var _graphics,
+    _transform,
+    _orientationOptions,
+    _annotationLabelTemplate,
+    _panelSize;
 
-	function process() {
+  function process() {
 
-		_graphics = getGraphics();
+    _graphics = getGraphics();
 
-		_transform = createTranfromTask.getTransform();
-		_orientationOptions = orientationOptionTask.getOptions();
+    _transform = createTranfromTask.getTransform();
+    _orientationOptions = orientationOptionTask.getOptions();
 
-		_annotationLabelTemplate = annotationLabelTemplateTask.getTemplate();
+    _annotationLabelTemplate = annotationLabelTemplateTask.getTemplate();
 
-		_panelSize = new primitives.common.Size(alignDiagramTask.getContentSize());
+    _panelSize = new primitives.common.Size(alignDiagramTask.getContentSize());
 
-		switch (zOrderType) {
-			case 1/*primitives.common.ZOrderType.Background*/://ignore jslint
-				_graphics.reset("placeholder", 4/*primitives.common.Layers.BackgroundConnectorAnnotation*/);
-				break;
-			case 2/*primitives.common.ZOrderType.Foreground*/://ignore jslint
-				_graphics.reset("placeholder",  14/*primitives.common.Layers.ForegroundConnectorAnnotation*/);
-				break;
-		}
+    switch (zOrderType) {
+      case 1/*primitives.common.ZOrderType.Background*/://ignore jslint
+        _graphics.reset("placeholder", 4/*primitives.common.Layers.BackgroundConnectorAnnotation*/);
+        break;
+      case 2/*primitives.common.ZOrderType.Foreground*/://ignore jslint
+        _graphics.reset("placeholder", 14/*primitives.common.Layers.ForegroundConnectorAnnotation*/);
+        break;
+    }
 
-		drawAnnotations(connectorAnnotationOptionTask.getAnnotations(), alignDiagramTask.getItemPosition);
+    drawAnnotations(connectorAnnotationOptionTask.getAnnotations(), alignDiagramTask.getItemPosition);
 
-		return false;
-	}
+    return false;
+  }
 
-	function drawAnnotations(annotations, getItemPosition) {
-		var panel,
-			index, len,
-			layer = 14/*primitives.common.Layers.ForegroundConnectorAnnotation*/,
-			fromItemPosition, fromActualPosition,
-			toItemPosition, toActualPosition,
-			shape,
-			annotationConfig,
-			uiHash,
-			buffer = new primitives.common.PolylinesBuffer(),
-			labelPlacement,
-			connectorAnnotationOffsetResolver = primitives.orgdiagram.ConnectorAnnotationOffsetResolver(),
-			maximumLineWidth = 0;
+  function drawAnnotations(annotations, getItemPosition) {
+    var panel,
+      index, len,
+      layer = 14/*primitives.common.Layers.ForegroundConnectorAnnotation*/,
+      fromItemPosition, fromActualPosition,
+      toItemPosition, toActualPosition,
+      shape,
+      annotationConfig,
+      uiHash,
+      buffer = new primitives.common.PolylinesBuffer(),
+      labelPlacement,
+      connectorAnnotationOffsetResolver = primitives.orgdiagram.ConnectorAnnotationOffsetResolver(),
+      maximumLineWidth = 0;
 
-		switch (zOrderType) {
-			case 1/*primitives.common.ZOrderType.Background*/://ignore jslint
-				panel = _graphics.activate("placeholder", 4/*primitives.common.Layers.BackgroundConnectorAnnotation*/);
-				break;
-			case 2/*primitives.common.ZOrderType.Foreground*/://ignore jslint
-				panel = _graphics.activate("placeholder", 14/*primitives.common.Layers.ForegroundConnectorAnnotation*/);
-				break;
-		}
+    switch (zOrderType) {
+      case 1/*primitives.common.ZOrderType.Background*/://ignore jslint
+        panel = _graphics.activate("placeholder", 4/*primitives.common.Layers.BackgroundConnectorAnnotation*/);
+        break;
+      case 2/*primitives.common.ZOrderType.Foreground*/://ignore jslint
+        panel = _graphics.activate("placeholder", 14/*primitives.common.Layers.ForegroundConnectorAnnotation*/);
+        break;
+    }
 
-		for (index = 0, len = annotations.length; index < len; index += 1) {
-			annotationConfig = annotations[index];
-			maximumLineWidth = Math.max(maximumLineWidth, annotationConfig.lineWidth);
-		}
+    for (index = 0, len = annotations.length; index < len; index += 1) {
+      annotationConfig = annotations[index];
+      maximumLineWidth = Math.max(maximumLineWidth, annotationConfig.lineWidth);
+    }
 
-		for (index = 0, len = annotations.length; index < len; index += 1) {
-			annotationConfig = annotations[index];
+    for (index = 0, len = annotations.length; index < len; index += 1) {
+      annotationConfig = annotations[index];
 
-			if (annotationConfig.fromItem != null && annotationConfig.toItem != null) {
-				fromItemPosition = getItemPosition(annotationConfig.fromItem);
-				toItemPosition = getItemPosition(annotationConfig.toItem);
-				if (fromItemPosition != null && toItemPosition != null) {
-					fromActualPosition = fromItemPosition.actualPosition;
-					toActualPosition = toItemPosition.actualPosition;
+      if (annotationConfig.fromItem != null && annotationConfig.toItem != null) {
+        fromItemPosition = getItemPosition(annotationConfig.fromItem);
+        toItemPosition = getItemPosition(annotationConfig.toItem);
+        if (fromItemPosition != null && toItemPosition != null) {
+          fromActualPosition = fromItemPosition.actualPosition;
+          toActualPosition = toItemPosition.actualPosition;
 
-					switch (annotationConfig.connectorPlacementType) {
-						case 0/*primitives.common.ConnectorPlacementType.Offbeat*/:
-							shape = new primitives.common.ConnectorOffbeat();
-							break;
-						case 1/*primitives.common.ConnectorPlacementType.Straight*/:
-							shape = new primitives.common.ConnectorStraight();
-							break;
-					}
+          switch (annotationConfig.connectorPlacementType) {
+            case 0/*primitives.common.ConnectorPlacementType.Offbeat*/:
+              shape = new primitives.common.ConnectorOffbeat();
+              break;
+            case 1/*primitives.common.ConnectorPlacementType.Straight*/:
+              shape = new primitives.common.ConnectorStraight();
+              break;
+          }
 
-					/* rotate label size to user orientation */
-					var labelSize;
-					_transform.transformRect(0, 0, annotationConfig.labelSize.width, annotationConfig.labelSize.height, false,
-					this, function (x, y, width, height) {
-						labelSize = new primitives.common.Size(width, height);
-					});
+          /* rotate label size to user orientation */
+          var labelSize;
+          _transform.transformRect(0, 0, annotationConfig.labelSize.width, annotationConfig.labelSize.height, false,
+            this, function (x, y, width, height) {
+              labelSize = new primitives.common.Size(width, height);
+            });
 
-					/* rotate panel size to user orientation */
-					var panelSize = null;
-					_transform.transformRect(0, 0, _panelSize.width, _panelSize.height, false,
-					this, function (x, y, width, height) {
-						panelSize = new primitives.common.Size(width, height);
-					});
+          /* rotate panel size to user orientation */
+          var panelSize = null;
+          _transform.transformRect(0, 0, _panelSize.width, _panelSize.height, false,
+            this, function (x, y, width, height) {
+              panelSize = new primitives.common.Size(width, height);
+            });
 
-					var linePaletteItem = new primitives.common.PaletteItem({
-						lineColor: annotationConfig.color,
-						lineWidth: annotationConfig.lineWidth,
-						lineType: annotationConfig.lineType
-					});
+          var linePaletteItem = new primitives.common.PaletteItem({
+            lineColor: annotationConfig.color,
+            lineWidth: annotationConfig.lineWidth,
+            lineType: annotationConfig.lineType
+          });
 
-					var hasLabel = !primitives.common.isNullOrEmpty(annotationConfig.label);
+          var hasLabel = !primitives.common.isNullOrEmpty(annotationConfig.label);
 
-					/* offset rectangles */
-					var fromRect = new primitives.common.Rect(fromActualPosition).offset(annotationConfig.offset);
-					var toRect = new primitives.common.Rect(toActualPosition).offset(annotationConfig.offset);
+          /* offset rectangles */
+          var fromRect = new primitives.common.Rect(fromActualPosition).offset(annotationConfig.offset);
+          var toRect = new primitives.common.Rect(toActualPosition).offset(annotationConfig.offset);
 
-					var linesOffset = annotationConfig.lineWidth * 3;
-					var bundleOffset = maximumLineWidth * 6;
+          var linesOffset = annotationConfig.lineWidth * 3;
+          var bundleOffset = maximumLineWidth * 6;
 
-					/* create connection lines */
-					shape.draw(buffer, linePaletteItem, fromRect, toRect, linesOffset, bundleOffset, labelSize, panelSize,
-						annotationConfig.connectorShapeType, 4 /*labelOffset*/, annotationConfig.labelPlacementType, hasLabel,
-						connectorAnnotationOffsetResolver, function (labelPlacement, labelConfig) {
-							var hasLabel = !primitives.common.isNullOrEmpty(labelConfig.label);
-							if (hasLabel && labelPlacement != null) {
-								/* translate result label placement back to users orientation */
-								_transform.transformRect(labelPlacement.x, labelPlacement.y, labelPlacement.width, labelPlacement.height, true,
-									this, function (x, y, width, height) {
-										labelPlacement = new primitives.common.Rect(x, y, width, height);
-									});
+          /* create connection lines */
+          shape.draw(buffer, linePaletteItem, fromRect, toRect, linesOffset, bundleOffset, labelSize, panelSize,
+            annotationConfig.connectorShapeType, 4 /*labelOffset*/, annotationConfig.labelPlacementType, hasLabel,
+            connectorAnnotationOffsetResolver, function (labelPlacement, labelConfig) {
+              var hasLabel = !primitives.common.isNullOrEmpty(labelConfig.label);
+              if (hasLabel && labelPlacement != null) {
+                /* translate result label placement back to users orientation */
+                _transform.transformRect(labelPlacement.x, labelPlacement.y, labelPlacement.width, labelPlacement.height, true,
+                  this, function (x, y, width, height) {
+                    labelPlacement = new primitives.common.Rect(x, y, width, height);
+                  });
 
-								uiHash = new primitives.common.RenderEventArgs();
-								uiHash.context = labelConfig;
+                uiHash = new primitives.common.RenderEventArgs();
+                uiHash.context = labelConfig;
 
-								/* draw label */
-								_graphics.template(
-									labelPlacement.x
-									, labelPlacement.y
-									, 0
-									, 0
-									, 0
-									, 0
-									, labelPlacement.width
-									, labelPlacement.height
-									, _annotationLabelTemplate.template()
-									, _annotationLabelTemplate.getHashCode()
-									, _annotationLabelTemplate.render
-									, uiHash
-									, null
-								);
-							}
-						}, annotationConfig);
-				}
-			}
-		}
+                /* draw label */
+                _graphics.template(
+                  labelPlacement.x
+                  , labelPlacement.y
+                  , 0
+                  , 0
+                  , 0
+                  , 0
+                  , labelPlacement.width
+                  , labelPlacement.height
+                  , _annotationLabelTemplate.template()
+                  , _annotationLabelTemplate.getHashCode()
+                  , _annotationLabelTemplate.render
+                  , uiHash
+                  , null
+                );
+              }
+            }, annotationConfig);
+        }
+      }
+    }
 
-		connectorAnnotationOffsetResolver.resolve();
+    connectorAnnotationOffsetResolver.resolve();
 
 
-		/* translate result polylines back to users orientation */
-		buffer.transform(_transform, true);
-		/* draw background polylines */
-		_graphics.polylinesBuffer(buffer);
-	}
+    /* translate result polylines back to users orientation */
+    buffer.transform(_transform, true);
+    /* draw background polylines */
+    _graphics.polylinesBuffer(buffer);
+  }
 
-	return {
-		process: process
-	};
+  return {
+    process: process
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Renders/DrawConnectorsTask.js*/
@@ -22546,29 +22546,29 @@ primitives.common.UserTemplate = function (options, content, onRender) {
 
 /* /Controls/OrgDiagram/BaseControl.js*/
 primitives.orgdiagram.BaseControl = function (element, options, taskManagerFactory, eventArgsFactory, templates) {
-	var _data = {
-		name: "orgdiagram",
-		options: options,
-		tasks: null,
-		graphics: null,
-		mouse: null,
-		layout: {
-			element: element,
-			scrollPanel: null,
-			mousePanel: null,
-			placeholder: null,
-			calloutPlaceholder: null,
-			forceCenterOnCursor: true
-		}
-	},
-	_dragFrom,
-	_scrollFrom,
-	_scrollTo,
-	_dragImage,
-	_dragTimer,
-	_scale,
-	_debug = false,
-	_timer = null;
+  var _data = {
+    name: "orgdiagram",
+    options: options,
+    tasks: null,
+    graphics: null,
+    mouse: null,
+    layout: {
+      element: element,
+      scrollPanel: null,
+      mousePanel: null,
+      placeholder: null,
+      calloutPlaceholder: null,
+      forceCenterOnCursor: true
+    }
+  },
+    _dragFrom,
+    _scrollFrom,
+    _scrollTo,
+    _dragImage,
+    _dragTimer,
+    _scale,
+    _debug = true,
+    _timer = null;
 
 	/*
 		method: update
@@ -22586,103 +22586,103 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 		Default:
 			<primitives.common.UpdateMode.Recreate>
 	*/
-	function update(updateMode, forceCenterOnCursor) {
-		if (forceCenterOnCursor == null) {
-			forceCenterOnCursor = true;
-		}
-		switch (updateMode) {
-			case 1/*primitives.common.UpdateMode.Refresh*/:
-				refresh(forceCenterOnCursor, _debug);
-				break;
-			case 2/*primitives.common.UpdateMode.PositonHighlight*/:
-				positionHighlight(_debug);
-				break;
-			default:
-				redraw();
-				break;
-		}
-	}
+  function update(updateMode, forceCenterOnCursor) {
+    if (forceCenterOnCursor == null) {
+      forceCenterOnCursor = true;
+    }
+    switch (updateMode) {
+      case 1/*primitives.common.UpdateMode.Refresh*/:
+        refresh(forceCenterOnCursor, _debug);
+        break;
+      case 2/*primitives.common.UpdateMode.PositonHighlight*/:
+        positionHighlight(_debug);
+        break;
+      default:
+        redraw();
+        break;
+    }
+  }
 
 	/*
 		method: destroy
 			Removes all elements control added to DOM incluidng event listeners.
 	*/
-	function destroy() {
-		unbind(_data.layout);
-		cleanLayout(_data.layout);
+  function destroy() {
+    unbind(_data.layout);
+    cleanLayout(_data.layout);
 
-		_data.tasks = null;
-		_data.graphics = null;
-	}
+    _data.tasks = null;
+    _data.graphics = null;
+  }
 
-	function redraw() {
-		unbind(_data.layout);
-		cleanLayout(_data.layout);
+  function redraw() {
+    unbind(_data.layout);
+    cleanLayout(_data.layout);
 
-		createLayout(_data.layout, _data.name);
-		bind(_data.layout);
-		_data.tasks = taskManagerFactory(getOptions, getGraphics, getLayout, templates);
-		_data.graphics = primitives.common.createGraphics(_data.options.graphicsType, _data.layout.element);
-		_data.graphics.debug = _debug;
+    createLayout(_data.layout, _data.name);
+    bind(_data.layout);
+    _data.tasks = taskManagerFactory(getOptions, getGraphics, getLayout, templates);
+    _data.graphics = primitives.common.createGraphics(_data.options.graphicsType, _data.layout.element);
+    _data.graphics.debug = _debug;
 
-		refresh(true, _debug);
-	}
+    refresh(true, _debug);
+  }
 
-	function refresh(forceCenterOnCursor, debug) {
-		var centerOnCursorTask,
-			placeholderOffset;
+  function refresh(forceCenterOnCursor, debug) {
+    var centerOnCursorTask,
+      placeholderOffset;
 
-		//_data.layout.scrollPanel.css({
-		//	"display": "none",
-		//	"-webkit-overflow-scrolling": "auto"
-		//});
+    //_data.layout.scrollPanel.css({
+    //	"display": "none",
+    //	"-webkit-overflow-scrolling": "auto"
+    //});
 
-		//this.graphics.begin();
+    //this.graphics.begin();
 
-		_data.layout.forceCenterOnCursor = forceCenterOnCursor;
-		_data.tasks.process('OptionsTask', null, debug);
+    _data.layout.forceCenterOnCursor = forceCenterOnCursor;
+    _data.tasks.process('OptionsTask', null, debug);
 
-		_data.graphics.end();
+    _data.graphics.end();
 
-		//_data.layout.scrollPanel.css({
-		//	"display": "block"
-		//});
+    //_data.layout.scrollPanel.css({
+    //	"display": "block"
+    //});
 
-		if (forceCenterOnCursor) {
-			/* scroll to offset */
-			centerOnCursorTask = _data.tasks.getTask("CenterOnCursorTask");
-			placeholderOffset = centerOnCursorTask.getPlaceholderOffset();
-			_data.layout.scrollPanel.scrollLeft = placeholderOffset.x;
-			_data.layout.scrollPanel.scrollTop = placeholderOffset.y;
-		}
-		//_data.layout.scrollPanel.css({
-		//	"-webkit-overflow-scrolling": "touch"
-		//});
-	}
+    if (forceCenterOnCursor) {
+      /* scroll to offset */
+      centerOnCursorTask = _data.tasks.getTask("CenterOnCursorTask");
+      placeholderOffset = centerOnCursorTask.getPlaceholderOffset();
+      _data.layout.scrollPanel.scrollLeft = placeholderOffset.x;
+      _data.layout.scrollPanel.scrollTop = placeholderOffset.y;
+    }
+    //_data.layout.scrollPanel.css({
+    //	"-webkit-overflow-scrolling": "touch"
+    //});
+  }
 
-	function positionHighlight(debug) {
-		_data.layout.forceCenterOnCursor = false;
-		_data.tasks.process('HighlightItemOptionTask', null, debug);
+  function positionHighlight(debug) {
+    _data.layout.forceCenterOnCursor = false;
+    _data.tasks.process('HighlightItemOptionTask', null, debug);
 
-		_data.graphics.end();
-	}
+    _data.graphics.end();
+  }
 
-	function redrawCurrentViewPort(debug) {
-		_data.layout.forceCenterOnCursor = false;
-		_data.tasks.process('CurrentScrollPositionTask', null, debug);
+  function redrawCurrentViewPort(debug) {
+    _data.layout.forceCenterOnCursor = false;
+    _data.tasks.process('CurrentScrollPositionTask', null, debug);
 
-		_data.graphics.end();
-	}
+    _data.graphics.end();
+  }
 
-	function onScroll(event) {
-		if (_timer == null) {
-			_timer = window.setTimeout(function () {
-				redrawCurrentViewPort(_debug);
-				window.clearTimeout(_timer);
-				_timer = null;
-			}, 200);
-		}
-	}
+  function onScroll(event) {
+    if (_timer == null) {
+      _timer = window.setTimeout(function () {
+        redrawCurrentViewPort(_debug);
+        window.clearTimeout(_timer);
+        _timer = null;
+      }, 200);
+    }
+  }
 
 	/*
 		method: setOptions
@@ -22691,13 +22691,13 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 		Parameters:
 		options - JavaScript object containing options.
 	*/
-	function setOptions(options) {
-		for (var option in options) {
-			if (options.hasOwnProperty(option)) {
-				_data.options[option] = options[option];
-			}
-		}
-	}
+  function setOptions(options) {
+    for (var option in options) {
+      if (options.hasOwnProperty(option)) {
+        _data.options[option] = options[option];
+      }
+    }
+  }
 
 	/*
 		method: getOptions
@@ -22706,9 +22706,9 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 		Returns:
 		Reference to current configuration object
 	*/
-	function getOptions() {
-		return _data.options;
-	}
+  function getOptions() {
+    return _data.options;
+  }
 
 	/*
 		method: getOption
@@ -22717,9 +22717,9 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 		Returns:
 		Option value by name
 	*/
-	function getOption(option) {
-		return _data.options[option];
-	}
+  function getOption(option) {
+    return _data.options[option];
+  }
 
 	/*
 		method: setOption
@@ -22729,402 +22729,402 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 		option - option name
 		value - value
 	*/
-	function setOption(option, value) {
-		return _data.options[option] = value;
-	}
+  function setOption(option, value) {
+    return _data.options[option] = value;
+  }
 
-	function getGraphics() {
-		return _data.graphics;
-	}
+  function getGraphics() {
+    return _data.graphics;
+  }
 
-	function getLayout() {
-		return _data.layout;
-	}
+  function getLayout() {
+    return _data.layout;
+  }
 
-	function createLayout(layout, name) {
-		var elementSize = primitives.common.getInnerSize(layout.element),
-			scrollPanelRect = new primitives.common.Rect(0, 0, elementSize.width, elementSize.height),
-			placeholderRect = new primitives.common.Rect(scrollPanelRect),
-			pixelAlignmentFix = primitives.common.getFixOfPixelALignment(element);
-
-		
-		primitives.common.JsonML.appendDOM(layout.element, primitives.common.JsonML.toHTML(
-			["div", /* scrollPanel - root scroll panel */
-				{
-					"tabindex": 0,
-					"style": {
-						"position": "relative",
-						"overflow": "auto",
-						"-webkit-overflow-scrolling": "touch",
-						"top": "0px",
-						"left": "0px",
-						"width": scrollPanelRect.width + "px",
-						"height": scrollPanelRect.height + "px",
-						"padding": "0px",
-						"marginBottom": "0px",
-						"marginRight": "0px",
-						"marginLeft": pixelAlignmentFix.width + "px", /* fixes div pixel alignment */
-						"marginTop": pixelAlignmentFix.height + "px"
-					},
-					"class": name,
-					"$": function (element) { layout.scrollPanel = element; }
-				},
-				["div", /* mousePanel - mouse tracking events panel */
-					{
-						"style": primitives.common.mergeObjects({
-							position: "absolute",
-							overflow: "hidden"
-						},
-						placeholderRect.getCSS()),
-						"class": name,
-						"$": function (element) { layout.mousePanel = element; }
-					},
-					["div", /* placeholder - contents scalable panel */
-						{
-							"style": primitives.common.mergeObjects({
-								position: "absolute",
-								overflow: "hidden"
-							},
-							placeholderRect.getCSS()),
-							"class": ["placeholder", name],
-							"$": function (element) { layout.placeholder = element; }
-						},
-						["div", /* calloutPlaceholder - callout panel */
-							{
-								"style": {
-									position: "absolute",
-									overflow: "visible",
-									top: "0px",
-									left: "0px",
-									width: "0px",
-									height: "0px"
-								},
-								"class": ["calloutplaceholder", name],
-								"$": function (element) { layout.calloutPlaceholder = element; }
-							}
-						]
-					]
-				]
-			])
-		);
-	}
-
-	function cleanLayout(layout) {
-		if (_data.layout.scrollPanel != null) {
-			var parent = _data.layout.scrollPanel.parentNode;
-			if (parent != null) {
-				parent.removeChild(_data.layout.scrollPanel);
-			}
-		}
-	}
-
-	function bind(layout) {
-		layout.mousePanel.addEventListener('mousemove', onMouseMove);
-		layout.mousePanel.addEventListener('click', onMouseClick);
-		layout.mousePanel.addEventListener('dblclick', onMouseDblClick);
-		layout.mousePanel.addEventListener('change', onCheckboxChange);
-
-		layout.scrollPanel.addEventListener('keydown', onKeyDown);
-		layout.scrollPanel.addEventListener('scroll', onScroll);
-		if (_data.options.enablePanning && primitives.common.isChrome()) {
-			layout.scrollPanel.draggable = true;
-			layout.scrollPanel.addEventListener('dragstart', onDragStart);
-			layout.scrollPanel.addEventListener('drag', onDragScroll);
-			layout.scrollPanel.addEventListener('dragend', onDragScroll);
-			layout.scrollPanel.addEventListener('dragover', onDragOver);
-		}
-	}
-
-	function unbind(layout) {
-		if (layout.mousePanel != null) {
-			layout.mousePanel.removeEventListener("mousemove", onMouseMove);
-			layout.mousePanel.removeEventListener("click", onMouseClick);
-			layout.mousePanel.removeEventListener("dblclick", onMouseDblClick);
-			layout.mousePanel.removeEventListener("change", onCheckboxChange);
-		}
-		if (layout.scrollPanel != null) {
-			layout.scrollPanel.removeEventListener("keydown", onKeyDown);
-			layout.scrollPanel.removeEventListener("scroll", onScroll);
-
-			layout.scrollPanel.removeEventListener('dragstart', onDragStart);
-			layout.scrollPanel.removeEventListener('drag', onDragScroll);
-			layout.scrollPanel.removeEventListener('dragend', onDragScroll);
-			layout.scrollPanel.removeEventListener('dragover', onDragOver);
-		}
-	}
-
-	function onMouseMove(event) {
-		var placeholderOffset = primitives.common.getElementOffset(_data.layout.mousePanel),
-			x = event.pageX - placeholderOffset.left,
-			y = event.pageY - placeholderOffset.top,
-			createTransformTask = _data.tasks.getTask("CreateTransformTask"),
-			highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
-			itemId;
-
-		if (highlightItemOptionTask.hasHighlightEnabled()) {
-			itemId = createTransformTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius());
-			setHighlightItem(event, itemId);
-		}
-	}
-
-	function onCheckboxChange(event) {
-		var target = event.target;
-		var selectedId = target.getAttribute("data-id");
-		if (selectedId != null) {
-			var selectedItems = (_data.options.selectedItems || []).slice();
-			var eventArgs = getEventArgs(null, selectedId);
-			var position = primitives.common.indexOf(selectedItems, selectedId);
-			trigger("onSelectionChanging", event, eventArgs);
-			if (!eventArgs.cancel) {
-				if (position >= 0) {
-					selectedItems.splice(position, 1);
-				}
-				else {
-					selectedItems.push(selectedId);
-				}
-				_data.options.selectedItems = selectedItems;
-
-				if (position < 0) {
-					target.setAttribute("checked", "checked");
-				} else {
-					target.removeAttribute("checked");
-				}
-
-				//refresh(false, false);
-
-				trigger("onSelectionChanged", event, eventArgs);
-			}
-		}
-	}
-
-	function onMouseClick(event) {
-		var placeholderOffset = primitives.common.getElementOffset(_data.layout.mousePanel),
-			x = event.pageX - placeholderOffset.left,
-			y = event.pageY - placeholderOffset.top,
-			createTransformTask = _data.tasks.getTask("CreateTransformTask"),
-			cursorItemOptionTask = _data.tasks.getTask("CursorItemOptionTask"),
-			highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
-			item,
-			newCursorItemId = createTransformTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius()),
-			target,
-			button,
-			buttonname,
-			eventArgs,
-			position,
-			selectedItems;
-		target = event.target;
-		if (newCursorItemId !== null) {
-			if (primitives.common.hasClass(target, _data.name + "button") || primitives.common.hasClass(target.parentNode, _data.name + "button")) {
-				button = primitives.common.hasClass(target, _data.name + "button") ? target : target.parentNode;
-				buttonname = button.getAttribute("data-buttonname");
-
-				eventArgs = getEventArgs(null, newCursorItemId, buttonname);
-				trigger("onButtonClick", event, eventArgs);
-			}
-			else if (target.getAttribute("name") === "checkbox" || target.getAttribute("name") === "selectiontext") { //ignore jslint
-				
-			}
-			else {
-				eventArgs = getEventArgs(null, newCursorItemId);
-				trigger("onMouseClick", event, eventArgs);
-				if (!eventArgs.cancel) {
-					if (cursorItemOptionTask.hasCursorEnabled()) {
-						setCursorItem(event, newCursorItemId);
-						_data.layout.scrollPanel.focus();
-					}
-				}
-			}
-		}
-	}
-
-	function onMouseDblClick(event) {
-		var eventArgs,
-			highlightItemTask = _data.tasks.getTask("HighlightItemTask"),
-			highlightTreeItem = highlightItemTask.getHighlightTreeItem();
-
-		if (highlightTreeItem !== null) {
-				eventArgs = getEventArgs(null, highlightTreeItem);
-				trigger("onMouseDblClick", event, eventArgs);
-		}
-	}
-
-	function onKeyDown(event) {
-		var highlightItemTask = _data.tasks.getTask("HighlightItemTask"),
-			highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
-			cursorItemTask = _data.tasks.getTask("CursorItemTask"),
-			cursorItemOptionTask = _data.tasks.getTask("CursorItemOptionTask"),
-			alignDiagramTask = _data.tasks.getTask('AlignDiagramTask'),
-			createTransformTask = _data.tasks.getTask('CreateTransformTask'),
-			transform = createTransformTask.getTransform(),
-			navigationItem = null,
-			newNavigationItem,
-			direction = null,
-			accepted,
-			layout = _data.layout;
-
-		if (highlightItemOptionTask.hasHighlightEnabled() && cursorItemOptionTask.hasCursorEnabled()) {
-			navigationItem = highlightItemTask.getHighlightTreeItem();
-			if (navigationItem === null) {
-				navigationItem = cursorItemTask.getCursorTreeItem();
-			}
-		} else if (highlightItemOptionTask.hasHighlightEnabled()) {
-			navigationItem = highlightItemTask.getHighlightTreeItem();
-		} else if (cursorItemOptionTask.hasCursorEnabled()) {
-			navigationItem = cursorItemTask.getCursorTreeItem();
-		}
+  function createLayout(layout, name) {
+    var elementSize = primitives.common.getInnerSize(layout.element),
+      scrollPanelRect = new primitives.common.Rect(0, 0, elementSize.width, elementSize.height),
+      placeholderRect = new primitives.common.Rect(scrollPanelRect),
+      pixelAlignmentFix = primitives.common.getFixOfPixelALignment(element);
 
 
-		if (navigationItem != null) {
-			switch (event.which) {
-				case 13: /*Enter*/
-					if (cursorItemOptionTask.hasCursorEnabled()) {
-						setCursorItem(event, navigationItem);
-						event.preventDefault();
-						layout.scrollPanel.focus();
-					}
-					break;
-				case 40: /*Down*/
-					direction = 1/*primitives.common.OrientationType.Bottom*/;
-					break;
-				case 38: /*Up*/
-					direction = 0/*primitives.common.OrientationType.Top*/;
-					break;
-				case 37: /*Left*/
-					direction = 2/*primitives.common.OrientationType.Left*/;
-					break;
-				case 39: /*Right*/
-					direction = 3/*primitives.common.OrientationType.Right*/;
-					break;
-			}
+    primitives.common.JsonML.appendDOM(layout.element, primitives.common.JsonML.toHTML(
+      ["div", /* scrollPanel - root scroll panel */
+        {
+          "tabindex": 0,
+          "style": {
+            "position": "relative",
+            "overflow": "auto",
+            "-webkit-overflow-scrolling": "touch",
+            "top": "0px",
+            "left": "0px",
+            "width": scrollPanelRect.width + "px",
+            "height": scrollPanelRect.height + "px",
+            "padding": "0px",
+            "marginBottom": "0px",
+            "marginRight": "0px",
+            "marginLeft": pixelAlignmentFix.width + "px", /* fixes div pixel alignment */
+            "marginTop": pixelAlignmentFix.height + "px"
+          },
+          "class": name,
+          "$": function (element) { layout.scrollPanel = element; }
+        },
+        ["div", /* mousePanel - mouse tracking events panel */
+          {
+            "style": primitives.common.mergeObjects({
+              position: "absolute",
+              overflow: "hidden"
+            },
+              placeholderRect.getCSS()),
+            "class": name,
+            "$": function (element) { layout.mousePanel = element; }
+          },
+          ["div", /* placeholder - contents scalable panel */
+            {
+              "style": primitives.common.mergeObjects({
+                position: "absolute",
+                overflow: "hidden"
+              },
+                placeholderRect.getCSS()),
+              "class": ["placeholder", name],
+              "$": function (element) { layout.placeholder = element; }
+            },
+            ["div", /* calloutPlaceholder - callout panel */
+              {
+                "style": {
+                  position: "absolute",
+                  overflow: "visible",
+                  top: "0px",
+                  left: "0px",
+                  width: "0px",
+                  height: "0px"
+                },
+                "class": ["calloutplaceholder", name],
+                "$": function (element) { layout.calloutPlaceholder = element; }
+              }
+            ]
+          ]
+        ]
+      ])
+    );
+  }
 
-			if (direction != null) {
+  function cleanLayout(layout) {
+    if (_data.layout.scrollPanel != null) {
+      var parent = _data.layout.scrollPanel.parentNode;
+      if (parent != null) {
+        parent.removeChild(_data.layout.scrollPanel);
+      }
+    }
+  }
 
-				accepted = false;
+  function bind(layout) {
+    layout.mousePanel.addEventListener('mousemove', onMouseMove);
+    layout.mousePanel.addEventListener('click', onMouseClick);
+    layout.mousePanel.addEventListener('dblclick', onMouseDblClick);
+    layout.mousePanel.addEventListener('change', onCheckboxChange);
 
-				while (!accepted) {
-					accepted = true;
+    layout.scrollPanel.addEventListener('keydown', onKeyDown);
+    layout.scrollPanel.addEventListener('scroll', onScroll);
+    if (_data.options.enablePanning && primitives.common.isChrome()) {
+      layout.scrollPanel.draggable = true;
+      layout.scrollPanel.addEventListener('dragstart', onDragStart);
+      layout.scrollPanel.addEventListener('drag', onDragScroll);
+      layout.scrollPanel.addEventListener('dragend', onDragScroll);
+      layout.scrollPanel.addEventListener('dragover', onDragOver);
+    }
+  }
 
-					direction = transform.getOrientation(direction);
-					newNavigationItem = alignDiagramTask.getNextItem(navigationItem, direction);
+  function unbind(layout) {
+    if (layout.mousePanel != null) {
+      layout.mousePanel.removeEventListener("mousemove", onMouseMove);
+      layout.mousePanel.removeEventListener("click", onMouseClick);
+      layout.mousePanel.removeEventListener("dblclick", onMouseDblClick);
+      layout.mousePanel.removeEventListener("change", onCheckboxChange);
+    }
+    if (layout.scrollPanel != null) {
+      layout.scrollPanel.removeEventListener("keydown", onKeyDown);
+      layout.scrollPanel.removeEventListener("scroll", onScroll);
 
-					if (newNavigationItem != null) {
-						event.preventDefault();
-						if (highlightItemOptionTask.hasHighlightEnabled()) {
-							setHighlightItem(event, newNavigationItem);
-						} else if (cursorItemOptionTask.hasCursorEnabled()) {
-							setCursorItem(event, newNavigationItem);
-						}
+      layout.scrollPanel.removeEventListener('dragstart', onDragStart);
+      layout.scrollPanel.removeEventListener('drag', onDragScroll);
+      layout.scrollPanel.removeEventListener('dragend', onDragScroll);
+      layout.scrollPanel.removeEventListener('dragover', onDragOver);
+    }
+  }
 
-					}
-				}
-				layout.scrollPanel.focus();
-			}
-		}
-	}
+  function onMouseMove(event) {
+    var placeholderOffset = primitives.common.getElementOffset(_data.layout.mousePanel),
+      x = event.pageX - placeholderOffset.left,
+      y = event.pageY - placeholderOffset.top,
+      createTransformTask = _data.tasks.getTask("CreateTransformTask"),
+      highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
+      itemId;
 
-	function onDragStart(event) {
-		var scrollPanel = _data.layout.scrollPanel;
-		_dragFrom = new primitives.common.Point(event.clientX, event.clientY);
-		_scrollFrom = new primitives.common.Point(scrollPanel.scrollLeft, scrollPanel.scrollTop);
-		_dragImage = _dragImage || new Image(); //ignore jslint
-		event.dataTransfer.setDragImage(_dragImage, 0, 0);
-	}
+    if (highlightItemOptionTask.hasHighlightEnabled()) {
+      itemId = createTransformTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius());
+      setHighlightItem(event, itemId);
+    }
+  }
 
-	function onDragOver(event) {
-		event.preventDefault();
-		event.dataTransfer.dropEffect = "move";
-	}
+  function onCheckboxChange(event) {
+    var target = event.target;
+    var selectedId = target.getAttribute("data-id");
+    if (selectedId != null) {
+      var selectedItems = (_data.options.selectedItems || []).slice();
+      var eventArgs = getEventArgs(null, selectedId);
+      var position = primitives.common.indexOf(selectedItems, selectedId);
+      trigger("onSelectionChanging", event, eventArgs);
+      if (!eventArgs.cancel) {
+        if (position >= 0) {
+          selectedItems.splice(position, 1);
+        }
+        else {
+          selectedItems.push(selectedId);
+        }
+        _data.options.selectedItems = selectedItems;
 
-	function onDragScroll(event) {
-		_scrollTo = new primitives.common.Point(_scrollFrom.x - (event.clientX - _dragFrom.x), _scrollFrom.y - (event.clientY - _dragFrom.y));
-		if (_dragTimer == null) {
-			_dragTimer = window.setTimeout(function () {
-				var scrollPanel = _data.layout.scrollPanel;
-				scrollPanel.scrollLeft = _scrollTo.x;
-				scrollPanel.scrollTop = _scrollTo.y;
-				window.clearTimeout(_dragTimer);
-				_dragTimer = null;
-			}, 50);
-		}
-	}
+        if (position < 0) {
+          target.setAttribute("checked", "checked");
+        } else {
+          target.removeAttribute("checked");
+        }
 
-	function setHighlightItem(event, newHighlightItemId) {
-		var result = true,
-			eventArgs;
-		if (newHighlightItemId !== null) {
-			if (newHighlightItemId !== _data.options.highlightItem) {
-				eventArgs = getEventArgs(_data.options.highlightItem, newHighlightItemId);
+        //refresh(false, false);
 
-				_data.options.highlightItem = newHighlightItemId;
+        trigger("onSelectionChanged", event, eventArgs);
+      }
+    }
+  }
 
-				trigger("onHighlightChanging", event, eventArgs);
+  function onMouseClick(event) {
+    var placeholderOffset = primitives.common.getElementOffset(_data.layout.mousePanel),
+      x = event.pageX - placeholderOffset.left,
+      y = event.pageY - placeholderOffset.top,
+      createTransformTask = _data.tasks.getTask("CreateTransformTask"),
+      cursorItemOptionTask = _data.tasks.getTask("CursorItemOptionTask"),
+      highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
+      item,
+      newCursorItemId = createTransformTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius()),
+      target,
+      button,
+      buttonname,
+      eventArgs,
+      position,
+      selectedItems;
+    target = event.target;
+    if (newCursorItemId !== null) {
+      if (primitives.common.hasClass(target, _data.name + "button") || primitives.common.hasClass(target.parentNode, _data.name + "button")) {
+        button = primitives.common.hasClass(target, _data.name + "button") ? target : target.parentNode;
+        buttonname = button.getAttribute("data-buttonname");
 
-				if (!eventArgs.cancel) {
-					refresh(false, false);
+        eventArgs = getEventArgs(null, newCursorItemId, buttonname);
+        trigger("onButtonClick", event, eventArgs);
+      }
+      else if (target.getAttribute("name") === "checkbox" || target.getAttribute("name") === "selectiontext") { //ignore jslint
 
-					trigger("onHighlightChanged", event, eventArgs);
-				} else {
-					result = false;
-				}
-			}
-		} else {
-			if (_data.options.highlightItem !== null) {
-				eventArgs = getEventArgs(_data.options.highlightItem, null);
+      }
+      else {
+        eventArgs = getEventArgs(null, newCursorItemId);
+        trigger("onMouseClick", event, eventArgs);
+        if (!eventArgs.cancel) {
+          if (cursorItemOptionTask.hasCursorEnabled()) {
+            setCursorItem(event, newCursorItemId);
+            _data.layout.scrollPanel.focus();
+          }
+        }
+      }
+    }
+  }
 
-				_data.options.highlightItem = null;
+  function onMouseDblClick(event) {
+    var eventArgs,
+      highlightItemTask = _data.tasks.getTask("HighlightItemTask"),
+      highlightTreeItem = highlightItemTask.getHighlightTreeItem();
 
-				trigger("onHighlightChanging", event, eventArgs);
+    if (highlightTreeItem !== null) {
+      eventArgs = getEventArgs(null, highlightTreeItem);
+      trigger("onMouseDblClick", event, eventArgs);
+    }
+  }
 
-				if (!eventArgs.cancel) {
-					refresh(false, false);
+  function onKeyDown(event) {
+    var highlightItemTask = _data.tasks.getTask("HighlightItemTask"),
+      highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
+      cursorItemTask = _data.tasks.getTask("CursorItemTask"),
+      cursorItemOptionTask = _data.tasks.getTask("CursorItemOptionTask"),
+      alignDiagramTask = _data.tasks.getTask('AlignDiagramTask'),
+      createTransformTask = _data.tasks.getTask('CreateTransformTask'),
+      transform = createTransformTask.getTransform(),
+      navigationItem = null,
+      newNavigationItem,
+      direction = null,
+      accepted,
+      layout = _data.layout;
 
-					trigger("onHighlightChanged", event, eventArgs);
-				} else {
-					result = false;
-				}
-			}
-		}
-		return result;
-	}
+    if (highlightItemOptionTask.hasHighlightEnabled() && cursorItemOptionTask.hasCursorEnabled()) {
+      navigationItem = highlightItemTask.getHighlightTreeItem();
+      if (navigationItem === null) {
+        navigationItem = cursorItemTask.getCursorTreeItem();
+      }
+    } else if (highlightItemOptionTask.hasHighlightEnabled()) {
+      navigationItem = highlightItemTask.getHighlightTreeItem();
+    } else if (cursorItemOptionTask.hasCursorEnabled()) {
+      navigationItem = cursorItemTask.getCursorTreeItem();
+    }
 
-	function setCursorItem(event, newCursorItemId) {
-		var eventArgs;
-		if (newCursorItemId !== _data.options.cursorItem) {
-			eventArgs = getEventArgs(_data.options.cursorItem, newCursorItemId);
 
-			_data.options.cursorItem = newCursorItemId;
+    if (navigationItem != null) {
+      switch (event.which) {
+        case 13: /*Enter*/
+          if (cursorItemOptionTask.hasCursorEnabled()) {
+            setCursorItem(event, navigationItem);
+            event.preventDefault();
+            layout.scrollPanel.focus();
+          }
+          break;
+        case 40: /*Down*/
+          direction = 1/*primitives.common.OrientationType.Bottom*/;
+          break;
+        case 38: /*Up*/
+          direction = 0/*primitives.common.OrientationType.Top*/;
+          break;
+        case 37: /*Left*/
+          direction = 2/*primitives.common.OrientationType.Left*/;
+          break;
+        case 39: /*Right*/
+          direction = 3/*primitives.common.OrientationType.Right*/;
+          break;
+      }
 
-			trigger("onCursorChanging", event, eventArgs);
+      if (direction != null) {
 
-			if (!eventArgs.cancel) {
-				refresh(true, _debug);
+        accepted = false;
 
-				trigger("onCursorChanged", event, eventArgs);
-			}
-		}
-	}
+        while (!accepted) {
+          accepted = true;
 
-	function getEventArgs(oldTreeItemId, newTreeItemId, name) {
-		return eventArgsFactory(_data, oldTreeItemId, newTreeItemId, name);
-	}
+          direction = transform.getOrientation(direction);
+          newNavigationItem = alignDiagramTask.getNextItem(navigationItem, direction);
 
-	function trigger(eventHandlerName, event, eventArgs) {
-		var eventHandler = _data.options[eventHandlerName];
-		if (eventHandler != null) {
-			eventHandler(event, eventArgs);
-		}
-	}
+          if (newNavigationItem != null) {
+            event.preventDefault();
+            if (highlightItemOptionTask.hasHighlightEnabled()) {
+              setHighlightItem(event, newNavigationItem);
+            } else if (cursorItemOptionTask.hasCursorEnabled()) {
+              setCursorItem(event, newNavigationItem);
+            }
 
-	update(); /* init control on create */
+          }
+        }
+        layout.scrollPanel.focus();
+      }
+    }
+  }
 
-	return {
-		destroy: destroy,
-		setOptions: setOptions,
-		getOptions: getOptions,
-		setOption: setOption,
-		getOption: getOption,
-		update: update
-	};
+  function onDragStart(event) {
+    var scrollPanel = _data.layout.scrollPanel;
+    _dragFrom = new primitives.common.Point(event.clientX, event.clientY);
+    _scrollFrom = new primitives.common.Point(scrollPanel.scrollLeft, scrollPanel.scrollTop);
+    _dragImage = _dragImage || new Image(); //ignore jslint
+    event.dataTransfer.setDragImage(_dragImage, 0, 0);
+  }
+
+  function onDragOver(event) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }
+
+  function onDragScroll(event) {
+    _scrollTo = new primitives.common.Point(_scrollFrom.x - (event.clientX - _dragFrom.x), _scrollFrom.y - (event.clientY - _dragFrom.y));
+    if (_dragTimer == null) {
+      _dragTimer = window.setTimeout(function () {
+        var scrollPanel = _data.layout.scrollPanel;
+        scrollPanel.scrollLeft = _scrollTo.x;
+        scrollPanel.scrollTop = _scrollTo.y;
+        window.clearTimeout(_dragTimer);
+        _dragTimer = null;
+      }, 50);
+    }
+  }
+
+  function setHighlightItem(event, newHighlightItemId) {
+    var result = true,
+      eventArgs;
+    if (newHighlightItemId !== null) {
+      if (newHighlightItemId !== _data.options.highlightItem) {
+        eventArgs = getEventArgs(_data.options.highlightItem, newHighlightItemId);
+
+        _data.options.highlightItem = newHighlightItemId;
+
+        trigger("onHighlightChanging", event, eventArgs);
+
+        if (!eventArgs.cancel) {
+          refresh(false, false);
+
+          trigger("onHighlightChanged", event, eventArgs);
+        } else {
+          result = false;
+        }
+      }
+    } else {
+      if (_data.options.highlightItem !== null) {
+        eventArgs = getEventArgs(_data.options.highlightItem, null);
+
+        _data.options.highlightItem = null;
+
+        trigger("onHighlightChanging", event, eventArgs);
+
+        if (!eventArgs.cancel) {
+          refresh(false, false);
+
+          trigger("onHighlightChanged", event, eventArgs);
+        } else {
+          result = false;
+        }
+      }
+    }
+    return result;
+  }
+
+  function setCursorItem(event, newCursorItemId) {
+    var eventArgs;
+    if (newCursorItemId !== _data.options.cursorItem) {
+      eventArgs = getEventArgs(_data.options.cursorItem, newCursorItemId);
+
+      _data.options.cursorItem = newCursorItemId;
+
+      trigger("onCursorChanging", event, eventArgs);
+
+      if (!eventArgs.cancel) {
+        refresh(true, _debug);
+
+        trigger("onCursorChanged", event, eventArgs);
+      }
+    }
+  }
+
+  function getEventArgs(oldTreeItemId, newTreeItemId, name) {
+    return eventArgsFactory(_data, oldTreeItemId, newTreeItemId, name);
+  }
+
+  function trigger(eventHandlerName, event, eventArgs) {
+    var eventHandler = _data.options[eventHandlerName];
+    if (eventHandler != null) {
+      eventHandler(event, eventArgs);
+    }
+  }
+
+  update(); /* init control on create */
+
+  return {
+    destroy: destroy,
+    setOptions: setOptions,
+    getOptions: getOptions,
+    setOption: setOption,
+    getOption: getOption,
+    update: update
+  };
 };
 
 
@@ -30472,5 +30472,5 @@ primitives.pdf.UserTemplate = function (options, itemTemplateConfig, onRender) {
 	};
 };
 
-return primitives;
+  return primitives;
 }));

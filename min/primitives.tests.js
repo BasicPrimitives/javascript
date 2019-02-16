@@ -1,4 +1,5 @@
 
+
 /* /Algorithms/binarySearch.Tests.js*/
 QUnit.module('Algorithms - Binary Search Function');
 
@@ -38,928 +39,138 @@ QUnit.test("primitives.common.binarySearch -  Search sorted list of elements for
 	assert.equal(result.item.x, 100, "Function should item nearest 90.");
 });
 
-/* /Algorithms/SpatialIndex.Tests.js*/
-QUnit.module('Algorithms - SpatialIndex');
+/* /Algorithms/Family.getFamilyWithoutGrandParentsRelations.Tests.js*/
+QUnit.module('Algorithms - Family class, getFamilyWithoutGrandParentsRelations function tests');
 
-QUnit.test("primitives.common.SpatialIndex", function (assert) {
-	function findCrossedRectangles(placements, frame) {
-		var result = [];
-
-		for (var index = 0; index < placements.length; index += 1) {
-			var placement = placements[index];
-
-			if (placement.overlaps(frame)) {
-				result.push(placement.context.id);
-			}
-		}
-
-		return result;
-	}
-
-	function GetPlacementMarker(placement, label, color) {
-		var div = jQuery("<div></div>");
-
-		div.append(label);
-		div.css(placement.getCSS());
-		div.css({
-			"background": color,
-			visibility: "visible",
-			position: "absolute",
-			font: "Areal",
-			"font-size": "12px",
-			"border-style": "solid",
-			"border-color": "black",
-			"border-width": "2px",
-			opacity: 0.6
-		});
-
-		return div;
-	}
-
-	function ShowLayout(fixture, placements, frame, title) {
-		var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
-		titlePlaceholder.append(title);
-		fixture.append(titlePlaceholder);
-
-		var offsetX = null;
-		var offsetY = null;
-		var space = new primitives.common.Rect();
-		for (var index = 0; index < placements.length; index += 1) {
-			var placement = placements[index];
-
-			offsetX = offsetX == null ? placement.x : Math.min(offsetX, placement.x);
-			offsetY = offsetY == null ? placement.y : Math.min(offsetY, placement.y);
-
-			space.addRect(placement);
-		}
-		space.addRect(frame);
-		offsetX = offsetX == null ? frame.x : Math.min(offsetX, frame.x);
-		offsetY = offsetY == null ? frame.y : Math.min(offsetY, frame.y);
-
-		var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'></div>");
-		placeholder.css({
-			width: space.width,
-			height: space.height
-		});
-		for (var index = 0; index < placements.length; index += 1) {
-			var placement = placements[index];
-			var context = placement.context;
-			var placement = new primitives.common.Rect(placements[index]);
-			placement.translate(-offsetX, -offsetY);
-
-			var div = GetPlacementMarker(placement, context.id, context.isHighlighted ? "blue" : "grey");
-			placeholder.append(div);
-		}
-
-		var placement = new primitives.common.Rect(frame);
-		placement.translate(-offsetX, -offsetY);
-		var div = GetPlacementMarker(placement, index, "red");
-		placeholder.append(div);
-
-		fixture.append(placeholder);
-	}
-
-	function getRectangles(items) {
-		var result = [];
+QUnit.test("primitives.common.family.getFamilyWithoutGrandParentsRelations - eliminates relations directly connecting grad parents with grand children.", function (assert) {
+	function getFamily(items) {
+		var family = primitives.common.family();
 		for (var index = 0; index < items.length; index += 1) {
 			var item = items[index];
-			var rect = new primitives.common.Rect(item[0], item[1], item[2], item[3]);
-			rect.context = index;
-			result.push(rect);
+			family.add(item.parents, item.id, item);
 		}
-		return result;
+		return family;
 	}
 
-	function getSpatialIndex(sizes, rectangles) {
-		var result = primitives.common.SpatialIndex(sizes);
-		for (var index = 0; index < rectangles.length; index += 1) {
-			var rect = rectangles[index];
-			rect.context = {
-				id: index,
-				isHighlighted: false
-			};
-			result.addRect(rect);
-		}
-		return result;
-	}
-
-	function getSizes(items) {
-		var result = [];
-		var hash = {};
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			var size = Math.max(item.width, item.height);
-			if (!hash.hasOwnProperty(size)) {
-				hash[size] = true;
-				result.push(size);
-			}
-		}
-		return result;
-	}
-
-	function TestLayout(title, items, selection, hidden) {
-
-		console.time('getRectangles');
-		var placements = getRectangles(items);
-		console.timeEnd('getRectangles')
-
-		console.time('getSpatialIndex');
-		var spatialIndex = getSpatialIndex(getSizes(placements), placements);
-		console.timeEnd('getSpatialIndex');
-
-		console.time('loopArea');
-		
-		var result = [];
-		spatialIndex.loopArea(this, selection, function (rect) {
-			result.push(rect.context.id);
-
-			rect.context.isHighlighted = true;
-		});
-
-		console.timeEnd('loopArea');
-
-		if (!hidden) {
-			ShowLayout(jQuery("#qunit-fixture"), placements, selection, title);
-
-			//ShowLayout(jQuery("#qunit-fixture"), spatialIndex.getPositions(selection), selection, title);
-
-			jQuery("#qunit-fixture").css({
-				position: "relative",
-				left: "0px",
-				top: "0px",
-				height: "Auto"
+	function getLevels(family) {
+		var levels = [];
+		family.loopLevels(this, true, function (itemid, item, level) {
+			var newItem = { id: itemid };
+			var children = [];
+			family.loopChildren(this, itemid, function (itemid, item, levelIndex) {
+				if (levelIndex > 0) {
+					return family.BREAK;
+				}
+				children.push(itemid);
 			});
-
-			
-
-		}
-
-		console.time('findCrossedRectangles');
-
-		var expectedResult = findCrossedRectangles(placements, selection);
-
-		console.timeEnd('findCrossedRectangles');
-
-		console.time('sort');
-		result.sort();
-		expectedResult.sort();
-
-		assert.ok(spatialIndex.validate(), "Spatial index should pass validation");
-		assert.deepEqual(result, expectedResult, title);
-
-		console.timeEnd('sort');
-	};
-
-	TestLayout("Spatial Index should bounding rectangle", [
-		[0, 0, 100, 100]
-	], new primitives.common.Rect(10, 10, 80, 80));
-
-	TestLayout("Spatial Index should bounded rectangle", [
-	[10, 10, 80, 80]
-	], new primitives.common.Rect(0, 0, 100, 100));
-
-	TestLayout("Spatial Index should touched rectangle", [
-		[0, 0, 40, 40]
-	], new primitives.common.Rect(40, 0, 40, 40));
-
-	TestLayout("Spatial Index should not return non overlapping rectangle", [
-	[0, 0, 40, 40]
-	], new primitives.common.Rect(45, 0, 40, 40));
-
-	TestLayout("Multi-layer test case", [
-		[0, 0, 40, 280],
-		[60, 0, 100, 100],
-		[180, 0, 40, 40],
-		[180, 60, 40, 40],
-		[240, 0, 40, 40],
-		[300, 0, 40, 40],
-		[240, 60, 40, 40],
-		[300, 60, 40, 100],
-		[360, 0, 100, 100],
-		[480, 0, 40, 40],
-		[540, 0, 40, 40],
-		[600, 0, 80, 100],
-		[480, 60, 40, 140],
-		[540, 140, 60, 60],
-		[620, 140, 60, 60],
-		[60, 120, 160, 160],
-		[240, 180, 60, 60],
-		[320, 180, 60, 60],
-		[400, 180, 60, 60],
-		[620, 220, 20, 20],
-		[660, 220, 20, 20],
-		[240, 260, 20, 20],
-		[280, 260, 340, 20],
-		[640, 260, 40, 20]
-	], new primitives.common.Rect(100, 80, 220, 100));
-
-	(function () {
-		var testData = [];
-		for (var x = 0; x < 1000; x += 50) {
-			for (var y = 0; y < 1000; y += 50) {
-				testData.push([x, y, 40, 40]);
+			if (children.length > 0) {
+				newItem.children = children;
 			}
-		}
-
-		TestLayout("Matrix nesting test", testData, new primitives.common.Rect(710, 210, 200, 700));
-	})();
-
-	(function () {
-		var testData = [];
-		for (var x = 0; x < 1000; x += 10) {
-			for (var y = 0; y < 1000; y += 10) {
-				testData.push([x, y, 2, 2]);
-			}
-		}
-
-		TestLayout("Matrix performance test", testData, new primitives.common.Rect(710, 210, 20, 70), true);
-	})();
-});
-
-/* /Algorithms/SortedList.Tests.js*/
-QUnit.module('Algorithms - SortedList - AVL binary search tree collection implementation.');
-
-QUnit.test("primitives.common.SortedList", function (assert) {
-	function getSortedList(items) {
-		var sortedList = primitives.common.SortedList();
-
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			sortedList.add(item);
-		}
-
-		return sortedList;
-	};
-
-	function removeItems(sortedList, items) {
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			sortedList.remove(item);
-		}
-	};
-
-	function addAndRemove(addValues, removeValues) {
-		var sortedList = getSortedList(addValues);
-		if (removeValues != null) {
-			removeItems(sortedList, removeValues);
-		}
-		return sortedList.validate();
-	}
-
-	(function () {
-		assert.ok(addAndRemove([3, 7, 8]), "Small left rotation test on addition.");
-		assert.ok(addAndRemove([3, 2, 1]), "Small right rotation test on addition.");
-		assert.ok(addAndRemove([3, 1, 7, 0, 2, 10, 9, 8]), "Big left rotation test on addition.");
-		assert.ok(addAndRemove([6, 4, 8, 7, 9, 1, 2]), "Big right rotation test on addition.");
-		assert.ok(addAndRemove([3, 2, 4, 1], [4]), "Small left rotation test on removal.");
-		assert.ok(addAndRemove([3, 2, 4, 5], [2]), "Small right rotation test on removal.");
-		assert.ok(addAndRemove([3, 2, 7, 1, 5, 8, 4, 6], [1]), "Big left rotation test on removal.");
-		assert.ok(addAndRemove([6, 2, 7, 1, 4, 8, 3, 5], [8]), "Big right rotation test on removal.");
-		assert.ok(addAndRemove([-4, -3, -2, -1, 0, 1, 2, 3, 4], [-3, 0]), "Small left rotation test on removal.");
-		assert.ok(addAndRemove([4, 3, 2, 1, 0, -1, -2, -3, -4], [3, 0]), "Small right rotation test on removal.");
-	})();
-
-	(function() {
-		var items = [100, 50, 150, 25, 75, 125, 175, 12, 37, 63, 87, 113, 137, 163, 187];
-
-		var sortedList = getSortedList(items);
-
-		var result = [];
-		sortedList.loopForward(this, null, function (value) {
-			result.push(value);
+			levels.push(newItem);
 		});
-
-		items.sort(function (a, b) { return a - b; });
-
-		assert.ok(sortedList.validate(), "Sorted list validated.");
-		assert.deepEqual(result, items, "loopForward should return all added values ordered.");
-	})();
-
-	(function () {
-		var items = [0, 60, 180, 220, 260];
-
-		var sortedList = getSortedList(items);
-
-		var result = [];
-		sortedList.loopForward(this, 180, function (value) {
-			result.push(value);
-		});
-
-		assert.deepEqual(result, [180, 220, 260], "loopForward should return all items from the given item including it.");
-	})();
-
-	(function () {
-		var items = [0, 60, 180, 220, 260];
-
-		var sortedList = getSortedList(items);
-
-		var result = [];
-		sortedList.loopBackward(this, 180, function (value) {
-			result.push(value);
-		});
-
-		assert.deepEqual(result, [180, 60, 0], "loopBackward should return all items from the given item including it.");
-	})();
-
-	(function () {
-		var items = [100, 50, 150, 25, 75, 125, 175, 12, 37, 63, 87, 113, 137, 163, 187];
-
-		var sortedList = getSortedList(items);
-
-		var result = [];
-		sortedList.loopBackward(this, null, function (value) {
-			result.push(value);
-		});
-
-		items.sort(function (a, b) { return b - a; });
-
-		assert.ok(sortedList.validate(), "Sorted list validated.");
-		assert.deepEqual(result, items, "loopBackward should return all values in reversed order.");
-	})();
-
-	(function () {
-		var count = 100;
-		var items = [];
-		for (var index = -count; index <= count; index += 1) {
-			items.push(index);
-		}
-
-		var sortedList = getSortedList(items);
-
-		var expected = [];
-		for (var index = -count; index <= count; index += 1) {
-			if (index % 2 != 0) {
-				sortedList.remove(index);
-			} else {
-				expected.push(index);
-			}
-		}
-
-		var result = [];
-		sortedList.loopForward(this, null, function (value) {
-			result.push(value);
-		});
-
-
-		assert.ok(sortedList.validate(), "Sorted list validated.");
-		assert.deepEqual(result, expected, "SortedList should return all odd items # " + result.length);
-	})();
-
-	(function () {
-		var count = 100;
-		var items = [];
-		for (var index = -count; index <= count; index += 1) {
-			items.push(index);
-		}
-
-		var expected = []
-		for (var index = -count; index <= count; index += 1) {
-			if (index % 2 != 0) {
-				var itemIndex = items.indexOf(index);
-				items.splice(itemIndex, 1);
-			} else {
-				expected.push(index);
-			}
-		}
-		assert.deepEqual(items, expected, "Performance test for regular array search and remove elements #" + items.length);
-	})();
-});
-
-/* /Algorithms/RMQ.Tests.js*/
-QUnit.module('Algorithms - RMQ - Range Minimum Query');
-
-QUnit.test("primitives.common.RMQ", function (assert) {
-	function getRangeMinimum(items, from, to) {
-		var result = items[from];
-		for (var index = from + 1; index <= to; index += 1) {
-			if (items[index] < result) {
-				result = items[index];
-			}
-		}
-		return result;
-	}
-
-	(function () {
-		var items = [
-			53, 24, 44, 59, 43, 91, 39, 37, 33, 78,
-			32, 34, 93, 88, 76, 74, 63, 99, 86, 47,
-			84, 83, 67, 17, 14, 60, 11, 46, 89, 12,
-			96, 73, 57, 1, 58, 48, 80, 13, 19, 40,
-			20, 82, 29, 2, 100, 77, 35, 36, 56, 5,
-			7, 97, 4, 95, 75, 66, 21, 31, 69, 54,
-			30, 79, 68, 52, 62, 61, 28, 23, 41, 42,
-			8, 27, 45, 3, 90, 26, 22, 71, 38, 98,
-			94, 49, 9, 64, 72, 25, 50, 81, 16, 87,
-			15, 51, 10, 92, 6, 55, 18, 65, 70, 85
-		];
-		var rmq = primitives.common.RMQ(items);
-
-		assert.equal(rmq.getRangeMinimum(0, 15), getRangeMinimum(items, 0, 15), "getRangeMinimum test from 0 to 15");
-		assert.equal(rmq.getRangeMinimum(45, 99), getRangeMinimum(items, 45, 100), "getRangeMinimum test from 45 to 100");
-		assert.equal(rmq.getRangeMinimum(0, 99), getRangeMinimum(items, 0, 100), "getRangeMinimum test from 0 to 100");
-		assert.equal(rmq.getRangeMinimum(8, 8), getRangeMinimum(items, 8, 8), "getRangeMinimum test from 8 to 8");
-		assert.equal(rmq.getRangeMinimum(50, 51), getRangeMinimum(items, 50, 51), "getRangeMinimum test from 50 to 51");
-		assert.equal(rmq.getRangeMinimum(1, 98), getRangeMinimum(items, 1, 99), "getRangeMinimum test from 1 to 99");
-		assert.equal(rmq.getRangeMinimum(32, 65), getRangeMinimum(items, 32, 65), "getRangeMinimum test from 32 to 65");
-	})();
-});
-
-/* /Algorithms/QuadTree.Tests.js*/
-QUnit.module('Algorithms - QuadTree');
-
-QUnit.test("primitives.common.QuadTree", function (assert) {
-
-	function findCrossedPoints(points, frame) {
-		var result = [];
-
-		for (var index = 0; index < points.length; index += 1) {
-			var point = points[index];
-
-			if (frame.contains(point)) {
-				result.push(point.context.id);
-			}
-		}
-
-		return result;
-	}
-
-	function GetPlacementMarker(placement, label, color) {
-		var div = jQuery("<div></div>");
-
-		//div.append(label);
-		div.css(placement.getCSS());
-		div.css({
-			"background": color,
-			visibility: "visible",
-			position: "absolute",
-			font: "Areal",
-			"font-size": "12px",
-			"border-style": "solid",
-			"border-color": "black",
-			"border-width": "2px",
-			opacity: 0.5
-		});
-
-		return div;
-	}
-
-	function ShowLayout(fixture, placements, points, frame, title) {
-		var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
-		titlePlaceholder.append(title);
-		fixture.append(titlePlaceholder);
-
-		var offsetX = null;
-		var offsetY = null;
-		var space = new primitives.common.Rect();
-		for (var index = 0; index < placements.length; index += 1) {
-			var placement = placements[index];
-
-			offsetX = offsetX == null ? placement.x : Math.min(offsetX, placement.x);
-			offsetY = offsetY == null ? placement.y : Math.min(offsetY, placement.y);
-
-			space.addRect(placement);
-		}
-		space.addRect(frame);
-		offsetX = offsetX == null ? frame.x : Math.min(offsetX, frame.x);
-		offsetY = offsetY == null ? frame.y : Math.min(offsetY, frame.y);
-
-		//-------------------------------------------------------------------------
-		var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'></div>");
-		placeholder.css({
-			width: space.width,
-			height: space.height
-		});
-		for (var index = 0; index < placements.length; index += 1) {
-			var placement = placements[index];
-			var context = placement.context;
-			var placement = new primitives.common.Rect(placements[index]);
-			placement.translate(-offsetX, -offsetY);
-
-			var div = GetPlacementMarker(placement, context.id, context.isHighlighted ? "grey" : "white");
-			placeholder.append(div);
-		}
-		
-		//-------------------------------------------------------------------------
-
-		var placement = new primitives.common.Rect(frame);
-		placement.translate(-offsetX, -offsetY);
-		var div = GetPlacementMarker(placement, index, "red");
-		placeholder.append(div);
-
-		//-------------------------------------------------------------------------
-
-		for (var index = 0; index < points.length; index += 1) {
-			var point = points[index];
-			var context = point.context;
-			var placement = new primitives.common.Rect(point.x - 2, point.y - 2, 4, 4);
-			placement.translate(-offsetX, -offsetY);
-
-			var div = GetPlacementMarker(placement, context.id, context.isHighlighted ? "blue" : "grey");
-			placeholder.append(div);
-		}
-
-		var placement = new primitives.common.Rect(frame);
-		placement.translate(-offsetX, -offsetY);
-		var div = GetPlacementMarker(placement, index, "red");
-		placeholder.append(div);
-
-
-		fixture.append(placeholder);
-	}
-
-	function getPoints(items) {
-		var result = [];
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			var point = new primitives.common.Point(item[0], item[1]);
-			point.context = index;
-			result.push(point);
-		}
-		return result;
-	}
-
-	function getQuadTree(points) {
-		var result = primitives.common.QuadTree(2);
-		for (var index = 0; index < points.length; index += 1) {
-			var point = points[index];
-			point.context = {
-				id: index,
-				isHighlighted: false
-			};
-			result.addPoint(point);
-		}
-		return result;
-	}
-
-	function TestLayout(title, items, selection, hidden) {
-
-		console.time('getPoints');
-		var points = getPoints(items);
-		console.timeEnd('getPoints')
-
-		console.time('getQuadTree');
-		var quadTree = getQuadTree(points);
-		console.timeEnd('getQuadTree');
-
-		console.time('loopArea');
-		var result = [];
-		quadTree.loopArea(this, selection, function (point) {
-			result.push(point.context.id);
-
-			point.context.isHighlighted = true;
-		});
-		console.timeEnd('loopArea');
-
-		if (!hidden) {
-			ShowLayout(jQuery("#qunit-fixture"), quadTree.getPositions(selection), points, selection, title);
-
-			jQuery("#qunit-fixture").css({
-				position: "relative",
-				left: "0px",
-				top: "0px",
-				height: "Auto"
-			});
-		}
-
-		console.time('findCrossedPoints');
-
-		var expectedResult = findCrossedPoints(points, selection);
-
-		console.timeEnd('findCrossedPoints');
-
-		console.time('result');
-		result.sort();
-		expectedResult.sort();
-
-		assert.ok(quadTree.validate(), "Quad tree structure should pass validation");
-		assert.deepEqual(result, expectedResult, title);
-
-		console.timeEnd('result');
-
-		console.log("found = " + result.length);
+		return levels;
 	};
 
 	(function () {
-		var testData = [];
-		for (var x = 0; x < 1000; x += 10) {
-			testData.push([x, x]);
-		}
-
-		TestLayout("NW to SE diagonal points test", testData, new primitives.common.Rect(600, 600, 40, 40), false);
-	})();
-
-	(function () {
-		var testData = [];
-		for (var x = 0; x < 1000; x += 10) {
-			testData.push([x, 1000 - x]);
-		}
-
-		TestLayout("SW to NE diagonal points test", testData, new primitives.common.Rect(690, 250, 40, 40), false);
-	})();
-
-	(function () {
-		var testData = [];
-		for (var x = 0; x < 1000; x += 10) {
-			testData.push([x, 512]);
-		}
-
-		TestLayout("W to E horizontal points test", testData, new primitives.common.Rect(690, 500, 40, 40), false);
-	})();
-
-	(function () {
-		var testData = [];
-		for (var x = 0; x < 1000; x += 10) {
-			for (var y = 0; y < 1000; y += 10) {
-				testData.push([x, y]);
-			}
-		}
-
-		TestLayout("10K Matrix performance test", testData, new primitives.common.Rect(690, 500, 140, 140), true);
-	})();
-});
-
-/* /Algorithms/Pile.Tests.js*/
-QUnit.module('Algorithms - Pile Of Segments');
-
-QUnit.test("primitives.common.pile -  Closure based segments pile data structure. Sorts and stack segments on top of each other so they occupy minimum space.", function (assert) {
-	var items = [
-		[1, 3], [2, 4], [3, 5], [4, 6], [5, 7], [6, 8], [7, 9], [8, 10], [9, 11], [10, 12], [11, 13], [12, 14]
-	];
-
-	var pile = primitives.common.pile();
-	for (var index = 0, len = items.length; index < len; index += 1) {
-		var item = items[index];
-		pile.add(item[0], item[1], item);
-	}
-
-	var result = {};
-	var pileHeight = pile.resolve(this, function (from, to, context, offset) {
-		if (!result.hasOwnProperty(offset)) {
-			result[offset] = [];
-		}
-		result[offset].push(context);
-	});
-	assert.equal(pileHeight, 2, "Pile should have two rows.");
-
-	var expectedItems = {
-		"0": [[2, 4], [4, 6], [6, 8], [8, 10], [10, 12], [12, 14]],
-		"1": [[1, 3], [3, 5], [5, 7], [7, 9], [9, 11], [11, 13]]
-	};
-	assert.deepEqual(result, expectedItems, "Function resolve should group segments into two rows");
-
-	var items = [
-		[5, 10], [10, 15],
-		[12.5, 13], [13, 14.5],
-		[1, 10], [12, 14],
-		[5, 13],
-		[2, 7], [8, 10], [12, 14],
-		[12, 13], [13.5, 15]
-	];
-
-	var pile = primitives.common.pile();
-	for (var index = 0, len = items.length; index < len; index += 1) {
-		var item = items[index];
-		pile.add(item[0], item[1], item);
-	}
-
-	var result = {};
-	var pileHeight = pile.resolve(this, function (from, to, context, offset) {
-		if (!result.hasOwnProperty(offset)) {
-			result[offset] = [];
-		}
-		result[offset].push(context);
-	});
-	assert.equal(pileHeight, 6, "Pile should have 6 rows.");
-
-	var expectedItems = {
-		"0": [[2, 7], [8, 10], [12.5, 13], [13.5, 15]],
-		"1": [[5, 10], [12, 13], [13, 14.5]],
-		"2": [[1, 10], [12, 14]],
-		"3": [[12, 14]],
-		"4": [[10, 15]],
-		"5": [[5, 13]]
-	};
-	assert.deepEqual(result, expectedItems, "Function resolve should group segments into 6 rows");
-
-	var items = [
-		[70, 90], [70, 80],
-		[10, 20], [30, 40],
-		[36, 65], [50, 60],
-		[10, 35]
-	];
-
-	var pile = primitives.common.pile();
-	for (var index = 0, len = items.length; index < len; index += 1) {
-		var item = items[index];
-		pile.add(item[0], item[1], item);
-	}
-
-	var result = {};
-	var pileHeight = pile.resolve(this, function (from, to, context, offset) {
-		if (!result.hasOwnProperty(offset)) {
-			result[offset] = [];
-		}
-		result[offset].push(context);
-	});
-	assert.equal(pileHeight, 2, "Pile should have 2 rows.");
-
-	var expectedItems = {
-		"0": [[10, 20], [30, 40], [50, 60], [70, 80]],
-		"1": [[10, 35], [36, 65], [70, 90]]
-	};
-	assert.deepEqual(result, expectedItems, "Items should stack on top of each other in 2 layes");
-});
-
-/* /Algorithms/mergeSort.Tests.js*/
-QUnit.module('Algorithms - Merge collections Function');
-
-QUnit.test("primitives.common.mergeSort", function (assert) {
-	var arrays = [
-		[1, 5, 9, 13, 17],
-		[0, 2, 4, 6, 8, 10],
-		[3, 7, 11],
-		[],
-		[18, 19, 20]
-	];
-
-	var result = primitives.common.mergeSort(arrays);
-
-	var expectedResult = [];
-	for (var index = 0; index < arrays.length; index += 1) {
-		var array1 = arrays[index];
-
-		expectedResult = expectedResult.concat(array1);
-	}
-	expectedResult.sort(function (a, b) {
-		return a - b;
-	});
-
-	assert.deepEqual(result, expectedResult, "Merged sort multiple arrays!");
-
-	arrays = [
-		[1, 1, 5, 9, 9, 13, 17, 17],
-		[0, 0, 2, 4, 6, 6, 8, 10]
-	];
-
-	result = primitives.common.mergeSort(arrays, null, true);
-
-	expectedResult = [0, 1, 2, 4, 5, 6, 8, 9, 10, 13, 17];
-
-	assert.deepEqual(result, expectedResult, "Merged sort multiple arrays ignoring duplicates!");
-
-	arrays = [
-		[1, 5, 9, 13, 17],
-	];
-
-	var result = primitives.common.mergeSort(arrays);
-
-	var expectedResult = [];
-	for (var index = 0; index < arrays.length; index += 1) {
-		var array1 = arrays[index];
-
-		expectedResult = expectedResult.concat(array1);
-	}
-	expectedResult.sort(function (a, b) {
-		return a - b;
-	});
-
-	assert.deepEqual(result, expectedResult, "Merged sort single array!");
-
-	arrays = [
-		[1, 1, 5, 9, 9, 9, 13, 17, 17, 18, 18, 18, 18]
-	];
-
-	result = primitives.common.mergeSort(arrays, null, true);
-
-	expectedResult = [1, 5, 9, 13, 17, 18];
-
-	assert.deepEqual(result, expectedResult, "Merged sort single array ignoring duplicates!");
-
-	arrays = [
-		[{ weight: 1 }, { weight: 5 }, { weight: 9 }, { weight: 13 }, { weight: 17 }],
-		[{ weight: 2 }, { weight: 4 }, { weight: 6 }, { weight: 8 }, { weight: 10 }],
-		[{ weight: 3 }, { weight: 7 }, { weight: 11 }],
-		[],
-		[{ weight: 18 }, { weight: 19 }, { weight: 20 }]
-	];
-
-	var result = primitives.common.mergeSort(arrays, function (item) { return item.weight; });
-
-	var expectedResult = [];
-	for (var index = 0; index < arrays.length; index += 1) {
-		var array1 = arrays[index];
-
-		expectedResult = expectedResult.concat(array1);
-	}
-	expectedResult.sort(function (a, b) {
-		return a.weight - b.weight;
-	});
-
-	assert.deepEqual(result, expectedResult, "Merged sort multiple arrays of objects!");
-});
-
-/* /Algorithms/LinkedHashItems.Tests.js*/
-QUnit.module('Algorithms - LinkedHashItems');
-
-QUnit.test("primitives.common.LinkedHashItems -  Add and iterate items in linked hash items collection.", function (assert) {
-	var items = [
-		{ id: 1, name: 'A' },
-		{ id: 2, name: 'B' },
-		{ id: 3, name: 'C' },
-		{ id: 4, name: 'D' },
-		{ id: 5, name: 'E' },
-		{ id: 6, name: 'F' }
-	];
-
-	var linkedHashItems = new primitives.common.LinkedHashItems();
-	for (var index = 0; index < items.length; index++) {
-		var item = items[index];
-		linkedHashItems.add(item.id, item);
-	};
-
-	var result = [];
-	linkedHashItems.iterate(function (item) {
-		result.push(item);
-	});
-	assert.deepEqual(items, result, "Forward iteration returned correct items!");
-
-	var reversedResult = [],
-		reversedItems = items.slice(0);
-	reversedItems.reverse();
-
-	linkedHashItems.iterateBack(function (item) {
-		reversedResult.push(item);
-	});
-	assert.deepEqual(reversedItems, reversedResult, "Back iteration returned correct items!");
-
-	linkedHashItems.remove(3);
-	items.splice(2, 1);
-	assert.deepEqual(items, linkedHashItems.toArray(), "Removed item. Passed!");
-
-	linkedHashItems.remove(1);
-	items.splice(0, 1);
-	assert.deepEqual(items, linkedHashItems.toArray(), "Remove first item. Passed!");
-
-	linkedHashItems.remove(6);
-	items.splice(3, 1);
-	assert.deepEqual(items, linkedHashItems.toArray(), "Remove last item. Passed!");
-
-	linkedHashItems.empty();
-	assert.deepEqual([], linkedHashItems.toArray(), "Remove all items. Passed!");
-});
-
-/* /Algorithms/LCA.Tests.js*/
-QUnit.module('Algorithms - LCA - Lowest Common Ancestor');
-
-QUnit.test("primitives.common.LCA", function (assert) {
-	function getTree(items) {
-		var tree = primitives.common.tree();
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			tree.add(item.parent, item.id, item);
-		}
-		return tree;
-	}
-
-	(function () {
-		var tree = getTree([
-			{ id: 0, parent: null, name: "0" },
-			{ id: 1, parent: 0, name: "1" },
-			{ id: 2, parent: 1, name: "2" },
-			{ id: 3, parent: 1, name: "3" },
-			{ id: 4, parent: 0, name: "4" },
-			{ id: 5, parent: 4, name: "5" },
-			{ id: 6, parent: 4, name: "6" },
-			{ id: 7, parent: 6, name: "6" },
-			{ id: 8, parent: 7, name: "8" },
-			{ id: 9, parent: 3, name: "9" },
-			{ id: 10, parent: 9, name: "10" }
+		var family = getFamily([
+			{ id: 1 },
+			{ id: 2, parents: [1] },
+			{ id: 3, parents: [1, 2] },
+			{ id: 4, parents: [1, 2, 3] }
 		]);
 
-		var lca = primitives.common.LCA(tree);
+		var familyWithoutGrandParentsRelations = family.getFamilyWithoutGrandParentsRelations();
+		assert.ok(familyWithoutGrandParentsRelations.validate(), "Result family structure should pass validation");
 
-		assert.equal(lca.getLowestCommonAncestor(2, 3), 1, "getLowestCommonAncestor test for nodes 2 and 3");
-		assert.equal(lca.getLowestCommonAncestor(9, 10), 9, "getLowestCommonAncestor test for nodes 9 and 10");
-		assert.equal(lca.getLowestCommonAncestor(10, 9), 9, "getLowestCommonAncestor test for nodes 10 and 9");
-		assert.equal(lca.getLowestCommonAncestor(5, 8), 4, "getLowestCommonAncestor test for nodes 5 and 8");
-		assert.equal(lca.getLowestCommonAncestor(10, 8), 0, "getLowestCommonAncestor test for nodes 10 and 8");
-		assert.equal(lca.getLowestCommonAncestor(0, 8), 0, "getLowestCommonAncestor test for nodes 0 and 8");
+		var result = getLevels(familyWithoutGrandParentsRelations);
+		var expected = [
+			{ id: "1", children: ["2"] },
+			{ id: "2", children: ["3"] },
+			{ id: "3", children: ["4"] },
+			{ id: "4" }
+		];
+		
+		assert.deepEqual(result, expected, "Should return linked list connections without shot custs between generations");
+	})();
+
+	(function () {
+		var family = getFamily([
+			{ id: '1', parents: [] },
+			{ id: '2', parents: [] },
+			{ id: '3', parents: ['1', '2'] },
+			{ id: '4', parents: ['1', '2', '3'] },
+			{ id: '5', parents: ['3'] }
+		]);
+
+		var familyWithoutGrandParentsRelations = family.getFamilyWithoutGrandParentsRelations();
+		assert.ok(familyWithoutGrandParentsRelations.validate(), "Result family structure should pass validation");
+
+		var result = getLevels(familyWithoutGrandParentsRelations);
+		var expected = [
+			{ "id": "1", "children": ["3"] },
+			{ "id": "2", "children": ["3"] },
+			{ "id": "3", "children": ["4", "5"] },
+			{ "id": "4" },
+			{ "id": "5" }
+		];
+
+		assert.deepEqual(result, expected, "Element 4 should break connectors to parents 1 and 2");
+	})();
+
+	(function () {
+		var family = getFamily([
+			{ id: '1', parents: [] },
+			{ id: '2', parents: ['1'] },
+			{ id: '3', parents: ['2'] }
+		]);
+
+		var familyWithoutGrandParentsRelations = family.getFamilyWithoutGrandParentsRelations();
+		assert.ok(familyWithoutGrandParentsRelations.validate(), "Result family structure should pass validation");
+
+		var result = getLevels(familyWithoutGrandParentsRelations);
+		var expected = [
+			{ "id": "1", "children": ["2"], },
+			{ "id": "2", "children": ["3"], },
+			{ "id": "3"}
+		];
+
+		assert.deepEqual(result, expected, "Element 4 should break connectors to parents 1 and 2");
 	})();
 });
 
-/* /Algorithms/Graph.Tests.js*/
-QUnit.module('Algorithms - Graph');
 
-QUnit.test("primitives.common.graph -  Closure based graph data structure.", function (assert) {
 
-	function getGraph(items) {
-		var graph = primitives.common.graph();
+/* /Algorithms/Family.getPlanarFamily.Tests.js*/
+QUnit.module('Algorithms - Family class, getPlanarFamily function tests');
+
+QUnit.test("primitives.common.family.getPlanarFamily - Function eliminates some relations in family, so they don;t cross each other.", function (assert) {
+	function getFamily(items) {
+		var family = primitives.common.family();
 		for (var index = 0; index < items.length; index += 1) {
 			var item = items[index];
-			graph.addEdge(item.from, item.to, item);
+			family.add(item.parents, item.id, item);
 		}
-		return graph;
+		return family;
 	}
+
+	function getLevels(family) {
+		var levels = [];
+		family.loopLevels(this, true, function (itemid, item, level) {
+			var newItem = { id: itemid };
+			var children = [];
+			family.loopChildren(this, itemid, function (itemid, item, levelIndex) {
+				if (levelIndex > 0) {
+					return family.BREAK;
+				}
+				children.push(itemid);
+			});
+			if (children.length > 0) {
+				newItem.children = children;
+			}
+			levels.push(newItem);
+		});
+		return levels;
+	};
 
 	function getTreeLevels(levels) {
 		var treeLevels = primitives.common.TreeLevels();
@@ -973,632 +184,158 @@ QUnit.test("primitives.common.graph -  Closure based graph data structure.", fun
 	};
 
 	(function () {
-		var items = [
-			{ from: 1, to: 2, weight: 1 },
-			{ from: 1, to: 3, weight: 1 },
-			{ from: 1, to: 5, weight: 2 },
-			{ from: 2, to: 3, weight: 3 },
-			{ from: 3, to: 4, weight: 1 },
-			{ from: 3, to: 5, weight: 2 },
-			{ from: 4, to: 5, weight: 2 }
-		];
+		var family = getFamily([
+			{ id: 1 },
+			{ id: 2 },
+			{ id: 3 },
+			{ id: 4 },
+			{ id: 5, parents: [1] },
+			{ id: 6, parents: [1] },
+			{ id: 7, parents: [2, 3] },
+			{ id: 8, parents: [4] }
+		]);
 
-		var graph = primitives.common.graph();
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			graph.addEdge(item.from, item.to, item);
-		}
+		var treeLevels = getTreeLevels([
+			[1, 2, 3, 4],
+			[5, 6, 7, 8]
+		]);
 
-		var tree = graph.getSpanningTree(items[0].from, function (edge) {
-			return edge.weight;
-		})
+		var planarFamily = family.getPlanarFamily(treeLevels);
 
-		var children = [];
-		tree.loopLevels(this, function (nodeid, node, level) {
-			if (children[level] == null) {
-				children[level] = { level: level, items: [] };
-			}
-			children[level].items.push({ id: nodeid, parent: tree.parentid(nodeid) });
-		});
-		var expectedChildren = [{ "level": 0, "items": [{ "id": "1", "parent": null }] }, { "level": 1, "items": [{ "id": "5", "parent": "1" }] }, { "level": 2, "items": [{ "id": "3", "parent": "5" }, { "id": "4", "parent": "5" }] }, { "level": 3, "items": [{ "id": "2", "parent": "3" }] }];
-
-		assert.deepEqual(children, expectedChildren, "getSpanningTree function test");
+		var expectedResult = getLevels(family);
+		var result = getLevels(planarFamily);
+		assert.ok(planarFamily.validate(), "Family structure should pass internal structure validation");
+		assert.deepEqual(result, expectedResult, "Function should return the same family structure without changes");
 	})();
 
 	(function () {
-		var items = [
-			{ from: 1, to: 2, weight: 1 },
-			{ from: 1, to: 3, weight: 1 },
-			{ from: 1, to: 5, weight: 2 },
-			{ from: 2, to: 3, weight: 3 },
-			{ from: 3, to: 4, weight: 1 },
-			{ from: 3, to: 5, weight: 2 },
-			{ from: 4, to: 5, weight: 2 }
-		];
+		// Test elimination of edge in two intersecting hierarchies
+		var family = getFamily([
+			{ id: 1 },
+			{ id: 2 },
+			{ id: 3, parents: [1] },
+			{ id: 4, parents: [2] },
+			{ id: 5, parents: [1] },
+			{ id: 6, parents: [2] }
+		]);
 
-		var graph = primitives.common.graph();
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			graph.addEdge(item.from, item.to, item);
-		}
-		var sequence = [];
-		graph.getTotalWeightGrowthSequence(this,
-			function (edge) { return edge.weight; },
-			function (item) { return sequence.push(item); }
-		);
-		var expectedsequence = ["3", "2", "1", "5", "4"];
+		var treeLevels = getTreeLevels([
+			[1, 2],
+			[3, 4, 5, 6]
+		]);
 
-		assert.deepEqual(sequence, expectedsequence, "getTotalWeightGrowthSequence function test");
+		var planarFamily = family.getPlanarFamily(treeLevels);
+
+		var expectedResult = [{ "id": "1", "children": ["3", "5"] }, { "id": "2", "children": ["6"] }, { "id": "3" }, { "id": "5" }, { "id": "6" }];
+		var result = getLevels(planarFamily);
+		assert.ok(planarFamily.validate(), "Family structure should pass internal structure validation");
+		assert.deepEqual(result, expectedResult, "Function should break edge 1-5");
 	})();
 
 	(function () {
-		var items = [
-			{ from: 'A', to: 'B' }, { from: 'A', to: 'C' }, { from: 'A', to: 'D' },
-			{ from: 'B', to: 'E' },
-			{ from: 'C', to: 'E' }, { from: 'C', to: 'D' },
-			{ from: 'D', to: 'F' }, { from: 'D', to: 'J' },
-			{ from: 'E', to: 'Z' },
-			{ from: 'Z', to: 'F' },
-			{ from: 'J', to: 'D' }
-		];
+		// Test elimination of edge in two intersecting hierarchies
+		var family = getFamily([
+			{ id: 1 },
+			{ id: 2 },
+			{ id: 3, parents: [1] },
+			{ id: 4, parents: [2] },
+			{ id: 5, parents: [2] },
+			{ id: 6, parents: [1] },
+			{ id: 7, parents: [2] }
+		]);
 
-		var graph = primitives.common.graph();
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			graph.addEdge(item.from, item.to, item);
-		}
+		var treeLevels = getTreeLevels([
+			[1, 2],
+			[3, 4, 5, 6, 7]
+		]);
 
-		var expectedConnectionPath = ['J', 'D', 'C', 'E'];
+		var planarFamily = family.getPlanarFamily(treeLevels);
 
-		var connectionPath = null;
-		graph.getShortestPath(this, 'E', ['J'], null, function (path) {
-			connectionPath = path;
-		});
-
-		assert.deepEqual(connectionPath, expectedConnectionPath, "getShortestPath function test for Not weighted edges");
+		var expectedResult = [{ "id": "1", "children": ["3"] }, { "id": "2", "children": ["4", "5", "7"] }, { "id": "3" }, { "id": "4" }, { "id": "5" }, { "id": "7" }];
+		var result = getLevels(planarFamily);
+		assert.ok(planarFamily.validate(), "Family structure should pass internal structure validation");
+		assert.deepEqual(result, expectedResult, "Function should break edge 1-6 because it cross 2 other relations");
 	})();
 
 	(function () {
-		var items = [
-		{ from: 'A', to: 'B' }, { from: 'A', to: 'C' }, { from: 'A', to: 'D' },
-		{ from: 'B', to: 'E' },
-		{ from: 'C', to: 'E', weight: 100 }, { from: 'C', to: 'D', weight: 100 },
-		{ from: 'D', to: 'F', weight: 50 }, { from: 'D', to: 'J' },
-		{ from: 'E', to: 'F', weight: 100 },
-		{ from: 'J', to: 'D' }
-		];
+		// Test elimination of edge in two intersecting hierarchies
+		var family = getFamily([
+			{ id: 1 },
+			{ id: 2 },
+			{ id: 3 },
+			{ id: 4 },
+			{ id: 5, parents: [1, 2, 3] },
+			{ id: 6, parents: [2, 3, 4] }
+		]);
 
-		var graph = primitives.common.graph();
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			graph.addEdge(item.from, item.to, item);
-		}
+		var treeLevels = getTreeLevels([
+			[1, 2, 3, 4],
+			[5, 6]
+		]);
 
-		var expectedConnectionPath = ['J', 'D', 'A', 'B', 'E'];
+		var planarFamily = family.getPlanarFamily(treeLevels);
 
-		var connectionPath = [];
-		graph.getShortestPath(this, 'E', ['J'], function (edge, fromItem, toItem) {
-			return edge.weight || 1;
-		}, function (path) {
-			connectionPath = path;
-		});
-
-		assert.deepEqual(connectionPath, expectedConnectionPath, "getShortestPath function test for weighted edges");
+		var expectedResult = [{ "id": "1", "children": ["5"] }, { "id": "2", "children": ["5", "6"] }, { "id": "4", "children": ["6"] }, { "id": "3", "children": ["6"] }, { "id": "5" }, { "id": "6" }];
+		var result = getLevels(planarFamily);
+		assert.ok(planarFamily.validate(), "Family structure should pass internal structure validation");
+		assert.deepEqual(result, expectedResult, "Function should break edge 3-5");
 	})();
 
 	(function () {
-		var items = [
-		{ from: 'A', to: 'B' }, { from: 'A', to: 'C' }, { from: 'A', to: 'D' },
-		{ from: 'B', to: 'G' },
-		{ from: 'D', to: 'H' },
-		{ from: 'E', to: 'H' },
-		{ from: 'F', to: 'H' },
-		{ from: 'K', to: 'F' }, { from: 'K', to: 'L' }, { from: 'K', to: 'M' },
-		{ from: 'M', to: 'I' }, { from: 'M', to: 'J' },
-		{ from: 'I', to: 'T' }, { from: 'J', to: 'T' },
-		{ from: 'H', to: 'Q' }, { from: 'H', to: 'R' }, { from: 'H', to: 'S' },
-		{ from: 'G', to: 'N' }, { from: 'G', to: 'O' },
-		{ from: 'O', to: 'P' }, { from: 'Q', to: 'P' },
-		{ from: 'S', to: 'U' }, { from: 'T', to: 'U' }
-		];
+		// Test elimination of edge in two intersecting hierarchies
+		var family = getFamily([
+			{ id: 1 },
+			{ id: 2 },
+			{ id: 3 },
+			{ id: 4 },
+			{ id: 5, parents: [1, 2, 3] },
+			{ id: 6, parents: [1, 3, 4] }
+		]);
 
-		var graph = primitives.common.graph();
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			graph.addEdge(item.from, item.to, item);
-		}
+		var treeLevels = getTreeLevels([
+			[1, 2, 3, 4],
+			[5, 6]
+		]);
 
-		var expected = [];
-		var processed = {};
-		jQuery.each(items, function (index, item) {
-			if (!processed.hasOwnProperty(item.from)) {
-				expected.push(item.from);
-				processed[item.from] = true;
-			}
-			if (!processed.hasOwnProperty(item.to)) {
-				expected.push(item.to);
-				processed[item.to] = true;
-			}
-		});
-		expected.sort();
+		var planarFamily = family.getPlanarFamily(treeLevels);
 
-		var result = [];
-		graph.loopNodes(this, 'K', function (itemid) {
-			result.push(itemid);
-		});
-
-		result.sort();
-
-		assert.deepEqual(result, expected, "loopNodes function test. Loop all accessable nodes starting from node K");
+		var expectedResult = [{ "id": "1", "children": ["5"] }, { "id": "3", "children": ["5", "6"] }, { "id": "2", "children": ["5"] }, { "id": "4", "children": ["6"] }, { "id": "5" }, { "id": "6" }];
+		var result = getLevels(planarFamily);
+		assert.ok(planarFamily.validate(), "Family structure should pass internal structure validation");
+		assert.deepEqual(result, expectedResult, "Function should break edge 1-6 because it crosses 2 relations");
 	})();
 
-	//function getGreedyGrowSequence(startNode, graph, treeLevels) {
-	//	var sequence = [];
-	//	var margins = {};
-	//	graph.getMinimumWeightGrowthSequence(this,
-	//		startNode,
-	//		function (edge, fromItem, toItem) {
-	//			var level = treeLevels.getLevelIndex(toItem);
-	//			var position = treeLevels.getItemPosition(toItem);
-	//			if (!margins.hasOwnProperty(level)) {
-	//				return 0;
-	//			} else {
-	//				var margin = margins[level];
-	//				if (position < margin.left) {
-	//					return (margin.left - position);
-	//				}
-	//				if (position > margin.right) {
-	//					return (position - margin.right);
-	//				}
-	//				return Math.min(position - margin.left, margin.right - position);
-	//			}
-	//		},
-	//		function (item) {
-	//			var level = treeLevels.getLevelIndex(item);
-	//			var position = treeLevels.getItemPosition(item);
-	//			if (!margins.hasOwnProperty(level)) {
-	//				margins[level] = {
-	//					left: position,
-	//					right: position
-	//				};
-	//			} else {
-	//				var margin = margins[level];
-	//				margin.left = Math.min(position, margin.left);
-	//				margin.right = Math.max(position, margin.right);
-	//			}
-	//			return sequence.push(item);
-	//		}
-	//	);
-	//	return sequence;
-	//}
+	(function () {
+		// Test elimination of edge should create orphant in the second level of children
+		var family = getFamily([
+			{ id: 1 },
+			{ id: 2 },
+			{ id: 3 },
+			{ id: 4 },
+			{ id: 5, parents: [4] },
+			{ id: 6, parents: [1] },
+			{ id: 7, parents: [2] },
+			{ id: 8, parents: [3] }
+		]);
 
-	//(function () {
-	//	var graph = getGraph([
-	//		{ from: 'A', to: 'B' }, { from: 'A', to: 'C' }, { from: 'A', to: 'D' },
-	//		{ from: 'B', to: 'G' },
-	//		{ from: 'D', to: 'H' },
-	//		{ from: 'E', to: 'H' },
-	//		{ from: 'F', to: 'H' },
-	//		{ from: 'K', to: 'F' }, { from: 'K', to: 'L' }, { from: 'K', to: 'M' },
-	//		{ from: 'M', to: 'I' }, { from: 'M', to: 'J' },
-	//		{ from: 'I', to: 'T' }, { from: 'J', to: 'T' },
-	//		{ from: 'H', to: 'Q' }, { from: 'H', to: 'R' }, { from: 'H', to: 'S' },
-	//		{ from: 'G', to: 'N' }, { from: 'G', to: 'O' },
-	//		{ from: 'O', to: 'P' }, { from: 'Q', to: 'P' },
-	//		{ from: 'S', to: 'U' }, { from: 'T', to: 'U' }
-	//	]);
+		var treeLevels = getTreeLevels([
+			[1, 2, 3, 4],
+			[5, 6, 7, 8]
+		]);
 
-	//	var treeLevels = getTreeLevels([
-	//		['A', 'K'],
-	//		['B', 'C', 'D', 'E', 'F', 'L', 'M'],
-	//		['G', 'H', 'I', 'J'],
-	//		['N', 'O', 'Q', 'R', 'S', 'T'],
-	//		['P', 'U']
-	//	]);
+		var planarFamily = family.getPlanarFamily(treeLevels);
 
-	//	var sequence = getGreedyGrowSequence('K', graph, treeLevels);
-
-	//	var expected = ["K", "M", "J", "T", "U", "L", "F", "I", "S", "H", "E", "D", "R", "Q", "A", "P", "C", "B", "O", "G", "N"];
-	//	assert.deepEqual(sequence, expected, "getMinimumWeightGrowthSequence function test of graph traversing sequence starting from node K greedy grows to left side");
-	//})();
-
-	//(function () {
-	//	var graph = getGraph([
-	//		{ from: 'A', to: 'B' }, { from: 'A', to: 'C' }, { from: 'A', to: 'D' },
-	//		{ from: 'B', to: 'G' },
-	//		{ from: 'D', to: 'H' },
-	//		{ from: 'E', to: 'H' },
-	//		{ from: 'F', to: 'H' },
-	//		{ from: 'K', to: 'F' }, { from: 'K', to: 'L' }, { from: 'K', to: 'M' },
-	//		{ from: 'M', to: 'I' }, { from: 'M', to: 'J' },
-	//		{ from: 'I', to: 'T' }, { from: 'J', to: 'T' },
-	//		{ from: 'H', to: 'Q' }, { from: 'H', to: 'R' }, { from: 'H', to: 'S' },
-	//		{ from: 'G', to: 'N' }, { from: 'G', to: 'O' },
-	//		{ from: 'O', to: 'P' }, { from: 'Q', to: 'P' },
-	//		{ from: 'S', to: 'U' }, { from: 'T', to: 'U' }
-	//	]);
-
-	//	var treeLevels = getTreeLevels([
-	//		['A', 'K'],
-	//		['B', 'C', 'D', 'E', 'F', 'L', 'M'],
-	//		['G', 'H', 'I', 'J'],
-	//		['N', 'O', 'Q', 'R', 'S', 'T'],
-	//		['P', 'U']
-	//	]);
-
-	//	var sequence = getGreedyGrowSequence('A', graph, treeLevels);
-
-	//	var expected = ["A", "D", "H", "S", "U", "C", "B", "E", "F", "R", "Q", "T", "G", "K", "P", "I", "J", "O", "N", "L", "M"];
-	//	assert.deepEqual(sequence, expected, "getMinimumWeightGrowthSequence function test of graph traversing sequence starting from node A greedy grows to both sides");
-	//})();
+		var expectedResult = [{ "id": "1", "children": ["6"] }, { "id": "2", "children": ["7"] }, { "id": "3", "children": ["8"] }, { "id": "6" }, { "id": "7" }, { "id": "8" }];
+		var result = getLevels(planarFamily);
+		assert.ok(planarFamily.validate(), "Family structure should pass internal structure validation");
+		assert.deepEqual(result, expectedResult, "Function should make item 5 orphant");
+	})();
 });
 
-/* /Algorithms/getMinimumCrossingRows.Tests.js*/
-QUnit.module('Algorithms - Get minimum set of rows crossing all rectangles. This structure is needed for keyboard arrow keys navigation across random set of rectangles.');
+/* /Algorithms/Family.groupBy.Tests.js*/
+QUnit.module('Algorithms - Family class, groupBy function tests');
 
-function countPlacementsCrossings(placements, rows) {
-	var result = 0;
-
-	for (var index = 0; index < placements.length; index += 1) {
-		var placement = placements[index];
-
-		for (var index2 = 0; index2 < rows.length; index2 += 1) {
-			var row = rows[index2];
-			if (placement.y <= row && placement.bottom() >= row) {
-				result += 1;
-				break;
-			}
-		}
-	}
-
-	return result;
-}
-
-function GetPlacementMarker(placement, label, color) {
-	var div = jQuery("<div></div>");
-
-	div.append(label);
-	div.css(placement.getCSS());
-	div.css({
-		"background": color,
-		visibility: "visible",
-		position: "absolute",
-		font: "Areal",
-		"font-size": "12px",
-		"border-style": "solid",
-		"border-color": "black",
-		"border-width": "2px"
-	});
-
-	return div;
-}
-
-function ShowLayout(fixture, placements, rows, title) {
-	var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
-	titlePlaceholder.append(title);
-	fixture.append(titlePlaceholder);
-
-	var offsetX = null;
-	var offsetY = null;
-	var space = new primitives.common.Rect();
-	for (var index = 0; index < placements.length; index+=1) {
-		var placement = placements[index];
-
-		offsetX = offsetX == null ? placement.x : Math.min(offsetX, placement.x);
-		offsetY = offsetY == null ? placement.y : Math.min(offsetY, placement.y);
-
-		space.addRect(placement);
-	}
-
-	var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'></div>");
-	placeholder.css({
-		width: space.width,
-		height: space.height
-	});
-	for (var index = 0; index < placements.length; index += 1) {
-		var placement = placements[index];
-		var label = placement.context;
-		var placement = new primitives.common.Rect(placements[index]);
-		placement.translate(-offsetX, -offsetY);
-
-		var div = GetPlacementMarker(placement, label, "grey");
-		placeholder.append(div);
-	}
-
-	for (var index = 0; index < rows.length; index += 1) {
-		var row = rows[index];
-		var placement = new primitives.common.Rect(0, row, space.width, 1);
-		placement.translate(-offsetX, -offsetY);
-
-		var div = GetPlacementMarker(placement, index, "red");
-		placeholder.append(div);
-	}
-
-	fixture.append(placeholder);
-}
-
-function getRectangles(items) {
-	var result = [];
-	for (var index = 0; index < items.length; index += 1) {
-		var item = items[index];
-		var rect = new primitives.common.Rect(item[0], item[1], item[2], item[3]);
-		rect.context = index;
-		result.push(rect);
-	}
-	return result;
-}
-
-QUnit.test("primitives.common.getMinimumCrossingRows", function (assert) {
-	function TestLayout(title, items) {
-		var placements = getRectangles(items);
-		var rows = [];
-		primitives.common.getMinimumCrossingRows(this, placements, function (row) {
-			rows.push(row);
-		});
-
-		ShowLayout(jQuery("#qunit-fixture"), placements, rows, title);
-
-		jQuery("#qunit-fixture").css({
-			position: "relative",
-			left: "0px",
-			top: "0px",
-			height: "Auto"
-		});
-
-		var result = countPlacementsCrossings(placements, rows);
-
-		assert.equal(result, placements.length, title);
-	};
-
-	TestLayout("Basic test case", [
-		[0, 0, 200, 50],
-		[300, 30, 200, 50],
-		[600, 45, 200, 50],
-		[10, 55, 200, 50],
-		[310, 90, 200, 50]
-	]);
-
-	TestLayout("Multi-layer test case", [
-		[0, 0, 40, 280],
-		[60, 0, 100, 100],
-		[180, 0, 40, 40],
-		[180, 60, 40, 40],
-		[240, 0, 40, 40],
-		[300, 0, 40, 40],
-		[240, 60, 40, 40],
-		[300, 60, 40, 100],
-		[360, 0, 100, 100],
-		[480, 0, 40, 40],
-		[540, 0, 40, 40],
-		[600, 0, 80, 100],
-		[480, 60, 40, 140],
-		[540, 140, 60, 60],
-		[620, 140, 60, 60],
-		[60, 120, 160, 160],
-		[240, 180, 60, 60],
-		[320, 180, 60, 60],
-		[400, 180, 60, 60],
-		[620, 220, 20, 20],
-		[660, 220, 20, 20],
-		[240, 260, 20, 20],
-		[280, 260, 340, 20],
-		[640, 260, 40, 20]
-	]);
-
-	TestLayout("Nested block test case", [
-		[220, 0, 120, 80],
-		[0, 100, 120, 80],
-		[0, 200, 120, 80],
-		[400, 100, 120, 80],
-		[400, 200, 120, 80],
-		[160, 100, 40, 40],
-		[220, 100, 40, 40],
-		[280, 100, 40, 40],
-		[340, 100, 40, 40],
-		[160, 160, 40, 40],
-		[220, 160, 40, 40],
-		[280, 160, 40, 40],
-		[340, 160, 40, 40],
-		[160, 220, 40, 40],
-		[220, 220, 40, 40],
-		[280, 220, 40, 40],
-		[340, 220, 40, 40]
-	]);
-});
-
-/* /Algorithms/getMergedRectangles.Tests.js*/
-QUnit.module('Algorithms - Get merged rectangles. This method merges multiple rectangles into a single polyline object.');
-
-QUnit.test("primitives.common.getMergedRectangles", function (assert) {
-	function ShowLayout(fixture, polyline, width, height, title) {
-		var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
-		titlePlaceholder.append(title);
-		fixture.append(titlePlaceholder);
-
-		var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'><div class='placeholder'></div></div>");
-		placeholder.css({
-			width: width,
-			height: height
-		});
-
-		fixture.append(placeholder);
-
-		var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder[0]);
-		graphics.begin();
-		graphics.resize("placeholder", width, height);
-		graphics.activate("placeholder");
-		graphics.polyline(polyline);
-		graphics.end();
-	}
-
-	function getSize(rects) {
-		var result = new primitives.common.Rect(0, 0, 0, 0);
-		for (var index = 0; index < rects.length; index += 1) {
-			var rect = rects[index];
-			result.addRect(rect);
-		}
-		return result;
-	}
-
-	function getRectangles(items) {
-		var result = [];
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			var rect = new primitives.common.Rect(item[0], item[1], item[2], item[3]);
-			rect.context = index;
-			result.push(rect);
-		}
-		return result;
-	}
-
-	function TestLayout(title, items) {
-		var rects = getRectangles(items);
-		var paletteItem = new primitives.common.PaletteItem({
-			lineColor: "#000000",
-			lineWidth: "2",
-			fillColor: "#faebd7",
-			lineType: primitives.common.LineType.Solid,
-			opacity: 1
-		});
-
-		var polyline = new primitives.common.Polyline(paletteItem);
-		primitives.common.getMergedRectangles(this, rects, function (points) {
-			for (var index = 0, len = points.length; index < len; index += 1) {
-				var point = points[index];
-				if (index == 0) {
-					polyline.addSegment(new primitives.common.MoveSegment(point.x, point.y));
-				} else {
-					polyline.addSegment(new primitives.common.LineSegment(point.x, point.y));
-				}
-			}
-		});
-
-		var size = getSize(rects);
-
-		ShowLayout(jQuery("#qunit-fixture"), polyline, size.width, size.height, title);
-
-		jQuery("#qunit-fixture").css({
-			position: "relative",
-			left: "0px",
-			top: "0px",
-			height: "Auto"
-		});
-
-		assert.ok(true, title);
-	};
-
-	TestLayout("Merge single rectangle", [
-		[0, 0, 100, 100]
-	]);
-
-	TestLayout("Merge two disconnected rectangles", [
-		[0, 0, 80, 80],
-		[100, 0, 80, 80]
-	]);
-
-	TestLayout("Merge two aligned disconnected rectangles", [
-		[0, 0, 80, 80],
-		[80, 100, 80, 80]
-	]);
-
-	TestLayout("Merge two aligned disconnected rectangles", [
-		[0, 100, 80, 80],
-		[80, 0, 80, 80]
-	]);
-
-	TestLayout("Merge two overlapping rectangles", [
-	[0, 0, 100, 100],
-	[50, 50, 100, 100]
-	]);
-
-	TestLayout("Merge two overlapping rectangles", [
-		[0, 50, 100, 100],
-		[50, 0, 100, 100]
-	]);
-
-	TestLayout("Merge E shape rectangles", [
-		[0, 0, 50, 350],
-		[50, 0, 50, 50],
-		[50, 100, 50, 50],
-		[50, 200, 50, 50],
-		[50, 300, 50, 50]
-	]);
-
-	TestLayout("Merge E shape rectangles", [
-		[50, 0, 50, 350],
-		[0, 0, 50, 50],
-		[0, 100, 50, 50],
-		[0, 200, 50, 50],
-		[0, 300, 50, 50]
-	]);
-
-
-	TestLayout("Merge 5 rectangles", [
-		[0, 0, 100, 100],
-		[150, 0, 100, 100],
-		[0, 150, 100, 100],
-		[150, 150, 100, 100],
-		[50, 50, 150, 150]
-	]);
-
-	TestLayout("Window", [
-		[100, 0, 150, 150],
-		[100, 200, 150, 150],
-		[0, 100, 150, 150],
-		[200, 100, 150, 150]
-	]);
-
-	TestLayout("Window 2", [
-		[0, 0, 150, 50],
-		[0, 50, 50, 50],
-		[100, 50, 50, 50],
-		[0, 100, 150, 50],
-		[0, 150, 50, 50],
-		[100, 150, 50, 50],
-		[0, 200, 150, 50]
-	]);
-
-	TestLayout("Dumbbell", [
-		[0, 0, 60, 60],
-		[80, 0, 60, 60],
-		[50, 20, 40, 20]
-	]);
-});
-
-/* /Algorithms/getLiniarBreaks.Tests.js*/
-QUnit.module('Algorithms - Get Liniar Breaks for Collection of values Function');
-
-QUnit.test("primitives.common.getLiniarBreaks", function (assert) {
-	var values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 200, 300, 400, 9900, 10000];
-
-	var result = primitives.common.getLiniarBreaks(values);
-
-	var expectedResult = [8, 11, 13];
-
-	assert.deepEqual(result, expectedResult, "Liniar breaks for 3 sequances havin 10x and 100x difference");
-
-	var values = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-	var result = primitives.common.getLiniarBreaks(values);
-
-	var expectedResult = [2, 5, 8];
-
-	assert.deepEqual(result, expectedResult, "Liniar breaks for 3 distinct numbers");
-
-	var values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 100, 200, 300];
-
-	var result = primitives.common.getLiniarBreaks(values);
-
-	var expectedResult = [3, 8, 11];
-
-	assert.deepEqual(result, expectedResult, "Liniar breaks for 2 sequances having 10x difference");
-});
-
-/* /Algorithms/getFamilyUnits.Tests.js*/
-QUnit.module('Algorithms - getFamilyUnits');
-
-QUnit.test("primitives.common.getFamilyUnits - Group family into family units for alignment.", function (assert) {
-
+QUnit.test("primitives.common.family.groupBy - Function groups nodes having single common parent and child.", function (assert) {
 	function getFamily(items) {
 		var family = primitives.common.family();
 		for (var index = 0; index < items.length; index += 1) {
@@ -1610,1691 +347,138 @@ QUnit.test("primitives.common.getFamilyUnits - Group family into family units fo
 
 	(function () {
 		var family = getFamily([
-			{ id: 'A', parents: [] },
-			{ id: 'K', parents: [] },
-			{ id: 'B', parents: ['A'] },
-			{ id: 'C', parents: ['A'] },
-			{ id: 'D', parents: ['A'] },
-			{ id: 'E', parents: [] },
-			{ id: 'F', parents: ['K'] },
-			{ id: 'L', parents: ['K'] },
-			{ id: 'M', parents: ['K'] },
-			{ id: 'G', parents: ['B'] },
-			{ id: 'H', parents: ['D', 'E', 'F'] },
-			{ id: 'I', parents: ['M'] },
-			{ id: 'J', parents: ['M'] },
-			{ id: 'N', parents: ['G'] },
-			{ id: 'O', parents: ['G'] },
-			{ id: 'Q', parents: ['H'] },
-			{ id: 'R', parents: ['H'] },
-			{ id: 'S', parents: ['H'] },
-			{ id: 'T', parents: ['I', 'J'] },
-			{ id: 'P', parents: ['O', 'Q'] },
-			{ id: 'U', parents: ['S', 'T'] }
+			{ id: 1 },
+			{ id: 2, parents: [1] },
+			{ id: 3, parents: [1] },
+			{ id: 4, parents: [1] },
+			{ id: 5, parents: [1] },
+			{ id: 6, parents: [1] },
+			{ id: 7, parents: [1] },
+			{ id: 8, parents: [1] },
 		]);
 
-		var familyUnitsById = primitives.common.getFamilyUnits(family);
-
 		var result = [];
-		for (var familyId in familyUnitsById) {
-			var familyUnits = familyUnitsById[familyId];
-			for (var index = 0; index < familyUnits.length; index += 1) {
-				var familyUnit = familyUnits[index];
-				result[familyUnit.id] = { id: familyUnit.id, parents: familyUnit.parents.items, children: familyUnit.children.items };
-			}
-		}
+		var planarFamily = family.groupBy(this, 2, function (parentid, childid, nodes) {
+			result.push({
+				parent: parentid,
+				child: childid,
+				nodes: nodes
+			})
+		});
 
-		var expected = [
-			{ id: 0, parents: ["A"], children: ["B", "C", "D"] },
-			{ id: 1, parents: ["K"], children: ["F", "L", "M"] },
-			{ id: 2, parents: ["B"], children: ["G"] },
-			{ id: 3, parents: ["D", "E", "F"], children: ["H"] },
-			{ id: 4, parents: ["M"], children: ["I", "J"] },
-			{ id: 5, parents: ["G"], children: ["N", "O"] },
-			{ id: 6, parents: ["H"], children: ["Q", "R", "S"] },
-			{ id: 7, parents: ["I", "J"], children: ["T"] },
-			{ id: 8, parents: ["O", "Q"], children: ["P"] },
-			{ id: 9, parents: ["S", "T"], children: ["U"] }
+		var expectedResult = [
+			{ parent: "1", child: null, nodes: ["2", "3", "4", "5", "6", "7", "8"] }
 		];
-
-		assert.deepEqual(result, expected, "getFamilyUnits function creates layout family units out of family structure");
+		assert.deepEqual(result, expectedResult, "Function should group nodes sharing the same parent together");
 	})();
 
 	(function () {
 		var family = getFamily([
-			{ id: '6', parents: [] },
-			{ id: '5', parents: ['6'] },
-			{ id: '2', parents: ['6'] },
-			{ id: '1', parents: ['6'] },
-			{ id: '7', parents: ['1', '2'] }
+			{ id: 1 },
+			{ id: 2 },
+			{ id: 3 },
+			{ id: 4 },
+			{ id: 5 },
+			{ id: 6 },
+			{ id: 7 },
+			{ id: 8, parents: [1, 2, 3, 4, 5, 6, 7] }
 		]);
 
-		var familyUnitsById = primitives.common.getFamilyUnits(family);
-
 		var result = [];
-		for (var familyId in familyUnitsById) {
-			var familyUnits = familyUnitsById[familyId];
-			for (var index = 0; index < familyUnits.length; index += 1) {
-				var familyUnit = familyUnits[index];
-				result[familyUnit.id] = { id: familyUnit.id, parents: familyUnit.parents.items, children: familyUnit.children.items };
-			}
-		}
-
-		var expected = [
-			{ id: 0, parents: ["1", "2"], children: ["7"] },
-			{ id: 1, parents: ["6"], children: ["1", "2", "5"] }
-		];
-
-		assert.deepEqual(result, expected, "getFamilyUnits bottom family misses unit 5");
-	})();
-});
-
-/* /Algorithms/getCrossingRectangles.Tests.js*/
-QUnit.module('Algorithms - Get crossing rectangles. This method finds rectangles having sides intersections. It does not finds completly ovellaped rectangles. This method is used for searching overlaped lables.');
-
-QUnit.test("primitives.common.getCrossingRectangles", function (assert) {
-	function GetPlacementMarker(placement, label, color) {
-		var div = jQuery("<div></div>");
-
-		div.append(label);
-		div.css(placement.getCSS());
-		div.css({
-			"background": color,
-			visibility: "visible",
-			position: "absolute",
-			font: "Areal",
-			"font-size": "12px",
-			"border-style": "solid",
-			"border-color": "black",
-			"border-width": "2px",
-			"opacity": "0.5"
-		});
-
-		return div;
-	}
-
-	function ShowLayout(fixture, rects, width, height, title) {
-		var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
-		titlePlaceholder.append(title);
-		fixture.append(titlePlaceholder);
-
-		var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'></div>");
-		placeholder.css({
-			width: width,
-			height: height
-		});
-		for (var index = 0; index < rects.length; index += 1) {
-			var rect = rects[index];
-			var label = rect.context;
-
-			var div = GetPlacementMarker(rect, label, "grey");
-			placeholder.append(div);
-		}
-
-		fixture.append(placeholder);
-	}
-
-	function getSize(rects) {
-		var result = new primitives.common.Rect(0, 0, 0, 0);
-		for (var index = 0; index < rects.length; index += 1) {
-			var rect = rects[index];
-			result.addRect(rect);
-		}
-		return result;
-	}
-
-	function getRectangles(items) {
-		var result = [];
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			var rect = new primitives.common.Rect(item[0], item[1], item[2], item[3]);
-			rect.context = index;
-			result.push(rect);
-		}
-		return result;
-	}
-
-	function getCrossingRectangles(rects) {
-		var result = [];
-		for (var index = 0, len = rects.length; index < len - 1; index += 1) {
-			var firstRect = rects[index];
-			for (var index2 = index + 1; index2 < len; index2 += 1) {
-				secondRect = rects[index2];
-
-				if (firstRect.overlaps(secondRect)) {
-					result.push([index, index2]);
-				}
-			}
-		}
-		return result;
-	}
-
-	function TestLayout(title, items) {
-		var rects = getRectangles(items);
-		var paletteItem = new primitives.common.PaletteItem({
-			lineColor: "#000000",
-			lineWidth: "2",
-			fillColor: "#faebd7",
-			lineType: primitives.common.LineType.Solid,
-			opacity: 1
-		});
-
-		var result = [];
-		primitives.common.getCrossingRectangles(this, rects, function (rect1, rect2) {
-			var crossing = [rect1.context, rect2.context];
-			crossing.sort(function (a, b) { return a - b;});
-			result.push(crossing);
-
-			if (rect1.context == rect2.context) {
-				throw "Self crossing is not considered as a valid result";
-			}
-		});
-		result.sort(function (a, b) {
-			if (a[0] == b[0]) {
-				return a[1] - b[1];
-			} else {
-				return a[0] - b[0];
-			}
-		});
-
-		var size = getSize(rects);
-		ShowLayout(jQuery("#qunit-fixture"), rects, size.width, size.height, title);
-
-		jQuery("#qunit-fixture").css({
-			position: "relative",
-			left: "0px",
-			top: "0px",
-			height: "Auto"
-		});
-
-		var expected = getCrossingRectangles(rects);
-		assert.deepEqual(result, expected, title);
-	};
-
-	TestLayout("Single rectangle", [
-		[0, 0, 100, 100]
-	]);
-
-	TestLayout("Two disconnected rectangles", [
-		[0, 0, 80, 80],
-		[100, 0, 80, 80]
-	]);
-
-	TestLayout("Two aligned disconnected rectangles", [
-		[0, 0, 80, 80],
-		[80, 100, 80, 80]
-	]);
-
-	TestLayout("Two aligned disconnected rectangles", [
-		[0, 100, 80, 80],
-		[80, 0, 80, 80]
-	]);
-
-	TestLayout("Two overlapping rectangles", [
-	[0, 0, 100, 100],
-	[50, 50, 100, 100]
-	]);
-
-	TestLayout("Two overlapping rectangles", [
-		[0, 50, 100, 100],
-		[50, 0, 100, 100]
-	]);
-
-	TestLayout("E shape rectangles on right", [
-		[0, 0, 50, 350],
-		[50, 0, 50, 50],
-		[50, 100, 50, 50],
-		[50, 200, 50, 50],
-		[50, 300, 50, 50]
-	]);
-
-	TestLayout("E shape rectangles on left", [
-		[50, 0, 50, 350],
-		[0, 0, 50, 50],
-		[0, 100, 50, 50],
-		[0, 200, 50, 50],
-		[0, 300, 50, 50]
-	]);
-
-
-	TestLayout("5 rectangles", [
-		[0, 0, 100, 100],
-		[150, 0, 100, 100],
-		[0, 150, 100, 100],
-		[150, 150, 100, 100],
-		[50, 50, 150, 150]
-	]);
-
-	TestLayout("Window", [
-		[100, 0, 150, 150],
-		[100, 200, 150, 150],
-		[0, 100, 150, 150],
-		[200, 100, 150, 150]
-	]);
-
-	TestLayout("Window 2", [
-		[0, 0, 150, 50],
-		[0, 50, 50, 50],
-		[100, 50, 50, 50],
-		[0, 100, 150, 50],
-		[0, 150, 50, 50],
-		[100, 150, 50, 50],
-		[0, 200, 150, 50]
-	]);
-
-	TestLayout("Dumbbell", [
-		[0, 0, 60, 60],
-		[80, 0, 60, 60],
-		[50, 20, 40, 20]
-	]);
-
-	TestLayout("Horizontal overlay", [
-		[0, 0, 60, 60],
-		[10, 0, 60, 60],
-		[20, 0, 60, 60],
-		[30, 0, 60, 60],
-		[40, 0, 60, 60],
-		[50, 0, 60, 60]
-	]);
-
-	TestLayout("Vertical overlay", [
-	[0, 0, 60, 60],
-	[0, 10, 60, 60],
-	[0, 20, 60, 60],
-	[0, 30, 60, 60],
-	[0, 40, 60, 60],
-	[0, 50, 60, 60]
-	]);
-
-	function TestPerformance(title, items, useBruteForce) {
-
-		var rects = getRectangles(items);
-
-		if (useBruteForce) {
-			getCrossingRectangles(rects);
-		} else {
-			var result = [];
-			primitives.common.getCrossingRectangles(this, rects, function (rect1, rect2) {
-				result.push([rect1.context, rect2.context]);
-			});
-		}
-		assert.ok(true, title);
-	};
-
-	var demoLabels = [[28, 5, 154, 130], [220, 8, 120, 124], [506, 65, 100, 10], [788, 65, 100, 10], [950, 65, 100, 10], [950, 76, 100, 10], [1062, 76, 100, 10], [1062, 87, 100, 10],
-		[1062, 98, 100, 10], [950, 90.75, 100, 10], [950, 105.5, 100, 10], [1062, 105.5, 100, 10], [950, 116.5, 100, 10], [950, 127.5, 100, 10], [788, 138.5, 100, 10], [950, 138.5, 100, 10],
-		[950, 149.5, 100, 10], [950, 160.5, 100, 10], [950, 171.5, 100, 10], [950, 182.5, 100, 10], [788, 193.5, 100, 10], [950, 193.5, 100, 10], [950, 204.5, 100, 10], [950, 215.5, 100, 10],
-		[788, 226.5, 100, 10], [950, 226.5, 100, 10], [1062, 226.5, 100, 10], [950, 237.5, 100, 10], [1062, 237.5, 100, 10], [1062, 248.5, 100, 10], [1062, 259.5, 100, 10], [950, 267, 100, 10],
-		[1062, 267, 100, 10], [788, 278, 100, 10], [950, 278, 100, 10], [788, 289, 100, 10], [788, 300, 100, 10], [788, 311, 100, 10], [950, 311, 100, 10], [950, 322, 100, 10],
-		[950, 333, 100, 10], [378, 262, 244, 144], [788, 329, 100, 10], [788, 340.5, 100, 10], [950, 340.5, 100, 10], [950, 351.5, 100, 10], [788, 351.5, 100, 10],
-		[788, 362.5, 100, 10], [378, 416, 244, 144], [788, 483, 100, 10], [950, 483, 100, 10], [788, 494, 100, 10], [950, 494, 100, 10], [1062, 494, 100, 10],
-		[950, 505, 100, 10], [950, 516, 100, 10], [950, 527, 100, 10], [788, 534.5, 100, 10], [950, 534.5, 100, 10], [950, 545.5, 100, 10], [1062, 545.5, 100, 10],
-		[950, 556.5, 100, 10], [788, 567.5, 100, 10], [950, 567.5, 100, 10], [788, 578.5, 100, 10], [788, 589.5, 100, 10], [506, 597, 100, 10], [788, 597, 100, 10],
-		[950, 597, 100, 10], [1062, 597, 100, 10], [1062, 608, 100, 10], [950, 615.5, 100, 10], [1062, 615.5, 100, 10], [1062, 626.5, 100, 10], [1062, 637.5, 100, 10],
-		[950, 648.5, 100, 10], [1062, 648.5, 100, 10], [1062, 659.5, 100, 10], [950, 659.5, 100, 10], [950, 670.5, 100, 10], [950, 681.5, 100, 10], [950, 692.5, 100, 10],
-		[950, 703.5, 100, 10], [1062, 703.5, 100, 10], [1062, 714.5, 100, 10], [1062, 725.5, 100, 10], [788, 722, 100, 10], [950, 722, 100, 10], [950, 733, 100, 10],
-		[1062, 733, 100, 10], [788, 744, 100, 10], [950, 744, 100, 10], [950, 755, 100, 10], [950, 766, 100, 10], [1062, 766, 100, 10], [950, 777, 100, 10], [950, 788, 100, 10],
-		[788, 799, 100, 10], [950, 799, 100, 10], [950, 810, 100, 10], [950, 821, 100, 10], [1062, 821, 100, 10], [950, 832, 100, 10], [1062, 832, 100, 10], [1062, 843, 100, 10],
-		[1062, 854, 100, 10], [1062, 865, 100, 10], [1174, 865, 100, 10], [950, 843, 100, 10], [788, 872.5, 100, 10], [950, 872.5, 100, 10], [1062, 872.5, 100, 10],
-		[1062, 883.5, 100, 10], [1174, 883.5, 100, 10], [1174, 894.5, 100, 10], [1062, 894.5, 100, 10], [950, 883.5, 100, 10], [950, 894.5, 100, 10], [950, 905.5, 100, 10],
-		[1062, 905.5, 100, 10], [1062, 916.5, 100, 10], [950, 927.5, 100, 10], [1062, 927.5, 100, 10], [1062, 938.5, 100, 10], [1062, 949.5, 100, 10], [1062, 960.5, 100, 10],
-		[1062, 971.5, 100, 10], [1062, 982.5, 100, 10], [1062, 993.5, 100, 10], [1062, 1004.5, 100, 10], [1062, 1015.5, 100, 10], [1062, 1026.5, 100, 10], [950, 1037.5, 100, 10],
-		[1062, 1037.5, 100, 10], [950, 1048.5, 100, 10], [1062, 1048.5, 100, 10], [1062, 1059.5, 100, 10], [950, 1059.5, 100, 10], [788, 883.5, 100, 10], [506, 1070.5, 100, 10],
-		[788, 1070.5, 100, 10], [950, 1070.5, 100, 10], [788, 1081.5, 100, 10], [788, 1092.5, 100, 10], [950, 1092.5, 100, 10], [788, 1103.5, 100, 10], [506, 1114.5, 100, 10],
-		[788, 1114.5, 100, 10], [950, 1114.5, 100, 10], [950, 1125.5, 100, 10], [950, 1136.5, 100, 10], [950, 1147.5, 100, 10], [950, 1158.5, 100, 10], [788, 1166, 100, 10],
-		[950, 1166, 100, 10], [950, 1177, 100, 10], [950, 1188, 100, 10], [788, 1199, 100, 10], [950, 1199, 100, 10], [788, 1210, 100, 10], [950, 1210, 100, 10], [950, 1221, 100, 10],
-		[950, 1232, 100, 10], [788, 1243, 100, 10], [950, 1243, 100, 10], [1062, 1243, 100, 10], [1062, 1254, 100, 10], [950, 1261.5, 100, 10], [1062, 1261.5, 100, 10], [950, 1272.5, 100, 10],
-		[950, 1283.5, 100, 10], [1062, 1283.5, 100, 10], [1062, 1294.5, 100, 10], [788, 1294.5, 100, 10], [950, 1294.5, 100, 10], [788, 1305.5, 100, 10], [506, 1125.5, 100, 10],
-		[506, 1136.5, 100, 10], [220, 1256, 120, 124], [506, 1313, 100, 10], [788, 1313, 100, 10], [378, 1328.5, 244, 144], [788, 1395.5, 100, 10], [788, 1406.5, 100, 10],
-		[950, 1406.5, 100, 10], [950, 1417.5, 100, 10], [950, 1428.5, 100, 10], [950, 1439.5, 100, 10], [788, 1417.5, 100, 10], [378, 1482.5, 244, 144], [788, 1549.5, 100, 10],
-		[950, 1549.5, 100, 10], [950, 1560.5, 100, 10], [788, 1560.5, 100, 10], [506, 1632, 100, 10], [788, 1632, 100, 10], [788, 1643, 100, 10], [788, 1654, 100, 10],
-		[506, 1661.5, 100, 10], [788, 1661.5, 100, 10], [950, 1661.5, 100, 10], [1062, 1661.5, 100, 10], [950, 1672.5, 100, 10], [950, 1683.5, 100, 10], [950, 1694.5, 100, 10],
-		[950, 1705.5, 100, 10], [950, 1716.5, 100, 10], [1062, 1716.5, 100, 10], [788, 1724, 100, 10], [950, 1724, 100, 10], [950, 1735, 100, 10], [788, 1746, 100, 10], [950, 1746, 100, 10],
-		[950, 1757, 100, 10], [950, 1768, 100, 10], [950, 1779, 100, 10], [950, 1790, 100, 10], [788, 1757, 100, 10], [506, 1779, 100, 10], [788, 1779, 100, 10], [788, 1790, 100, 10],
-		[788, 1801, 100, 10], [950, 1801, 100, 10], [950, 1812, 100, 10], [950, 1823, 100, 10], [950, 1834, 100, 10], [788, 1812, 100, 10], [506, 1845, 100, 10], [788, 1845, 100, 10],
-		[950, 1845, 100, 10], [950, 1856, 100, 10], [788, 1856, 100, 10], [788, 1867, 100, 10], [950, 1867, 100, 10], [788, 1878, 100, 10], [788, 1889, 100, 10], [220, 1832, 120, 124],
-		[506, 1889, 100, 10], [506, 1900, 100, 10], [788, 1900, 100, 10], [788, 1911, 100, 10], [788, 1922, 100, 10], [506, 1911, 100, 10], [506, 1922, 100, 10], [506, 1933, 100, 10],
-		[506, 1944, 100, 10], [506, 1955, 100, 10], [506, 1966, 100, 10], [506, 1977, 100, 10], [506, 1988, 100, 10], [506, 1999, 100, 10], [220, 1966, 120, 124], [506, 2023, 100, 10],
-		[788, 2023, 100, 10], [950, 2023, 100, 10], [950, 2034, 100, 10], [950, 2045, 100, 10], [788, 2052.5, 100, 10], [950, 2052.5, 100, 10], [788, 2063.5, 100, 10], [788, 2074.5, 100, 10],
-		[788, 2085.5, 100, 10], [788, 2096.5, 100, 10], [506, 2104, 100, 10], [788, 2104, 100, 10], [788, 2115, 100, 10], [788, 2126, 100, 10], [788, 2137, 100, 10], [950, 2137, 100, 10],
-		[788, 2148, 100, 10], [788, 2159, 100, 10], [506, 2137, 100, 10], [506, 2170, 100, 10], [788, 2170, 100, 10], [788, 2181, 100, 10], [788, 2192, 100, 10],
-		[378, 2185.5, 244, 144], [788, 2252.5, 100, 10], [788, 2263.5, 100, 10], [788, 2274.5, 100, 10], [950, 2274.5, 100, 10], [950, 2285.5, 100, 10], [950, 2296.5, 100, 10],
-		[788, 2304, 100, 10], [950, 2304, 100, 10], [950, 2315, 100, 10], [788, 2315, 100, 10], [788, 2326, 100, 10], [788, 2337, 100, 10], [788, 2348, 100, 10], [950, 2348, 100, 10],
-		[788, 2359, 100, 10], [788, 2370, 100, 10], [440, 2339.5, 120, 124], [788, 2396.5, 100, 10], [950, 2396.5, 100, 10], [660, 2412, 244, 144], [950, 2479, 100, 10],
-		[1062, 2479, 100, 10], [1062, 2490, 100, 10], [1062, 2501, 100, 10], [1062, 2512, 100, 10], [1062, 2523, 100, 10], [950, 2504.75, 100, 10], [950, 2530.5, 100, 10],
-		[1062, 2530.5, 100, 10], [1062, 2541.5, 100, 10], [950, 2541.5, 100, 10], [950, 2552.5, 100, 10], [1062, 2552.5, 100, 10], [1062, 2563.5, 100, 10], [1062, 2574.5, 100, 10],
-		[1062, 2585.5, 100, 10], [1062, 2596.5, 100, 10], [1062, 2607.5, 100, 10], [950, 2563.5, 100, 10], [788, 2571, 100, 10], [950, 2571, 100, 10], [950, 2582, 100, 10],
-		[950, 2593, 100, 10], [950, 2604, 100, 10], [950, 2615, 100, 10], [950, 2626, 100, 10], [950, 2637, 100, 10], [1062, 2637, 100, 10], [788, 2582, 100, 10], [506, 2490.875, 100, 10],
-		[506, 2523.75, 100, 10], [506, 2556.625, 100, 10], [506, 2589.5, 100, 10], [788, 2589.5, 100, 10], [506, 2600.5, 100, 10], [220, 2551, 120, 124], [506, 2608, 100, 10],
-		[506, 2619, 100, 10], [788, 2619, 100, 10], [788, 2630, 100, 10], [788, 2641, 100, 10], [378, 2634.5, 244, 144], [788, 2701.5, 100, 10], [788, 2712.5, 100, 10],
-		[506, 2784, 100, 10], [788, 2784, 100, 10], [788, 2795, 100, 10], [950, 2795, 100, 10], [788, 2806, 100, 10], [788, 2817, 100, 10], [788, 2828, 100, 10], [506, 2795, 100, 10],
-		[220, 2685, 120, 124], [220, 2819, 120, 124], [506, 2876, 100, 10], [788, 2876, 100, 10], [950, 2876, 100, 10], [950, 2887, 100, 10], [950, 2898, 100, 10], [950, 2909, 100, 10],
-		[788, 2887, 100, 10], [788, 2898, 100, 10], [788, 2909, 100, 10], [788, 2920, 100, 10], [506, 2931, 100, 10], [788, 2931, 100, 10], [950, 2931, 100, 10], [1062, 2931, 100, 10],
-		[1062, 2942, 100, 10], [950, 2949.5, 100, 10], [1062, 2949.5, 100, 10], [1062, 2960.5, 100, 10], [1062, 2971.5, 100, 10], [950, 2982.5, 100, 10], [1062, 2982.5, 100, 10],
-		[1062, 2993.5, 100, 10], [1062, 3004.5, 100, 10], [1062, 3015.5, 100, 10], [950, 3026.5, 100, 10], [1062, 3026.5, 100, 10], [1062, 3037.5, 100, 10], [1062, 3048.5, 100, 10],
-		[1062, 3059.5, 100, 10], [950, 3048.5, 100, 10], [950, 3070.5, 100, 10], [1062, 3070.5, 100, 10], [1062, 3081.5, 100, 10], [1062, 3092.5, 100, 10], [950, 3103.5, 100, 10],
-		[1062, 3103.5, 100, 10], [950, 3114.5, 100, 10], [1062, 3114.5, 100, 10], [1062, 3125.5, 100, 10], [788, 3122, 100, 10], [950, 3122, 100, 10], [950, 3133, 100, 10],
-		[950, 3144, 100, 10], [950, 3155, 100, 10], [950, 3166, 100, 10], [950, 3177, 100, 10], [788, 3188, 100, 10], [950, 3188, 100, 10], [950, 3199, 100, 10], [788, 3210, 100, 10],
-		[950, 3210, 100, 10], [1062, 3210, 100, 10], [1062, 3221, 100, 10], [1062, 3232, 100, 10], [1062, 3243, 100, 10], [950, 3250.5, 100, 10], [1062, 3250.5, 100, 10], [1062, 3261.5, 100, 10],
-		[1062, 3272.5, 100, 10], [1062, 3283.5, 100, 10], [1062, 3294.5, 100, 10], [950, 3305.5, 100, 10], [1062, 3305.5, 100, 10], [1062, 3316.5, 100, 10], [1062, 3327.5, 100, 10],
-		[1062, 3338.5, 100, 10], [1062, 3349.5, 100, 10], [950, 3360.5, 100, 10], [1062, 3360.5, 100, 10], [1062, 3371.5, 100, 10], [1062, 3382.5, 100, 10], [1062, 3393.5, 100, 10],
-		[1062, 3404.5, 100, 10], [1062, 3415.5, 100, 10], [950, 3377, 100, 10], [950, 3393.5, 100, 10], [950, 3410, 100, 10], [950, 3426.5, 100, 10], [1062, 3426.5, 100, 10],
-		[788, 3285.8333333333335, 100, 10], [788, 3361.6666666666665, 100, 10], [788, 3437.5, 100, 10], [950, 3437.5, 100, 10], [950, 3448.5, 100, 10], [506, 3459.5, 100, 10],
-		[788, 3459.5, 100, 10], [950, 3459.5, 100, 10], [788, 3470.5, 100, 10], [788, 3481.5, 100, 10], [950, 3481.5, 100, 10], [788, 3492.5, 100, 10], [950, 3492.5, 100, 10],
-		[1062, 3492.5, 100, 10], [1062, 3503.5, 100, 10], [950, 3503.5, 100, 10], [788, 3511, 100, 10], [950, 3511, 100, 10], [788, 3522, 100, 10], [506, 3533, 100, 10], [788, 3533, 100, 10],
-		[788, 3544, 100, 10], [950, 3544, 100, 10], [950, 3555, 100, 10], [950, 3566, 100, 10], [950, 3577, 100, 10], [950, 3588, 100, 10], [950, 3599, 100, 10], [788, 3606.5, 100, 10],
-		[950, 3606.5, 100, 10], [1062, 3606.5, 100, 10], [1062, 3617.5, 100, 10], [1062, 3628.5, 100, 10], [1062, 3639.5, 100, 10], [1062, 3650.5, 100, 10], [1062, 3661.5, 100, 10],
-		[1062, 3672.5, 100, 10], [1062, 3683.5, 100, 10], [1062, 3694.5, 100, 10], [950, 3654.25, 100, 10], [950, 3702, 100, 10], [1062, 3702, 100, 10], [1062, 3713, 100, 10],
-		[1062, 3724, 100, 10], [1062, 3735, 100, 10], [1062, 3746, 100, 10], [1062, 3757, 100, 10], [950, 3768, 100, 10], [1062, 3768, 100, 10], [950, 3779, 100, 10],
-		[1062, 3779, 100, 10], [1062, 3790, 100, 10], [788, 3790, 100, 10], [950, 3790, 100, 10], [950, 3801, 100, 10], [788, 3812, 100, 10], [950, 3812, 100, 10], [1062, 3812, 100, 10],
-		[950, 3823, 100, 10], [1062, 3823, 100, 10], [950, 3834, 100, 10], [950, 3845, 100, 10], [950, 3856, 100, 10], [1062, 3856, 100, 10], [950, 3867, 100, 10], [1062, 3867, 100, 10],
-		[1174, 3867, 100, 10], [950, 3878, 100, 10], [788, 3889, 100, 10], [950, 3889, 100, 10], [1062, 3889, 100, 10], [950, 3900, 100, 10], [1062, 3900, 100, 10], [1062, 3911, 100, 10],
-		[1062, 3922, 100, 10], [1062, 3933, 100, 10], [1062, 3944, 100, 10], [950, 3911, 100, 10], [950, 3922, 100, 10], [788, 3933, 100, 10], [950, 3933, 100, 10], [950, 3944, 100, 10],
-		[788, 3944, 100, 10], [788, 3955, 100, 10], [950, 3955, 100, 10], [1062, 3955, 100, 10], [1062, 3966, 100, 10], [1062, 3977, 100, 10], [1062, 3988, 100, 10], [1062, 3999, 100, 10],
-		[1062, 4010, 100, 10], [1062, 4021, 100, 10], [1062, 4032, 100, 10], [1062, 4043, 100, 10], [1174, 4043, 100, 10], [950, 4050.5, 100, 10], [1062, 4050.5, 100, 10], [1062, 4061.5, 100, 10],
-		[950, 4072.5, 100, 10], [1062, 4072.5, 100, 10], [1174, 4072.5, 100, 10], [950, 4083.5, 100, 10], [1062, 4083.5, 100, 10], [1062, 4094.5, 100, 10], [1062, 4105.5, 100, 10],
-		[1062, 4116.5, 100, 10], [1062, 4127.5, 100, 10], [1062, 4138.5, 100, 10], [1062, 4149.5, 100, 10], [1062, 4160.5, 100, 10], [1062, 4171.5, 100, 10], [1062, 4182.5, 100, 10],
-		[1062, 4193.5, 100, 10], [1062, 4204.5, 100, 10], [950, 4215.5, 100, 10], [1062, 4215.5, 100, 10], [1062, 4226.5, 100, 10], [1062, 4237.5, 100, 10], [1062, 4248.5, 100, 10],
-		[950, 4237.5, 100, 10], [950, 4259.5, 100, 10], [1062, 4259.5, 100, 10], [1062, 4270.5, 100, 10], [1062, 4281.5, 100, 10], [1062, 4292.5, 100, 10], [1062, 4303.5, 100, 10],
-		[1062, 4314.5, 100, 10], [1062, 4325.5, 100, 10], [1062, 4336.5, 100, 10], [1062, 4347.5, 100, 10], [1062, 4358.5, 100, 10], [1062, 4369.5, 100, 10], [950, 4270.5, 100, 10],
-		[950, 4281.5, 100, 10], [950, 4292.5, 100, 10], [788, 4167.75, 100, 10], [788, 4380.5, 100, 10], [950, 4380.5, 100, 10], [1062, 4380.5, 100, 10], [950, 4391.5, 100, 10],
-		[950, 4402.5, 100, 10], [950, 4413.5, 100, 10], [1062, 4413.5, 100, 10], [950, 4424.5, 100, 10], [950, 4435.5, 100, 10], [788, 4391.5, 100, 10], [506, 4435.5, 100, 10],
-		[788, 4435.5, 100, 10], [788, 4446.5, 100, 10], [950, 4446.5, 100, 10], [950, 4457.5, 100, 10], [1062, 4457.5, 100, 10], [950, 4468.5, 100, 10], [788, 4479.5, 100, 10],
-		[950, 4479.5, 100, 10], [788, 4490.5, 100, 10], [506, 4501.5, 100, 10], [788, 4501.5, 100, 10], [950, 4501.5, 100, 10], [950, 4512.5, 100, 10], [950, 4523.5, 100, 10],
-		[950, 4534.5, 100, 10], [950, 4545.5, 100, 10], [950, 4556.5, 100, 10], [950, 4567.5, 100, 10], [950, 4578.5, 100, 10], [950, 4589.5, 100, 10], [788, 4597, 100, 10],
-		[950, 4597, 100, 10], [1062, 4597, 100, 10], [950, 4608, 100, 10], [950, 4619, 100, 10], [950, 4630, 100, 10], [950, 4641, 100, 10], [1062, 4641, 100, 10], [950, 4652, 100, 10],
-		[1062, 4652, 100, 10], [950, 4663, 100, 10], [950, 4674, 100, 10], [950, 4685, 100, 10], [788, 4696, 100, 10], [950, 4696, 100, 10], [950, 4707, 100, 10], [788, 4707, 100, 10],
-		[788, 4718, 100, 10], [950, 4718, 100, 10], [788, 4729, 100, 10], [950, 4729, 100, 10], [950, 4740, 100, 10], [950, 4751, 100, 10], [950, 4762, 100, 10], [950, 4773, 100, 10],
-		[950, 4784, 100, 10], [1062, 4784, 100, 10], [1062, 4795, 100, 10], [1062, 4806, 100, 10], [950, 4795, 100, 10], [788, 4806, 100, 10], [950, 4806, 100, 10], [788, 4817, 100, 10],
-		[788, 4828, 100, 10], [788, 4839, 100, 10], [788, 4850, 100, 10], [788, 4861, 100, 10], [788, 4872, 100, 10], [506, 4883, 100, 10], [788, 4883, 100, 10], [788, 4894, 100, 10],
-		[788, 4905, 100, 10], [788, 4916, 100, 10], [788, 4927, 100, 10], [788, 4938, 100, 10], [788, 4949, 100, 10], [788, 4960, 100, 10], [788, 4971, 100, 10], [506, 4982, 100, 10],
-		[788, 4982, 100, 10], [950, 4982, 100, 10], [1062, 4982, 100, 10], [950, 4993, 100, 10], [950, 5004, 100, 10], [788, 4993, 100, 10], [788, 5004, 100, 10], [788, 5015, 100, 10],
-		[950, 5015, 100, 10], [950, 5026, 100, 10], [950, 5037, 100, 10], [788, 5029.75, 100, 10], [788, 5044.5, 100, 10], [950, 5044.5, 100, 10], [788, 5055.5, 100, 10],
-		[788, 5066.5, 100, 10], [950, 5066.5, 100, 10], [788, 5077.5, 100, 10], [950, 5077.5, 100, 10], [950, 5088.5, 100, 10], [1062, 5088.5, 100, 10], [506, 5088.5, 100, 10],
-		[788, 5088.5, 100, 10], [788, 5099.5, 100, 10], [950, 5099.5, 100, 10], [788, 5110.5, 100, 10], [950, 5110.5, 100, 10], [788, 5121.5, 100, 10], [950, 5121.5, 100, 10],
-		[950, 5132.5, 100, 10], [950, 5143.5, 100, 10], [788, 5136.25, 100, 10], [788, 5151, 100, 10], [950, 5151, 100, 10], [950, 5162, 100, 10], [788, 5173, 100, 10], [950, 5173, 100, 10],
-		[950, 5184, 100, 10], [950, 5195, 100, 10], [788, 5184, 100, 10], [788, 5195, 100, 10], [788, 5206, 100, 10], [788, 5217, 100, 10], [788, 5228, 100, 10], [506, 5099.5, 100, 10],
-		[220, 5178.5, 120, 124], [506, 5235.5, 100, 10], [788, 5235.5, 100, 10], [506, 5246.5, 100, 10], [506, 5257.5, 100, 10], [506, 5268.5, 100, 10], [788, 5268.5, 100, 10],
-		[506, 5279.5, 100, 10], [506, 5290.5, 100, 10], [506, 5301.5, 100, 10], [506, 5312.5, 100, 10], [506, 5323.5, 100, 10]];
-
-	TestPerformance("Performance of getCrossingRectangles", demoLabels, false);
-	TestPerformance("Performance of brute force test function", demoLabels, true);
-});
-
-/* /Algorithms/FibonacciHeap.Tests.js*/
-QUnit.module('Algorithms - Fibonacci Heap');
-
-QUnit.test("primitives.common.FibonacciHeap -  Closure based priority queue structure based on fibonacci heap algorithm.", function (assert) {
-	var items = [
-		[10, 1, "First"],
-		[1, 10, "Second"],
-		[2, 20, "Third"],
-		[3, 30, "Toronto"],
-		[4, 40, "NY"],
-		[5, 50, "Seoul"],
-		[6, 60, "Maple"],
-		[7, 70, "Vaughan"],
-		[8, 80, "Redmond"]
-	];
-
-	var queue = primitives.common.FibonacciHeap(false);
-	for (var index = 0, len = items.length; index < len; index += 1) {
-		var item = items[index];
-		queue.add(item[0], item[1], item[2]);
-	}
-
-	var result = [];
-	var item = null;
-	while ((item = queue.extractRoot()) != null) {
-		result.push([item.key, item.priority, item.item]);
-		queue.validate();
-	}
-
-	var expectedItems = [
-		[10, 1, "First"],
-		[1, 10, "Second"],
-		[2, 20, "Third"],
-		[3, 30, "Toronto"],
-		[4, 40, "NY"],
-		[5, 50, "Seoul"],
-		[6, 60, "Maple"],
-		[7, 70, "Vaughan"],
-		[8, 80, "Redmond"]
-	];
-	assert.deepEqual(result, expectedItems, "Structure should return sorted items");
-
-
-	var items = [
-	[10, 1, "First"],
-	[1, 10, "Second"],
-	[2, 20, "Third"],
-	[3, 30, "Toronto"],
-	[4, 40, "NY"],
-	[5, 50, "Seoul"],
-	[6, 60, "Maple"],
-	[7, 70, "Vaughan"],
-	[8, 80, "Redmond"]
-	];
-
-	var queue = primitives.common.FibonacciHeap(false);
-	for (var index = 0, len = items.length; index < len; index += 1) {
-		var item = items[index];
-		queue.add(item[0], item[1], item[2]);
-	}
-
-	queue.extractRoot()
-	queue.validate();
-
-	queue.setPriority(8, 1);
-	queue.validate();
-
-	var result = [];
-	var item = null;
-	while ((item = queue.extractRoot()) != null) {
-		result.push([item.key, item.priority, item.item]);
-		queue.validate();
-	}
-
-	var expectedItems = [
-		[8, 1, "Redmond"],
-		[1, 10, "Second"],
-		[2, 20, "Third"],
-		[3, 30, "Toronto"],
-		[4, 40, "NY"],
-		[5, 50, "Seoul"],
-		[6, 60, "Maple"],
-		[7, 70, "Vaughan"]
-	];
-	assert.deepEqual(result, expectedItems, "Structure should return item #1 first");
-
-});
-
-/* /Algorithms/FamilyMargins.Tests.js*/
-QUnit.module('Algorithms - FamilyMargins structure helps to calculate space and place family siblings side by side');
-
-QUnit.test("primitives.common.FamilyMargins", function (assert) {
-
-	function getMargins(margins) {
-		var result = [];
-		margins.loop(this, function (level, left, right) {
-			result[level] = [left, right];
-		})
-		return result;
-	}
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-		margins.add(20, 0);
-		margins.add(30, 0);
-		margins.add(10, 0);
-
-		var result = getMargins(margins);
-
-		var expectedResult = [
-			[-5, 5],
-			[-15, 15],
-			[-10, 10]
-		];
-
-		assert.deepEqual(result, expectedResult, "loop of levels in FamilyMargins object");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-		margins.add(8, 0);
-		margins.add(10, 0);
-		margins.add(40, 0);
-		margins.add(60, 0);
-		margins.add(80, 0);
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(80, 1);
-		margins2.add(120, 1);
-		margins2.add(20, 1);
-
-		assert.equal(margins.getDistanceTo(margins2), 40, "getDistanceTo - left margins are deeper than right");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-		margins.add(80, 0);
-		margins.add(120, 0);
-		margins.add(20, 0);
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(8, 1);
-		margins2.add(10, 1);
-		margins2.add(40, 1);
-		margins2.add(60, 1);
-		margins2.add(80, 1);
-
-		assert.equal(margins.getDistanceTo(margins2), 40, "getDistanceTo - right margins are deeper than left");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(80, 1);
-
-		assert.equal(margins.getDistanceTo(margins2), null, "getDistanceTo - left margins are empty");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-		margins.add(8, 0);
-		margins.add(10, 0);
-		margins.add(40, 0);
-		margins.add(60, 0);
-		margins.add(80, 0);
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(80, 1);
-		margins2.add(120, 1);
-		margins2.add(20, 1);
-
-		margins.merge(margins2, 0);
-
-		var result = getMargins(margins);
-
-		var expectedResult = [
-			[-70, 70],
-			[-60, 120],
-			[-50, 100],
-			[-35, -25],
-			[-34, -26]
-		];
-
-		assert.deepEqual(result, expectedResult, "merge - left margins are deeper than right");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-		margins.add(80, 0);
-		margins.add(120, 0);
-		margins.add(20, 0);
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(8, 1);
-		margins2.add(10, 1);
-		margins2.add(40, 1);
-		margins2.add(60, 1);
-		margins2.add(80, 1);
-
-		margins.merge(margins2, 0);
-
-		var result = getMargins(margins);
-
-		var expectedResult = [
-			[-70, 70],
-			[-120, 60],
-			[-100, 50],
-			[25, 35],
-			[26, 34]
-		];
-
-		assert.deepEqual(result, expectedResult, "merge - right margins are deeper than left");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-		margins.add(80, 0);
-		margins.add(120, 0);
-		margins.add(20, 0);
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(8, 1);
-		margins2.add(10, 1);
-		margins2.add(40, 1);
-		margins2.add(60, 1);
-		margins2.add(80, 1);
-
-		margins.merge(margins2, 20);
-
-		var result = getMargins(margins);
-
-		var expectedResult = [
-			[-80, 80],
-			[-130, 70],
-			[-110, 60],
-			[35, 45],
-			[36, 44]
-		];
-
-		assert.deepEqual(result, expectedResult, "merge - right margins are deeper than left and interval is added");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-		margins.add(20, 0);
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(20, 1);
-
-		var margins3 = new primitives.common.FamilyMargins();
-		margins3.add(30, 2);
-
-		merged = new primitives.common.FamilyMargins();
-
-		merged.merge(margins, 10);
-		merged.merge(margins2, 10);
-		merged.merge(margins3, 10);
-
-		var result = getMargins(merged);
-
-		var expectedResult = [
-			[-45, 45]
-		];
-
-		assert.deepEqual(result, expectedResult, "merge - 3 elements side by side");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-		margins.add(10, 0);
-		margins.add(20, 0);
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(20, 1);
-		margins2.add(20, 1);
-
-		var margins3 = new primitives.common.FamilyMargins();
-		margins3.add(20, 2);
-		margins3.add(30, 2);
-
-		margins.merge(margins2, 10);
-		margins.merge(margins3, 10);
-
-		var result = getMargins(margins);
-
-		var expectedResult = [
-			[-45, 45],
-			[-40, 40]
-		];
-
-		assert.deepEqual(result, expectedResult, "merge - 3 families having 2 generations side by side");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-		margins.add(50, 0);
-		margins.add(50, 0);
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(50, 1);
-
-		margins.merge(margins2, 20);
-
-		var result = getMargins(margins);
-
-		var expectedResult = [
-			[-60, 60],
-			[-60, -10]
-		];
-
-		assert.deepEqual(result, expectedResult, "merge - family having 2 generations with family having one generation only");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(20, 0);
-		margins2.add(20, 0);
-
-		margins.merge(margins2);
-
-		var result = getMargins(margins);
-
-		var expectedResult = [
-			[-10, 10],
-			[-10, 10]
-		];
-
-		assert.deepEqual(result, expectedResult, "merge - empty family with non empty");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-		margins.add(20, 0);
-		margins.add(20, 0);
-
-		var margins2 = new primitives.common.FamilyMargins();
-
-
-		var expectedResult = [
-			[-10, 10],
-			[-10, 10]
-		];
-
-		margins.merge(new primitives.common.FamilyMargins());
-
-		var result = getMargins(margins);
-
-		assert.deepEqual(result, expectedResult, "merge - non empty family with empty");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-		margins.add(10, 0);
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(10, 1);
-
-		margins.attach(margins2, 0);
-
-		var result = getMargins(margins);
-
-		var expectedResult = [
-			[-5, 15]
-		];
-
-		assert.deepEqual(result, expectedResult, "attach - one family to another");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-		margins.add(8, 0);
-		margins.add(10, 0);
-		margins.add(40, 0);
-		margins.add(60, 0);
-		margins.add(80, 0);
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(80, 1);
-		margins2.add(120, 1);
-		margins2.add(20, 1);
-
-		margins.attach(margins2, 0);
-
-		var result = getMargins(margins);
-
-		var expectedResult = [
-			[-40, 100],
-			[-30, 150],
-			[-20, 130],
-			[-5, 5],
-			[-4, 4]
-		];
-
-		assert.deepEqual(result, expectedResult, "attach - left margins are deeper than right");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-		margins.add(80, 0);
-		margins.add(120, 0);
-		margins.add(20, 0);
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(8, 1);
-		margins2.add(10, 1);
-		margins2.add(40, 1);
-		margins2.add(60, 1);
-		margins2.add(80, 1);
-
-		margins.attach(margins2, 0);
-
-		var result = getMargins(margins);
-
-		var expectedResult = [
-			[-10, 130],
-			[-60, 120],
-			[-40, 110],
-			[85, 95],
-			[86, 94]
-		];
-
-		assert.deepEqual(result, expectedResult, "attach - right margins are deeper than left");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(10, 0);
-
-		margins.attach(margins2, 20);
-
-		var result = getMargins(margins);
-
-		var expectedResult = [
-			[15, 25]
-		];
-
-		assert.deepEqual(result, expectedResult, "attach - single generation family to empty family with positive interval");
-	})();
-
-	(function () {
-		var margins = new primitives.common.FamilyMargins();
-
-		var margins2 = new primitives.common.FamilyMargins();
-		margins2.add(10, 0);
-
-		margins.attach(margins2, -20);
-
-		var result = getMargins(margins);
-
-		var expectedResult = [
-			[-25, -15]
-		];
-
-		assert.deepEqual(result, expectedResult, "attach - single generation family to empty family with negative interval");
-	})();
-
-	(function () {
-		var a = new primitives.common.FamilyMargins();
-		var b = new primitives.common.FamilyMargins();
-		b.add(10, 0);
-
-		a.attach(b, 5);
-		a.add(10, 0);
-
-		var c = new primitives.common.FamilyMargins();
-		c.attach(b, -5);
-		c.add(10, 1);
-
-		var d = new primitives.common.FamilyMargins();
-		d.merge(a);
-		d.merge(c);
-		d.add(10, 0);
-
-		var result = getMargins(d);
-
-		var expectedResult = [
-			[-5, 5],
-			[-10, 10],
-			[-5, 5]
-		];
-
-		assert.deepEqual(result, expectedResult, "attach - rombus");
-	})();
-
-	(function () {
-		var d = new primitives.common.FamilyMargins();
-		d.add(10, 0);
-
-		var e = new primitives.common.FamilyMargins();
-		e.add(10, 0);
-
-		d.merge(e);
-		d.add(10, 0);
-
-		var a = new primitives.common.FamilyMargins();
-		a.attach(d, 5);
-		a.add(10, 0);
-
-		var b = new primitives.common.FamilyMargins();
-		b.attach(d, -5);
-		b.add(10, 1);
-
-		a.merge(b);
-
-		var result = getMargins(a);
-
-		var expectedResult = [
-			[-10, 10],
-			[-5, 5],
-			[-10, 10]
-		];
-
-		assert.deepEqual(result, expectedResult, "attach - X");
-	})();
-});
-
-/* /Algorithms/FamilyAlignment.Tests.js*/
-QUnit.module('Algorithms - FamilyAlignment calculate distances between nodes in family accounting for space for children and parents');
-
-QUnit.test("primitives.common.FamilyAlignment - Horizontal alignment of family nodes.", function (assert) {
-
-	function getFamily(items) {
-		var family = primitives.common.family();
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			family.add(item.parents, item.id, item);
-		}
-		return family;
-	}
-
-	function getTreeLevels(levels) {
-		var treeLevels = primitives.common.TreeLevels();
-		for (var levelIndex = 0, levelLen = levels.length; levelIndex < levelLen; levelIndex += 1) {
-			var level = levels[levelIndex];
-			for (var index = 0, len = level.length; index < len; index += 1) {
-				treeLevels.addItem(levelIndex, level[index], {});
-			}
-		}
-		return treeLevels;
-	};
-
-	function getPlacements(treeLevels, familyAlignment, isBig) {
-		var placements = {};
-
-		treeLevels.loopLevels(this, function (levelIndex, level) {
-			treeLevels.loopLevelItems(this, levelIndex, function (nodeid, node, position) {
-				var nodeOffset = familyAlignment.getOffset(nodeid);
-				if (isBig == null || isBig.hasOwnProperty(nodeid)) {
-					placements[nodeid] = new primitives.common.Rect(nodeOffset - 25, levelIndex * 50, 50, 40);
-				} else {
-					placements[nodeid] = new primitives.common.Rect(nodeOffset - 1, levelIndex * 50, 2, 40);
-				}
+		var planarFamily = family.groupBy(this, 2, function (parentid, childid, nodes) {
+			result.push({
+				parent: parentid,
+				child: childid,
+				nodes: nodes
 			})
 		});
 
-		return placements;
-	}
+		var expectedResult = [
+			{ parent: null, child: "8", nodes: ["1", "2", "3", "4", "5", "6", "7"] }
+		];
+		assert.deepEqual(result, expectedResult, "Function should group nodes sharing the same child together");
+	})();
 
-	function countPlacementsOverlaps(treeLevels, placements) {
-		var result = 0;
+	(function () {
+		var family = getFamily([
+			{ id: 1 },
+			{ id: 2, parents: [1] },
+			{ id: 3, parents: [1] },
+			{ id: 4, parents: [1] },
+			{ id: 5, parents: [1] },
+			{ id: 6, parents: [1] },
+			{ id: 7, parents: [1] },
+			{ id: 8, parents: [1] },
+			{ id: 9, parents: [2, 3, 4, 5, 6, 7, 8] },
+		]);
 
-		treeLevels.loopLevels(this, function (levelIndex, level) {
-			treeLevels.loopLevelItems(this, levelIndex, function (nodeid, node, position) {
-				if (position > 0) {
-					var prevNodeId = treeLevels.getItemAtPosition(levelIndex, position - 1);
-					var prevPlacement = placements[prevNodeId];
-					var nodePlacement = placements[nodeid];
-
-					if (prevPlacement.overlaps(nodePlacement)) {
-						result += 1;
-					}
-				}
+		var result = [];
+		var planarFamily = family.groupBy(this, 2, function (parentid, childid, nodes) {
+			result.push({
+				parent: parentid,
+				child: childid,
+				nodes: nodes
 			})
 		});
 
-		return result;
-	}
+		var expectedResult = [
+			{ parent: "1", child: "9", nodes: ["2", "3", "4", "5", "6", "7", "8"] }
+		];
+		assert.deepEqual(result, expectedResult, "Function should group nodes sharing the same parent and child together");
+	})();
 
-	function GetPlacementMarker(placement, label, color) {
-		var div = jQuery("<div></div>");
+	(function () {
+		var family = getFamily([
+		{ id: 1, parents: [] },
+		{ id: 2, parents: [1] },
+		{ id: 3, parents: [1] },
+		{ id: 4, parents: [1] },
+		{ id: 5, parents: [1] },
+		{ id: 6, parents: [1] },
+		{ id: 7, parents: [1] },
+		{ id: 8, parents: [1] },
+		{ id: 9, parents: [1] },
+		{ id: 10, parents: [1] },
+		{ id: 11, parents: [1] },
+		{ id: 12, parents: [1] },
+		{ id: 13, parents: [1] },
+		{ id: 14, parents: [1] },
+		{ id: 15, parents: [1] },
+		{ id: 16, parents: [1] },
+		{ id: 17, parents: [1] },
+		{ id: 18, parents: [1] },
+		{ id: 19, parents: [1] },
+		{ id: 20, parents: [1] },
 
-		div.append(label);
-		div.css(placement.getCSS());
-		div.css({
-			"background": color,
-			visibility: "visible",
-			position: "absolute",
-			font: "Areal",
-			"font-size": "12px",
-			"border-style": "solid",
-			"border-color": "black",
-			"border-width": "2px"
+		{ id: 21, parents: [5] },
+		{ id: 22, parents: [5] },
+		{ id: 23, parents: [5] },
+		{ id: 24, parents: [5] },
+		{ id: 25, parents: [5] },
+		{ id: 26, parents: [5] },
+
+		{ id: 27, parents: [26] },
+		{ id: 28, parents: [26] },
+		{ id: 29, parents: [26] },
+		{ id: 30, parents: [26] },
+		{ id: 31, parents: [26, 9] },
+		]);
+
+		var result = [];
+		var planarFamily = family.groupBy(this, 2, function (parentid, childid, nodes) {
+			result.push({
+				parent: parentid,
+				child: childid,
+				nodes: nodes
+			})
 		});
 
-		return div;
-	}
-
-	function ShowLayout(fixture, placements, title) {
-		var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
-		titlePlaceholder.append(title);
-		fixture.append(titlePlaceholder);
-
-		var offsetX = null;
-		var offsetY = null;
-		var space = new primitives.common.Rect();
-		for (var key in placements) {
-			if (placements.hasOwnProperty(key)) {
-				var placement = placements[key];
-
-				offsetX = offsetX == null ? placement.x : Math.min(offsetX, placement.x);
-				offsetY = offsetY == null ? placement.y : Math.min(offsetY, placement.y);
-
-				space.addRect(placement);
-			}
-		}
-
-		var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'></div>");
-		placeholder.css({
-			width: space.width,
-			height: space.height
-		});
-		for (var key in placements) {
-			if (placements.hasOwnProperty(key)) {
-				var placement = new primitives.common.Rect(placements[key]);
-				placement.translate(-offsetX, -offsetY);
-
-				var div = GetPlacementMarker(placement, key, "grey");
-				placeholder.append(div);
-			}
-		}
-
-		
-		fixture.append(placeholder);
-	}
-
-	function TestLayout(title, familyItems, treeLevelsItems, sized) {
-		var family = getFamily(familyItems);
-		var treeLevels = getTreeLevels(treeLevelsItems);
-
-		var isBig = null;
-		if (sized != null) {
-			isBig = {};
-			for (var index = 0; index < sized.length; index += 1) {
-				isBig[sized[index]] = true;
-			}
-		}
-
-		var familyAlignment = new primitives.common.FamilyAlignment(this, family, treeLevels, function (nodeid, node) {
-			if (isBig == null || isBig.hasOwnProperty(nodeid)) {
-				return 6 + 50 + 6;
-			} else {
-				return 6 + 2 + 6;
-			}
-		});
-
-		var placements = getPlacements(treeLevels, familyAlignment, isBig);
-
-		ShowLayout(jQuery("#qunit-fixture"), placements, title);
-
-		jQuery("#qunit-fixture").css({
-			position: "relative",
-			left: "0px",
-			top: "0px",
-			height: "Auto"
-		});
-
-		var result = countPlacementsOverlaps(treeLevels, placements);
-
-		assert.equal(result, 0, title);
-	};
-
-	(function () {
-		TestLayout("Empty family layout", [
-			{}
-		], [
-			[]
-		]);
-	})();
-
-
-	(function () {
-		TestLayout("Single node family layout", [
-			{ id: 'A', parents: [] }
-		], [
-			['A']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Side by side 2 families where the left one starts one generation below", [
-			{ id: '1', parents: [] },
-			{ id: '2', parents: [] },
-			{ id: '3', parents: ['1'] }
-		], [
-			['1'],
-			['2', '3']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Side by side families", [
-			{ id: '1', parents: [] },
-			{ id: '3', parents: ['1'] },
-			{ id: '4', parents: ['1'] },
-			{ id: '2', parents: [] },
-			{ id: '5', parents: ['2'] },
-			{ id: '6', parents: ['2'] }
-		], [
-			['1', '2'],
-			['3', '4', '5', '6']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Internal orphan family", [
-			{ id: '1', parents: [] },
-
-			{ id: '2', parents: ['1'] },
-			{ id: '3', parents: ['1'] },
-			{ id: '4', parents: ['1'] },
-			{ id: '5', parents: ['2', '3'] },
-			{ id: '6', parents: [] },
-			{ id: '7', parents: ['4'] },
-			{ id: '8', parents: ['4'] },
-			{ id: '9', parents: ['6'] },
-			{ id: '10', parents: ['6'] },
-			{ id: '11', parents: ['5', '7', '8'] }
-		], [
-			['1'],
-			['2', '3', '6', '4'],
-			['5', '9', '10', '7', '8'],
-			['11']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Side by side and upside-down families", [
-			{ id: '1', parents: [] },
-			{ id: '2', parents: [] },
-			{ id: '3', parents: [] },
-			{ id: '4', parents: ['1'] },
-			{ id: '5', parents: ['1'] },
-			{ id: '6', parents: ['2', '3'] }
-		], [
-			['1', '2', '3'],
-			['4', '5', '6']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Family diagram horizontal alignment with multiple cycles", [
-				{ id: 'A', parents: [] },
-				{ id: 'K', parents: [] },
-				{ id: 'B', parents: ['A'] },
-				{ id: 'C', parents: ['A'] },
-				{ id: 'D', parents: ['A'] },
-				{ id: 'E', parents: [] },
-				{ id: 'F', parents: ['K'] },
-				{ id: 'L', parents: ['K'] },
-				{ id: 'M', parents: ['K'] },
-				{ id: 'G', parents: ['B'] },
-				{ id: 'H', parents: ['D', 'E', 'F'] },
-				{ id: 'I', parents: ['M'] },
-				{ id: 'J', parents: ['M'] },
-				{ id: 'N', parents: ['G'] },
-				{ id: 'O', parents: ['G'] },
-				{ id: 'Q', parents: ['H'] },
-				{ id: 'R', parents: ['H'] },
-				{ id: 'S', parents: ['H'] },
-				{ id: 'T', parents: ['I', 'J'] },
-				{ id: 'P', parents: ['O', 'Q'] },
-				{ id: 'U', parents: ['S', 'T'] }
-		], [
-				['A', 'K'],
-				['B', 'C', 'D', 'E', 'F', 'L', 'M'],
-				['G', 'H', 'I', 'J'],
-				['N', 'O', 'Q', 'R', 'S', 'T'],
-				['P', 'U']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Family diagram large rombus alignment", [
-				{ id: 'A2', parents: [] },
-				{ id: 'A', parents: ['A2'] },
-				{ id: 'B', parents: ['A'] },
-				{ id: 'C', parents: ['A'] },
-				{ id: 'D', parents: ['A'] },
-				{ id: 'E', parents: ['B', 'C', 'D'] },
-				{ id: 'A1', parents: ['A2'] },
-				{ id: 'B1', parents: ['A1'] },
-				{ id: 'C1', parents: ['A1'] },
-				{ id: 'D1', parents: ['A1'] },
-				{ id: 'E1', parents: ['B1', 'C1', 'D1'] },
-				{ id: 'E2', parents: ['E', 'E1'] },
-		], [
-				['A2'],
-				['A', 'A1'],
-				['B', 'C', 'D', 'B1', 'C1', 'D1'],
-				['E', 'E1'],
-				['E2']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Small Sand clock family layout", [
-			{ id: 'A', parents: [] },
-			{ id: 'B', parents: [] },
-			{ id: 'C', parents: ['A', 'B'] },
-			{ id: 'D', parents: ['C'] },
-			{ id: 'E', parents: ['C'] }
-		], [
-			['A', 'B'],
-			['C'],
-			['D', 'E']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Small Rombus family layout", [
-			{ id: 'A', parents: [] },
-			{ id: 'B', parents: ['A'] },
-			{ id: 'C', parents: ['A'] },
-			{ id: 'D', parents: ['B', 'C'] }
-		], [
-			['A'],
-			['B', 'C'],
-			['D']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Regular tree family layout", [
-			{ id: 'A', parents: [] },
-			{ id: 'B', parents: ['A'] },
-			{ id: 'C', parents: ['A'] },
-			{ id: 'D', parents: ['B'] },
-			{ id: 'E', parents: ['B'] },
-			{ id: 'F', parents: ['C'] },
-			{ id: 'G', parents: ['C'] }
-		], [
-			['A'],
-			['B', 'C'],
-			['D', 'E', 'F', 'G']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Upside-down tree family layout", [
-			{ id: 'A', parents: [] },
-			{ id: 'B', parents: [] },
-			{ id: 'C', parents: [] },
-			{ id: 'D', parents: [] },
-			{ id: 'E', parents: ['A', 'B'] },
-			{ id: 'F', parents: ['C', 'D'] },
-			{ id: 'G', parents: ['E', 'F'] }
-		], [
-			['A', 'B', 'C', 'D'],
-			['E', 'F'],
-			['G']
-		]);
-	})();
-
-	(function () {
-		TestLayout("2 Cross Relations Demo family layout", [
-			{ id: '2', parents: [] },
-			{ id: '1', parents: [] },
-			{ id: '8', parents: ['2'] },
-			{ id: '6', parents: ['2'] },
-			{ id: '7', parents: ['2'] },
-			{ id: '5', parents: ['1'] },
-			{ id: '4', parents: ['1'] },
-			{ id: '3', parents: ['1'] },
-			{ id: '12', parents: ['8'] },
-			{ id: '11', parents: ['7', '5'] },
-			{ id: '10', parents: ['4'] },
-			{ id: '9', parents: ['3'] }
-		], [
-			['2', '1'],
-			['8', '6', '7', '5', '4', '3'],
-			['12', '11', '10', '9']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Family unit overlaps node between parents", [
-			{ id: '6', parents: [] },
-			{ id: '5', parents: ['6'] },
-			{ id: '2', parents: ['6'] },
-			{ id: '1', parents: [] },
-			{ id: '7', parents: ['1', '2'] },
-			{ id: '3', parents: ['7'] },
-			{ id: '4', parents: ['7'] }
-		], [
-			['6'],
-			['1', '5', '2'],
-			['7'],
-			['3', '4']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Family unit overlaps node between children", [
-			{ id: '3', parents: [] },
-			{ id: '4', parents: [] },
-			{ id: '7', parents: ['3', '4'] },
-			{ id: '1', parents: ['7'] },
-			{ id: '5', parents: [] },
-			{ id: '2', parents: ['7'] },
-			{ id: '6', parents: ['5', '2'] }
-		], [
-			['3', '4'],
-			['7'],
-			['1', '5', '2'],
-			['6']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Cycle 2", [
-			{ id: '1', parents: [] },
-			{ id: '2', parents: ['1'] },
-			{ id: '3', parents: ['1'] },
-			{ id: '4', parents: ['1'] },
-			{ id: '5', parents: ['1'] },
-			{ id: '6', parents: ['1'] },
-			{ id: '7', parents: ['1'] },
-			{ id: '8', parents: ['1'] },
-			{ id: '9', parents: ['1'] },
-			{ id: '10', parents: ['1'] },
-
-			{ id: '11', parents: ['9'] },
-			{ id: '12', parents: ['9'] },
-			{ id: '13', parents: ['9'] },
-			{ id: '14', parents: ['9'] },
-			{ id: '15', parents: ['9'] },
-			{ id: '16', parents: ['9'] },
-			{ id: '17', parents: ['10'] },
-
-			{ id: '18', parents: ['11'] },
-			{ id: '19', parents: [] },
-			{ id: '20', parents: [] },
-			{ id: '21', parents: [] },
-			{ id: '22', parents: [] },
-			{ id: '23', parents: [] },
-			{ id: '24', parents: [] },
-			{ id: '25', parents: ['17'] },
-
-			{ id: '26', parents: ['18', '19', '20', '21', '22', '23', '24', '25'] }
-		], [
-			['1'],
-			['2', '3', '4', '5', '6', '7', '8', '9', '10'],
-			['11', '12', '13', '14', '15', '16', '17'],
-			['18', '19', '20', '21', '22', '23', '24', '25'],
-			['26']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Large sandclock", [
-			{ id: '1', parents: [] },
-			{ id: '2', parents: [] },
-			{ id: '3', parents: [] },
-			{ id: '4', parents: [] },
-			{ id: '5', parents: ['1', '2'] },
-			{ id: '6', parents: ['3', '4'] },
-			{ id: '7', parents: ['5', '6'] },
-			{ id: '8', parents: ['7'] },
-			{ id: '9', parents: ['7'] },
-			{ id: '10', parents: ['8'] },
-			{ id: '11', parents: ['8'] },
-			{ id: '12', parents: ['9'] },
-			{ id: '13', parents: ['9'] }
-		], [
-			['1', '2', '3', '4'],
-			['5', '6'],
-			['7'],
-			['8', '9'],
-			['10', '11', '12', '13']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Fance layout", [
-			{ id: '1', parents: [] },
-			{ id: '2', parents: [] },
-
-			{ id: '3', parents: ['1'] },
-			{ id: '4', parents: ['1'] },
-			{ id: '5', parents: ['2'] },
-			{ id: '6', parents: ['2'] },
-
-			{ id: '7', parents: ['3'] },
-			{ id: '8', parents: ['4', '5'] },
-			{ id: '9', parents: ['6'] },
-
-			{ id: '10', parents: ['7'] },
-			{ id: '11', parents: ['8'] },
-			{ id: '12', parents: ['8'] },
-			{ id: '13', parents: ['9'] },
-
-			{ id: '14', parents: ['10', '11'] },
-			{ id: '15', parents: ['12', '13'] }
-		], [
-			['1', '2'],
-			['3', '4', '5', '6'],
-			['7', '8', '9'],
-			['10', '11', '12', '13'],
-			['14', '15']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Wave layout", [
-			{ id: '1', parents: [] },
-			{ id: '2', parents: [] },
-			{ id: '3', parents: [] },
-			{ id: '4', parents: [] },
-
-			{ id: '5', parents: ['1'] },
-			{ id: '6', parents: ['1'] },
-			{ id: '7', parents: ['2'] },
-			{ id: '8', parents: ['2'] },
-			{ id: '9', parents: ['3'] },
-			{ id: '10', parents: ['3'] },
-			{ id: '11', parents: ['4'] },
-
-			{ id: '12', parents: ['5'] },
-			{ id: '13', parents: ['6', '7'] },
-			{ id: '14', parents: ['8', '9'] },
-			{ id: '15', parents: ['10', '11'] }
-		], [
-			['1', '2', '3', '4'],
-			['5', '6', '7', '8', '9', '10', '11'],
-			['12', '13', '14', '15']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Skewed rombus layout", [
-			{ id: '1', parents: ['1'] },
-			{ id: '2', parents: ['1'] },
-			{ id: '3', parents: ['1'] },
-			{ id: '4', parents: ['1'] },
-			{ id: '5', parents: ['1'] },
-			{ id: '6', parents: ['1'] },
-
-			{ id: '7', parents: ['2'] },
-			{ id: '8', parents: ['2'] },
-			{ id: '9', parents: ['2'] },
-			{ id: '10', parents: ['6'] },
-			{ id: '11', parents: ['6'] },
-
-			{ id: '12', parents: ['7'] },
-			{ id: '13', parents: [] },
-			{ id: '14', parents: [] },
-			{ id: '15', parents: [] },
-			{ id: '16', parents: ['11'] },
-
-			{ id: '17', parents: ['12', '13'] },
-			{ id: '18', parents: ['14', '15', '16'] },
-
-			{ id: '19', parents: ['17', '18'] }
-		], [
-			['1'],
-			['2', '3', '4', '5', '6'],
-			['7', '8', '9', '10', '11'],
-			['12', '13', '14', '15', '16'],
-			['17', '18'],
-			['19']
-		]);
-	})();
-
-	(function () {
-		TestLayout("3 Cross Relations Test Layout", [
-			{ id: '1', parents: [] },
-			{ id: '2', parents: [] },
-			{ id: '3', parents: [] },
-			{ id: '4', parents: [] },
-			{ id: '5', parents: [] },
-
-			{ id: '6', parents: ['1', '2'] },
-			{ id: '7', parents: ['3'] },
-			{ id: '8', parents: ['4'] },
-			{ id: '9', parents: ['4'] },
-			{ id: '10', parents: ['5'] },
-
-
-			{ id: '11', parents: ['6'] },
-			{ id: '12', parents: ['7', '8'] },
-			{ id: '13', parents: ['9', '10'] },
-
-			{ id: '14', parents: ['11'] },
-			{ id: '15', parents: ['11'] },
-			{ id: '16', parents: ['12'] },
-			{ id: '17', parents: ['12'] },
-			{ id: '18', parents: ['12'] },
-			{ id: '19', parents: ['13'] },
-			{ id: '20', parents: ['13'] },
-
-			{ id: '21', parents: ['14'] },
-			{ id: '22', parents: ['15', '16'] },
-			{ id: '23', parents: ['20'] },
-
-			{ id: '24', parents: ['21'] },
-			{ id: '25', parents: ['21'] },
-			{ id: '26', parents: ['22'] },
-			{ id: '27', parents: ['22'] },
-			{ id: '28', parents: ['23'] },
-			{ id: '29', parents: ['23'] }
-		], [
-			['1', '2', '3', '4', '5'],
-			['6', '7', '8', '9', '10'],
-			['11', '12', '13'],
-			['14', '15', '16', '17', '18', '19', '20'],
-			['21', '22', '23'],
-			['24', '25', '26', '27', '28', '29']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Skipped Members Test Layout", [
-			{ id: '1', parents: [] },
-			{ id: '2', parents: [] },
-			{ id: '3', parents: [] },
-			{ id: '4', parents: [] },
-			{ id: '5', parents: [] },
-			{ id: '6', parents: [] },
-
-			{ id: '7', parents: ['1', '2'] },
-			{ id: '8', parents: ['3', '4'] },
-			{ id: '9', parents: ['5', '6'] },
-
-			{ id: '10', parents: ['7'] },
-			{ id: '11', parents: ['7'] },
-			{ id: '12', parents: ['8'] },
-			{ id: '13', parents: ['8'] },
-			{ id: '14', parents: ['9'] },
-			{ id: '15', parents: ['9'] },
-
-			{ id: '16', parents: ['10'] },
-			{ id: '17', parents: ['11'] },
-			{ id: '18', parents: ['11'] },
-			{ id: '19', parents: ['12'] },
-			{ id: '20', parents: ['13'] },
-			{ id: '21', parents: ['13'] },
-			{ id: '22', parents: ['14'] },
-			{ id: '23', parents: ['14'] },
-			{ id: '241', parents: ['15'] },
-
-			{ id: '24', parents: ['17'] },
-			{ id: '25', parents: ['18'] },
-			{ id: '26', parents: ['19', '20'] },
-			{ id: '27', parents: ['21'] },
-			{ id: '28', parents: ['22'] },
-			{ id: '29', parents: ['23', '241'] },
-
-			{ id: '30', parents: ['24'] },
-			{ id: '31', parents: ['25'] },
-			{ id: '32', parents: ['26'] },
-			{ id: '33', parents: ['26'] },
-			{ id: '34', parents: ['27'] },
-			{ id: '35', parents: ['28'] },
-			{ id: '36', parents: ['29'] },
-
-			{ id: '37', parents: ['30'] },
-			{ id: '38', parents: ['31', '32'] },
-			{ id: '39', parents: ['34'] },
-			{ id: '40', parents: ['35'] },
-			{ id: '41', parents: ['36'] },
-
-		], [
-			['1', '2', '3', '4', '5', '6'],
-			['7', '8', '9'],
-			['10', '11', '12', '13', '14', '15'],
-			['16', '17', '18', '19', '20', '21', '22', '23', '241'],
-			['24', '25', '26', '27', '28', '29'],
-			['30', '31', '32', '33', '34', '35', '36'],
-			['37', '38', '39', '40', '41']
-		], [
-			'1', '2', '3', '4', '5', '6', '11', '13', '14', '37', '38', '39', '40', '41'
-		]);
-	})();
-
-	(function () {
-		TestLayout("Left spiral layout", [
-			{ id: '1', parents: [] },
-
-			{ id: '2', parents: ['1'] },
-			{ id: '3', parents: [] },
-			{ id: '4', parents: ['1'] },
-
-			{ id: '5', parents: ['2'] },
-			{ id: '6', parents: ['3'] },
-			{ id: '7', parents: [] },
-			{ id: '8', parents: ['3'] },
-
-			{ id: '9', parents: ['5'] },
-			{ id: '10', parents: ['6'] },
-			{ id: '11', parents: ['7'] },
-			{ id: '12', parents: ['7'] },
-			{ id: '13', parents: ['8'] },
-
-			{ id: '14', parents: ['9'] },
-			{ id: '15', parents: ['10', '12'] },
-			{ id: '16', parents: ['13'] },
-
-			{ id: '17', parents: ['14', '16'] }
-		], [
-			['1'],
-			['2', '3', '4'],
-			['5', '6', '7', '8'],
-			['9', '10', '11', '12', '13'],
-			['14', '15', '16'],
-			['17']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Right spiral layout", [
-			{ id: '1', parents: [] },
-
-			{ id: '2', parents: ['1'] },
-			{ id: '3', parents: [] },
-			{ id: '4', parents: ['1'] },
-
-			{ id: '5', parents: ['3'] },
-			{ id: '6', parents: [] },
-			{ id: '7', parents: ['3'] },
-			{ id: '8', parents: ['4'] },
-
-			{ id: '9', parents: ['5'] },
-			{ id: '10', parents: ['6'] },
-			{ id: '11', parents: ['6'] },
-			{ id: '12', parents: ['7'] },
-			{ id: '13', parents: ['8'] },
-
-			{ id: '14', parents: ['9'] },
-			{ id: '15', parents: ['10', '12'] },
-			{ id: '16', parents: ['13'] },
-
-			{ id: '17', parents: ['14', '16'] }
-		], [
-			['1'],
-			['2', '3', '4'],
-			['5', '6', '7', '8'],
-			['9', '10', '11', '12', '13'],
-			['14', '15', '16'],
-			['17']
-		]);
-	})();
-
-	(function () {
-		TestLayout("Alignment of items having variable width", [
-			{ id: '1', parents: [] },
-
-			{ id: '2', parents: ['1'] },
-			{ id: '3', parents: ['1'] },
-			{ id: '4', parents: ['1'] },
-
-			{ id: '6', parents: ['2'] },
-			{ id: '7', parents: ['3', '4'] }
-		], [
-			['1'],
-			['2', '3', '4'],
-			['6', '7']
-		], [
-			'1', '4', '6', '7'
-		]);
+		var expectedResult = [
+			{ parent: "1", child: null, nodes: ["2", "3", "4", "6", "7", "8", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"] },
+			{ parent: "5", child: null, nodes: ["21", "22", "23", "24", "25"] },
+			{ parent: "26", child: null, nodes: ["27", "28", "29", "30"] }
+		];
+		assert.deepEqual(result, expectedResult, "General case test");
 	})();
 });
 
@@ -4207,10 +1391,12 @@ QUnit.test("primitives.common.family.loopNeighbours -  Loop neighbouring parents
 
 });
 
-/* /Algorithms/Family.groupBy.Tests.js*/
-QUnit.module('Algorithms - Family class, groupBy function tests');
 
-QUnit.test("primitives.common.family.groupBy - Function groups nodes having single common parent and child.", function (assert) {
+/* /Algorithms/FamilyAlignment.Tests.js*/
+QUnit.module('Algorithms - FamilyAlignment calculate distances between nodes in family accounting for space for children and parents');
+
+QUnit.test("primitives.common.FamilyAlignment - Horizontal alignment of family nodes.", function (assert) {
+
 	function getFamily(items) {
 		var family = primitives.common.family();
 		for (var index = 0; index < items.length; index += 1) {
@@ -4220,147 +1406,1608 @@ QUnit.test("primitives.common.family.groupBy - Function groups nodes having sing
 		return family;
 	}
 
-	(function () {
-		var family = getFamily([
-			{ id: 1 },
-			{ id: 2, parents: [1] },
-			{ id: 3, parents: [1] },
-			{ id: 4, parents: [1] },
-			{ id: 5, parents: [1] },
-			{ id: 6, parents: [1] },
-			{ id: 7, parents: [1] },
-			{ id: 8, parents: [1] },
-		]);
+	function getTreeLevels(levels) {
+		var treeLevels = primitives.common.TreeLevels();
+		for (var levelIndex = 0, levelLen = levels.length; levelIndex < levelLen; levelIndex += 1) {
+			var level = levels[levelIndex];
+			for (var index = 0, len = level.length; index < len; index += 1) {
+				treeLevels.addItem(levelIndex, level[index], {});
+			}
+		}
+		return treeLevels;
+	};
 
-		var result = [];
-		var planarFamily = family.groupBy(this, 2, function (parentid, childid, nodes) {
-			result.push({
-				parent: parentid,
-				child: childid,
-				nodes: nodes
+	function getPlacements(treeLevels, familyAlignment, isBig) {
+		var placements = {};
+
+		treeLevels.loopLevels(this, function (levelIndex, level) {
+			treeLevels.loopLevelItems(this, levelIndex, function (nodeid, node, position) {
+				var nodeOffset = familyAlignment.getOffset(nodeid);
+				if (isBig == null || isBig.hasOwnProperty(nodeid)) {
+					placements[nodeid] = new primitives.common.Rect(nodeOffset - 25, levelIndex * 50, 50, 40);
+				} else {
+					placements[nodeid] = new primitives.common.Rect(nodeOffset - 1, levelIndex * 50, 2, 40);
+				}
 			})
 		});
 
-		var expectedResult = [
-			{ parent: "1", child: null, nodes: ["2", "3", "4", "5", "6", "7", "8"] }
-		];
-		assert.deepEqual(result, expectedResult, "Function should group nodes sharing the same parent together");
+		return placements;
+	}
+
+	function countPlacementsOverlaps(treeLevels, placements) {
+		var result = 0;
+
+		treeLevels.loopLevels(this, function (levelIndex, level) {
+			treeLevels.loopLevelItems(this, levelIndex, function (nodeid, node, position) {
+				if (position > 0) {
+					var prevNodeId = treeLevels.getItemAtPosition(levelIndex, position - 1);
+					var prevPlacement = placements[prevNodeId];
+					var nodePlacement = placements[nodeid];
+
+					if (prevPlacement.overlaps(nodePlacement)) {
+						result += 1;
+					}
+				}
+			})
+		});
+
+		return result;
+	}
+
+	function GetPlacementMarker(placement, label, color) {
+		var div = jQuery("<div></div>");
+
+		div.append(label);
+		div.css(placement.getCSS());
+		div.css({
+			"background": color,
+			visibility: "visible",
+			position: "absolute",
+			font: "Areal",
+			"font-size": "12px",
+			"border-style": "solid",
+			"border-color": "black",
+			"border-width": "2px"
+		});
+
+		return div;
+	}
+
+	function ShowLayout(fixture, placements, title) {
+		var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
+		titlePlaceholder.append(title);
+		fixture.append(titlePlaceholder);
+
+		var offsetX = null;
+		var offsetY = null;
+		var space = new primitives.common.Rect();
+		for (var key in placements) {
+			if (placements.hasOwnProperty(key)) {
+				var placement = placements[key];
+
+				offsetX = offsetX == null ? placement.x : Math.min(offsetX, placement.x);
+				offsetY = offsetY == null ? placement.y : Math.min(offsetY, placement.y);
+
+				space.addRect(placement);
+			}
+		}
+
+		var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'></div>");
+		placeholder.css({
+			width: space.width,
+			height: space.height
+		});
+		for (var key in placements) {
+			if (placements.hasOwnProperty(key)) {
+				var placement = new primitives.common.Rect(placements[key]);
+				placement.translate(-offsetX, -offsetY);
+
+				var div = GetPlacementMarker(placement, key, "grey");
+				placeholder.append(div);
+			}
+		}
+
+		
+		fixture.append(placeholder);
+	}
+
+	function TestLayout(title, familyItems, treeLevelsItems, sized) {
+		var family = getFamily(familyItems);
+		var treeLevels = getTreeLevels(treeLevelsItems);
+
+		var isBig = null;
+		if (sized != null) {
+			isBig = {};
+			for (var index = 0; index < sized.length; index += 1) {
+				isBig[sized[index]] = true;
+			}
+		}
+
+		var familyAlignment = new primitives.common.FamilyAlignment(this, family, treeLevels, function (nodeid, node) {
+			if (isBig == null || isBig.hasOwnProperty(nodeid)) {
+				return 6 + 50 + 6;
+			} else {
+				return 6 + 2 + 6;
+			}
+		});
+
+		var placements = getPlacements(treeLevels, familyAlignment, isBig);
+
+		ShowLayout(jQuery("#qunit-fixture"), placements, title);
+
+		jQuery("#qunit-fixture").css({
+			position: "relative",
+			left: "0px",
+			top: "0px",
+			height: "Auto"
+		});
+
+		var result = countPlacementsOverlaps(treeLevels, placements);
+
+		assert.equal(result, 0, title);
+	};
+
+	(function () {
+		TestLayout("Empty family layout", [
+			{}
+		], [
+			[]
+		]);
+	})();
+
+
+	(function () {
+		TestLayout("Single node family layout", [
+			{ id: 'A', parents: [] }
+		], [
+			['A']
+		]);
 	})();
 
 	(function () {
-		var family = getFamily([
-			{ id: 1 },
-			{ id: 2 },
-			{ id: 3 },
-			{ id: 4 },
-			{ id: 5 },
-			{ id: 6 },
-			{ id: 7 },
-			{ id: 8, parents: [1, 2, 3, 4, 5, 6, 7] }
+		TestLayout("Side by side 2 families where the left one starts one generation below", [
+			{ id: '1', parents: [] },
+			{ id: '2', parents: [] },
+			{ id: '3', parents: ['1'] }
+		], [
+			['1'],
+			['2', '3']
 		]);
-
-		var result = [];
-		var planarFamily = family.groupBy(this, 2, function (parentid, childid, nodes) {
-			result.push({
-				parent: parentid,
-				child: childid,
-				nodes: nodes
-			})
-		});
-
-		var expectedResult = [
-			{ parent: null, child: "8", nodes: ["1", "2", "3", "4", "5", "6", "7"] }
-		];
-		assert.deepEqual(result, expectedResult, "Function should group nodes sharing the same child together");
 	})();
 
 	(function () {
-		var family = getFamily([
-			{ id: 1 },
-			{ id: 2, parents: [1] },
-			{ id: 3, parents: [1] },
-			{ id: 4, parents: [1] },
-			{ id: 5, parents: [1] },
-			{ id: 6, parents: [1] },
-			{ id: 7, parents: [1] },
-			{ id: 8, parents: [1] },
-			{ id: 9, parents: [2, 3, 4, 5, 6, 7, 8] },
+		TestLayout("Side by side families", [
+			{ id: '1', parents: [] },
+			{ id: '3', parents: ['1'] },
+			{ id: '4', parents: ['1'] },
+			{ id: '2', parents: [] },
+			{ id: '5', parents: ['2'] },
+			{ id: '6', parents: ['2'] }
+		], [
+			['1', '2'],
+			['3', '4', '5', '6']
 		]);
-
-		var result = [];
-		var planarFamily = family.groupBy(this, 2, function (parentid, childid, nodes) {
-			result.push({
-				parent: parentid,
-				child: childid,
-				nodes: nodes
-			})
-		});
-
-		var expectedResult = [
-			{ parent: "1", child: "9", nodes: ["2", "3", "4", "5", "6", "7", "8"] }
-		];
-		assert.deepEqual(result, expectedResult, "Function should group nodes sharing the same parent and child together");
 	})();
 
 	(function () {
-		var family = getFamily([
-		{ id: 1, parents: [] },
-		{ id: 2, parents: [1] },
-		{ id: 3, parents: [1] },
-		{ id: 4, parents: [1] },
-		{ id: 5, parents: [1] },
-		{ id: 6, parents: [1] },
-		{ id: 7, parents: [1] },
-		{ id: 8, parents: [1] },
-		{ id: 9, parents: [1] },
-		{ id: 10, parents: [1] },
-		{ id: 11, parents: [1] },
-		{ id: 12, parents: [1] },
-		{ id: 13, parents: [1] },
-		{ id: 14, parents: [1] },
-		{ id: 15, parents: [1] },
-		{ id: 16, parents: [1] },
-		{ id: 17, parents: [1] },
-		{ id: 18, parents: [1] },
-		{ id: 19, parents: [1] },
-		{ id: 20, parents: [1] },
+		TestLayout("Internal orphan family", [
+			{ id: '1', parents: [] },
 
-		{ id: 21, parents: [5] },
-		{ id: 22, parents: [5] },
-		{ id: 23, parents: [5] },
-		{ id: 24, parents: [5] },
-		{ id: 25, parents: [5] },
-		{ id: 26, parents: [5] },
-
-		{ id: 27, parents: [26] },
-		{ id: 28, parents: [26] },
-		{ id: 29, parents: [26] },
-		{ id: 30, parents: [26] },
-		{ id: 31, parents: [26, 9] },
+			{ id: '2', parents: ['1'] },
+			{ id: '3', parents: ['1'] },
+			{ id: '4', parents: ['1'] },
+			{ id: '5', parents: ['2', '3'] },
+			{ id: '6', parents: [] },
+			{ id: '7', parents: ['4'] },
+			{ id: '8', parents: ['4'] },
+			{ id: '9', parents: ['6'] },
+			{ id: '10', parents: ['6'] },
+			{ id: '11', parents: ['5', '7', '8'] }
+		], [
+			['1'],
+			['2', '3', '6', '4'],
+			['5', '9', '10', '7', '8'],
+			['11']
 		]);
+	})();
 
-		var result = [];
-		var planarFamily = family.groupBy(this, 2, function (parentid, childid, nodes) {
-			result.push({
-				parent: parentid,
-				child: childid,
-				nodes: nodes
-			})
-		});
+	(function () {
+		TestLayout("Side by side and upside-down families", [
+			{ id: '1', parents: [] },
+			{ id: '2', parents: [] },
+			{ id: '3', parents: [] },
+			{ id: '4', parents: ['1'] },
+			{ id: '5', parents: ['1'] },
+			{ id: '6', parents: ['2', '3'] }
+		], [
+			['1', '2', '3'],
+			['4', '5', '6']
+		]);
+	})();
 
-		var expectedResult = [
-			{ parent: "1", child: null, nodes: ["2", "3", "4", "6", "7", "8", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"] },
-			{ parent: "5", child: null, nodes: ["21", "22", "23", "24", "25"] },
-			{ parent: "26", child: null, nodes: ["27", "28", "29", "30"] }
-		];
-		assert.deepEqual(result, expectedResult, "General case test");
+	(function () {
+		TestLayout("Family diagram horizontal alignment with multiple cycles", [
+				{ id: 'A', parents: [] },
+				{ id: 'K', parents: [] },
+				{ id: 'B', parents: ['A'] },
+				{ id: 'C', parents: ['A'] },
+				{ id: 'D', parents: ['A'] },
+				{ id: 'E', parents: [] },
+				{ id: 'F', parents: ['K'] },
+				{ id: 'L', parents: ['K'] },
+				{ id: 'M', parents: ['K'] },
+				{ id: 'G', parents: ['B'] },
+				{ id: 'H', parents: ['D', 'E', 'F'] },
+				{ id: 'I', parents: ['M'] },
+				{ id: 'J', parents: ['M'] },
+				{ id: 'N', parents: ['G'] },
+				{ id: 'O', parents: ['G'] },
+				{ id: 'Q', parents: ['H'] },
+				{ id: 'R', parents: ['H'] },
+				{ id: 'S', parents: ['H'] },
+				{ id: 'T', parents: ['I', 'J'] },
+				{ id: 'P', parents: ['O', 'Q'] },
+				{ id: 'U', parents: ['S', 'T'] }
+		], [
+				['A', 'K'],
+				['B', 'C', 'D', 'E', 'F', 'L', 'M'],
+				['G', 'H', 'I', 'J'],
+				['N', 'O', 'Q', 'R', 'S', 'T'],
+				['P', 'U']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Family diagram large rombus alignment", [
+				{ id: 'A2', parents: [] },
+				{ id: 'A', parents: ['A2'] },
+				{ id: 'B', parents: ['A'] },
+				{ id: 'C', parents: ['A'] },
+				{ id: 'D', parents: ['A'] },
+				{ id: 'E', parents: ['B', 'C', 'D'] },
+				{ id: 'A1', parents: ['A2'] },
+				{ id: 'B1', parents: ['A1'] },
+				{ id: 'C1', parents: ['A1'] },
+				{ id: 'D1', parents: ['A1'] },
+				{ id: 'E1', parents: ['B1', 'C1', 'D1'] },
+				{ id: 'E2', parents: ['E', 'E1'] },
+		], [
+				['A2'],
+				['A', 'A1'],
+				['B', 'C', 'D', 'B1', 'C1', 'D1'],
+				['E', 'E1'],
+				['E2']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Small Sand clock family layout", [
+			{ id: 'A', parents: [] },
+			{ id: 'B', parents: [] },
+			{ id: 'C', parents: ['A', 'B'] },
+			{ id: 'D', parents: ['C'] },
+			{ id: 'E', parents: ['C'] }
+		], [
+			['A', 'B'],
+			['C'],
+			['D', 'E']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Small Rombus family layout", [
+			{ id: 'A', parents: [] },
+			{ id: 'B', parents: ['A'] },
+			{ id: 'C', parents: ['A'] },
+			{ id: 'D', parents: ['B', 'C'] }
+		], [
+			['A'],
+			['B', 'C'],
+			['D']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Regular tree family layout", [
+			{ id: 'A', parents: [] },
+			{ id: 'B', parents: ['A'] },
+			{ id: 'C', parents: ['A'] },
+			{ id: 'D', parents: ['B'] },
+			{ id: 'E', parents: ['B'] },
+			{ id: 'F', parents: ['C'] },
+			{ id: 'G', parents: ['C'] }
+		], [
+			['A'],
+			['B', 'C'],
+			['D', 'E', 'F', 'G']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Upside-down tree family layout", [
+			{ id: 'A', parents: [] },
+			{ id: 'B', parents: [] },
+			{ id: 'C', parents: [] },
+			{ id: 'D', parents: [] },
+			{ id: 'E', parents: ['A', 'B'] },
+			{ id: 'F', parents: ['C', 'D'] },
+			{ id: 'G', parents: ['E', 'F'] }
+		], [
+			['A', 'B', 'C', 'D'],
+			['E', 'F'],
+			['G']
+		]);
+	})();
+
+	(function () {
+		TestLayout("2 Cross Relations Demo family layout", [
+			{ id: '2', parents: [] },
+			{ id: '1', parents: [] },
+			{ id: '8', parents: ['2'] },
+			{ id: '6', parents: ['2'] },
+			{ id: '7', parents: ['2'] },
+			{ id: '5', parents: ['1'] },
+			{ id: '4', parents: ['1'] },
+			{ id: '3', parents: ['1'] },
+			{ id: '12', parents: ['8'] },
+			{ id: '11', parents: ['7', '5'] },
+			{ id: '10', parents: ['4'] },
+			{ id: '9', parents: ['3'] }
+		], [
+			['2', '1'],
+			['8', '6', '7', '5', '4', '3'],
+			['12', '11', '10', '9']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Family unit overlaps node between parents", [
+			{ id: '6', parents: [] },
+			{ id: '5', parents: ['6'] },
+			{ id: '2', parents: ['6'] },
+			{ id: '1', parents: [] },
+			{ id: '7', parents: ['1', '2'] },
+			{ id: '3', parents: ['7'] },
+			{ id: '4', parents: ['7'] }
+		], [
+			['6'],
+			['1', '5', '2'],
+			['7'],
+			['3', '4']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Family unit overlaps node between children", [
+			{ id: '3', parents: [] },
+			{ id: '4', parents: [] },
+			{ id: '7', parents: ['3', '4'] },
+			{ id: '1', parents: ['7'] },
+			{ id: '5', parents: [] },
+			{ id: '2', parents: ['7'] },
+			{ id: '6', parents: ['5', '2'] }
+		], [
+			['3', '4'],
+			['7'],
+			['1', '5', '2'],
+			['6']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Cycle 2", [
+			{ id: '1', parents: [] },
+			{ id: '2', parents: ['1'] },
+			{ id: '3', parents: ['1'] },
+			{ id: '4', parents: ['1'] },
+			{ id: '5', parents: ['1'] },
+			{ id: '6', parents: ['1'] },
+			{ id: '7', parents: ['1'] },
+			{ id: '8', parents: ['1'] },
+			{ id: '9', parents: ['1'] },
+			{ id: '10', parents: ['1'] },
+
+			{ id: '11', parents: ['9'] },
+			{ id: '12', parents: ['9'] },
+			{ id: '13', parents: ['9'] },
+			{ id: '14', parents: ['9'] },
+			{ id: '15', parents: ['9'] },
+			{ id: '16', parents: ['9'] },
+			{ id: '17', parents: ['10'] },
+
+			{ id: '18', parents: ['11'] },
+			{ id: '19', parents: [] },
+			{ id: '20', parents: [] },
+			{ id: '21', parents: [] },
+			{ id: '22', parents: [] },
+			{ id: '23', parents: [] },
+			{ id: '24', parents: [] },
+			{ id: '25', parents: ['17'] },
+
+			{ id: '26', parents: ['18', '19', '20', '21', '22', '23', '24', '25'] }
+		], [
+			['1'],
+			['2', '3', '4', '5', '6', '7', '8', '9', '10'],
+			['11', '12', '13', '14', '15', '16', '17'],
+			['18', '19', '20', '21', '22', '23', '24', '25'],
+			['26']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Large sandclock", [
+			{ id: '1', parents: [] },
+			{ id: '2', parents: [] },
+			{ id: '3', parents: [] },
+			{ id: '4', parents: [] },
+			{ id: '5', parents: ['1', '2'] },
+			{ id: '6', parents: ['3', '4'] },
+			{ id: '7', parents: ['5', '6'] },
+			{ id: '8', parents: ['7'] },
+			{ id: '9', parents: ['7'] },
+			{ id: '10', parents: ['8'] },
+			{ id: '11', parents: ['8'] },
+			{ id: '12', parents: ['9'] },
+			{ id: '13', parents: ['9'] }
+		], [
+			['1', '2', '3', '4'],
+			['5', '6'],
+			['7'],
+			['8', '9'],
+			['10', '11', '12', '13']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Fance layout", [
+			{ id: '1', parents: [] },
+			{ id: '2', parents: [] },
+
+			{ id: '3', parents: ['1'] },
+			{ id: '4', parents: ['1'] },
+			{ id: '5', parents: ['2'] },
+			{ id: '6', parents: ['2'] },
+
+			{ id: '7', parents: ['3'] },
+			{ id: '8', parents: ['4', '5'] },
+			{ id: '9', parents: ['6'] },
+
+			{ id: '10', parents: ['7'] },
+			{ id: '11', parents: ['8'] },
+			{ id: '12', parents: ['8'] },
+			{ id: '13', parents: ['9'] },
+
+			{ id: '14', parents: ['10', '11'] },
+			{ id: '15', parents: ['12', '13'] }
+		], [
+			['1', '2'],
+			['3', '4', '5', '6'],
+			['7', '8', '9'],
+			['10', '11', '12', '13'],
+			['14', '15']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Wave layout", [
+			{ id: '1', parents: [] },
+			{ id: '2', parents: [] },
+			{ id: '3', parents: [] },
+			{ id: '4', parents: [] },
+
+			{ id: '5', parents: ['1'] },
+			{ id: '6', parents: ['1'] },
+			{ id: '7', parents: ['2'] },
+			{ id: '8', parents: ['2'] },
+			{ id: '9', parents: ['3'] },
+			{ id: '10', parents: ['3'] },
+			{ id: '11', parents: ['4'] },
+
+			{ id: '12', parents: ['5'] },
+			{ id: '13', parents: ['6', '7'] },
+			{ id: '14', parents: ['8', '9'] },
+			{ id: '15', parents: ['10', '11'] }
+		], [
+			['1', '2', '3', '4'],
+			['5', '6', '7', '8', '9', '10', '11'],
+			['12', '13', '14', '15']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Skewed rombus layout", [
+			{ id: '1', parents: ['1'] },
+			{ id: '2', parents: ['1'] },
+			{ id: '3', parents: ['1'] },
+			{ id: '4', parents: ['1'] },
+			{ id: '5', parents: ['1'] },
+			{ id: '6', parents: ['1'] },
+
+			{ id: '7', parents: ['2'] },
+			{ id: '8', parents: ['2'] },
+			{ id: '9', parents: ['2'] },
+			{ id: '10', parents: ['6'] },
+			{ id: '11', parents: ['6'] },
+
+			{ id: '12', parents: ['7'] },
+			{ id: '13', parents: [] },
+			{ id: '14', parents: [] },
+			{ id: '15', parents: [] },
+			{ id: '16', parents: ['11'] },
+
+			{ id: '17', parents: ['12', '13'] },
+			{ id: '18', parents: ['14', '15', '16'] },
+
+			{ id: '19', parents: ['17', '18'] }
+		], [
+			['1'],
+			['2', '3', '4', '5', '6'],
+			['7', '8', '9', '10', '11'],
+			['12', '13', '14', '15', '16'],
+			['17', '18'],
+			['19']
+		]);
+	})();
+
+	(function () {
+		TestLayout("3 Cross Relations Test Layout", [
+			{ id: '1', parents: [] },
+			{ id: '2', parents: [] },
+			{ id: '3', parents: [] },
+			{ id: '4', parents: [] },
+			{ id: '5', parents: [] },
+
+			{ id: '6', parents: ['1', '2'] },
+			{ id: '7', parents: ['3'] },
+			{ id: '8', parents: ['4'] },
+			{ id: '9', parents: ['4'] },
+			{ id: '10', parents: ['5'] },
+
+
+			{ id: '11', parents: ['6'] },
+			{ id: '12', parents: ['7', '8'] },
+			{ id: '13', parents: ['9', '10'] },
+
+			{ id: '14', parents: ['11'] },
+			{ id: '15', parents: ['11'] },
+			{ id: '16', parents: ['12'] },
+			{ id: '17', parents: ['12'] },
+			{ id: '18', parents: ['12'] },
+			{ id: '19', parents: ['13'] },
+			{ id: '20', parents: ['13'] },
+
+			{ id: '21', parents: ['14'] },
+			{ id: '22', parents: ['15', '16'] },
+			{ id: '23', parents: ['20'] },
+
+			{ id: '24', parents: ['21'] },
+			{ id: '25', parents: ['21'] },
+			{ id: '26', parents: ['22'] },
+			{ id: '27', parents: ['22'] },
+			{ id: '28', parents: ['23'] },
+			{ id: '29', parents: ['23'] }
+		], [
+			['1', '2', '3', '4', '5'],
+			['6', '7', '8', '9', '10'],
+			['11', '12', '13'],
+			['14', '15', '16', '17', '18', '19', '20'],
+			['21', '22', '23'],
+			['24', '25', '26', '27', '28', '29']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Skipped Members Test Layout", [
+			{ id: '1', parents: [] },
+			{ id: '2', parents: [] },
+			{ id: '3', parents: [] },
+			{ id: '4', parents: [] },
+			{ id: '5', parents: [] },
+			{ id: '6', parents: [] },
+
+			{ id: '7', parents: ['1', '2'] },
+			{ id: '8', parents: ['3', '4'] },
+			{ id: '9', parents: ['5', '6'] },
+
+			{ id: '10', parents: ['7'] },
+			{ id: '11', parents: ['7'] },
+			{ id: '12', parents: ['8'] },
+			{ id: '13', parents: ['8'] },
+			{ id: '14', parents: ['9'] },
+			{ id: '15', parents: ['9'] },
+
+			{ id: '16', parents: ['10'] },
+			{ id: '17', parents: ['11'] },
+			{ id: '18', parents: ['11'] },
+			{ id: '19', parents: ['12'] },
+			{ id: '20', parents: ['13'] },
+			{ id: '21', parents: ['13'] },
+			{ id: '22', parents: ['14'] },
+			{ id: '23', parents: ['14'] },
+			{ id: '241', parents: ['15'] },
+
+			{ id: '24', parents: ['17'] },
+			{ id: '25', parents: ['18'] },
+			{ id: '26', parents: ['19', '20'] },
+			{ id: '27', parents: ['21'] },
+			{ id: '28', parents: ['22'] },
+			{ id: '29', parents: ['23', '241'] },
+
+			{ id: '30', parents: ['24'] },
+			{ id: '31', parents: ['25'] },
+			{ id: '32', parents: ['26'] },
+			{ id: '33', parents: ['26'] },
+			{ id: '34', parents: ['27'] },
+			{ id: '35', parents: ['28'] },
+			{ id: '36', parents: ['29'] },
+
+			{ id: '37', parents: ['30'] },
+			{ id: '38', parents: ['31', '32'] },
+			{ id: '39', parents: ['34'] },
+			{ id: '40', parents: ['35'] },
+			{ id: '41', parents: ['36'] },
+
+		], [
+			['1', '2', '3', '4', '5', '6'],
+			['7', '8', '9'],
+			['10', '11', '12', '13', '14', '15'],
+			['16', '17', '18', '19', '20', '21', '22', '23', '241'],
+			['24', '25', '26', '27', '28', '29'],
+			['30', '31', '32', '33', '34', '35', '36'],
+			['37', '38', '39', '40', '41']
+		], [
+			'1', '2', '3', '4', '5', '6', '11', '13', '14', '37', '38', '39', '40', '41'
+		]);
+	})();
+
+	(function () {
+		TestLayout("Left spiral layout", [
+			{ id: '1', parents: [] },
+
+			{ id: '2', parents: ['1'] },
+			{ id: '3', parents: [] },
+			{ id: '4', parents: ['1'] },
+
+			{ id: '5', parents: ['2'] },
+			{ id: '6', parents: ['3'] },
+			{ id: '7', parents: [] },
+			{ id: '8', parents: ['3'] },
+
+			{ id: '9', parents: ['5'] },
+			{ id: '10', parents: ['6'] },
+			{ id: '11', parents: ['7'] },
+			{ id: '12', parents: ['7'] },
+			{ id: '13', parents: ['8'] },
+
+			{ id: '14', parents: ['9'] },
+			{ id: '15', parents: ['10', '12'] },
+			{ id: '16', parents: ['13'] },
+
+			{ id: '17', parents: ['14', '16'] }
+		], [
+			['1'],
+			['2', '3', '4'],
+			['5', '6', '7', '8'],
+			['9', '10', '11', '12', '13'],
+			['14', '15', '16'],
+			['17']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Right spiral layout", [
+			{ id: '1', parents: [] },
+
+			{ id: '2', parents: ['1'] },
+			{ id: '3', parents: [] },
+			{ id: '4', parents: ['1'] },
+
+			{ id: '5', parents: ['3'] },
+			{ id: '6', parents: [] },
+			{ id: '7', parents: ['3'] },
+			{ id: '8', parents: ['4'] },
+
+			{ id: '9', parents: ['5'] },
+			{ id: '10', parents: ['6'] },
+			{ id: '11', parents: ['6'] },
+			{ id: '12', parents: ['7'] },
+			{ id: '13', parents: ['8'] },
+
+			{ id: '14', parents: ['9'] },
+			{ id: '15', parents: ['10', '12'] },
+			{ id: '16', parents: ['13'] },
+
+			{ id: '17', parents: ['14', '16'] }
+		], [
+			['1'],
+			['2', '3', '4'],
+			['5', '6', '7', '8'],
+			['9', '10', '11', '12', '13'],
+			['14', '15', '16'],
+			['17']
+		]);
+	})();
+
+	(function () {
+		TestLayout("Alignment of items having variable width", [
+			{ id: '1', parents: [] },
+
+			{ id: '2', parents: ['1'] },
+			{ id: '3', parents: ['1'] },
+			{ id: '4', parents: ['1'] },
+
+			{ id: '6', parents: ['2'] },
+			{ id: '7', parents: ['3', '4'] }
+		], [
+			['1'],
+			['2', '3', '4'],
+			['6', '7']
+		], [
+			'1', '4', '6', '7'
+		]);
 	})();
 });
 
-/* /Algorithms/Family.getPlanarFamily.Tests.js*/
-QUnit.module('Algorithms - Family class, getPlanarFamily function tests');
+/* /Algorithms/FamilyMargins.Tests.js*/
+QUnit.module('Algorithms - FamilyMargins structure helps to calculate space and place family siblings side by side');
 
-QUnit.test("primitives.common.family.getPlanarFamily - Function eliminates some relations in family, so they don;t cross each other.", function (assert) {
+QUnit.test("primitives.common.FamilyMargins", function (assert) {
+
+	function getMargins(margins) {
+		var result = [];
+		margins.loop(this, function (level, left, right) {
+			result[level] = [left, right];
+		})
+		return result;
+	}
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+		margins.add(20, 0);
+		margins.add(30, 0);
+		margins.add(10, 0);
+
+		var result = getMargins(margins);
+
+		var expectedResult = [
+			[-5, 5],
+			[-15, 15],
+			[-10, 10]
+		];
+
+		assert.deepEqual(result, expectedResult, "loop of levels in FamilyMargins object");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+		margins.add(8, 0);
+		margins.add(10, 0);
+		margins.add(40, 0);
+		margins.add(60, 0);
+		margins.add(80, 0);
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(80, 1);
+		margins2.add(120, 1);
+		margins2.add(20, 1);
+
+		assert.equal(margins.getDistanceTo(margins2), 40, "getDistanceTo - left margins are deeper than right");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+		margins.add(80, 0);
+		margins.add(120, 0);
+		margins.add(20, 0);
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(8, 1);
+		margins2.add(10, 1);
+		margins2.add(40, 1);
+		margins2.add(60, 1);
+		margins2.add(80, 1);
+
+		assert.equal(margins.getDistanceTo(margins2), 40, "getDistanceTo - right margins are deeper than left");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(80, 1);
+
+		assert.equal(margins.getDistanceTo(margins2), null, "getDistanceTo - left margins are empty");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+		margins.add(8, 0);
+		margins.add(10, 0);
+		margins.add(40, 0);
+		margins.add(60, 0);
+		margins.add(80, 0);
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(80, 1);
+		margins2.add(120, 1);
+		margins2.add(20, 1);
+
+		margins.merge(margins2, 0);
+
+		var result = getMargins(margins);
+
+		var expectedResult = [
+			[-70, 70],
+			[-60, 120],
+			[-50, 100],
+			[-35, -25],
+			[-34, -26]
+		];
+
+		assert.deepEqual(result, expectedResult, "merge - left margins are deeper than right");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+		margins.add(80, 0);
+		margins.add(120, 0);
+		margins.add(20, 0);
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(8, 1);
+		margins2.add(10, 1);
+		margins2.add(40, 1);
+		margins2.add(60, 1);
+		margins2.add(80, 1);
+
+		margins.merge(margins2, 0);
+
+		var result = getMargins(margins);
+
+		var expectedResult = [
+			[-70, 70],
+			[-120, 60],
+			[-100, 50],
+			[25, 35],
+			[26, 34]
+		];
+
+		assert.deepEqual(result, expectedResult, "merge - right margins are deeper than left");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+		margins.add(80, 0);
+		margins.add(120, 0);
+		margins.add(20, 0);
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(8, 1);
+		margins2.add(10, 1);
+		margins2.add(40, 1);
+		margins2.add(60, 1);
+		margins2.add(80, 1);
+
+		margins.merge(margins2, 20);
+
+		var result = getMargins(margins);
+
+		var expectedResult = [
+			[-80, 80],
+			[-130, 70],
+			[-110, 60],
+			[35, 45],
+			[36, 44]
+		];
+
+		assert.deepEqual(result, expectedResult, "merge - right margins are deeper than left and interval is added");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+		margins.add(20, 0);
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(20, 1);
+
+		var margins3 = new primitives.common.FamilyMargins();
+		margins3.add(30, 2);
+
+		merged = new primitives.common.FamilyMargins();
+
+		merged.merge(margins, 10);
+		merged.merge(margins2, 10);
+		merged.merge(margins3, 10);
+
+		var result = getMargins(merged);
+
+		var expectedResult = [
+			[-45, 45]
+		];
+
+		assert.deepEqual(result, expectedResult, "merge - 3 elements side by side");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+		margins.add(10, 0);
+		margins.add(20, 0);
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(20, 1);
+		margins2.add(20, 1);
+
+		var margins3 = new primitives.common.FamilyMargins();
+		margins3.add(20, 2);
+		margins3.add(30, 2);
+
+		margins.merge(margins2, 10);
+		margins.merge(margins3, 10);
+
+		var result = getMargins(margins);
+
+		var expectedResult = [
+			[-45, 45],
+			[-40, 40]
+		];
+
+		assert.deepEqual(result, expectedResult, "merge - 3 families having 2 generations side by side");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+		margins.add(50, 0);
+		margins.add(50, 0);
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(50, 1);
+
+		margins.merge(margins2, 20);
+
+		var result = getMargins(margins);
+
+		var expectedResult = [
+			[-60, 60],
+			[-60, -10]
+		];
+
+		assert.deepEqual(result, expectedResult, "merge - family having 2 generations with family having one generation only");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(20, 0);
+		margins2.add(20, 0);
+
+		margins.merge(margins2);
+
+		var result = getMargins(margins);
+
+		var expectedResult = [
+			[-10, 10],
+			[-10, 10]
+		];
+
+		assert.deepEqual(result, expectedResult, "merge - empty family with non empty");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+		margins.add(20, 0);
+		margins.add(20, 0);
+
+		var margins2 = new primitives.common.FamilyMargins();
+
+
+		var expectedResult = [
+			[-10, 10],
+			[-10, 10]
+		];
+
+		margins.merge(new primitives.common.FamilyMargins());
+
+		var result = getMargins(margins);
+
+		assert.deepEqual(result, expectedResult, "merge - non empty family with empty");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+		margins.add(10, 0);
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(10, 1);
+
+		margins.attach(margins2, 0);
+
+		var result = getMargins(margins);
+
+		var expectedResult = [
+			[-5, 15]
+		];
+
+		assert.deepEqual(result, expectedResult, "attach - one family to another");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+		margins.add(8, 0);
+		margins.add(10, 0);
+		margins.add(40, 0);
+		margins.add(60, 0);
+		margins.add(80, 0);
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(80, 1);
+		margins2.add(120, 1);
+		margins2.add(20, 1);
+
+		margins.attach(margins2, 0);
+
+		var result = getMargins(margins);
+
+		var expectedResult = [
+			[-40, 100],
+			[-30, 150],
+			[-20, 130],
+			[-5, 5],
+			[-4, 4]
+		];
+
+		assert.deepEqual(result, expectedResult, "attach - left margins are deeper than right");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+		margins.add(80, 0);
+		margins.add(120, 0);
+		margins.add(20, 0);
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(8, 1);
+		margins2.add(10, 1);
+		margins2.add(40, 1);
+		margins2.add(60, 1);
+		margins2.add(80, 1);
+
+		margins.attach(margins2, 0);
+
+		var result = getMargins(margins);
+
+		var expectedResult = [
+			[-10, 130],
+			[-60, 120],
+			[-40, 110],
+			[85, 95],
+			[86, 94]
+		];
+
+		assert.deepEqual(result, expectedResult, "attach - right margins are deeper than left");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(10, 0);
+
+		margins.attach(margins2, 20);
+
+		var result = getMargins(margins);
+
+		var expectedResult = [
+			[15, 25]
+		];
+
+		assert.deepEqual(result, expectedResult, "attach - single generation family to empty family with positive interval");
+	})();
+
+	(function () {
+		var margins = new primitives.common.FamilyMargins();
+
+		var margins2 = new primitives.common.FamilyMargins();
+		margins2.add(10, 0);
+
+		margins.attach(margins2, -20);
+
+		var result = getMargins(margins);
+
+		var expectedResult = [
+			[-25, -15]
+		];
+
+		assert.deepEqual(result, expectedResult, "attach - single generation family to empty family with negative interval");
+	})();
+
+	(function () {
+		var a = new primitives.common.FamilyMargins();
+		var b = new primitives.common.FamilyMargins();
+		b.add(10, 0);
+
+		a.attach(b, 5);
+		a.add(10, 0);
+
+		var c = new primitives.common.FamilyMargins();
+		c.attach(b, -5);
+		c.add(10, 1);
+
+		var d = new primitives.common.FamilyMargins();
+		d.merge(a);
+		d.merge(c);
+		d.add(10, 0);
+
+		var result = getMargins(d);
+
+		var expectedResult = [
+			[-5, 5],
+			[-10, 10],
+			[-5, 5]
+		];
+
+		assert.deepEqual(result, expectedResult, "attach - rombus");
+	})();
+
+	(function () {
+		var d = new primitives.common.FamilyMargins();
+		d.add(10, 0);
+
+		var e = new primitives.common.FamilyMargins();
+		e.add(10, 0);
+
+		d.merge(e);
+		d.add(10, 0);
+
+		var a = new primitives.common.FamilyMargins();
+		a.attach(d, 5);
+		a.add(10, 0);
+
+		var b = new primitives.common.FamilyMargins();
+		b.attach(d, -5);
+		b.add(10, 1);
+
+		a.merge(b);
+
+		var result = getMargins(a);
+
+		var expectedResult = [
+			[-10, 10],
+			[-5, 5],
+			[-10, 10]
+		];
+
+		assert.deepEqual(result, expectedResult, "attach - X");
+	})();
+});
+
+
+/* /Algorithms/FibonacciHeap.Tests.js*/
+QUnit.module('Algorithms - Fibonacci Heap');
+
+QUnit.test("primitives.common.FibonacciHeap -  Closure based priority queue structure based on fibonacci heap algorithm.", function (assert) {
+	var items = [
+		[10, 1, "First"],
+		[1, 10, "Second"],
+		[2, 20, "Third"],
+		[3, 30, "Toronto"],
+		[4, 40, "NY"],
+		[5, 50, "Seoul"],
+		[6, 60, "Maple"],
+		[7, 70, "Vaughan"],
+		[8, 80, "Redmond"]
+	];
+
+	var queue = primitives.common.FibonacciHeap(false);
+	for (var index = 0, len = items.length; index < len; index += 1) {
+		var item = items[index];
+		queue.add(item[0], item[1], item[2]);
+	}
+
+	var result = [];
+	var item = null;
+	while ((item = queue.extractRoot()) != null) {
+		result.push([item.key, item.priority, item.item]);
+		queue.validate();
+	}
+
+	var expectedItems = [
+		[10, 1, "First"],
+		[1, 10, "Second"],
+		[2, 20, "Third"],
+		[3, 30, "Toronto"],
+		[4, 40, "NY"],
+		[5, 50, "Seoul"],
+		[6, 60, "Maple"],
+		[7, 70, "Vaughan"],
+		[8, 80, "Redmond"]
+	];
+	assert.deepEqual(result, expectedItems, "Structure should return sorted items");
+
+
+	var items = [
+	[10, 1, "First"],
+	[1, 10, "Second"],
+	[2, 20, "Third"],
+	[3, 30, "Toronto"],
+	[4, 40, "NY"],
+	[5, 50, "Seoul"],
+	[6, 60, "Maple"],
+	[7, 70, "Vaughan"],
+	[8, 80, "Redmond"]
+	];
+
+	var queue = primitives.common.FibonacciHeap(false);
+	for (var index = 0, len = items.length; index < len; index += 1) {
+		var item = items[index];
+		queue.add(item[0], item[1], item[2]);
+	}
+
+	queue.extractRoot()
+	queue.validate();
+
+	queue.setPriority(8, 1);
+	queue.validate();
+
+	var result = [];
+	var item = null;
+	while ((item = queue.extractRoot()) != null) {
+		result.push([item.key, item.priority, item.item]);
+		queue.validate();
+	}
+
+	var expectedItems = [
+		[8, 1, "Redmond"],
+		[1, 10, "Second"],
+		[2, 20, "Third"],
+		[3, 30, "Toronto"],
+		[4, 40, "NY"],
+		[5, 50, "Seoul"],
+		[6, 60, "Maple"],
+		[7, 70, "Vaughan"]
+	];
+	assert.deepEqual(result, expectedItems, "Structure should return item #1 first");
+
+});
+
+
+/* /Algorithms/getCrossingRectangles.Tests.js*/
+QUnit.module('Algorithms - Get crossing rectangles. This method finds rectangles having sides intersections. It does not finds completly ovellaped rectangles. This method is used for searching overlaped lables.');
+
+QUnit.test("primitives.common.getCrossingRectangles", function (assert) {
+	function GetPlacementMarker(placement, label, color) {
+		var div = jQuery("<div></div>");
+
+		div.append(label);
+		div.css(placement.getCSS());
+		div.css({
+			"background": color,
+			visibility: "visible",
+			position: "absolute",
+			font: "Areal",
+			"font-size": "12px",
+			"border-style": "solid",
+			"border-color": "black",
+			"border-width": "2px",
+			"opacity": "0.5"
+		});
+
+		return div;
+	}
+
+	function ShowLayout(fixture, rects, width, height, title) {
+		var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
+		titlePlaceholder.append(title);
+		fixture.append(titlePlaceholder);
+
+		var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'></div>");
+		placeholder.css({
+			width: width,
+			height: height
+		});
+		for (var index = 0; index < rects.length; index += 1) {
+			var rect = rects[index];
+			var label = rect.context;
+
+			var div = GetPlacementMarker(rect, label, "grey");
+			placeholder.append(div);
+		}
+
+		fixture.append(placeholder);
+	}
+
+	function getSize(rects) {
+		var result = new primitives.common.Rect(0, 0, 0, 0);
+		for (var index = 0; index < rects.length; index += 1) {
+			var rect = rects[index];
+			result.addRect(rect);
+		}
+		return result;
+	}
+
+	function getRectangles(items) {
+		var result = [];
+		for (var index = 0; index < items.length; index += 1) {
+			var item = items[index];
+			var rect = new primitives.common.Rect(item[0], item[1], item[2], item[3]);
+			rect.context = index;
+			result.push(rect);
+		}
+		return result;
+	}
+
+	function getCrossingRectangles(rects) {
+		var result = [];
+		for (var index = 0, len = rects.length; index < len - 1; index += 1) {
+			var firstRect = rects[index];
+			for (var index2 = index + 1; index2 < len; index2 += 1) {
+				secondRect = rects[index2];
+
+				if (firstRect.overlaps(secondRect)) {
+					result.push([index, index2]);
+				}
+			}
+		}
+		return result;
+	}
+
+	function TestLayout(title, items) {
+		var rects = getRectangles(items);
+		var paletteItem = new primitives.common.PaletteItem({
+			lineColor: "#000000",
+			lineWidth: "2",
+			fillColor: "#faebd7",
+			lineType: primitives.common.LineType.Solid,
+			opacity: 1
+		});
+
+		var result = [];
+		primitives.common.getCrossingRectangles(this, rects, function (rect1, rect2) {
+			var crossing = [rect1.context, rect2.context];
+			crossing.sort(function (a, b) { return a - b;});
+			result.push(crossing);
+
+			if (rect1.context == rect2.context) {
+				throw "Self crossing is not considered as a valid result";
+			}
+		});
+		result.sort(function (a, b) {
+			if (a[0] == b[0]) {
+				return a[1] - b[1];
+			} else {
+				return a[0] - b[0];
+			}
+		});
+
+		var size = getSize(rects);
+		ShowLayout(jQuery("#qunit-fixture"), rects, size.width, size.height, title);
+
+		jQuery("#qunit-fixture").css({
+			position: "relative",
+			left: "0px",
+			top: "0px",
+			height: "Auto"
+		});
+
+		var expected = getCrossingRectangles(rects);
+		assert.deepEqual(result, expected, title);
+	};
+
+	TestLayout("Single rectangle", [
+		[0, 0, 100, 100]
+	]);
+
+	TestLayout("Two disconnected rectangles", [
+		[0, 0, 80, 80],
+		[100, 0, 80, 80]
+	]);
+
+	TestLayout("Two aligned disconnected rectangles", [
+		[0, 0, 80, 80],
+		[80, 100, 80, 80]
+	]);
+
+	TestLayout("Two aligned disconnected rectangles", [
+		[0, 100, 80, 80],
+		[80, 0, 80, 80]
+	]);
+
+	TestLayout("Two overlapping rectangles", [
+	[0, 0, 100, 100],
+	[50, 50, 100, 100]
+	]);
+
+	TestLayout("Two overlapping rectangles", [
+		[0, 50, 100, 100],
+		[50, 0, 100, 100]
+	]);
+
+	TestLayout("E shape rectangles on right", [
+		[0, 0, 50, 350],
+		[50, 0, 50, 50],
+		[50, 100, 50, 50],
+		[50, 200, 50, 50],
+		[50, 300, 50, 50]
+	]);
+
+	TestLayout("E shape rectangles on left", [
+		[50, 0, 50, 350],
+		[0, 0, 50, 50],
+		[0, 100, 50, 50],
+		[0, 200, 50, 50],
+		[0, 300, 50, 50]
+	]);
+
+
+	TestLayout("5 rectangles", [
+		[0, 0, 100, 100],
+		[150, 0, 100, 100],
+		[0, 150, 100, 100],
+		[150, 150, 100, 100],
+		[50, 50, 150, 150]
+	]);
+
+	TestLayout("Window", [
+		[100, 0, 150, 150],
+		[100, 200, 150, 150],
+		[0, 100, 150, 150],
+		[200, 100, 150, 150]
+	]);
+
+	TestLayout("Window 2", [
+		[0, 0, 150, 50],
+		[0, 50, 50, 50],
+		[100, 50, 50, 50],
+		[0, 100, 150, 50],
+		[0, 150, 50, 50],
+		[100, 150, 50, 50],
+		[0, 200, 150, 50]
+	]);
+
+	TestLayout("Dumbbell", [
+		[0, 0, 60, 60],
+		[80, 0, 60, 60],
+		[50, 20, 40, 20]
+	]);
+
+	TestLayout("Horizontal overlay", [
+		[0, 0, 60, 60],
+		[10, 0, 60, 60],
+		[20, 0, 60, 60],
+		[30, 0, 60, 60],
+		[40, 0, 60, 60],
+		[50, 0, 60, 60]
+	]);
+
+	TestLayout("Vertical overlay", [
+	[0, 0, 60, 60],
+	[0, 10, 60, 60],
+	[0, 20, 60, 60],
+	[0, 30, 60, 60],
+	[0, 40, 60, 60],
+	[0, 50, 60, 60]
+	]);
+
+	function TestPerformance(title, items, useBruteForce) {
+
+		var rects = getRectangles(items);
+
+		if (useBruteForce) {
+			getCrossingRectangles(rects);
+		} else {
+			var result = [];
+			primitives.common.getCrossingRectangles(this, rects, function (rect1, rect2) {
+				result.push([rect1.context, rect2.context]);
+			});
+		}
+		assert.ok(true, title);
+	};
+
+	var demoLabels = [[28, 5, 154, 130], [220, 8, 120, 124], [506, 65, 100, 10], [788, 65, 100, 10], [950, 65, 100, 10], [950, 76, 100, 10], [1062, 76, 100, 10], [1062, 87, 100, 10],
+		[1062, 98, 100, 10], [950, 90.75, 100, 10], [950, 105.5, 100, 10], [1062, 105.5, 100, 10], [950, 116.5, 100, 10], [950, 127.5, 100, 10], [788, 138.5, 100, 10], [950, 138.5, 100, 10],
+		[950, 149.5, 100, 10], [950, 160.5, 100, 10], [950, 171.5, 100, 10], [950, 182.5, 100, 10], [788, 193.5, 100, 10], [950, 193.5, 100, 10], [950, 204.5, 100, 10], [950, 215.5, 100, 10],
+		[788, 226.5, 100, 10], [950, 226.5, 100, 10], [1062, 226.5, 100, 10], [950, 237.5, 100, 10], [1062, 237.5, 100, 10], [1062, 248.5, 100, 10], [1062, 259.5, 100, 10], [950, 267, 100, 10],
+		[1062, 267, 100, 10], [788, 278, 100, 10], [950, 278, 100, 10], [788, 289, 100, 10], [788, 300, 100, 10], [788, 311, 100, 10], [950, 311, 100, 10], [950, 322, 100, 10],
+		[950, 333, 100, 10], [378, 262, 244, 144], [788, 329, 100, 10], [788, 340.5, 100, 10], [950, 340.5, 100, 10], [950, 351.5, 100, 10], [788, 351.5, 100, 10],
+		[788, 362.5, 100, 10], [378, 416, 244, 144], [788, 483, 100, 10], [950, 483, 100, 10], [788, 494, 100, 10], [950, 494, 100, 10], [1062, 494, 100, 10],
+		[950, 505, 100, 10], [950, 516, 100, 10], [950, 527, 100, 10], [788, 534.5, 100, 10], [950, 534.5, 100, 10], [950, 545.5, 100, 10], [1062, 545.5, 100, 10],
+		[950, 556.5, 100, 10], [788, 567.5, 100, 10], [950, 567.5, 100, 10], [788, 578.5, 100, 10], [788, 589.5, 100, 10], [506, 597, 100, 10], [788, 597, 100, 10],
+		[950, 597, 100, 10], [1062, 597, 100, 10], [1062, 608, 100, 10], [950, 615.5, 100, 10], [1062, 615.5, 100, 10], [1062, 626.5, 100, 10], [1062, 637.5, 100, 10],
+		[950, 648.5, 100, 10], [1062, 648.5, 100, 10], [1062, 659.5, 100, 10], [950, 659.5, 100, 10], [950, 670.5, 100, 10], [950, 681.5, 100, 10], [950, 692.5, 100, 10],
+		[950, 703.5, 100, 10], [1062, 703.5, 100, 10], [1062, 714.5, 100, 10], [1062, 725.5, 100, 10], [788, 722, 100, 10], [950, 722, 100, 10], [950, 733, 100, 10],
+		[1062, 733, 100, 10], [788, 744, 100, 10], [950, 744, 100, 10], [950, 755, 100, 10], [950, 766, 100, 10], [1062, 766, 100, 10], [950, 777, 100, 10], [950, 788, 100, 10],
+		[788, 799, 100, 10], [950, 799, 100, 10], [950, 810, 100, 10], [950, 821, 100, 10], [1062, 821, 100, 10], [950, 832, 100, 10], [1062, 832, 100, 10], [1062, 843, 100, 10],
+		[1062, 854, 100, 10], [1062, 865, 100, 10], [1174, 865, 100, 10], [950, 843, 100, 10], [788, 872.5, 100, 10], [950, 872.5, 100, 10], [1062, 872.5, 100, 10],
+		[1062, 883.5, 100, 10], [1174, 883.5, 100, 10], [1174, 894.5, 100, 10], [1062, 894.5, 100, 10], [950, 883.5, 100, 10], [950, 894.5, 100, 10], [950, 905.5, 100, 10],
+		[1062, 905.5, 100, 10], [1062, 916.5, 100, 10], [950, 927.5, 100, 10], [1062, 927.5, 100, 10], [1062, 938.5, 100, 10], [1062, 949.5, 100, 10], [1062, 960.5, 100, 10],
+		[1062, 971.5, 100, 10], [1062, 982.5, 100, 10], [1062, 993.5, 100, 10], [1062, 1004.5, 100, 10], [1062, 1015.5, 100, 10], [1062, 1026.5, 100, 10], [950, 1037.5, 100, 10],
+		[1062, 1037.5, 100, 10], [950, 1048.5, 100, 10], [1062, 1048.5, 100, 10], [1062, 1059.5, 100, 10], [950, 1059.5, 100, 10], [788, 883.5, 100, 10], [506, 1070.5, 100, 10],
+		[788, 1070.5, 100, 10], [950, 1070.5, 100, 10], [788, 1081.5, 100, 10], [788, 1092.5, 100, 10], [950, 1092.5, 100, 10], [788, 1103.5, 100, 10], [506, 1114.5, 100, 10],
+		[788, 1114.5, 100, 10], [950, 1114.5, 100, 10], [950, 1125.5, 100, 10], [950, 1136.5, 100, 10], [950, 1147.5, 100, 10], [950, 1158.5, 100, 10], [788, 1166, 100, 10],
+		[950, 1166, 100, 10], [950, 1177, 100, 10], [950, 1188, 100, 10], [788, 1199, 100, 10], [950, 1199, 100, 10], [788, 1210, 100, 10], [950, 1210, 100, 10], [950, 1221, 100, 10],
+		[950, 1232, 100, 10], [788, 1243, 100, 10], [950, 1243, 100, 10], [1062, 1243, 100, 10], [1062, 1254, 100, 10], [950, 1261.5, 100, 10], [1062, 1261.5, 100, 10], [950, 1272.5, 100, 10],
+		[950, 1283.5, 100, 10], [1062, 1283.5, 100, 10], [1062, 1294.5, 100, 10], [788, 1294.5, 100, 10], [950, 1294.5, 100, 10], [788, 1305.5, 100, 10], [506, 1125.5, 100, 10],
+		[506, 1136.5, 100, 10], [220, 1256, 120, 124], [506, 1313, 100, 10], [788, 1313, 100, 10], [378, 1328.5, 244, 144], [788, 1395.5, 100, 10], [788, 1406.5, 100, 10],
+		[950, 1406.5, 100, 10], [950, 1417.5, 100, 10], [950, 1428.5, 100, 10], [950, 1439.5, 100, 10], [788, 1417.5, 100, 10], [378, 1482.5, 244, 144], [788, 1549.5, 100, 10],
+		[950, 1549.5, 100, 10], [950, 1560.5, 100, 10], [788, 1560.5, 100, 10], [506, 1632, 100, 10], [788, 1632, 100, 10], [788, 1643, 100, 10], [788, 1654, 100, 10],
+		[506, 1661.5, 100, 10], [788, 1661.5, 100, 10], [950, 1661.5, 100, 10], [1062, 1661.5, 100, 10], [950, 1672.5, 100, 10], [950, 1683.5, 100, 10], [950, 1694.5, 100, 10],
+		[950, 1705.5, 100, 10], [950, 1716.5, 100, 10], [1062, 1716.5, 100, 10], [788, 1724, 100, 10], [950, 1724, 100, 10], [950, 1735, 100, 10], [788, 1746, 100, 10], [950, 1746, 100, 10],
+		[950, 1757, 100, 10], [950, 1768, 100, 10], [950, 1779, 100, 10], [950, 1790, 100, 10], [788, 1757, 100, 10], [506, 1779, 100, 10], [788, 1779, 100, 10], [788, 1790, 100, 10],
+		[788, 1801, 100, 10], [950, 1801, 100, 10], [950, 1812, 100, 10], [950, 1823, 100, 10], [950, 1834, 100, 10], [788, 1812, 100, 10], [506, 1845, 100, 10], [788, 1845, 100, 10],
+		[950, 1845, 100, 10], [950, 1856, 100, 10], [788, 1856, 100, 10], [788, 1867, 100, 10], [950, 1867, 100, 10], [788, 1878, 100, 10], [788, 1889, 100, 10], [220, 1832, 120, 124],
+		[506, 1889, 100, 10], [506, 1900, 100, 10], [788, 1900, 100, 10], [788, 1911, 100, 10], [788, 1922, 100, 10], [506, 1911, 100, 10], [506, 1922, 100, 10], [506, 1933, 100, 10],
+		[506, 1944, 100, 10], [506, 1955, 100, 10], [506, 1966, 100, 10], [506, 1977, 100, 10], [506, 1988, 100, 10], [506, 1999, 100, 10], [220, 1966, 120, 124], [506, 2023, 100, 10],
+		[788, 2023, 100, 10], [950, 2023, 100, 10], [950, 2034, 100, 10], [950, 2045, 100, 10], [788, 2052.5, 100, 10], [950, 2052.5, 100, 10], [788, 2063.5, 100, 10], [788, 2074.5, 100, 10],
+		[788, 2085.5, 100, 10], [788, 2096.5, 100, 10], [506, 2104, 100, 10], [788, 2104, 100, 10], [788, 2115, 100, 10], [788, 2126, 100, 10], [788, 2137, 100, 10], [950, 2137, 100, 10],
+		[788, 2148, 100, 10], [788, 2159, 100, 10], [506, 2137, 100, 10], [506, 2170, 100, 10], [788, 2170, 100, 10], [788, 2181, 100, 10], [788, 2192, 100, 10],
+		[378, 2185.5, 244, 144], [788, 2252.5, 100, 10], [788, 2263.5, 100, 10], [788, 2274.5, 100, 10], [950, 2274.5, 100, 10], [950, 2285.5, 100, 10], [950, 2296.5, 100, 10],
+		[788, 2304, 100, 10], [950, 2304, 100, 10], [950, 2315, 100, 10], [788, 2315, 100, 10], [788, 2326, 100, 10], [788, 2337, 100, 10], [788, 2348, 100, 10], [950, 2348, 100, 10],
+		[788, 2359, 100, 10], [788, 2370, 100, 10], [440, 2339.5, 120, 124], [788, 2396.5, 100, 10], [950, 2396.5, 100, 10], [660, 2412, 244, 144], [950, 2479, 100, 10],
+		[1062, 2479, 100, 10], [1062, 2490, 100, 10], [1062, 2501, 100, 10], [1062, 2512, 100, 10], [1062, 2523, 100, 10], [950, 2504.75, 100, 10], [950, 2530.5, 100, 10],
+		[1062, 2530.5, 100, 10], [1062, 2541.5, 100, 10], [950, 2541.5, 100, 10], [950, 2552.5, 100, 10], [1062, 2552.5, 100, 10], [1062, 2563.5, 100, 10], [1062, 2574.5, 100, 10],
+		[1062, 2585.5, 100, 10], [1062, 2596.5, 100, 10], [1062, 2607.5, 100, 10], [950, 2563.5, 100, 10], [788, 2571, 100, 10], [950, 2571, 100, 10], [950, 2582, 100, 10],
+		[950, 2593, 100, 10], [950, 2604, 100, 10], [950, 2615, 100, 10], [950, 2626, 100, 10], [950, 2637, 100, 10], [1062, 2637, 100, 10], [788, 2582, 100, 10], [506, 2490.875, 100, 10],
+		[506, 2523.75, 100, 10], [506, 2556.625, 100, 10], [506, 2589.5, 100, 10], [788, 2589.5, 100, 10], [506, 2600.5, 100, 10], [220, 2551, 120, 124], [506, 2608, 100, 10],
+		[506, 2619, 100, 10], [788, 2619, 100, 10], [788, 2630, 100, 10], [788, 2641, 100, 10], [378, 2634.5, 244, 144], [788, 2701.5, 100, 10], [788, 2712.5, 100, 10],
+		[506, 2784, 100, 10], [788, 2784, 100, 10], [788, 2795, 100, 10], [950, 2795, 100, 10], [788, 2806, 100, 10], [788, 2817, 100, 10], [788, 2828, 100, 10], [506, 2795, 100, 10],
+		[220, 2685, 120, 124], [220, 2819, 120, 124], [506, 2876, 100, 10], [788, 2876, 100, 10], [950, 2876, 100, 10], [950, 2887, 100, 10], [950, 2898, 100, 10], [950, 2909, 100, 10],
+		[788, 2887, 100, 10], [788, 2898, 100, 10], [788, 2909, 100, 10], [788, 2920, 100, 10], [506, 2931, 100, 10], [788, 2931, 100, 10], [950, 2931, 100, 10], [1062, 2931, 100, 10],
+		[1062, 2942, 100, 10], [950, 2949.5, 100, 10], [1062, 2949.5, 100, 10], [1062, 2960.5, 100, 10], [1062, 2971.5, 100, 10], [950, 2982.5, 100, 10], [1062, 2982.5, 100, 10],
+		[1062, 2993.5, 100, 10], [1062, 3004.5, 100, 10], [1062, 3015.5, 100, 10], [950, 3026.5, 100, 10], [1062, 3026.5, 100, 10], [1062, 3037.5, 100, 10], [1062, 3048.5, 100, 10],
+		[1062, 3059.5, 100, 10], [950, 3048.5, 100, 10], [950, 3070.5, 100, 10], [1062, 3070.5, 100, 10], [1062, 3081.5, 100, 10], [1062, 3092.5, 100, 10], [950, 3103.5, 100, 10],
+		[1062, 3103.5, 100, 10], [950, 3114.5, 100, 10], [1062, 3114.5, 100, 10], [1062, 3125.5, 100, 10], [788, 3122, 100, 10], [950, 3122, 100, 10], [950, 3133, 100, 10],
+		[950, 3144, 100, 10], [950, 3155, 100, 10], [950, 3166, 100, 10], [950, 3177, 100, 10], [788, 3188, 100, 10], [950, 3188, 100, 10], [950, 3199, 100, 10], [788, 3210, 100, 10],
+		[950, 3210, 100, 10], [1062, 3210, 100, 10], [1062, 3221, 100, 10], [1062, 3232, 100, 10], [1062, 3243, 100, 10], [950, 3250.5, 100, 10], [1062, 3250.5, 100, 10], [1062, 3261.5, 100, 10],
+		[1062, 3272.5, 100, 10], [1062, 3283.5, 100, 10], [1062, 3294.5, 100, 10], [950, 3305.5, 100, 10], [1062, 3305.5, 100, 10], [1062, 3316.5, 100, 10], [1062, 3327.5, 100, 10],
+		[1062, 3338.5, 100, 10], [1062, 3349.5, 100, 10], [950, 3360.5, 100, 10], [1062, 3360.5, 100, 10], [1062, 3371.5, 100, 10], [1062, 3382.5, 100, 10], [1062, 3393.5, 100, 10],
+		[1062, 3404.5, 100, 10], [1062, 3415.5, 100, 10], [950, 3377, 100, 10], [950, 3393.5, 100, 10], [950, 3410, 100, 10], [950, 3426.5, 100, 10], [1062, 3426.5, 100, 10],
+		[788, 3285.8333333333335, 100, 10], [788, 3361.6666666666665, 100, 10], [788, 3437.5, 100, 10], [950, 3437.5, 100, 10], [950, 3448.5, 100, 10], [506, 3459.5, 100, 10],
+		[788, 3459.5, 100, 10], [950, 3459.5, 100, 10], [788, 3470.5, 100, 10], [788, 3481.5, 100, 10], [950, 3481.5, 100, 10], [788, 3492.5, 100, 10], [950, 3492.5, 100, 10],
+		[1062, 3492.5, 100, 10], [1062, 3503.5, 100, 10], [950, 3503.5, 100, 10], [788, 3511, 100, 10], [950, 3511, 100, 10], [788, 3522, 100, 10], [506, 3533, 100, 10], [788, 3533, 100, 10],
+		[788, 3544, 100, 10], [950, 3544, 100, 10], [950, 3555, 100, 10], [950, 3566, 100, 10], [950, 3577, 100, 10], [950, 3588, 100, 10], [950, 3599, 100, 10], [788, 3606.5, 100, 10],
+		[950, 3606.5, 100, 10], [1062, 3606.5, 100, 10], [1062, 3617.5, 100, 10], [1062, 3628.5, 100, 10], [1062, 3639.5, 100, 10], [1062, 3650.5, 100, 10], [1062, 3661.5, 100, 10],
+		[1062, 3672.5, 100, 10], [1062, 3683.5, 100, 10], [1062, 3694.5, 100, 10], [950, 3654.25, 100, 10], [950, 3702, 100, 10], [1062, 3702, 100, 10], [1062, 3713, 100, 10],
+		[1062, 3724, 100, 10], [1062, 3735, 100, 10], [1062, 3746, 100, 10], [1062, 3757, 100, 10], [950, 3768, 100, 10], [1062, 3768, 100, 10], [950, 3779, 100, 10],
+		[1062, 3779, 100, 10], [1062, 3790, 100, 10], [788, 3790, 100, 10], [950, 3790, 100, 10], [950, 3801, 100, 10], [788, 3812, 100, 10], [950, 3812, 100, 10], [1062, 3812, 100, 10],
+		[950, 3823, 100, 10], [1062, 3823, 100, 10], [950, 3834, 100, 10], [950, 3845, 100, 10], [950, 3856, 100, 10], [1062, 3856, 100, 10], [950, 3867, 100, 10], [1062, 3867, 100, 10],
+		[1174, 3867, 100, 10], [950, 3878, 100, 10], [788, 3889, 100, 10], [950, 3889, 100, 10], [1062, 3889, 100, 10], [950, 3900, 100, 10], [1062, 3900, 100, 10], [1062, 3911, 100, 10],
+		[1062, 3922, 100, 10], [1062, 3933, 100, 10], [1062, 3944, 100, 10], [950, 3911, 100, 10], [950, 3922, 100, 10], [788, 3933, 100, 10], [950, 3933, 100, 10], [950, 3944, 100, 10],
+		[788, 3944, 100, 10], [788, 3955, 100, 10], [950, 3955, 100, 10], [1062, 3955, 100, 10], [1062, 3966, 100, 10], [1062, 3977, 100, 10], [1062, 3988, 100, 10], [1062, 3999, 100, 10],
+		[1062, 4010, 100, 10], [1062, 4021, 100, 10], [1062, 4032, 100, 10], [1062, 4043, 100, 10], [1174, 4043, 100, 10], [950, 4050.5, 100, 10], [1062, 4050.5, 100, 10], [1062, 4061.5, 100, 10],
+		[950, 4072.5, 100, 10], [1062, 4072.5, 100, 10], [1174, 4072.5, 100, 10], [950, 4083.5, 100, 10], [1062, 4083.5, 100, 10], [1062, 4094.5, 100, 10], [1062, 4105.5, 100, 10],
+		[1062, 4116.5, 100, 10], [1062, 4127.5, 100, 10], [1062, 4138.5, 100, 10], [1062, 4149.5, 100, 10], [1062, 4160.5, 100, 10], [1062, 4171.5, 100, 10], [1062, 4182.5, 100, 10],
+		[1062, 4193.5, 100, 10], [1062, 4204.5, 100, 10], [950, 4215.5, 100, 10], [1062, 4215.5, 100, 10], [1062, 4226.5, 100, 10], [1062, 4237.5, 100, 10], [1062, 4248.5, 100, 10],
+		[950, 4237.5, 100, 10], [950, 4259.5, 100, 10], [1062, 4259.5, 100, 10], [1062, 4270.5, 100, 10], [1062, 4281.5, 100, 10], [1062, 4292.5, 100, 10], [1062, 4303.5, 100, 10],
+		[1062, 4314.5, 100, 10], [1062, 4325.5, 100, 10], [1062, 4336.5, 100, 10], [1062, 4347.5, 100, 10], [1062, 4358.5, 100, 10], [1062, 4369.5, 100, 10], [950, 4270.5, 100, 10],
+		[950, 4281.5, 100, 10], [950, 4292.5, 100, 10], [788, 4167.75, 100, 10], [788, 4380.5, 100, 10], [950, 4380.5, 100, 10], [1062, 4380.5, 100, 10], [950, 4391.5, 100, 10],
+		[950, 4402.5, 100, 10], [950, 4413.5, 100, 10], [1062, 4413.5, 100, 10], [950, 4424.5, 100, 10], [950, 4435.5, 100, 10], [788, 4391.5, 100, 10], [506, 4435.5, 100, 10],
+		[788, 4435.5, 100, 10], [788, 4446.5, 100, 10], [950, 4446.5, 100, 10], [950, 4457.5, 100, 10], [1062, 4457.5, 100, 10], [950, 4468.5, 100, 10], [788, 4479.5, 100, 10],
+		[950, 4479.5, 100, 10], [788, 4490.5, 100, 10], [506, 4501.5, 100, 10], [788, 4501.5, 100, 10], [950, 4501.5, 100, 10], [950, 4512.5, 100, 10], [950, 4523.5, 100, 10],
+		[950, 4534.5, 100, 10], [950, 4545.5, 100, 10], [950, 4556.5, 100, 10], [950, 4567.5, 100, 10], [950, 4578.5, 100, 10], [950, 4589.5, 100, 10], [788, 4597, 100, 10],
+		[950, 4597, 100, 10], [1062, 4597, 100, 10], [950, 4608, 100, 10], [950, 4619, 100, 10], [950, 4630, 100, 10], [950, 4641, 100, 10], [1062, 4641, 100, 10], [950, 4652, 100, 10],
+		[1062, 4652, 100, 10], [950, 4663, 100, 10], [950, 4674, 100, 10], [950, 4685, 100, 10], [788, 4696, 100, 10], [950, 4696, 100, 10], [950, 4707, 100, 10], [788, 4707, 100, 10],
+		[788, 4718, 100, 10], [950, 4718, 100, 10], [788, 4729, 100, 10], [950, 4729, 100, 10], [950, 4740, 100, 10], [950, 4751, 100, 10], [950, 4762, 100, 10], [950, 4773, 100, 10],
+		[950, 4784, 100, 10], [1062, 4784, 100, 10], [1062, 4795, 100, 10], [1062, 4806, 100, 10], [950, 4795, 100, 10], [788, 4806, 100, 10], [950, 4806, 100, 10], [788, 4817, 100, 10],
+		[788, 4828, 100, 10], [788, 4839, 100, 10], [788, 4850, 100, 10], [788, 4861, 100, 10], [788, 4872, 100, 10], [506, 4883, 100, 10], [788, 4883, 100, 10], [788, 4894, 100, 10],
+		[788, 4905, 100, 10], [788, 4916, 100, 10], [788, 4927, 100, 10], [788, 4938, 100, 10], [788, 4949, 100, 10], [788, 4960, 100, 10], [788, 4971, 100, 10], [506, 4982, 100, 10],
+		[788, 4982, 100, 10], [950, 4982, 100, 10], [1062, 4982, 100, 10], [950, 4993, 100, 10], [950, 5004, 100, 10], [788, 4993, 100, 10], [788, 5004, 100, 10], [788, 5015, 100, 10],
+		[950, 5015, 100, 10], [950, 5026, 100, 10], [950, 5037, 100, 10], [788, 5029.75, 100, 10], [788, 5044.5, 100, 10], [950, 5044.5, 100, 10], [788, 5055.5, 100, 10],
+		[788, 5066.5, 100, 10], [950, 5066.5, 100, 10], [788, 5077.5, 100, 10], [950, 5077.5, 100, 10], [950, 5088.5, 100, 10], [1062, 5088.5, 100, 10], [506, 5088.5, 100, 10],
+		[788, 5088.5, 100, 10], [788, 5099.5, 100, 10], [950, 5099.5, 100, 10], [788, 5110.5, 100, 10], [950, 5110.5, 100, 10], [788, 5121.5, 100, 10], [950, 5121.5, 100, 10],
+		[950, 5132.5, 100, 10], [950, 5143.5, 100, 10], [788, 5136.25, 100, 10], [788, 5151, 100, 10], [950, 5151, 100, 10], [950, 5162, 100, 10], [788, 5173, 100, 10], [950, 5173, 100, 10],
+		[950, 5184, 100, 10], [950, 5195, 100, 10], [788, 5184, 100, 10], [788, 5195, 100, 10], [788, 5206, 100, 10], [788, 5217, 100, 10], [788, 5228, 100, 10], [506, 5099.5, 100, 10],
+		[220, 5178.5, 120, 124], [506, 5235.5, 100, 10], [788, 5235.5, 100, 10], [506, 5246.5, 100, 10], [506, 5257.5, 100, 10], [506, 5268.5, 100, 10], [788, 5268.5, 100, 10],
+		[506, 5279.5, 100, 10], [506, 5290.5, 100, 10], [506, 5301.5, 100, 10], [506, 5312.5, 100, 10], [506, 5323.5, 100, 10]];
+
+	TestPerformance("Performance of getCrossingRectangles", demoLabels, false);
+	TestPerformance("Performance of brute force test function", demoLabels, true);
+});
+
+/* /Algorithms/getFamilyUnits.Tests.js*/
+QUnit.module('Algorithms - getFamilyUnits');
+
+QUnit.test("primitives.common.getFamilyUnits - Group family into family units for alignment.", function (assert) {
+
 	function getFamily(items) {
 		var family = primitives.common.family();
 		for (var index = 0; index < items.length; index += 1) {
@@ -4370,24 +3017,461 @@ QUnit.test("primitives.common.family.getPlanarFamily - Function eliminates some 
 		return family;
 	}
 
-	function getLevels(family) {
-		var levels = [];
-		family.loopLevels(this, true, function (itemid, item, level) {
-			var newItem = { id: itemid };
-			var children = [];
-			family.loopChildren(this, itemid, function (itemid, item, levelIndex) {
-				if (levelIndex > 0) {
-					return family.BREAK;
-				}
-				children.push(itemid);
-			});
-			if (children.length > 0) {
-				newItem.children = children;
+	(function () {
+		var family = getFamily([
+			{ id: 'A', parents: [] },
+			{ id: 'K', parents: [] },
+			{ id: 'B', parents: ['A'] },
+			{ id: 'C', parents: ['A'] },
+			{ id: 'D', parents: ['A'] },
+			{ id: 'E', parents: [] },
+			{ id: 'F', parents: ['K'] },
+			{ id: 'L', parents: ['K'] },
+			{ id: 'M', parents: ['K'] },
+			{ id: 'G', parents: ['B'] },
+			{ id: 'H', parents: ['D', 'E', 'F'] },
+			{ id: 'I', parents: ['M'] },
+			{ id: 'J', parents: ['M'] },
+			{ id: 'N', parents: ['G'] },
+			{ id: 'O', parents: ['G'] },
+			{ id: 'Q', parents: ['H'] },
+			{ id: 'R', parents: ['H'] },
+			{ id: 'S', parents: ['H'] },
+			{ id: 'T', parents: ['I', 'J'] },
+			{ id: 'P', parents: ['O', 'Q'] },
+			{ id: 'U', parents: ['S', 'T'] }
+		]);
+
+		var familyUnitsById = primitives.common.getFamilyUnits(family);
+
+		var result = [];
+		for (var familyId in familyUnitsById) {
+			var familyUnits = familyUnitsById[familyId];
+			for (var index = 0; index < familyUnits.length; index += 1) {
+				var familyUnit = familyUnits[index];
+				result[familyUnit.id] = { id: familyUnit.id, parents: familyUnit.parents.items, children: familyUnit.children.items };
 			}
-			levels.push(newItem);
+		}
+
+		var expected = [
+			{ id: 0, parents: ["A"], children: ["B", "C", "D"] },
+			{ id: 1, parents: ["K"], children: ["F", "L", "M"] },
+			{ id: 2, parents: ["B"], children: ["G"] },
+			{ id: 3, parents: ["D", "E", "F"], children: ["H"] },
+			{ id: 4, parents: ["M"], children: ["I", "J"] },
+			{ id: 5, parents: ["G"], children: ["N", "O"] },
+			{ id: 6, parents: ["H"], children: ["Q", "R", "S"] },
+			{ id: 7, parents: ["I", "J"], children: ["T"] },
+			{ id: 8, parents: ["O", "Q"], children: ["P"] },
+			{ id: 9, parents: ["S", "T"], children: ["U"] }
+		];
+
+		assert.deepEqual(result, expected, "getFamilyUnits function creates layout family units out of family structure");
+	})();
+
+	(function () {
+		var family = getFamily([
+			{ id: '6', parents: [] },
+			{ id: '5', parents: ['6'] },
+			{ id: '2', parents: ['6'] },
+			{ id: '1', parents: ['6'] },
+			{ id: '7', parents: ['1', '2'] }
+		]);
+
+		var familyUnitsById = primitives.common.getFamilyUnits(family);
+
+		var result = [];
+		for (var familyId in familyUnitsById) {
+			var familyUnits = familyUnitsById[familyId];
+			for (var index = 0; index < familyUnits.length; index += 1) {
+				var familyUnit = familyUnits[index];
+				result[familyUnit.id] = { id: familyUnit.id, parents: familyUnit.parents.items, children: familyUnit.children.items };
+			}
+		}
+
+		var expected = [
+			{ id: 0, parents: ["1", "2"], children: ["7"] },
+			{ id: 1, parents: ["6"], children: ["1", "2", "5"] }
+		];
+
+		assert.deepEqual(result, expected, "getFamilyUnits bottom family misses unit 5");
+	})();
+});
+
+/* /Algorithms/getLiniarBreaks.Tests.js*/
+QUnit.module('Algorithms - Get Liniar Breaks for Collection of values Function');
+
+QUnit.test("primitives.common.getLiniarBreaks", function (assert) {
+	var values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 200, 300, 400, 9900, 10000];
+
+	var result = primitives.common.getLiniarBreaks(values);
+
+	var expectedResult = [8, 11, 13];
+
+	assert.deepEqual(result, expectedResult, "Liniar breaks for 3 sequances havin 10x and 100x difference");
+
+	var values = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+	var result = primitives.common.getLiniarBreaks(values);
+
+	var expectedResult = [2, 5, 8];
+
+	assert.deepEqual(result, expectedResult, "Liniar breaks for 3 distinct numbers");
+
+	var values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 100, 200, 300];
+
+	var result = primitives.common.getLiniarBreaks(values);
+
+	var expectedResult = [3, 8, 11];
+
+	assert.deepEqual(result, expectedResult, "Liniar breaks for 2 sequances having 10x difference");
+});
+
+/* /Algorithms/getMergedRectangles.Tests.js*/
+QUnit.module('Algorithms - Get merged rectangles. This method merges multiple rectangles into a single polyline object.');
+
+QUnit.test("primitives.common.getMergedRectangles", function (assert) {
+	function ShowLayout(fixture, polyline, width, height, title) {
+		var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
+		titlePlaceholder.append(title);
+		fixture.append(titlePlaceholder);
+
+		var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'><div class='placeholder'></div></div>");
+		placeholder.css({
+			width: width,
+			height: height
 		});
-		return levels;
+
+		fixture.append(placeholder);
+
+		var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder[0]);
+		graphics.begin();
+		graphics.resize("placeholder", width, height);
+		graphics.activate("placeholder");
+		graphics.polyline(polyline);
+		graphics.end();
+	}
+
+	function getSize(rects) {
+		var result = new primitives.common.Rect(0, 0, 0, 0);
+		for (var index = 0; index < rects.length; index += 1) {
+			var rect = rects[index];
+			result.addRect(rect);
+		}
+		return result;
+	}
+
+	function getRectangles(items) {
+		var result = [];
+		for (var index = 0; index < items.length; index += 1) {
+			var item = items[index];
+			var rect = new primitives.common.Rect(item[0], item[1], item[2], item[3]);
+			rect.context = index;
+			result.push(rect);
+		}
+		return result;
+	}
+
+	function TestLayout(title, items) {
+		var rects = getRectangles(items);
+		var paletteItem = new primitives.common.PaletteItem({
+			lineColor: "#000000",
+			lineWidth: "2",
+			fillColor: "#faebd7",
+			lineType: primitives.common.LineType.Solid,
+			opacity: 1
+		});
+
+		var polyline = new primitives.common.Polyline(paletteItem);
+		primitives.common.getMergedRectangles(this, rects, function (points) {
+			for (var index = 0, len = points.length; index < len; index += 1) {
+				var point = points[index];
+				if (index == 0) {
+					polyline.addSegment(new primitives.common.MoveSegment(point.x, point.y));
+				} else {
+					polyline.addSegment(new primitives.common.LineSegment(point.x, point.y));
+				}
+			}
+		});
+
+		var size = getSize(rects);
+
+		ShowLayout(jQuery("#qunit-fixture"), polyline, size.width, size.height, title);
+
+		jQuery("#qunit-fixture").css({
+			position: "relative",
+			left: "0px",
+			top: "0px",
+			height: "Auto"
+		});
+
+		assert.ok(true, title);
 	};
+
+	TestLayout("Merge single rectangle", [
+		[0, 0, 100, 100]
+	]);
+
+	TestLayout("Merge two disconnected rectangles", [
+		[0, 0, 80, 80],
+		[100, 0, 80, 80]
+	]);
+
+	TestLayout("Merge two aligned disconnected rectangles", [
+		[0, 0, 80, 80],
+		[80, 100, 80, 80]
+	]);
+
+	TestLayout("Merge two aligned disconnected rectangles", [
+		[0, 100, 80, 80],
+		[80, 0, 80, 80]
+	]);
+
+	TestLayout("Merge two overlapping rectangles", [
+	[0, 0, 100, 100],
+	[50, 50, 100, 100]
+	]);
+
+	TestLayout("Merge two overlapping rectangles", [
+		[0, 50, 100, 100],
+		[50, 0, 100, 100]
+	]);
+
+	TestLayout("Merge E shape rectangles", [
+		[0, 0, 50, 350],
+		[50, 0, 50, 50],
+		[50, 100, 50, 50],
+		[50, 200, 50, 50],
+		[50, 300, 50, 50]
+	]);
+
+	TestLayout("Merge E shape rectangles", [
+		[50, 0, 50, 350],
+		[0, 0, 50, 50],
+		[0, 100, 50, 50],
+		[0, 200, 50, 50],
+		[0, 300, 50, 50]
+	]);
+
+
+	TestLayout("Merge 5 rectangles", [
+		[0, 0, 100, 100],
+		[150, 0, 100, 100],
+		[0, 150, 100, 100],
+		[150, 150, 100, 100],
+		[50, 50, 150, 150]
+	]);
+
+	TestLayout("Window", [
+		[100, 0, 150, 150],
+		[100, 200, 150, 150],
+		[0, 100, 150, 150],
+		[200, 100, 150, 150]
+	]);
+
+	TestLayout("Window 2", [
+		[0, 0, 150, 50],
+		[0, 50, 50, 50],
+		[100, 50, 50, 50],
+		[0, 100, 150, 50],
+		[0, 150, 50, 50],
+		[100, 150, 50, 50],
+		[0, 200, 150, 50]
+	]);
+
+	TestLayout("Dumbbell", [
+		[0, 0, 60, 60],
+		[80, 0, 60, 60],
+		[50, 20, 40, 20]
+	]);
+});
+
+/* /Algorithms/getMinimumCrossingRows.Tests.js*/
+QUnit.module('Algorithms - Get minimum set of rows crossing all rectangles. This structure is needed for keyboard arrow keys navigation across random set of rectangles.');
+
+function countPlacementsCrossings(placements, rows) {
+	var result = 0;
+
+	for (var index = 0; index < placements.length; index += 1) {
+		var placement = placements[index];
+
+		for (var index2 = 0; index2 < rows.length; index2 += 1) {
+			var row = rows[index2];
+			if (placement.y <= row && placement.bottom() >= row) {
+				result += 1;
+				break;
+			}
+		}
+	}
+
+	return result;
+}
+
+function GetPlacementMarker(placement, label, color) {
+	var div = jQuery("<div></div>");
+
+	div.append(label);
+	div.css(placement.getCSS());
+	div.css({
+		"background": color,
+		visibility: "visible",
+		position: "absolute",
+		font: "Areal",
+		"font-size": "12px",
+		"border-style": "solid",
+		"border-color": "black",
+		"border-width": "2px"
+	});
+
+	return div;
+}
+
+function ShowLayout(fixture, placements, rows, title) {
+	var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
+	titlePlaceholder.append(title);
+	fixture.append(titlePlaceholder);
+
+	var offsetX = null;
+	var offsetY = null;
+	var space = new primitives.common.Rect();
+	for (var index = 0; index < placements.length; index+=1) {
+		var placement = placements[index];
+
+		offsetX = offsetX == null ? placement.x : Math.min(offsetX, placement.x);
+		offsetY = offsetY == null ? placement.y : Math.min(offsetY, placement.y);
+
+		space.addRect(placement);
+	}
+
+	var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'></div>");
+	placeholder.css({
+		width: space.width,
+		height: space.height
+	});
+	for (var index = 0; index < placements.length; index += 1) {
+		var placement = placements[index];
+		var label = placement.context;
+		var placement = new primitives.common.Rect(placements[index]);
+		placement.translate(-offsetX, -offsetY);
+
+		var div = GetPlacementMarker(placement, label, "grey");
+		placeholder.append(div);
+	}
+
+	for (var index = 0; index < rows.length; index += 1) {
+		var row = rows[index];
+		var placement = new primitives.common.Rect(0, row, space.width, 1);
+		placement.translate(-offsetX, -offsetY);
+
+		var div = GetPlacementMarker(placement, index, "red");
+		placeholder.append(div);
+	}
+
+	fixture.append(placeholder);
+}
+
+function getRectangles(items) {
+	var result = [];
+	for (var index = 0; index < items.length; index += 1) {
+		var item = items[index];
+		var rect = new primitives.common.Rect(item[0], item[1], item[2], item[3]);
+		rect.context = index;
+		result.push(rect);
+	}
+	return result;
+}
+
+QUnit.test("primitives.common.getMinimumCrossingRows", function (assert) {
+	function TestLayout(title, items) {
+		var placements = getRectangles(items);
+		var rows = [];
+		primitives.common.getMinimumCrossingRows(this, placements, function (row) {
+			rows.push(row);
+		});
+
+		ShowLayout(jQuery("#qunit-fixture"), placements, rows, title);
+
+		jQuery("#qunit-fixture").css({
+			position: "relative",
+			left: "0px",
+			top: "0px",
+			height: "Auto"
+		});
+
+		var result = countPlacementsCrossings(placements, rows);
+
+		assert.equal(result, placements.length, title);
+	};
+
+	TestLayout("Basic test case", [
+		[0, 0, 200, 50],
+		[300, 30, 200, 50],
+		[600, 45, 200, 50],
+		[10, 55, 200, 50],
+		[310, 90, 200, 50]
+	]);
+
+	TestLayout("Multi-layer test case", [
+		[0, 0, 40, 280],
+		[60, 0, 100, 100],
+		[180, 0, 40, 40],
+		[180, 60, 40, 40],
+		[240, 0, 40, 40],
+		[300, 0, 40, 40],
+		[240, 60, 40, 40],
+		[300, 60, 40, 100],
+		[360, 0, 100, 100],
+		[480, 0, 40, 40],
+		[540, 0, 40, 40],
+		[600, 0, 80, 100],
+		[480, 60, 40, 140],
+		[540, 140, 60, 60],
+		[620, 140, 60, 60],
+		[60, 120, 160, 160],
+		[240, 180, 60, 60],
+		[320, 180, 60, 60],
+		[400, 180, 60, 60],
+		[620, 220, 20, 20],
+		[660, 220, 20, 20],
+		[240, 260, 20, 20],
+		[280, 260, 340, 20],
+		[640, 260, 40, 20]
+	]);
+
+	TestLayout("Nested block test case", [
+		[220, 0, 120, 80],
+		[0, 100, 120, 80],
+		[0, 200, 120, 80],
+		[400, 100, 120, 80],
+		[400, 200, 120, 80],
+		[160, 100, 40, 40],
+		[220, 100, 40, 40],
+		[280, 100, 40, 40],
+		[340, 100, 40, 40],
+		[160, 160, 40, 40],
+		[220, 160, 40, 40],
+		[280, 160, 40, 40],
+		[340, 160, 40, 40],
+		[160, 220, 40, 40],
+		[220, 220, 40, 40],
+		[280, 220, 40, 40],
+		[340, 220, 40, 40]
+	]);
+});
+
+/* /Algorithms/Graph.Tests.js*/
+QUnit.module('Algorithms - Graph');
+
+QUnit.test("primitives.common.graph -  Closure based graph data structure.", function (assert) {
+
+	function getGraph(items) {
+		var graph = primitives.common.graph();
+		for (var index = 0; index < items.length; index += 1) {
+			var item = items[index];
+			graph.addEdge(item.from, item.to, item);
+		}
+		return graph;
+	}
 
 	function getTreeLevels(levels) {
 		var treeLevels = primitives.common.TreeLevels();
@@ -4401,253 +3485,1177 @@ QUnit.test("primitives.common.family.getPlanarFamily - Function eliminates some 
 	};
 
 	(function () {
-		var family = getFamily([
-			{ id: 1 },
-			{ id: 2 },
-			{ id: 3 },
-			{ id: 4 },
-			{ id: 5, parents: [1] },
-			{ id: 6, parents: [1] },
-			{ id: 7, parents: [2, 3] },
-			{ id: 8, parents: [4] }
-		]);
+		var items = [
+			{ from: 1, to: 2, weight: 1 },
+			{ from: 1, to: 3, weight: 1 },
+			{ from: 1, to: 5, weight: 2 },
+			{ from: 2, to: 3, weight: 3 },
+			{ from: 3, to: 4, weight: 1 },
+			{ from: 3, to: 5, weight: 2 },
+			{ from: 4, to: 5, weight: 2 }
+		];
 
-		var treeLevels = getTreeLevels([
-			[1, 2, 3, 4],
-			[5, 6, 7, 8]
-		]);
+		var graph = primitives.common.graph();
+		for (var index = 0; index < items.length; index += 1) {
+			var item = items[index];
+			graph.addEdge(item.from, item.to, item);
+		}
 
-		var planarFamily = family.getPlanarFamily(treeLevels);
+		var tree = graph.getSpanningTree(items[0].from, function (edge) {
+			return edge.weight;
+		})
 
-		var expectedResult = getLevels(family);
-		var result = getLevels(planarFamily);
-		assert.ok(planarFamily.validate(), "Family structure should pass internal structure validation");
-		assert.deepEqual(result, expectedResult, "Function should return the same family structure without changes");
+		var children = [];
+		tree.loopLevels(this, function (nodeid, node, level) {
+			if (children[level] == null) {
+				children[level] = { level: level, items: [] };
+			}
+			children[level].items.push({ id: nodeid, parent: tree.parentid(nodeid) });
+		});
+		var expectedChildren = [{ "level": 0, "items": [{ "id": "1", "parent": null }] }, { "level": 1, "items": [{ "id": "5", "parent": "1" }] }, { "level": 2, "items": [{ "id": "3", "parent": "5" }, { "id": "4", "parent": "5" }] }, { "level": 3, "items": [{ "id": "2", "parent": "3" }] }];
+
+		assert.deepEqual(children, expectedChildren, "getSpanningTree function test");
 	})();
 
 	(function () {
-		// Test elimination of edge in two intersecting hierarchies
-		var family = getFamily([
-			{ id: 1 },
-			{ id: 2 },
-			{ id: 3, parents: [1] },
-			{ id: 4, parents: [2] },
-			{ id: 5, parents: [1] },
-			{ id: 6, parents: [2] }
-		]);
+		var items = [
+			{ from: 1, to: 2, weight: 1 },
+			{ from: 1, to: 3, weight: 1 },
+			{ from: 1, to: 5, weight: 2 },
+			{ from: 2, to: 3, weight: 3 },
+			{ from: 3, to: 4, weight: 1 },
+			{ from: 3, to: 5, weight: 2 },
+			{ from: 4, to: 5, weight: 2 }
+		];
 
-		var treeLevels = getTreeLevels([
-			[1, 2],
-			[3, 4, 5, 6]
-		]);
+		var graph = primitives.common.graph();
+		for (var index = 0; index < items.length; index += 1) {
+			var item = items[index];
+			graph.addEdge(item.from, item.to, item);
+		}
+		var sequence = [];
+		graph.getTotalWeightGrowthSequence(this,
+			function (edge) { return edge.weight; },
+			function (item) { return sequence.push(item); }
+		);
+		var expectedsequence = ["3", "2", "1", "5", "4"];
 
-		var planarFamily = family.getPlanarFamily(treeLevels);
-
-		var expectedResult = [{ "id": "1", "children": ["3", "5"] }, { "id": "2", "children": ["6"] }, { "id": "3" }, { "id": "5" }, { "id": "6" }];
-		var result = getLevels(planarFamily);
-		assert.ok(planarFamily.validate(), "Family structure should pass internal structure validation");
-		assert.deepEqual(result, expectedResult, "Function should break edge 1-5");
+		assert.deepEqual(sequence, expectedsequence, "getTotalWeightGrowthSequence function test");
 	})();
 
 	(function () {
-		// Test elimination of edge in two intersecting hierarchies
-		var family = getFamily([
-			{ id: 1 },
-			{ id: 2 },
-			{ id: 3, parents: [1] },
-			{ id: 4, parents: [2] },
-			{ id: 5, parents: [2] },
-			{ id: 6, parents: [1] },
-			{ id: 7, parents: [2] }
-		]);
+		var items = [
+			{ from: 'A', to: 'B' }, { from: 'A', to: 'C' }, { from: 'A', to: 'D' },
+			{ from: 'B', to: 'E' },
+			{ from: 'C', to: 'E' }, { from: 'C', to: 'D' },
+			{ from: 'D', to: 'F' }, { from: 'D', to: 'J' },
+			{ from: 'E', to: 'Z' },
+			{ from: 'Z', to: 'F' },
+			{ from: 'J', to: 'D' }
+		];
 
-		var treeLevels = getTreeLevels([
-			[1, 2],
-			[3, 4, 5, 6, 7]
-		]);
+		var graph = primitives.common.graph();
+		for (var index = 0; index < items.length; index += 1) {
+			var item = items[index];
+			graph.addEdge(item.from, item.to, item);
+		}
 
-		var planarFamily = family.getPlanarFamily(treeLevels);
+		var expectedConnectionPath = ['J', 'D', 'C', 'E'];
 
-		var expectedResult = [{ "id": "1", "children": ["3"] }, { "id": "2", "children": ["4", "5", "7"] }, { "id": "3" }, { "id": "4" }, { "id": "5" }, { "id": "7" }];
-		var result = getLevels(planarFamily);
-		assert.ok(planarFamily.validate(), "Family structure should pass internal structure validation");
-		assert.deepEqual(result, expectedResult, "Function should break edge 1-6 because it cross 2 other relations");
+		var connectionPath = null;
+		graph.getShortestPath(this, 'E', ['J'], null, function (path) {
+			connectionPath = path;
+		});
+
+		assert.deepEqual(connectionPath, expectedConnectionPath, "getShortestPath function test for Not weighted edges");
 	})();
 
 	(function () {
-		// Test elimination of edge in two intersecting hierarchies
-		var family = getFamily([
-			{ id: 1 },
-			{ id: 2 },
-			{ id: 3 },
-			{ id: 4 },
-			{ id: 5, parents: [1, 2, 3] },
-			{ id: 6, parents: [2, 3, 4] }
-		]);
+		var items = [
+		{ from: 'A', to: 'B' }, { from: 'A', to: 'C' }, { from: 'A', to: 'D' },
+		{ from: 'B', to: 'E' },
+		{ from: 'C', to: 'E', weight: 100 }, { from: 'C', to: 'D', weight: 100 },
+		{ from: 'D', to: 'F', weight: 50 }, { from: 'D', to: 'J' },
+		{ from: 'E', to: 'F', weight: 100 },
+		{ from: 'J', to: 'D' }
+		];
 
-		var treeLevels = getTreeLevels([
-			[1, 2, 3, 4],
-			[5, 6]
-		]);
+		var graph = primitives.common.graph();
+		for (var index = 0; index < items.length; index += 1) {
+			var item = items[index];
+			graph.addEdge(item.from, item.to, item);
+		}
 
-		var planarFamily = family.getPlanarFamily(treeLevels);
+		var expectedConnectionPath = ['J', 'D', 'A', 'B', 'E'];
 
-		var expectedResult = [{ "id": "1", "children": ["5"] }, { "id": "2", "children": ["5", "6"] }, { "id": "4", "children": ["6"] }, { "id": "3", "children": ["6"] }, { "id": "5" }, { "id": "6" }];
-		var result = getLevels(planarFamily);
-		assert.ok(planarFamily.validate(), "Family structure should pass internal structure validation");
-		assert.deepEqual(result, expectedResult, "Function should break edge 3-5");
+		var connectionPath = [];
+		graph.getShortestPath(this, 'E', ['J'], function (edge, fromItem, toItem) {
+			return edge.weight || 1;
+		}, function (path) {
+			connectionPath = path;
+		});
+
+		assert.deepEqual(connectionPath, expectedConnectionPath, "getShortestPath function test for weighted edges");
 	})();
 
 	(function () {
-		// Test elimination of edge in two intersecting hierarchies
-		var family = getFamily([
-			{ id: 1 },
-			{ id: 2 },
-			{ id: 3 },
-			{ id: 4 },
-			{ id: 5, parents: [1, 2, 3] },
-			{ id: 6, parents: [1, 3, 4] }
-		]);
+		var items = [
+		{ from: 'A', to: 'B' }, { from: 'A', to: 'C' }, { from: 'A', to: 'D' },
+		{ from: 'B', to: 'G' },
+		{ from: 'D', to: 'H' },
+		{ from: 'E', to: 'H' },
+		{ from: 'F', to: 'H' },
+		{ from: 'K', to: 'F' }, { from: 'K', to: 'L' }, { from: 'K', to: 'M' },
+		{ from: 'M', to: 'I' }, { from: 'M', to: 'J' },
+		{ from: 'I', to: 'T' }, { from: 'J', to: 'T' },
+		{ from: 'H', to: 'Q' }, { from: 'H', to: 'R' }, { from: 'H', to: 'S' },
+		{ from: 'G', to: 'N' }, { from: 'G', to: 'O' },
+		{ from: 'O', to: 'P' }, { from: 'Q', to: 'P' },
+		{ from: 'S', to: 'U' }, { from: 'T', to: 'U' }
+		];
 
-		var treeLevels = getTreeLevels([
-			[1, 2, 3, 4],
-			[5, 6]
-		]);
+		var graph = primitives.common.graph();
+		for (var index = 0; index < items.length; index += 1) {
+			var item = items[index];
+			graph.addEdge(item.from, item.to, item);
+		}
 
-		var planarFamily = family.getPlanarFamily(treeLevels);
+		var expected = [];
+		var processed = {};
+		jQuery.each(items, function (index, item) {
+			if (!processed.hasOwnProperty(item.from)) {
+				expected.push(item.from);
+				processed[item.from] = true;
+			}
+			if (!processed.hasOwnProperty(item.to)) {
+				expected.push(item.to);
+				processed[item.to] = true;
+			}
+		});
+		expected.sort();
 
-		var expectedResult = [{ "id": "1", "children": ["5"] }, { "id": "3", "children": ["5", "6"] }, { "id": "2", "children": ["5"] }, { "id": "4", "children": ["6"] }, { "id": "5" }, { "id": "6" }];
-		var result = getLevels(planarFamily);
-		assert.ok(planarFamily.validate(), "Family structure should pass internal structure validation");
-		assert.deepEqual(result, expectedResult, "Function should break edge 1-6 because it crosses 2 relations");
+		var result = [];
+		graph.loopNodes(this, 'K', function (itemid) {
+			result.push(itemid);
+		});
+
+		result.sort();
+
+		assert.deepEqual(result, expected, "loopNodes function test. Loop all accessable nodes starting from node K");
 	})();
 
+	//function getGreedyGrowSequence(startNode, graph, treeLevels) {
+	//	var sequence = [];
+	//	var margins = {};
+	//	graph.getMinimumWeightGrowthSequence(this,
+	//		startNode,
+	//		function (edge, fromItem, toItem) {
+	//			var level = treeLevels.getLevelIndex(toItem);
+	//			var position = treeLevels.getItemPosition(toItem);
+	//			if (!margins.hasOwnProperty(level)) {
+	//				return 0;
+	//			} else {
+	//				var margin = margins[level];
+	//				if (position < margin.left) {
+	//					return (margin.left - position);
+	//				}
+	//				if (position > margin.right) {
+	//					return (position - margin.right);
+	//				}
+	//				return Math.min(position - margin.left, margin.right - position);
+	//			}
+	//		},
+	//		function (item) {
+	//			var level = treeLevels.getLevelIndex(item);
+	//			var position = treeLevels.getItemPosition(item);
+	//			if (!margins.hasOwnProperty(level)) {
+	//				margins[level] = {
+	//					left: position,
+	//					right: position
+	//				};
+	//			} else {
+	//				var margin = margins[level];
+	//				margin.left = Math.min(position, margin.left);
+	//				margin.right = Math.max(position, margin.right);
+	//			}
+	//			return sequence.push(item);
+	//		}
+	//	);
+	//	return sequence;
+	//}
+
+	//(function () {
+	//	var graph = getGraph([
+	//		{ from: 'A', to: 'B' }, { from: 'A', to: 'C' }, { from: 'A', to: 'D' },
+	//		{ from: 'B', to: 'G' },
+	//		{ from: 'D', to: 'H' },
+	//		{ from: 'E', to: 'H' },
+	//		{ from: 'F', to: 'H' },
+	//		{ from: 'K', to: 'F' }, { from: 'K', to: 'L' }, { from: 'K', to: 'M' },
+	//		{ from: 'M', to: 'I' }, { from: 'M', to: 'J' },
+	//		{ from: 'I', to: 'T' }, { from: 'J', to: 'T' },
+	//		{ from: 'H', to: 'Q' }, { from: 'H', to: 'R' }, { from: 'H', to: 'S' },
+	//		{ from: 'G', to: 'N' }, { from: 'G', to: 'O' },
+	//		{ from: 'O', to: 'P' }, { from: 'Q', to: 'P' },
+	//		{ from: 'S', to: 'U' }, { from: 'T', to: 'U' }
+	//	]);
+
+	//	var treeLevels = getTreeLevels([
+	//		['A', 'K'],
+	//		['B', 'C', 'D', 'E', 'F', 'L', 'M'],
+	//		['G', 'H', 'I', 'J'],
+	//		['N', 'O', 'Q', 'R', 'S', 'T'],
+	//		['P', 'U']
+	//	]);
+
+	//	var sequence = getGreedyGrowSequence('K', graph, treeLevels);
+
+	//	var expected = ["K", "M", "J", "T", "U", "L", "F", "I", "S", "H", "E", "D", "R", "Q", "A", "P", "C", "B", "O", "G", "N"];
+	//	assert.deepEqual(sequence, expected, "getMinimumWeightGrowthSequence function test of graph traversing sequence starting from node K greedy grows to left side");
+	//})();
+
+	//(function () {
+	//	var graph = getGraph([
+	//		{ from: 'A', to: 'B' }, { from: 'A', to: 'C' }, { from: 'A', to: 'D' },
+	//		{ from: 'B', to: 'G' },
+	//		{ from: 'D', to: 'H' },
+	//		{ from: 'E', to: 'H' },
+	//		{ from: 'F', to: 'H' },
+	//		{ from: 'K', to: 'F' }, { from: 'K', to: 'L' }, { from: 'K', to: 'M' },
+	//		{ from: 'M', to: 'I' }, { from: 'M', to: 'J' },
+	//		{ from: 'I', to: 'T' }, { from: 'J', to: 'T' },
+	//		{ from: 'H', to: 'Q' }, { from: 'H', to: 'R' }, { from: 'H', to: 'S' },
+	//		{ from: 'G', to: 'N' }, { from: 'G', to: 'O' },
+	//		{ from: 'O', to: 'P' }, { from: 'Q', to: 'P' },
+	//		{ from: 'S', to: 'U' }, { from: 'T', to: 'U' }
+	//	]);
+
+	//	var treeLevels = getTreeLevels([
+	//		['A', 'K'],
+	//		['B', 'C', 'D', 'E', 'F', 'L', 'M'],
+	//		['G', 'H', 'I', 'J'],
+	//		['N', 'O', 'Q', 'R', 'S', 'T'],
+	//		['P', 'U']
+	//	]);
+
+	//	var sequence = getGreedyGrowSequence('A', graph, treeLevels);
+
+	//	var expected = ["A", "D", "H", "S", "U", "C", "B", "E", "F", "R", "Q", "T", "G", "K", "P", "I", "J", "O", "N", "L", "M"];
+	//	assert.deepEqual(sequence, expected, "getMinimumWeightGrowthSequence function test of graph traversing sequence starting from node A greedy grows to both sides");
+	//})();
+});
+
+/* /Algorithms/LCA.Tests.js*/
+QUnit.module('Algorithms - LCA - Lowest Common Ancestor');
+
+QUnit.test("primitives.common.LCA", function (assert) {
+	function getTree(items) {
+		var tree = primitives.common.tree();
+		for (var index = 0; index < items.length; index += 1) {
+			var item = items[index];
+			tree.add(item.parent, item.id, item);
+		}
+		return tree;
+	}
+
 	(function () {
-		// Test elimination of edge should create orphant in the second level of children
-		var family = getFamily([
-			{ id: 1 },
-			{ id: 2 },
-			{ id: 3 },
-			{ id: 4 },
-			{ id: 5, parents: [4] },
-			{ id: 6, parents: [1] },
-			{ id: 7, parents: [2] },
-			{ id: 8, parents: [3] }
+		var tree = getTree([
+			{ id: 0, parent: null, name: "0" },
+			{ id: 1, parent: 0, name: "1" },
+			{ id: 2, parent: 1, name: "2" },
+			{ id: 3, parent: 1, name: "3" },
+			{ id: 4, parent: 0, name: "4" },
+			{ id: 5, parent: 4, name: "5" },
+			{ id: 6, parent: 4, name: "6" },
+			{ id: 7, parent: 6, name: "6" },
+			{ id: 8, parent: 7, name: "8" },
+			{ id: 9, parent: 3, name: "9" },
+			{ id: 10, parent: 9, name: "10" }
 		]);
 
-		var treeLevels = getTreeLevels([
-			[1, 2, 3, 4],
-			[5, 6, 7, 8]
-		]);
+		var lca = primitives.common.LCA(tree);
 
-		var planarFamily = family.getPlanarFamily(treeLevels);
-
-		var expectedResult = [{ "id": "1", "children": ["6"] }, { "id": "2", "children": ["7"] }, { "id": "3", "children": ["8"] }, { "id": "6" }, { "id": "7" }, { "id": "8" }];
-		var result = getLevels(planarFamily);
-		assert.ok(planarFamily.validate(), "Family structure should pass internal structure validation");
-		assert.deepEqual(result, expectedResult, "Function should make item 5 orphant");
+		assert.equal(lca.getLowestCommonAncestor(2, 3), 1, "getLowestCommonAncestor test for nodes 2 and 3");
+		assert.equal(lca.getLowestCommonAncestor(9, 10), 9, "getLowestCommonAncestor test for nodes 9 and 10");
+		assert.equal(lca.getLowestCommonAncestor(10, 9), 9, "getLowestCommonAncestor test for nodes 10 and 9");
+		assert.equal(lca.getLowestCommonAncestor(5, 8), 4, "getLowestCommonAncestor test for nodes 5 and 8");
+		assert.equal(lca.getLowestCommonAncestor(10, 8), 0, "getLowestCommonAncestor test for nodes 10 and 8");
+		assert.equal(lca.getLowestCommonAncestor(0, 8), 0, "getLowestCommonAncestor test for nodes 0 and 8");
 	})();
 });
 
-/* /Algorithms/Family.getFamilyWithoutGrandParentsRelations.Tests.js*/
-QUnit.module('Algorithms - Family class, getFamilyWithoutGrandParentsRelations function tests');
+/* /Algorithms/LinkedHashItems.Tests.js*/
+QUnit.module('Algorithms - LinkedHashItems');
 
-QUnit.test("primitives.common.family.getFamilyWithoutGrandParentsRelations - eliminates relations directly connecting grad parents with grand children.", function (assert) {
-	function getFamily(items) {
-		var family = primitives.common.family();
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			family.add(item.parents, item.id, item);
-		}
-		return family;
+QUnit.test("primitives.common.LinkedHashItems -  Add and iterate items in linked hash items collection.", function (assert) {
+	var items = [
+		{ id: 1, name: 'A' },
+		{ id: 2, name: 'B' },
+		{ id: 3, name: 'C' },
+		{ id: 4, name: 'D' },
+		{ id: 5, name: 'E' },
+		{ id: 6, name: 'F' }
+	];
+
+	var linkedHashItems = new primitives.common.LinkedHashItems();
+	for (var index = 0; index < items.length; index++) {
+		var item = items[index];
+		linkedHashItems.add(item.id, item);
+	};
+
+	var result = [];
+	linkedHashItems.iterate(function (item) {
+		result.push(item);
+	});
+	assert.deepEqual(items, result, "Forward iteration returned correct items!");
+
+	var reversedResult = [],
+		reversedItems = items.slice(0);
+	reversedItems.reverse();
+
+	linkedHashItems.iterateBack(function (item) {
+		reversedResult.push(item);
+	});
+	assert.deepEqual(reversedItems, reversedResult, "Back iteration returned correct items!");
+
+	linkedHashItems.remove(3);
+	items.splice(2, 1);
+	assert.deepEqual(items, linkedHashItems.toArray(), "Removed item. Passed!");
+
+	linkedHashItems.remove(1);
+	items.splice(0, 1);
+	assert.deepEqual(items, linkedHashItems.toArray(), "Remove first item. Passed!");
+
+	linkedHashItems.remove(6);
+	items.splice(3, 1);
+	assert.deepEqual(items, linkedHashItems.toArray(), "Remove last item. Passed!");
+
+	linkedHashItems.empty();
+	assert.deepEqual([], linkedHashItems.toArray(), "Remove all items. Passed!");
+});
+
+/* /Algorithms/mergeSort.Tests.js*/
+QUnit.module('Algorithms - Merge collections Function');
+
+QUnit.test("primitives.common.mergeSort", function (assert) {
+	var arrays = [
+		[1, 5, 9, 13, 17],
+		[0, 2, 4, 6, 8, 10],
+		[3, 7, 11],
+		[],
+		[18, 19, 20]
+	];
+
+	var result = primitives.common.mergeSort(arrays);
+
+	var expectedResult = [];
+	for (var index = 0; index < arrays.length; index += 1) {
+		var array1 = arrays[index];
+
+		expectedResult = expectedResult.concat(array1);
+	}
+	expectedResult.sort(function (a, b) {
+		return a - b;
+	});
+
+	assert.deepEqual(result, expectedResult, "Merged sort multiple arrays!");
+
+	arrays = [
+		[1, 1, 5, 9, 9, 13, 17, 17],
+		[0, 0, 2, 4, 6, 6, 8, 10]
+	];
+
+	result = primitives.common.mergeSort(arrays, null, true);
+
+	expectedResult = [0, 1, 2, 4, 5, 6, 8, 9, 10, 13, 17];
+
+	assert.deepEqual(result, expectedResult, "Merged sort multiple arrays ignoring duplicates!");
+
+	arrays = [
+		[1, 5, 9, 13, 17],
+	];
+
+	var result = primitives.common.mergeSort(arrays);
+
+	var expectedResult = [];
+	for (var index = 0; index < arrays.length; index += 1) {
+		var array1 = arrays[index];
+
+		expectedResult = expectedResult.concat(array1);
+	}
+	expectedResult.sort(function (a, b) {
+		return a - b;
+	});
+
+	assert.deepEqual(result, expectedResult, "Merged sort single array!");
+
+	arrays = [
+		[1, 1, 5, 9, 9, 9, 13, 17, 17, 18, 18, 18, 18]
+	];
+
+	result = primitives.common.mergeSort(arrays, null, true);
+
+	expectedResult = [1, 5, 9, 13, 17, 18];
+
+	assert.deepEqual(result, expectedResult, "Merged sort single array ignoring duplicates!");
+
+	arrays = [
+		[{ weight: 1 }, { weight: 5 }, { weight: 9 }, { weight: 13 }, { weight: 17 }],
+		[{ weight: 2 }, { weight: 4 }, { weight: 6 }, { weight: 8 }, { weight: 10 }],
+		[{ weight: 3 }, { weight: 7 }, { weight: 11 }],
+		[],
+		[{ weight: 18 }, { weight: 19 }, { weight: 20 }]
+	];
+
+	var result = primitives.common.mergeSort(arrays, function (item) { return item.weight; });
+
+	var expectedResult = [];
+	for (var index = 0; index < arrays.length; index += 1) {
+		var array1 = arrays[index];
+
+		expectedResult = expectedResult.concat(array1);
+	}
+	expectedResult.sort(function (a, b) {
+		return a.weight - b.weight;
+	});
+
+	assert.deepEqual(result, expectedResult, "Merged sort multiple arrays of objects!");
+});
+
+
+/* /Algorithms/Pile.Tests.js*/
+QUnit.module('Algorithms - Pile Of Segments');
+
+QUnit.test("primitives.common.pile -  Closure based segments pile data structure. Sorts and stack segments on top of each other so they occupy minimum space.", function (assert) {
+	var items = [
+		[1, 3], [2, 4], [3, 5], [4, 6], [5, 7], [6, 8], [7, 9], [8, 10], [9, 11], [10, 12], [11, 13], [12, 14]
+	];
+
+	var pile = primitives.common.pile();
+	for (var index = 0, len = items.length; index < len; index += 1) {
+		var item = items[index];
+		pile.add(item[0], item[1], item);
 	}
 
-	function getLevels(family) {
-		var levels = [];
-		family.loopLevels(this, true, function (itemid, item, level) {
-			var newItem = { id: itemid };
-			var children = [];
-			family.loopChildren(this, itemid, function (itemid, item, levelIndex) {
-				if (levelIndex > 0) {
-					return family.BREAK;
-				}
-				children.push(itemid);
-			});
-			if (children.length > 0) {
-				newItem.children = children;
+	var result = {};
+	var pileHeight = pile.resolve(this, function (from, to, context, offset) {
+		if (!result.hasOwnProperty(offset)) {
+			result[offset] = [];
+		}
+		result[offset].push(context);
+	});
+	assert.equal(pileHeight, 2, "Pile should have two rows.");
+
+	var expectedItems = {
+		"0": [[2, 4], [4, 6], [6, 8], [8, 10], [10, 12], [12, 14]],
+		"1": [[1, 3], [3, 5], [5, 7], [7, 9], [9, 11], [11, 13]]
+	};
+	assert.deepEqual(result, expectedItems, "Function resolve should group segments into two rows");
+
+	var items = [
+		[5, 10], [10, 15],
+		[12.5, 13], [13, 14.5],
+		[1, 10], [12, 14],
+		[5, 13],
+		[2, 7], [8, 10], [12, 14],
+		[12, 13], [13.5, 15]
+	];
+
+	var pile = primitives.common.pile();
+	for (var index = 0, len = items.length; index < len; index += 1) {
+		var item = items[index];
+		pile.add(item[0], item[1], item);
+	}
+
+	var result = {};
+	var pileHeight = pile.resolve(this, function (from, to, context, offset) {
+		if (!result.hasOwnProperty(offset)) {
+			result[offset] = [];
+		}
+		result[offset].push(context);
+	});
+	assert.equal(pileHeight, 6, "Pile should have 6 rows.");
+
+	var expectedItems = {
+		"0": [[2, 7], [8, 10], [12.5, 13], [13.5, 15]],
+		"1": [[5, 10], [12, 13], [13, 14.5]],
+		"2": [[1, 10], [12, 14]],
+		"3": [[12, 14]],
+		"4": [[10, 15]],
+		"5": [[5, 13]]
+	};
+	assert.deepEqual(result, expectedItems, "Function resolve should group segments into 6 rows");
+
+	var items = [
+		[70, 90], [70, 80],
+		[10, 20], [30, 40],
+		[36, 65], [50, 60],
+		[10, 35]
+	];
+
+	var pile = primitives.common.pile();
+	for (var index = 0, len = items.length; index < len; index += 1) {
+		var item = items[index];
+		pile.add(item[0], item[1], item);
+	}
+
+	var result = {};
+	var pileHeight = pile.resolve(this, function (from, to, context, offset) {
+		if (!result.hasOwnProperty(offset)) {
+			result[offset] = [];
+		}
+		result[offset].push(context);
+	});
+	assert.equal(pileHeight, 2, "Pile should have 2 rows.");
+
+	var expectedItems = {
+		"0": [[10, 20], [30, 40], [50, 60], [70, 80]],
+		"1": [[10, 35], [36, 65], [70, 90]]
+	};
+	assert.deepEqual(result, expectedItems, "Items should stack on top of each other in 2 layes");
+});
+
+
+/* /Algorithms/QuadTree.Tests.js*/
+QUnit.module('Algorithms - QuadTree');
+
+QUnit.test("primitives.common.QuadTree", function (assert) {
+
+	function findCrossedPoints(points, frame) {
+		var result = [];
+
+		for (var index = 0; index < points.length; index += 1) {
+			var point = points[index];
+
+			if (frame.contains(point)) {
+				result.push(point.context.id);
 			}
-			levels.push(newItem);
+		}
+
+		return result;
+	}
+
+	function GetPlacementMarker(placement, label, color) {
+		var div = jQuery("<div></div>");
+
+		//div.append(label);
+		div.css(placement.getCSS());
+		div.css({
+			"background": color,
+			visibility: "visible",
+			position: "absolute",
+			font: "Areal",
+			"font-size": "12px",
+			"border-style": "solid",
+			"border-color": "black",
+			"border-width": "2px",
+			opacity: 0.5
 		});
-		return levels;
+
+		return div;
+	}
+
+	function ShowLayout(fixture, placements, points, frame, title) {
+		var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
+		titlePlaceholder.append(title);
+		fixture.append(titlePlaceholder);
+
+		var offsetX = null;
+		var offsetY = null;
+		var space = new primitives.common.Rect();
+		for (var index = 0; index < placements.length; index += 1) {
+			var placement = placements[index];
+
+			offsetX = offsetX == null ? placement.x : Math.min(offsetX, placement.x);
+			offsetY = offsetY == null ? placement.y : Math.min(offsetY, placement.y);
+
+			space.addRect(placement);
+		}
+		space.addRect(frame);
+		offsetX = offsetX == null ? frame.x : Math.min(offsetX, frame.x);
+		offsetY = offsetY == null ? frame.y : Math.min(offsetY, frame.y);
+
+		//-------------------------------------------------------------------------
+		var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'></div>");
+		placeholder.css({
+			width: space.width,
+			height: space.height
+		});
+		for (var index = 0; index < placements.length; index += 1) {
+			var placement = placements[index];
+			var context = placement.context;
+			var placement = new primitives.common.Rect(placements[index]);
+			placement.translate(-offsetX, -offsetY);
+
+			var div = GetPlacementMarker(placement, context.id, context.isHighlighted ? "grey" : "white");
+			placeholder.append(div);
+		}
+		
+		//-------------------------------------------------------------------------
+
+		var placement = new primitives.common.Rect(frame);
+		placement.translate(-offsetX, -offsetY);
+		var div = GetPlacementMarker(placement, index, "red");
+		placeholder.append(div);
+
+		//-------------------------------------------------------------------------
+
+		for (var index = 0; index < points.length; index += 1) {
+			var point = points[index];
+			var context = point.context;
+			var placement = new primitives.common.Rect(point.x - 2, point.y - 2, 4, 4);
+			placement.translate(-offsetX, -offsetY);
+
+			var div = GetPlacementMarker(placement, context.id, context.isHighlighted ? "blue" : "grey");
+			placeholder.append(div);
+		}
+
+		var placement = new primitives.common.Rect(frame);
+		placement.translate(-offsetX, -offsetY);
+		var div = GetPlacementMarker(placement, index, "red");
+		placeholder.append(div);
+
+
+		fixture.append(placeholder);
+	}
+
+	function getPoints(items) {
+		var result = [];
+		for (var index = 0; index < items.length; index += 1) {
+			var item = items[index];
+			var point = new primitives.common.Point(item[0], item[1]);
+			point.context = index;
+			result.push(point);
+		}
+		return result;
+	}
+
+	function getQuadTree(points) {
+		var result = primitives.common.QuadTree(2);
+		for (var index = 0; index < points.length; index += 1) {
+			var point = points[index];
+			point.context = {
+				id: index,
+				isHighlighted: false
+			};
+			result.addPoint(point);
+		}
+		return result;
+	}
+
+	function TestLayout(title, items, selection, hidden) {
+
+		console.time('getPoints');
+		var points = getPoints(items);
+		console.timeEnd('getPoints')
+
+		console.time('getQuadTree');
+		var quadTree = getQuadTree(points);
+		console.timeEnd('getQuadTree');
+
+		console.time('loopArea');
+		var result = [];
+		quadTree.loopArea(this, selection, function (point) {
+			result.push(point.context.id);
+
+			point.context.isHighlighted = true;
+		});
+		console.timeEnd('loopArea');
+
+		if (!hidden) {
+			ShowLayout(jQuery("#qunit-fixture"), quadTree.getPositions(selection), points, selection, title);
+
+			jQuery("#qunit-fixture").css({
+				position: "relative",
+				left: "0px",
+				top: "0px",
+				height: "Auto"
+			});
+		}
+
+		console.time('findCrossedPoints');
+
+		var expectedResult = findCrossedPoints(points, selection);
+
+		console.timeEnd('findCrossedPoints');
+
+		console.time('result');
+		result.sort();
+		expectedResult.sort();
+
+		assert.ok(quadTree.validate(), "Quad tree structure should pass validation");
+		assert.deepEqual(result, expectedResult, title);
+
+		console.timeEnd('result');
+
+		console.log("found = " + result.length);
 	};
 
 	(function () {
-		var family = getFamily([
-			{ id: 1 },
-			{ id: 2, parents: [1] },
-			{ id: 3, parents: [1, 2] },
-			{ id: 4, parents: [1, 2, 3] }
-		]);
+		var testData = [];
+		for (var x = 0; x < 1000; x += 10) {
+			testData.push([x, x]);
+		}
 
-		var familyWithoutGrandParentsRelations = family.getFamilyWithoutGrandParentsRelations();
-		assert.ok(familyWithoutGrandParentsRelations.validate(), "Result family structure should pass validation");
-
-		var result = getLevels(familyWithoutGrandParentsRelations);
-		var expected = [
-			{ id: "1", children: ["2"] },
-			{ id: "2", children: ["3"] },
-			{ id: "3", children: ["4"] },
-			{ id: "4" }
-		];
-		
-		assert.deepEqual(result, expected, "Should return linked list connections without shot custs between generations");
+		TestLayout("NW to SE diagonal points test", testData, new primitives.common.Rect(600, 600, 40, 40), false);
 	})();
 
 	(function () {
-		var family = getFamily([
-			{ id: '1', parents: [] },
-			{ id: '2', parents: [] },
-			{ id: '3', parents: ['1', '2'] },
-			{ id: '4', parents: ['1', '2', '3'] },
-			{ id: '5', parents: ['3'] }
-		]);
+		var testData = [];
+		for (var x = 0; x < 1000; x += 10) {
+			testData.push([x, 1000 - x]);
+		}
 
-		var familyWithoutGrandParentsRelations = family.getFamilyWithoutGrandParentsRelations();
-		assert.ok(familyWithoutGrandParentsRelations.validate(), "Result family structure should pass validation");
-
-		var result = getLevels(familyWithoutGrandParentsRelations);
-		var expected = [
-			{ "id": "1", "children": ["3"] },
-			{ "id": "2", "children": ["3"] },
-			{ "id": "3", "children": ["4", "5"] },
-			{ "id": "4" },
-			{ "id": "5" }
-		];
-
-		assert.deepEqual(result, expected, "Element 4 should break connectors to parents 1 and 2");
+		TestLayout("SW to NE diagonal points test", testData, new primitives.common.Rect(690, 250, 40, 40), false);
 	})();
 
 	(function () {
-		var family = getFamily([
-			{ id: '1', parents: [] },
-			{ id: '2', parents: ['1'] },
-			{ id: '3', parents: ['2'] }
-		]);
+		var testData = [];
+		for (var x = 0; x < 1000; x += 10) {
+			testData.push([x, 512]);
+		}
 
-		var familyWithoutGrandParentsRelations = family.getFamilyWithoutGrandParentsRelations();
-		assert.ok(familyWithoutGrandParentsRelations.validate(), "Result family structure should pass validation");
+		TestLayout("W to E horizontal points test", testData, new primitives.common.Rect(690, 500, 40, 40), false);
+	})();
 
-		var result = getLevels(familyWithoutGrandParentsRelations);
-		var expected = [
-			{ "id": "1", "children": ["2"], },
-			{ "id": "2", "children": ["3"], },
-			{ "id": "3"}
-		];
+	(function () {
+		var testData = [];
+		for (var x = 0; x < 1000; x += 10) {
+			for (var y = 0; y < 1000; y += 10) {
+				testData.push([x, y]);
+			}
+		}
 
-		assert.deepEqual(result, expected, "Element 4 should break connectors to parents 1 and 2");
+		TestLayout("10K Matrix performance test", testData, new primitives.common.Rect(690, 500, 140, 140), true);
 	})();
 });
 
+
+/* /Algorithms/RMQ.Tests.js*/
+QUnit.module('Algorithms - RMQ - Range Minimum Query');
+
+QUnit.test("primitives.common.RMQ", function (assert) {
+	function getRangeMinimum(items, from, to) {
+		var result = items[from];
+		for (var index = from + 1; index <= to; index += 1) {
+			if (items[index] < result) {
+				result = items[index];
+			}
+		}
+		return result;
+	}
+
+	(function () {
+		var items = [
+			53, 24, 44, 59, 43, 91, 39, 37, 33, 78,
+			32, 34, 93, 88, 76, 74, 63, 99, 86, 47,
+			84, 83, 67, 17, 14, 60, 11, 46, 89, 12,
+			96, 73, 57, 1, 58, 48, 80, 13, 19, 40,
+			20, 82, 29, 2, 100, 77, 35, 36, 56, 5,
+			7, 97, 4, 95, 75, 66, 21, 31, 69, 54,
+			30, 79, 68, 52, 62, 61, 28, 23, 41, 42,
+			8, 27, 45, 3, 90, 26, 22, 71, 38, 98,
+			94, 49, 9, 64, 72, 25, 50, 81, 16, 87,
+			15, 51, 10, 92, 6, 55, 18, 65, 70, 85
+		];
+		var rmq = primitives.common.RMQ(items);
+
+		assert.equal(rmq.getRangeMinimum(0, 15), getRangeMinimum(items, 0, 15), "getRangeMinimum test from 0 to 15");
+		assert.equal(rmq.getRangeMinimum(45, 99), getRangeMinimum(items, 45, 100), "getRangeMinimum test from 45 to 100");
+		assert.equal(rmq.getRangeMinimum(0, 99), getRangeMinimum(items, 0, 100), "getRangeMinimum test from 0 to 100");
+		assert.equal(rmq.getRangeMinimum(8, 8), getRangeMinimum(items, 8, 8), "getRangeMinimum test from 8 to 8");
+		assert.equal(rmq.getRangeMinimum(50, 51), getRangeMinimum(items, 50, 51), "getRangeMinimum test from 50 to 51");
+		assert.equal(rmq.getRangeMinimum(1, 98), getRangeMinimum(items, 1, 99), "getRangeMinimum test from 1 to 99");
+		assert.equal(rmq.getRangeMinimum(32, 65), getRangeMinimum(items, 32, 65), "getRangeMinimum test from 32 to 65");
+	})();
+});
+
+/* /Algorithms/SortedList.Tests.js*/
+QUnit.module('Algorithms - SortedList - AVL binary search tree collection implementation.');
+
+QUnit.test("primitives.common.SortedList", function (assert) {
+	function getSortedList(items) {
+		var sortedList = primitives.common.SortedList();
+
+		for (var index = 0; index < items.length; index += 1) {
+			var item = items[index];
+			sortedList.add(item);
+		}
+
+		return sortedList;
+	};
+
+	function removeItems(sortedList, items) {
+		for (var index = 0; index < items.length; index += 1) {
+			var item = items[index];
+			sortedList.remove(item);
+		}
+	};
+
+	function addAndRemove(addValues, removeValues) {
+		var sortedList = getSortedList(addValues);
+		if (removeValues != null) {
+			removeItems(sortedList, removeValues);
+		}
+		return sortedList.validate();
+	}
+
+	(function () {
+		assert.ok(addAndRemove([3, 7, 8]), "Small left rotation test on addition.");
+		assert.ok(addAndRemove([3, 2, 1]), "Small right rotation test on addition.");
+		assert.ok(addAndRemove([3, 1, 7, 0, 2, 10, 9, 8]), "Big left rotation test on addition.");
+		assert.ok(addAndRemove([6, 4, 8, 7, 9, 1, 2]), "Big right rotation test on addition.");
+		assert.ok(addAndRemove([3, 2, 4, 1], [4]), "Small left rotation test on removal.");
+		assert.ok(addAndRemove([3, 2, 4, 5], [2]), "Small right rotation test on removal.");
+		assert.ok(addAndRemove([3, 2, 7, 1, 5, 8, 4, 6], [1]), "Big left rotation test on removal.");
+		assert.ok(addAndRemove([6, 2, 7, 1, 4, 8, 3, 5], [8]), "Big right rotation test on removal.");
+		assert.ok(addAndRemove([-4, -3, -2, -1, 0, 1, 2, 3, 4], [-3, 0]), "Small left rotation test on removal.");
+		assert.ok(addAndRemove([4, 3, 2, 1, 0, -1, -2, -3, -4], [3, 0]), "Small right rotation test on removal.");
+	})();
+
+	(function() {
+		var items = [100, 50, 150, 25, 75, 125, 175, 12, 37, 63, 87, 113, 137, 163, 187];
+
+		var sortedList = getSortedList(items);
+
+		var result = [];
+		sortedList.loopForward(this, null, function (value) {
+			result.push(value);
+		});
+
+		items.sort(function (a, b) { return a - b; });
+
+		assert.ok(sortedList.validate(), "Sorted list validated.");
+		assert.deepEqual(result, items, "loopForward should return all added values ordered.");
+	})();
+
+	(function () {
+		var items = [0, 60, 180, 220, 260];
+
+		var sortedList = getSortedList(items);
+
+		var result = [];
+		sortedList.loopForward(this, 180, function (value) {
+			result.push(value);
+		});
+
+		assert.deepEqual(result, [180, 220, 260], "loopForward should return all items from the given item including it.");
+	})();
+
+	(function () {
+		var items = [0, 60, 180, 220, 260];
+
+		var sortedList = getSortedList(items);
+
+		var result = [];
+		sortedList.loopBackward(this, 180, function (value) {
+			result.push(value);
+		});
+
+		assert.deepEqual(result, [180, 60, 0], "loopBackward should return all items from the given item including it.");
+	})();
+
+	(function () {
+		var items = [100, 50, 150, 25, 75, 125, 175, 12, 37, 63, 87, 113, 137, 163, 187];
+
+		var sortedList = getSortedList(items);
+
+		var result = [];
+		sortedList.loopBackward(this, null, function (value) {
+			result.push(value);
+		});
+
+		items.sort(function (a, b) { return b - a; });
+
+		assert.ok(sortedList.validate(), "Sorted list validated.");
+		assert.deepEqual(result, items, "loopBackward should return all values in reversed order.");
+	})();
+
+	(function () {
+		var count = 100;
+		var items = [];
+		for (var index = -count; index <= count; index += 1) {
+			items.push(index);
+		}
+
+		var sortedList = getSortedList(items);
+
+		var expected = [];
+		for (var index = -count; index <= count; index += 1) {
+			if (index % 2 != 0) {
+				sortedList.remove(index);
+			} else {
+				expected.push(index);
+			}
+		}
+
+		var result = [];
+		sortedList.loopForward(this, null, function (value) {
+			result.push(value);
+		});
+
+
+		assert.ok(sortedList.validate(), "Sorted list validated.");
+		assert.deepEqual(result, expected, "SortedList should return all odd items # " + result.length);
+	})();
+
+	(function () {
+		var count = 100;
+		var items = [];
+		for (var index = -count; index <= count; index += 1) {
+			items.push(index);
+		}
+
+		var expected = []
+		for (var index = -count; index <= count; index += 1) {
+			if (index % 2 != 0) {
+				var itemIndex = items.indexOf(index);
+				items.splice(itemIndex, 1);
+			} else {
+				expected.push(index);
+			}
+		}
+		assert.deepEqual(items, expected, "Performance test for regular array search and remove elements #" + items.length);
+	})();
+});
+
+/* /Algorithms/SpatialIndex.Tests.js*/
+QUnit.module('Algorithms - SpatialIndex');
+
+QUnit.test("primitives.common.SpatialIndex", function (assert) {
+	function findCrossedRectangles(placements, frame) {
+		var result = [];
+
+		for (var index = 0; index < placements.length; index += 1) {
+			var placement = placements[index];
+
+			if (placement.overlaps(frame)) {
+				result.push(placement.context.id);
+			}
+		}
+
+		return result;
+	}
+
+	function GetPlacementMarker(placement, label, color) {
+		var div = jQuery("<div></div>");
+
+		div.append(label);
+		div.css(placement.getCSS());
+		div.css({
+			"background": color,
+			visibility: "visible",
+			position: "absolute",
+			font: "Areal",
+			"font-size": "12px",
+			"border-style": "solid",
+			"border-color": "black",
+			"border-width": "2px",
+			opacity: 0.6
+		});
+
+		return div;
+	}
+
+	function ShowLayout(fixture, placements, frame, title) {
+		var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
+		titlePlaceholder.append(title);
+		fixture.append(titlePlaceholder);
+
+		var offsetX = null;
+		var offsetY = null;
+		var space = new primitives.common.Rect();
+		for (var index = 0; index < placements.length; index += 1) {
+			var placement = placements[index];
+
+			offsetX = offsetX == null ? placement.x : Math.min(offsetX, placement.x);
+			offsetY = offsetY == null ? placement.y : Math.min(offsetY, placement.y);
+
+			space.addRect(placement);
+		}
+		space.addRect(frame);
+		offsetX = offsetX == null ? frame.x : Math.min(offsetX, frame.x);
+		offsetY = offsetY == null ? frame.y : Math.min(offsetY, frame.y);
+
+		var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'></div>");
+		placeholder.css({
+			width: space.width,
+			height: space.height
+		});
+		for (var index = 0; index < placements.length; index += 1) {
+			var placement = placements[index];
+			var context = placement.context;
+			var placement = new primitives.common.Rect(placements[index]);
+			placement.translate(-offsetX, -offsetY);
+
+			var div = GetPlacementMarker(placement, context.id, context.isHighlighted ? "blue" : "grey");
+			placeholder.append(div);
+		}
+
+		var placement = new primitives.common.Rect(frame);
+		placement.translate(-offsetX, -offsetY);
+		var div = GetPlacementMarker(placement, index, "red");
+		placeholder.append(div);
+
+		fixture.append(placeholder);
+	}
+
+	function getRectangles(items) {
+		var result = [];
+		for (var index = 0; index < items.length; index += 1) {
+			var item = items[index];
+			var rect = new primitives.common.Rect(item[0], item[1], item[2], item[3]);
+			rect.context = index;
+			result.push(rect);
+		}
+		return result;
+	}
+
+	function getSpatialIndex(sizes, rectangles) {
+		var result = primitives.common.SpatialIndex(sizes);
+		for (var index = 0; index < rectangles.length; index += 1) {
+			var rect = rectangles[index];
+			rect.context = {
+				id: index,
+				isHighlighted: false
+			};
+			result.addRect(rect);
+		}
+		return result;
+	}
+
+	function getSizes(items) {
+		var result = [];
+		var hash = {};
+		for (var index = 0; index < items.length; index += 1) {
+			var item = items[index];
+			var size = Math.max(item.width, item.height);
+			if (!hash.hasOwnProperty(size)) {
+				hash[size] = true;
+				result.push(size);
+			}
+		}
+		return result;
+	}
+
+	function TestLayout(title, items, selection, hidden) {
+
+		console.time('getRectangles');
+		var placements = getRectangles(items);
+		console.timeEnd('getRectangles')
+
+		console.time('getSpatialIndex');
+		var spatialIndex = getSpatialIndex(getSizes(placements), placements);
+		console.timeEnd('getSpatialIndex');
+
+		console.time('loopArea');
+		
+		var result = [];
+		spatialIndex.loopArea(this, selection, function (rect) {
+			result.push(rect.context.id);
+
+			rect.context.isHighlighted = true;
+		});
+
+		console.timeEnd('loopArea');
+
+		if (!hidden) {
+			ShowLayout(jQuery("#qunit-fixture"), placements, selection, title);
+
+			//ShowLayout(jQuery("#qunit-fixture"), spatialIndex.getPositions(selection), selection, title);
+
+			jQuery("#qunit-fixture").css({
+				position: "relative",
+				left: "0px",
+				top: "0px",
+				height: "Auto"
+			});
+
+			
+
+		}
+
+		console.time('findCrossedRectangles');
+
+		var expectedResult = findCrossedRectangles(placements, selection);
+
+		console.timeEnd('findCrossedRectangles');
+
+		console.time('sort');
+		result.sort();
+		expectedResult.sort();
+
+		assert.ok(spatialIndex.validate(), "Spatial index should pass validation");
+		assert.deepEqual(result, expectedResult, title);
+
+		console.timeEnd('sort');
+	};
+
+	TestLayout("Spatial Index should bounding rectangle", [
+		[0, 0, 100, 100]
+	], new primitives.common.Rect(10, 10, 80, 80));
+
+	TestLayout("Spatial Index should bounded rectangle", [
+	[10, 10, 80, 80]
+	], new primitives.common.Rect(0, 0, 100, 100));
+
+	TestLayout("Spatial Index should touched rectangle", [
+		[0, 0, 40, 40]
+	], new primitives.common.Rect(40, 0, 40, 40));
+
+	TestLayout("Spatial Index should not return non overlapping rectangle", [
+	[0, 0, 40, 40]
+	], new primitives.common.Rect(45, 0, 40, 40));
+
+	TestLayout("Multi-layer test case", [
+		[0, 0, 40, 280],
+		[60, 0, 100, 100],
+		[180, 0, 40, 40],
+		[180, 60, 40, 40],
+		[240, 0, 40, 40],
+		[300, 0, 40, 40],
+		[240, 60, 40, 40],
+		[300, 60, 40, 100],
+		[360, 0, 100, 100],
+		[480, 0, 40, 40],
+		[540, 0, 40, 40],
+		[600, 0, 80, 100],
+		[480, 60, 40, 140],
+		[540, 140, 60, 60],
+		[620, 140, 60, 60],
+		[60, 120, 160, 160],
+		[240, 180, 60, 60],
+		[320, 180, 60, 60],
+		[400, 180, 60, 60],
+		[620, 220, 20, 20],
+		[660, 220, 20, 20],
+		[240, 260, 20, 20],
+		[280, 260, 340, 20],
+		[640, 260, 40, 20]
+	], new primitives.common.Rect(100, 80, 220, 100));
+
+	(function () {
+		var testData = [];
+		for (var x = 0; x < 1000; x += 50) {
+			for (var y = 0; y < 1000; y += 50) {
+				testData.push([x, y, 40, 40]);
+			}
+		}
+
+		TestLayout("Matrix nesting test", testData, new primitives.common.Rect(710, 210, 200, 700));
+	})();
+
+	(function () {
+		var testData = [];
+		for (var x = 0; x < 1000; x += 10) {
+			for (var y = 0; y < 1000; y += 10) {
+				testData.push([x, y, 2, 2]);
+			}
+		}
+
+		TestLayout("Matrix performance test", testData, new primitives.common.Rect(710, 210, 20, 70), true);
+	})();
+});
 
 /* /Algorithms/Tree.Tests.js*/
 QUnit.module('Algorithms - Tree');
@@ -4896,6 +4904,7 @@ QUnit.test("primitives.common.tree -  Closure based tree data structure.", funct
 
 	assert.deepEqual(children, expectedChildren, "moveChildren function test");
 });
+
 
 /* /Algorithms/TreeLevels.Tests.js*/
 QUnit.module('Algorithms - TreeLevels is collection of collections structure');
@@ -5326,6 +5335,7 @@ primitives.helpers.tests.getItemsPlacements = function (control, items) {
 	}
 	return itemsPlacements;
 };
+
 
 
 /* /Cases/CaseFirstOrganizationalChart.Tests.js*/
@@ -6391,6 +6401,7 @@ QUnit.test("primitives.common.Matrix - 2 by 2 matrix", function (assert) {
 	assert.equal(m.determinant(), 8, "Check determinant.");
 });
 
+
 /* /Graphics/Structs/Polyline.Tests.js*/
 QUnit.module('Graphics - Structs - Polyline');
 
@@ -6749,6 +6760,7 @@ QUnit.test("primitives.common.Polyline - Polyline offset function test.", functi
 	assert.deepEqual(result7, expected7, "Offset cubic arc segment");
 });
 
+
 /* /Graphics/Structs/Vector.Tests.js*/
 QUnit.module('Graphics - Structs - Vector');
 
@@ -6795,6 +6807,7 @@ QUnit.test("primitives.common.Vector - 2D vector defined with 2 2D points", func
 	v12.offset(-2 * Math.sqrt(2));
 	assert.ok(v12.equalTo(v14), "Diagonal vector offset to the left. From (" + v12.from.x + ", " + v12.from.y + "), To (" + v12.to.x + ", " + v12.to.y + ")");
 });
+
 
 /* /Graphics/Graphics.Tests.js*/
 QUnit.module('Graphics - draw polyline.');
@@ -7399,4 +7412,3 @@ QUnit.test("primitives.common.ArrayReader - Reads Array of non distinct objects 
 
 	assert.ok(context.isChanged, "Compare current array to new empty array. Has changes");
 });
-

@@ -1,6 +1,6 @@
 ﻿var primitives = {
   common: {
-    version: "5.2.4"
+    version: "5.3.0"
   },
   orgdiagram: {},
   famdiagram: {},

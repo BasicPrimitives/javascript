@@ -1,404 +1,416 @@
-﻿<!DOCTYPE html> 
+﻿<!DOCTYPE html>
 <html>
+
 <head>
-	<title>JavaScript Control Patents Inheritance Diagram Demo</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>JavaScript Control Patents Inheritance Diagram Demo</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-	<!-- header -->
-	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-	<script type="text/javascript" src="common/helpers.js"></script>
-	<script type="text/javascript" src="../data/patents.js"></script>
+  <!-- header -->
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <script type="text/javascript" src="common/helpers.js"></script>
+  <script type="text/javascript" src="../data/patents.js"></script>
 
-	<script type="text/javascript">
-		var control;
-		var parents = {};
-		var children = {};
-		var timer = null;
-		var optionsRender = new primitives.helpers.controls.Render([
-			new primitives.helpers.controls.PanelConfig("Options", [
-				new primitives.helpers.controls.RadioBoxConfig("hideGrandParentsConnectors", true, "The hideGrandParentsConnectors option hides direct connectors to grand parents. It helps to reduce diagrams connectors layout complexity. This option should be used together with dynamic highlighting of connectors to grandparents via immidiate parents, so information is not lost.", { Hide: true, Show: false }, primitives.helpers.controls.ValueType.Boolean, onUpdate),
-				new primitives.helpers.controls.CaptionConfig("Page Fit Mode defines rule of fitting chart into available screen space. Set it to None if you want to disable it.", false),
-				new primitives.helpers.controls.RadioBoxConfig("pageFitMode", primitives.common.PageFitMode.FitToPage, "Page Fit Mode", { None: 0, PageWidth: 1, PageHeight: 2, FitToPage: 3, SelectionOnly: 6 }, primitives.helpers.controls.ValueType.Integer, onUpdate),
-				new primitives.helpers.controls.RadioBoxConfig("neighboursSelectionMode", primitives.common.NeighboursSelectionMode.ParentsAndChildren, "Cursor Neighbours Selection Mode", primitives.common.NeighboursSelectionMode, primitives.helpers.controls.ValueType.Integer, onUpdate)
-				
-			])
-		], {
-			diagramType: 1,
-			pageFitMode: primitives.common.PageFitMode.None,
-			neighboursSelectionMode: primitives.common.NeighboursSelectionMode.ParentsAndChildren,
-			hideGrandParentsConnectors: true
-		});
+  <script type="text/javascript">
+    var control;
+    var parents = {};
+    var children = {};
+    var timer = null;
+    var optionsRender = new primitives.helpers.controls.Render([
+      new primitives.helpers.controls.PanelConfig("Options", [
+        new primitives.helpers.controls.RadioBoxConfig("hideGrandParentsConnectors", true, "The hideGrandParentsConnectors option hides direct connectors to grand parents. It helps to reduce diagrams connectors layout complexity. This option should be used together with dynamic highlighting of connectors to grandparents via immidiate parents, so information is not lost.", { Hide: true, Show: false }, primitives.helpers.controls.ValueType.Boolean, onUpdate),
+        new primitives.helpers.controls.CaptionConfig("Page Fit Mode defines rule of fitting chart into available screen space. Set it to None if you want to disable it.", false),
+        new primitives.helpers.controls.RadioBoxConfig("pageFitMode", primitives.common.PageFitMode.FitToPage, "Page Fit Mode", { None: 0, PageWidth: 1, PageHeight: 2, FitToPage: 3, SelectionOnly: 6 }, primitives.helpers.controls.ValueType.Integer, onUpdate),
+        new primitives.helpers.controls.RadioBoxConfig("neighboursSelectionMode", primitives.common.NeighboursSelectionMode.ParentsAndChildren, "Cursor Neighbours Selection Mode", primitives.common.NeighboursSelectionMode, primitives.helpers.controls.ValueType.Integer, onUpdate)
 
-		document.addEventListener('DOMContentLoaded', function () {
-			optionsRender.render(document.getElementById("westpanel"));
+      ])
+    ], {
+        diagramType: 1,
+        pageFitMode: primitives.common.PageFitMode.None,
+        neighboursSelectionMode: primitives.common.NeighboursSelectionMode.ParentsAndChildren,
+        hideGrandParentsConnectors: true
+      });
 
-			processData();
+    document.addEventListener('DOMContentLoaded', function () {
+      optionsRender.render(document.getElementById("westpanel"));
 
-			control = primitives.famdiagram.Control(document.getElementById("centerpanel"),
-				new primitives.famdiagram.Config() 
-			);
+      processData();
 
-			onUpdate();
+      control = primitives.famdiagram.Control(document.getElementById("centerpanel"),
+        new primitives.famdiagram.Config()
+      );
 
-			window.addEventListener('resize', function (event) {
-				onWindowResize();
-			});
-		});
+      onUpdate();
 
-		function onUpdate() {
-			control.setOptions(getOptions());
-			var cursorItemId = control.getOption("cursorItem");
-			updateTemplates(cursorItemId);
-			updateHighlightPathAnnotations(cursorItemId);
-			control.update(primitives.common.UpdateMode.Recreate);
-		};
+      window.addEventListener('resize', function (event) {
+        onWindowResize();
+      });
+    });
 
-		function getOptions() {
-			var options = optionsRender.getValues();
+    function onUpdate() {
+      control.setOptions(getOptions());
+      var cursorItemId = control.getOption("cursorItem");
+      updateTemplates(cursorItemId);
+      updateHighlightPathAnnotations(cursorItemId);
+      control.update(primitives.common.UpdateMode.Recreate);
+    };
 
-			primitives.common.mergeObjects(options, {
-				templates: [getDefaultTemplate(options), getDirectTemplate(options)],
-				defaultTemplateName: "defaultTemplate",
-				onItemRender: onTemplateRender,
-				buttons: [
-					new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"),
-					new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"),
-					new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add")
-				],
-				linesPalette: [
-					new primitives.famdiagram.PaletteItemConfig({ lineColor: "#C6C6C6", lineWidth: 1, lineType: primitives.common.LineType.Solid }), //1
-					new primitives.famdiagram.PaletteItemConfig({ lineColor: "#A5A5A5", lineWidth: 1, lineType: primitives.common.LineType.Dashed }), //4
-					new primitives.famdiagram.PaletteItemConfig({ lineColor: "#848484", lineWidth: 1, lineType: primitives.common.LineType.Solid }), //7
-					new primitives.famdiagram.PaletteItemConfig({ lineColor: "#646464", lineWidth: 1, lineType: primitives.common.LineType.Dashed }), //10
-					new primitives.famdiagram.PaletteItemConfig({ lineColor: "#454545", lineWidth: 1, lineType: primitives.common.LineType.Solid }) //13
-				],
-				linesWidth: 1,
-				linesColor: "black",
-				cousinsIntervalMultiplier: 1,
-				normalLevelShift: 20,
-				dotLevelShift: 20,
-				lineLevelShift: 20,
-				normalItemsInterval: 5,
-				dotItemsInterval: 20,
-				lineItemsInterval: 20,
-				arrowsDirection: primitives.common.GroupByType.Parents,
-				hasSelectorCheckbox: primitives.common.Enabled.True
-			})
+    function getOptions() {
+      var options = optionsRender.getValues();
 
-			primitives.common.mergeObjects(options, {
-				onButtonClick: onButtonClick,
-				onCursorChanging: onCursorChanging,
-				onCursorChanged: onCursorChanged,
-				onHighlightChanging: onHighlightChanging,
-				onHighlightChanged: onHighlightChanged,
-				onSelectionChanged: onSelectionChanged
-			});
+      primitives.common.mergeObjects(options, {
+        templates: [getDefaultTemplate(options), getDirectTemplate(options)],
+        defaultTemplateName: "defaultTemplate",
+        onItemRender: onTemplateRender,
+        buttons: [
+          new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"),
+          new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"),
+          new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add")
+        ],
+        linesPalette: [
+          new primitives.famdiagram.PaletteItemConfig({ lineColor: "#C6C6C6", lineWidth: 1, lineType: primitives.common.LineType.Solid }), //1
+          new primitives.famdiagram.PaletteItemConfig({ lineColor: "#A5A5A5", lineWidth: 1, lineType: primitives.common.LineType.Dashed }), //4
+          new primitives.famdiagram.PaletteItemConfig({ lineColor: "#848484", lineWidth: 1, lineType: primitives.common.LineType.Solid }), //7
+          new primitives.famdiagram.PaletteItemConfig({ lineColor: "#646464", lineWidth: 1, lineType: primitives.common.LineType.Dashed }), //10
+          new primitives.famdiagram.PaletteItemConfig({ lineColor: "#454545", lineWidth: 1, lineType: primitives.common.LineType.Solid }) //13
+        ],
+        linesWidth: 1,
+        linesColor: "black",
+        cousinsIntervalMultiplier: 1,
+        normalLevelShift: 20,
+        dotLevelShift: 20,
+        lineLevelShift: 20,
+        normalItemsInterval: 5,
+        dotItemsInterval: 20,
+        lineItemsInterval: 20,
+        arrowsDirection: primitives.common.GroupByType.Parents,
+        hasSelectorCheckbox: primitives.common.Enabled.True
+      })
 
-			primitives.common.mergeObjects(options, {
-				items: patentsdata,
-				cursorItem: 18,
-				annotations: []
-			}); // See patents.js
+      primitives.common.mergeObjects(options, {
+        onButtonClick: onButtonClick,
+        onCursorChanging: onCursorChanging,
+        onCursorChanged: onCursorChanged,
+        onHighlightChanging: onHighlightChanging,
+        onHighlightChanged: onHighlightChanged,
+        onSelectionChanged: onSelectionChanged
+      });
 
-			return options;
-		}
+      primitives.common.mergeObjects(options, {
+        items: patentsdata,
+        cursorItem: 18,
+        annotations: []
+      }); // See patents.js
 
-		function onTemplateRender(event, data) {
-			switch (data.renderingMode) {
-				case primitives.common.RenderingMode.Create:
-					/* Initialize widgets here */
-					break;
-				case primitives.common.RenderingMode.Update:
-					/* Update widgets here */
-					break;
-			}
+      return options;
+    }
 
-			var itemConfig = data.context;
-			var element = data.element;
+    function onTemplateRender(event, data) {
+      switch (data.renderingMode) {
+        case primitives.common.RenderingMode.Create:
+          /* Initialize widgets here */
+          break;
+        case primitives.common.RenderingMode.Update:
+          /* Update widgets here */
+          break;
+      }
 
-			switch (data.templateName) {
-				case "defaultTemplate":
-				case "directTemplate":
-					element.firstChild.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
-					element.firstChild.firstChild.textContent = itemConfig.title;
-					break;
-			}
-		}
+      var itemConfig = data.context;
+      var element = data.element;
 
-		function getDefaultTemplate(options) {
-			var result = new primitives.orgdiagram.TemplateConfig();
-			result.name = "defaultTemplate";
+      switch (data.templateName) {
+        case "defaultTemplate":
+        case "directTemplate":
+          element.firstChild.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+          element.firstChild.firstChild.textContent = itemConfig.title;
+          break;
+      }
+    }
 
-			result.itemSize = new primitives.common.Size(84, 70);
-			result.minimizedItemSize = new primitives.common.Size(3, 3);
-			result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
+    function getDefaultTemplate(options) {
+      var result = new primitives.orgdiagram.TemplateConfig();
+      result.name = "defaultTemplate";
 
-			result.itemTemplate = ["div",
-				{
-					"style": {
-						width: result.itemSize.width + "px",
-						height: result.itemSize.height + "px"
-					},
-					"class": ["bp-item", "bp-corner-all", "bt-item-frame"]
-				},
-				["div",
-					{
-						name: "titleBackground",
-						style: {
-							top: "2px",
-							left: "2px",
-							width: "80px",
-							height: "20px",
-							overflow: "hidden"
-						},
-						"class": ["bp-item", "bp-corner-all", "bp-title-frame"]
-					},
-					["div",
-						{
-							name: "title",
-							style: {
-								top: "2px",
-								left: "2px",
-								width: "76px",
-								height: "18px",
-								fontSize: "14px",
-								overflow: "hidden"
-							},
-							"class": ["bp-item", "bp-title"]
-						}
-					]
-				]
-			];
+      result.itemSize = new primitives.common.Size(84, 70);
+      result.minimizedItemSize = new primitives.common.Size(3, 3);
+      result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
 
-			return result;
-		}
+      result.itemTemplate = ["div",
+        {
+          "style": {
+            width: result.itemSize.width + "px",
+            height: result.itemSize.height + "px"
+          },
+          "class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+        },
+        ["div",
+          {
+            name: "titleBackground",
+            style: {
+              top: "2px",
+              left: "2px",
+              width: "80px",
+              height: "20px",
+              overflow: "hidden"
+            },
+            "class": ["bp-item", "bp-corner-all", "bp-title-frame"]
+          },
+          ["div",
+            {
+              name: "title",
+              style: {
+                top: "2px",
+                left: "2px",
+                width: "76px",
+                height: "18px",
+                fontSize: "14px",
+                overflow: "hidden"
+              },
+              "class": ["bp-item", "bp-title"]
+            }
+          ]
+        ]
+      ];
 
-		function getDirectTemplate() {
-			var result = new primitives.orgdiagram.TemplateConfig();
-			result.name = "directTemplate";
+      return result;
+    }
 
-			result.itemSize = new primitives.common.Size(200, 80);
-			result.minimizedItemSize = new primitives.common.Size(3, 3);
-			result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
+    function getDirectTemplate() {
+      var result = new primitives.orgdiagram.TemplateConfig();
+      result.name = "directTemplate";
 
-			result.itemTemplate = ["div",
-				{
-					"style": {
-						width: result.itemSize.width + "px",
-						height: result.itemSize.height + "px"
-					},
-					"class": ["bp-item", "bp-corner-all", "bt-item-frame"]
-				},
-				["div",
-					{
-						name: "titleBackground",
-						style: {
-							top: "2px",
-							left: "2px",
-							width: "196px",
-							height: "20px",
-							overflow: "hidden"
-						},
-						"class": ["bp-item", "bp-corner-all", "bp-title-frame"]
-					},
-					["div",
-						{
-							name: "title",
-							style: {
-								top: "2px",
-								left: "2px",
-								width: "192px",
-								height: "18px",
-								fontSize: "14px",
-								overflow: "hidden"
-							},
-							"class": ["bp-item", "bp-title"]
-						}
-					]
-				],
-				["p",
-					{
-						style: {
-							top: "16px",
-							left: "2px",
-							maxWidth: "192px",
-							fontSize: "14px",
-						},
-						"class": ["bp-item"]
-					},
-					"This template indicate presence of direct link to cursor item"
-				]
-			];
+      result.itemSize = new primitives.common.Size(200, 80);
+      result.minimizedItemSize = new primitives.common.Size(3, 3);
+      result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
 
-			return result;
-		}
+      result.itemTemplate = ["div",
+        {
+          "style": {
+            width: result.itemSize.width + "px",
+            height: result.itemSize.height + "px"
+          },
+          "class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+        },
+        ["div",
+          {
+            name: "titleBackground",
+            style: {
+              top: "2px",
+              left: "2px",
+              width: "196px",
+              height: "20px",
+              overflow: "hidden"
+            },
+            "class": ["bp-item", "bp-corner-all", "bp-title-frame"]
+          },
+          ["div",
+            {
+              name: "title",
+              style: {
+                top: "2px",
+                left: "2px",
+                width: "192px",
+                height: "18px",
+                fontSize: "14px",
+                overflow: "hidden"
+              },
+              "class": ["bp-item", "bp-title"]
+            }
+          ]
+        ],
+        ["p",
+          {
+            style: {
+              top: "16px",
+              left: "2px",
+              maxWidth: "192px",
+              fontSize: "14px",
+            },
+            "class": ["bp-item"]
+          },
+          "This template indicate presence of direct link to cursor item"
+        ]
+      ];
 
-		function getParentsList(data) {
-			var message = "",
-				index, len;
+      return result;
+    }
 
-			if (data.parentItems.length > 0) {
-				message += " Parent item <b>";
-				for (index = 0, len = data.parentItems.length; index < len; index += 1) {
-					if (index > 0) {
-						message += ", ";
-					}
-					message += "'" + data.parentItems[index].title + "'";
-				}
-				message += "</b>";
-			}
+    function getParentsList(data) {
+      var message = "",
+        index, len;
 
-			return message;
-		};
+      if (data.parentItems.length > 0) {
+        message += " Parent item <b>";
+        for (index = 0, len = data.parentItems.length; index < len; index += 1) {
+          if (index > 0) {
+            message += ", ";
+          }
+          message += "'" + data.parentItems[index].title + "'";
+        }
+        message += "</b>";
+      }
 
-		function onSelectionChanged(e, data) {
-			var selectedItems = control.getOption("selectedItems");
-			var message = "";
-			for (var index = 0; index < selectedItems.length; index += 1) {
-				var itemConfig = selectedItems[index];
-				if (message != "") {
-					message += ", ";
-				}
-				message += "<b>'" + itemConfig.title + "'</b>";
-			}
-			message += getParentsList(data);
-			document.getElementById("southpanel").innerHTML = "User selected following items: " + message;
-		}
+      return message;
+    };
 
-		function onHighlightChanging(e, data) {
-			var message = (data.context != null) ? "User is hovering mouse over item <b>'" + data.context.title + "'</b>." : "";
-			message += getParentsList(data);
-			document.getElementById("southpanel").innerHTML = message;
-		}
+    function onSelectionChanged(e, data) {
+      var selectedItems = control.getOption("selectedItems");
+      var message = "";
+      for (var index = 0; index < selectedItems.length; index += 1) {
+        var itemConfig = selectedItems[index];
+        if (message != "") {
+          message += ", ";
+        }
+        message += "<b>'" + itemConfig.title + "'</b>";
+      }
+      message += getParentsList(data);
+      document.getElementById("southpanel").innerHTML = "User selected following items: " + message;
+    }
 
-		function onHighlightChanged(e, data) {
-			var message = (data.context != null) ? "User hovers mouse over item <b>'" + data.context.title + "'</b>." : "";
-			message += getParentsList(data);
-			document.getElementById("southpanel").innerHTML = message;
-		}
+    function onHighlightChanging(e, data) {
+      var message = (data.context != null) ? "User is hovering mouse over item <b>'" + data.context.title + "'</b>." : "";
+      message += getParentsList(data);
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-		function onCursorChanging(e, data) {
-			var message = "User is clicking on item '" + data.context.title + "'.";
-			message += getParentsList(data);
-			document.getElementById("southpanel").innerHTML = message;
+    function onHighlightChanged(e, data) {
+      var message = (data.context != null) ? "User hovers mouse over item <b>'" + data.context.title + "'</b>." : "";
+      message += getParentsList(data);
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-			updateTemplates(data.context.id);
-			updateHighlightPathAnnotations(data.context.id);
-		}
+    function onCursorChanging(e, data) {
+      var message = "User is clicking on item '" + data.context.title + "'.";
+      message += getParentsList(data);
+      document.getElementById("southpanel").innerHTML = message;
 
-		function onCursorChanged(e, data) {
-			var message = "User clicked on item '" + data.context.title + "'.";
-			message += getParentsList(data);
-			document.getElementById("southpanel").innerHTML = message;
-		}
+      updateTemplates(data.context.id);
+      updateHighlightPathAnnotations(data.context.id);
+    }
 
-		function onButtonClick(e, data) {
-			var message = "User clicked <b>'" + data.name + "'</b> button for item <b>'" + data.context.title + "'</b>.";
-			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
-			document.getElementById("southpanel").innerHTML = message;
-		}
+    function onCursorChanged(e, data) {
+      var message = "User clicked on item '" + data.context.title + "'.";
+      message += getParentsList(data);
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-		function updateTemplates(itemid) {
-			var hash = getDirectItems(itemid);
-			var items = control.getOption("items");
-			for (var index = 0, len = items.length; index < len; index += 1) {
-				var item = items[index];
-				if (hash.hasOwnProperty(item.id)) {
-					item.templateName = "directTemplate";
-				} else {
-					item.templateName = null;
-				}
-			}
-			control.setOptions({ items: items });
-		}
+    function onButtonClick(e, data) {
+      var message = "User clicked <b>'" + data.name + "'</b> button for item <b>'" + data.context.title + "'</b>.";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-		function getDirectItems(itemid) {
-			var items = [];
-			items = items.concat(parents[itemid]);
-			items = items.concat(children[itemid]);
+    function updateTemplates(itemid) {
+      var hash = getDirectItems(itemid);
+      var items = control.getOption("items");
+      for (var index = 0, len = items.length; index < len; index += 1) {
+        var item = items[index];
+        if (hash.hasOwnProperty(item.id)) {
+          item.templateName = "directTemplate";
+        } else {
+          item.templateName = null;
+        }
+      }
+      control.setOptions({ items: items });
+    }
 
-			var hash = {};
-			hash[itemid] = true;
-			for (var index = 0, len = items.length; index < len; index += 1) {
-				var itemid = items[index];
-				hash[itemid] = true;
-			}
+    function getDirectItems(itemid) {
+      var items = [];
+      items = items.concat(parents[itemid]);
+      items = items.concat(children[itemid]);
 
-			return hash;
-		}
+      var hash = {};
+      hash[itemid] = true;
+      for (var index = 0, len = items.length; index < len; index += 1) {
+        var itemid = items[index];
+        hash[itemid] = true;
+      }
 
-		function updateHighlightPathAnnotations(itemid) {
-			var annotations = control.getOption("annotations");
+      return hash;
+    }
 
-			var newAnnotations = [];
-			for(var index = 0, len = annotations.length; index < len; index+=1) {
-				var annotation = annotations[index];
-				if(annotation.annotationType != primitives.common.AnnotationType.HighlightPath) {
-					newAnnotations.push(annotation);
-				}
-			}
+    function updateHighlightPathAnnotations(itemid) {
+      var annotations = control.getOption("annotations");
 
-			var items = [];
-			items = items.concat(parents[itemid]);
-			items = items.concat(children[itemid]);
-			for (index = 0, len = items.length; index < len; index += 1) {
-				var directItemId = items[index];
-				var annotation = new primitives.famdiagram.HighlightPathAnnotationConfig({
-					items: [itemid, directItemId],
-					color: primitives.common.Colors.Navy,
-					opacity: 0.4,
-					lineWidth: 4,
-					zOrderType: primitives.common.ZOrderType.Background,
-					showArrows: false,
-					selectItems: true
-				});
-				newAnnotations.push(annotation);
-			}
-			control.setOptions({ annotations: newAnnotations });
-		}
+      var newAnnotations = [];
+      for (var index = 0, len = annotations.length; index < len; index += 1) {
+        var annotation = annotations[index];
+        if (annotation.annotationType != primitives.common.AnnotationType.HighlightPath) {
+          newAnnotations.push(annotation);
+        }
+      }
 
-		function processData() {
-			for (var index = 0, len = patentsdata.length; index < len; index += 1) {
-				var patent = patentsdata[index];
-				if (!parents.hasOwnProperty(patent.id)) {
-					parents[patent.id] = patent.parents || [];
-				}
-				for (var parentIndex = 0; parentIndex < patent.parents.length; parentIndex += 1) {
-					var parentid = patent.parents[parentIndex];
-					if (!children.hasOwnProperty(parentid)) {
-						children[parentid] = [];
-					}
-					children[parentid].push(patent.id);
-				}
-			}
-		}
+      var items = [];
+      items = items.concat(parents[itemid]);
+      items = items.concat(children[itemid]);
+      for (index = 0, len = items.length; index < len; index += 1) {
+        var directItemId = items[index];
+        var annotation = new primitives.famdiagram.HighlightPathAnnotationConfig({
+          items: [itemid, directItemId],
+          color: primitives.common.Colors.Navy,
+          opacity: 0.4,
+          lineWidth: 4,
+          zOrderType: primitives.common.ZOrderType.Background,
+          showArrows: false,
+          selectItems: true
+        });
+        newAnnotations.push(annotation);
+      }
+      control.setOptions({ annotations: newAnnotations });
+    }
 
-		function onWindowResize() {
-			if (timer == null) {
-				timer = window.setTimeout(function () {
-					control.update(primitives.orgdiagram.UpdateMode.Refresh);
-					window.clearTimeout(timer);
-					timer = null;
-				}, 300);
-			}
-		}
-	</script>
-	<!-- /header -->
+    function processData() {
+      for (var index = 0, len = patentsdata.length; index < len; index += 1) {
+        var patent = patentsdata[index];
+        if (!parents.hasOwnProperty(patent.id)) {
+          parents[patent.id] = patent.parents || [];
+        }
+        for (var parentIndex = 0; parentIndex < patent.parents.length; parentIndex += 1) {
+          var parentid = patent.parents[parentIndex];
+          if (!children.hasOwnProperty(parentid)) {
+            children[parentid] = [];
+          }
+          children[parentid].push(patent.id);
+        }
+      }
+    }
+
+    function onWindowResize() {
+      if (timer == null) {
+        timer = window.setTimeout(function () {
+          control.update(primitives.orgdiagram.UpdateMode.Refresh);
+          window.clearTimeout(timer);
+          timer = null;
+        }, 300);
+      }
+    }
+  </script>
+  <!-- /header -->
 </head>
+
 <body>
-	<div style="position: absolute; width: 400px; left: 0px; top: 0px; bottom: 50px; padding: 0px; margin: 0px; border-style: none; font-size: 14px; overflow: scroll; -webkit-overflow-scrolling: touch;">
-		<div id="westpanel" style="padding: 5px; margin: 5px; font: normal 12px verdana, areal;">
-			<h2>Patents Diagram Demo</h2>
-			<p>Patents data has massive number of references to grandparents, basically every patent has links to almost every grandparent patent in database,
-			in order to resolve this problem famDiagram control provides option to hide direct grand parents connectors. So this demo instead of visualizing direct connections to grandparents
-			shows them with custom template and highlights connection going via intermediate parents with highlight path annotation, so if some grandparent is outside of the current view, end user has 
-			indication that there are grandparents directly connected to the current cursor item outside of the screen view.</p>
-			<p><b> Try to set hideGrandParentsConnectors into false/true in the following options:</b></p>
-		</div>
-	</div>
-	<div id="centerpanel" style="position: absolute; border-style: dotted; border-width: 0px; top: 0; right: 0; bottom: 50px; left: 400px;"></div>
-	<div id="southpanel" style="position: absolute; border-style: dotted; border-width: 0px; height: 50px; right: 0; bottom: 0; left: 0;"></div>
+  <div
+    style="position: absolute; width: 400px; left: 0px; top: 0px; bottom: 50px; padding: 0px; margin: 0px; border-style: none; font-size: 14px; overflow: scroll; -webkit-overflow-scrolling: touch;">
+    <div id="westpanel" style="padding: 5px; margin: 5px; font: normal 12px verdana, areal;">
+      <h2>Patents Diagram Demo</h2>
+      <p>Patents data has massive number of references to grandparents, basically every patent has links to almost every
+        grandparent patent in database,
+        in order to resolve this problem famDiagram control provides option to hide direct grand parents connectors. So
+        this demo instead of visualizing direct connections to grandparents
+        shows them with custom template and highlights connection going via intermediate parents with highlight path
+        annotation, so if some grandparent is outside of the current view, end user has
+        indication that there are grandparents directly connected to the current cursor item outside of the screen view.
+      </p>
+      <p><b> Try to set hideGrandParentsConnectors into false/true in the following options:</b></p>
+    </div>
+  </div>
+  <div id="centerpanel"
+    style="position: absolute; border-style: dotted; border-width: 0px; top: 0; right: 0; bottom: 50px; left: 400px;">
+  </div>
+  <div id="southpanel"
+    style="position: absolute; border-style: dotted; border-width: 0px; height: 50px; right: 0; bottom: 0; left: 0;">
+  </div>
 </body>
+
 </html>

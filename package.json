@@ -8,5 +8,8 @@
     "src.orgeditor.compile": "compiler.jar --js=min\\bporgeditor.latest.js --js_output_file=min\\bporgeditor.min.js",
     "src.tests.merge": "node merge.js src.tests\\src.tests.json",
     "merge": "yarn src.primitives.merge && yarn src.primitives.compile && yarn src.primitives.jquery.merge && yarn src.primitives.jquery.compile && yarn src.orgeditor.merge && yarn src.orgeditor.compile && yarn src.tests.merge"
+  },
+  "dependencies": {
+    "eslint": "^5.15.1"
   }
 }

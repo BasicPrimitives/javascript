@@ -25,880 +25,905 @@
 		In the way when groups having maximum mutual links placed close to each other.
 */
 primitives.famdiagram.FamilyBalance = function () {
-	this.properties = [
-		'title', 'description', 'image',
-		'itemTitleColor', 'groupTitle', 'groupTitleColor',
-		'isActive', 'hasSelectorCheckbox', 'hasButtons',
-		'templateName', 'showCallout', 'calloutTemplateName',
-		'label', 'showLabel', 'labelSize', 'labelOrientation', 'labelPlacement',
-		'minimizedItemShapeType'
-	];
+  this.properties = [
+    'title', 'description', 'image',
+    'itemTitleColor', 'groupTitle', 'groupTitleColor',
+    'isActive', 'hasSelectorCheckbox', 'hasButtons',
+    'templateName', 'showCallout', 'calloutTemplateName',
+    'label', 'showLabel', 'labelSize', 'labelOrientation', 'labelPlacement',
+    'minimizedItemShapeType'
+  ];
 };
 
 //var params = {
 //	logicalFamily,
 //	maximumId,
-//	defaultItemConfig
+//	defaultItemConfig,
+//  items
 //};
 primitives.famdiagram.FamilyBalance.prototype.balance = function (params) {
-	var result = {
-		maximumId: null,
-		treeLevels: primitives.common.TreeLevels(),
-		bundles: [],
-		connectorStacks: []
-	};
+  var result = {
+    maximumId: null,
+    treeLevels: primitives.common.TreeLevels(),
+    bundles: [],
+    connectorStacks: []
+  };
 
-	var data = {
-		orgTree: primitives.common.tree(), /*tree primitives.orgdiagram.OrgItem */
-		maximumId: params.maximumId,
-		orgPartners: {}, /* Creates extra partners collection of relations between visual tree items They are used to draw connectors between items in different branches of organizational chart*/
-		itemByChildrenKey: {},
-		minimumLevel: null,
-		maximumLevel: null
-	};
+  var data = {
+    orgTree: primitives.common.tree(), /*tree primitives.orgdiagram.OrgItem */
+    maximumId: params.maximumId,
+    orgPartners: {}, /* Creates extra partners collection of relations between visual tree items They are used to draw connectors between items in different branches of organizational chart*/
+    itemByChildrenKey: {},
+    minimumLevel: null,
+    maximumLevel: null
+  };
 
-	this.createOrgTree(params, data);
+  this.createOrgTree(params, data);
 
-	data.orgTree.loopLevels(this, function (treeItemId, treeItem, levelIndex) {
-		result.treeLevels.addItem(levelIndex, treeItemId, treeItem);
-	});
+  data.orgTree.loopLevels(this, function (treeItemId, treeItem, levelIndex) {
+    result.treeLevels.addItem(levelIndex, treeItemId, treeItem);
+  });
 
-	this.recalcLevelsDepth(result.bundles, result.connectorStacks, result.treeLevels, data.orgTree, data.orgPartners);
+  this.recalcLevelsDepth(result.bundles, result.connectorStacks, result.treeLevels, data.orgTree, data.orgPartners);
 
-	result.maximumId = data.maximumId;
+  result.maximumId = data.maximumId;
 
-	return result;
+  return result;
 };
 
 primitives.famdiagram.FamilyBalance.prototype.Family = function (id) {
-	this.id = null;
-	this.familyPriority = 1;
-	this.childFamilies = [];
-	this.items = [];
+  this.id = null;
+  this.familyPriority = 1;
+  this.childFamilies = [];
+  this.items = [];
 
-	this.links = []; /* array of FamLink(s) */
-	this.backLinks = []; /* array of FamLink(s) */
+  this.links = []; /* array of FamLink(s) */
+  this.backLinks = []; /* array of FamLink(s) */
 
-	if (arguments.length == 1) {
-		this.id = id;
-	}
+  if (arguments.length == 1) {
+    this.id = id;
+  }
 };
 
 primitives.famdiagram.FamilyBalance.prototype.FamLink = function (fromItem, toItem) {
-	this.fromItem = fromItem; /* FamilyItem.id */
-	this.toItem = toItem; /* FamilyItem.id */
+  this.fromItem = fromItem; /* FamilyItem.id */
+  this.toItem = toItem; /* FamilyItem.id */
 };
 
 primitives.famdiagram.FamilyBalance.prototype.createOrgTree = function (params, data) {
-	var index, len, index2, len2,
-		famItem,
-		familiesGraph, /* primitives.common.graph */
-		link, links,
-		fromFamily,
-		toFamily,
-		sortedFamilies = [], sortedFamiliesHash,
-		attachedFamilies,
-		userItem,
-		familyId,
-		family,
-		familyRootItem,
-		fromItem,
-		toItem,
-		rootItem, rootItems, bestRootItem, bestReference,
-		spanningTree,
-		extraGravities, grandChildren,
-		parsedId,
-		itemsHavingSpouses, spouses,
-		orgItemRoot,
-		famItemsExtracted,
-		families = [],
-		families2;
+  var index, len, index2, len2,
+    famItem,
+    familiesGraph, /* primitives.common.graph */
+    link, links,
+    fromFamily,
+    toFamily,
+    sortedFamilies = [], sortedFamiliesHash,
+    attachedFamilies,
+    userItem,
+    familyId,
+    family,
+    familyRootItem,
+    fromItem,
+    toItem,
+    rootItem, rootItems, bestRootItem, bestReference,
+    spanningTree,
+    extraGravities, grandChildren,
+    parsedId,
+    itemsHavingSpouses, spouses,
+    orgItemRoot,
+    famItemsExtracted,
+    families = [],
+    families2;
 
-	if (params.logicalFamily.hasNodes() > 0) {
-		/* create hash of extracted family items */
-		famItemsExtracted = {};
+  if (params.logicalFamily.hasNodes() > 0) {
+    /* create hash of extracted family items */
+    famItemsExtracted = {};
 
-		familyId = 0;
-		families2 = [];
-		params.logicalFamily.loopRoots(this, function (grandParentId, grandParent) {
-			//ignore jslint
-			family = new this.Family(familyId);
+    familyId = 0;
+    families2 = [];
+    params.logicalFamily.loopRoots(this, function (grandParentId, grandParent) {
+      //ignore jslint
+      family = new this.Family(familyId);
 			/* extractOrgChart method extracts hiearchy of family members starting from grandParent and takes only non extracted family items 
 			 * For every extracted item it assigns its familyId, it is used for building families relations graph and finding cross family links
 			*/
-			this.extractOrgChart(grandParentId, params.logicalFamily, params.defaultItemConfig, data.orgTree, data.orgPartners, data.itemByChildrenKey, famItemsExtracted, family);
-			families.push(family);
-			families2.push(family);
-			familyId += 1;
-		});
+      this.extractOrgChart(grandParentId, params.logicalFamily, params.defaultItemConfig, data.orgTree, data.orgPartners, data.itemByChildrenKey, famItemsExtracted, family);
+      families.push(family);
+      families2.push(family);
+      familyId += 1;
+    });
 
-		families2.sort(function (a, b) {
-			/* sort families by root item level ASC and size DESC */
-			var aLevel = a.items[0].level,
-				bLevel = b.items[0].level;
+    families2.sort(function (a, b) {
+      /* sort families by root item level ASC and size DESC */
+      var aLevel = a.items[0].level,
+        bLevel = b.items[0].level;
 
-			return aLevel != bLevel ? (aLevel - bLevel) : (b.items.length - a.items.length);
-		});
+      return aLevel != bLevel ? (aLevel - bLevel) : (b.items.length - a.items.length);
+    });
 
-		sortedFamilies = [];
-		sortedFamiliesHash = {};
-		if (families.length > 0) {
+    sortedFamilies = [];
+    sortedFamiliesHash = {};
+    if (families.length > 0) {
 
-			/* Build families graph */
-			familiesGraph = primitives.common.graph();
-			for (index = 0, len = families.length; index < len; index += 1) {
-				family = families[index];
+      /* Build families graph */
+      familiesGraph = primitives.common.graph();
+      for (index = 0, len = families.length; index < len; index += 1) {
+        family = families[index];
 
-				for (index2 = 0, len2 = family.links.length; index2 < len2; index2 += 1) {
-					link = family.links[index2];
+        for (index2 = 0, len2 = family.links.length; index2 < len2; index2 += 1) {
+          link = family.links[index2];
 
-					fromFamily = params.logicalFamily.node(link.fromItem).familyId;
-					toFamily = params.logicalFamily.node(link.toItem).familyId;
+          fromFamily = params.logicalFamily.node(link.fromItem).familyId;
+          toFamily = params.logicalFamily.node(link.toItem).familyId;
 
-					if (fromFamily != toFamily) {
-						familiesGraph.addEdge(fromFamily, toFamily, { weight: 0 });
-						familiesGraph.edge(fromFamily, toFamily).weight += 1;
-					}
+          if (fromFamily != toFamily) {
+            familiesGraph.addEdge(fromFamily, toFamily, { weight: 0 });
+            familiesGraph.edge(fromFamily, toFamily).weight += 1;
+          }
 
-					families[toFamily].backLinks.push(new this.FamLink(link.toItem, link.fromItem));
-				}
-			}
+          families[toFamily].backLinks.push(new this.FamLink(link.toItem, link.fromItem));
+        }
+      }
 
-			/* Flatten families graph into array for merging */
-			while (sortedFamilies.length < families.length) {
-				for (index = 0, len = families2.length; index < len; index += 1) {
-					family = families2[index];
+      /* Flatten families graph into array for merging */
+      while (sortedFamilies.length < families.length) {
+        for (index = 0, len = families2.length; index < len; index += 1) {
+          family = families2[index];
 
-					if (!sortedFamiliesHash.hasOwnProperty(family.id)) {
+          if (!sortedFamiliesHash.hasOwnProperty(family.id)) {
 
-						/* find maximum spanning tree of families graph*/
-						spanningTree = familiesGraph.getSpanningTree(family.id, function (edge) {
-							return -edge.weight;
-						}); //ignore jslint
+            /* find maximum spanning tree of families graph*/
+            spanningTree = familiesGraph.getSpanningTree(family.id, function (edge) {
+              return -edge.weight;
+            }); //ignore jslint
 
-						if (spanningTree.node(family.id) != null) {
+            if (spanningTree.node(family.id) != null) {
 
-							/* count number of sub families for every family in spanning tree and sorts child families desc*/
-							spanningTree.loopPostOrder(this, function (nodeid, node, parentid, parent) {
-								var family = families[nodeid],
-									parentFamily = families[parentid],
-									children = [];
+              /* count number of sub families for every family in spanning tree and sorts child families desc*/
+              spanningTree.loopPostOrder(this, function (nodeid, node, parentid, parent) {
+                var family = families[nodeid],
+                  parentFamily = families[parentid],
+                  children = [];
 
-								if (parentid != null) {
-									parentFamily.familyPriority = parentFamily.familyPriority + family.familyPriority;
-								}
+                if (parentid != null) {
+                  parentFamily.familyPriority = parentFamily.familyPriority + family.familyPriority;
+                }
 
-								children = [];
-								spanningTree.loopChildren(this, nodeid, function (childid, child, index) {
-									children.push(childid);
-								});
+                children = [];
+                spanningTree.loopChildren(this, nodeid, function (childid, child, index) {
+                  children.push(childid);
+                });
 
-								children.sort(function (a, b) { return families[a].familyPriority - families[b].familyPriority; });
-								spanningTree.arrangeChildren(nodeid, children);
-							}); //ignore jslint
+                children.sort(function (a, b) { return families[a].familyPriority - families[b].familyPriority; });
+                spanningTree.arrangeChildren(nodeid, children);
+              }); //ignore jslint
 
-							/* merge tree items in pre order sequence */
-							spanningTree.loopPreOrder(this, function (familyid, node) {
-								sortedFamilies.push(familyid);
-								sortedFamiliesHash[familyid] = true;
-							}); //ignore jslint
+              /* merge tree items in pre order sequence */
+              spanningTree.loopPreOrder(this, function (familyid, node) {
+                sortedFamilies.push(familyid);
+                sortedFamiliesHash[familyid] = true;
+              }); //ignore jslint
 
-						} else {
-							/* family has no links to any other family so we add it as orphant */
-							sortedFamilies.push(family.id);
-							sortedFamiliesHash[family.id] = true;
-						}
-					}
-				}
-			}
-		}
+            } else {
+              /* family has no links to any other family so we add it as orphant */
+              sortedFamilies.push(family.id);
+              sortedFamiliesHash[family.id] = true;
+            }
+          }
+        }
+      }
+    }
 
-		/* create chart root */
-		data.maximumId += 1;
-		orgItemRoot = this.createOrgItem(data.orgTree, params.defaultItemConfig, data.maximumId, null /*parent id*/, null, data.minimumLevel - 1, null /* userItem */);
-		orgItemRoot.hideParentConnection = true;
-		orgItemRoot.hideChildrenConnection = true;
-		orgItemRoot.title = "internal root";
-		orgItemRoot.isVisible = false;
-		orgItemRoot.isActive = false;
-		orgItemRoot.childIndex = 0;
-
-
-		/* Place family roots to organizational chart */
-		attachedFamilies = {};
-		for (index = 0, len = sortedFamilies.length; index < len; index += 1) {
-			family = families[sortedFamilies[index]];
-
-			rootItems = {}; // Hash where key = rootItem.id and value is number of references
-			bestRootItem = orgItemRoot;
-			bestReference = 0;
-			links = family.links.concat(family.backLinks);
-			for (index2 = 0; index2 < links.length; index2 += 1) {
-				link = links[index2];
-
-				toItem = data.orgTree.node(link.toItem);
-				fromItem = data.orgTree.node(link.fromItem);
-
-				if (attachedFamilies[toItem.familyId] === true) {
-					familyRootItem = family.items[0];
-					rootItem = toItem;
-
-					if (rootItem.level >= familyRootItem.level) {
-						data.orgTree.loopParents(this, rootItem.id, function (nodeid, node) {
-							rootItem = node;
-							if (node.level < familyRootItem.level) {
-								return true;
-							}
-						});//ignore jslint
-					}
-
-					if (rootItems.hasOwnProperty(rootItem.id)) {
-						rootItems[rootItem.id] += 1;
-					} else {
-						rootItems[rootItem.id] = 1;
-					}
-					/* family may be nested to multiple places, so we select root item having maximum connections with our new sub family */
-					if (bestReference < rootItems[rootItem.id]) {
-						bestRootItem = rootItem;
-						bestReference = rootItems[rootItem.id];
-					}
-				}
+    /* create chart root */
+    data.maximumId += 1;
+    orgItemRoot = this.createOrgItem(data.orgTree, params.defaultItemConfig, data.maximumId, null /*parent id*/, null, data.minimumLevel - 1, null /* userItem */);
+    orgItemRoot.hideParentConnection = true;
+    orgItemRoot.hideChildrenConnection = true;
+    orgItemRoot.title = "internal root";
+    orgItemRoot.isVisible = false;
+    orgItemRoot.isActive = false;
+    orgItemRoot.childIndex = 0;
 
 
-			}
+    /* Place family roots to organizational chart */
+    attachedFamilies = {};
+    for (index = 0, len = sortedFamilies.length; index < len; index += 1) {
+      family = families[sortedFamilies[index]];
 
-			this.attachFamilyToOrgChart(data, params.defaultItemConfig, bestRootItem, family);
+      rootItems = {}; // Hash where key = rootItem.id and value is number of references
+      bestRootItem = orgItemRoot;
+      bestReference = 0;
+      links = family.links.concat(family.backLinks);
+      for (index2 = 0; index2 < links.length; index2 += 1) {
+        link = links[index2];
 
-			attachedFamilies[family.id] = true;
-		}
+        toItem = data.orgTree.node(link.toItem);
+        fromItem = data.orgTree.node(link.fromItem);
 
-		/* balance organizational chart in order to place items having extra connections close to each other */
-		extraGravities = this.getExtraGravity(data);
+        if (attachedFamilies[toItem.familyId] === true) {
+          familyRootItem = family.items[0];
+          rootItem = toItem;
 
-		/* count number of vertical connections for every item */
-		grandChildren = this.getGrandChildren(data);
+          if (rootItem.level >= familyRootItem.level) {
+            data.orgTree.loopParents(this, rootItem.id, function (nodeid, node) {
+              rootItem = node;
+              if (node.level < familyRootItem.level) {
+                return true;
+              }
+            });//ignore jslint
+          }
 
-		/* scan orgTree hierarchy from root to bottom and balance its children */
-		this.balanceOrgTree(data.orgTree, extraGravities, grandChildren);
-	}
+          if (rootItems.hasOwnProperty(rootItem.id)) {
+            rootItems[rootItem.id] += 1;
+          } else {
+            rootItems[rootItem.id] = 1;
+          }
+          /* family may be nested to multiple places, so we select root item having maximum connections with our new sub family */
+          if (bestReference < rootItems[rootItem.id]) {
+            bestRootItem = rootItem;
+            bestReference = rootItems[rootItem.id];
+          }
+        }
+
+
+      }
+
+      this.attachFamilyToOrgChart(data, params.defaultItemConfig, bestRootItem, family);
+
+      attachedFamilies[family.id] = true;
+    }
+
+    /* balance organizational chart in order to place items having extra connections close to each other */
+    extraGravities = this.getExtraGravity(data);
+
+    /* count number of vertical connections for every item */
+    grandChildren = this.getGrandChildren(data);
+
+    /* scan orgTree hierarchy from root to bottom and balance its children */
+    this.balanceOrgTree(data.orgTree, extraGravities, grandChildren, params.itemsPositions, params.itemsGroups);
+  }
 };
 
 primitives.famdiagram.FamilyBalance.prototype.getGrandChildren = function (data) {
-	var result = {};  /* Key = primitives.orgdiagram.OrgItem.id, Value= Hash {} having Key = level and Value = number of grand children*/
+  var result = {};  /* Key = primitives.orgdiagram.OrgItem.id, Value= Hash {} having Key = level and Value = number of grand children*/
 
-	data.orgTree.loopPostOrder(this, function (itemId, orgItem, parentId, parent) {
-		var level;
+  data.orgTree.loopPostOrder(this, function (itemId, orgItem, parentId, parent) {
+    var level;
 
-		data.minimumLevel = data.minimumLevel != null ? Math.min(data.minimumLevel, orgItem.level) : orgItem.level;
-		data.maximumLevel = data.maximumLevel != null ? Math.max(data.maximumLevel, orgItem.level) : orgItem.level;
+    data.minimumLevel = data.minimumLevel != null ? Math.min(data.minimumLevel, orgItem.level) : orgItem.level;
+    data.maximumLevel = data.maximumLevel != null ? Math.max(data.maximumLevel, orgItem.level) : orgItem.level;
 
-		if (parentId != null) {
-			if (!result[parentId]) {
-				result[parentId] = {};
-			}
+    if (parentId != null) {
+      if (!result[parentId]) {
+        result[parentId] = {};
+      }
 
-			level = orgItem.level - 1; /* project children qty to parent level, it is needed to match cross hierarchy connectors levels*/
-			if (!result[parentId][level]) {
-				result[parentId][level] = 1;
-			} else {
-				result[parentId][level] += 1;
-			}
+      level = orgItem.level - 1; /* project children qty to parent level, it is needed to match cross hierarchy connectors levels*/
+      if (!result[parentId][level]) {
+        result[parentId][level] = 1;
+      } else {
+        result[parentId][level] += 1;
+      }
 
-			if (result[itemId] != null) {
-				for (level in result[itemId]) {
-					if (result[itemId].hasOwnProperty(level)) {
-						if (!result[parentId][level]) {
-							result[parentId][level] = result[itemId][level];
-						} else {
-							result[parentId][level] += result[itemId][level];
-						}
-					}
-				}
-			}
-		}
-	});
+      if (result[itemId] != null) {
+        for (level in result[itemId]) {
+          if (result[itemId].hasOwnProperty(level)) {
+            if (!result[parentId][level]) {
+              result[parentId][level] = result[itemId][level];
+            } else {
+              result[parentId][level] += result[itemId][level];
+            }
+          }
+        }
+      }
+    }
+  });
 
-	return result;
+  return result;
 };
 
-primitives.famdiagram.FamilyBalance.prototype.balanceOrgTree = function (orgTree, extraGravities, grandChildren) {
-	var index2, len2,
-		index3, len3,
-		extraGravity,
-		childExtraGravities,
-		sortedChildren,
-		subChildren, subOrgItem,
-		leftId = '__left__',
-		rightId = '__right__',
-		levelExtraGravities,
-		sequence;
+primitives.famdiagram.FamilyBalance.prototype.balanceOrgTree = function (orgTree, extraGravities, grandChildren, itemsPositions, itemsGroups) {
+  var index2, len2,
+    index3, len3,
+    extraGravity,
+    childExtraGravities,
+    sortedChildren,
+    subChildren, subOrgItem,
+    leftId = '__left__',
+    rightId = '__right__',
+    levelExtraGravities,
+    sequence;
 
-	orgTree.loopLevels(this, function (parentOrgItemId, parentOrgItem, levelid) {
-		var graph = primitives.common.graph(),
-			graphGravities = {},
-			firstOrgItem = null,
-			toItemId;
-		/* build gravities graph for children */
-		sortedChildren = [];
-		orgTree.loopChildren(this, parentOrgItem.id, function (childOrgItemId, childOrgItem, index) {
-			var levelKey;
-			if (firstOrgItem == null) {
-				firstOrgItem = childOrgItem;
-			}
+  orgTree.loopLevels(this, function (parentOrgItemId, parentOrgItem, levelid) {
+    var graph = primitives.common.graph(),
+      graphGravities = {},
+      firstOrgItem = null,
+      toItemId;
+    /* build gravities graph for children */
+    sortedChildren = [];
+    orgTree.loopChildren(this, parentOrgItem.id, function (childOrgItemId, childOrgItem, index) {
+      var levelKey;
+      if (firstOrgItem == null) {
+        firstOrgItem = childOrgItem;
+      }
 
-			graphGravities[childOrgItem.id] = {};
-			if (extraGravities.hasOwnProperty(childOrgItem.id)) {
-				childExtraGravities = extraGravities[childOrgItem.id];
+      graphGravities[childOrgItem.id] = {};
+      if (extraGravities.hasOwnProperty(childOrgItem.id)) {
+        childExtraGravities = extraGravities[childOrgItem.id];
 
-				for (levelKey in childExtraGravities) {
-					if (childExtraGravities.hasOwnProperty(levelKey)) {
-						levelExtraGravities = childExtraGravities[levelKey];
+        for (levelKey in childExtraGravities) {
+          if (childExtraGravities.hasOwnProperty(levelKey)) {
+            levelExtraGravities = childExtraGravities[levelKey];
 
-						graphGravities[childOrgItem.id][levelKey] = {};
-						for (index2 = 0, len2 = levelExtraGravities.length; index2 < len2; index2 += 1) {
-							extraGravity = levelExtraGravities[index2];
+            graphGravities[childOrgItem.id][levelKey] = {};
+            for (index2 = 0, len2 = levelExtraGravities.length; index2 < len2; index2 += 1) {
+              extraGravity = levelExtraGravities[index2];
 
-							if (extraGravity.commonParent == parentOrgItem.id) {
-								/* this is link between two children */
-								toItemId = extraGravity.toParent;
-							} else {
-								/* this is external link on left or on right side, we create virtual graph item ids for external links */
-								if (orgTree.node(extraGravity.fromParent).childIndex < orgTree.node(extraGravity.toParent).childIndex) {
-									toItemId = rightId;
-								} else {
-									toItemId = leftId;
-								}
-							}
+              if (extraGravity.commonParent == parentOrgItem.id) {
+                /* this is link between two children */
+                toItemId = extraGravity.toParent;
+              } else {
+                /* this is external link on left or on right side, we create virtual graph item ids for external links */
+                if (orgTree.node(extraGravity.fromParent).childIndex < orgTree.node(extraGravity.toParent).childIndex) {
+                  toItemId = rightId;
+                } else {
+                  toItemId = leftId;
+                }
+              }
 
-							/* add connection to graph */
-							if (childOrgItem.id != toItemId) {
-								graph.addEdge(childOrgItem.id, toItemId, { weight: 0 });
-								graph.edge(childOrgItem.id, toItemId).weight += 1.0;
+              /* add connection to graph */
+              if (childOrgItem.id != toItemId) {
+                graph.addEdge(childOrgItem.id, toItemId, { weight: 0 });
+                graph.edge(childOrgItem.id, toItemId).weight += 1.0;
 
-								if (graphGravities[childOrgItem.id][levelKey][toItemId] == null) {
-									graphGravities[childOrgItem.id][levelKey][toItemId] = 0;
-								}
-								graphGravities[childOrgItem.id][levelKey][toItemId] += 1;
-							}
-						}
-					}
-				}
-			}
+                if (graphGravities[childOrgItem.id][levelKey][toItemId] == null) {
+                  graphGravities[childOrgItem.id][levelKey][toItemId] = 0;
+                }
+                graphGravities[childOrgItem.id][levelKey][toItemId] += 1;
+              }
+            }
+          }
+        }
+      }
 			/* add extra zero connection to graph when child org item has no connections
 				it is connected to the first item in the graph with zero link
 			*/
-			if (index > 0) {
-				graph.addEdge(childOrgItem.id, firstOrgItem.id, { weight: 0 });
-			}
-		});
+      if (index > 0) {
+        graph.addEdge(childOrgItem.id, firstOrgItem.id, { weight: 0 });
+      }
+    });
 
-		if (firstOrgItem != null) {
-			/* sort items in graph from the most connected to the least */
+    if (firstOrgItem != null) {
+      /* sort items in graph from the most connected to the least */
 
-			sequence = [];
+      sequence = [];
 
-			graph.getTotalWeightGrowthSequence(this,
-				function (a) { return a.weight; },
-				function (a) { sequence.push(a); }
-			); //ignore jslint
+      graph.getTotalWeightGrowthSequence(this,
+        function (a) { return a.weight; },
+        function (a) { sequence.push(a); }
+      ); //ignore jslint
 
-			if (sequence.length === 0) {
-				sequence = [firstOrgItem.id];
-			}
+      if (sequence.length === 0) {
+        sequence = [firstOrgItem.id];
+      }
 
-			/* sort children from top to down */
-			subChildren = this.balanceItems(sequence, leftId, rightId, graphGravities, grandChildren);
+      /* sort children from top to down */
+      subChildren = this.balanceItems(sequence, leftId, rightId, graphGravities, grandChildren, itemsPositions, itemsGroups);
 
-			/* save items indexes for further use */
-			for (index3 = 0, len3 = subChildren.length; index3 < len3; index3 += 1) {
-				subOrgItem = orgTree.node(subChildren[index3]);
+      /* save items indexes for further use */
+      for (index3 = 0, len3 = subChildren.length; index3 < len3; index3 += 1) {
+        subOrgItem = orgTree.node(subChildren[index3]);
 
-				subOrgItem.childIndex = index3;
+        subOrgItem.childIndex = index3;
 
-				sortedChildren.push(subOrgItem.id);
-			}
-		}
-		orgTree.arrangeChildren(parentOrgItem.id, sortedChildren);
-	});
+        sortedChildren.push(subOrgItem.id);
+      }
+    }
+    orgTree.arrangeChildren(parentOrgItem.id, sortedChildren);
+  });
 };
 
-primitives.famdiagram.FamilyBalance.prototype.balanceItems = function (sequence, leftId, rightId, graphGravities, grandChildren) {
-	var result = [],
-	index,
-	slots, position,
-	itemid,
-	bestSlot, bestSlotValue, bestSlotDistance, bestSlotBalance, bestSlotCrossings,
-	slotValue, slotDistance, slotBalance, slotCrossings,
-	itemGrandChildren,
-	cloneSlot, itemSlot,
-	level, levelGravities, toItemId, toItemSlot;
+primitives.famdiagram.FamilyBalance.prototype.balanceItems = function (sequence, leftId, rightId, graphGravities, grandChildren, itemsPositions, itemsGroups) {
+  var result = [],
+    index,
+    slots = primitives.common.LinkedHashItems(), // key = counter++, value =  slot object
+    counter = 0,
+    positions = {}, // hash[groupId] = primitives.common.SortedList, key = user defined item position, value = key in slots -- create only when user defined itemsPositions exists for items
+    startSlotKey, endSlotKey,
+    key, slot,
+    items = {}, itemid, itemsToAdd,
+    bestSlotKey, bestSlot, bestSlotValue, bestSlotDistance, bestSlotBalance, bestSlotCrossings,
+    slotValue, slotDistance, slotBalance, slotCrossings,
+    itemGrandChildren,
+    itemSlot, itemSlotKey,
+    level, levelGravities, toItemId, toItemSlot,
+    userItemPosition, position, itemGroup, groupPositions,
+    toItemSlotKey;
 
-	slots = new primitives.famdiagram.Slots();
-	slots.add(new primitives.famdiagram.Slot(leftId));
-	slots.add(new primitives.famdiagram.Slot(null)); /* first empty slot */
-	slots.add(new primitives.famdiagram.Slot(rightId));
+  /* populate initital slots */
+  itemsToAdd = [leftId, null, rightId];
+  for (index = 0; index < itemsToAdd.length; index += 1) {
+    itemid = itemsToAdd[index];
+    key = counter++;
+    slot = new primitives.famdiagram.Slot(itemid);
+    slot.position = index;
+    slots.add(key, slot);
+    if (itemid !== null) {
+      items[itemid] = key;
+    }
+  }
 
-	/* set initital positions */
-	position = 0;
-	slots.loop(function (slot) {
-		position += 1;
-		slot.position = position;
-	});
+  for (index = 0; index < sequence.length; index += 1) {
+    itemid = sequence[index];
 
-	for (index = 0; index < sequence.length; index += 1) {
-		itemid = sequence[index];
+    /* ignore left and right margin */
+    if (itemid != leftId && itemid != rightId) {
 
-		/* ignore left and right margin */
-		if (itemid != leftId && itemid != rightId) {
+      bestSlotKey = null;
+      bestSlot = null;
+      bestSlotValue = null;
+      bestSlotDistance = null;
+      bestSlotBalance = null;
+      bestSlotCrossings = null;
 
-			bestSlot = null;
-			bestSlotValue = null;
-			bestSlotDistance = null;
-			bestSlotBalance = null;
-			bestSlotCrossings = null;
-			slots.loop(function (slot) {
-				var level, toItemId,
-					levelGravities,
-					toItemSlot;
+      startSlotKey = null;
+      endSlotKey = null;
+      if (itemsGroups.hasOwnProperty(itemid)) {
+        itemGroup = itemsGroups[itemid];
+        if (positions.hasOwnProperty(itemGroup)) {
+          userItemPosition = itemsPositions[itemid];
+          groupPositions = positions[itemGroup];
+          startSlotKey = groupPositions.previousContext(userItemPosition);
+          endSlotKey = groupPositions.nextContext(userItemPosition);
+        }
+      }
 
-				if (slot.itemId == null) {
-					itemGrandChildren = grandChildren[itemid];
-					slotValue = 0;
-					slotDistance = 0;
-					slotBalance = 0;
-					slotCrossings = 0;
+      slots.iterate(function (slot, slotKey) {
+        var level, toItemId,
+          levelGravities,
+          toItemSlot;
 
-					for (level in slot.crossings) {
-						if (slot.crossings.hasOwnProperty(level)) {
-							if (itemGrandChildren && itemGrandChildren[level] != null) {
-								slotValue += slot.crossings[level] * itemGrandChildren[level];
-							}
-							slotCrossings += slot.crossings[level];
-						}
-					}
-					for (level in graphGravities[itemid]) {
-						if (graphGravities[itemid].hasOwnProperty(level)) {
-							levelGravities = graphGravities[itemid][level];
-							for (toItemId in levelGravities) {
-								if (levelGravities.hasOwnProperty(toItemId)) {
-									toItemSlot = slots.getSlot(toItemId);
-									if (toItemSlot != null) {
-										if (toItemSlot.position < slot.position) {
-											/* on the left side */
-											slotValue += ((slot.left[level] || 0.0) - (toItemSlot.left[level] || 0.0));
-											slotBalance += Math.abs(toItemSlot.balance + 1);
-										} else {
-											/* on the right side */
-											slotValue += ((slot.right[level] || 0.0) - (toItemSlot.right[level] || 0.0));
-											slotBalance += Math.abs(toItemSlot.balance - 1);
-										}
-										slotDistance += Math.abs(toItemSlot.position - slot.position);
-									}
-								}
-							}
-						}
-					}
+        if (slot.itemId == null) {
+          itemGrandChildren = grandChildren[itemid];
+          slotValue = 0;
+          slotDistance = 0;
+          slotBalance = 0;
+          slotCrossings = 0;
 
-					if (bestSlotValue == null ||
-						bestSlotValue > slotValue ||
-							(bestSlotValue == slotValue &&
-								(bestSlotDistance > slotDistance ||
-									(bestSlotDistance == slotDistance &&
-										(bestSlotBalance > slotBalance ||
-												(bestSlotBalance == slotBalance && bestSlotCrossings > slotCrossings)
-										)
-									)
-								)
-							)
-						) {
-						bestSlotValue = slotValue;
-						bestSlot = slot;
-						bestSlotDistance = slotDistance;
-						bestSlotBalance = slotBalance;
-						bestSlotCrossings = slotCrossings;
-					}
-				}
-			}); //ignore jslint
+          for (level in slot.crossings) {
+            if (slot.crossings.hasOwnProperty(level)) {
+              if (itemGrandChildren && itemGrandChildren[level] != null) {
+                slotValue += slot.crossings[level] * itemGrandChildren[level];
+              }
+              slotCrossings += slot.crossings[level];
+            }
+          }
+          for (level in graphGravities[itemid]) {
+            if (graphGravities[itemid].hasOwnProperty(level)) {
+              levelGravities = graphGravities[itemid][level];
+              for (toItemId in levelGravities) {
+                if (levelGravities.hasOwnProperty(toItemId)) {
+                  if (items.hasOwnProperty(toItemId)) {
+                    toItemSlot = slots.item(items[toItemId]);
+                    if (toItemSlot != null) {
+                      if (toItemSlot.position < slot.position) {
+                        /* on the left side */
+                        slotValue += ((slot.left[level] || 0.0) - (toItemSlot.left[level] || 0.0));
+                        slotBalance += Math.abs(toItemSlot.balance + 1);
+                      } else {
+                        /* on the right side */
+                        slotValue += ((slot.right[level] || 0.0) - (toItemSlot.right[level] || 0.0));
+                        slotBalance += Math.abs(toItemSlot.balance - 1);
+                      }
+                      slotDistance += Math.abs(toItemSlot.position - slot.position);
+                    }
+                  }
+                }
+              }
+            }
+          }
 
-			/* insert item into found slot*/
-			cloneSlot = bestSlot.clone();
-			itemSlot = bestSlot.clone();
+          if (bestSlotValue == null ||
+            bestSlotValue > slotValue ||
+            (bestSlotValue == slotValue &&
+              (bestSlotDistance > slotDistance ||
+                (bestSlotDistance == slotDistance &&
+                  (bestSlotBalance > slotBalance ||
+                    (bestSlotBalance == slotBalance && bestSlotCrossings > slotCrossings)
+                  )
+                )
+              )
+            )
+          ) {
+            bestSlotKey = slotKey;
+            bestSlotValue = slotValue;
+            bestSlot = slot;
+            bestSlotDistance = slotDistance;
+            bestSlotBalance = slotBalance;
+            bestSlotCrossings = slotCrossings;
+          }
+        }
+      }, startSlotKey, endSlotKey); //ignore jslint
 
-			itemSlot.itemId = itemid;
+      slots.insertBefore(bestSlotKey, counter++, bestSlot.clone(null));
+      items[itemid] = counter;
+      itemSlotKey = counter;
+      itemSlot = bestSlot.clone(itemid);
+      if (itemsPositions.hasOwnProperty(itemid)) {
+        itemGroup = itemsGroups[itemid];
+        if (!positions.hasOwnProperty(itemGroup)) {
+          positions[itemGroup] = primitives.common.SortedList();
+        }
+        groupPositions = positions[itemGroup];
+        groupPositions.add(itemsPositions[itemid], counter);
+      }
+      slots.insertBefore(bestSlotKey, counter++, itemSlot);
 
-			slots.insertBefore(bestSlot, cloneSlot);
-			slots.insertBefore(bestSlot, itemSlot);
+      /* add new item grand children qty to all slots to their grand totals for right & left sides */
+      itemSlot.position = 0;
+      position = 0;
+      slots.iterate(function (slot, slotKey) {
+        var level, itemGrandChildren;
+        if (slotKey != itemSlotKey) {
+          itemGrandChildren = grandChildren[itemid];
+          for (level in itemGrandChildren) {
+            if (itemGrandChildren.hasOwnProperty(level)) {
+              if (!slot.left[level]) {
+                slot.left[level] = itemGrandChildren[level];
+              } else {
+                slot.left[level] += itemGrandChildren[level];
+              }
+            }
+          }
+          position += 1;
+          slot.position = position;
+        }
+      }, itemSlotKey); //ignore jslint
 
-			/* add new item grand children qty to all slots to their grand totals for right & left sides */
-			itemSlot.position = 0;
-			position = 0;
-			slots.loop(function (slot) {
-				var level, itemGrandChildren;
-				if (slot.id != itemSlot.id) {
-					itemGrandChildren = grandChildren[itemid];
-					for (level in itemGrandChildren) {
-						if (itemGrandChildren.hasOwnProperty(level)) {
-							if (!slot.left[level]) {
-								slot.left[level] = itemGrandChildren[level];
-							} else {
-								slot.left[level] += itemGrandChildren[level];
-							}
-						}
-					}
-					position += 1;
-					slot.position = position;
-				}
-			}, itemSlot); //ignore jslint
+      position = 0;
+      slots.iterateBack(function (slot, slotKey) {
+        var level, itemGrandChildren;
+        if (slotKey != itemSlotKey) {
+          itemGrandChildren = grandChildren[itemid];
+          for (level in grandChildren[itemid]) {
+            if (grandChildren[itemid].hasOwnProperty(level)) {
+              if (!slot.right[level]) {
+                slot.right[level] = itemGrandChildren[level];
+              } else {
+                slot.right[level] += itemGrandChildren[level];
+              }
+            }
+          }
+          position -= 1;
+          slot.position = position;
+        }
+      }, itemSlotKey); //ignore jslint
 
-			position = 0;
-			slots.backwardLoop(function (slot) {
-				var level, itemGrandChildren;
-				if (slot.id != itemSlot.id) {
-					itemGrandChildren = grandChildren[itemid];
-					for (level in grandChildren[itemid]) {
-						if (grandChildren[itemid].hasOwnProperty(level)) {
-							if (!slot.right[level]) {
-								slot.right[level] = itemGrandChildren[level];
-							} else {
-								slot.right[level] += itemGrandChildren[level];
-							}
-						}
-					}
-					position -= 1;
-					slot.position = position;
-				}
-			}, itemSlot); //ignore jslint
+      /* add crossings */
+      for (level in graphGravities[itemid]) {
+        if (graphGravities[itemid].hasOwnProperty(level)) {
+          levelGravities = graphGravities[itemid][level];
+          for (toItemId in levelGravities) {
+            if (levelGravities.hasOwnProperty(toItemId)) {
+              if (items.hasOwnProperty(toItemId)) {
+                toItemSlotKey = items[toItemId];
+                toItemSlot = slots.item(toItemSlotKey);
+                if (toItemSlot != null) {
+                  if (toItemSlot.position < 0) {
+                    /* on the left side */
+                    toItemSlot.balance += 1;
+                    itemSlot.balance -= 1;
+                    slots.iterateBack(function (slot, slotKey) {
+                      if (slotKey != itemSlotKey && slotKey != toItemSlotKey) {
+                        if (!slot.crossings[level]) {
+                          slot.crossings[level] = levelGravities[toItemId];
+                        } else {
+                          slot.crossings[level] += levelGravities[toItemId];
+                        }
+                      }
+                    }, itemSlotKey, toItemSlotKey); //ignore jslint
+                  } else {
+                    /* on the right side */
+                    toItemSlot.balance -= 1;
+                    itemSlot.balance += 1;
+                    slots.iterate(function (slot, slotKey) {
+                      if (slotKey != itemSlotKey && slotKey != toItemSlotKey) {
+                        if (!slot.crossings[level]) {
+                          slot.crossings[level] = levelGravities[toItemId];
+                        } else {
+                          slot.crossings[level] += levelGravities[toItemId];
+                        }
+                      }
+                    }, itemSlotKey, toItemSlotKey); //ignore jslint
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
-			/* add crossings */
-			for (level in graphGravities[itemid]) {
-				if (graphGravities[itemid].hasOwnProperty(level)) {
-					levelGravities = graphGravities[itemid][level];
-					for (toItemId in levelGravities) {
-						if (levelGravities.hasOwnProperty(toItemId)) {
-							toItemSlot = slots.getSlot(toItemId);
-							if (toItemSlot != null) {
-								if (toItemSlot.position < 0) {
-									/* on the left side */
-									toItemSlot.balance += 1;
-									itemSlot.balance -= 1;
-									slots.backwardLoop(function (slot) {
-										if (slot.id != itemSlot.id) {
-											if (slot.id != toItemSlot.id) {
-												if (!slot.crossings[level]) {
-													slot.crossings[level] = levelGravities[toItemId];
-												} else {
-													slot.crossings[level] += levelGravities[toItemId];
-												}
-											} else {
-												return true;
-											}
-										}
-									}, itemSlot); //ignore jslint
-								} else {
-									/* on the right side */
-									toItemSlot.balance -= 1;
-									itemSlot.balance += 1;
-									slots.loop(function (slot) {
-										if (slot.id != itemSlot.id) {
-											if (slot.id != toItemSlot.id) {
-												if (!slot.crossings[level]) {
-													slot.crossings[level] = levelGravities[toItemId];
-												} else {
-													slot.crossings[level] += levelGravities[toItemId];
-												}
-											} else {
-												return true;
-											}
-										}
-									}, itemSlot); //ignore jslint
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+  slots.iterate(function (slot) {
+    var itemId = slot.itemId;
+    if (itemId != null && itemId != leftId && itemId != rightId) {
+      result.push(itemId);
+    }
+  });
 
-	slots.loop(function (slot) {
-		var itemId = slot.itemId;
-		if (itemId != null && itemId != leftId && itemId != rightId) {
-			result.push(itemId);
-		}
-	});
-
-	return result;
+  return result;
 };
 
 primitives.famdiagram.FamilyBalance.prototype.ExtraGravity = function (level) {
-	this.commonParent = null; // primitives.orgdiagram.OrgItem.id
-	this.fromParent = null; // primitives.orgdiagram.OrgItem.id
-	this.toParent = null; // primitives.orgdiagram.OrgItem.id
-	this.level = level;
+  this.commonParent = null; // primitives.orgdiagram.OrgItem.id
+  this.fromParent = null; // primitives.orgdiagram.OrgItem.id
+  this.toParent = null; // primitives.orgdiagram.OrgItem.id
+  this.level = level;
 };
 
 primitives.famdiagram.FamilyBalance.prototype.getExtraGravity = function (data) {
-	var orgItemId, orgItem,
-		result = {}, /* Key = primitives.orgdiagram.OrgItem.id, Value= Hash {} having Key = level and Value = [] array of ExtraGravity objects*/
-		index, len,
-		extraPartners, extraPartner;
+  var orgItemId, orgItem,
+    result = {}, /* Key = primitives.orgdiagram.OrgItem.id, Value= Hash {} having Key = level and Value = [] array of ExtraGravity objects*/
+    index, len,
+    extraPartners, extraPartner;
 
-	/* collect gravities for extra partners */
-	for (orgItemId in data.orgPartners) {
-		if (data.orgPartners.hasOwnProperty(orgItemId)) {
-			orgItem = data.orgTree.node(orgItemId);
-			extraPartners = data.orgPartners[orgItemId];
+  /* collect gravities for extra partners */
+  for (orgItemId in data.orgPartners) {
+    if (data.orgPartners.hasOwnProperty(orgItemId)) {
+      orgItem = data.orgTree.node(orgItemId);
+      extraPartners = data.orgPartners[orgItemId];
 
-			for (index = 0, len = extraPartners.length; index < len; index += 1) {
-				extraPartner = data.orgTree.node(extraPartners[index]);
+      for (index = 0, len = extraPartners.length; index < len; index += 1) {
+        extraPartner = data.orgTree.node(extraPartners[index]);
 
-				this.addExtraGravitiesForConnection(data.orgTree, result, extraPartner, orgItem);
-			}
-		}
-	}
+        this.addExtraGravitiesForConnection(data.orgTree, result, extraPartner, orgItem);
+      }
+    }
+  }
 
-	return result;
+  return result;
 };
 
 primitives.famdiagram.FamilyBalance.prototype.addExtraGravitiesForConnection = function (orgTree, extraGravities, fromItem, toItem) {
-	var extraGravityFrom = new this.ExtraGravity(fromItem.level),
-		extraGravityTo = new this.ExtraGravity(toItem.level);
+  var extraGravityFrom = new this.ExtraGravity(fromItem.level),
+    extraGravityTo = new this.ExtraGravity(toItem.level);
 
-	/* find common parent for evry child and orgItem and create connector for evey parent in selection path */
-	orgTree.zipUp(this, fromItem.id, toItem.id, function (fromItemId, parentFromItemId, toItemId, parentToItemId) {
-		/* all parent items in chain up to the common root share the same gravity object for one connector */
-		this.addExtraGravityForItem(extraGravities, fromItemId, extraGravityFrom);
-		this.addExtraGravityForItem(extraGravities, toItemId, extraGravityTo);
+  /* find common parent for evry child and orgItem and create connector for evey parent in selection path */
+  orgTree.zipUp(this, fromItem.id, toItem.id, function (fromItemId, parentFromItemId, toItemId, parentToItemId) {
+    /* all parent items in chain up to the common root share the same gravity object for one connector */
+    this.addExtraGravityForItem(extraGravities, fromItemId, extraGravityFrom);
+    this.addExtraGravityForItem(extraGravities, toItemId, extraGravityTo);
 
-		/* initialize gravity objects */
-		if (parentFromItemId == parentToItemId) {
-			extraGravityFrom.commonParent = parentFromItemId;
-			extraGravityFrom.fromParent = fromItemId;
-			extraGravityFrom.toParent = toItemId;
+    /* initialize gravity objects */
+    if (parentFromItemId == parentToItemId) {
+      extraGravityFrom.commonParent = parentFromItemId;
+      extraGravityFrom.fromParent = fromItemId;
+      extraGravityFrom.toParent = toItemId;
 
-			extraGravityTo.commonParent = parentFromItemId;
-			extraGravityTo.fromParent = toItemId;
-			extraGravityTo.toParent = fromItemId;
+      extraGravityTo.commonParent = parentFromItemId;
+      extraGravityTo.fromParent = toItemId;
+      extraGravityTo.toParent = fromItemId;
 
-			return true;
-		}
-	});
+      return true;
+    }
+  });
 };
 
 primitives.famdiagram.FamilyBalance.prototype.addExtraGravityForItem = function (extraGravities, id, extraGravity) {
-	if (!extraGravities.hasOwnProperty(id)) {
-		extraGravities[id] = {};
-	}
-	if (extraGravities[id][extraGravity.level] == null) {
-		extraGravities[id][extraGravity.level] = [];
-	}
-	extraGravities[id][extraGravity.level].push(extraGravity);
+  if (!extraGravities.hasOwnProperty(id)) {
+    extraGravities[id] = {};
+  }
+  if (extraGravities[id][extraGravity.level] == null) {
+    extraGravities[id][extraGravity.level] = [];
+  }
+  extraGravities[id][extraGravity.level].push(extraGravity);
 };
 
 primitives.famdiagram.FamilyBalance.prototype.attachFamilyToOrgChart = function (data, defaultItemConfig, parent, family) {
-	var levelIndex,
-		familyRoot = family.items[0],
-		newOrgItem = null,
-		rootItem = parent;
+  var levelIndex,
+    familyRoot = family.items[0],
+    newOrgItem = null,
+    rootItem = parent;
 
-	// fill in levels between parent and family root with invisible items
-	for (levelIndex = parent.level + 1; levelIndex < familyRoot.level; levelIndex += 1) {
-		data.maximumId += 1;
-		newOrgItem = this.createOrgItem(data.orgTree, defaultItemConfig, data.maximumId, rootItem.id, null, levelIndex, null /* userItem */);
-		newOrgItem.title = "shift";
-		newOrgItem.isVisible = false;
-		newOrgItem.isActive = false;
-		newOrgItem.hideParentConnection = true;
-		newOrgItem.hideChildrenConnection = true;
-		family.items.push(newOrgItem);
+  // fill in levels between parent and family root with invisible items
+  for (levelIndex = parent.level + 1; levelIndex < familyRoot.level; levelIndex += 1) {
+    data.maximumId += 1;
+    newOrgItem = this.createOrgItem(data.orgTree, defaultItemConfig, data.maximumId, rootItem.id, null, levelIndex, null /* userItem */);
+    newOrgItem.title = "shift";
+    newOrgItem.isVisible = false;
+    newOrgItem.isActive = false;
+    newOrgItem.hideParentConnection = true;
+    newOrgItem.hideChildrenConnection = true;
+    family.items.push(newOrgItem);
 
-		rootItem = newOrgItem;
-	}
+    rootItem = newOrgItem;
+  }
 
-	// attach family root 
-	familyRoot.hideParentConnection = true;
-	data.orgTree.adopt(rootItem.id, familyRoot.id, familyRoot);
+  // attach family root 
+  familyRoot.hideParentConnection = true;
+  data.orgTree.adopt(rootItem.id, familyRoot.id, familyRoot);
 };
 
 primitives.famdiagram.FamilyBalance.prototype.extractOrgChart = function (grandParentId, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family) {
-	var index, len,
-		children = [], tempChildren,
-		childItem,
-		rootItem = null,
-		newOrgItem,
-		grandParent = logicalFamily.node(grandParentId);
+  var index, len,
+    children = [], tempChildren,
+    childItem,
+    rootItem = null,
+    newOrgItem,
+    grandParent = logicalFamily.node(grandParentId);
 
-	/* extract root item */
-	newOrgItem = this.createOrgItem(orgTree, defaultItemConfig, grandParent.id, rootItem, family.id, grandParent.level, grandParent.itemConfig);
-	newOrgItem.hideParentConnection = true;
-	newOrgItem.isVisible = grandParent.isVisible;
-	newOrgItem.isActive = grandParent.isActive;
-	newOrgItem.hideParentConnection = grandParent.hideParentConnection;
-	newOrgItem.hideChildrenConnection = grandParent.hideChildrenConnection;
-	family.items.push(newOrgItem);
+  /* extract root item */
+  newOrgItem = this.createOrgItem(orgTree, defaultItemConfig, grandParent.id, rootItem, family.id, grandParent.level, grandParent.itemConfig);
+  newOrgItem.hideParentConnection = true;
+  newOrgItem.isVisible = grandParent.isVisible;
+  newOrgItem.isActive = grandParent.isActive;
+  newOrgItem.hideParentConnection = grandParent.hideParentConnection;
+  newOrgItem.hideChildrenConnection = grandParent.hideChildrenConnection;
+  family.items.push(newOrgItem);
 
-	famItemsExtracted[grandParent.id] = true;
-	grandParent.familyId = family.id;
+  famItemsExtracted[grandParent.id] = true;
+  grandParent.familyId = family.id;
 
-	/* extract its children */
-	children = this.extractChildren(grandParent, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family);
+  /* extract its children */
+  children = this.extractChildren(grandParent, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family);
 
-	while (children.length > 0) {
-		tempChildren = [];
-		for (index = 0, len = children.length; index < len; index += 1) {
-			childItem = children[index];
-			tempChildren = tempChildren.concat(this.extractChildren(childItem, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family));
-		}
+  while (children.length > 0) {
+    tempChildren = [];
+    for (index = 0, len = children.length; index < len; index += 1) {
+      childItem = children[index];
+      tempChildren = tempChildren.concat(this.extractChildren(childItem, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family));
+    }
 
-		children = tempChildren;
-	}
+    children = tempChildren;
+  }
 };
 
 primitives.famdiagram.FamilyBalance.prototype.extractChildren = function (parentItem, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family) {
-	var result = [],
-		firstChild = null,
-		partnerItem = null,
-		newOrgItem;
+  var result = [],
+    firstChild = null,
+    partnerItem = null,
+    newOrgItem;
 
-	if (logicalFamily.countChildren(parentItem.id) == 1) {
-		firstChild = logicalFamily.firstChild(parentItem.id);
-	}
+  if (logicalFamily.countChildren(parentItem.id) == 1) {
+    firstChild = logicalFamily.firstChild(parentItem.id);
+  }
 
-	if (itemByChildrenKey[firstChild] != null) {
-		/* all children already extracted */
-		partnerItem = itemByChildrenKey[firstChild];
+  if (itemByChildrenKey[firstChild] != null) {
+    /* all children already extracted */
+    partnerItem = itemByChildrenKey[firstChild];
 
-		if (orgPartners[partnerItem.id] == null) {
-			orgPartners[partnerItem.id] = [];
-		}
-		orgPartners[partnerItem.id].push(parentItem.id);
+    if (orgPartners[partnerItem.id] == null) {
+      orgPartners[partnerItem.id] = [];
+    }
+    orgPartners[partnerItem.id].push(parentItem.id);
 
-		family.links.push(new this.FamLink(parentItem.id, firstChild));
-	} else {
-		if (firstChild != null) {
-			itemByChildrenKey[firstChild] = parentItem;
-		}
+    family.links.push(new this.FamLink(parentItem.id, firstChild));
+  } else {
+    if (firstChild != null) {
+      itemByChildrenKey[firstChild] = parentItem;
+    }
 
-		logicalFamily.loopChildren(this, parentItem.id, function (childid, childItem, levelIndex) {
-			if (famItemsExtracted[childItem.id]) {
-				throw "Many to many relations should not exist at this stage";
-			}
-			result.push(childItem);
+    logicalFamily.loopChildren(this, parentItem.id, function (childid, childItem, levelIndex) {
+      if (famItemsExtracted[childItem.id]) {
+        throw "Many to many relations should not exist at this stage";
+      }
+      result.push(childItem);
 
-			newOrgItem = this.createOrgItem(orgTree, defaultItemConfig, childItem.id, parentItem.id, family.id, childItem.level, childItem.itemConfig);
-			newOrgItem.hideParentConnection = childItem.hideParentConnection;
-			newOrgItem.hideChildrenConnection = childItem.hideChildrenConnection;
-			newOrgItem.isVisible = childItem.isVisible;
-			newOrgItem.isActive = childItem.isActive;
-			family.items.push(newOrgItem);
+      newOrgItem = this.createOrgItem(orgTree, defaultItemConfig, childItem.id, parentItem.id, family.id, childItem.level, childItem.itemConfig);
+      newOrgItem.hideParentConnection = childItem.hideParentConnection;
+      newOrgItem.hideChildrenConnection = childItem.hideChildrenConnection;
+      newOrgItem.isVisible = childItem.isVisible;
+      newOrgItem.isActive = childItem.isActive;
+      family.items.push(newOrgItem);
 
-			famItemsExtracted[childItem.id] = true;
+      famItemsExtracted[childItem.id] = true;
 
-			childItem.familyId = family.id;
-			return logicalFamily.SKIP;
-		});
-	}
-	return result;
+      childItem.familyId = family.id;
+      return logicalFamily.SKIP;
+    });
+  }
+  return result;
 };
 
 primitives.famdiagram.FamilyBalance.prototype.createOrgItem = function (orgTree, defaultItemConfig, id, parentId, familyId, level, userItem) {
-	var orgItem = new primitives.orgdiagram.OrgItem({}),
-		index, len,
-		property;
+  var orgItem = new primitives.orgdiagram.OrgItem({}),
+    index, len,
+    property;
 
-	// OrgItem id coinsides with ItemConfig id since we don't add any new org items to user's org chart definition
-	orgItem.id = id;
-	orgItem.familyId = familyId;
-	orgItem.level = level;
+  // OrgItem id coinsides with ItemConfig id since we don't add any new org items to user's org chart definition
+  orgItem.id = id;
+  orgItem.familyId = familyId;
+  orgItem.level = level;
 
-	for (index = 0, len = this.properties.length; index < len; index += 1) {
-		property = this.properties[index];
+  for (index = 0, len = this.properties.length; index < len; index += 1) {
+    property = this.properties[index];
 
-		orgItem[property] = (userItem != null && userItem[property] !== undefined) ? userItem[property] : defaultItemConfig[property];
-	}
-	orgTree.add(parentId, orgItem.id, orgItem);
+    orgItem[property] = (userItem != null && userItem[property] !== undefined) ? userItem[property] : defaultItemConfig[property];
+  }
+  orgTree.add(parentId, orgItem.id, orgItem);
 
-	return orgItem;
+  return orgItem;
 };
 
 primitives.famdiagram.FamilyBalance.prototype.recalcLevelsDepth = function (bundles, connectorStacks, treeLevels, orgTree, orgPartners) {
-	var index, len,
-		index2, len2,
-		index3, len3,
-		itemPosition,
-		bundle, bundlesToStack,
-		processed = {},
-		startIndex, endIndex, stackSegments;
+  var index, len,
+    index2, len2,
+    index3, len3,
+    itemPosition,
+    bundle, bundlesToStack,
+    processed = {},
+    startIndex, endIndex, stackSegments;
 
 
-	treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
-		var stacksSizes = new primitives.orgdiagram.TreeLevelConnectorStackSize();
-		connectorStacks[levelIndex] = stacksSizes;
+  treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
+    var stacksSizes = new primitives.orgdiagram.TreeLevelConnectorStackSize();
+    connectorStacks[levelIndex] = stacksSizes;
 
-		bundlesToStack = [];
+    bundlesToStack = [];
 
-		treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
-			var fromItems = [],
-				toItems = [],
-				partners;
-			if (!processed.hasOwnProperty(itemid)) {
+    treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
+      var fromItems = [],
+        toItems = [],
+        partners;
+      if (!processed.hasOwnProperty(itemid)) {
 
 
-				processed[itemid] = true;
-				if (!treeItem.hideChildrenConnection) {
-					fromItems.push(itemid);
-				}
+        processed[itemid] = true;
+        if (!treeItem.hideChildrenConnection) {
+          fromItems.push(itemid);
+        }
 
-				partners = orgPartners[itemid];
-				if (partners != null) {
-					for (index = 0, len = partners.length; index < len; index += 1) {
-						var partner = partners[index];
-						processed[partner] = true;
-						fromItems.push(partner);
-					}
-				}
+        partners = orgPartners[itemid];
+        if (partners != null) {
+          for (index = 0, len = partners.length; index < len; index += 1) {
+            var partner = partners[index];
+            processed[partner] = true;
+            fromItems.push(partner);
+          }
+        }
 
-				orgTree.loopChildren(this, itemid, function (childid, child, index) {
-					if (!child.hideParentConnection) {
-						toItems.push(childid);
-					}
-				}); //ignore jslint
+        orgTree.loopChildren(this, itemid, function (childid, child, index) {
+          if (!child.hideParentConnection) {
+            toItems.push(childid);
+          }
+        }); //ignore jslint
 
-				if (fromItems.length > 1 || toItems.length > 0) {
-					/* if bundle has more than one parent without children we draw connection line between parents */
-					/* if bundles has no parents, but has children we draw connectors between children, top loop */
-					bundle = new primitives.common.VerticalConnectorBundle(fromItems, toItems);
+        if (fromItems.length > 1 || toItems.length > 0) {
+          /* if bundle has more than one parent without children we draw connection line between parents */
+          /* if bundles has no parents, but has children we draw connectors between children, top loop */
+          bundle = new primitives.common.VerticalConnectorBundle(fromItems, toItems);
 
-					bundles.push(bundle);
+          bundles.push(bundle);
 
-					if (fromItems.length > 1) {
-						bundlesToStack.push(bundle);
-					}
-				}
-			}
-		});
+          if (fromItems.length > 1) {
+            bundlesToStack.push(bundle);
+          }
+        }
+      }
+    });
 
-		if (bundlesToStack.length > 0) {
-			/* find minimum and maximum partner index at level */
-			stackSegments = primitives.common.pile();
-			for (index2 = 0, len2 = bundlesToStack.length; index2 < len2; index2 += 1) {
-				bundle = bundlesToStack[index2];
+    if (bundlesToStack.length > 0) {
+      /* find minimum and maximum partner index at level */
+      stackSegments = primitives.common.pile();
+      for (index2 = 0, len2 = bundlesToStack.length; index2 < len2; index2 += 1) {
+        bundle = bundlesToStack[index2];
 
-				startIndex = null;
-				endIndex = null;
-				for (index3 = 0, len3 = bundle.fromItems.length; index3 < len3; index3 += 1) {
-					itemPosition = treeLevels.getItemPosition(bundle.fromItems[index3]);
+        startIndex = null;
+        endIndex = null;
+        for (index3 = 0, len3 = bundle.fromItems.length; index3 < len3; index3 += 1) {
+          itemPosition = treeLevels.getItemPosition(bundle.fromItems[index3]);
 
-					startIndex = (startIndex != null) ? Math.min(startIndex, itemPosition) : itemPosition;
-					endIndex = (endIndex != null) ? Math.max(endIndex, itemPosition) : itemPosition;
-				}
-				stackSegments.add(startIndex, endIndex, bundle);
-			}
+          startIndex = (startIndex != null) ? Math.min(startIndex, itemPosition) : itemPosition;
+          endIndex = (endIndex != null) ? Math.max(endIndex, itemPosition) : itemPosition;
+        }
+        stackSegments.add(startIndex, endIndex, bundle);
+      }
 
-			stacksSizes.parentsStackSize = stackSegments.resolve(this, function (from, to, bundle, offset, stackSize) {
-				bundle.fromOffset = offset + 1;
-				bundle.fromStackSize = stackSize;
-			});//ignore jslint
-		}
-	});
+      stacksSizes.parentsStackSize = stackSegments.resolve(this, function (from, to, bundle, offset, stackSize) {
+        bundle.fromOffset = offset + 1;
+        bundle.fromStackSize = stackSize;
+      });//ignore jslint
+    }
+  });
 };

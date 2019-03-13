@@ -1,380 +1,394 @@
-﻿<!DOCTYPE html> 
+﻿<!DOCTYPE html>
 <html>
+
 <head>
-	<title>JavaScript Control Family Tree Chart Demo</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>JavaScript Control Family Tree Chart Demo</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-	<!-- header -->
-	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-	<script type="text/javascript" src="common/helpers.js"></script>
-	<script type="text/javascript" src="../data/famdata.js"></script>
-	
-	<script type="text/javascript">
-		var control = null;
-		var timer = null;
-		var treeItems = {};
-		var fromItem = 0;
-		var toItem = 0;
-		var connectorAnnotation;
+  <!-- header -->
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <script type="text/javascript" src="common/helpers.js"></script>
+  <script type="text/javascript" src="../data/famdata.js"></script>
 
-		var optionsRender = primitives.helpers.controls.getFamDiagramOptionsRender([
-			new primitives.helpers.controls.PanelConfig("Demo Family Datasets", [
-				new primitives.helpers.controls.RadioBoxConfig("dataSet", defaultDataSetName, "Select Data Set", dataSetNames, primitives.helpers.controls.ValueType.String, onUpdate)
-			])
-		], {
-			/* Data Sets */
-			dataSet: defaultDataSetName,
+  <script type="text/javascript">
+    var control = null;
+    var timer = null;
+    var treeItems = {};
+    var fromItem = 0;
+    var toItem = 0;
+    var connectorAnnotation;
 
-			/* Family Diagram Specific Options */
-			neighboursSelectionMode: primitives.common.NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses,
-			groupByType: primitives.common.GroupByType.Children,
-			alignBylevels: "true",
-			hideGrandParentsConnectors: "false",
-			enableMatrixLayout: "false",
-			minimumMatrixSize: 2,
-			maximumColumnsInMatrix: 6,
+    var optionsRender = primitives.helpers.controls.getFamDiagramOptionsRender([
+      new primitives.helpers.controls.PanelConfig("Demo Family Datasets", [
+        new primitives.helpers.controls.RadioBoxConfig("dataSet", defaultDataSetName, "Select Data Set", dataSetNames, primitives.helpers.controls.ValueType.String, onUpdate)
+      ])
+    ], {
+        /* Data Sets */
+        dataSet: defaultDataSetName,
 
-			/* On-screen annotations specific options */
-			AnnotationOptions: {
-				connectorPlacementType: primitives.common.ConnectorPlacementType.Offbeat,
-				connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-				labelPlacementType: primitives.common.ConnectorLabelPlacementType.Between,
-				lineWidth: 2,
-				lineType: primitives.common.LineType.Dashed,
-				color: primitives.common.Colors.Red,
-				offset: 5,
-				zOrderType: primitives.common.ZOrderType.Auto
-			},
-			/* Layout */
-			pageFitMode: primitives.common.PageFitMode.FitToPage,
-			orientationType: primitives.common.OrientationType.Top,
-			verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-			horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
-			childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
-			leavesPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
-			maximumColumnsInMatrix: 6,
-			minimalVisibility: primitives.common.Visibility.Dot,
-			selectionPathMode: primitives.common.SelectionPathMode.None,
+        /* Family Diagram Specific Options */
+        neighboursSelectionMode: primitives.common.NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses,
+        groupByType: primitives.common.GroupByType.Children,
+        alignBylevels: "true",
+        hideGrandParentsConnectors: "false",
+        enableMatrixLayout: "false",
+        minimumMatrixSize: 2,
+        maximumColumnsInMatrix: 6,
 
-			hasButtons: primitives.common.Enabled.Auto,
-			hasSelectorCheckbox: primitives.common.Enabled.True,
-			selectCheckBoxLabel: "Selected",
-			itemTitleFirstFontColor: primitives.common.Colors.White,
-			itemTitleSecondFontColor: primitives.common.Colors.White,
-			buttonsPanelSize: 28,
-			groupTitlePanelSize: 24,
-			checkBoxPanelSize: 24,
+        /* On-screen annotations specific options */
+        AnnotationOptions: {
+          connectorPlacementType: primitives.common.ConnectorPlacementType.Offbeat,
+          connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
+          labelPlacementType: primitives.common.ConnectorLabelPlacementType.Between,
+          lineWidth: 2,
+          lineType: primitives.common.LineType.Dashed,
+          color: primitives.common.Colors.Red,
+          offset: 5,
+          zOrderType: primitives.common.ZOrderType.Auto
+        },
+        /* Layout */
+        pageFitMode: primitives.common.PageFitMode.FitToPage,
+        orientationType: primitives.common.OrientationType.Top,
+        verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
+        horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+        childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+        leavesPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+        maximumColumnsInMatrix: 6,
+        minimalVisibility: primitives.common.Visibility.Dot,
+        selectionPathMode: primitives.common.SelectionPathMode.None,
 
-			/* group title options */
-			groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
-			groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
-			groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-			groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
-			groupTitleFontSize: "12px",
-			groupTitleFontFamily: "Arial",
-			groupTitleColor: primitives.common.Colors.RoyalBlue,
-			groupTitleFontWeight: "normal",
-			groupTitleFontStyle: "normal",
+        hasButtons: primitives.common.Enabled.Auto,
+        hasSelectorCheckbox: primitives.common.Enabled.True,
+        selectCheckBoxLabel: "Selected",
+        itemTitleFirstFontColor: primitives.common.Colors.White,
+        itemTitleSecondFontColor: primitives.common.Colors.White,
+        buttonsPanelSize: 28,
+        groupTitlePanelSize: 24,
+        checkBoxPanelSize: 24,
 
-			/* Template */
-			DefaultTemplateOptions: {
-				minimizedItemCornerRadius: 8,
-				minimizedItemSize: new primitives.common.Size(16, 16),
-				highlightPadding: 4,
-				minimizedItemShapeType: primitives.common.ShapeType.None,
-				minimizedItemLineWidth: 1,
-				minimizedItemLineType: primitives.common.LineType.Solid,
-				minimizedItemBorderColor: null,
-				minimizedItemFillColor: null,
-				minimizedItemOpacity: 1.0
-			},
+        /* group title options */
+        groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
+        groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
+        groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
+        groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+        groupTitleFontSize: "12px",
+        groupTitleFontFamily: "Arial",
+        groupTitleColor: primitives.common.Colors.RoyalBlue,
+        groupTitleFontWeight: "normal",
+        groupTitleFontStyle: "normal",
 
-			/* Intervals */
-			normalLevelShift: 20,
-			dotLevelShift: 20,
-			lineLevelShift: 20,
+        /* Template */
+        DefaultTemplateOptions: {
+          minimizedItemCornerRadius: 8,
+          minimizedItemSize: new primitives.common.Size(16, 16),
+          highlightPadding: 4,
+          minimizedItemShapeType: primitives.common.ShapeType.None,
+          minimizedItemLineWidth: 1,
+          minimizedItemLineType: primitives.common.LineType.Solid,
+          minimizedItemBorderColor: null,
+          minimizedItemFillColor: null,
+          minimizedItemOpacity: 1.0
+        },
 
-			normalItemsInterval: 20,
-			dotItemsInterval: 10,
-			lineItemsInterval: 10,
+        /* Intervals */
+        normalLevelShift: 20,
+        dotLevelShift: 20,
+        lineLevelShift: 20,
 
-			cousinsIntervalMultiplier: 0,
+        normalItemsInterval: 20,
+        dotItemsInterval: 10,
+        lineItemsInterval: 10,
 
-			/* Connectors */
-			arrowsDirection: primitives.common.GroupByType.Parents,
-			showExtraArrows: true,
-			extraArrowsMinimumSpace: 30,
-			connectorType: primitives.common.ConnectorType.Squared,
-			elbowType: primitives.common.ElbowType.Round,
-			bevelSize: 4,
-			elbowDotSize: 4,
-			linesType: primitives.common.LineType.Solid,
-			linesColor: primitives.common.Colors.Black,
-			linesWidth: 1,
+        cousinsIntervalMultiplier: 0,
 
-			/* Labels */
-			showLabels: primitives.common.Enabled.Auto,
-			labelSize: new primitives.common.Size(60, 40),
-			labelOrientation: primitives.text.TextOrientationType.Horizontal,
-			labelPlacement: primitives.common.PlacementType.Top,
-			labelOffset: 1,
-			labelFontSize: "10px",
-			labelFontFamily: "Arial",
-			labelColor: primitives.common.Colors.Black,
-			labelFontWeight: "normal",
-			labelFontStyle: "normal",
+        /* Connectors */
+        arrowsDirection: primitives.common.GroupByType.Parents,
+        showExtraArrows: true,
+        extraArrowsMinimumSpace: 30,
+        connectorType: primitives.common.ConnectorType.Squared,
+        elbowType: primitives.common.ElbowType.Round,
+        bevelSize: 4,
+        elbowDotSize: 4,
+        linesType: primitives.common.LineType.Solid,
+        linesColor: primitives.common.Colors.Black,
+        linesWidth: 1,
 
-			/* Callout */
-			calloutMaximumVisibility: primitives.common.Visibility.Dot,
-			showCallout: "true",
-			calloutPlacementOffset: 100,
-			calloutfillColor: "#000000",
-			calloutBorderColor: null,
-			calloutOffset: 4,
-			calloutCornerRadius: 4,
-			calloutPointerWidth: "10%",
-			calloutLineWidth: 1,
-			calloutOpacity: 0.2,
+        /* Labels */
+        showLabels: primitives.common.Enabled.Auto,
+        labelSize: new primitives.common.Size(60, 40),
+        labelOrientation: primitives.text.TextOrientationType.Horizontal,
+        labelPlacement: primitives.common.PlacementType.Top,
+        labelOffset: 1,
+        labelFontSize: "10px",
+        labelFontFamily: "Arial",
+        labelColor: primitives.common.Colors.Black,
+        labelFontWeight: "normal",
+        labelFontStyle: "normal",
 
-			/* Interactivity */
-			navigationMode: primitives.common.NavigationMode.Default,
-			highlightGravityRadius: 40,
-			enablePanning: true,
+        /* Callout */
+        calloutMaximumVisibility: primitives.common.Visibility.Dot,
+        showCallout: "true",
+        calloutPlacementOffset: 100,
+        calloutfillColor: "#000000",
+        calloutBorderColor: null,
+        calloutOffset: 4,
+        calloutCornerRadius: 4,
+        calloutPointerWidth: "10%",
+        calloutLineWidth: 1,
+        calloutOpacity: 0.2,
 
-			/* Graphics */
-			graphicsType: primitives.common.GraphicsType.SVG,
+        /* Interactivity */
+        navigationMode: primitives.common.NavigationMode.Default,
+        highlightGravityRadius: 40,
+        enablePanning: true,
 
-			scale: 1.0
-		},
-		/* On property change event handler */
-		onUpdate
-		);
+        /* Graphics */
+        graphicsType: primitives.common.GraphicsType.SVG,
 
-		function onUpdate() {
-			control.setOptions(GetDiagramConfig());
-			control.update(primitives.common.UpdateMode.Recreate);
-		};
+        scale: 1.0
+      },
+      /* On property change event handler */
+      onUpdate
+    );
 
-		document.addEventListener('DOMContentLoaded', function () {
-			optionsRender.render(document.getElementById("westpanel"));
-			control = primitives.famdiagram.Control(document.getElementById("centerpanel"),
-				GetDiagramConfig()
-			);
+    function onUpdate() {
+      control.setOptions(GetDiagramConfig());
+      control.update(primitives.common.UpdateMode.Recreate);
+    };
 
-			window.addEventListener('resize', function (event) {
-				onWindowResize();
-			});
-		});
+    document.addEventListener('DOMContentLoaded', function () {
+      optionsRender.render(document.getElementById("westpanel"));
+      control = primitives.famdiagram.Control(document.getElementById("centerpanel"),
+        GetDiagramConfig()
+      );
 
-		function GetDiagramConfig() {
-			var options = optionsRender.getValues();
+      window.addEventListener('resize', function (event) {
+        onWindowResize();
+      });
+    });
 
-			primitives.common.mergeObjects(options, {
-				templates: [getDefaultTemplate(options)],
-				defaultTemplateName: "defaultTemplate",
-				buttons: [
-					new primitives.famdiagram.ButtonConfig("to", "ui-icon-circle-triangle-w", "to"),
-					new primitives.famdiagram.ButtonConfig("from", "ui-icon-circle-triangle-e", "from")
-				]
-			})
+    function GetDiagramConfig() {
+      var options = optionsRender.getValues();
 
-			primitives.common.mergeObjects(options, {
-				onButtonClick: onButtonClick,
-				onCursorChanging: onCursorChanging,
-				onCursorChanged: onCursorChanged,
-				onHighlightChanging: onHighlightChanging,
-				onHighlightChanged: onHighlightChanged,
-				onSelectionChanged: onSelectionChanged
-			});
+      primitives.common.mergeObjects(options, {
+        templates: [getDefaultTemplate(options)],
+        defaultTemplateName: "defaultTemplate",
+        buttons: [
+          new primitives.famdiagram.ButtonConfig("to", "ui-icon-circle-triangle-w", "to"),
+          new primitives.famdiagram.ButtonConfig("from", "ui-icon-circle-triangle-e", "from")
+        ]
+      })
 
-			var data = window[options.dataSet]; // See famdata.js for definitions
+      primitives.common.mergeObjects(options, {
+        onButtonClick: onButtonClick,
+        onCursorChanging: onCursorChanging,
+        onCursorChanged: onCursorChanged,
+        onHighlightChanging: onHighlightChanging,
+        onHighlightChanged: onHighlightChanged,
+        onSelectionChanged: onSelectionChanged
+      });
 
-			// find first connector annotation and keep reference to it
-			connectorAnnotation = null;
-			if (data.annotations != null) {
-				for (var index = 0; index < data.annotations.length; index += 1) {
-					var annotation = data.annotations[index];
-					if (annotation.annotationType == primitives.common.AnnotationType.Connector) {
-						connectorAnnotation = annotation;
-						fromItem = annotation.fromItem;
-						toItem = annotation.toItem;
+      var data = window[options.dataSet]; // See famdata.js for definitions
 
-						primitives.common.mergeObjects(connectorAnnotation, options.AnnotationOptions);
+      // find first connector annotation and keep reference to it
+      connectorAnnotation = null;
+      if (data.annotations != null) {
+        for (var index = 0; index < data.annotations.length; index += 1) {
+          var annotation = data.annotations[index];
+          if (annotation.annotationType == primitives.common.AnnotationType.Connector) {
+            connectorAnnotation = annotation;
+            fromItem = annotation.fromItem;
+            toItem = annotation.toItem;
 
-						break;
-					}
-				}
-			}
+            primitives.common.mergeObjects(connectorAnnotation, options.AnnotationOptions);
 
-			primitives.common.mergeObjects(options, data);
+            break;
+          }
+        }
+      }
 
-			primitives.common.mergeObjects(options, {
-				linesPalette: [
-					{ lineColor: "#C6C6C6", lineWidth: 1, lineType: primitives.common.LineType.Solid }, //1
-					{ lineColor: "#A5A5A5", lineWidth: 1, lineType: primitives.common.LineType.Solid }, //4
-					{ lineColor: "#848484", lineWidth: 1, lineType: primitives.common.LineType.Solid }, //7
-					{ lineColor: "#646464", lineWidth: 1, lineType: primitives.common.LineType.Solid }, //10
-					{ lineColor: "#454545", lineWidth: 1, lineType: primitives.common.LineType.Solid } //13
-				]
-			});
+      primitives.common.mergeObjects(options, data);
 
-			return options;
-		}
+      primitives.common.mergeObjects(options, {
+        linesPalette: [
+          { lineColor: "#C6C6C6", lineWidth: 1, lineType: primitives.common.LineType.Solid }, //1
+          { lineColor: "#A5A5A5", lineWidth: 1, lineType: primitives.common.LineType.Solid }, //4
+          { lineColor: "#848484", lineWidth: 1, lineType: primitives.common.LineType.Solid }, //7
+          { lineColor: "#646464", lineWidth: 1, lineType: primitives.common.LineType.Solid }, //10
+          { lineColor: "#454545", lineWidth: 1, lineType: primitives.common.LineType.Solid } //13
+        ]
+      });
 
-		function getDefaultTemplate(options) {
-			var result = new primitives.orgdiagram.TemplateConfig();
-			result.name = "defaultTemplate";
+      return options;
+    }
 
-			// If we don't change anything in template then all its properties stays default
-			// So we change only minimized item properties
-			primitives.common.mergeObjects(result, options.DefaultTemplateOptions);
+    function getDefaultTemplate(options) {
+      var result = new primitives.orgdiagram.TemplateConfig();
+      result.name = "defaultTemplate";
 
-			return result;
-		}
+      // If we don't change anything in template then all its properties stays default
+      // So we change only minimized item properties
+      primitives.common.mergeObjects(result, options.DefaultTemplateOptions);
 
-		function getParentsList(data) {
-			var message = "",
-				index, len;
+      return result;
+    }
 
-			if (data.parentItems.length > 0) {
-				message += " Parent item <b>";
-				for (index = 0, len = data.parentItems.length; index < len; index += 1) {
-					if (index > 0) {
-						message += ", ";
-					}
-					message += "'" + data.parentItems[index].title + "'";
-				}
-				message += "</b>";
-			}
+    function getParentsList(data) {
+      var message = "",
+        index, len;
 
-			return message;
-		};
+      if (data.parentItems.length > 0) {
+        message += " Parent item <b>";
+        for (index = 0, len = data.parentItems.length; index < len; index += 1) {
+          if (index > 0) {
+            message += ", ";
+          }
+          message += "'" + data.parentItems[index].title + "'";
+        }
+        message += "</b>";
+      }
 
-		function onSelectionChanged(e, data) {
-			var selectedItems = control.getOption("selectedItems");
-			var message = "";
-			for (var index = 0; index < selectedItems.length; index += 1) {
-				var itemConfig = selectedItems[index];
-				if (message != "") {
-					message += ", ";
-				}
-				message += "<b>'" + itemConfig.title + "'</b>";
-			}
-			message += getParentsList(data);
-			document.getElementById("southpanel").innerHTML = "User selected following items: " + message;
-		}
+      return message;
+    };
 
-		function onHighlightChanging(e, data) {
-			var message = (data.context != null) ? "User is hovering mouse over item <b>'" + data.context.title + "'</b>." : "";
-			message += getParentsList(data);
-			updateHighlightPathAnnotations(data);
-			document.getElementById("southpanel").innerHTML = message;
-		}
+    function onSelectionChanged(e, data) {
+      var selectedItems = control.getOption("selectedItems");
+      var message = "";
+      for (var index = 0; index < selectedItems.length; index += 1) {
+        var itemConfig = selectedItems[index];
+        if (message != "") {
+          message += ", ";
+        }
+        message += "<b>'" + itemConfig.title + "'</b>";
+      }
+      message += getParentsList(data);
+      document.getElementById("southpanel").innerHTML = "User selected following items: " + message;
+    }
 
-		function onHighlightChanged(e, data) {
-			var message = (data.context != null) ? "User hovers mouse over item <b>'" + data.context.title + "'</b>." : "";
-			message += getParentsList(data);
-			document.getElementById("southpanel").innerHTML = message;
-		}
+    function onHighlightChanging(e, data) {
+      var message = (data.context != null) ? "User is hovering mouse over item <b>'" + data.context.title + "'</b>." : "";
+      message += getParentsList(data);
+      updateHighlightPathAnnotations(data);
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-		function onCursorChanging(e, data) {
-			var message = "User is clicking on item '" + data.context.title + "'.";
-			message += getParentsList(data);
-			document.getElementById("southpanel").innerHTML = message;
-		}
+    function onHighlightChanged(e, data) {
+      var message = (data.context != null) ? "User hovers mouse over item <b>'" + data.context.title + "'</b>." : "";
+      message += getParentsList(data);
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-		function onCursorChanged(e, data) {
-			var message = "User clicked on item '" + data.context.title + "'.";
-			message += getParentsList(data);
-			document.getElementById("southpanel").innerHTML = message;
-		}
+    function onCursorChanging(e, data) {
+      var message = "User is clicking on item '" + data.context.title + "'.";
+      message += getParentsList(data);
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-		function onButtonClick(e, data) {
-			switch (data.name) {
-				case "from":
-					fromItem = data.context.id;
-					break;
-				case "to":
-					toItem = data.context.id;
-					break;
-			}
+    function onCursorChanged(e, data) {
+      var message = "User clicked on item '" + data.context.title + "'.";
+      message += getParentsList(data);
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-			var options = optionsRender.getValues();
+    function onButtonClick(e, data) {
+      switch (data.name) {
+        case "from":
+          fromItem = data.context.id;
+          break;
+        case "to":
+          toItem = data.context.id;
+          break;
+      }
 
-			updateAnnotation(fromItem, toItem, options);
-			control.update(primitives.orgdiagram.UpdateMode.Refresh);
-		}
+      var options = optionsRender.getValues();
 
-		function updateAnnotation(fromItem, toItem, options) {
-			if (connectorAnnotation != null) {
-				// this is ugly jQuery hack, we update annotation definition inside of the widget :-)
-				// jQuery makes shallow copy of config object, so we can preserve reference to objects and collections inside of it
-				if (fromItem != null && toItem != null) {
-					connectorAnnotation.fromItem = fromItem;
-					connectorAnnotation.toItem = toItem;
-				}
+      updateAnnotation(fromItem, toItem, options);
+      control.update(primitives.orgdiagram.UpdateMode.Refresh);
+    }
 
-				primitives.common.mergeObjects(connectorAnnotation, options.AnnotationOptions);
-			}
-		}
+    function updateAnnotation(fromItem, toItem, options) {
+      if (connectorAnnotation != null) {
+        // this is ugly jQuery hack, we update annotation definition inside of the widget :-)
+        // jQuery makes shallow copy of config object, so we can preserve reference to objects and collections inside of it
+        if (fromItem != null && toItem != null) {
+          connectorAnnotation.fromItem = fromItem;
+          connectorAnnotation.toItem = toItem;
+        }
 
-		function updateHighlightPathAnnotations(data) {
-			var annotations = control.getOption("annotations");
+        primitives.common.mergeObjects(connectorAnnotation, options.AnnotationOptions);
+      }
+    }
 
-			var newAnnotations = [];
-			for(var index = 0, len = annotations.length; index < len; index+=1) {
-				var annotation = annotations[index];
-				if(annotation.annotationType != primitives.common.AnnotationType.HighlightPath) {
-					newAnnotations.push(annotation);
-				}
-			}
+    function updateHighlightPathAnnotations(data) {
+      var annotations = control.getOption("annotations");
 
-			var items = [];
-			items = items.concat(data.parentItems);
-			items = items.concat(data.childrenItems);
-			for (index = 0, len = items.length; index < len; index += 1) {
-				var parent = items[index];
-				var highlightid = data.context.id;
-				var annotation = new primitives.famdiagram.HighlightPathAnnotationConfig({
-					items: [highlightid, parent.id],
-					color: primitives.common.Colors.Navy,
-					opacity: 0.2,
-					lineWidth: 16,
-					zOrderType: primitives.common.ZOrderType.Background,
-					showArrows: false
-				});
-				newAnnotations.push(annotation);
-			}
-			control.setOptions({ annotations: newAnnotations });
-		}
+      var newAnnotations = [];
+      for (var index = 0, len = annotations.length; index < len; index += 1) {
+        var annotation = annotations[index];
+        if (annotation.annotationType != primitives.common.AnnotationType.HighlightPath) {
+          newAnnotations.push(annotation);
+        }
+      }
 
-		function onWindowResize() {
-			if (timer == null) {
-				timer = window.setTimeout(function () {
-					control.update(primitives.orgdiagram.UpdateMode.Refresh);
-					window.clearTimeout(timer);
-					timer = null;
-				}, 300);
-			}
-		}
+      var items = [];
+      items = items.concat(data.parentItems);
+      items = items.concat(data.childrenItems);
+      for (index = 0, len = items.length; index < len; index += 1) {
+        var parent = items[index];
+        var highlightid = data.context.id;
+        var annotation = new primitives.famdiagram.HighlightPathAnnotationConfig({
+          items: [highlightid, parent.id],
+          color: primitives.common.Colors.Navy,
+          opacity: 0.2,
+          lineWidth: 16,
+          zOrderType: primitives.common.ZOrderType.Background,
+          showArrows: false
+        });
+        newAnnotations.push(annotation);
+      }
+      control.setOptions({ annotations: newAnnotations });
+    }
 
-	</script>
-	<!-- /header -->
+    function onWindowResize() {
+      if (timer == null) {
+        timer = window.setTimeout(function () {
+          control.update(primitives.orgdiagram.UpdateMode.Refresh);
+          window.clearTimeout(timer);
+          timer = null;
+        }, 300);
+      }
+    }
+
+  </script>
+  <!-- /header -->
 </head>
+
 <body>
-	<div style="position: absolute; width: 400px; left: 0px; top: 0px; bottom: 50px; padding: 0px; margin: 0px; border-style: none; font-size: 14px; overflow: scroll; -webkit-overflow-scrolling: touch;">
-		<div id="westpanel" style="padding: 5px; margin: 5px; font: normal 12px verdana, areal;">
-			<h2>Family Tree chart</h2>
-			<p>Family chart visualizes multiple inheritance diagram, dependencies diagram and graphs in form of multiple inheritance hierarchy diagram. It bundles parents and children together into one inheritance line where it is possible.</p>
-			<p>Chart nodes visibility depends on current cursor item. Chart shows all its siblings, children & parents in full item size for easy navigation of large hiearchies. Siblings are nodes which share common parent or child. In other words siblings are child nodes accessable via parent or parent nodes accessable via child.</p>
-			<p>Chart supports loops in inheritance. That means node can be parent of itself. Loop has no logical root so if chart has loops then first item in items collection is used as root. See "Loops" data set.</p>
-			<p>Widget automatically groups nodes into bundles in order to minimize connection lines clutter in layout. See "Skipped members" data set.</p>
-			<p>Root parents are placed close to their children. See "Side by side" data set.</p>
-		</div>
-	</div>
-	<div id="centerpanel" style="position: absolute; border-style: dotted; border-width: 0px; top: 0; right: 0; bottom: 50px; left: 400px;"></div>
-	<div id="southpanel" style="position: absolute; border-style: dotted; border-width: 0px; height: 50px; right: 0; bottom: 0; left: 0;"></div>
+  <div
+    style="position: absolute; width: 400px; left: 0px; top: 0px; bottom: 50px; padding: 0px; margin: 0px; border-style: none; font-size: 14px; overflow: scroll; -webkit-overflow-scrolling: touch;">
+    <div id="westpanel" style="padding: 5px; margin: 5px; font: normal 12px verdana, areal;">
+      <h2>Family Tree chart</h2>
+      <p>Family chart visualizes multiple inheritance diagram, dependencies diagram and graphs in form of multiple
+        inheritance hierarchy diagram. It bundles parents and children together into one inheritance line where it is
+        possible.</p>
+      <p>Chart nodes visibility depends on current cursor item. Chart shows all its siblings, children & parents in full
+        item size for easy navigation of large hiearchies. Siblings are nodes which share common parent or child. In
+        other words siblings are child nodes accessable via parent or parent nodes accessable via child.</p>
+      <p>Chart supports loops in inheritance. That means node can be parent of itself. Loop has no logical root so if
+        chart has loops then first item in items collection is used as root. See "Loops" data set.</p>
+      <p>Widget automatically groups nodes into bundles in order to minimize connection lines clutter in layout. See
+        "Skipped members" data set.</p>
+      <p>Root parents are placed close to their children. See "Side by side" data set.</p>
+    </div>
+  </div>
+  <div id="centerpanel"
+    style="position: absolute; border-style: dotted; border-width: 0px; top: 0; right: 0; bottom: 50px; left: 400px;">
+  </div>
+  <div id="southpanel"
+    style="position: absolute; border-style: dotted; border-width: 0px; height: 50px; right: 0; bottom: 0; left: 0;">
+  </div>
 </body>
+
 </html>

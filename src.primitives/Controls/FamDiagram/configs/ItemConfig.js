@@ -10,54 +10,82 @@
 		<primitives.famdiagram.Config.items>
 */
 primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
-	var property;
+  var property;
 	/*
 	Property: id
 	Unique item id.
 	*/
-	this.id = null;
+  this.id = null;
 
 	/*
 	Property: parents
 	Collection of parent id's. If parents collection is empty [] then item placed as a root item.
 	*/
-	this.parents = [];
+  this.parents = [];
 
 	/*
 	Property: spouses
 	Collection of spouses id's. Items in this collection share common connector line whether they have common children or not.
 	*/
-	this.spouses = [];
+  this.spouses = [];
+
+  /*
+		Property: relativeItem
+      This property is used to control items mutual placement in order to keep consistent ordering within levels. Relative item is used 
+      for placing given item in diagram. We can place item on left or right side of relative item via setting placementType type property.
+      In case when multiple items use the same relative item then their order can be customized with position property.
+
+      If this property set to null, family layout algorithm will try to choose elements order via placing connected 
+      nodes as close to each other as posible.
+
+    Deafult:
+			null
+	*/
+  this.relativeItem = null;
+
+	/*
+		Property: placementType
+      Placement type defines Left ot Right side placement relative to relativeItem.
+		Deafult:
+			<primitives.common.AdviserPlacementType.Auto>
+	*/
+  this.placementType = primitives.common.AdviserPlacementType.Right;
+
+	/*
+    Property: position
+      Property defines ordering of elements placed relative to the same item.
+	*/
+  this.position = null;
 
 	/*
 	Property: title
 	Default template title property.
 	*/
-	this.title = null;
+  this.title = null;
 
 	/*
 	Property: description
 	Default template description element.
 	*/
-	this.description = null;
+  this.description = null;
 
 	/*
 	Property: image
 	Url to image. This property is used in default template.
 	*/
-	this.image = null;
+  this.image = null;
 
 	/*
 	Property: context
 	User context object.
 	*/
-	this.context = null;
+  this.context = null;
 
 	/*
 	Property: itemTitleColor
 	Default template title background color. The same color is used to draw minimized/dotted item.
 	*/
-	this.itemTitleColor = primitives.common.Colors.RoyalBlue;
+  this.itemTitleColor = primitives.common.Colors.RoyalBlue;
 
 	/*
 	Property: minimizedItemShapeType
@@ -67,19 +95,19 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	See Also:
 		<primitives.common.ShapeType>
 	*/
-	this.minimizedItemShapeType = null;
+  this.minimizedItemShapeType = null;
 
 	/*
 	Property: groupTitle
 	Auxiliary group title property. Displayed vertically on the side of item.
 	*/
-	this.groupTitle = null;
+  this.groupTitle = null;
 
 	/*
 	Property: groupTitleColor
 	Group title background color.
 	*/
-	this.groupTitleColor = primitives.common.Colors.RoyalBlue;
+  this.groupTitleColor = primitives.common.Colors.RoyalBlue;
 
 	/*
 	Property: isActive
@@ -91,7 +119,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 		true
 	*/
-	this.isActive = true;
+  this.isActive = true;
 
 	/*
 	Property: hasSelectorCheckbox
@@ -106,7 +134,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 	<primitives.common.Enabled.Auto>
 	*/
-	this.hasSelectorCheckbox = primitives.common.Enabled.Auto;
+  this.hasSelectorCheckbox = primitives.common.Enabled.Auto;
 
 	/*
 	Property: hasButtons
@@ -119,7 +147,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 	<primitives.common.Enabled.Auto>
 	*/
-	this.hasButtons = primitives.common.Enabled.Auto;
+  this.hasButtons = primitives.common.Enabled.Auto;
 
 	/*
 	Property: templateName
@@ -129,7 +157,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 		<primitives.famdiagram.TemplateConfig>
 		<primitives.famdiagram.Config.templates> collection property.
 	*/
-	this.templateName = null;
+  this.templateName = null;
 
 	/*
 	Property: showCallout
@@ -142,7 +170,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 		<primitives.common.Enabled.Auto>
 	*/
-	this.showCallout = primitives.common.Enabled.Auto;
+  this.showCallout = primitives.common.Enabled.Auto;
 
 	/*
 	Property: calloutTemplateName
@@ -158,13 +186,13 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 		null
 	*/
-	this.calloutTemplateName = null;
+  this.calloutTemplateName = null;
 
 	/*
 	Property: label
 	Items label text.
 	*/
-	this.label = null;
+  this.label = null;
 
 	/*
 	Property: showLabel
@@ -182,7 +210,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 		<primitives.common.Enabled.Auto>
 	*/
-	this.showLabel = primitives.common.Enabled.Auto;
+  this.showLabel = primitives.common.Enabled.Auto;
 
 	/*
 	Property: labelSize
@@ -195,7 +223,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 		null;
 	*/
-	this.labelSize = null;
+  this.labelSize = null;
 
 	/*
 	Property: labelOrientation
@@ -209,7 +237,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 		<primitives.text.TextOrientationType.Auto>
 	*/
-	this.labelOrientation = primitives.text.TextOrientationType.Auto;
+  this.labelOrientation = primitives.text.TextOrientationType.Auto;
 
 	/*
 	Property: labelPlacement
@@ -223,22 +251,22 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 		<primitives.common.PlacementType.Auto>
 	*/
-	this.labelPlacement = primitives.common.PlacementType.Auto;
+  this.labelPlacement = primitives.common.PlacementType.Auto;
 
-	switch (arguments.length) {
-		case 1:
-			for (property in arg0) {
-				if (arg0.hasOwnProperty(property)) {
-					this[property] = arg0[property];
-				}
-			}
-			break;
-		case 5:
-			this.id = arg0;
-			this.parent = arg1;
-			this.title = arg2;
-			this.description = arg3;
-			this.image = arg4;
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      for (property in arg0) {
+        if (arg0.hasOwnProperty(property)) {
+          this[property] = arg0[property];
+        }
+      }
+      break;
+    case 5:
+      this.id = arg0;
+      this.parent = arg1;
+      this.title = arg2;
+      this.description = arg3;
+      this.image = arg4;
+      break;
+  }
 };

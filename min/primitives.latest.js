@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagram v5.2.4
+ * @preserve Basic Primitives Diagram v5.3.0
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -27,7 +27,7 @@
 /* /common/init.js*/
 var primitives = {
   common: {
-    version: "5.2.4"
+    version: "5.3.0"
   },
   orgdiagram: {},
   famdiagram: {},
@@ -8488,54 +8488,82 @@ primitives.famdiagram.HighlightPathAnnotationConfig = function (arg0) {
 		<primitives.famdiagram.Config.items>
 */
 primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
-	var property;
+  var property;
 	/*
 	Property: id
 	Unique item id.
 	*/
-	this.id = null;
+  this.id = null;
 
 	/*
 	Property: parents
 	Collection of parent id's. If parents collection is empty [] then item placed as a root item.
 	*/
-	this.parents = [];
+  this.parents = [];
 
 	/*
 	Property: spouses
 	Collection of spouses id's. Items in this collection share common connector line whether they have common children or not.
 	*/
-	this.spouses = [];
+  this.spouses = [];
+
+  /*
+		Property: relativeItem
+      This property is used to control items mutual placement in order to keep consistent ordering within levels. Relative item is used 
+      for placing given item in diagram. We can place item on left or right side of relative item via setting placementType type property.
+      In case when multiple items use the same relative item then their order can be customized with position property.
+
+      If this property set to null, family layout algorithm will try to choose elements order via placing connected 
+      nodes as close to each other as posible.
+
+    Deafult:
+			null
+	*/
+  this.relativeItem = null;
+
+	/*
+		Property: placementType
+      Placement type defines Left ot Right side placement relative to relativeItem.
+		Deafult:
+			<primitives.common.AdviserPlacementType.Auto>
+	*/
+  this.placementType = 3/*primitives.common.AdviserPlacementType.Right*/;
+
+	/*
+    Property: position
+      Property defines ordering of elements placed relative to the same item.
+	*/
+  this.position = null;
 
 	/*
 	Property: title
 	Default template title property.
 	*/
-	this.title = null;
+  this.title = null;
 
 	/*
 	Property: description
 	Default template description element.
 	*/
-	this.description = null;
+  this.description = null;
 
 	/*
 	Property: image
 	Url to image. This property is used in default template.
 	*/
-	this.image = null;
+  this.image = null;
 
 	/*
 	Property: context
 	User context object.
 	*/
-	this.context = null;
+  this.context = null;
 
 	/*
 	Property: itemTitleColor
 	Default template title background color. The same color is used to draw minimized/dotted item.
 	*/
-	this.itemTitleColor = "#4169e1"/*primitives.common.Colors.RoyalBlue*/;
+  this.itemTitleColor = "#4169e1"/*primitives.common.Colors.RoyalBlue*/;
 
 	/*
 	Property: minimizedItemShapeType
@@ -8545,19 +8573,19 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	See Also:
 		<primitives.common.ShapeType>
 	*/
-	this.minimizedItemShapeType = null;
+  this.minimizedItemShapeType = null;
 
 	/*
 	Property: groupTitle
 	Auxiliary group title property. Displayed vertically on the side of item.
 	*/
-	this.groupTitle = null;
+  this.groupTitle = null;
 
 	/*
 	Property: groupTitleColor
 	Group title background color.
 	*/
-	this.groupTitleColor = "#4169e1"/*primitives.common.Colors.RoyalBlue*/;
+  this.groupTitleColor = "#4169e1"/*primitives.common.Colors.RoyalBlue*/;
 
 	/*
 	Property: isActive
@@ -8569,7 +8597,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 		true
 	*/
-	this.isActive = true;
+  this.isActive = true;
 
 	/*
 	Property: hasSelectorCheckbox
@@ -8584,7 +8612,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 	<primitives.common.Enabled.Auto>
 	*/
-	this.hasSelectorCheckbox = 0/*primitives.common.Enabled.Auto*/;
+  this.hasSelectorCheckbox = 0/*primitives.common.Enabled.Auto*/;
 
 	/*
 	Property: hasButtons
@@ -8597,7 +8625,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 	<primitives.common.Enabled.Auto>
 	*/
-	this.hasButtons = 0/*primitives.common.Enabled.Auto*/;
+  this.hasButtons = 0/*primitives.common.Enabled.Auto*/;
 
 	/*
 	Property: templateName
@@ -8607,7 +8635,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 		<primitives.famdiagram.TemplateConfig>
 		<primitives.famdiagram.Config.templates> collection property.
 	*/
-	this.templateName = null;
+  this.templateName = null;
 
 	/*
 	Property: showCallout
@@ -8620,7 +8648,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 		<primitives.common.Enabled.Auto>
 	*/
-	this.showCallout = 0/*primitives.common.Enabled.Auto*/;
+  this.showCallout = 0/*primitives.common.Enabled.Auto*/;
 
 	/*
 	Property: calloutTemplateName
@@ -8636,13 +8664,13 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 		null
 	*/
-	this.calloutTemplateName = null;
+  this.calloutTemplateName = null;
 
 	/*
 	Property: label
 	Items label text.
 	*/
-	this.label = null;
+  this.label = null;
 
 	/*
 	Property: showLabel
@@ -8660,7 +8688,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 		<primitives.common.Enabled.Auto>
 	*/
-	this.showLabel = 0/*primitives.common.Enabled.Auto*/;
+  this.showLabel = 0/*primitives.common.Enabled.Auto*/;
 
 	/*
 	Property: labelSize
@@ -8673,7 +8701,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 		null;
 	*/
-	this.labelSize = null;
+  this.labelSize = null;
 
 	/*
 	Property: labelOrientation
@@ -8687,7 +8715,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 		<primitives.text.TextOrientationType.Auto>
 	*/
-	this.labelOrientation = 3/*primitives.text.TextOrientationType.Auto*/;
+  this.labelOrientation = 3/*primitives.text.TextOrientationType.Auto*/;
 
 	/*
 	Property: labelPlacement
@@ -8701,24 +8729,24 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 	Default:
 		<primitives.common.PlacementType.Auto>
 	*/
-	this.labelPlacement = 0/*primitives.common.PlacementType.Auto*/;
+  this.labelPlacement = 0/*primitives.common.PlacementType.Auto*/;
 
-	switch (arguments.length) {
-		case 1:
-			for (property in arg0) {
-				if (arg0.hasOwnProperty(property)) {
-					this[property] = arg0[property];
-				}
-			}
-			break;
-		case 5:
-			this.id = arg0;
-			this.parent = arg1;
-			this.title = arg2;
-			this.description = arg3;
-			this.image = arg4;
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      for (property in arg0) {
+        if (arg0.hasOwnProperty(property)) {
+          this[property] = arg0[property];
+        }
+      }
+      break;
+    case 5:
+      this.id = arg0;
+      this.parent = arg1;
+      this.title = arg2;
+      this.description = arg3;
+      this.image = arg4;
+      break;
+  }
 };
 
 
@@ -9100,130 +9128,37 @@ primitives.famdiagram.FamilyItem = function (arg0) {
 
 /* /Controls/FamDiagram/models/Slot.js*/
 primitives.famdiagram.Slot = function (itemid) {
-	this.id = null;
-	this.prev = null; /* prev slot id */
-	this.next = null; /* next slot id */
+  this.itemId = itemid; /* if itemId is null then this slot is empty */
+  this.position = null;
+  this.balance = 0;
 
-	this.position = null;
-	this.balance = 0;
-
-	this.itemId = itemid; /* if itemId is null then this slot is empty */
-	
-	this.left = {}; /* total number of children at the level on the left side of this slot */
-	this.right = {}; /* total number of children at the level on the right side of this slot */
-
-	this.crossings = {}; /* number of connections crossing this slot from side to side at the level */
+  this.left = {}; /* total number of children at the level on the left side of this slot */
+  this.right = {}; /* total number of children at the level on the right side of this slot */
+  this.crossings = {}; /* number of connections crossing this slot from side to side at the level */
 };
 
-primitives.famdiagram.Slot.prototype.clone = function () {
-	var result = new primitives.famdiagram.Slot(),
-		level;
+primitives.famdiagram.Slot.prototype.clone = function (itemid) {
+  var result = new primitives.famdiagram.Slot(itemid),
+    level;
 
-	result.itemId = this.itemId;
+  for (level in this.left) {
+    if (this.left.hasOwnProperty(level)) {
+      result.left[level] = this.left[level];
+    }
+  }
+  for (level in this.right) {
+    if (this.right.hasOwnProperty(level)) {
+      result.right[level] = this.right[level];
+    }
+  }
+  for (level in this.crossings) {
+    if (this.crossings.hasOwnProperty(level)) {
+      result.crossings[level] = this.crossings[level];
+    }
+  }
 
-	for (level in this.left) {
-		if (this.left.hasOwnProperty(level)) {
-			result.left[level] = this.left[level];
-		}
-	}
-	for (level in this.right) {
-		if (this.right.hasOwnProperty(level)) {
-			result.right[level] = this.right[level];
-		}
-	}
-	for (level in this.crossings) {
-		if (this.crossings.hasOwnProperty(level)) {
-			result.crossings[level] = this.crossings[level];
-		}
-	}
-
-	return result;
-};
-
-/* /Controls/FamDiagram/models/Slots.js*/
-primitives.famdiagram.Slots = function () {
-	this.first = null;
-	this.last = null;
-
-	this.slots = {};
-
-	this.items = {};
-
-	this.counter = 0;
-};
-
-primitives.famdiagram.Slots.prototype.add = function (slot) {
-	slot.id = this.counter;
-	this.counter += 1;
-
-	this.slots[slot.id] = slot;
-	if (slot.itemId != null) {
-		this.items[slot.itemId] = slot;
-	}
-
-	if (this.last == null) {
-		this.last = slot.id;
-		this.first = slot.id;
-	} else {
-		this.slots[this.last].next = slot.id;
-		slot.prev = this.last;
-
-		this.last = slot.id;
-	}
-};
-
-primitives.famdiagram.Slots.prototype.insertBefore = function (beforeSlot, slot) {
-	slot.id = this.counter;
-	this.counter+=1;
-	this.slots[slot.id] = slot;
-	if (slot.itemId != null) {
-		this.items[slot.itemId] = slot;
-	}
-
-	if (beforeSlot.prev == null) {
-		slot.next = beforeSlot.id;
-		this.first = slot.id;
-	} else {
-		var prevSlot = this.slots[beforeSlot.prev];
-		prevSlot.next = slot.id;
-		slot.next = beforeSlot.id;
-		beforeSlot.prev = slot.id;
-		slot.prev = prevSlot.id;
-	}
-};
-
-primitives.famdiagram.Slots.prototype.loop = function (callback, startSlot) {
-	var slotid = startSlot != null ? startSlot.id : this.first,
-		slot;
-
-	while (slotid != null) {
-		slot = this.slots[slotid];
-
-		if (callback(slot)) {
-			break;
-		}
-
-		slotid = slot.next;
-	}
-};
-
-primitives.famdiagram.Slots.prototype.backwardLoop = function (callback, startSlot) {
-	var slotid = startSlot != null ? startSlot.id : this.last,
-		slot;
-
-	while (slotid != null) {
-		slot = this.slots[slotid];
-
-		if (callback(slot)) {
-			break;
-		}
-
-		slotid = slot.prev;
-	}
-};
-
-primitives.famdiagram.Slots.prototype.getSlot = function (itemId) {
-	return this.items[itemId];
+  result.itemid = itemid;
+  return result;
 };
 
 /* /Controls/FamDiagram/Tasks/Options/Annotations/LabelAnnotationOptionTask.js*/
@@ -9419,6 +9354,36 @@ primitives.famdiagram.NeighboursSelectionModeOptionTask = function (optionsTask,
 	};
 };
 
+/* /Controls/FamDiagram/Tasks/Options/HideGrandParentsConnectorsOptionTask.js*/
+primitives.famdiagram.HideGrandParentsConnectorsOptionTask = function (optionsTask, defaultConfig) {
+  var _data = {},
+    _hash = {};
+
+  var _dataTemplate = new primitives.common.ObjectReader({
+    hideGrandParentsConnectors: new primitives.common.ValueReader(["boolean"], false, defaultConfig.hideGrandParentsConnectors)
+  });
+
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
+
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+
+    return context.isChanged;
+  }
+
+  function getOptions() {
+    return _data;
+  }
+
+  return {
+    process: process,
+    getOptions: getOptions
+  };
+};
+
 /* /Controls/FamDiagram/Tasks/Options/ItemsOptionTask.js*/
 primitives.famdiagram.ItemsOptionTask = function (optionsTask, defaultItemConfig) {
 	var _data = {},
@@ -9507,37 +9472,33 @@ primitives.famdiagram.LinePaletteOptionTask = function (optionsTask, defaultPale
 
 /* /Controls/FamDiagram/Tasks/Options/NormalizeOptionTask.js*/
 primitives.famdiagram.NormalizeOptionTask = function (optionsTask, defaultConfig) {
-	var _data = {},
-		_hash = {};
+  var _data = {},
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-		groupByType: new primitives.common.EnumerationReader(primitives.common.GroupByType, false, defaultConfig.groupByType),
-		alignBylevels: new primitives.common.ValueReader(["boolean"], false, defaultConfig.alignBylevels),
-		hideGrandParentsConnectors: new primitives.common.ValueReader(["boolean"], false, defaultConfig.hideGrandParentsConnectors),
-		enableMatrixLayout: new primitives.common.ValueReader(["boolean"], false, defaultConfig.enableMatrixLayout),
-		minimumMatrixSize: new primitives.common.ValueReader(["number"], false, defaultConfig.minimumMatrixSize),
-		maximumColumnsInMatrix: new primitives.common.ValueReader(["number"], false, defaultConfig.maximumColumnsInMatrix)
-		});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    groupByType: new primitives.common.EnumerationReader(primitives.common.GroupByType, false, defaultConfig.groupByType),
+    alignBylevels: new primitives.common.ValueReader(["boolean"], false, defaultConfig.alignBylevels)
+  });
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getOptions() {
-		return _data;
-	}
+  function getOptions() {
+    return _data;
+  }
 
-	return {
-		process: process,
-		getOptions: getOptions
-	};
+  return {
+    process: process,
+    getOptions: getOptions
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Options/OptionsTask.js*/
@@ -9553,6 +9514,48 @@ primitives.famdiagram.OptionsTask = function (getOptions) {
 		getOptions: getOptions,
 		description: "Raw options."
 	};
+};
+
+/* /Controls/FamDiagram/Tasks/Options/OrderFamilyNodesOptionTask.js*/
+primitives.famdiagram.OrderFamilyNodesOptionTask = function (optionsTask, defaultConfig, defaultItemConfig) {
+  var _data = {},
+    _hash = {};
+
+  var _dataTemplate = new primitives.common.ObjectReader({
+    enableMatrixLayout: new primitives.common.ValueReader(["boolean"], false, defaultConfig.enableMatrixLayout),
+    minimumMatrixSize: new primitives.common.ValueReader(["number"], false, defaultConfig.minimumMatrixSize),
+    maximumColumnsInMatrix: new primitives.common.ValueReader(["number"], false, defaultConfig.maximumColumnsInMatrix),
+    items: new primitives.common.ArrayReader(
+      new primitives.common.ObjectReader({
+        id: new primitives.common.ValueReader(["string", "number"], true),
+        position: new primitives.common.ValueReader(["number"], true),
+        relativeItem: new primitives.common.ValueReader(["string", "number"], true),
+        placementType: new primitives.common.EnumerationReader(primitives.common.AdviserPlacementType, false, defaultItemConfig.placementType)
+      }),
+      true,
+      "id"
+    )
+  });
+
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
+
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+
+    return context.isChanged;
+  }
+
+  function getOptions() {
+    return _data;
+  }
+
+  return {
+    process: process,
+    getOptions: getOptions
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Options/SpousesOptionTask.js*/
@@ -9721,882 +9724,907 @@ primitives.famdiagram.BaseTransformer.prototype.validate = function (logicalFami
 		In the way when groups having maximum mutual links placed close to each other.
 */
 primitives.famdiagram.FamilyBalance = function () {
-	this.properties = [
-		'title', 'description', 'image',
-		'itemTitleColor', 'groupTitle', 'groupTitleColor',
-		'isActive', 'hasSelectorCheckbox', 'hasButtons',
-		'templateName', 'showCallout', 'calloutTemplateName',
-		'label', 'showLabel', 'labelSize', 'labelOrientation', 'labelPlacement',
-		'minimizedItemShapeType'
-	];
+  this.properties = [
+    'title', 'description', 'image',
+    'itemTitleColor', 'groupTitle', 'groupTitleColor',
+    'isActive', 'hasSelectorCheckbox', 'hasButtons',
+    'templateName', 'showCallout', 'calloutTemplateName',
+    'label', 'showLabel', 'labelSize', 'labelOrientation', 'labelPlacement',
+    'minimizedItemShapeType'
+  ];
 };
 
 //var params = {
 //	logicalFamily,
 //	maximumId,
-//	defaultItemConfig
+//	defaultItemConfig,
+//  items
 //};
 primitives.famdiagram.FamilyBalance.prototype.balance = function (params) {
-	var result = {
-		maximumId: null,
-		treeLevels: primitives.common.TreeLevels(),
-		bundles: [],
-		connectorStacks: []
-	};
+  var result = {
+    maximumId: null,
+    treeLevels: primitives.common.TreeLevels(),
+    bundles: [],
+    connectorStacks: []
+  };
 
-	var data = {
-		orgTree: primitives.common.tree(), /*tree primitives.orgdiagram.OrgItem */
-		maximumId: params.maximumId,
-		orgPartners: {}, /* Creates extra partners collection of relations between visual tree items They are used to draw connectors between items in different branches of organizational chart*/
-		itemByChildrenKey: {},
-		minimumLevel: null,
-		maximumLevel: null
-	};
+  var data = {
+    orgTree: primitives.common.tree(), /*tree primitives.orgdiagram.OrgItem */
+    maximumId: params.maximumId,
+    orgPartners: {}, /* Creates extra partners collection of relations between visual tree items They are used to draw connectors between items in different branches of organizational chart*/
+    itemByChildrenKey: {},
+    minimumLevel: null,
+    maximumLevel: null
+  };
 
-	this.createOrgTree(params, data);
+  this.createOrgTree(params, data);
 
-	data.orgTree.loopLevels(this, function (treeItemId, treeItem, levelIndex) {
-		result.treeLevels.addItem(levelIndex, treeItemId, treeItem);
-	});
+  data.orgTree.loopLevels(this, function (treeItemId, treeItem, levelIndex) {
+    result.treeLevels.addItem(levelIndex, treeItemId, treeItem);
+  });
 
-	this.recalcLevelsDepth(result.bundles, result.connectorStacks, result.treeLevels, data.orgTree, data.orgPartners);
+  this.recalcLevelsDepth(result.bundles, result.connectorStacks, result.treeLevels, data.orgTree, data.orgPartners);
 
-	result.maximumId = data.maximumId;
+  result.maximumId = data.maximumId;
 
-	return result;
+  return result;
 };
 
 primitives.famdiagram.FamilyBalance.prototype.Family = function (id) {
-	this.id = null;
-	this.familyPriority = 1;
-	this.childFamilies = [];
-	this.items = [];
+  this.id = null;
+  this.familyPriority = 1;
+  this.childFamilies = [];
+  this.items = [];
 
-	this.links = []; /* array of FamLink(s) */
-	this.backLinks = []; /* array of FamLink(s) */
+  this.links = []; /* array of FamLink(s) */
+  this.backLinks = []; /* array of FamLink(s) */
 
-	if (arguments.length == 1) {
-		this.id = id;
-	}
+  if (arguments.length == 1) {
+    this.id = id;
+  }
 };
 
 primitives.famdiagram.FamilyBalance.prototype.FamLink = function (fromItem, toItem) {
-	this.fromItem = fromItem; /* FamilyItem.id */
-	this.toItem = toItem; /* FamilyItem.id */
+  this.fromItem = fromItem; /* FamilyItem.id */
+  this.toItem = toItem; /* FamilyItem.id */
 };
 
 primitives.famdiagram.FamilyBalance.prototype.createOrgTree = function (params, data) {
-	var index, len, index2, len2,
-		famItem,
-		familiesGraph, /* primitives.common.graph */
-		link, links,
-		fromFamily,
-		toFamily,
-		sortedFamilies = [], sortedFamiliesHash,
-		attachedFamilies,
-		userItem,
-		familyId,
-		family,
-		familyRootItem,
-		fromItem,
-		toItem,
-		rootItem, rootItems, bestRootItem, bestReference,
-		spanningTree,
-		extraGravities, grandChildren,
-		parsedId,
-		itemsHavingSpouses, spouses,
-		orgItemRoot,
-		famItemsExtracted,
-		families = [],
-		families2;
+  var index, len, index2, len2,
+    famItem,
+    familiesGraph, /* primitives.common.graph */
+    link, links,
+    fromFamily,
+    toFamily,
+    sortedFamilies = [], sortedFamiliesHash,
+    attachedFamilies,
+    userItem,
+    familyId,
+    family,
+    familyRootItem,
+    fromItem,
+    toItem,
+    rootItem, rootItems, bestRootItem, bestReference,
+    spanningTree,
+    extraGravities, grandChildren,
+    parsedId,
+    itemsHavingSpouses, spouses,
+    orgItemRoot,
+    famItemsExtracted,
+    families = [],
+    families2;
 
-	if (params.logicalFamily.hasNodes() > 0) {
-		/* create hash of extracted family items */
-		famItemsExtracted = {};
+  if (params.logicalFamily.hasNodes() > 0) {
+    /* create hash of extracted family items */
+    famItemsExtracted = {};
 
-		familyId = 0;
-		families2 = [];
-		params.logicalFamily.loopRoots(this, function (grandParentId, grandParent) {
-			//ignore jslint
-			family = new this.Family(familyId);
+    familyId = 0;
+    families2 = [];
+    params.logicalFamily.loopRoots(this, function (grandParentId, grandParent) {
+      //ignore jslint
+      family = new this.Family(familyId);
 			/* extractOrgChart method extracts hiearchy of family members starting from grandParent and takes only non extracted family items 
 			 * For every extracted item it assigns its familyId, it is used for building families relations graph and finding cross family links
 			*/
-			this.extractOrgChart(grandParentId, params.logicalFamily, params.defaultItemConfig, data.orgTree, data.orgPartners, data.itemByChildrenKey, famItemsExtracted, family);
-			families.push(family);
-			families2.push(family);
-			familyId += 1;
-		});
+      this.extractOrgChart(grandParentId, params.logicalFamily, params.defaultItemConfig, data.orgTree, data.orgPartners, data.itemByChildrenKey, famItemsExtracted, family);
+      families.push(family);
+      families2.push(family);
+      familyId += 1;
+    });
 
-		families2.sort(function (a, b) {
-			/* sort families by root item level ASC and size DESC */
-			var aLevel = a.items[0].level,
-				bLevel = b.items[0].level;
+    families2.sort(function (a, b) {
+      /* sort families by root item level ASC and size DESC */
+      var aLevel = a.items[0].level,
+        bLevel = b.items[0].level;
 
-			return aLevel != bLevel ? (aLevel - bLevel) : (b.items.length - a.items.length);
-		});
+      return aLevel != bLevel ? (aLevel - bLevel) : (b.items.length - a.items.length);
+    });
 
-		sortedFamilies = [];
-		sortedFamiliesHash = {};
-		if (families.length > 0) {
+    sortedFamilies = [];
+    sortedFamiliesHash = {};
+    if (families.length > 0) {
 
-			/* Build families graph */
-			familiesGraph = primitives.common.graph();
-			for (index = 0, len = families.length; index < len; index += 1) {
-				family = families[index];
+      /* Build families graph */
+      familiesGraph = primitives.common.graph();
+      for (index = 0, len = families.length; index < len; index += 1) {
+        family = families[index];
 
-				for (index2 = 0, len2 = family.links.length; index2 < len2; index2 += 1) {
-					link = family.links[index2];
+        for (index2 = 0, len2 = family.links.length; index2 < len2; index2 += 1) {
+          link = family.links[index2];
 
-					fromFamily = params.logicalFamily.node(link.fromItem).familyId;
-					toFamily = params.logicalFamily.node(link.toItem).familyId;
+          fromFamily = params.logicalFamily.node(link.fromItem).familyId;
+          toFamily = params.logicalFamily.node(link.toItem).familyId;
 
-					if (fromFamily != toFamily) {
-						familiesGraph.addEdge(fromFamily, toFamily, { weight: 0 });
-						familiesGraph.edge(fromFamily, toFamily).weight += 1;
-					}
+          if (fromFamily != toFamily) {
+            familiesGraph.addEdge(fromFamily, toFamily, { weight: 0 });
+            familiesGraph.edge(fromFamily, toFamily).weight += 1;
+          }
 
-					families[toFamily].backLinks.push(new this.FamLink(link.toItem, link.fromItem));
-				}
-			}
+          families[toFamily].backLinks.push(new this.FamLink(link.toItem, link.fromItem));
+        }
+      }
 
-			/* Flatten families graph into array for merging */
-			while (sortedFamilies.length < families.length) {
-				for (index = 0, len = families2.length; index < len; index += 1) {
-					family = families2[index];
+      /* Flatten families graph into array for merging */
+      while (sortedFamilies.length < families.length) {
+        for (index = 0, len = families2.length; index < len; index += 1) {
+          family = families2[index];
 
-					if (!sortedFamiliesHash.hasOwnProperty(family.id)) {
+          if (!sortedFamiliesHash.hasOwnProperty(family.id)) {
 
-						/* find maximum spanning tree of families graph*/
-						spanningTree = familiesGraph.getSpanningTree(family.id, function (edge) {
-							return -edge.weight;
-						}); //ignore jslint
+            /* find maximum spanning tree of families graph*/
+            spanningTree = familiesGraph.getSpanningTree(family.id, function (edge) {
+              return -edge.weight;
+            }); //ignore jslint
 
-						if (spanningTree.node(family.id) != null) {
+            if (spanningTree.node(family.id) != null) {
 
-							/* count number of sub families for every family in spanning tree and sorts child families desc*/
-							spanningTree.loopPostOrder(this, function (nodeid, node, parentid, parent) {
-								var family = families[nodeid],
-									parentFamily = families[parentid],
-									children = [];
+              /* count number of sub families for every family in spanning tree and sorts child families desc*/
+              spanningTree.loopPostOrder(this, function (nodeid, node, parentid, parent) {
+                var family = families[nodeid],
+                  parentFamily = families[parentid],
+                  children = [];
 
-								if (parentid != null) {
-									parentFamily.familyPriority = parentFamily.familyPriority + family.familyPriority;
-								}
+                if (parentid != null) {
+                  parentFamily.familyPriority = parentFamily.familyPriority + family.familyPriority;
+                }
 
-								children = [];
-								spanningTree.loopChildren(this, nodeid, function (childid, child, index) {
-									children.push(childid);
-								});
+                children = [];
+                spanningTree.loopChildren(this, nodeid, function (childid, child, index) {
+                  children.push(childid);
+                });
 
-								children.sort(function (a, b) { return families[a].familyPriority - families[b].familyPriority; });
-								spanningTree.arrangeChildren(nodeid, children);
-							}); //ignore jslint
+                children.sort(function (a, b) { return families[a].familyPriority - families[b].familyPriority; });
+                spanningTree.arrangeChildren(nodeid, children);
+              }); //ignore jslint
 
-							/* merge tree items in pre order sequence */
-							spanningTree.loopPreOrder(this, function (familyid, node) {
-								sortedFamilies.push(familyid);
-								sortedFamiliesHash[familyid] = true;
-							}); //ignore jslint
+              /* merge tree items in pre order sequence */
+              spanningTree.loopPreOrder(this, function (familyid, node) {
+                sortedFamilies.push(familyid);
+                sortedFamiliesHash[familyid] = true;
+              }); //ignore jslint
 
-						} else {
-							/* family has no links to any other family so we add it as orphant */
-							sortedFamilies.push(family.id);
-							sortedFamiliesHash[family.id] = true;
-						}
-					}
-				}
-			}
-		}
+            } else {
+              /* family has no links to any other family so we add it as orphant */
+              sortedFamilies.push(family.id);
+              sortedFamiliesHash[family.id] = true;
+            }
+          }
+        }
+      }
+    }
 
-		/* create chart root */
-		data.maximumId += 1;
-		orgItemRoot = this.createOrgItem(data.orgTree, params.defaultItemConfig, data.maximumId, null /*parent id*/, null, data.minimumLevel - 1, null /* userItem */);
-		orgItemRoot.hideParentConnection = true;
-		orgItemRoot.hideChildrenConnection = true;
-		orgItemRoot.title = "internal root";
-		orgItemRoot.isVisible = false;
-		orgItemRoot.isActive = false;
-		orgItemRoot.childIndex = 0;
-
-
-		/* Place family roots to organizational chart */
-		attachedFamilies = {};
-		for (index = 0, len = sortedFamilies.length; index < len; index += 1) {
-			family = families[sortedFamilies[index]];
-
-			rootItems = {}; // Hash where key = rootItem.id and value is number of references
-			bestRootItem = orgItemRoot;
-			bestReference = 0;
-			links = family.links.concat(family.backLinks);
-			for (index2 = 0; index2 < links.length; index2 += 1) {
-				link = links[index2];
-
-				toItem = data.orgTree.node(link.toItem);
-				fromItem = data.orgTree.node(link.fromItem);
-
-				if (attachedFamilies[toItem.familyId] === true) {
-					familyRootItem = family.items[0];
-					rootItem = toItem;
-
-					if (rootItem.level >= familyRootItem.level) {
-						data.orgTree.loopParents(this, rootItem.id, function (nodeid, node) {
-							rootItem = node;
-							if (node.level < familyRootItem.level) {
-								return true;
-							}
-						});//ignore jslint
-					}
-
-					if (rootItems.hasOwnProperty(rootItem.id)) {
-						rootItems[rootItem.id] += 1;
-					} else {
-						rootItems[rootItem.id] = 1;
-					}
-					/* family may be nested to multiple places, so we select root item having maximum connections with our new sub family */
-					if (bestReference < rootItems[rootItem.id]) {
-						bestRootItem = rootItem;
-						bestReference = rootItems[rootItem.id];
-					}
-				}
+    /* create chart root */
+    data.maximumId += 1;
+    orgItemRoot = this.createOrgItem(data.orgTree, params.defaultItemConfig, data.maximumId, null /*parent id*/, null, data.minimumLevel - 1, null /* userItem */);
+    orgItemRoot.hideParentConnection = true;
+    orgItemRoot.hideChildrenConnection = true;
+    orgItemRoot.title = "internal root";
+    orgItemRoot.isVisible = false;
+    orgItemRoot.isActive = false;
+    orgItemRoot.childIndex = 0;
 
 
-			}
+    /* Place family roots to organizational chart */
+    attachedFamilies = {};
+    for (index = 0, len = sortedFamilies.length; index < len; index += 1) {
+      family = families[sortedFamilies[index]];
 
-			this.attachFamilyToOrgChart(data, params.defaultItemConfig, bestRootItem, family);
+      rootItems = {}; // Hash where key = rootItem.id and value is number of references
+      bestRootItem = orgItemRoot;
+      bestReference = 0;
+      links = family.links.concat(family.backLinks);
+      for (index2 = 0; index2 < links.length; index2 += 1) {
+        link = links[index2];
 
-			attachedFamilies[family.id] = true;
-		}
+        toItem = data.orgTree.node(link.toItem);
+        fromItem = data.orgTree.node(link.fromItem);
 
-		/* balance organizational chart in order to place items having extra connections close to each other */
-		extraGravities = this.getExtraGravity(data);
+        if (attachedFamilies[toItem.familyId] === true) {
+          familyRootItem = family.items[0];
+          rootItem = toItem;
 
-		/* count number of vertical connections for every item */
-		grandChildren = this.getGrandChildren(data);
+          if (rootItem.level >= familyRootItem.level) {
+            data.orgTree.loopParents(this, rootItem.id, function (nodeid, node) {
+              rootItem = node;
+              if (node.level < familyRootItem.level) {
+                return true;
+              }
+            });//ignore jslint
+          }
 
-		/* scan orgTree hierarchy from root to bottom and balance its children */
-		this.balanceOrgTree(data.orgTree, extraGravities, grandChildren);
-	}
+          if (rootItems.hasOwnProperty(rootItem.id)) {
+            rootItems[rootItem.id] += 1;
+          } else {
+            rootItems[rootItem.id] = 1;
+          }
+          /* family may be nested to multiple places, so we select root item having maximum connections with our new sub family */
+          if (bestReference < rootItems[rootItem.id]) {
+            bestRootItem = rootItem;
+            bestReference = rootItems[rootItem.id];
+          }
+        }
+
+
+      }
+
+      this.attachFamilyToOrgChart(data, params.defaultItemConfig, bestRootItem, family);
+
+      attachedFamilies[family.id] = true;
+    }
+
+    /* balance organizational chart in order to place items having extra connections close to each other */
+    extraGravities = this.getExtraGravity(data);
+
+    /* count number of vertical connections for every item */
+    grandChildren = this.getGrandChildren(data);
+
+    /* scan orgTree hierarchy from root to bottom and balance its children */
+    this.balanceOrgTree(data.orgTree, extraGravities, grandChildren, params.itemsPositions, params.itemsGroups);
+  }
 };
 
 primitives.famdiagram.FamilyBalance.prototype.getGrandChildren = function (data) {
-	var result = {};  /* Key = primitives.orgdiagram.OrgItem.id, Value= Hash {} having Key = level and Value = number of grand children*/
+  var result = {};  /* Key = primitives.orgdiagram.OrgItem.id, Value= Hash {} having Key = level and Value = number of grand children*/
 
-	data.orgTree.loopPostOrder(this, function (itemId, orgItem, parentId, parent) {
-		var level;
+  data.orgTree.loopPostOrder(this, function (itemId, orgItem, parentId, parent) {
+    var level;
 
-		data.minimumLevel = data.minimumLevel != null ? Math.min(data.minimumLevel, orgItem.level) : orgItem.level;
-		data.maximumLevel = data.maximumLevel != null ? Math.max(data.maximumLevel, orgItem.level) : orgItem.level;
+    data.minimumLevel = data.minimumLevel != null ? Math.min(data.minimumLevel, orgItem.level) : orgItem.level;
+    data.maximumLevel = data.maximumLevel != null ? Math.max(data.maximumLevel, orgItem.level) : orgItem.level;
 
-		if (parentId != null) {
-			if (!result[parentId]) {
-				result[parentId] = {};
-			}
+    if (parentId != null) {
+      if (!result[parentId]) {
+        result[parentId] = {};
+      }
 
-			level = orgItem.level - 1; /* project children qty to parent level, it is needed to match cross hierarchy connectors levels*/
-			if (!result[parentId][level]) {
-				result[parentId][level] = 1;
-			} else {
-				result[parentId][level] += 1;
-			}
+      level = orgItem.level - 1; /* project children qty to parent level, it is needed to match cross hierarchy connectors levels*/
+      if (!result[parentId][level]) {
+        result[parentId][level] = 1;
+      } else {
+        result[parentId][level] += 1;
+      }
 
-			if (result[itemId] != null) {
-				for (level in result[itemId]) {
-					if (result[itemId].hasOwnProperty(level)) {
-						if (!result[parentId][level]) {
-							result[parentId][level] = result[itemId][level];
-						} else {
-							result[parentId][level] += result[itemId][level];
-						}
-					}
-				}
-			}
-		}
-	});
+      if (result[itemId] != null) {
+        for (level in result[itemId]) {
+          if (result[itemId].hasOwnProperty(level)) {
+            if (!result[parentId][level]) {
+              result[parentId][level] = result[itemId][level];
+            } else {
+              result[parentId][level] += result[itemId][level];
+            }
+          }
+        }
+      }
+    }
+  });
 
-	return result;
+  return result;
 };
 
-primitives.famdiagram.FamilyBalance.prototype.balanceOrgTree = function (orgTree, extraGravities, grandChildren) {
-	var index2, len2,
-		index3, len3,
-		extraGravity,
-		childExtraGravities,
-		sortedChildren,
-		subChildren, subOrgItem,
-		leftId = '__left__',
-		rightId = '__right__',
-		levelExtraGravities,
-		sequence;
+primitives.famdiagram.FamilyBalance.prototype.balanceOrgTree = function (orgTree, extraGravities, grandChildren, itemsPositions, itemsGroups) {
+  var index2, len2,
+    index3, len3,
+    extraGravity,
+    childExtraGravities,
+    sortedChildren,
+    subChildren, subOrgItem,
+    leftId = '__left__',
+    rightId = '__right__',
+    levelExtraGravities,
+    sequence;
 
-	orgTree.loopLevels(this, function (parentOrgItemId, parentOrgItem, levelid) {
-		var graph = primitives.common.graph(),
-			graphGravities = {},
-			firstOrgItem = null,
-			toItemId;
-		/* build gravities graph for children */
-		sortedChildren = [];
-		orgTree.loopChildren(this, parentOrgItem.id, function (childOrgItemId, childOrgItem, index) {
-			var levelKey;
-			if (firstOrgItem == null) {
-				firstOrgItem = childOrgItem;
-			}
+  orgTree.loopLevels(this, function (parentOrgItemId, parentOrgItem, levelid) {
+    var graph = primitives.common.graph(),
+      graphGravities = {},
+      firstOrgItem = null,
+      toItemId;
+    /* build gravities graph for children */
+    sortedChildren = [];
+    orgTree.loopChildren(this, parentOrgItem.id, function (childOrgItemId, childOrgItem, index) {
+      var levelKey;
+      if (firstOrgItem == null) {
+        firstOrgItem = childOrgItem;
+      }
 
-			graphGravities[childOrgItem.id] = {};
-			if (extraGravities.hasOwnProperty(childOrgItem.id)) {
-				childExtraGravities = extraGravities[childOrgItem.id];
+      graphGravities[childOrgItem.id] = {};
+      if (extraGravities.hasOwnProperty(childOrgItem.id)) {
+        childExtraGravities = extraGravities[childOrgItem.id];
 
-				for (levelKey in childExtraGravities) {
-					if (childExtraGravities.hasOwnProperty(levelKey)) {
-						levelExtraGravities = childExtraGravities[levelKey];
+        for (levelKey in childExtraGravities) {
+          if (childExtraGravities.hasOwnProperty(levelKey)) {
+            levelExtraGravities = childExtraGravities[levelKey];
 
-						graphGravities[childOrgItem.id][levelKey] = {};
-						for (index2 = 0, len2 = levelExtraGravities.length; index2 < len2; index2 += 1) {
-							extraGravity = levelExtraGravities[index2];
+            graphGravities[childOrgItem.id][levelKey] = {};
+            for (index2 = 0, len2 = levelExtraGravities.length; index2 < len2; index2 += 1) {
+              extraGravity = levelExtraGravities[index2];
 
-							if (extraGravity.commonParent == parentOrgItem.id) {
-								/* this is link between two children */
-								toItemId = extraGravity.toParent;
-							} else {
-								/* this is external link on left or on right side, we create virtual graph item ids for external links */
-								if (orgTree.node(extraGravity.fromParent).childIndex < orgTree.node(extraGravity.toParent).childIndex) {
-									toItemId = rightId;
-								} else {
-									toItemId = leftId;
-								}
-							}
+              if (extraGravity.commonParent == parentOrgItem.id) {
+                /* this is link between two children */
+                toItemId = extraGravity.toParent;
+              } else {
+                /* this is external link on left or on right side, we create virtual graph item ids for external links */
+                if (orgTree.node(extraGravity.fromParent).childIndex < orgTree.node(extraGravity.toParent).childIndex) {
+                  toItemId = rightId;
+                } else {
+                  toItemId = leftId;
+                }
+              }
 
-							/* add connection to graph */
-							if (childOrgItem.id != toItemId) {
-								graph.addEdge(childOrgItem.id, toItemId, { weight: 0 });
-								graph.edge(childOrgItem.id, toItemId).weight += 1.0;
+              /* add connection to graph */
+              if (childOrgItem.id != toItemId) {
+                graph.addEdge(childOrgItem.id, toItemId, { weight: 0 });
+                graph.edge(childOrgItem.id, toItemId).weight += 1.0;
 
-								if (graphGravities[childOrgItem.id][levelKey][toItemId] == null) {
-									graphGravities[childOrgItem.id][levelKey][toItemId] = 0;
-								}
-								graphGravities[childOrgItem.id][levelKey][toItemId] += 1;
-							}
-						}
-					}
-				}
-			}
+                if (graphGravities[childOrgItem.id][levelKey][toItemId] == null) {
+                  graphGravities[childOrgItem.id][levelKey][toItemId] = 0;
+                }
+                graphGravities[childOrgItem.id][levelKey][toItemId] += 1;
+              }
+            }
+          }
+        }
+      }
 			/* add extra zero connection to graph when child org item has no connections
 				it is connected to the first item in the graph with zero link
 			*/
-			if (index > 0) {
-				graph.addEdge(childOrgItem.id, firstOrgItem.id, { weight: 0 });
-			}
-		});
+      if (index > 0) {
+        graph.addEdge(childOrgItem.id, firstOrgItem.id, { weight: 0 });
+      }
+    });
 
-		if (firstOrgItem != null) {
-			/* sort items in graph from the most connected to the least */
+    if (firstOrgItem != null) {
+      /* sort items in graph from the most connected to the least */
 
-			sequence = [];
+      sequence = [];
 
-			graph.getTotalWeightGrowthSequence(this,
-				function (a) { return a.weight; },
-				function (a) { sequence.push(a); }
-			); //ignore jslint
+      graph.getTotalWeightGrowthSequence(this,
+        function (a) { return a.weight; },
+        function (a) { sequence.push(a); }
+      ); //ignore jslint
 
-			if (sequence.length === 0) {
-				sequence = [firstOrgItem.id];
-			}
+      if (sequence.length === 0) {
+        sequence = [firstOrgItem.id];
+      }
 
-			/* sort children from top to down */
-			subChildren = this.balanceItems(sequence, leftId, rightId, graphGravities, grandChildren);
+      /* sort children from top to down */
+      subChildren = this.balanceItems(sequence, leftId, rightId, graphGravities, grandChildren, itemsPositions, itemsGroups);
 
-			/* save items indexes for further use */
-			for (index3 = 0, len3 = subChildren.length; index3 < len3; index3 += 1) {
-				subOrgItem = orgTree.node(subChildren[index3]);
+      /* save items indexes for further use */
+      for (index3 = 0, len3 = subChildren.length; index3 < len3; index3 += 1) {
+        subOrgItem = orgTree.node(subChildren[index3]);
 
-				subOrgItem.childIndex = index3;
+        subOrgItem.childIndex = index3;
 
-				sortedChildren.push(subOrgItem.id);
-			}
-		}
-		orgTree.arrangeChildren(parentOrgItem.id, sortedChildren);
-	});
+        sortedChildren.push(subOrgItem.id);
+      }
+    }
+    orgTree.arrangeChildren(parentOrgItem.id, sortedChildren);
+  });
 };
 
-primitives.famdiagram.FamilyBalance.prototype.balanceItems = function (sequence, leftId, rightId, graphGravities, grandChildren) {
-	var result = [],
-	index,
-	slots, position,
-	itemid,
-	bestSlot, bestSlotValue, bestSlotDistance, bestSlotBalance, bestSlotCrossings,
-	slotValue, slotDistance, slotBalance, slotCrossings,
-	itemGrandChildren,
-	cloneSlot, itemSlot,
-	level, levelGravities, toItemId, toItemSlot;
+primitives.famdiagram.FamilyBalance.prototype.balanceItems = function (sequence, leftId, rightId, graphGravities, grandChildren, itemsPositions, itemsGroups) {
+  var result = [],
+    index,
+    slots = primitives.common.LinkedHashItems(), // key = counter++, value =  slot object
+    counter = 0,
+    positions = {}, // hash[groupId] = primitives.common.SortedList, key = user defined item position, value = key in slots -- create only when user defined itemsPositions exists for items
+    startSlotKey, endSlotKey,
+    key, slot,
+    items = {}, itemid, itemsToAdd,
+    bestSlotKey, bestSlot, bestSlotValue, bestSlotDistance, bestSlotBalance, bestSlotCrossings,
+    slotValue, slotDistance, slotBalance, slotCrossings,
+    itemGrandChildren,
+    itemSlot, itemSlotKey,
+    level, levelGravities, toItemId, toItemSlot,
+    userItemPosition, position, itemGroup, groupPositions,
+    toItemSlotKey;
 
-	slots = new primitives.famdiagram.Slots();
-	slots.add(new primitives.famdiagram.Slot(leftId));
-	slots.add(new primitives.famdiagram.Slot(null)); /* first empty slot */
-	slots.add(new primitives.famdiagram.Slot(rightId));
+  /* populate initital slots */
+  itemsToAdd = [leftId, null, rightId];
+  for (index = 0; index < itemsToAdd.length; index += 1) {
+    itemid = itemsToAdd[index];
+    key = counter++;
+    slot = new primitives.famdiagram.Slot(itemid);
+    slot.position = index;
+    slots.add(key, slot);
+    if (itemid !== null) {
+      items[itemid] = key;
+    }
+  }
 
-	/* set initital positions */
-	position = 0;
-	slots.loop(function (slot) {
-		position += 1;
-		slot.position = position;
-	});
+  for (index = 0; index < sequence.length; index += 1) {
+    itemid = sequence[index];
 
-	for (index = 0; index < sequence.length; index += 1) {
-		itemid = sequence[index];
+    /* ignore left and right margin */
+    if (itemid != leftId && itemid != rightId) {
 
-		/* ignore left and right margin */
-		if (itemid != leftId && itemid != rightId) {
+      bestSlotKey = null;
+      bestSlot = null;
+      bestSlotValue = null;
+      bestSlotDistance = null;
+      bestSlotBalance = null;
+      bestSlotCrossings = null;
 
-			bestSlot = null;
-			bestSlotValue = null;
-			bestSlotDistance = null;
-			bestSlotBalance = null;
-			bestSlotCrossings = null;
-			slots.loop(function (slot) {
-				var level, toItemId,
-					levelGravities,
-					toItemSlot;
+      startSlotKey = null;
+      endSlotKey = null;
+      if (itemsGroups.hasOwnProperty(itemid)) {
+        itemGroup = itemsGroups[itemid];
+        if (positions.hasOwnProperty(itemGroup)) {
+          userItemPosition = itemsPositions[itemid];
+          groupPositions = positions[itemGroup];
+          startSlotKey = groupPositions.previousContext(userItemPosition);
+          endSlotKey = groupPositions.nextContext(userItemPosition);
+        }
+      }
 
-				if (slot.itemId == null) {
-					itemGrandChildren = grandChildren[itemid];
-					slotValue = 0;
-					slotDistance = 0;
-					slotBalance = 0;
-					slotCrossings = 0;
+      slots.iterate(function (slot, slotKey) {
+        var level, toItemId,
+          levelGravities,
+          toItemSlot;
 
-					for (level in slot.crossings) {
-						if (slot.crossings.hasOwnProperty(level)) {
-							if (itemGrandChildren && itemGrandChildren[level] != null) {
-								slotValue += slot.crossings[level] * itemGrandChildren[level];
-							}
-							slotCrossings += slot.crossings[level];
-						}
-					}
-					for (level in graphGravities[itemid]) {
-						if (graphGravities[itemid].hasOwnProperty(level)) {
-							levelGravities = graphGravities[itemid][level];
-							for (toItemId in levelGravities) {
-								if (levelGravities.hasOwnProperty(toItemId)) {
-									toItemSlot = slots.getSlot(toItemId);
-									if (toItemSlot != null) {
-										if (toItemSlot.position < slot.position) {
-											/* on the left side */
-											slotValue += ((slot.left[level] || 0.0) - (toItemSlot.left[level] || 0.0));
-											slotBalance += Math.abs(toItemSlot.balance + 1);
-										} else {
-											/* on the right side */
-											slotValue += ((slot.right[level] || 0.0) - (toItemSlot.right[level] || 0.0));
-											slotBalance += Math.abs(toItemSlot.balance - 1);
-										}
-										slotDistance += Math.abs(toItemSlot.position - slot.position);
-									}
-								}
-							}
-						}
-					}
+        if (slot.itemId == null) {
+          itemGrandChildren = grandChildren[itemid];
+          slotValue = 0;
+          slotDistance = 0;
+          slotBalance = 0;
+          slotCrossings = 0;
 
-					if (bestSlotValue == null ||
-						bestSlotValue > slotValue ||
-							(bestSlotValue == slotValue &&
-								(bestSlotDistance > slotDistance ||
-									(bestSlotDistance == slotDistance &&
-										(bestSlotBalance > slotBalance ||
-												(bestSlotBalance == slotBalance && bestSlotCrossings > slotCrossings)
-										)
-									)
-								)
-							)
-						) {
-						bestSlotValue = slotValue;
-						bestSlot = slot;
-						bestSlotDistance = slotDistance;
-						bestSlotBalance = slotBalance;
-						bestSlotCrossings = slotCrossings;
-					}
-				}
-			}); //ignore jslint
+          for (level in slot.crossings) {
+            if (slot.crossings.hasOwnProperty(level)) {
+              if (itemGrandChildren && itemGrandChildren[level] != null) {
+                slotValue += slot.crossings[level] * itemGrandChildren[level];
+              }
+              slotCrossings += slot.crossings[level];
+            }
+          }
+          for (level in graphGravities[itemid]) {
+            if (graphGravities[itemid].hasOwnProperty(level)) {
+              levelGravities = graphGravities[itemid][level];
+              for (toItemId in levelGravities) {
+                if (levelGravities.hasOwnProperty(toItemId)) {
+                  if (items.hasOwnProperty(toItemId)) {
+                    toItemSlot = slots.item(items[toItemId]);
+                    if (toItemSlot != null) {
+                      if (toItemSlot.position < slot.position) {
+                        /* on the left side */
+                        slotValue += ((slot.left[level] || 0.0) - (toItemSlot.left[level] || 0.0));
+                        slotBalance += Math.abs(toItemSlot.balance + 1);
+                      } else {
+                        /* on the right side */
+                        slotValue += ((slot.right[level] || 0.0) - (toItemSlot.right[level] || 0.0));
+                        slotBalance += Math.abs(toItemSlot.balance - 1);
+                      }
+                      slotDistance += Math.abs(toItemSlot.position - slot.position);
+                    }
+                  }
+                }
+              }
+            }
+          }
 
-			/* insert item into found slot*/
-			cloneSlot = bestSlot.clone();
-			itemSlot = bestSlot.clone();
+          if (bestSlotValue == null ||
+            bestSlotValue > slotValue ||
+            (bestSlotValue == slotValue &&
+              (bestSlotDistance > slotDistance ||
+                (bestSlotDistance == slotDistance &&
+                  (bestSlotBalance > slotBalance ||
+                    (bestSlotBalance == slotBalance && bestSlotCrossings > slotCrossings)
+                  )
+                )
+              )
+            )
+          ) {
+            bestSlotKey = slotKey;
+            bestSlotValue = slotValue;
+            bestSlot = slot;
+            bestSlotDistance = slotDistance;
+            bestSlotBalance = slotBalance;
+            bestSlotCrossings = slotCrossings;
+          }
+        }
+      }, startSlotKey, endSlotKey); //ignore jslint
 
-			itemSlot.itemId = itemid;
+      slots.insertBefore(bestSlotKey, counter++, bestSlot.clone(null));
+      items[itemid] = counter;
+      itemSlotKey = counter;
+      itemSlot = bestSlot.clone(itemid);
+      if (itemsPositions.hasOwnProperty(itemid)) {
+        itemGroup = itemsGroups[itemid];
+        if (!positions.hasOwnProperty(itemGroup)) {
+          positions[itemGroup] = primitives.common.SortedList();
+        }
+        groupPositions = positions[itemGroup];
+        groupPositions.add(itemsPositions[itemid], counter);
+      }
+      slots.insertBefore(bestSlotKey, counter++, itemSlot);
 
-			slots.insertBefore(bestSlot, cloneSlot);
-			slots.insertBefore(bestSlot, itemSlot);
+      /* add new item grand children qty to all slots to their grand totals for right & left sides */
+      itemSlot.position = 0;
+      position = 0;
+      slots.iterate(function (slot, slotKey) {
+        var level, itemGrandChildren;
+        if (slotKey != itemSlotKey) {
+          itemGrandChildren = grandChildren[itemid];
+          for (level in itemGrandChildren) {
+            if (itemGrandChildren.hasOwnProperty(level)) {
+              if (!slot.left[level]) {
+                slot.left[level] = itemGrandChildren[level];
+              } else {
+                slot.left[level] += itemGrandChildren[level];
+              }
+            }
+          }
+          position += 1;
+          slot.position = position;
+        }
+      }, itemSlotKey); //ignore jslint
 
-			/* add new item grand children qty to all slots to their grand totals for right & left sides */
-			itemSlot.position = 0;
-			position = 0;
-			slots.loop(function (slot) {
-				var level, itemGrandChildren;
-				if (slot.id != itemSlot.id) {
-					itemGrandChildren = grandChildren[itemid];
-					for (level in itemGrandChildren) {
-						if (itemGrandChildren.hasOwnProperty(level)) {
-							if (!slot.left[level]) {
-								slot.left[level] = itemGrandChildren[level];
-							} else {
-								slot.left[level] += itemGrandChildren[level];
-							}
-						}
-					}
-					position += 1;
-					slot.position = position;
-				}
-			}, itemSlot); //ignore jslint
+      position = 0;
+      slots.iterateBack(function (slot, slotKey) {
+        var level, itemGrandChildren;
+        if (slotKey != itemSlotKey) {
+          itemGrandChildren = grandChildren[itemid];
+          for (level in grandChildren[itemid]) {
+            if (grandChildren[itemid].hasOwnProperty(level)) {
+              if (!slot.right[level]) {
+                slot.right[level] = itemGrandChildren[level];
+              } else {
+                slot.right[level] += itemGrandChildren[level];
+              }
+            }
+          }
+          position -= 1;
+          slot.position = position;
+        }
+      }, itemSlotKey); //ignore jslint
 
-			position = 0;
-			slots.backwardLoop(function (slot) {
-				var level, itemGrandChildren;
-				if (slot.id != itemSlot.id) {
-					itemGrandChildren = grandChildren[itemid];
-					for (level in grandChildren[itemid]) {
-						if (grandChildren[itemid].hasOwnProperty(level)) {
-							if (!slot.right[level]) {
-								slot.right[level] = itemGrandChildren[level];
-							} else {
-								slot.right[level] += itemGrandChildren[level];
-							}
-						}
-					}
-					position -= 1;
-					slot.position = position;
-				}
-			}, itemSlot); //ignore jslint
+      /* add crossings */
+      for (level in graphGravities[itemid]) {
+        if (graphGravities[itemid].hasOwnProperty(level)) {
+          levelGravities = graphGravities[itemid][level];
+          for (toItemId in levelGravities) {
+            if (levelGravities.hasOwnProperty(toItemId)) {
+              if (items.hasOwnProperty(toItemId)) {
+                toItemSlotKey = items[toItemId];
+                toItemSlot = slots.item(toItemSlotKey);
+                if (toItemSlot != null) {
+                  if (toItemSlot.position < 0) {
+                    /* on the left side */
+                    toItemSlot.balance += 1;
+                    itemSlot.balance -= 1;
+                    slots.iterateBack(function (slot, slotKey) {
+                      if (slotKey != itemSlotKey && slotKey != toItemSlotKey) {
+                        if (!slot.crossings[level]) {
+                          slot.crossings[level] = levelGravities[toItemId];
+                        } else {
+                          slot.crossings[level] += levelGravities[toItemId];
+                        }
+                      }
+                    }, itemSlotKey, toItemSlotKey); //ignore jslint
+                  } else {
+                    /* on the right side */
+                    toItemSlot.balance -= 1;
+                    itemSlot.balance += 1;
+                    slots.iterate(function (slot, slotKey) {
+                      if (slotKey != itemSlotKey && slotKey != toItemSlotKey) {
+                        if (!slot.crossings[level]) {
+                          slot.crossings[level] = levelGravities[toItemId];
+                        } else {
+                          slot.crossings[level] += levelGravities[toItemId];
+                        }
+                      }
+                    }, itemSlotKey, toItemSlotKey); //ignore jslint
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
-			/* add crossings */
-			for (level in graphGravities[itemid]) {
-				if (graphGravities[itemid].hasOwnProperty(level)) {
-					levelGravities = graphGravities[itemid][level];
-					for (toItemId in levelGravities) {
-						if (levelGravities.hasOwnProperty(toItemId)) {
-							toItemSlot = slots.getSlot(toItemId);
-							if (toItemSlot != null) {
-								if (toItemSlot.position < 0) {
-									/* on the left side */
-									toItemSlot.balance += 1;
-									itemSlot.balance -= 1;
-									slots.backwardLoop(function (slot) {
-										if (slot.id != itemSlot.id) {
-											if (slot.id != toItemSlot.id) {
-												if (!slot.crossings[level]) {
-													slot.crossings[level] = levelGravities[toItemId];
-												} else {
-													slot.crossings[level] += levelGravities[toItemId];
-												}
-											} else {
-												return true;
-											}
-										}
-									}, itemSlot); //ignore jslint
-								} else {
-									/* on the right side */
-									toItemSlot.balance -= 1;
-									itemSlot.balance += 1;
-									slots.loop(function (slot) {
-										if (slot.id != itemSlot.id) {
-											if (slot.id != toItemSlot.id) {
-												if (!slot.crossings[level]) {
-													slot.crossings[level] = levelGravities[toItemId];
-												} else {
-													slot.crossings[level] += levelGravities[toItemId];
-												}
-											} else {
-												return true;
-											}
-										}
-									}, itemSlot); //ignore jslint
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+  slots.iterate(function (slot) {
+    var itemId = slot.itemId;
+    if (itemId != null && itemId != leftId && itemId != rightId) {
+      result.push(itemId);
+    }
+  });
 
-	slots.loop(function (slot) {
-		var itemId = slot.itemId;
-		if (itemId != null && itemId != leftId && itemId != rightId) {
-			result.push(itemId);
-		}
-	});
-
-	return result;
+  return result;
 };
 
 primitives.famdiagram.FamilyBalance.prototype.ExtraGravity = function (level) {
-	this.commonParent = null; // primitives.orgdiagram.OrgItem.id
-	this.fromParent = null; // primitives.orgdiagram.OrgItem.id
-	this.toParent = null; // primitives.orgdiagram.OrgItem.id
-	this.level = level;
+  this.commonParent = null; // primitives.orgdiagram.OrgItem.id
+  this.fromParent = null; // primitives.orgdiagram.OrgItem.id
+  this.toParent = null; // primitives.orgdiagram.OrgItem.id
+  this.level = level;
 };
 
 primitives.famdiagram.FamilyBalance.prototype.getExtraGravity = function (data) {
-	var orgItemId, orgItem,
-		result = {}, /* Key = primitives.orgdiagram.OrgItem.id, Value= Hash {} having Key = level and Value = [] array of ExtraGravity objects*/
-		index, len,
-		extraPartners, extraPartner;
+  var orgItemId, orgItem,
+    result = {}, /* Key = primitives.orgdiagram.OrgItem.id, Value= Hash {} having Key = level and Value = [] array of ExtraGravity objects*/
+    index, len,
+    extraPartners, extraPartner;
 
-	/* collect gravities for extra partners */
-	for (orgItemId in data.orgPartners) {
-		if (data.orgPartners.hasOwnProperty(orgItemId)) {
-			orgItem = data.orgTree.node(orgItemId);
-			extraPartners = data.orgPartners[orgItemId];
+  /* collect gravities for extra partners */
+  for (orgItemId in data.orgPartners) {
+    if (data.orgPartners.hasOwnProperty(orgItemId)) {
+      orgItem = data.orgTree.node(orgItemId);
+      extraPartners = data.orgPartners[orgItemId];
 
-			for (index = 0, len = extraPartners.length; index < len; index += 1) {
-				extraPartner = data.orgTree.node(extraPartners[index]);
+      for (index = 0, len = extraPartners.length; index < len; index += 1) {
+        extraPartner = data.orgTree.node(extraPartners[index]);
 
-				this.addExtraGravitiesForConnection(data.orgTree, result, extraPartner, orgItem);
-			}
-		}
-	}
+        this.addExtraGravitiesForConnection(data.orgTree, result, extraPartner, orgItem);
+      }
+    }
+  }
 
-	return result;
+  return result;
 };
 
 primitives.famdiagram.FamilyBalance.prototype.addExtraGravitiesForConnection = function (orgTree, extraGravities, fromItem, toItem) {
-	var extraGravityFrom = new this.ExtraGravity(fromItem.level),
-		extraGravityTo = new this.ExtraGravity(toItem.level);
+  var extraGravityFrom = new this.ExtraGravity(fromItem.level),
+    extraGravityTo = new this.ExtraGravity(toItem.level);
 
-	/* find common parent for evry child and orgItem and create connector for evey parent in selection path */
-	orgTree.zipUp(this, fromItem.id, toItem.id, function (fromItemId, parentFromItemId, toItemId, parentToItemId) {
-		/* all parent items in chain up to the common root share the same gravity object for one connector */
-		this.addExtraGravityForItem(extraGravities, fromItemId, extraGravityFrom);
-		this.addExtraGravityForItem(extraGravities, toItemId, extraGravityTo);
+  /* find common parent for evry child and orgItem and create connector for evey parent in selection path */
+  orgTree.zipUp(this, fromItem.id, toItem.id, function (fromItemId, parentFromItemId, toItemId, parentToItemId) {
+    /* all parent items in chain up to the common root share the same gravity object for one connector */
+    this.addExtraGravityForItem(extraGravities, fromItemId, extraGravityFrom);
+    this.addExtraGravityForItem(extraGravities, toItemId, extraGravityTo);
 
-		/* initialize gravity objects */
-		if (parentFromItemId == parentToItemId) {
-			extraGravityFrom.commonParent = parentFromItemId;
-			extraGravityFrom.fromParent = fromItemId;
-			extraGravityFrom.toParent = toItemId;
+    /* initialize gravity objects */
+    if (parentFromItemId == parentToItemId) {
+      extraGravityFrom.commonParent = parentFromItemId;
+      extraGravityFrom.fromParent = fromItemId;
+      extraGravityFrom.toParent = toItemId;
 
-			extraGravityTo.commonParent = parentFromItemId;
-			extraGravityTo.fromParent = toItemId;
-			extraGravityTo.toParent = fromItemId;
+      extraGravityTo.commonParent = parentFromItemId;
+      extraGravityTo.fromParent = toItemId;
+      extraGravityTo.toParent = fromItemId;
 
-			return true;
-		}
-	});
+      return true;
+    }
+  });
 };
 
 primitives.famdiagram.FamilyBalance.prototype.addExtraGravityForItem = function (extraGravities, id, extraGravity) {
-	if (!extraGravities.hasOwnProperty(id)) {
-		extraGravities[id] = {};
-	}
-	if (extraGravities[id][extraGravity.level] == null) {
-		extraGravities[id][extraGravity.level] = [];
-	}
-	extraGravities[id][extraGravity.level].push(extraGravity);
+  if (!extraGravities.hasOwnProperty(id)) {
+    extraGravities[id] = {};
+  }
+  if (extraGravities[id][extraGravity.level] == null) {
+    extraGravities[id][extraGravity.level] = [];
+  }
+  extraGravities[id][extraGravity.level].push(extraGravity);
 };
 
 primitives.famdiagram.FamilyBalance.prototype.attachFamilyToOrgChart = function (data, defaultItemConfig, parent, family) {
-	var levelIndex,
-		familyRoot = family.items[0],
-		newOrgItem = null,
-		rootItem = parent;
+  var levelIndex,
+    familyRoot = family.items[0],
+    newOrgItem = null,
+    rootItem = parent;
 
-	// fill in levels between parent and family root with invisible items
-	for (levelIndex = parent.level + 1; levelIndex < familyRoot.level; levelIndex += 1) {
-		data.maximumId += 1;
-		newOrgItem = this.createOrgItem(data.orgTree, defaultItemConfig, data.maximumId, rootItem.id, null, levelIndex, null /* userItem */);
-		newOrgItem.title = "shift";
-		newOrgItem.isVisible = false;
-		newOrgItem.isActive = false;
-		newOrgItem.hideParentConnection = true;
-		newOrgItem.hideChildrenConnection = true;
-		family.items.push(newOrgItem);
+  // fill in levels between parent and family root with invisible items
+  for (levelIndex = parent.level + 1; levelIndex < familyRoot.level; levelIndex += 1) {
+    data.maximumId += 1;
+    newOrgItem = this.createOrgItem(data.orgTree, defaultItemConfig, data.maximumId, rootItem.id, null, levelIndex, null /* userItem */);
+    newOrgItem.title = "shift";
+    newOrgItem.isVisible = false;
+    newOrgItem.isActive = false;
+    newOrgItem.hideParentConnection = true;
+    newOrgItem.hideChildrenConnection = true;
+    family.items.push(newOrgItem);
 
-		rootItem = newOrgItem;
-	}
+    rootItem = newOrgItem;
+  }
 
-	// attach family root 
-	familyRoot.hideParentConnection = true;
-	data.orgTree.adopt(rootItem.id, familyRoot.id, familyRoot);
+  // attach family root 
+  familyRoot.hideParentConnection = true;
+  data.orgTree.adopt(rootItem.id, familyRoot.id, familyRoot);
 };
 
 primitives.famdiagram.FamilyBalance.prototype.extractOrgChart = function (grandParentId, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family) {
-	var index, len,
-		children = [], tempChildren,
-		childItem,
-		rootItem = null,
-		newOrgItem,
-		grandParent = logicalFamily.node(grandParentId);
+  var index, len,
+    children = [], tempChildren,
+    childItem,
+    rootItem = null,
+    newOrgItem,
+    grandParent = logicalFamily.node(grandParentId);
 
-	/* extract root item */
-	newOrgItem = this.createOrgItem(orgTree, defaultItemConfig, grandParent.id, rootItem, family.id, grandParent.level, grandParent.itemConfig);
-	newOrgItem.hideParentConnection = true;
-	newOrgItem.isVisible = grandParent.isVisible;
-	newOrgItem.isActive = grandParent.isActive;
-	newOrgItem.hideParentConnection = grandParent.hideParentConnection;
-	newOrgItem.hideChildrenConnection = grandParent.hideChildrenConnection;
-	family.items.push(newOrgItem);
+  /* extract root item */
+  newOrgItem = this.createOrgItem(orgTree, defaultItemConfig, grandParent.id, rootItem, family.id, grandParent.level, grandParent.itemConfig);
+  newOrgItem.hideParentConnection = true;
+  newOrgItem.isVisible = grandParent.isVisible;
+  newOrgItem.isActive = grandParent.isActive;
+  newOrgItem.hideParentConnection = grandParent.hideParentConnection;
+  newOrgItem.hideChildrenConnection = grandParent.hideChildrenConnection;
+  family.items.push(newOrgItem);
 
-	famItemsExtracted[grandParent.id] = true;
-	grandParent.familyId = family.id;
+  famItemsExtracted[grandParent.id] = true;
+  grandParent.familyId = family.id;
 
-	/* extract its children */
-	children = this.extractChildren(grandParent, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family);
+  /* extract its children */
+  children = this.extractChildren(grandParent, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family);
 
-	while (children.length > 0) {
-		tempChildren = [];
-		for (index = 0, len = children.length; index < len; index += 1) {
-			childItem = children[index];
-			tempChildren = tempChildren.concat(this.extractChildren(childItem, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family));
-		}
+  while (children.length > 0) {
+    tempChildren = [];
+    for (index = 0, len = children.length; index < len; index += 1) {
+      childItem = children[index];
+      tempChildren = tempChildren.concat(this.extractChildren(childItem, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family));
+    }
 
-		children = tempChildren;
-	}
+    children = tempChildren;
+  }
 };
 
 primitives.famdiagram.FamilyBalance.prototype.extractChildren = function (parentItem, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family) {
-	var result = [],
-		firstChild = null,
-		partnerItem = null,
-		newOrgItem;
+  var result = [],
+    firstChild = null,
+    partnerItem = null,
+    newOrgItem;
 
-	if (logicalFamily.countChildren(parentItem.id) == 1) {
-		firstChild = logicalFamily.firstChild(parentItem.id);
-	}
+  if (logicalFamily.countChildren(parentItem.id) == 1) {
+    firstChild = logicalFamily.firstChild(parentItem.id);
+  }
 
-	if (itemByChildrenKey[firstChild] != null) {
-		/* all children already extracted */
-		partnerItem = itemByChildrenKey[firstChild];
+  if (itemByChildrenKey[firstChild] != null) {
+    /* all children already extracted */
+    partnerItem = itemByChildrenKey[firstChild];
 
-		if (orgPartners[partnerItem.id] == null) {
-			orgPartners[partnerItem.id] = [];
-		}
-		orgPartners[partnerItem.id].push(parentItem.id);
+    if (orgPartners[partnerItem.id] == null) {
+      orgPartners[partnerItem.id] = [];
+    }
+    orgPartners[partnerItem.id].push(parentItem.id);
 
-		family.links.push(new this.FamLink(parentItem.id, firstChild));
-	} else {
-		if (firstChild != null) {
-			itemByChildrenKey[firstChild] = parentItem;
-		}
+    family.links.push(new this.FamLink(parentItem.id, firstChild));
+  } else {
+    if (firstChild != null) {
+      itemByChildrenKey[firstChild] = parentItem;
+    }
 
-		logicalFamily.loopChildren(this, parentItem.id, function (childid, childItem, levelIndex) {
-			if (famItemsExtracted[childItem.id]) {
-				throw "Many to many relations should not exist at this stage";
-			}
-			result.push(childItem);
+    logicalFamily.loopChildren(this, parentItem.id, function (childid, childItem, levelIndex) {
+      if (famItemsExtracted[childItem.id]) {
+        throw "Many to many relations should not exist at this stage";
+      }
+      result.push(childItem);
 
-			newOrgItem = this.createOrgItem(orgTree, defaultItemConfig, childItem.id, parentItem.id, family.id, childItem.level, childItem.itemConfig);
-			newOrgItem.hideParentConnection = childItem.hideParentConnection;
-			newOrgItem.hideChildrenConnection = childItem.hideChildrenConnection;
-			newOrgItem.isVisible = childItem.isVisible;
-			newOrgItem.isActive = childItem.isActive;
-			family.items.push(newOrgItem);
+      newOrgItem = this.createOrgItem(orgTree, defaultItemConfig, childItem.id, parentItem.id, family.id, childItem.level, childItem.itemConfig);
+      newOrgItem.hideParentConnection = childItem.hideParentConnection;
+      newOrgItem.hideChildrenConnection = childItem.hideChildrenConnection;
+      newOrgItem.isVisible = childItem.isVisible;
+      newOrgItem.isActive = childItem.isActive;
+      family.items.push(newOrgItem);
 
-			famItemsExtracted[childItem.id] = true;
+      famItemsExtracted[childItem.id] = true;
 
-			childItem.familyId = family.id;
-			return logicalFamily.SKIP;
-		});
-	}
-	return result;
+      childItem.familyId = family.id;
+      return logicalFamily.SKIP;
+    });
+  }
+  return result;
 };
 
 primitives.famdiagram.FamilyBalance.prototype.createOrgItem = function (orgTree, defaultItemConfig, id, parentId, familyId, level, userItem) {
-	var orgItem = new primitives.orgdiagram.OrgItem({}),
-		index, len,
-		property;
+  var orgItem = new primitives.orgdiagram.OrgItem({}),
+    index, len,
+    property;
 
-	// OrgItem id coinsides with ItemConfig id since we don't add any new org items to user's org chart definition
-	orgItem.id = id;
-	orgItem.familyId = familyId;
-	orgItem.level = level;
+  // OrgItem id coinsides with ItemConfig id since we don't add any new org items to user's org chart definition
+  orgItem.id = id;
+  orgItem.familyId = familyId;
+  orgItem.level = level;
 
-	for (index = 0, len = this.properties.length; index < len; index += 1) {
-		property = this.properties[index];
+  for (index = 0, len = this.properties.length; index < len; index += 1) {
+    property = this.properties[index];
 
-		orgItem[property] = (userItem != null && userItem[property] !== undefined) ? userItem[property] : defaultItemConfig[property];
-	}
-	orgTree.add(parentId, orgItem.id, orgItem);
+    orgItem[property] = (userItem != null && userItem[property] !== undefined) ? userItem[property] : defaultItemConfig[property];
+  }
+  orgTree.add(parentId, orgItem.id, orgItem);
 
-	return orgItem;
+  return orgItem;
 };
 
 primitives.famdiagram.FamilyBalance.prototype.recalcLevelsDepth = function (bundles, connectorStacks, treeLevels, orgTree, orgPartners) {
-	var index, len,
-		index2, len2,
-		index3, len3,
-		itemPosition,
-		bundle, bundlesToStack,
-		processed = {},
-		startIndex, endIndex, stackSegments;
+  var index, len,
+    index2, len2,
+    index3, len3,
+    itemPosition,
+    bundle, bundlesToStack,
+    processed = {},
+    startIndex, endIndex, stackSegments;
 
 
-	treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
-		var stacksSizes = new primitives.orgdiagram.TreeLevelConnectorStackSize();
-		connectorStacks[levelIndex] = stacksSizes;
+  treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
+    var stacksSizes = new primitives.orgdiagram.TreeLevelConnectorStackSize();
+    connectorStacks[levelIndex] = stacksSizes;
 
-		bundlesToStack = [];
+    bundlesToStack = [];
 
-		treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
-			var fromItems = [],
-				toItems = [],
-				partners;
-			if (!processed.hasOwnProperty(itemid)) {
+    treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
+      var fromItems = [],
+        toItems = [],
+        partners;
+      if (!processed.hasOwnProperty(itemid)) {
 
 
-				processed[itemid] = true;
-				if (!treeItem.hideChildrenConnection) {
-					fromItems.push(itemid);
-				}
+        processed[itemid] = true;
+        if (!treeItem.hideChildrenConnection) {
+          fromItems.push(itemid);
+        }
 
-				partners = orgPartners[itemid];
-				if (partners != null) {
-					for (index = 0, len = partners.length; index < len; index += 1) {
-						var partner = partners[index];
-						processed[partner] = true;
-						fromItems.push(partner);
-					}
-				}
+        partners = orgPartners[itemid];
+        if (partners != null) {
+          for (index = 0, len = partners.length; index < len; index += 1) {
+            var partner = partners[index];
+            processed[partner] = true;
+            fromItems.push(partner);
+          }
+        }
 
-				orgTree.loopChildren(this, itemid, function (childid, child, index) {
-					if (!child.hideParentConnection) {
-						toItems.push(childid);
-					}
-				}); //ignore jslint
+        orgTree.loopChildren(this, itemid, function (childid, child, index) {
+          if (!child.hideParentConnection) {
+            toItems.push(childid);
+          }
+        }); //ignore jslint
 
-				if (fromItems.length > 1 || toItems.length > 0) {
-					/* if bundle has more than one parent without children we draw connection line between parents */
-					/* if bundles has no parents, but has children we draw connectors between children, top loop */
-					bundle = new primitives.common.VerticalConnectorBundle(fromItems, toItems);
+        if (fromItems.length > 1 || toItems.length > 0) {
+          /* if bundle has more than one parent without children we draw connection line between parents */
+          /* if bundles has no parents, but has children we draw connectors between children, top loop */
+          bundle = new primitives.common.VerticalConnectorBundle(fromItems, toItems);
 
-					bundles.push(bundle);
+          bundles.push(bundle);
 
-					if (fromItems.length > 1) {
-						bundlesToStack.push(bundle);
-					}
-				}
-			}
-		});
+          if (fromItems.length > 1) {
+            bundlesToStack.push(bundle);
+          }
+        }
+      }
+    });
 
-		if (bundlesToStack.length > 0) {
-			/* find minimum and maximum partner index at level */
-			stackSegments = primitives.common.pile();
-			for (index2 = 0, len2 = bundlesToStack.length; index2 < len2; index2 += 1) {
-				bundle = bundlesToStack[index2];
+    if (bundlesToStack.length > 0) {
+      /* find minimum and maximum partner index at level */
+      stackSegments = primitives.common.pile();
+      for (index2 = 0, len2 = bundlesToStack.length; index2 < len2; index2 += 1) {
+        bundle = bundlesToStack[index2];
 
-				startIndex = null;
-				endIndex = null;
-				for (index3 = 0, len3 = bundle.fromItems.length; index3 < len3; index3 += 1) {
-					itemPosition = treeLevels.getItemPosition(bundle.fromItems[index3]);
+        startIndex = null;
+        endIndex = null;
+        for (index3 = 0, len3 = bundle.fromItems.length; index3 < len3; index3 += 1) {
+          itemPosition = treeLevels.getItemPosition(bundle.fromItems[index3]);
 
-					startIndex = (startIndex != null) ? Math.min(startIndex, itemPosition) : itemPosition;
-					endIndex = (endIndex != null) ? Math.max(endIndex, itemPosition) : itemPosition;
-				}
-				stackSegments.add(startIndex, endIndex, bundle);
-			}
+          startIndex = (startIndex != null) ? Math.min(startIndex, itemPosition) : itemPosition;
+          endIndex = (endIndex != null) ? Math.max(endIndex, itemPosition) : itemPosition;
+        }
+        stackSegments.add(startIndex, endIndex, bundle);
+      }
 
-			stacksSizes.parentsStackSize = stackSegments.resolve(this, function (from, to, bundle, offset, stackSize) {
-				bundle.fromOffset = offset + 1;
-				bundle.fromStackSize = stackSize;
-			});//ignore jslint
-		}
-	});
+      stacksSizes.parentsStackSize = stackSegments.resolve(this, function (from, to, bundle, offset, stackSize) {
+        bundle.fromOffset = offset + 1;
+        bundle.fromStackSize = stackSize;
+      });//ignore jslint
+    }
+  });
 };
 
 /* /Controls/FamDiagram/Tasks/Transformations/FamilyTransformations/FamilyMatrixesExtractor.js*/
@@ -10991,6 +11019,111 @@ primitives.famdiagram.FamilyNormalizer.prototype.fillInItems = function (logical
 		}
 	});
 };
+
+/* /Controls/FamDiagram/Tasks/Transformations/FamilyTransformations/UserDefinedNodesOrder.js*/
+primitives.famdiagram.UserDefinedNodesOrder = function () {
+
+};
+
+primitives.famdiagram.UserDefinedNodesOrder.prototype.getUserDefinedPositions = function (items) {
+  var userItem,
+    index, len,
+    relationTree = primitives.common.tree(),
+    referencedItems = {};
+
+  for (index = 0, len = items.length; index < len; index += 1) {
+    userItem = items[index];
+    /* user should define unique id for every ItemConfig otherwise we ignore it
+       user should define relativeItem otherwise we cannot position item
+    */
+    if (userItem.relativeItem != null) {
+      referencedItems[userItem.relativeItem] = true;
+    }
+    if (userItem.id != null) {
+      referencedItems[userItem.id] = true;
+    }
+  }
+
+  /* convert items relations into tree, it is not nessasary to be a single root tree */
+  for (index = 0, len = items.length; index < len; index += 1) {
+    userItem = items[index];
+    if (referencedItems.hasOwnProperty(userItem.id)) {
+      var relativeItem = userItem.relativeItem || null;
+      relationTree.add(relativeItem, userItem.id, userItem);
+    }
+  }
+
+  /* at this step relationTree should contain some set of root items 
+    if it has no root items that means we ether don't have any user defined relations
+    or relations tree is looped so we ignore loops
+  */
+  function Set(position, items) {
+    this.position = position;
+    this.items = items;
+  }
+
+  var itemsOrder = {};
+  var lefts = {};
+  var rights = {};
+  relationTree.loopPostOrder(this, function (nodeid, node, parentid, parent) {
+    var items = [],
+      leftItems = lefts[nodeid],
+      rightItems = rights[nodeid],
+      index;
+    if (leftItems != null) {
+      leftItems.sort(function (a, b) {
+        return b.position - a.position
+      });
+      for (index = 0; index < leftItems.length; index += 1) {
+        items = items.concat(leftItems[index].items);
+      }
+    }
+    items.push(nodeid);
+    if (rightItems != null) {
+      rightItems.sort(function (a, b) {
+        return a.position - b.position
+      });
+      for (index = 0; index < rightItems.length; index += 1) {
+        items = items.concat(rightItems[index].items);
+      }
+    }
+
+    if (parentid != null) {
+      if (node.placementType == 2/*primitives.common.AdviserPlacementType.Left*/) {
+        if (!lefts.hasOwnProperty(parentid)) {
+          lefts[parentid] = [];
+        }
+        lefts[parentid].push(new Set(node.position, items));
+      } else {
+        if (!rights.hasOwnProperty(parentid)) {
+          rights[parentid] = [];
+        }
+        rights[parentid].push(new Set(node.position, items));
+      }
+    } else {
+      itemsOrder[nodeid] = items;
+    }
+  });
+
+  /* convert root items collections into a sinle result hash */
+  var position = {},
+    group = {};
+
+  for (var rootItemId in itemsOrder) {
+    if (itemsOrder.hasOwnProperty(rootItemId)) {
+      items = itemsOrder[rootItemId];
+      for (index = 0; index < items.length; index += 1) {
+        var itemid = items[index];
+        position[itemid] = index;
+        group[itemid] = rootItemId;
+      }
+    }
+  }
+  return {
+    position: position,
+    group: group
+  };
+}
 
 /* /Controls/FamDiagram/Tasks/Transformations/Layouts/BaseLayout.js*/
 primitives.common.BaseLayout = function (params, options) {
@@ -12136,6 +12269,49 @@ primitives.famdiagram.AddSpousesTask = function (spousesOptionTask, removeLoopsT
 	};
 };
 
+/* /Controls/FamDiagram/Tasks/Transformations/HideGrandParentsConnectorsTask.js*/
+/*	This task optionally eliminates direct connections to grand parents */
+primitives.famdiagram.HideGrandParentsConnectorsTask = function (hideGrandParentsConnectorsOptionTask, addSpousesTask) {
+  var _data = {
+    maximumId: null, /* maximum of OrgItem.id */
+    logicalFamily: null
+  }
+
+  function process(debug) {
+    var logicalFamily = addSpousesTask.getLogicalFamily(),
+      maximumId = addSpousesTask.getMaximumId();
+
+    var options = hideGrandParentsConnectorsOptionTask.getOptions();
+
+    if (options.hideGrandParentsConnectors == true) {
+      /* optionally eliminate grand parents connectors */
+      logicalFamily = logicalFamily.getFamilyWithoutGrandParentsRelations();
+    } else {
+      logicalFamily = logicalFamily.clone();
+    }
+
+    _data.logicalFamily = logicalFamily;
+    _data.maximumId = maximumId;
+
+    return true;
+  }
+
+  function getLogicalFamily() {
+    return _data.logicalFamily;
+  }
+
+  function getMaximumId() {
+    return _data.maximumId;
+  }
+
+  return {
+    process: process,
+    getLogicalFamily: getLogicalFamily,
+    getMaximumId: getMaximumId
+  };
+};
+
+
 /* /Controls/FamDiagram/Tasks/Transformations/ItemsPositionsTask.js*/
 primitives.famdiagram.ItemsPositionsTask = function (currentControlSizeTask, scaleOptionTask, orientationOptionTask, itemsSizesOptionTask, connectorsOptionTask,
 	normalizeOptionTask, normalizeLogicalFamilyTask,
@@ -12235,55 +12411,6 @@ primitives.famdiagram.ItemsPositionsTask = function (currentControlSizeTask, sca
 	};
 };
 
-/* /Controls/FamDiagram/Tasks/Transformations/LevelsTask.js*/
-primitives.famdiagram.LevelsTask = function (normalizeLogicalFamilyTask, defaultItemConfig) {
-	var _data = {
-		maximumId: null, /* maximum of OrgItem.id */
-		treeLevels: null, /* primitives.common.TreeLevels */
-		bundles: null, /* array of primitives.common.BaseConnectorBundle objects */
-		connectorStacks: null /* array of primitives.orgdiagram.TreeLevelConnectorStackSize objects, it keeps total number of horizontal connectors lines between parents and children stack on top of each other */
-	},
-	_familyBalance = new primitives.famdiagram.FamilyBalance(),
-	_nullTreeLevelConnectorStackSize = new primitives.orgdiagram.TreeLevelConnectorStackSize();
-
-	function process() {
-		var params = {
-			logicalFamily: normalizeLogicalFamilyTask.getLogicalFamily(),
-			maximumId: normalizeLogicalFamilyTask.getMaximumId(),
-			defaultItemConfig: defaultItemConfig
-		};
-
-		_data = _familyBalance.balance(params);
-
-		return true;
-	}
-
-	function getMaximumId() {
-		return _data.maximumId;
-	}
-
-	function getTreeLevels() {
-		return _data.treeLevels;
-	}
-
-	function getBundles() {
-		return _data.bundles;
-	}
-
-	function getConnectorsStacksSizes(levelid) {
-		return _data.connectorStacks[levelid] || _nullTreeLevelConnectorStackSize;
-	}
-
-	return {
-		process: process,
-
-		getMaximumId: getMaximumId,
-		getTreeLevels: getTreeLevels,
-		getBundles: getBundles,
-		getConnectorsStacksSizes: getConnectorsStacksSizes
-	};
-};
-
 /* /Controls/FamDiagram/Tasks/Transformations/LogicalFamilyTask.js*/
 primitives.famdiagram.LogicalFamilyTask = function (itemsOptionTask) {
 	var _data = {
@@ -12351,108 +12478,143 @@ primitives.famdiagram.LogicalFamilyTask = function (itemsOptionTask) {
 	5. Fill in missed items between levels. So that way we have invisible items between parent/child family items if they have gap between levels.
 		Such invisible family items have isVisible option set to false.
 */
-primitives.famdiagram.NormalizeLogicalFamilyTask = function (normalizeOptionTask, addSpousesTask, defaultItemConfig) {
-	var _data = {
-		maximumId: null, /* maximum of OrgItem.id */
-		logicalFamily: null,
-		matrixes: {},
-		nestedLayoutBottomConnectorIds: {},
-		treeLevels: null, /* primitives.common.TreeLevels */
-		bundles: null, /* array of primitives.common.BaseConnectorBundle objects */
-		connectorStacks: null /* array of primitives.orgdiagram.TreeLevelConnectorStackSize objects, it keeps total number of horizontal connectors lines between parents and children stack on top of each other */
-	},
-	_familyBalance = new primitives.famdiagram.FamilyBalance(),
-	_familyNormalizer = new primitives.famdiagram.FamilyNormalizer(false),
-	_familyMatrixesExtractor = new primitives.famdiagram.FamilyMatrixesExtractor(false),
-	_nullTreeLevelConnectorStackSize = new primitives.orgdiagram.TreeLevelConnectorStackSize();
+primitives.famdiagram.NormalizeLogicalFamilyTask = function (normalizeOptionTask, hideGrandParentsConnectorsTask) {
+  var _data = {
+    maximumId: null, /* maximum of OrgItem.id */
+    logicalFamily: null
+  },
+    _familyNormalizer = new primitives.famdiagram.FamilyNormalizer(false);
 
-	function process(debug) {
-		var logicalFamily = addSpousesTask.getLogicalFamily(),
-			maximumId = addSpousesTask.getMaximumId(),
-			matrixes = {},
-			nestedLayoutBottomConnectorIds = {},
-			bundles = [];
+  function process(debug) {
+    var logicalFamily = hideGrandParentsConnectorsTask.getLogicalFamily(),
+      maximumId = hideGrandParentsConnectorsTask.getMaximumId(),
+      normalizeOptions = normalizeOptionTask.getOptions();
 
-		var normalizeOptions = normalizeOptionTask.getOptions();
+    var options = {
+      groupByType: normalizeOptions.groupByType,
+      alignBylevels: normalizeOptions.alignBylevels
+    };
+    logicalFamily = logicalFamily.clone();
+    maximumId = _familyNormalizer.normalize(options, logicalFamily, maximumId);
 
-		var options = {
-			hideGrandParentsConnectors: normalizeOptions.hideGrandParentsConnectors,
-			groupByType: normalizeOptions.groupByType,
-			alignBylevels: normalizeOptions.alignBylevels,
-			enableMatrixLayout: normalizeOptions.enableMatrixLayout,
-			minimumMatrixSize: normalizeOptions.minimumMatrixSize,
-			maximumColumnsInMatrix: normalizeOptions.maximumColumnsInMatrix
-		};
+    _data.logicalFamily = logicalFamily;
+    _data.maximumId = maximumId;
 
-		if (options.hideGrandParentsConnectors == true) {
-			/* optionally eliminate grand parents connectors */
-			logicalFamily = logicalFamily.getFamilyWithoutGrandParentsRelations();
-		} else {
-			logicalFamily = logicalFamily.clone();
-		}
-		
-		maximumId = _familyNormalizer.normalize(options, logicalFamily, maximumId);
-		maximumId = _familyMatrixesExtractor.extract(options, logicalFamily, matrixes, nestedLayoutBottomConnectorIds, bundles, maximumId);
+    return true;
+  }
 
-		_data.logicalFamily = logicalFamily;
-		_data.matrixes = matrixes;
-		_data.nestedLayoutBottomConnectorIds = nestedLayoutBottomConnectorIds;
-		_data.bundles = bundles;
+  function getLogicalFamily() {
+    return _data.logicalFamily;
+  }
 
-		var balanceParams = {
-			logicalFamily: logicalFamily,
-			maximumId: maximumId,
-			defaultItemConfig: defaultItemConfig
-		};
+  function getMaximumId() {
+    return _data.maximumId;
+  }
 
-		var balanceResult = _familyBalance.balance(balanceParams);
+  return {
+    process: process,
+    getLogicalFamily: getLogicalFamily,
+    getMaximumId: getMaximumId
+  };
+};
 
-		_data.maximumId = balanceResult.maximumId;
-		_data.treeLevels = balanceResult.treeLevels;
-		_data.bundles = _data.bundles.concat(balanceResult.bundles);
-		_data.connectorStacks = balanceResult.connectorStacks;
 
-		return true;
-	}
+/* /Controls/FamDiagram/Tasks/Transformations/OrderFamilyNodesTask.js*/
+/*	Balance family tree so parents sharing the most children stay close to each other 
+    Account for users position and primnaryParent options
+*/
+primitives.famdiagram.OrderFamilyNodesTask = function (orderFamilyNodesOptionTask, userDefinedNodesOrderTask, normalizeLogicalFamilyTask, defaultItemConfig) {
+  var _data = {
+    maximumId: null, /* maximum of OrgItem.id */
+    logicalFamily: null,
+    matrixes: {},
+    nestedLayoutBottomConnectorIds: {},
+    treeLevels: null, /* primitives.common.TreeLevels */
+    bundles: null, /* array of primitives.common.BaseConnectorBundle objects */
+    connectorStacks: null /* array of primitives.orgdiagram.TreeLevelConnectorStackSize objects, it keeps total number of horizontal connectors lines between parents and children stack on top of each other */
+  },
+    _familyBalance = new primitives.famdiagram.FamilyBalance(),
+    _familyMatrixesExtractor = new primitives.famdiagram.FamilyMatrixesExtractor(false),
+    _nullTreeLevelConnectorStackSize = new primitives.orgdiagram.TreeLevelConnectorStackSize();
 
-	function getLogicalFamily() {
-		return _data.logicalFamily;
-	}
+  function process(debug) {
+    var logicalFamily = normalizeLogicalFamilyTask.getLogicalFamily(),
+      maximumId = normalizeLogicalFamilyTask.getMaximumId(),
+      matrixes = {},
+      nestedLayoutBottomConnectorIds = {},
+      bundles = [];
 
-	function getMatrixes() {
-		return _data.matrixes;
-	}
+    var orderFamilyNodesOptions = orderFamilyNodesOptionTask.getOptions();
+    var options = {
+      enableMatrixLayout: orderFamilyNodesOptions.enableMatrixLayout,
+      minimumMatrixSize: orderFamilyNodesOptions.minimumMatrixSize,
+      maximumColumnsInMatrix: orderFamilyNodesOptions.maximumColumnsInMatrix
+    };
 
-	function getNestedLayoutBottomConnectorIds() {
-		return _data.nestedLayoutBottomConnectorIds;
-	}
+    logicalFamily = logicalFamily.clone();
+    maximumId = _familyMatrixesExtractor.extract(options, logicalFamily, matrixes, nestedLayoutBottomConnectorIds, bundles, maximumId);
 
-	function getMaximumId() {
-		return _data.maximumId;
-	}
+    _data.logicalFamily = logicalFamily;
+    _data.matrixes = matrixes;
+    _data.nestedLayoutBottomConnectorIds = nestedLayoutBottomConnectorIds;
+    _data.bundles = bundles;
 
-	function getTreeLevels() {
-		return _data.treeLevels;
-	}
+    var balanceParams = {
+      logicalFamily: logicalFamily,
+      maximumId: maximumId,
+      defaultItemConfig: defaultItemConfig,
+      itemsPositions: userDefinedNodesOrderTask.getPositions(),
+      itemsGroups: userDefinedNodesOrderTask.getGroups()
+    };
 
-	function getBundles() {
-		return _data.bundles;
-	}
+    var balanceResult = _familyBalance.balance(balanceParams);
 
-	function getConnectorsStacksSizes(levelid) {
-		return _data.connectorStacks[levelid] || _nullTreeLevelConnectorStackSize;
-	}
+    _data.maximumId = balanceResult.maximumId;
+    _data.treeLevels = balanceResult.treeLevels;
+    _data.bundles = _data.bundles.concat(balanceResult.bundles);
+    _data.connectorStacks = balanceResult.connectorStacks;
 
-	return {
-		process: process,
-		getLogicalFamily: getLogicalFamily,
-		getMatrixes: getMatrixes,
-		getNestedLayoutBottomConnectorIds: getNestedLayoutBottomConnectorIds,
-		getMaximumId: getMaximumId,
-		getTreeLevels: getTreeLevels,
-		getBundles: getBundles,
-		getConnectorsStacksSizes: getConnectorsStacksSizes
-	};
+    return true;
+  }
+
+  function getLogicalFamily() {
+    return _data.logicalFamily;
+  }
+
+  function getMatrixes() {
+    return _data.matrixes;
+  }
+
+  function getNestedLayoutBottomConnectorIds() {
+    return _data.nestedLayoutBottomConnectorIds;
+  }
+
+  function getMaximumId() {
+    return _data.maximumId;
+  }
+
+  function getTreeLevels() {
+    return _data.treeLevels;
+  }
+
+  function getBundles() {
+    return _data.bundles;
+  }
+
+  function getConnectorsStacksSizes(levelid) {
+    return _data.connectorStacks[levelid] || _nullTreeLevelConnectorStackSize;
+  }
+
+  return {
+    process: process,
+    getLogicalFamily: getLogicalFamily,
+    getMatrixes: getMatrixes,
+    getNestedLayoutBottomConnectorIds: getNestedLayoutBottomConnectorIds,
+    getMaximumId: getMaximumId,
+    getTreeLevels: getTreeLevels,
+    getBundles: getBundles,
+    getConnectorsStacksSizes: getConnectorsStacksSizes
+  };
 };
 
 
@@ -12580,6 +12742,39 @@ primitives.famdiagram.RemoveLoopsTask = function (itemsOptionTask, addLabelAnnot
 	};
 };
 
+/* /Controls/FamDiagram/Tasks/Transformations/UserDefinedNodesOrderTask.js*/
+primitives.famdiagram.UserDefinedNodesOrderTask = function (orderFamilyNodesOptionTask) {
+  var _data = {
+    position: null, /* hash[itemid] = position*/
+    group: null /* hash[itemid] = root itemid */
+  },
+    _userDefinedNodesOrder = new primitives.famdiagram.UserDefinedNodesOrder();
+
+  function process() {
+    var options = orderFamilyNodesOptionTask.getOptions();
+    var result = _userDefinedNodesOrder.getUserDefinedPositions(options.items);
+
+    _data.position = result.position;
+    _data.group = result.group;
+
+    return true;
+  }
+
+  function getPositions() {
+    return _data.position;
+  }
+
+  function getGroups() {
+    return _data.group;
+  }
+
+  return {
+    process: process,
+    getPositions: getPositions,
+    getGroups: getGroups
+  };
+};
+
 /* /Controls/FamDiagram/Templates/LabelAnnotationTemplate.js*/
 primitives.common.LabelAnnotationTemplate = function () {
 	var _template = ["div",
@@ -12696,174 +12891,180 @@ primitives.famdiagram.getProcessDiagramConfig = function () {
 
 /* /Controls/FamDiagram/TaskManagerFactory.js*/
 primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, getLayout, templates) {
-	var tasks = new primitives.common.TaskManager();
+  var tasks = new primitives.common.TaskManager();
 
-	// Dependencies
-	tasks.addDependency('options', getOptions);
-	tasks.addDependency('graphics', getGraphics);
-	tasks.addDependency('layout', getLayout);
-	tasks.addDependency('templates', templates);
+  // Dependencies
+  tasks.addDependency('options', getOptions);
+  tasks.addDependency('graphics', getGraphics);
+  tasks.addDependency('layout', getLayout);
+  tasks.addDependency('templates', templates);
 
-	tasks.addDependency('defaultConfig', new primitives.famdiagram.Config());
-	tasks.addDependency('defaultItemConfig', new primitives.famdiagram.ItemConfig());
-	tasks.addDependency('defaultTemplateConfig', new primitives.famdiagram.TemplateConfig());
-	tasks.addDependency('defaultButtonConfig', new primitives.famdiagram.ButtonConfig());
-	tasks.addDependency('defaultPaletteItemConfig', new primitives.famdiagram.PaletteItemConfig());
+  tasks.addDependency('defaultConfig', new primitives.famdiagram.Config());
+  tasks.addDependency('defaultItemConfig', new primitives.famdiagram.ItemConfig());
+  tasks.addDependency('defaultTemplateConfig', new primitives.famdiagram.TemplateConfig());
+  tasks.addDependency('defaultButtonConfig', new primitives.famdiagram.ButtonConfig());
+  tasks.addDependency('defaultPaletteItemConfig', new primitives.famdiagram.PaletteItemConfig());
 
-	tasks.addDependency('defaultBackgroundAnnotationConfig', new primitives.famdiagram.BackgroundAnnotationConfig());
-	tasks.addDependency('defaultConnectorAnnotationConfig', new primitives.famdiagram.ConnectorAnnotationConfig());
-	tasks.addDependency('defaultHighlightPathAnnotationConfig', new primitives.famdiagram.HighlightPathAnnotationConfig());
-	tasks.addDependency('defaultShapeAnnotationConfig', new primitives.famdiagram.ShapeAnnotationConfig());
-	tasks.addDependency('defaultLabelAnnotationConfig', new primitives.famdiagram.LabelAnnotationConfig());
+  tasks.addDependency('defaultBackgroundAnnotationConfig', new primitives.famdiagram.BackgroundAnnotationConfig());
+  tasks.addDependency('defaultConnectorAnnotationConfig', new primitives.famdiagram.ConnectorAnnotationConfig());
+  tasks.addDependency('defaultHighlightPathAnnotationConfig', new primitives.famdiagram.HighlightPathAnnotationConfig());
+  tasks.addDependency('defaultShapeAnnotationConfig', new primitives.famdiagram.ShapeAnnotationConfig());
+  tasks.addDependency('defaultLabelAnnotationConfig', new primitives.famdiagram.LabelAnnotationConfig());
 
-	tasks.addDependency('isFamilyChartMode', true);/* in regular org diagram we hide branch if it contains only invisible nodes, 
+  tasks.addDependency('isFamilyChartMode', true);/* in regular org diagram we hide branch if it contains only invisible nodes, 
 		in the family chart we use invisible items to draw connectors across multiple levels */
-	tasks.addDependency('showElbowDots', true);/* in regular org chart we don;t have situations when connector lines cross, but we have such situations in 
+  tasks.addDependency('showElbowDots', true);/* in regular org chart we don;t have situations when connector lines cross, but we have such situations in 
 		family tree so we need extra visual attribute to distinguish intersections betwen connectors */
-	tasks.addDependency('null', null);
-	tasks.addDependency('foreground', 2/*primitives.common.ZOrderType.Foreground*/);
-	tasks.addDependency('background', 1/*primitives.common.ZOrderType.Background*/);
+  tasks.addDependency('null', null);
+  tasks.addDependency('foreground', 2/*primitives.common.ZOrderType.Foreground*/);
+  tasks.addDependency('background', 1/*primitives.common.ZOrderType.Background*/);
 
-	// Options
-	tasks.addTask('OptionsTask', ['options'], primitives.famdiagram.OptionsTask, "#000000"/*primitives.common.Colors.Black*/);
+  // Options
+  tasks.addTask('OptionsTask', ['options'], primitives.famdiagram.OptionsTask, "#000000"/*primitives.common.Colors.Black*/);
 
-	// Layout
-	tasks.addTask('CurrentControlSizeTask', ['layout', 'OptionsTask', 'ItemsSizesOptionTask'], primitives.orgdiagram.CurrentControlSizeTask, "#000000"/*primitives.common.Colors.Black*/);
-	tasks.addTask('CurrentScrollPositionTask', ['layout', 'OptionsTask'], primitives.orgdiagram.CurrentScrollPositionTask, "#000000"/*primitives.common.Colors.Black*/);
+  // Layout
+  tasks.addTask('CurrentControlSizeTask', ['layout', 'OptionsTask', 'ItemsSizesOptionTask'], primitives.orgdiagram.CurrentControlSizeTask, "#000000"/*primitives.common.Colors.Black*/);
+  tasks.addTask('CurrentScrollPositionTask', ['layout', 'OptionsTask'], primitives.orgdiagram.CurrentScrollPositionTask, "#000000"/*primitives.common.Colors.Black*/);
 
-	tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.ItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('ItemsContentOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.orgdiagram.ItemsContentOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('SpousesOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.SpousesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig', 'defaultButtonConfig'], primitives.orgdiagram.ItemsSizesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.LabelsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultButtonConfig', 'defaultTemplateConfig'], primitives.orgdiagram.TemplatesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.OrientationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('VisualTreeOptionTask', ['OptionsTask'], primitives.famdiagram.VisualTreeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('MinimizedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.MinimizedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('NormalizeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.famdiagram.NormalizeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('LinePaletteOptionTask', ['OptionsTask', 'defaultPaletteItemConfig'], primitives.famdiagram.LinePaletteOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.ItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('ItemsContentOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.orgdiagram.ItemsContentOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('SpousesOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.SpousesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig', 'defaultButtonConfig'], primitives.orgdiagram.ItemsSizesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.LabelsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultButtonConfig', 'defaultTemplateConfig'], primitives.orgdiagram.TemplatesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.OrientationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('VisualTreeOptionTask', ['OptionsTask'], primitives.famdiagram.VisualTreeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('MinimizedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.MinimizedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('HideGrandParentsConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.famdiagram.HideGrandParentsConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('NormalizeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.famdiagram.NormalizeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('OrderFamilyNodesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.famdiagram.OrderFamilyNodesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('LinePaletteOptionTask', ['OptionsTask', 'defaultPaletteItemConfig'], primitives.famdiagram.LinePaletteOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-	tasks.addTask('CursorItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('HighlightItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.HighlightItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('SelectedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.SelectedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('CursorSelectionPathModeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorSelectionPathModeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('NeighboursSelectionModeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.famdiagram.NeighboursSelectionModeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('CursorItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('HighlightItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.HighlightItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('SelectedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.SelectedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('CursorSelectionPathModeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorSelectionPathModeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('NeighboursSelectionModeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.famdiagram.NeighboursSelectionModeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-	tasks.addTask('SplitAnnotationsOptionTask', ['OptionsTask'], primitives.orgdiagram.SplitAnnotationsOptionTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('SplitAnnotationsOptionTask', ['OptionsTask'], primitives.orgdiagram.SplitAnnotationsOptionTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-	tasks.addTask('ForegroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'foreground'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('BackgroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'background'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('ForegroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'foreground'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('BackgroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'background'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], primitives.orgdiagram.BackgroundAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('ForegroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'foreground'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('BackgroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'background'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('ForegroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'foreground'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('BackgroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'background'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], primitives.orgdiagram.BackgroundAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-	tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ScaleOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ScaleOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-	// Transformations
-	tasks.addTask('LogicalFamilyTask', ['ItemsOptionTask'], primitives.famdiagram.LogicalFamilyTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  // Transformations
+  tasks.addTask('UserDefinedNodesOrderTask', ['OrderFamilyNodesOptionTask', 'defaultItemConfig'], primitives.famdiagram.UserDefinedNodesOrderTask, "#ff0000"/*primitives.common.Colors.Red*/);
 
-	tasks.addTask('LabelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'LogicalFamilyTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('LabelAnnotationTemplateOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationTemplateOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-	tasks.addTask('LabelAnnotationPlacementOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationPlacementOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('LogicalFamilyTask', ['ItemsOptionTask'], primitives.famdiagram.LogicalFamilyTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-	tasks.addTask('CombinedContextsTask', ['ItemsContentOptionTask', 'LabelAnnotationOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('LabelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'LogicalFamilyTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('LabelAnnotationTemplateOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationTemplateOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('LabelAnnotationPlacementOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationPlacementOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-	tasks.addTask('AddLabelAnnotationsTask', ['LabelAnnotationPlacementOptionTask', 'LogicalFamilyTask'], primitives.famdiagram.AddLabelAnnotationsTask, "#ff0000"/*primitives.common.Colors.Red*/);
-	tasks.addTask('RemoveLoopsTask', ['ItemsOptionTask', 'AddLabelAnnotationsTask'], primitives.famdiagram.RemoveLoopsTask, "#ff0000"/*primitives.common.Colors.Red*/);
-	tasks.addTask('AddSpousesTask', ['SpousesOptionTask', 'RemoveLoopsTask'], primitives.famdiagram.AddSpousesTask, "#ff0000"/*primitives.common.Colors.Red*/);
-	tasks.addTask('NormalizeLogicalFamilyTask', ['NormalizeOptionTask', 'AddSpousesTask', 'defaultItemConfig'], primitives.famdiagram.NormalizeLogicalFamilyTask, "#ff0000"/*primitives.common.Colors.Red*/);
+  tasks.addTask('CombinedContextsTask', ['ItemsContentOptionTask', 'LabelAnnotationOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-	// Transformations / Templates
-	tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask'], primitives.orgdiagram.ReadTemplatesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('ActiveItemsTask', ['ItemsSizesOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ActiveItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ItemTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('LabelAnnotationTemplateParamsTask', ['ItemsSizesOptionTask', 'LabelAnnotationTemplateOptionTask', 'ReadTemplatesTask'], primitives.famdiagram.LabelAnnotationTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('CombinedTemplateParamsTask', ['ItemTemplateParamsTask', 'LabelAnnotationTemplateParamsTask'], primitives.famdiagram.CombinedTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('AddLabelAnnotationsTask', ['LabelAnnotationPlacementOptionTask', 'LogicalFamilyTask'], primitives.famdiagram.AddLabelAnnotationsTask, "#ff0000"/*primitives.common.Colors.Red*/);
+  tasks.addTask('RemoveLoopsTask', ['ItemsOptionTask', 'AddLabelAnnotationsTask'], primitives.famdiagram.RemoveLoopsTask, "#ff0000"/*primitives.common.Colors.Red*/);
+  tasks.addTask('AddSpousesTask', ['SpousesOptionTask', 'RemoveLoopsTask'], primitives.famdiagram.AddSpousesTask, "#ff0000"/*primitives.common.Colors.Red*/);
+  tasks.addTask('HideGrandParentsConnectorsTask', ['HideGrandParentsConnectorsOptionTask', 'AddSpousesTask'], primitives.famdiagram.HideGrandParentsConnectorsTask, "#ff0000"/*primitives.common.Colors.Red*/);
+  tasks.addTask('NormalizeLogicalFamilyTask', ['NormalizeOptionTask', 'HideGrandParentsConnectorsTask'], primitives.famdiagram.NormalizeLogicalFamilyTask, "#ff0000"/*primitives.common.Colors.Red*/);
+  tasks.addTask('OrderFamilyNodesTask', ['OrderFamilyNodesOptionTask', 'UserDefinedNodesOrderTask', 'NormalizeLogicalFamilyTask', 'defaultItemConfig'], primitives.famdiagram.OrderFamilyNodesTask, "#ff0000"/*primitives.common.Colors.Red*/);
 
-	tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask'], primitives.orgdiagram.GroupTitleTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask'], primitives.orgdiagram.CheckBoxTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask', 'templates'], primitives.orgdiagram.ButtonsTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask'], primitives.orgdiagram.AnnotationLabelTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  // Transformations / Templates
+  tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask'], primitives.orgdiagram.ReadTemplatesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('ActiveItemsTask', ['ItemsSizesOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ActiveItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ItemTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('LabelAnnotationTemplateParamsTask', ['ItemsSizesOptionTask', 'LabelAnnotationTemplateOptionTask', 'ReadTemplatesTask'], primitives.famdiagram.LabelAnnotationTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('CombinedTemplateParamsTask', ['ItemTemplateParamsTask', 'LabelAnnotationTemplateParamsTask'], primitives.famdiagram.CombinedTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-	tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'NormalizeLogicalFamilyTask', 'AlignDiagramTask'], primitives.orgdiagram.ConnectionsGraphTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask'], primitives.orgdiagram.GroupTitleTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask'], primitives.orgdiagram.CheckBoxTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask', 'templates'], primitives.orgdiagram.ButtonsTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask'], primitives.orgdiagram.AnnotationLabelTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-	// Transformations/Selections
-	tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.HighlightItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'OrderFamilyNodesTask', 'AlignDiagramTask'], primitives.orgdiagram.ConnectionsGraphTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-	tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'NeighboursSelectionModeOptionTask', 'AddLabelAnnotationsTask', 'ActiveItemsTask'], primitives.famdiagram.CursorNeighboursTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('SelectionPathItemsTask', ['AddLabelAnnotationsTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], primitives.orgdiagram.SelectionPathItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  // Transformations/Selections
+  tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.HighlightItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-	tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('NormalVisibilityItemsByBackgroundShapeAnnotationTask', ['BackgroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('NormalVisibilityItemsByBackgroundAnnotationTask', ['BackgroundAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('NormalVisibilityItemsByForegroundHighlightPathAnnotationTask', ['ForegroundHighlightPathAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', ['BackgroundHighlightPathAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('NormalVisibilityItemsByForegroundConnectorAnnotationTask', ['ForegroundConnectorAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByConnectorAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('NormalVisibilityItemsByBackgroundConnectorAnnotationTask', ['BackgroundConnectorAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByConnectorAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('CombinedNormalVisibilityItemsTask', [
-		'ItemsSizesOptionTask',
-		'CursorItemTask',
-		'CursorNeighboursTask',
-		'SelectedItemsTask',
-		'SelectionPathItemsTask',
-		'NormalVisibilityItemsByForegroundShapeAnnotationTask',
-		'NormalVisibilityItemsByBackgroundShapeAnnotationTask',
-		'NormalVisibilityItemsByBackgroundAnnotationTask',
-		'NormalVisibilityItemsByForegroundHighlightPathAnnotationTask',
-		'NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask',
-		'NormalVisibilityItemsByForegroundConnectorAnnotationTask',
-		'NormalVisibilityItemsByBackgroundConnectorAnnotationTask'], primitives.orgdiagram.CombinedNormalVisibilityItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'NeighboursSelectionModeOptionTask', 'AddLabelAnnotationsTask', 'ActiveItemsTask'], primitives.famdiagram.CursorNeighboursTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('SelectionPathItemsTask', ['AddLabelAnnotationsTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], primitives.orgdiagram.SelectionPathItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-	tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask',
-		'NormalizeOptionTask', 'NormalizeLogicalFamilyTask',
-		'CombinedTemplateParamsTask',
-		'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], primitives.famdiagram.ItemsPositionsTask, "#ff0000"/*primitives.common.Colors.Red*/);
+  tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('NormalVisibilityItemsByBackgroundShapeAnnotationTask', ['BackgroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('NormalVisibilityItemsByBackgroundAnnotationTask', ['BackgroundAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('NormalVisibilityItemsByForegroundHighlightPathAnnotationTask', ['ForegroundHighlightPathAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', ['BackgroundHighlightPathAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('NormalVisibilityItemsByForegroundConnectorAnnotationTask', ['ForegroundConnectorAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByConnectorAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('NormalVisibilityItemsByBackgroundConnectorAnnotationTask', ['BackgroundConnectorAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByConnectorAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('CombinedNormalVisibilityItemsTask', [
+    'ItemsSizesOptionTask',
+    'CursorItemTask',
+    'CursorNeighboursTask',
+    'SelectedItemsTask',
+    'SelectionPathItemsTask',
+    'NormalVisibilityItemsByForegroundShapeAnnotationTask',
+    'NormalVisibilityItemsByBackgroundShapeAnnotationTask',
+    'NormalVisibilityItemsByBackgroundAnnotationTask',
+    'NormalVisibilityItemsByForegroundHighlightPathAnnotationTask',
+    'NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask',
+    'NormalVisibilityItemsByForegroundConnectorAnnotationTask',
+    'NormalVisibilityItemsByBackgroundConnectorAnnotationTask'], primitives.orgdiagram.CombinedNormalVisibilityItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-	tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], primitives.orgdiagram.AlignDiagramTask, "#ff0000"/*primitives.common.Colors.Red*/);
-	tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.CreateTransformTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('CenterOnCursorTask', ['layout', 'CurrentControlSizeTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], primitives.orgdiagram.CenterOnCursorTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask',
+    'OrderFamilyNodesOptionTask', 'OrderFamilyNodesTask',
+    'CombinedTemplateParamsTask',
+    'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], primitives.famdiagram.ItemsPositionsTask, "#ff0000"/*primitives.common.Colors.Red*/);
 
-	// Managers
-	tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'LinePaletteOptionTask'], primitives.orgdiagram.PaletteManagerTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], primitives.orgdiagram.AlignDiagramTask, "#ff0000"/*primitives.common.Colors.Red*/);
+  tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.CreateTransformTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('CenterOnCursorTask', ['layout', 'CurrentControlSizeTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], primitives.orgdiagram.CenterOnCursorTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-	// Apply Layout Changes
-	tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'layout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.ApplyLayoutChangesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  // Managers
+  tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'LinePaletteOptionTask'], primitives.orgdiagram.PaletteManagerTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-	// Renders
-	tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-	tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  // Apply Layout Changes
+  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'layout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.ApplyLayoutChangesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-	tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'AddLabelAnnotationsTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawBackgroundAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-	tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-	tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-	tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-	tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+  // Renders
+  tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-	tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawCursorTask, "#008000"/*primitives.common.Colors.Green*/);
-	tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightTask, "#008000"/*primitives.common.Colors.Green*/);
-	tasks.addTask('DrawHighlightAnnotationTask', ['layout', 'graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'AddLabelAnnotationsTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawBackgroundAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
 
-	tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask',
-		'ItemsSizesOptionTask',
-		'CombinedContextsTask',
-		'AlignDiagramTask', 'CenterOnCursorTask',
-		'CombinedTemplateParamsTask',
-		'CursorItemTask', 'SelectedItemsTask',
-		'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask'
-	], primitives.orgdiagram.DrawTreeItemsTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawCursorTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawHighlightAnnotationTask', ['layout', 'graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
 
-	tasks.addTask('DrawMinimizedItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'MinimizedItemsOptionTask', 'CombinedTemplateParamsTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawMinimizedItemsTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask',
+    'ItemsSizesOptionTask',
+    'CombinedContextsTask',
+    'AlignDiagramTask', 'CenterOnCursorTask',
+    'CombinedTemplateParamsTask',
+    'CursorItemTask', 'SelectedItemsTask',
+    'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask'
+  ], primitives.orgdiagram.DrawTreeItemsTask, "#008000"/*primitives.common.Colors.Green*/);
 
-	tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask'], primitives.orgdiagram.DrawConnectorsTask, "#008000"/*primitives.common.Colors.Green*/);
-	tasks.addTask('DrawItemLabelsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LabelsOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawItemLabelsTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawMinimizedItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'MinimizedItemsOptionTask', 'CombinedTemplateParamsTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawMinimizedItemsTask, "#008000"/*primitives.common.Colors.Green*/);
 
-	return tasks;
+  tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask'], primitives.orgdiagram.DrawConnectorsTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawItemLabelsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LabelsOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawItemLabelsTask, "#008000"/*primitives.common.Colors.Green*/);
+
+  return tasks;
 };
 
 
@@ -26695,242 +26896,258 @@ primitives.common.LCA = function (tree) {
 
 /* /algorithms/LinkedHashItems.js*/
 primitives.common.LinkedHashItems = function () {
-	var segmentsHash = {},
-	nextKeys = {},
-	prevKeys = {},
-	startSegmentKey = null,
-	endSegmentKey = null;
+  var segmentsHash = {},
+    nextKeys = {},
+    prevKeys = {},
+    startSegmentKey = null,
+    endSegmentKey = null;
 
-	function add(key, item) {
-		if (segmentsHash.hasOwnProperty(key)) {
-			throw "Duplicate segments are not supported!";
-		}
-		segmentsHash[key] = item;
-		nextKeys[key] = null;
-		if (endSegmentKey == null) {
-			startSegmentKey = key;
-			prevKeys[key] = null;
-		} else {
-			nextKeys[endSegmentKey] = key;
-			prevKeys[key] = endSegmentKey;
-		}
-		endSegmentKey = key;
-	}
+  function add(key, item) {
+    if (segmentsHash.hasOwnProperty(key)) {
+      throw "Duplicate segments are not supported!";
+    }
+    segmentsHash[key] = item;
+    nextKeys[key] = null;
+    if (endSegmentKey == null) {
+      startSegmentKey = key;
+      prevKeys[key] = null;
+    } else {
+      nextKeys[endSegmentKey] = key;
+      prevKeys[key] = endSegmentKey;
+    }
+    endSegmentKey = key;
+  }
 
-	function isEmpty() {
-		return startSegmentKey == null;
-	}
+  function isEmpty() {
+    return startSegmentKey == null;
+  }
 
-	function item(key) {
-		return segmentsHash[key];
-	}
+  function item(key) {
+    return segmentsHash[key];
+  }
 
-	function nextKey(key) {
-		return nextKeys[key];
-	}
+  function nextKey(key) {
+    return nextKeys[key];
+  }
 
-	function prevKey(key) {
-		return prevKeys[key];
-	}
+  function prevKey(key) {
+    return prevKeys[key];
+  }
 
-	function  startKey() {
-		return startSegmentKey;
-	}
+  function startKey() {
+    return startSegmentKey;
+  }
 
-	function endKey() {
-		return endSegmentKey;
-	}
+  function endKey() {
+    return endSegmentKey;
+  }
 
-	function unshift(key, item) {
-		if (segmentsHash.hasOwnProperty(key)) {
-			throw "Duplicate segments are not supported!";
-		}
-		segmentsHash[key] = item;
-		prevKeys[key] = null;
-		if (startSegmentKey == null) {
-			endSegmentKey = key;
-			nextKeys[key] = null;
-		} else {
-			prevKeys[startSegmentKey] = key;
-			nextKeys[key] = startSegmentKey;
-		}
-		startSegmentKey = key;
-	}
+  function unshift(key, item) {
+    if (segmentsHash.hasOwnProperty(key)) {
+      throw "Duplicate segments are not supported!";
+    }
+    segmentsHash[key] = item;
+    prevKeys[key] = null;
+    if (startSegmentKey == null) {
+      endSegmentKey = key;
+      nextKeys[key] = null;
+    } else {
+      prevKeys[startSegmentKey] = key;
+      nextKeys[key] = startSegmentKey;
+    }
+    startSegmentKey = key;
+  }
 
-	function insertAfter(afterKey, key, item) {
-		if (segmentsHash.hasOwnProperty(key)) {
-			throw "Duplicate segments are not supported!";
-		}
+  function insertAfter(afterKey, key, item) {
+    if (segmentsHash.hasOwnProperty(key)) {
+      throw "Duplicate segments are not supported!";
+    }
 
-		if (afterKey == null) {
-			unshift(key, item);
-		} else {
-			var nextKey = nextKeys[afterKey];
-			if (nextKey == null) {
-				add(key, item);
-			} else {
-				segmentsHash[key] = item;
-				nextKeys[afterKey] = key;
-				nextKeys[key] = nextKey;
-				prevKeys[nextKey] = key;
-				prevKeys[key] = afterKey;
-			}
-		}
-	}
+    if (afterKey == null) {
+      unshift(key, item);
+    } else {
+      var nextKey = nextKeys[afterKey];
+      if (nextKey == null) {
+        add(key, item);
+      } else {
+        segmentsHash[key] = item;
+        nextKeys[afterKey] = key;
+        nextKeys[key] = nextKey;
+        prevKeys[nextKey] = key;
+        prevKeys[key] = afterKey;
+      }
+    }
+  }
 
-	function remove(key) {
-		var prevKey = prevKeys[key],
-			nextKey = nextKeys[key];
+  function insertBefore(beforeKey, key, item) {
+    if (segmentsHash.hasOwnProperty(key)) {
+      throw "Duplicate segments are not supported!";
+    }
+    if (beforeKey == null || !segmentsHash.hasOwnProperty(beforeKey)) {
+      throw "Before key should be defined!";
+    }
+    var prevKey = prevKeys[beforeKey];
+    if (prevKey == null) {
+      unshift(key, item);
+    } else {
+      insertAfter(prevKey, key, item)
+    }
+  }
 
-		if (prevKey != null) {
-			nextKeys[prevKey] = nextKey;
-		} else {
-			startSegmentKey = nextKey;
-		}
+  function remove(key) {
+    var prevKey = prevKeys[key],
+      nextKey = nextKeys[key];
 
-		if (nextKey != null) {
-			prevKeys[nextKey] = prevKey;
-		} else {
-			endSegmentKey = prevKey;
-		}
+    if (prevKey != null) {
+      nextKeys[prevKey] = nextKey;
+    } else {
+      startSegmentKey = nextKey;
+    }
 
-		delete segmentsHash[key];
-		delete nextKeys[key];
-		delete prevKeys[key];
-	}
+    if (nextKey != null) {
+      prevKeys[nextKey] = prevKey;
+    } else {
+      endSegmentKey = prevKey;
+    }
 
-	function empty() {
-		segmentsHash = {};
-		nextKeys = {};
-		prevKeys = {};
-		startSegmentKey = null;
-		endSegmentKey = null;
-	}
+    delete segmentsHash[key];
+    delete nextKeys[key];
+    delete prevKeys[key];
+  }
 
-	function _iterate(forward, onItem, startKey, endKey) {
-		var key = startKey,
-			segment;
+  function empty() {
+    segmentsHash = {};
+    nextKeys = {};
+    prevKeys = {};
+    startSegmentKey = null;
+    endSegmentKey = null;
+  }
 
-		if (key == null) {
-			key = forward ? startSegmentKey : endSegmentKey;
-		}
+  function _iterate(forward, onItem, startKey, endKey) {
+    var key = startKey,
+      segment;
 
-		if (onItem != null) {
-			while (key != null) {
-				segment = segmentsHash[key];
-				if (segment != null) {
-					if (onItem(segment, key)) {
-						return;
-					}
-				}
+    if (key == null) {
+      key = forward ? startSegmentKey : endSegmentKey;
+    }
 
-				if (key == endKey) {
-					key = null;
-				} else {
-					key = forward ? nextKeys[key] : prevKeys[key];
-				}
-			}
-		}
-	}
+    if (onItem != null) {
+      while (key != null) {
+        segment = segmentsHash[key];
+        if (segment != null) {
+          if (onItem(segment, key)) {
+            return;
+          }
+        }
 
-	function attach(list) {
-		list.iterate(function (segment, key) {
-			add(key, segment);
-		});
-	}
+        if (key == endKey) {
+          key = null;
+        } else {
+          key = forward ? nextKeys[key] : prevKeys[key];
+        }
+      }
+    }
+  }
 
-	function iterate(onItem, startKey, endKey) {
-		_iterate(true, onItem, startKey, endKey);
-	}
+  function attach(list) {
+    list.iterate(function (segment, key) {
+      add(key, segment);
+    });
+  }
 
-	function iterateBack(onItem, startKey, endKey) {
-		_iterate(false, onItem, startKey, endKey);
-	}
+  function iterate(onItem, startKey, endKey) {
+    _iterate(true, onItem, startKey, endKey);
+  }
 
-	function validate(info) {
-		var key, prevKey, nextKey;
-		for (key in segmentsHash) {
-			if (segmentsHash.hasOwnProperty(key)) {
-				if (!nextKeys.hasOwnProperty(key) || !prevKeys.hasOwnProperty(key)) {
-					if (info != null) {
-						info.message = "Orphant key found!";
-					}
-					return false;
-				}
-			}
-		}
-		if (!segmentsHash.hasOwnProperty(startSegmentKey) || !segmentsHash.hasOwnProperty(endSegmentKey)) {
-			if (info != null) {
-				info.message = "Start or end values are missing!";
-			}
-			return false;
-		}
-		for (key in nextKeys) {
-			if (nextKeys.hasOwnProperty(key)) {
-				if (!segmentsHash.hasOwnProperty(key) || !prevKeys.hasOwnProperty(key)) {
-					if (info != null) {
-						info.message = "Orphant key found!";
-					}
-					return false;
-				}
-				nextKey = nextKeys[key];
-				if (nextKey && !nextKeys.hasOwnProperty(nextKey)) {
-					if (info != null) {
-						info.message = "Next key not found!";
-					}
-					return false;
-				}
-			}
-		}
-		for (key in prevKeys) {
-			if (prevKeys.hasOwnProperty(key)) {
-				if (!segmentsHash.hasOwnProperty(key) || !nextKeys.hasOwnProperty(key)) {
-					if (info != null) {
-						info.message = "Orphant key found!";
-					}
-					return false;
-				}
-				prevKey = prevKeys[key];
-				if (prevKey && !prevKeys.hasOwnProperty(prevKey)) {
-					if (info != null) {
-						info.message = "Prev key not found!";
-					}
-					return false;
-				}
-			}
-		}
-		return true;
-	}
+  function iterateBack(onItem, startKey, endKey) {
+    _iterate(false, onItem, startKey, endKey);
+  }
 
-	function toArray() {
-		var result = [];
+  function validate(info) {
+    var key, prevKey, nextKey;
+    for (key in segmentsHash) {
+      if (segmentsHash.hasOwnProperty(key)) {
+        if (!nextKeys.hasOwnProperty(key) || !prevKeys.hasOwnProperty(key)) {
+          if (info != null) {
+            info.message = "Orphant key found!";
+          }
+          return false;
+        }
+      }
+    }
+    if (!segmentsHash.hasOwnProperty(startSegmentKey) || !segmentsHash.hasOwnProperty(endSegmentKey)) {
+      if (info != null) {
+        info.message = "Start or end values are missing!";
+      }
+      return false;
+    }
+    for (key in nextKeys) {
+      if (nextKeys.hasOwnProperty(key)) {
+        if (!segmentsHash.hasOwnProperty(key) || !prevKeys.hasOwnProperty(key)) {
+          if (info != null) {
+            info.message = "Orphant key found!";
+          }
+          return false;
+        }
+        nextKey = nextKeys[key];
+        if (nextKey && !nextKeys.hasOwnProperty(nextKey)) {
+          if (info != null) {
+            info.message = "Next key not found!";
+          }
+          return false;
+        }
+      }
+    }
+    for (key in prevKeys) {
+      if (prevKeys.hasOwnProperty(key)) {
+        if (!segmentsHash.hasOwnProperty(key) || !nextKeys.hasOwnProperty(key)) {
+          if (info != null) {
+            info.message = "Orphant key found!";
+          }
+          return false;
+        }
+        prevKey = prevKeys[key];
+        if (prevKey && !prevKeys.hasOwnProperty(prevKey)) {
+          if (info != null) {
+            info.message = "Prev key not found!";
+          }
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 
-		iterate(function (item) {
-			result.push(item);
-		});
+  function toArray() {
+    var result = [];
 
-		return result;
-	}
+    iterate(function (item) {
+      result.push(item);
+    });
 
-	return {
-		add: add,
-		item: item,
-		nextKey: nextKey,
-		prevKey: prevKey,
-		startKey: startKey,
-		endKey: endKey,
-		unshift:unshift,
-		insertAfter:insertAfter,
-		remove: remove,
-		isEmpty: isEmpty,
-		attach: attach,
+    return result;
+  }
 
-		iterate: iterate,
-		iterateBack: iterateBack,
-		empty: empty,
-		toArray: toArray,
-		validate: validate
-	};
+  return {
+    add: add,
+    item: item,
+    nextKey: nextKey,
+    prevKey: prevKey,
+    startKey: startKey,
+    endKey: endKey,
+    unshift: unshift,
+    insertAfter: insertAfter,
+    insertBefore: insertBefore,
+    remove: remove,
+    isEmpty: isEmpty,
+    attach: attach,
+
+    iterate: iterate,
+    iterateBack: iterateBack,
+    empty: empty,
+    toArray: toArray,
+    validate: validate
+  };
 };
 
 
@@ -27459,443 +27676,444 @@ primitives.common.RMQ = function (items) {
 
 /* /algorithms/SortedList.js*/
 primitives.common.SortedList = function () {
-	var _rootNode = null;
+  var _rootNode = null;
 
-	function Node(value, context) {
-		this.value = value;
-		this.context = context;
+  function Node(value, context) {
+    this.value = value;
+    this.context = context;
 
-		this.left = null;
-		this.right = null;
+    this.left = null;
+    this.right = null;
 
-		this.balance = 0;
-	}
+    this.balance = 0;
+  }
 
-	function _rebalance(node) {
-		var balance;
-		if (node.balance == 2) {
-			var right = node.right;
-			balance = right.balance;
-			if (balance >= 0) {
-				_rotateSmallLeft(right, node);
-			} else {
-				_rotateBigLeft(right, node);
-			}
-		} else if (node.balance == -2) {
-			var left = node.left;
-			balance = left.balance;
-			if (balance <= 0) {
-				_rotateSmallRight(node.left, node);
-			} else {
-				_rotateBigRight(node.left, node);
-			}
-		}
-		return balance;
-	}
+  function _rebalance(node) {
+    var balance;
+    if (node.balance == 2) {
+      var right = node.right;
+      balance = right.balance;
+      if (balance >= 0) {
+        _rotateSmallLeft(right, node);
+      } else {
+        _rotateBigLeft(right, node);
+      }
+    } else if (node.balance == -2) {
+      var left = node.left;
+      balance = left.balance;
+      if (balance <= 0) {
+        _rotateSmallRight(node.left, node);
+      } else {
+        _rotateBigRight(node.left, node);
+      }
+    }
+    return balance;
+  }
 
-	function _rotateSmallLeft(node, parent) {
-		_rotateLeft(node, parent);
+  function _rotateSmallLeft(node, parent) {
+    _rotateLeft(node, parent);
 
-		if (node.balance == 1) {
-			parent.balance = 0;
-			node.balance = 0;
-		} else {
-			parent.balance = -1;
-			node.balance = 1;
-		}
-	}
+    if (node.balance == 1) {
+      parent.balance = 0;
+      node.balance = 0;
+    } else {
+      parent.balance = -1;
+      node.balance = 1;
+    }
+  }
 
-	function _rotateLeft(node, parent) {
-		_swap(node, parent);
-		parent.right = node.right;
-		node.right = node.left;
-		node.left = parent.left;
-		parent.left = node;
-	}
+  function _rotateLeft(node, parent) {
+    _swap(node, parent);
+    parent.right = node.right;
+    node.right = node.left;
+    node.left = parent.left;
+    parent.left = node;
+  }
 
-	function _rotateSmallRight(node, parent) {
-		_rotateRight(node, parent);
+  function _rotateSmallRight(node, parent) {
+    _rotateRight(node, parent);
 
-		if (node.balance == -1) {
-			parent.balance = 0;
-			node.balance = 0;
-		} else {
-			parent.balance = 1;
-			node.balance = -1;
-		}
-	}
+    if (node.balance == -1) {
+      parent.balance = 0;
+      node.balance = 0;
+    } else {
+      parent.balance = 1;
+      node.balance = -1;
+    }
+  }
 
-	function _rotateRight(node, parent) {
-		_swap(node, parent);
-		parent.left = node.left;
-		node.left = node.right;
-		node.right = parent.right;
-		parent.right = node;
-	}
+  function _rotateRight(node, parent) {
+    _swap(node, parent);
+    parent.left = node.left;
+    node.left = node.right;
+    node.right = parent.right;
+    parent.right = node;
+  }
 
-	function _rotateBigLeft(node, parent) {
-		var bottom = node.left;
-		_rotateRight(bottom, node);
-		_rotateLeft(node, parent);
+  function _rotateBigLeft(node, parent) {
+    var bottom = node.left;
+    _rotateRight(bottom, node);
+    _rotateLeft(node, parent);
 
-		parent.balance = 0;
-		switch (bottom.balance) {
-			case 1:
-				node.balance = -1;
-				bottom.balance = 0;
-				break;
-			case 0:
-				bottom.balance = 0;
-				node.balance = 0;
-				break;
-			default:
-				bottom.balance = 1;
-				node.balance = 0;
-				break;
-		}
-	}
+    parent.balance = 0;
+    switch (bottom.balance) {
+      case 1:
+        node.balance = -1;
+        bottom.balance = 0;
+        break;
+      case 0:
+        bottom.balance = 0;
+        node.balance = 0;
+        break;
+      default:
+        bottom.balance = 1;
+        node.balance = 0;
+        break;
+    }
+  }
 
-	function _rotateBigRight(node, parent) {
-		var bottom = node.right;
-		_rotateLeft(bottom, node);
-		_rotateRight(node, parent);
+  function _rotateBigRight(node, parent) {
+    var bottom = node.right;
+    _rotateLeft(bottom, node);
+    _rotateRight(node, parent);
 
-		parent.balance = 0;
-		switch (bottom.balance) {
-			case -1:
-				bottom.balance = 0;
-				node.balance = 1;
-				break;
-			case 0:
-				bottom.balance = 0;
-				node.balance = 0;
-				break;
-			default:
-				bottom.balance = -1;
-				node.balance = 0;
-				break;
-		}
-	}
+    parent.balance = 0;
+    switch (bottom.balance) {
+      case -1:
+        bottom.balance = 0;
+        node.balance = 1;
+        break;
+      case 0:
+        bottom.balance = 0;
+        node.balance = 0;
+        break;
+      default:
+        bottom.balance = -1;
+        node.balance = 0;
+        break;
+    }
+  }
 
-	function add(value, context, thisArg, onDuplicate) {
-		if (_rootNode == null) {
-			_rootNode = new Node(value, context);
-		} else {
-			var trace = [];
-			var node = null;
-			var next = _rootNode;
-			while (next != null) {
-				if (node != null) {
-					trace.push(node);
-				}
-				node = next;
-				if (node.value == value) {
-					if (onDuplicate != null) {
-						onDuplicate.call(thisArg, node.context);
-					} else {
-						throw "Structure does not support duplicates.";
-					}
-				} else {
-					if (node.value > value) {
-						next = node.left;
-					} else {
-						next = node.right;
-					}
-				}
-			}
-			trace.push(node);
-			var newNode = new Node(value, context);
-			if (node.value > value) {
-				node.left = newNode;
-			} else {
-				node.right = newNode;
-			}
-			node = newNode;
+  function add(value, context, thisArg, onDuplicate) {
+    if (_rootNode == null) {
+      _rootNode = new Node(value, context);
+    } else {
+      var trace = [];
+      var node = null;
+      var next = _rootNode;
+      while (next != null) {
+        if (node != null) {
+          trace.push(node);
+        }
+        node = next;
+        if (node.value == value) {
+          if (onDuplicate != null) {
+            onDuplicate.call(thisArg, node.context);
+          } else {
+            throw "Structure does not support duplicates.";
+          }
+        } else {
+          if (node.value > value) {
+            next = node.left;
+          } else {
+            next = node.right;
+          }
+        }
+      }
+      trace.push(node);
+      var newNode = new Node(value, context);
+      if (node.value > value) {
+        node.left = newNode;
+      } else {
+        node.right = newNode;
+      }
+      node = newNode;
 
-			while ((next = trace.pop()) != null) {
-				if (node.value < next.value) {
-					if (next.balance < 0) {
-						next.balance -= 1;
-						_rebalance(next);
-						break;
-					} else {
-						if (next.balance > 0) {
-							next.balance -= 1;
-							break;
-						}
-						next.balance -= 1;
-					}
-				} else {
-					if (next.balance > 0) {
-						next.balance += 1;
-						_rebalance(next);
-						break;
-					} else {
-						if (next.balance < 0) {
-							next.balance += 1;
-							break;
-						}
-						next.balance += 1;
-					}
-				}
-				node = next;
-			}
-		}
-	}
+      while ((next = trace.pop()) != null) {
+        if (node.value < next.value) {
+          if (next.balance < 0) {
+            next.balance -= 1;
+            _rebalance(next);
+            break;
+          } else {
+            if (next.balance > 0) {
+              next.balance -= 1;
+              break;
+            }
+            next.balance -= 1;
+          }
+        } else {
+          if (next.balance > 0) {
+            next.balance += 1;
+            _rebalance(next);
+            break;
+          } else {
+            if (next.balance < 0) {
+              next.balance += 1;
+              break;
+            }
+            next.balance += 1;
+          }
+        }
+        node = next;
+      }
+    }
+  }
 
-	function _delete(node, parent) {
-		var child = node.right != null ? node.right : node.left;
-		if (parent != null) {
-			if (parent.value > node.value) {
-				parent.left = child;
-			} else {
-				parent.right = child;
-			}
-		} else {
-			_rootNode = child;
-		}
-	}
+  function _delete(node, parent) {
+    var child = node.right != null ? node.right : node.left;
+    if (parent != null) {
+      if (parent.value > node.value) {
+        parent.left = child;
+      } else {
+        parent.right = child;
+      }
+    } else {
+      _rootNode = child;
+    }
+  }
 
-	function _swap(node1, node2) {
-		var value = node1.value;
-		node1.value = node2.value;
-		node2.value = value;
+  function _swap(node1, node2) {
+    var value = node1.value;
+    node1.value = node2.value;
+    node2.value = value;
 
-		var context = node1.context;
-		node1.context = node2.context;
-		node2.context = context;
-	}
+    var context = node1.context;
+    node1.context = node2.context;
+    node2.context = context;
+  }
 
-	function _copy(fromNode, toNode) {
-		toNode.value = fromNode.value;
-		toNode.context = fromNode.context;
-	}
+  function _copy(fromNode, toNode) {
+    toNode.value = fromNode.value;
+    toNode.context = fromNode.context;
+  }
 
-	function remove(value) {
-		var trace = [];
-		var node = _rootNode;
-		while (node != null) {
-			if (node.value == value) {
-				if (node.right != null && node.left != null) {
-					trace.push(node);
-					var next = node.right;
-					while (next.left != null) {
-						trace.push(next);
-						next = next.left;
-					}
-					_copy(next, node);
-					_delete(next, trace[trace.length - 1]);
-					trace.push(next);
-				} else {
-					_delete(node, trace[trace.length - 1]);
-					trace.push(node);
-				}
-				for (var index = trace.length - 2; index >= 0; index -= 1) {
-					var parent = trace[index];
-					node = trace[index + 1];
-					if (parent.value > node.value) {
-						if (parent.balance > 0) {
-							parent.balance += 1;
-							if (_rebalance(parent) === 0) {
-								break;
-							}
-						} else {
-							if (parent.balance === 0) {
-								parent.balance += 1;
-								break;
-							}
-							parent.balance += 1;
-						}
-					} else {
-						if (parent.balance < 0) {
-							parent.balance -= 1;
-							if (_rebalance(parent) === 0) {
-								break;
-							}
-						} else {
-							if (parent.balance === 0) {
-								parent.balance -= 1;
-								break;
-							}
-							parent.balance -= 1;
-						}
-					}
-				}
-				break;
-			} else {
-				trace.push(node);
-				if (node.value > value) {
-					node = node.left;
-				} else {
-					node = node.right;
-				}
-			}
-		}
-	}
+  function remove(value) {
+    var trace = [];
+    var node = _rootNode;
+    while (node != null) {
+      if (node.value == value) {
+        if (node.right != null && node.left != null) {
+          trace.push(node);
+          var next = node.right;
+          while (next.left != null) {
+            trace.push(next);
+            next = next.left;
+          }
+          _copy(next, node);
+          _delete(next, trace[trace.length - 1]);
+          trace.push(next);
+        } else {
+          _delete(node, trace[trace.length - 1]);
+          trace.push(node);
+        }
+        for (var index = trace.length - 2; index >= 0; index -= 1) {
+          var parent = trace[index];
+          node = trace[index + 1];
+          if (parent.value > node.value) {
+            if (parent.balance > 0) {
+              parent.balance += 1;
+              if (_rebalance(parent) === 0) {
+                break;
+              }
+            } else {
+              if (parent.balance === 0) {
+                parent.balance += 1;
+                break;
+              }
+              parent.balance += 1;
+            }
+          } else {
+            if (parent.balance < 0) {
+              parent.balance -= 1;
+              if (_rebalance(parent) === 0) {
+                break;
+              }
+            } else {
+              if (parent.balance === 0) {
+                parent.balance -= 1;
+                break;
+              }
+              parent.balance -= 1;
+            }
+          }
+        }
+        break;
+      } else {
+        trace.push(node);
+        if (node.value > value) {
+          node = node.left;
+        } else {
+          node = node.right;
+        }
+      }
+    }
+  }
 
-	function nextContext(fromValue) {
-		var result = null;
-		loopForward(this, fromValue, function (value, context) {
-			result = context;
-			return true;
-		});
-		return result;
-	}
+  function nextContext(fromValue) {
+    var result = null;
+    loopForward(this, fromValue, function (value, context) {
+      result = context;
+      return true;
+    });
+    return result;
+  }
 
-	function loopForward(thisArg, fromValue, onItem) { //function onItem(value, context)
-		if (onItem != null) {
-			var trace = [];
-			var node = null;
-			var next = _rootNode;
-			while (next != null) {
-				node = next;
-				if (node.value >= fromValue || fromValue == null) {
-					trace.push(node);
-					next = node.left;
-				} else {
-					next = node.right;
-				}
-			}
-			while ((node = trace.pop()) != null) {
-				if (onItem.call(thisArg, node.value, node.context)) {
-					return;
-				}
-				next = node.right;
-				while (next != null) {
-					node = next;
-					if (node.left != null) {
-						trace.push(node);
-						next = node.left;
-					} else {
-						if (onItem.call(thisArg, node.value, node.context)) {
-							return;
-						}
-						next = node.right;
-					}
-				}
-			}
-		}
-	}
+  function loopForward(thisArg, fromValue, onItem) { //function onItem(value, context)
+    if (onItem != null) {
+      var trace = [];
+      var node = null;
+      var next = _rootNode;
+      while (next != null) {
+        node = next;
+        if (node.value >= fromValue || fromValue == null) {
+          trace.push(node);
+          next = node.left;
+        } else {
+          next = node.right;
+        }
+      }
+      while ((node = trace.pop()) != null) {
+        if (onItem.call(thisArg, node.value, node.context)) {
+          return;
+        }
+        next = node.right;
+        while (next != null) {
+          node = next;
+          if (node.left != null) {
+            trace.push(node);
+            next = node.left;
+          } else {
+            if (onItem.call(thisArg, node.value, node.context)) {
+              return;
+            }
+            next = node.right;
+          }
+        }
+      }
+    }
+  }
 
-	function previousContext(fromValue) {
-		var result = null;
-		loopBackward(this, fromValue, function (nextValue, context) {
-			result = context;
-			return true;
-		});
-		return result;
-	}
+  function previousContext(fromValue) {
+    var result = null;
+    loopBackward(this, fromValue, function (nextValue, context) {
+      result = context;
+      return true;
+    });
+    return result;
+  }
 
-	function loopBackward(thisArg, fromValue, onItem) {
-		if (onItem != null) {
-			var trace = [];
-			var node = null;
-			var next = _rootNode;
-			while (next != null) {
-				node = next;
-				if (node.value <= fromValue || fromValue == null) {
-					trace.push(node);
-					next = node.right;
-				} else {
-					next = node.left;
-				}
-			}
-			while ((node = trace.pop()) != null) {
-				if (onItem.call(thisArg, node.value, node.context)) {
-					return;
-				}
-				next = node.left;
-				while (next != null) {
-					node = next;
-					if (node.right != null) {
-						trace.push(node);
-						next = node.right;
-					} else {
-						if (onItem.call(thisArg, node.value, node.context)) {
-							return;
-						}
-						next = node.left;
-					}
-				}
-			}
-		}
-	}
+  function loopBackward(thisArg, fromValue, onItem) {
+    if (onItem != null) {
+      var trace = [];
+      var node = null;
+      var next = _rootNode;
+      while (next != null) {
+        node = next;
+        if (node.value <= fromValue || fromValue == null) {
+          trace.push(node);
+          next = node.right;
+        } else {
+          next = node.left;
+        }
+      }
+      while ((node = trace.pop()) != null) {
+        if (onItem.call(thisArg, node.value, node.context)) {
+          return;
+        }
+        next = node.left;
+        while (next != null) {
+          node = next;
+          if (node.right != null) {
+            trace.push(node);
+            next = node.right;
+          } else {
+            if (onItem.call(thisArg, node.value, node.context)) {
+              return;
+            }
+            next = node.left;
+          }
+        }
+      }
+    }
+  }
 
-	function _getValidationDepth(node) {
-		var level = [],
-			result = 0;
-		if (node != null) {
-			level.push(node);
-			while (level.length > 0) {
-				var newLevel = [];
+  function _getValidationDepth(node) {
+    var level = [],
+      result = 0;
+    if (node != null) {
+      level.push(node);
+      while (level.length > 0) {
+        var newLevel = [];
 
-				for (var index = 0; index < level.length; index += 1) {
-					node = level[index];
+        for (var index = 0; index < level.length; index += 1) {
+          node = level[index];
 
-					if (node.left != null) {
-						newLevel.push(node.left);
-					}
+          if (node.left != null) {
+            newLevel.push(node.left);
+          }
 
-					if (node.right != null) {
-						newLevel.push(node.right);
-					}
-				}
+          if (node.right != null) {
+            newLevel.push(node.right);
+          }
+        }
 
-				level = newLevel;
-				result += 1;
-			}
-		}
-		return result;
-	}
+        level = newLevel;
+        result += 1;
+      }
+    }
+    return result;
+  }
 
-	function validate() {
-		if (_rootNode != null) {
-			var level = [_rootNode];
-			while (level.length > 0) {
-				var newLevel = [];
+  function validate() {
+    if (_rootNode != null) {
+      var level = [_rootNode];
+      while (level.length > 0) {
+        var newLevel = [];
 
-				for (var index = 0; index < level.length; index += 1) {
-					var node = level[index];
+        for (var index = 0; index < level.length; index += 1) {
+          var node = level[index];
 
-					if (node.value == null) {
-						return false;
-					}
+          if (node.value == null) {
+            return false;
+          }
 
-					if (node.left != null) {
-						newLevel.push(node.left);
-						if (node.left.value >= node.value) {
-							return false;
-						}
-					}
+          if (node.left != null) {
+            newLevel.push(node.left);
+            if (node.left.value >= node.value) {
+              return false;
+            }
+          }
 
-					if (node.right != null) {
-						newLevel.push(node.right);
-						if (node.right.value <= node.value) {
-							return false;
-						}
-					}
+          if (node.right != null) {
+            newLevel.push(node.right);
+            if (node.right.value <= node.value) {
+              return false;
+            }
+          }
 
-					if (node.balance != (_getValidationDepth(node.right) - _getValidationDepth(node.left))) {
-						console.log("Disbalanced node: " + node.value + " - " + JSON.stringify(_rootNode));
-						return false;
-					}
-				}
+          if (node.balance != (_getValidationDepth(node.right) - _getValidationDepth(node.left))) {
+            // eslint-disable-next-line no-console
+            console.log("Disbalanced node: " + node.value + " - " + JSON.stringify(_rootNode));
+            return false;
+          }
+        }
 
-				level = newLevel;
-			}
-		}
-		return true;
-	}
+        level = newLevel;
+      }
+    }
+    return true;
+  }
 
-	return {
-		add: add,
-		remove: remove,
-		loopForward: loopForward,
-		loopBackward: loopBackward,
-		nextContext: nextContext,
-		previousContext: previousContext,
-		validate: validate
-	};
+  return {
+    add: add,
+    remove: remove,
+    loopForward: loopForward,
+    loopBackward: loopBackward,
+    nextContext: nextContext,
+    previousContext: previousContext,
+    validate: validate
+  };
 };
 
 /* /algorithms/SpatialIndex.js*/
@@ -29188,115 +29406,117 @@ primitives.common.KeyboardNavigationManager = function () {
 
 /* /Managers/TaskManager.js*/
 primitives.common.TaskManager = function () {
-	var _taskFamily = new primitives.common.family();
-	var _dependencies = new primitives.common.DependencyManager();
-	var _tasks = [];
+  var _taskFamily = new primitives.common.family();
+  var _dependencies = new primitives.common.DependencyManager();
+  var _tasks = [];
 
-	function TaskInfo(name, dependencies, factory, color) {
-		this.name = name;
-		this.dependencies = dependencies;
-		this.factory = factory;
-		this.task = null;
-		this.color = color;
-	}
+  function TaskInfo(name, dependencies, factory, color) {
+    this.name = name;
+    this.dependencies = dependencies;
+    this.factory = factory;
+    this.task = null;
+    this.color = color;
+  }
 
-	function addTask(taskName, taskDependencies, factory, color) {
-		if (_tasks.length > 0) {
-			throw "Task Manager is already initialized";
-		}
-		_taskFamily.add(taskDependencies, taskName, new TaskInfo(taskName, taskDependencies, factory, color));
-	}
+  function addTask(taskName, taskDependencies, factory, color) {
+    if (_tasks.length > 0) {
+      throw "Task Manager is already initialized";
+    }
+    _taskFamily.add(taskDependencies, taskName, new TaskInfo(taskName, taskDependencies, factory, color));
+  }
 
-	function getTask(taskName) {
-		var taskInfo = _taskFamily.node(taskName);
-		return taskInfo && taskInfo.task;
-	}
+  function getTask(taskName) {
+    var taskInfo = _taskFamily.node(taskName);
+    return taskInfo && taskInfo.task;
+  }
 
-	function addDependency(name, dependency) {
-		if (_tasks.length > 0) {
-			throw "Task Manager is already initialized";
-		}
-		_dependencies.register(name, dependency);
-	}
+  function addDependency(name, dependency) {
+    if (_tasks.length > 0) {
+      throw "Task Manager is already initialized";
+    }
+    _dependencies.register(name, dependency);
+  }
 
-	function process(startTask, stopTask, debug) {
-		var hasChanges = false,
-			logtime = debug;
-		if (_tasks.length === 0) {
-			_taskFamily.loopTopo(this, function (taskName, taskInfo) {
-				taskInfo.task = _dependencies.register(taskName, _dependencies.resolve(taskInfo.dependencies, taskInfo.factory)());
-				_tasks.push(taskInfo);
-			});
-		}
-		if (debug) {
-			console.log("-- process --");
-		}
-		var isRequired = {};
-		for (var index = 0, len = _tasks.length; index < len; index += 1) {
-			var taskInfo = _tasks[index],
-				dependents = [];
+  function process(startTask, stopTask, debug) {
+    var hasChanges = false,
+      logtime = debug;
+    if (_tasks.length === 0) {
+      _taskFamily.loopTopo(this, function (taskName, taskInfo) {
+        taskInfo.task = _dependencies.register(taskName, _dependencies.resolve(taskInfo.dependencies, taskInfo.factory)());
+        _tasks.push(taskInfo);
+      });
+    }
+    if (debug) {
+      // eslint-disable-next-line no-console
+      console.log("-- process --");
+    }
+    var isRequired = {};
+    for (var index = 0, len = _tasks.length; index < len; index += 1) {
+      var taskInfo = _tasks[index],
+        dependents = [];
 
-			if (taskInfo.name == startTask || isRequired.hasOwnProperty(taskInfo.name)) {
-				if (logtime) {
-					var startAt = performance.now(); //ignore jslint
-				}
-				if (hasChanges = taskInfo.task.process(debug)) {
-					_taskFamily.loopChildren(this, taskInfo.name, function (childTaskName, childTaskInfo) {
-						isRequired[childTaskName] = true;
-						if (debug) {
-							dependents.push(childTaskName);
-						}
-						return _taskFamily.SKIP;
-					});
-				}
-				if (logtime) {
-					var endAt = performance.now(); //ignore jslint
-				}
-				if (debug) {
-					var spentTime = Math.round((endAt - startAt), 2);
-					console.log(index + ". " + taskInfo.name + (", " + spentTime + " ms. ") + (hasChanges ? " - forces: " + dependents.toString() : ""));
-				}
-			}
-			if (taskInfo.name == stopTask) {
-				return;
-			}
-		}
-	}
+      if (taskInfo.name == startTask || isRequired.hasOwnProperty(taskInfo.name)) {
+        if (logtime) {
+          var startAt = performance.now(); //ignore jslint
+        }
+        if ((hasChanges = taskInfo.task.process(debug))) {
+          _taskFamily.loopChildren(this, taskInfo.name, function (childTaskName, childTaskInfo) {
+            isRequired[childTaskName] = true;
+            if (debug) {
+              dependents.push(childTaskName);
+            }
+            return _taskFamily.SKIP;
+          });
+        }
+        if (logtime) {
+          var endAt = performance.now(); //ignore jslint
+        }
+        if (debug) {
+          var spentTime = Math.round((endAt - startAt), 2);
+          // eslint-disable-next-line no-console
+          console.log(index + ". " + taskInfo.name + (", " + spentTime + " ms. ") + (hasChanges ? " - forces: " + dependents.toString() : ""));
+        }
+      }
+      if (taskInfo.name == stopTask) {
+        return;
+      }
+    }
+  }
 
-	function getProcessDiagramConfig() {
-		var result = new primitives.famdiagram.Config();
-		if (_tasks.length === 0) {
-			_taskFamily.loopTopo(this, function (taskName, taskInfo) {
-				taskInfo.task = _dependencies.register(taskName, _dependencies.resolve(taskInfo.dependencies, taskInfo.factory)());
-				_tasks.push(taskInfo);
-			});
-		}
-		for (var index = 0, len = _tasks.length; index < len; index += 1) {
-			var taskInfo = _tasks[index];
+  function getProcessDiagramConfig() {
+    var result = new primitives.famdiagram.Config();
+    if (_tasks.length === 0) {
+      _taskFamily.loopTopo(this, function (taskName, taskInfo) {
+        taskInfo.task = _dependencies.register(taskName, _dependencies.resolve(taskInfo.dependencies, taskInfo.factory)());
+        _tasks.push(taskInfo);
+      });
+    }
+    for (var index = 0, len = _tasks.length; index < len; index += 1) {
+      var taskInfo = _tasks[index];
 
-			var itemConfig = new primitives.famdiagram.ItemConfig();
-			itemConfig.id = taskInfo.name;
-			itemConfig.title = primitives.common.splitCamelCaseName(taskInfo.name).join(" ");
-			itemConfig.description = taskInfo.task.description || "";
-			itemConfig.itemTitleColor = taskInfo.color;
-			itemConfig.parents = [];
+      var itemConfig = new primitives.famdiagram.ItemConfig();
+      itemConfig.id = taskInfo.name;
+      itemConfig.title = primitives.common.splitCamelCaseName(taskInfo.name).join(" ");
+      itemConfig.description = taskInfo.task.description || "";
+      itemConfig.itemTitleColor = taskInfo.color;
+      itemConfig.parents = [];
 
-			_taskFamily.loopParents(this, taskInfo.name, function (parentTaskName, parentTaskInfo) {
-				itemConfig.parents.push(parentTaskName);
-				return _taskFamily.SKIP;
-			});
-			result.items.push(itemConfig);
-		}
-		return result;
-	}
+      _taskFamily.loopParents(this, taskInfo.name, function (parentTaskName, parentTaskInfo) {
+        itemConfig.parents.push(parentTaskName);
+        return _taskFamily.SKIP;
+      });
+      result.items.push(itemConfig);
+    }
+    return result;
+  }
 
-	return {
-		addTask: addTask,
-		addDependency: addDependency,
-		getTask: getTask,
-		process: process,
-		getProcessDiagramConfig: getProcessDiagramConfig
-	};
+  return {
+    addTask: addTask,
+    addDependency: addDependency,
+    getTask: getTask,
+    process: process,
+    getProcessDiagramConfig: getProcessDiagramConfig
+  };
 };
 
 /* /pdf/graphics/graphics.js*/
@@ -29467,244 +29687,250 @@ primitives.pdf.graphics.prototype.getPxSize = function (value, base) {
 
 /* /pdf/FamDiagram/Plugin.js*/
 primitives.pdf.famdiagram.Plugin = function (options) {
-	var _data = {
-		name: "famdiagram",
-		doc: null,
-		options: options,
-		tasks: null,
-		graphics: null
-	},
-	_scale,
-	_debug = false;
+  var _data = {
+    name: "famdiagram",
+    doc: null,
+    options: options,
+    tasks: null,
+    graphics: null
+  },
+    _scale,
+    _debug = false;
 
-	function getOptions() {
-		return _data.options;
-	}
+  function getOptions() {
+    return _data.options;
+  }
 
-	function getGraphics() {
-		return _data.graphics;
-	}
+  function getGraphics() {
+    return _data.graphics;
+  }
 
-	function createTaskManager() {
-		var tasks = new primitives.common.TaskManager();
+  function createTaskManager() {
+    var tasks = new primitives.common.TaskManager();
 
-		// Dependencies
-		tasks.addDependency('options', getOptions);
-		tasks.addDependency('graphics', getGraphics);
+    // Dependencies
+    tasks.addDependency('options', getOptions);
+    tasks.addDependency('graphics', getGraphics);
 
-		tasks.addDependency('defaultConfig', new primitives.famdiagram.Config());
-		tasks.addDependency('defaultItemConfig', new primitives.famdiagram.ItemConfig());
-		tasks.addDependency('defaultTemplateConfig', new primitives.famdiagram.TemplateConfig());
-		tasks.addDependency('defaultButtonConfig', new primitives.famdiagram.ButtonConfig());
-		tasks.addDependency('defaultPaletteItemConfig', new primitives.famdiagram.PaletteItemConfig());
+    tasks.addDependency('defaultConfig', new primitives.famdiagram.Config());
+    tasks.addDependency('defaultItemConfig', new primitives.famdiagram.ItemConfig());
+    tasks.addDependency('defaultTemplateConfig', new primitives.famdiagram.TemplateConfig());
+    tasks.addDependency('defaultButtonConfig', new primitives.famdiagram.ButtonConfig());
+    tasks.addDependency('defaultPaletteItemConfig', new primitives.famdiagram.PaletteItemConfig());
 
-		tasks.addDependency('defaultBackgroundAnnotationConfig', new primitives.famdiagram.BackgroundAnnotationConfig());
-		tasks.addDependency('defaultConnectorAnnotationConfig', new primitives.famdiagram.ConnectorAnnotationConfig());
-		tasks.addDependency('defaultHighlightPathAnnotationConfig', new primitives.famdiagram.HighlightPathAnnotationConfig());
-		tasks.addDependency('defaultShapeAnnotationConfig', new primitives.famdiagram.ShapeAnnotationConfig());
-		tasks.addDependency('defaultLabelAnnotationConfig', new primitives.famdiagram.LabelAnnotationConfig());
+    tasks.addDependency('defaultBackgroundAnnotationConfig', new primitives.famdiagram.BackgroundAnnotationConfig());
+    tasks.addDependency('defaultConnectorAnnotationConfig', new primitives.famdiagram.ConnectorAnnotationConfig());
+    tasks.addDependency('defaultHighlightPathAnnotationConfig', new primitives.famdiagram.HighlightPathAnnotationConfig());
+    tasks.addDependency('defaultShapeAnnotationConfig', new primitives.famdiagram.ShapeAnnotationConfig());
+    tasks.addDependency('defaultLabelAnnotationConfig', new primitives.famdiagram.LabelAnnotationConfig());
 
-		tasks.addDependency('isFamilyChartMode', true);/* in regular org diagram we hide branch if it contains only invisible nodes, 
+    tasks.addDependency('isFamilyChartMode', true);/* in regular org diagram we hide branch if it contains only invisible nodes, 
 		in the family chart we use invisible items to draw connectors across multiple levels */
-		tasks.addDependency('showElbowDots', true);/* in regular org chart we don;t have situations when connector lines cross, but we have such situations in 
+    tasks.addDependency('showElbowDots', true);/* in regular org chart we don;t have situations when connector lines cross, but we have such situations in 
 		family tree so we need extra visual attribute to distinguish intersections betwen connectors */
-		tasks.addDependency('null', null);
-		tasks.addDependency('foreground', 2/*primitives.common.ZOrderType.Foreground*/);
-		tasks.addDependency('background', 1/*primitives.common.ZOrderType.Background*/);
+    tasks.addDependency('null', null);
+    tasks.addDependency('foreground', 2/*primitives.common.ZOrderType.Foreground*/);
+    tasks.addDependency('background', 1/*primitives.common.ZOrderType.Background*/);
 
-		// Options
-		tasks.addTask('OptionsTask', ['options'], primitives.famdiagram.OptionsTask, "#000000"/*primitives.common.Colors.Black*/);
+    // Options
+    tasks.addTask('OptionsTask', ['options'], primitives.famdiagram.OptionsTask, "#000000"/*primitives.common.Colors.Black*/);
 
-		tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.ItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('SpousesOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.SpousesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig', 'defaultButtonConfig'], primitives.orgdiagram.ItemsSizesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultButtonConfig', 'defaultTemplateConfig'], primitives.orgdiagram.TemplatesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.OrientationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('VisualTreeOptionTask', ['OptionsTask'], primitives.famdiagram.VisualTreeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('NormalizeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.famdiagram.NormalizeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('LinePaletteOptionTask', ['OptionsTask', 'defaultPaletteItemConfig'], primitives.famdiagram.LinePaletteOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.ItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('SpousesOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.famdiagram.SpousesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig', 'defaultButtonConfig'], primitives.orgdiagram.ItemsSizesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultButtonConfig', 'defaultTemplateConfig'], primitives.orgdiagram.TemplatesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.OrientationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('VisualTreeOptionTask', ['OptionsTask'], primitives.famdiagram.VisualTreeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('HideGrandParentsConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.famdiagram.HideGrandParentsConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('NormalizeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.famdiagram.NormalizeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('OrderFamilyNodesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.famdiagram.OrderFamilyNodesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('LinePaletteOptionTask', ['OptionsTask', 'defaultPaletteItemConfig'], primitives.famdiagram.LinePaletteOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-		tasks.addTask('CursorItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('HighlightItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.HighlightItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('SelectedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.SelectedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('CursorItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('HighlightItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.HighlightItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('SelectedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.SelectedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-		tasks.addTask('SplitAnnotationsOptionTask', ['OptionsTask'], primitives.orgdiagram.SplitAnnotationsOptionTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('SplitAnnotationsOptionTask', ['OptionsTask'], primitives.orgdiagram.SplitAnnotationsOptionTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('ForegroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'foreground'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'background'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ForegroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'foreground'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'background'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], primitives.orgdiagram.BackgroundAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('ForegroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'foreground'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('BackgroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'background'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('ForegroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'foreground'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('BackgroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'background'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], primitives.orgdiagram.BackgroundAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-		tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ScaleOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ScaleOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-		// Transformations
-		tasks.addTask('LogicalFamilyTask', ['ItemsOptionTask'], primitives.famdiagram.LogicalFamilyTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    // Transformations
+    tasks.addTask('UserDefinedNodesOrderTask', ['OrderFamilyNodesOptionTask', 'defaultItemConfig'], primitives.famdiagram.UserDefinedNodesOrderTask, "#ff0000"/*primitives.common.Colors.Red*/);
 
-		tasks.addTask('LabelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'LogicalFamilyTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('LabelAnnotationTemplateOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationTemplateOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('LabelAnnotationPlacementOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationPlacementOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('LogicalFamilyTask', ['ItemsOptionTask'], primitives.famdiagram.LogicalFamilyTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('CombinedContextsTask', ['ItemsOptionTask', 'LabelAnnotationOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('LabelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'LogicalFamilyTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('LabelAnnotationTemplateOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationTemplateOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('LabelAnnotationPlacementOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], primitives.famdiagram.LabelAnnotationPlacementOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-		tasks.addTask('AddLabelAnnotationsTask', ['LabelAnnotationPlacementOptionTask', 'LogicalFamilyTask'], primitives.famdiagram.AddLabelAnnotationsTask, "#ff0000"/*primitives.common.Colors.Red*/);
-		tasks.addTask('RemoveLoopsTask', ['ItemsOptionTask', 'AddLabelAnnotationsTask'], primitives.famdiagram.RemoveLoopsTask, "#ff0000"/*primitives.common.Colors.Red*/);
-		tasks.addTask('AddSpousesTask', ['SpousesOptionTask', 'RemoveLoopsTask'], primitives.famdiagram.AddSpousesTask, "#ff0000"/*primitives.common.Colors.Red*/);
-		tasks.addTask('NormalizeLogicalFamilyTask', ['NormalizeOptionTask', 'AddSpousesTask', 'defaultItemConfig'], primitives.famdiagram.NormalizeLogicalFamilyTask, "#ff0000"/*primitives.common.Colors.Red*/);
+    tasks.addTask('CombinedContextsTask', ['ItemsOptionTask', 'LabelAnnotationOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		// Transformations / Templates
-		tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask'], primitives.pdf.orgdiagram.ReadTemplatesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ItemTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('AddLabelAnnotationsTask', ['LabelAnnotationPlacementOptionTask', 'LogicalFamilyTask'], primitives.famdiagram.AddLabelAnnotationsTask, "#ff0000"/*primitives.common.Colors.Red*/);
+    tasks.addTask('RemoveLoopsTask', ['ItemsOptionTask', 'AddLabelAnnotationsTask'], primitives.famdiagram.RemoveLoopsTask, "#ff0000"/*primitives.common.Colors.Red*/);
+    tasks.addTask('AddSpousesTask', ['SpousesOptionTask', 'RemoveLoopsTask'], primitives.famdiagram.AddSpousesTask, "#ff0000"/*primitives.common.Colors.Red*/);
+    tasks.addTask('HideGrandParentsConnectorsTask', ['HideGrandParentsConnectorsOptionTask', 'AddSpousesTask'], primitives.famdiagram.HideGrandParentsConnectorsTask, "#ff0000"/*primitives.common.Colors.Red*/);
+    tasks.addTask('NormalizeLogicalFamilyTask', ['NormalizeOptionTask', 'HideGrandParentsConnectorsTask'], primitives.famdiagram.NormalizeLogicalFamilyTask, "#ff0000"/*primitives.common.Colors.Red*/);
+    tasks.addTask('OrderFamilyNodesTask', ['OrderFamilyNodesOptionTask', 'UserDefinedNodesOrderTask', 'NormalizeLogicalFamilyTask', 'defaultItemConfig'], primitives.famdiagram.OrderFamilyNodesTask, "#ff0000"/*primitives.common.Colors.Red*/);
 
-		tasks.addTask('LabelAnnotationTemplateParamsTask', ['ItemsSizesOptionTask', 'LabelAnnotationTemplateOptionTask', 'ReadTemplatesTask'], primitives.famdiagram.LabelAnnotationTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('CombinedTemplateParamsTask', ['ItemTemplateParamsTask', 'LabelAnnotationTemplateParamsTask'], primitives.famdiagram.CombinedTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    // Transformations / Templates
+    tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask'], primitives.pdf.orgdiagram.ReadTemplatesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ItemTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask'], primitives.pdf.orgdiagram.GroupTitleTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask'], primitives.pdf.orgdiagram.CheckBoxTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask'], primitives.pdf.orgdiagram.ButtonsTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask'], primitives.pdf.orgdiagram.AnnotationLabelTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('LabelAnnotationTemplateParamsTask', ['ItemsSizesOptionTask', 'LabelAnnotationTemplateOptionTask', 'ReadTemplatesTask'], primitives.famdiagram.LabelAnnotationTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('CombinedTemplateParamsTask', ['ItemTemplateParamsTask', 'LabelAnnotationTemplateParamsTask'], primitives.famdiagram.CombinedTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'NormalizeLogicalFamilyTask', 'AlignDiagramTask'], primitives.orgdiagram.ConnectionsGraphTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask'], primitives.pdf.orgdiagram.GroupTitleTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask'], primitives.pdf.orgdiagram.CheckBoxTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask'], primitives.pdf.orgdiagram.ButtonsTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask'], primitives.pdf.orgdiagram.AnnotationLabelTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		// Transformations/Selections
-		tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'null'], primitives.orgdiagram.HighlightItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'OrderFamilyNodesTask', 'AlignDiagramTask'], primitives.orgdiagram.ConnectionsGraphTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'null'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    // Transformations/Selections
+    tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'null'], primitives.orgdiagram.HighlightItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('CombinedNormalVisibilityItemsTask', ['OptionsTask'], primitives.pdf.orgdiagram.DummyCombinedNormalVisibilityItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('CurrentControlSizeTask', ['OptionsTask'], primitives.pdf.orgdiagram.DummyCurrentControlSizeTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'null'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask',
-			'NormalizeOptionTask', 'NormalizeLogicalFamilyTask',
-			'CombinedTemplateParamsTask',
-			'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], primitives.famdiagram.ItemsPositionsTask, "#ff0000"/*primitives.common.Colors.Red*/);
+    tasks.addTask('CombinedNormalVisibilityItemsTask', ['OptionsTask'], primitives.pdf.orgdiagram.DummyCombinedNormalVisibilityItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('CurrentControlSizeTask', ['OptionsTask'], primitives.pdf.orgdiagram.DummyCurrentControlSizeTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'null', 'ItemsPositionsTask', 'isFamilyChartMode'], primitives.orgdiagram.AlignDiagramTask, "#ff0000"/*primitives.common.Colors.Red*/);
-		tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.CreateTransformTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask',
+      'OrderFamilyNodesOptionTask', 'OrderFamilyNodesTask',
+      'CombinedTemplateParamsTask',
+      'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], primitives.famdiagram.ItemsPositionsTask, "#ff0000"/*primitives.common.Colors.Red*/);
 
-		// Managers
-		tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'LinePaletteOptionTask'], primitives.orgdiagram.PaletteManagerTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'null', 'ItemsPositionsTask', 'isFamilyChartMode'], primitives.orgdiagram.AlignDiagramTask, "#ff0000"/*primitives.common.Colors.Red*/);
+    tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.CreateTransformTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		// Renders
-		tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'AddLabelAnnotationsTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawBackgroundAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundAnnotationTask'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundShapeAnnotationTask'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+    // Managers
+    tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'LinePaletteOptionTask'], primitives.orgdiagram.PaletteManagerTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground', 'DrawBackgroundConnectorAnnotationTask'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask', 'DrawBackgroundHighlightPathAnnotationTask'], primitives.orgdiagram.DrawConnectorsTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background', 'DrawConnectorsTask'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    // Renders
+    tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'AddLabelAnnotationsTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawBackgroundAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundAnnotationTask'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundShapeAnnotationTask'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
 
-		tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'null',
-			'ItemsSizesOptionTask',
-			'CombinedContextsTask',
-			'AlignDiagramTask', 'null',
-			'CombinedTemplateParamsTask',
-			'CursorItemTask', 'SelectedItemsTask',
-			'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask',
-			'DrawForegroundHighlightPathAnnotationTask'
-		], primitives.orgdiagram.DrawTreeItemsTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground', 'DrawBackgroundConnectorAnnotationTask'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask', 'DrawBackgroundHighlightPathAnnotationTask'], primitives.orgdiagram.DrawConnectorsTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background', 'DrawConnectorsTask'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawTreeItemsTask'], primitives.orgdiagram.DrawCursorTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawCursorTask'], primitives.orgdiagram.DrawHighlightTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'null',
+      'ItemsSizesOptionTask',
+      'CombinedContextsTask',
+      'AlignDiagramTask', 'null',
+      'CombinedTemplateParamsTask',
+      'CursorItemTask', 'SelectedItemsTask',
+      'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask',
+      'DrawForegroundHighlightPathAnnotationTask'
+    ], primitives.orgdiagram.DrawTreeItemsTask, "#008000"/*primitives.common.Colors.Green*/);
 
-		tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawHighlightTask'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawForegroundShapeAnnotationTask'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawTreeItemsTask'], primitives.orgdiagram.DrawCursorTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawCursorTask'], primitives.orgdiagram.DrawHighlightTask, "#008000"/*primitives.common.Colors.Green*/);
 
-		return tasks;
-	}
+    tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawHighlightTask'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawForegroundShapeAnnotationTask'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
 
-	function createEventArgs(data, oldTreeItemId, newTreeItemId, name) {
-		var result = new primitives.famdiagram.EventArgs(),
-			combinedContextsTask = data.tasks.getTask("CombinedContextsTask"),
-			alignDiagramTask = data.tasks.getTask("AlignDiagramTask"),
-			navigationFamilyTask = data.tasks.getTask("AddLabelAnnotationsTask"),
-			oldItemConfig = combinedContextsTask.getConfig(oldTreeItemId),
-			newItemConfig = combinedContextsTask.getConfig(newTreeItemId),
-			navigationFamily = navigationFamilyTask.getNavigationFamily(),
-			itemPosition;
+    return tasks;
+  }
 
-		if (oldItemConfig && oldItemConfig.id != null) {
-			result.oldContext = oldItemConfig;
-		}
+  function createEventArgs(data, oldTreeItemId, newTreeItemId, name) {
+    var result = new primitives.famdiagram.EventArgs(),
+      combinedContextsTask = data.tasks.getTask("CombinedContextsTask"),
+      alignDiagramTask = data.tasks.getTask("AlignDiagramTask"),
+      navigationFamilyTask = data.tasks.getTask("AddLabelAnnotationsTask"),
+      oldItemConfig = combinedContextsTask.getConfig(oldTreeItemId),
+      newItemConfig = combinedContextsTask.getConfig(newTreeItemId),
+      navigationFamily = navigationFamilyTask.getNavigationFamily(),
+      itemPosition;
 
-		if (newItemConfig && newItemConfig.id != null) {
-			result.context = newItemConfig;
+    if (oldItemConfig && oldItemConfig.id != null) {
+      result.oldContext = oldItemConfig;
+    }
 
-			navigationFamily.loopParents(this, newItemConfig.id, function (itemid, item, levelIndex) {
-				if (levelIndex > 0) {
-					return navigationFamily.BREAK;
-				}
-				result.parentItems.push(combinedContextsTask.getConfig(itemid));
-			});
+    if (newItemConfig && newItemConfig.id != null) {
+      result.context = newItemConfig;
 
-			itemPosition = alignDiagramTask.getItemPosition(newTreeItemId);
-			result.position = new primitives.common.Rect(itemPosition.actualPosition);
-		}
+      navigationFamily.loopParents(this, newItemConfig.id, function (itemid, item, levelIndex) {
+        if (levelIndex > 0) {
+          return navigationFamily.BREAK;
+        }
+        result.parentItems.push(combinedContextsTask.getConfig(itemid));
+      });
 
-		if (name != null) {
-			result.name = name;
-		}
+      itemPosition = alignDiagramTask.getItemPosition(newTreeItemId);
+      result.position = new primitives.common.Rect(itemPosition.actualPosition);
+    }
 
-		return result;
-	}
+    if (name != null) {
+      result.name = name;
+    }
 
-	function trigger(eventHandlerName, event, eventArgs) {
-		var eventHandler = _data.options[eventHandlerName];
-		if (eventHandler != null) {
-			eventHandler(event, eventArgs);
-		}
-	}
+    return result;
+  }
 
-	function _disableNotAvailableFunctionality() {
-		/* disable functionality not available in PDF */
-		_data.options.hasButtons = 2/*primitives.common.Enabled.False*/;
-		_data.options.pageFitMode = 5/*primitives.common.PageFitMode.AutoSize*/;
-		_data.options.autoSizeMaximum = new primitives.common.Size(100000, 100000);
-	}
+  function trigger(eventHandlerName, event, eventArgs) {
+    var eventHandler = _data.options[eventHandlerName];
+    if (eventHandler != null) {
+      eventHandler(event, eventArgs);
+    }
+  }
 
-	function draw(doc, positionX, positionY) {
-		_data.doc = doc;
+  function _disableNotAvailableFunctionality() {
+    /* disable functionality not available in PDF */
+    _data.options.hasButtons = 2/*primitives.common.Enabled.False*/;
+    _data.options.pageFitMode = 5/*primitives.common.PageFitMode.AutoSize*/;
+    _data.options.autoSizeMaximum = new primitives.common.Size(100000, 100000);
+  }
 
-		_data.tasks = createTaskManager(getOptions, getGraphics);
-		_data.graphics = new primitives.pdf.graphics(_data.doc);
-		_data.graphics.debug = _debug;
+  function draw(doc, positionX, positionY) {
+    _data.doc = doc;
 
-		_disableNotAvailableFunctionality();
+    _data.tasks = createTaskManager(getOptions, getGraphics);
+    _data.graphics = new primitives.pdf.graphics(_data.doc);
+    _data.graphics.debug = _debug;
 
-		_data.doc.save();
+    _disableNotAvailableFunctionality();
 
-		_data.doc.translate(positionX, positionY);
+    _data.doc.save();
 
-		_data.tasks.process('OptionsTask', null, _debug);
+    _data.doc.translate(positionX, positionY);
 
-		_data.doc.restore();
+    _data.tasks.process('OptionsTask', null, _debug);
 
-		var alignDiagramTask = _data.tasks.getTask("AlignDiagramTask");
+    _data.doc.restore();
 
-		return new primitives.common.Size(alignDiagramTask.getContentSize());
-	}
+    var alignDiagramTask = _data.tasks.getTask("AlignDiagramTask");
 
-	function getSize() {
-		_data.tasks = createTaskManager(getOptions, getGraphics);
+    return new primitives.common.Size(alignDiagramTask.getContentSize());
+  }
 
-		_disableNotAvailableFunctionality();
+  function getSize() {
+    _data.tasks = createTaskManager(getOptions, getGraphics);
 
-		_data.tasks.process('OptionsTask', 'AlignDiagramTask', _debug);
+    _disableNotAvailableFunctionality();
 
-		var alignDiagramTask = _data.tasks.getTask("AlignDiagramTask");
+    _data.tasks.process('OptionsTask', 'AlignDiagramTask', _debug);
 
-		return new primitives.common.Size(alignDiagramTask.getContentSize());
-	}
+    var alignDiagramTask = _data.tasks.getTask("AlignDiagramTask");
 
-	return {
-		draw: draw,
-		getSize: getSize
-	};
+    return new primitives.common.Size(alignDiagramTask.getContentSize());
+  }
+
+  return {
+    draw: draw,
+    getSize: getSize
+  };
 };
 
 
@@ -30316,32 +30542,32 @@ primitives.pdf.GroupTitleTemplate = function (itemTitleFirstFontColor, itemTitle
 
 /* /pdf/Templates/HighlightTemplate.js*/
 primitives.pdf.HighlightTemplate = function (options, itemTemplateConfig) {
-	var _config = itemTemplateConfig;
+  var _config = itemTemplateConfig;
 
-	function template() {
-		return {};
-	}
+  function template() {
+    return {};
+  }
 
-	function getHashCode() {
-		return 0;
-	}
+  function getHashCode() {
+    return 0;
+  }
 
-	function render(doc, position, data) {
-		doc.save();
+  function render(doc, position, _data) {
+    doc.save();
 
-		/* border */
-		doc.roundedRect(position.x, position.y, position.width, position.height, 4)
-			.lineWidth(_config.highlightBorderWidth)
-			.stroke('#fbcb09');
+    /* border */
+    doc.roundedRect(position.x, position.y, position.width, position.height, 4)
+      .lineWidth(_config.highlightBorderWidth)
+      .stroke('#fbcb09');
 
-		doc.restore();
-	}
+    doc.restore();
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /pdf/Templates/ItemTemplate.js*/

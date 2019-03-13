@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>First family chart</title>
+
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+    var control;
+    var items = [
+      { id: 10, relativeItem: 2, placementType: primitives.common.AdviserPlacementType.Left, position: 1, title: "Roger Dalton", label: "Roger Dalton", description: "Id: 10", image: "../images/photos/a.png", itemTitleColor: "#4169e1" },
+      { id: 2, title: "Steven Lacombe", label: "Steven Lacombe", description: "Id: 2", image: "../images/photos/b.png", itemTitleColor: "#4b0082" },
+      { id: 11, relativeItem: 2, placementType: primitives.common.AdviserPlacementType.Right, position: 1, title: "Bill Dalton", label: "Bill Dalton", description: "Id: 11", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
+      { id: 1, parents: [11], title: "David Dalton", label: "David Dalton", description: "Id: 1", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
+      { id: 3, parents: [10], title: "Ann Smith", label: "Ann Smith", description: "Id: 3", image: "../images/photos/a.png", itemTitleColor: "#4169e1" },
+      { id: 4, parents: [2], title: "Nancy Smith", label: "Nancy Smith", description: "Id: 4", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
+      { id: 5, parents: [2], title: "Helly Smith", label: "Helly Smith", description: "Id: 5", image: "../images/photos/a.png", itemTitleColor: "#4169e1" },
+      { id: 6, parents: [1, 4], title: "Kelly Smith", label: "Kelly Smith", description: "Id: 6", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
+      { id: 7, parents: [5, 3], title: "Sally Smith", label: "Sally Smith", description: "Id: 7", image: "../images/photos/a.png", itemTitleColor: "#4169e1" }
+    ];
+
+    var hash = {};
+    for (var index = 0; index < items.length; index += 1) {
+      var item = items[index];
+      hash[item.id] = item;
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var options = new primitives.famdiagram.Config();
+
+      options.pageFitMode = primitives.common.PageFitMode.None;
+      options.items = items;
+      options.cursorItem = 2;
+      options.linesWidth = 1;
+      options.linesColor = "black";
+      options.hasSelectorCheckbox = primitives.common.Enabled.False;
+      options.normalLevelShift = 20;
+      options.dotLevelShift = 20;
+      options.lineLevelShift = 20;
+      options.normalItemsInterval = 10;
+      options.dotItemsInterval = 10;
+      options.lineItemsInterval = 10;
+      options.arrowsDirection = primitives.common.GroupByType.Parents;
+      options.showExtraArrows = false;
+
+      control = primitives.famdiagram.Control(document.getElementById("basicdiagram"), options);
+    });
+
+    function Flip() {
+      hash[10].placementType = (hash[10].placementType == primitives.common.AdviserPlacementType.Right) ? primitives.common.AdviserPlacementType.Left : primitives.common.AdviserPlacementType.Right;
+      hash[11].placementType = (hash[11].placementType == primitives.common.AdviserPlacementType.Right) ? primitives.common.AdviserPlacementType.Left : primitives.common.AdviserPlacementType.Right;
+
+      control.setOption("items", items);
+      control.update(primitives.orgdiagram.UpdateMode.Refresh);
+    }
+  </script>
+</head>
+
+<body>
+  <p>
+    <input onclick="Flip()" type="button" value="Flip Sides of Roger & Bill" />
+  </p>
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+
+</html>

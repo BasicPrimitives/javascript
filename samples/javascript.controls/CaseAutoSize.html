@@ -80,24 +80,17 @@
 	</script>
 </head>
 <body>
-	<h3>Auto Size Diagram.</h3>
-	<p style="max-width: 800px;">In order to make diagram automatically size itself to the size of its content set pageFitMode property to AutoSize. 
-	This mode is designed for diagrams usage inside articals.
-	Following properties allow to set minimum and maximum size of the diagram in this mode. 
-	Set minimum size to some value if you don't want it to collapse to nothing when diagram has no items.
-	Set maximum size to some value if you need to avoid humongous diagram on your page.
-	</p>
-	<p id="autoSizeMinimum">Minimum Auto Size
+	<p id="autoSizeMinimum">Minimum Auto Size: 
 		<br><label><input onclick="Update()" name="autoSizeMinimum" type="radio" value="640*480" checked="">640*480</label>
-		<br><label><input onclick="Update()" name="autoSizeMinimum" type="radio" value="800*600">800*600</label>
-		<br><label><input onclick="Update()" name="autoSizeMinimum" type="radio" value="1024*768">1024*768</label>
-		<br><label><input onclick="Update()" name="autoSizeMinimum" type="radio" value="1280*1024">1280*1024</label>
+		<label><input onclick="Update()" name="autoSizeMinimum" type="radio" value="800*600">800*600</label>
+		<label><input onclick="Update()" name="autoSizeMinimum" type="radio" value="1024*768">1024*768</label>
+		<label><input onclick="Update()" name="autoSizeMinimum" type="radio" value="1280*1024">1280*1024</label>
 	</p>
-	<p id="autoSizeMaximum">Maximum Auto Size
+	<p id="autoSizeMaximum">Maximum Auto Size:
 		<br><label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="640*480">640*480</label>
-		<br><label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="800*600" checked="">800*600</label>
-		<br><label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="1024*768">1024*768</label>
-		<br><label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="1280*1024">1280*1024</label>
+		<label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="800*600" checked="">800*600</label>
+		<label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="1024*768">1024*768</label>
+		<label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="1280*1024">1280*1024</label>
 	</p>
 	<div id="diagram" style="border-style: dotted; border-width: 1px;"></div>
 </body>

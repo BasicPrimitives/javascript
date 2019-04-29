@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Family Chart Having Excessive Grand Parent Relations</title>
+
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+    var control;
+    document.addEventListener('DOMContentLoaded', function () {
+      var options = new primitives.famdiagram.Config();
+
+      var items = [
+        { id: 1, title: "Thomas Williams", label: "Thomas Williams", description: "1", image: "images/photos/t.png" },
+        { id: 2, parents: [1], title: "Mary Spencer", label: "Mary Spencer", description: "2", image: "images/photos/m.png" },
+        { id: 3, parents: [1, 2], title: "David Kirby", label: "David Kirby", description: "3", image: "images/photos/d.png" },
+        { id: 4, parents: [1, 2, 3], title: "Brad Williams", label: "Brad Williams", description: "4", image: "images/photos/b.png" },
+        { id: 5, parents: [1, 2, 3, 4], title: "Mike Kirby", label: "Mike Kirby", description: "5", image: "images/photos/m.png" },
+        { id: 6, parents: [1, 2, 3, 4, 5], title: "Lynette Maloney", label: "Lynette Maloney", description: "6", image: "images/photos/m.png" },
+        { id: 7, parents: [1, 2, 3, 4, 5, 6], title: "Sara Kemp", label: "Sara Kemp", description: "7", image: "images/photos/s.png" },
+        { id: 8, parents: [1, 2, 3, 4, 5, 6, 7], title: "Leon Kemp", label: "Leon Kemp", description: "8", image: "images/photos/l.png" }
+      ];
+
+      options.pageFitMode = primitives.common.PageFitMode.None;
+      options.items = items;
+      options.cursorItem = 2;
+      options.linesWidth = 1;
+      options.linesColor = "black";
+      options.hasSelectorCheckbox = primitives.common.Enabled.False;
+      options.normalLevelShift = 20;
+      options.dotLevelShift = 20;
+      options.lineLevelShift = 20;
+      options.normalItemsInterval = 10;
+      options.dotItemsInterval = 10;
+      options.lineItemsInterval = 10;
+      options.arrowsDirection = primitives.common.GroupByType.Parents;
+      options.showExtraArrows = false;
+
+      options.defaultTemplateName = "info";
+      options.templates = [getInfoTemplate()];
+      options.onItemRender = onTemplateRender;
+
+      control = primitives.famdiagram.Control(document.getElementById("basicdiagram"), options);
+    });
+
+    function onTemplateRender(event, data) {
+      switch (data.renderingMode) {
+        case primitives.common.RenderingMode.Create:
+          /* Initialize widgets here */
+          break;
+        case primitives.common.RenderingMode.Update:
+          /* Update widgets here */
+          break;
+      }
+
+      var itemConfig = data.context;
+
+      if (data.templateName == "info") {
+        var title = data.element.firstChild;
+        title.textContent = itemConfig.title;
+      }
+    }
+
+    function getInfoTemplate() {
+      var result = new primitives.orgdiagram.TemplateConfig();
+      result.name = "info";
+
+      result.itemSize = new primitives.common.Size(80, 36);
+      result.minimizedItemSize = new primitives.common.Size(3, 3);
+      result.highlightPadding = new primitives.common.Thickness(4, 4, 4, 4);
+
+      result.itemTemplate =
+        '<div class="bp-item bp-corner-all bt-item-frame" style="width:' + result.itemSize.width + 'px; height: ' + result.itemSize.height + 'px;">'
+        + '<div name="title" class="bp-item" style="top: 3px; left: 6px; width: 68px; height: 28px; font-size: 12px;">'
+        + '</div>'
+        + '</div>';
+
+      return result;
+    }
+  </script>
+</head>
+
+<body>
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+
+</html>

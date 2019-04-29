@@ -25,7 +25,7 @@
 			var pageFitModes = jQuery("#pageFitMode");
 			for (var key in { AutoSize: 5 }) {
 				var value = primitives.common.PageFitMode[key];
-				pageFitModes.append(jQuery("<br/><label><input name='pageFitMode' type='radio' value='" + value + "' " + (value == primitives.common.PageFitMode.AutoSize ? "checked" : "") + " />" + key + "</label>"));
+				pageFitModes.append(jQuery("<label><input name='pageFitMode' type='radio' value='" + value + "' " + (value == primitives.common.PageFitMode.AutoSize ? "checked" : "") + " />" + key + "</label>"));
 			};
 
 			jQuery("input:radio[name=pageFitMode]").change(function () {
@@ -36,7 +36,7 @@
 			var autoSizeMinimums = jQuery("#autoSizeMinimum");
 			for (var key in sizes) {
 				var value = sizes[key];
-				autoSizeMinimums.append(jQuery("<br/><label><input name='autoSizeMinimum' type='radio' value='" + key + "' " + (key == "640*480" ? "checked" : "") + " />" + key + "</label>"));
+				autoSizeMinimums.append(jQuery("<label><input name='autoSizeMinimum' type='radio' value='" + key + "' " + (key == "640*480" ? "checked" : "") + " />" + key + "</label>"));
 			};
 
 			jQuery("input:radio[name=autoSizeMinimum]").change(function () {
@@ -47,7 +47,7 @@
 			var autoSizeMaximums = jQuery("#autoSizeMaximum");
 			for (var key in sizes) {
 				var value = sizes[key];
-				autoSizeMaximums.append(jQuery("<br/><label><input name='autoSizeMaximum' type='radio' value='" + key + "' " + (key == "800*600" ? "checked" : "") + " />" + key + "</label>"));
+				autoSizeMaximums.append(jQuery("<label><input name='autoSizeMaximum' type='radio' value='" + key + "' " + (key == "800*600" ? "checked" : "") + " />" + key + "</label>"));
 			};
 
 			jQuery("input:radio[name=autoSizeMaximum]").change(function () {
@@ -109,11 +109,9 @@
 	</script>
 </head>
 <body>
-	<h3>Auto Size Diagram.</h3>
-	<p>In this mode Diagram changes its placeholder size to show all contents of diagram.</p>
-	<p id="pageFitMode">Page Fit Mode</p>
-	<p id="autoSizeMinimum">Minimum Auto Size</p>
-	<p id="autoSizeMaximum">Maximum Auto Size</p>
+	<p id="pageFitMode">Page Fit Mode: </p>
+	<p id="autoSizeMinimum">Minimum Auto Size: </p>
+	<p id="autoSizeMaximum">Maximum Auto Size: </p>
 	<div id="diagram" style="border-style: dotted; border-width: 1px;"></div>
 </body>
 </html>

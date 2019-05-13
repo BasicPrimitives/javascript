@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Cursor Item selection</title>
+
+  <!-- PDFkit & Libs -->
+  <script src="../../packages/pdfkit/pdfkit.js"></script>
+  <script src="../../packages/pdfkit/blob-stream.js"></script>
+  <script src="../../packages/FileSaver.js/FileSaver.min.js"></script>
+
+  <!-- Demo Images -->
+  <script src="../data/photos.js"></script>
+
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+    var items = [
+      new primitives.orgdiagram.ItemConfig({
+        id: 0,
+        parent: null,
+        title: "Scott Aasrud",
+        description: "VP, Public Sector",
+        image: "../images/photos/a.png"
+      }),
+      new primitives.orgdiagram.ItemConfig({
+        id: 1,
+        parent: 0,
+        title: "Ted Lucas",
+        description: "VP, Human Resources",
+        image: "../images/photos/b.png"
+      }),
+      new primitives.orgdiagram.ItemConfig({
+        id: 2,
+        parent: 0,
+        title: "Fritz Stuger",
+        description: "Business Solutions, US",
+        image: "../images/photos/c.png"
+      })
+    ];
+    document.addEventListener('DOMContentLoaded', function () {
+      var options = new primitives.orgdiagram.Config();
+      options.items = items;
+      options.cursorItem = 0;
+      options.hasSelectorCheckbox = primitives.common.Enabled.False;
+      control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+    });
+
+    function Download() {
+      // create a document and pipe to a blob
+      var doc = new PDFDocument();
+      var stream = doc.pipe(blobStream());
+
+      doc.fontSize(25)
+        .text('First Organizational Chart', 30, 30);
+
+      var newItems = [];
+      for (var index = 0; index < items.length; index += 1) {
+        var item = items[index];
+        const imageName = (item.image.match(/.*(.+?)\.png/m) || [])[1];
+        newItems.push({
+          id: item.id,
+          parent: item.parent,
+          title: item.title,
+          description: item.description,
+          image: photos[imageName]
+        })
+      }
+      var firstOrganizationalChartSample = primitives.pdf.orgdiagram.Plugin({
+        items: newItems,
+        cursorItem: null,
+        hasSelectorCheckbox: primitives.common.Enabled.False
+      });
+
+      var size = firstOrganizationalChartSample.draw(doc, 30, 60);
+
+      doc.restore();
+
+      doc.end();
+
+      if (typeof stream !== 'undefined') {
+        stream.on('finish', function () {
+          var string = stream.toBlob('application/pdf');
+          window.saveAs(string, 'sample.pdf');
+        });
+      } else {
+        alert('Error: Failed to create file stream.');
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div>
+    Click to create and download PDF file:
+    <input onclick="Download()" type="button" value="Download PDF" />
+    <div id="basicdiagram"
+      style="width: 640px; height: 400px; position: absolute; top: 60px; border-style: dotted; border-width: 1px;" />
+  </div>
+</body>
+
+</html>

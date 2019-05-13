@@ -119,5 +119,94 @@ jQuery("#basicdiagram").orgDiagram({
 });
 ```
 
+## PDFKit
+
+Basic Primitives library provides plugins for [PDFkit](www.PDFkit.org) (MIT License) - it is JavaScript PDF generation library for NodeJS and client side rendering in browser.
+
+PDFKit library provides the most complete experience for rendering documents PDF format. Basic Primitves library implements additional plugins for PDFkit to render Diagrams on PDF page:
+* primitives.pdf.orgdiagram.Plugin - Organizational Chart PDFkit Plugin
+* primitives.pdf.famdiagram.Plugin - Family Diagram PDFkit Plugin
+
+Basically PDFkit Plugins are stand alone products, they share many API options with Basic Primitives Controls, but they are completly deprived of interactivity and their rendering engine uses regular vector graphics and text elements of PDFkit libarary API, see PDFkit site for reference.
+
+The following example is minimal code needed to create new empty PDF file on client side in browser using PDFkit library
+
+```JavaScript
+const PDFDocument = require('pdfkit');
+const blobStream  = require('blob-stream');
+
+// create a document the same way as above
+const doc = new PDFDocument;
+
+// pipe the document to a blob
+const stream = doc.pipe(blobStream());
+
+// add your content to the document here, as usual
+
+// get a blob when you're done
+doc.end();
+stream.on('finish', function() {
+  // get a blob you can do whatever you like with
+  const blob = stream.toBlob('application/pdf');
+
+  // or get a blob URL for display in the browser
+  const url = stream.toBlobURL('application/pdf');
+  iframe.src = url;
+});
+```
+
+Basic Primitives Organizational Chart PDFkit plugin is just a rendering function, which renders diagram using PDFkit API methods:
+
+``` JavaScript
+var firstOrganizationalChartSample = primitives.pdf.orgdiagram.Plugin({
+	items: [
+		new primitives.orgdiagram.ItemConfig({
+			id: 0,
+			parent: null,
+			title: "Scott Aasrud",
+			description: "VP, Public Sector",
+			image: photos.a
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 1,
+			parent: 0,
+			title: "Ted Lucas",
+			description: "VP, Human Resources",
+			image: photos.b
+		}),
+		new primitives.orgdiagram.ItemConfig({
+			id: 2,
+			parent: 0,
+			title: "Joao Stuger",
+			description: "Business Solutions, US",
+			image: photos.c
+		})
+	],
+	cursorItem: null,
+	hasSelectorCheckbox: primitives.common.Enabled.False
+});
+
+var size = firstOrganizationalChartSample.draw(doc, 100, 150);
+```
+
+Pay attention that `draw` method returns actual `size` of the rendered diagram. It is needed to calculate offset in order to place other elements of PDF document underneath of it. 
+
+PDF document is very easy to scale to make it fit to paper size or split it into multiple pages. So we don't need to make PDF page fit into some fixed predefined paper size, but in order to avoid diagram being cut by PDF page boundaries we have to measure its size first and then create PDF page of approapriate size.
+
+```JavaScript
+var sampleSize = samfirstOrganizationalChartSampleple3.getSize();
+```
+
+`getSize` method returns diagram size, so we can create new PDF document big enough to accomodate our diagram:
+
+```JavaScript
+var doc = new PDFDocument({ size: [sampleSize.width + 100, sampleSize.height + 150] });
+```
+
+Plugin draws diagram in current PDFkit document layout transformation context, so developer can rotate, translate and scale diagrams on PDFkit document page.
+
+Plugins are part of the Basic Primitives distribution assembly
+
 [JavaScript](javascript.controls/CaseFirstOrganizationalChart.html)
 [JQuery](jquery.widgets/CaseFirstOrganizationalChart.html)
+[PDFKit](pdfkit.plugins/FirstOrganizationalChart.html)

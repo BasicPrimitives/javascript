@@ -10,6 +10,7 @@
 * [React Demos](https://github.com/BasicPrimitives/react-demo)
 * [AngularJS Organizational Chart Directive](/samples/AngularJSFirstOrganizationalChartDirective.md)
 * [jQuery Specific Use Cases](/samples/jQuerySpecific.md)
+* [PDFkit Specific Use Cases](/samples/PDFkitSpecific.md)
 
 ## User Interface Events &amp; Options
 * [Selecting cursor item &amp; Mouse click](/samples/SelectingCursorItem.md)

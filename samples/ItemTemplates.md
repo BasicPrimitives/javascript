@@ -63,7 +63,7 @@ result.itemTemplate = ["div",
 ```
 
 ## Configuration Classes
-When we define node templates we can define Content Template, Cursor Template and Highlight Templates in one configuration object. This make sense since if we decide to customize cursor or highlight templates most likely we are going to make them item template specific. At the same time control does not require all 3 of them to be defined. If cursor or highlight templates properties are not set in template configuration object then control uses internal default template for all of them them. Generally all 3 templates can be set to null, so default templates are gonna be used by control. See template configuration properties in the following classes:
+When we define node templates we can define Content Template, Cursor Template and Highlight Templates in one configuration object. This make sense since if we decide to customize cursor or highlight templates most likely we are going to make them item template specific. At the same time control does not require all 3 of them to be defined. If cursor or highlight templates properties are not set in template configuration object then control uses internal default template for all of them. Generally all 3 templates can be set to null, so default templates are going to be used by control. See template configuration properties in the following classes:
 
 * `primitives.orgdiagram.ItemConfig`
 * `primitives.famdiagram.Config`
@@ -120,15 +120,90 @@ Every template configuration object has name property, it is being used to refer
 
 See following example of templates usage:
 
+## PDF Templates
+
+PDFKit Plugins use the same template objects with one major exception. All rendering is done using PDFKit API:
+
+* [Text](http://pdfkit.org/docs/text.html)
+* [Images](http://pdfkit.org/docs/images.html)
+* [Vector Graphics](http://pdfkit.org/docs/vector.html)
+
+See [PDFKit](http://pdfkit.org/) site for more details.
+
+Basic Primitives PDFkit Plugins have no HTML or browsers specific dependencies, they share API options with their complimentary UI controls. The major API difference is that they have no UI events and rendering mechanism refit to use PDFkit document API methods. The following sample shows usage of `onTemplateRender` event handler, which receives `doc` reference to PDFkit `PDFDocument` instance and node `position` in PDF document coordinates:
+
+Basically developer is free to render any content in node's position, the following sample renders frame, photo, title and PDF specific link annotation, which is clickable in PDF.
+
+```JavaScript
+function onTemplateRender(doc, position, data) {
+  var itemConfig = data.context;
+
+  if (data.templateName == "contactTemplate") {
+    var contentSize = new primitives.common.Size(220, 108);
+
+    contentSize.width -= 2;
+    contentSize.height -= 2;
+
+    doc.save();
+
+    /* item border */
+    doc.roundedRect(position.x, position.y, position.width, position.height, 0)
+      .lineWidth(1)
+      .stroke('#dddddd');
+
+    /* photo */
+    if (itemConfig.image != null) {
+      doc.image(itemConfig.image, position.x + 3, position.y + 3);
+    }
+
+    /* title */
+    doc.fillColor('Black')
+      .font('Helvetica', 12)
+      .text(itemConfig.title, position.x + 110, position.y + 7, {
+        ellipsis: true,
+        width: (contentSize.width - 4 - 110),
+        height: 16,
+        align: 'center'
+      });
+
+    /* description */
+    doc.fillColor('black')
+      .font('Helvetica', 10)
+      .text(itemConfig.description, position.x + 110, position.y + 24, {
+        ellipsis: true,
+        width: (contentSize.width - 4 - 110),
+        height: 74,
+        align: 'left'
+      });
+
+    /* readmore */
+    doc.fillColor('black')
+      .font('Helvetica', 10)
+      .text('Link Annotation ...', position.x + 110, position.y + 94, {
+        ellipsis: false,
+        width: (contentSize.width - 4 - 110),
+        height: 24,
+        align: 'right',
+        link: itemConfig.link,
+        underline: true
+      });
+
+    doc.restore();
+  }
+}
+```
+
 [JavaScript](javascript.controls/CaseItemTemplate.html)
 [JQuery](jquery.widgets/CaseItemTemplate.html)
+[PDFKit](pdfkit.plugins/UserItemTemplate.html)
+[PDFKit Graphics](pdfkit.plugins/UserItemTemplateWithShapes.html)
 
 ## Adding link to Item Template
-In order to avoid diagram cursor positioning and layout when user clicks on reference add 'stopPropogation' to mouse click event handler of the reference's label.
+In order to avoid diagram cursor positioning and layout when user clicks on reference add 'stopPropagation' to mouse click event handler of the reference's label.
 
 ```JavaScript
   readmore.addEventListener("click", function (e) {
-    /* Block mouse click propogation in order to avoid layout updates before server postback*/
+    /* Block mouse click propagation in order to avoid layout updates before server postback*/
     primitives.common.stopPropagation(e);
   });
 ```
@@ -137,7 +212,7 @@ In order to avoid diagram cursor positioning and layout when user clicks on refe
 [JQuery](jquery.widgets/CaseAddingLinkToItemTemplate.html)
 
 ## Adding selection checkbox to Item Template
-Chart supports selected items collection on its API, so checkbox element is nessary part of control's functionality. If you want to place it inside of item itemplate instead of having it shown outside as decorator of elemnt boundaries, you have to add `bp-selectioncheckbox` to your checkbox `class` style property.
+Chart supports selected items collection on its API, so checkbox element is necessary part of control's functionality. If you want to place it inside of item template instead of having it shown outside as decorator of element boundaries, you have to add `bp-selectioncheckbox` to your checkbox `class` style property.
 
 [JavaScript](javascript.controls/CaseSelectionCheckboxInItemTemplate.html)
 [JQuery](jquery.widgets/CaseSelectionCheckboxInItemTemplate.html)

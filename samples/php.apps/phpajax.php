@@ -142,7 +142,7 @@
 					/* Initialize widgets here */
 					hrefElement.click(function (e)
 					{
-						/* Block mouse click propogation in order to avoid layout updates before server postback*/
+						/* Block mouse click propagation in order to avoid layout updates before server postback*/
 						primitives.common.stopPropagation(e);
 					});
 					break;
@@ -255,7 +255,7 @@
 		<h2>Hierarchy Chart PHP Demo</h2>
 		<p>This demo requires PHP 5.2 & MySQL connection.</p>
 		<p>Create test database from mysqldump folder and edit connection string in header of this PHP file.</p>
-		<p>Cancel mouse events propogation before sending post back to server. See reference of event arguments</p>
+		<p>Cancel mouse events propagation before sending post back to server. See reference of event arguments</p>
 	</div>
 	<div id="orgdiagram" style="position: absolute; overflow: hidden; left: 0px; padding: 0px; margin: 0px; border-style: solid; border-color: navy; border-width: 1px;"></div>
 </body>

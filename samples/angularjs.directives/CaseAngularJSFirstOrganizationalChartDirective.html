@@ -1,349 +1,356 @@
 ﻿<!DOCTYPE html>
 <html ng-app="myApp">
+
 <head>
-	<title>AngularJS Organizational Chart Directive Example</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>AngularJS Organizational Chart Directive Example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
-	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
-	<script src="../../packages/angularjs/angular.js"></script>
-
-
-	<script>
-		var myApp = angular.module('myApp', ['BasicPrimitives']);
-
-		myApp.controller('myController', ['$scope', function ($scope) {
-			$scope.index = 10;
-			$scope.Message = "";
-
-			var options = {};
-
-			var items = [
-				new primitives.orgdiagram.ItemConfig({
-					id: 0,
-					parent: null,
-					title: "Scott Aasrud",
-					description: "Root",
-					phone: "1 (416) 001-4567",
-					email: "scott.aasrud@mail.com",
-					image: "../images/photos/a.png",
-					itemTitleColor: primitives.common.Colors.RoyalBlue
-				}),
-				new primitives.orgdiagram.ItemConfig({
-					id: 1,
-					parent: 0,
-					title: "Ted Lucas",
-					description: "Left",
-					phone: "1 (416) 002-4567",
-					email: "ted.lucas@mail.com",
-					image: "../images/photos/b.png",
-					itemTitleColor: primitives.common.Colors.RoyalBlue
-				}),
-				new primitives.orgdiagram.ItemConfig({
-					id: 2,
-					parent: 0,
-					title: "Fritz Stuger",
-					description: "Right",
-					phone: "1 (416) 003-4567",
-					email: "joao.stuger@mail.com",
-					image: "../images/photos/c.png",
-					itemTitleColor: primitives.common.Colors.RoyalBlue
-				}),
-				new primitives.orgdiagram.ItemConfig({
-					id: 3,
-					parent: 2,
-					title: "Hidden Node",
-					phone: "1 (416) 004-4567",
-					email: "hidden.node@mail.com",
-					description: "Dotted Node",
-					image: "../images/photos/e.png",
-					itemTitleColor: primitives.common.Colors.PaleVioletRed
-				})
-			];
-
-			options.items = items;
-			options.cursorItem = 0;
-			options.highlightItem = 0;
-			options.hasSelectorCheckbox = primitives.common.Enabled.True;
-			options.templates = [getContactTemplate()];
-			options.defaultTemplateName = "contactTemplate";
-
-			$scope.myOptions = options;
-
-			$scope.setCursorItem = function (item) {
-				$scope.myOptions.cursorItem = item;
-			};
-
-			$scope.setHighlightItem = function (item) {
-				$scope.myOptions.highlightItem = item;
-			};
-
-			$scope.deleteItem = function (index) {
-				$scope.myOptions.items.splice(index, 1);
-			}
-
-			$scope.addItem = function (index, parent) {
-				var id = $scope.index++;
-				$scope.myOptions.items.splice(index, 0, new primitives.orgdiagram.ItemConfig({
-					id: id,
-					parent: parent,
-					title: "New title " + id,
-					description: "New description " + id,
-					image: "../images/photos/b.png"
-				}));
-			}
-
-			$scope.onMyCursorChanged = function () {
-				$scope.Message = "onMyCursorChanged";
-			}
-
-			$scope.onMyHighlightChanged = function () {
-				$scope.Message = "onMyHighlightChanged";
-			}
-
-			function getContactTemplate() {
-				var result = new primitives.orgdiagram.TemplateConfig();
-				result.name = "contactTemplate";
-
-				result.itemSize = new primitives.common.Size(220, 120);
-				result.minimizedItemSize = new primitives.common.Size(5, 5);
-				result.minimizedItemCornerRadius = 5;
-				result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
+  <script src="../../packages/angularjs/angular.js"></script>
 
 
-				/* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
-				result.itemTemplate = ["div",
-					{
-						style: {
-							width: result.itemSize.width + "px",
-							height: result.itemSize.height + "px",
-						},
-						"class": ["bp-item", "bp-corner-all", "bt-item-frame"]
-					},
-					["div",
-						{
-							"name": "titleBackground",
-							"class": ["bp-item", "bp-corner-all", "bp-title-frame"],
-							"style": {
-								backgroundColor: "{{itemTitleColor}}",
-								top: "2px",
-								left: "2px",
-								width: "216px",
-								height: "20px"
-							}
-						},
-						["div",
-							{
-								"name": "title",
-								style: {
-									top: "3px",
-									left: "6px",
-									width: "208px",
-									height: "18px"
-								},
-								"class": ["bp-item", "bp-title"]
-							},
-							"{{itemConfig.title}}"
-						]
-					],
-					["div",
-						{
-							"style": {
-								top: "26px",
-								left: "2px",
-								width: "50px",
-								height: "60px"
-							},
-							"class": ["bp-item", "bp-photo-frame"]
-						},
-						["img",
-							{
-								"name": "photo",
-								"src": "{{itemConfig.image}}",
-								"style": {
-									height: "60px",
-									width: "50px"
-								}
-							}
-						]
-					],
-					["div",
-						{
-							"name": "phone",
-							"style": {
-								top: "26px",
-								left: "56px",
-								width: "162px",
-								height: "18px",
-								fontSize: "12px"
-							},
-							"class": "bp-item"
-						},
-						"{{itemConfig.phone}}"
-					],
-					["div",
-						{
-							"style": {
-								top: "44px",
-								left: "56px",
-								width: "162px",
-								height: "18px",
-								fontSize: "12px"
-							},
-							"class": "bp-item"
-						},
-						["a",
-							{
-								"name": "email",
-								href: "mailto::{{itemConfig.email}}",
-								target: "_top"
-							},
-							"{{itemConfig.email}}"
-						]
-					],
-					["div",
-						{
-							"name": "description",
-							"style": {
-								top: "62px",
-								left: "56px",
-								width: "162px",
-								height: "36px",
-								fontSize: "10px"
-							},
-							"class": "bp-item" 
-						},
-						"{{itemConfig.description}}"
-					]
-				];
+  <script>
+    var myApp = angular.module('myApp', ['BasicPrimitives']);
 
-				return result;
-			}
-		}]);
+    myApp.controller('myController', ['$scope', function ($scope) {
+      $scope.index = 10;
+      $scope.Message = "";
 
-		angular.module('BasicPrimitives', [], function ($compileProvider) {
-			$compileProvider.directive('bpOrgDiagram', function ($compile) {
-				function link(scope, element, attrs) {
-					var itemScopes = [];
+      var options = {};
 
-					var config = new primitives.orgdiagram.Config();
-					angular.extend(config, scope.options);
+      var items = [
+        new primitives.orgdiagram.ItemConfig({
+          id: 0,
+          parent: null,
+          title: "Scott Aasrud",
+          description: "Root",
+          phone: "1 (416) 001-4567",
+          email: "scott.aasrud@mail.com",
+          image: "../images/photos/a.png",
+          itemTitleColor: primitives.common.Colors.RoyalBlue
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 1,
+          parent: 0,
+          title: "Ted Lucas",
+          description: "Left",
+          phone: "1 (416) 002-4567",
+          email: "ted.lucas@mail.com",
+          image: "../images/photos/b.png",
+          itemTitleColor: primitives.common.Colors.RoyalBlue
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 2,
+          parent: 0,
+          title: "Fritz Stuger",
+          description: "Right",
+          phone: "1 (416) 003-4567",
+          email: "joao.stuger@mail.com",
+          image: "../images/photos/c.png",
+          itemTitleColor: primitives.common.Colors.RoyalBlue
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 3,
+          parent: 2,
+          title: "Hidden Node",
+          phone: "1 (416) 004-4567",
+          email: "hidden.node@mail.com",
+          description: "Dotted Node",
+          image: "../images/photos/e.png",
+          itemTitleColor: primitives.common.Colors.PaleVioletRed
+        })
+      ];
 
-					config.onItemRender = onTemplateRender;
-					config.onCursorChanged = onCursorChanged;
-					config.onHighlightChanged = onHighlightChanged;
+      options.items = items;
+      options.cursorItem = 0;
+      options.highlightItem = 0;
+      options.hasSelectorCheckbox = primitives.common.Enabled.True;
+      options.templates = [getContactTemplate()];
+      options.defaultTemplateName = "contactTemplate";
 
-					var chart = primitives.orgdiagram.Control(element[0], config);
+      $scope.myOptions = options;
 
-					scope.$watch('options.highlightItem', function (newValue, oldValue) {
-						var highlightItem = chart.getOption("highlightItem");
-						if (highlightItem != newValue) {
-							chart.setOption("highlightItem", newValue);
-							chart.update(primitives.orgdiagram.UpdateMode.PositonHighlight);
-						}
-					});
+      $scope.setCursorItem = function (item) {
+        $scope.myOptions.cursorItem = item;
+      };
 
-					scope.$watch('options.cursorItem', function (newValue, oldValue) {
-						var cursorItem = chart.getOption("cursorItem");
-						if (cursorItem != newValue) {
-							chart.setOption("cursorItem", newValue);
-							chart.update(primitives.orgdiagram.UpdateMode.Refresh);
-						}
-					});
+      $scope.setHighlightItem = function (item) {
+        $scope.myOptions.highlightItem = item;
+      };
 
-					scope.$watchCollection('options.items', function (items) {
-						chart.setOption("items", items);
-						chart.update(primitives.orgdiagram.UpdateMode.Refresh);
-					});
+      $scope.deleteItem = function (index) {
+        $scope.myOptions.items.splice(index, 1);
+      }
 
-					function onTemplateRender(event, data) {
-						var itemConfig = data.context;
+      $scope.addItem = function (index, parent) {
+        var id = $scope.index++;
+        $scope.myOptions.items.splice(index, 0, new primitives.orgdiagram.ItemConfig({
+          id: id,
+          parent: parent,
+          title: "New title " + id,
+          description: "New description " + id,
+          image: "../images/photos/b.png"
+        }));
+      }
 
-						switch (data.renderingMode) {
-							case primitives.common.RenderingMode.Create:
-								/* Initialize widgets here */
-								var itemScope = scope.$new();
-								itemScope.itemConfig = itemConfig;
-								$compile(data.element)(itemScope);
-								if (!scope.$parent.$$phase) {
-									itemScope.$apply();
-								}
-								itemScopes.push(itemScope);
-								break;
-							case primitives.common.RenderingMode.Update:
-								/* Update widgets here */
-								var itemScope = angular.element(data.element).scope();
-								itemScope.itemConfig = itemConfig;
-								break;
-						}
-					}
+      $scope.onMyCursorChanged = function () {
+        $scope.Message = "onMyCursorChanged";
+      }
 
-					function onButtonClick(e, data) {
-						scope.onButtonClick();
-						scope.$apply();
-					}
+      $scope.onMyHighlightChanged = function () {
+        $scope.Message = "onMyHighlightChanged";
+      }
 
-					function onCursorChanged(e, data) {
-						scope.options.cursorItem = data.context ? data.context.id : null;
-						scope.onCursorChanged();
-						scope.$apply();
-					}
+      function getContactTemplate() {
+        var result = new primitives.orgdiagram.TemplateConfig();
+        result.name = "contactTemplate";
 
-					function onHighlightChanged(e, data) {
-						scope.options.highlightItem = data.context ? data.context.id : null;
-						scope.onHighlightChanged();
-						scope.$apply();
-					}
+        result.itemSize = new primitives.common.Size(220, 120);
+        result.minimizedItemSize = new primitives.common.Size(5, 5);
+        result.minimizedItemCornerRadius = 5;
+        result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
 
-					element.on('$destroy', function () {
-						/* destroy items scopes */
-						for (var index = 0; index < scopes.length; index++) {
-							itemScopes[index].$destroy();
-						}
 
-						/* destory control instance */
-						chart.destroy();
-					});
-				};
+        /* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
+        result.itemTemplate = ["div",
+          {
+            style: {
+              width: result.itemSize.width + "px",
+              height: result.itemSize.height + "px",
+            },
+            "class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+          },
+          ["div",
+            {
+              "name": "titleBackground",
+              "class": ["bp-item", "bp-corner-all", "bp-title-frame"],
+              "style": {
+                backgroundColor: "{{itemTitleColor}}",
+                top: "2px",
+                left: "2px",
+                width: "216px",
+                height: "20px"
+              }
+            },
+            ["div",
+              {
+                "name": "title",
+                style: {
+                  top: "3px",
+                  left: "6px",
+                  width: "208px",
+                  height: "18px"
+                },
+                "class": ["bp-item", "bp-title"]
+              },
+              "{{itemConfig.title}}"
+            ]
+          ],
+          ["div",
+            {
+              "style": {
+                top: "26px",
+                left: "2px",
+                width: "50px",
+                height: "60px"
+              },
+              "class": ["bp-item", "bp-photo-frame"]
+            },
+            ["img",
+              {
+                "name": "photo",
+                "src": "{{itemConfig.image}}",
+                "style": {
+                  height: "60px",
+                  width: "50px"
+                }
+              }
+            ]
+          ],
+          ["div",
+            {
+              "name": "phone",
+              "style": {
+                top: "26px",
+                left: "56px",
+                width: "162px",
+                height: "18px",
+                fontSize: "12px"
+              },
+              "class": "bp-item"
+            },
+            "{{itemConfig.phone}}"
+          ],
+          ["div",
+            {
+              "style": {
+                top: "44px",
+                left: "56px",
+                width: "162px",
+                height: "18px",
+                fontSize: "12px"
+              },
+              "class": "bp-item"
+            },
+            ["a",
+              {
+                "name": "email",
+                href: "mailto::{{itemConfig.email}}",
+                target: "_top"
+              },
+              "{{itemConfig.email}}"
+            ]
+          ],
+          ["div",
+            {
+              "name": "description",
+              "style": {
+                top: "62px",
+                left: "56px",
+                width: "162px",
+                height: "36px",
+                fontSize: "10px"
+              },
+              "class": "bp-item"
+            },
+            "{{itemConfig.description}}"
+          ]
+        ];
 
-				return {
-					scope: {
-						options: '=options',
-						onCursorChanged: '&onCursorChanged',
-						onHighlightChanged: '&onHighlightChanged',
-					},
-					link: link
-				};
-			});
-		});
-	</script>
+        return result;
+      }
+    }]);
+
+    angular.module('BasicPrimitives', [], function ($compileProvider) {
+      $compileProvider.directive('bpOrgDiagram', function ($compile) {
+        function link(scope, element, attrs) {
+          var itemScopes = [];
+
+          var config = new primitives.orgdiagram.Config();
+          angular.extend(config, scope.options);
+
+          config.onItemRender = onTemplateRender;
+          config.onCursorChanged = onCursorChanged;
+          config.onHighlightChanged = onHighlightChanged;
+
+          var chart = primitives.orgdiagram.Control(element[0], config);
+
+          scope.$watch('options.highlightItem', function (newValue, oldValue) {
+            var highlightItem = chart.getOption("highlightItem");
+            if (highlightItem != newValue) {
+              chart.setOption("highlightItem", newValue);
+              chart.update(primitives.orgdiagram.UpdateMode.PositonHighlight);
+            }
+          });
+
+          scope.$watch('options.cursorItem', function (newValue, oldValue) {
+            var cursorItem = chart.getOption("cursorItem");
+            if (cursorItem != newValue) {
+              chart.setOption("cursorItem", newValue);
+              chart.update(primitives.orgdiagram.UpdateMode.Refresh);
+            }
+          });
+
+          scope.$watchCollection('options.items', function (items) {
+            chart.setOption("items", items);
+            chart.update(primitives.orgdiagram.UpdateMode.Refresh);
+          });
+
+          function onTemplateRender(event, data) {
+            var itemConfig = data.context;
+
+            switch (data.renderingMode) {
+              case primitives.common.RenderingMode.Create:
+                /* Initialize widgets here */
+                var itemScope = scope.$new();
+                itemScope.itemConfig = itemConfig;
+                $compile(data.element)(itemScope);
+                if (!scope.$parent.$$phase) {
+                  itemScope.$apply();
+                }
+                itemScopes.push(itemScope);
+                break;
+              case primitives.common.RenderingMode.Update:
+                /* Update widgets here */
+                var itemScope = angular.element(data.element).scope();
+                itemScope.itemConfig = itemConfig;
+                break;
+            }
+          }
+
+          function onButtonClick(e, data) {
+            scope.onButtonClick();
+            scope.$apply();
+          }
+
+          function onCursorChanged(e, data) {
+            scope.options.cursorItem = data.context ? data.context.id : null;
+            scope.onCursorChanged();
+            scope.$apply();
+          }
+
+          function onHighlightChanged(e, data) {
+            scope.options.highlightItem = data.context ? data.context.id : null;
+            scope.onHighlightChanged();
+            scope.$apply();
+          }
+
+          element.on('$destroy', function () {
+            /* destroy items scopes */
+            for (var index = 0; index < scopes.length; index++) {
+              itemScopes[index].$destroy();
+            }
+
+            /* destory control instance */
+            chart.destroy();
+          });
+        };
+
+        return {
+          scope: {
+            options: '=options',
+            onCursorChanged: '&onCursorChanged',
+            onHighlightChanged: '&onHighlightChanged',
+          },
+          link: link
+        };
+      });
+    });
+  </script>
 </head>
+
 <body data-ng-controller="myController" style="font-size: 12px">
-	<div id="westpanel" style="width: 400px; padding: 10px; margin: 0px; border-style: dotted; font-size: 12px; border-color: grey; float: left; border-width: 1px; overflow: scroll; -webkit-overflow-scrolling: touch;">
-		<p>Here is example of syncronized content between ngRepeat directive and bpOrgDiagram directive. 
-		<p>Cursor: {{myOptions.cursorItem}}
-		<p>Highlight: {{myOptions.highlightItem}}
-		<p>Message: {{Message}}
-		<p><ul>
-			<li ng-repeat="item in myOptions.items">
-			<p>Index: {{$index}}, Id: {{item.id}}, Parent: {{item.parent}}
-			<p>{{contact.title}}<input type="text" ng-model="item.title" ng-required/>
-			<p>{{contact.description}}<input type="text" ng-model="item.description" ng-required/>  
-			<p><button ng-click="$parent.setCursorItem(item.id)">Cursor</button>  
-			<button ng-click="$parent.setHighlightItem(item.id)">Highlight</button>
-			<button ng-click="$parent.deleteItem($index)">Delete</button>
-			<button ng-click="$parent.addItem($index + 1, item.id)">Add Child</button>
-			</li>
-		</ul>
-		<button ng-click="addItem(0, null)">New</button>
-			
-	</div>
-	<div id="centerpanel"  style="overflow: hidden; padding: 0px; margin: 0px; border: 0px;">
-		<div bp-org-diagram data-options="myOptions" data-on-highlight-changed="onMyHighlightChanged()"  data-on-cursor-changed="onMyCursorChanged()" style="width: 800px; height: 600px; border-style: dotted; border-width: 1px;"></div>
-	</div>
+  <div id="westpanel"
+    style="width: 400px; padding: 10px; margin: 0px; border-style: dotted; font-size: 12px; border-color: grey; float: left; border-width: 1px; overflow: scroll; -webkit-overflow-scrolling: touch;">
+    <p>Example of syncronized content between ngRepeat directive and bpOrgDiagram directive.
+      <p>Cursor: {{myOptions.cursorItem}}
+        <p>Highlight: {{myOptions.highlightItem}}
+          <p>Message: {{Message}}
+            <p>
+              <ul>
+                <li ng-repeat="item in myOptions.items">
+                  <p>Index: {{$index}}, Id: {{item.id}}, Parent: {{item.parent}}
+                    <p>{{contact.title}}<input type="text" ng-model="item.title" ng-required />
+                      <p>{{contact.description}}<input type="text" ng-model="item.description" ng-required />
+                        <p><button ng-click="$parent.setCursorItem(item.id)">Cursor</button>
+                          <button ng-click="$parent.setHighlightItem(item.id)">Highlight</button>
+                          <button ng-click="$parent.deleteItem($index)">Delete</button>
+                          <button ng-click="$parent.addItem($index + 1, item.id)">Add Child</button>
+                </li>
+              </ul>
+              <button ng-click="addItem(0, null)">New</button>
+
+  </div>
+  <div id="centerpanel" style="overflow: hidden; padding: 0px; margin: 0px; border: 0px;">
+    <div bp-org-diagram data-options="myOptions" data-on-highlight-changed="onMyHighlightChanged()"
+      data-on-cursor-changed="onMyCursorChanged()"
+      style="width: 800px; height: 600px; border-style: dotted; border-width: 1px;"></div>
+  </div>
 </body>
+
 </html>

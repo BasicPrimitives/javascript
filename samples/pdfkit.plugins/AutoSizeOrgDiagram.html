@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html style="height: 95%">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>First family chart</title>
+
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <!-- PDFkit & Libs -->
+  <script src="../../packages/pdfkit/pdfkit.js"></script>
+  <script src="../../packages/pdfkit/blob-stream.js"></script>
+
+  <!-- Demo Images -->
+  <script src="../data/photos.js"></script>
+
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+    var control;
+    var timer = null;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // create a document and pipe to a blob
+      var sample3 = primitives.pdf.orgdiagram.Plugin({
+        items: [
+          new primitives.orgdiagram.ItemConfig({
+            id: 0,
+            parent: null,
+            title: "Scott Aasrud",
+            description: "VP, Public Sector",
+            image: photos.a
+          }),
+          new primitives.orgdiagram.ItemConfig({
+            id: 1,
+            parent: 0,
+            title: "Ted Lucas 1",
+            description: "VP, Human Resources",
+            image: photos.b
+          }),
+          new primitives.orgdiagram.ItemConfig({
+            id: 2,
+            parent: 0,
+            title: "Fritz Stuger 2",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 3,
+            parent: 0,
+            title: "Fritz Stuger 3",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 4,
+            parent: 0,
+            title: "Fritz Stuger 4",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 5,
+            parent: 0,
+            title: "Fritz Stuger 5",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 6,
+            parent: 0,
+            title: "Fritz Stuger 6",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 7,
+            parent: 0,
+            title: "Fritz Stuger 7",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 8,
+            parent: 0,
+            title: "Fritz Stuger 8",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 9,
+            parent: 0,
+            title: "Fritz Stuger 9",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 10,
+            parent: 2,
+            title: "Fritz Stuger 10",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 11,
+            parent: 3,
+            title: "Fritz Stuger 11",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 12,
+            parent: 10,
+            title: "Fritz Stuger 12",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 14,
+            parent: 12,
+            title: "Fritz Stuger 14",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 15,
+            parent: 14,
+            title: "Fritz Stuger 15",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 16,
+            parent: 15,
+            title: "Fritz Stuger 16",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 17,
+            parent: 16,
+            title: "Fritz Stuger 17",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.orgdiagram.ItemConfig({
+            id: 18,
+            parent: 17,
+            title: "Fritz Stuger 18",
+            description: "Business Solutions, US",
+            image: photos.c
+          })
+
+        ],
+        annotations: [
+          {
+            annotationType: primitives.common.AnnotationType.Connector,
+            fromItem: 9,
+            toItem: 18,
+            label: "PDF document sized to fit organizational diagram",
+            labelSize: { width: 200, height: 200 }, //new primitives.common.Size(80, 30)
+            connectorShapeType: primitives.common.ConnectorShapeType.BothWay,
+            connectorPlacementType: primitives.common.ConnectorPlacementType.Straight,
+            color: primitives.common.Colors.Red,
+            offset: -30,
+            lineWidth: 2,
+            lineType: primitives.common.LineType.Solid
+          }
+        ],
+        cursorItem: null,
+        hasSelectorCheckbox: primitives.common.Enabled.False
+      });
+
+      var sample3size = sample3.getSize();
+
+      var doc = new PDFDocument({ size: [sample3size.width + 100, sample3size.height + 150] });
+      var stream = doc.pipe(blobStream());
+
+      doc.save();
+
+      // draw some text
+      doc.fontSize(25)
+        .text('Autosized page containing Organizational Chart ...', 50, 50);
+
+      sample3.draw(doc, 50, 100);
+
+      doc.restore();
+
+      doc.end();
+
+      stream.on('finish', function () {
+        var string = stream.toBlobURL('application/pdf');
+        document.getElementById("previewpanel").setAttribute("src", string);
+      });
+    });
+
+  </script>
+</head>
+
+<body style="height: 100%">
+  <div id="basicdiagram" style="width: 100%; height: 100%; border-style: none; border-width: 0px;">
+    <iframe id="previewpanel" type="application/pdf" width="100%" height="100%" frameborder="0"
+      style="position:relative;z-index:999">
+    </iframe>
+  </div>
+</body>
+
+</html>

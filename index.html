@@ -14,10 +14,11 @@
   <link href="min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
 
   <script>
-    var frameworks = ["javascript", "jquery"];
+    var frameworks = ["javascript", "jquery", "pdfkit"];
     var frameworksLabels = {
       "javascript": "JavaScript",
-      "jquery": "jQuery"
+      "jquery": "jQuery",
+      "pdfkit": "PDFkit"
     };
     var preferedFramework = "javascript";
     var files = [
@@ -136,7 +137,7 @@
           {
             label: "Client side PDF Generation and Download Samples",
             frameworks: {
-              javascript: "samples/pdfkit.plugins/DemoPDFKitPlugins.html"
+              pdfkit: "samples/pdfkit.plugins/DemoPDFKitPlugins.html"
             }
           },
           {
@@ -148,20 +149,57 @@
         ]
       },
       {
+        label: "PDFkit Specific Use Cases",
+        items: [
+          {
+            label: "Page Size Organizational Chart",
+            frameworks: {
+              pdfkit: "samples/pdfkit.plugins/AutoSizeOrgDiagram.html"
+            }
+          },
+          {
+            label: "Page Size Family Diagram",
+            frameworks: {
+              pdfkit: "samples/pdfkit.plugins/AutoSizeFamDiagram.html"
+            }
+          },
+          {
+            label: "PDF File Download Sample",
+            frameworks: {
+              pdfkit: "samples/pdfkit.plugins/FileDownload.html"
+            }
+          },
+          {
+            label: "Multi-page Document Example",
+            frameworks: {
+              pdfkit: "samples/pdfkit.plugins/Multipage.html"
+            }
+          },
+          {
+            label: "User Item Template with custom graphics",
+            frameworks: {
+              pdfkit: "samples/pdfkit.plugins/UserItemTemplateWithShapes.html"
+            }
+          }
+        ]
+      },
+      {
         label: "Create & Update use cases",
         items: [
           {
             label: "First Organizational Chart",
             frameworks: {
               javascript: "samples/javascript.controls/CaseFirstOrganizationalChart.html",
-              jquery: "samples/jquery.widgets/CaseFirstOrganizationalChart.html"
+              jquery: "samples/jquery.widgets/CaseFirstOrganizationalChart.html",
+              pdfkit: "samples/pdfkit.plugins/FirstOrganizationalChart.html"
             }
           },
           {
             label: "First Family Chart",
             frameworks: {
               javascript: "samples/javascript.controls/CaseFirstFamilyChart.html",
-              jquery: "samples/jquery.widgets/CaseFirstFamilyChart.html"
+              jquery: "samples/jquery.widgets/CaseFirstFamilyChart.html",
+              pdfkit: "samples/pdfkit.plugins/FirstFamilyChart.html"
             }
           },
           {
@@ -172,7 +210,7 @@
             }
           },
           {
-            label: "Page Size Diagram",
+            label: "Page Size Organizational Chart",
             frameworks: {
               javascript: "samples/javascript.controls/CasePageSizeDiagram.html",
               jquery: "samples/jquery.widgets/CasePageSizeDiagramWithoutUILayoutWidget.html"
@@ -337,7 +375,8 @@
             label: "Matrix Nodes layout in Family Chart",
             frameworks: {
               javascript: "samples/javascript.controls/CaseMatrixLayoutInFamilyChart.html",
-              jquery: "samples/jquery.widgets/CaseMatrixLayoutInFamilyChart.html"
+              jquery: "samples/jquery.widgets/CaseMatrixLayoutInFamilyChart.html",
+              pdfkit: "samples/pdfkit.plugins/FamilyMatrix.html"
             }
           },
           {
@@ -350,7 +389,8 @@
           {
             label: "Nodes ordering",
             frameworks: {
-              javascript: "samples/javascript.controls/CaseFamilyChartItemsOrdering.html"
+              javascript: "samples/javascript.controls/CaseFamilyChartItemsOrdering.html",
+              pdfkit: "samples/pdfkit.plugins/FamilyChartItemsOrdering.html"
             }
           },
           {
@@ -368,7 +408,8 @@
             label: "Item template",
             frameworks: {
               javascript: "samples/javascript.controls/CaseItemTemplate.html",
-              jquery: "samples/jquery.widgets/CaseItemTemplate.html"
+              jquery: "samples/jquery.widgets/CaseItemTemplate.html",
+              pdfkit: "samples/pdfkit.plugins/UserItemTemplate.html"
             }
           },
           {
@@ -470,7 +511,8 @@
           {
             label: "Routing Highlight Path Annotation for hidden grand parents connections",
             frameworks: {
-              javascript: "samples/javascript.controls/CaseFamilyHideGrandParentsConnections.html"
+              javascript: "samples/javascript.controls/CaseFamilyHideGrandParentsConnections.html",
+              pdfkit: "samples/pdfkit.plugins/HideGrandParentsConnectors.html"
             }
           }
         ]

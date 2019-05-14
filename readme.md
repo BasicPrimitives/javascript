@@ -20,7 +20,7 @@ Diagrams work in all major modern browsers Internet Explorer, Chrome, Firefox, S
 * [http://www.basicprimitives.com](https://www.basicprimitives.com) project home.
 * [NPM](https://www.npmjs.com/package/basicprimitives) official release package.
 * [GitHub](https://github.com/BasicPrimitives) repositories.
-* [GitHub repository based static Demos & Samples] (https://basicprimitives.github.io/javascript/).
+* [GitHub repository based static Demos & Samples](https://basicprimitives.github.io/javascript/).
 
 ## Pure JavaScript
 * 100% client side JavaScript layout and rendering.

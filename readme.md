@@ -25,7 +25,7 @@ Diagrams work in all major modern browsers Internet Explorer, Chrome, Firefox, S
 
 ## Pure JavaScript
 * 100% client side JavaScript layout and rendering.
-* Implemented in pure JavaScript without dependency on 3d party libraries.
+* Implemented without dependencies on 3d party libraries.
 * Works in all major modern browsers Internet Explorer, Edge, Chrome, Firefox, Safari and mobile browsers. Supports graphics rendering in SVG and Canvas modes depending on user options.
 
 ### PDF support

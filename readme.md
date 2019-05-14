@@ -38,7 +38,7 @@ Diagrams work in all major modern browsers Internet Explorer, Chrome, Firefox, S
 
 One of the key features of Basic Primitives Diagram that under any of the licenses, free or not, you are allowed to download the source code and make your own edits. This allows personal modifications and a great flexibility. The comprehensive set of samples, demos and unit tests guarantees quality of the library's source code.
 
-## Facilitates visual data analytics of hierarchical and topological dependencies
+## Created for visual data analytics of hierarchies and dependencies
 Business Intelligence systems and applications are designed for two major areas: Reporting and Analytics. Reporting applications are meant to be a legal statements, so reported data should be 100% complete, it should not have any discrepancy in form of omitted data, improperly rounded values or excessive abbreviations. On the other side, applications designed for data analytics should show only the most valuable and related data to current user focus and gracefully degrade details for less relevant data. So control provide API options for visual data analysis of diagrams:
 
 ### Auto layout
@@ -71,7 +71,8 @@ Every time we make changes to diagram we need to visualize performed modificatio
 ### Compatible
 * Works in AngularJS and ReactJS
 * Works in jQuery UI widgets. 
-* Supports customization of diagram nodes with nested components using various frameworks and templates
+* Supports nested components and nodes templates
+* Supports Drag & Drop frameworks
 
 ### Dynamic
 * Through a full API you can add, remove and modify individual items and their properties at any other time after organizational chart rendering. Widget update time is as fast as its navigation.

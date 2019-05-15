@@ -21,7 +21,7 @@ Diagrams work in all major modern browsers Internet Explorer, Chrome, Firefox, S
 * [NPM](https://www.npmjs.com/package/basicprimitives) official release package.
 * [GitHub](https://github.com/BasicPrimitives) repositories.
 * [JavaScript, jQUery and PDFkit Demos & Samples](https://basicprimitives.github.io/javascript/), clone this repository for sources.
-* [React Live Demos](http://react.basicprimitives.com:8080)
+* [React Live Demos](http://react.basicprimitives.com:8080), clone [ReactJS Demo repository](https://github.com/BasicPrimitives/react-demo) for sources.
 
 ## Pure JavaScript
 * 100% client side JavaScript layout and rendering.

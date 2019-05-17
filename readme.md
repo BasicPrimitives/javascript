@@ -7,6 +7,7 @@ Diagrams work in all major modern browsers Internet Explorer, Chrome, Firefox, S
 
 ## Supported Diagrams
 
+* Tree
 * Hierarchy Visualization
 * Organizational Chart
 * Multi-parent hierarchical chart

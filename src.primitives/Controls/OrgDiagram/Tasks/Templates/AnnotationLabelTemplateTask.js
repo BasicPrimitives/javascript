@@ -1,21 +1,21 @@
-﻿primitives.orgdiagram.AnnotationLabelTemplateTask = function (itemsSizesOptionTask) {
-	var _data = {
-		template: null
-	};
+﻿primitives.orgdiagram.AnnotationLabelTemplateTask = function (itemsSizesOptionTask, templates) {
+  var _data = {
+    template: null
+  };
 
-	function process() {
-		return false;
-	}
+  function process() {
+    return false;
+  }
 
-	function getTemplate() {
-		if (_data.template == null) {
-			_data.template = new primitives.common.AnnotationLabelTemplate();
-		}
-		return _data.template;
-	}
+  function getTemplate() {
+    if (_data.template == null) {
+      _data.template = new templates.AnnotationLabelTemplate();
+    }
+    return _data.template;
+  }
 
-	return {
-		process: process,
-		getTemplate: getTemplate
-	};
+  return {
+    process: process,
+    getTemplate: getTemplate
+  };
 };

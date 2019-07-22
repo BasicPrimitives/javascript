@@ -1,12 +1,12 @@
 # [Basic Primitives](https://www.basicprimitives.com)
 
-JavaScript Diagrams Library - implements organizational and multi-parent diagrams. 
-Library contains implementations of JavaScript Controls and PDFkit plugins. PDFkit is NodeJS and in browser PDF rendering library.
-Diagrams visualize nodes using HTML templates combined with HTML5 Canvas and SVG graphics elements. 
-Diagrams work in all major modern browsers Internet Explorer, Chrome, Firefox, Safari including mobile browsers.
+Basic Primitives Diagrams for JavaScript - data visualization components library implements organizational chart and multi-parent dependency diagrams. 
+Library contains implementations of JavaScript Controls and PDF rendering plugins.
+
 
 ## Supported Diagrams
 
+* Tree
 * Hierarchy Visualization
 * Organizational Chart
 * Multi-parent hierarchical chart
@@ -16,27 +16,28 @@ Diagrams work in all major modern browsers Internet Explorer, Chrome, Firefox, S
 * Financial Ownership Diagram
 
 ## Getting Started
-
 * [http://www.basicprimitives.com](https://www.basicprimitives.com) project home.
 * [NPM](https://www.npmjs.com/package/basicprimitives) official release package.
-* [GITHUB](https://github.com/BasicPrimitives) repositories.
+* [GitHub](https://github.com/BasicPrimitives) repositories.
+* [JavaScript, jQUery and PDFkit Demos & Samples](https://basicprimitives.github.io/javascript/), clone this repository for sources.
+* [React Live Demos](http://react.basicprimitives.com:8080), clone [ReactJS Demo repository](https://github.com/BasicPrimitives/react-demo) for sources.
 
 ## Pure JavaScript
 * 100% client side JavaScript layout and rendering.
-* Implemented in pure JavaScript without dependency on 3d party libraries.
-* Works in all major modern browsers Internet Explorer, Edge, Chrome, Firefox, Safari and mobile browsers. Supports graphics rendering in SVG and Canvas modes depending on user options.
+* Implemented without dependencies on 3d party libraries.
+* Works in all major modern browsers. Supports graphics rendering in SVG or Canvas depending on user options.
 
 ### PDF support
-* 100% JavaScript in-browser or NodeJS PDF rendering based [PDFkit](https://www.npmjs.com/package/pdfkit) (MIT) library.
+* 100% JavaScript in-browser or NodeJS PDF rendering based on [PDFkit](https://www.npmjs.com/package/pdfkit) (MIT) library.
 
 ## Free for Non-commercial
-* Do you want to use Basic Primitives Diagram for a personal website, a school site or a non-profit organization? Then you don't need the author's permission, just go on and use Basic Primitives Diagram. For commercial websites and projects, see [License and Pricing](https://www.basicprimitives.com/index.php?option=com_content&view=article&id=14&Itemid=18&lang=en).
+* Do you want to use Basic Primitives Diagrams for a personal website, a school site or a non-profit organization? Then you don't need the author's permission, just go on and use Basic Primitives Diagrams. For commercial websites and projects, see [License and Pricing](https://www.basicprimitives.com/index.php?option=com_content&view=article&id=14&Itemid=18&lang=en).
 
 ## Open
 
-One of the key features of Basic Primitives Diagram that under any of the licenses, free or not, you are allowed to download the source code and make your own edits. This allows personal modifications and a great flexibility. The comprehensive set of samples, demos and unit tests guarantees quality of the library's source code.
+One of the key features of Basic Primitives Diagrams that under any of the licenses, free or not, you are allowed to download the source code and make your own edits. This allows personal modifications and a great flexibility. The comprehensive set of samples, demos and unit tests guarantees quality of the library's source code.
 
-## Facilitates visual data analytics of hierarchical and topological dependencies
+## Created for visual data analytics of hierarchies and dependencies
 Business Intelligence systems and applications are designed for two major areas: Reporting and Analytics. Reporting applications are meant to be a legal statements, so reported data should be 100% complete, it should not have any discrepancy in form of omitted data, improperly rounded values or excessive abbreviations. On the other side, applications designed for data analytics should show only the most valuable and related data to current user focus and gracefully degrade details for less relevant data. So control provide API options for visual data analysis of diagrams:
 
 ### Auto layout
@@ -66,10 +67,9 @@ Every time we make changes to diagram we need to visualize performed modificatio
 * Left/Right layout alignment support.
 * Events
 
-### Compatible
-* Works in AngularJS and ReactJS
-* Works in jQuery UI widgets. 
-* Supports customization of diagram nodes with nested components using various frameworks and templates
+### jQuery UI
+* Provides jQuery UI Widgets wrapping core JavaScript controls. 
+* Supports jQuery UI Draggable and Droppable Widgets
 
 ### Dynamic
 * Through a full API you can add, remove and modify individual items and their properties at any other time after organizational chart rendering. Widget update time is as fast as its navigation.
@@ -79,5 +79,4 @@ Every time we make changes to diagram we need to visualize performed modificatio
 
 Copyright (c) 2013 - 2019 Basic Primitives Inc
 * [Non-commercial - Free](http://creativecommons.org/licenses/by-nc/3.0/)
-* [Commercial and government licenses](http://www.basicprimitives.com/pdf/license.pdf)
-
+* [Commercial and government licenses](license.pdf)

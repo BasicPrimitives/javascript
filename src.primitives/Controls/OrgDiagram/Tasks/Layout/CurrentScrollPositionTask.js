@@ -1,35 +1,32 @@
-primitives.orgdiagram.CurrentScrollPositionTask = function (getLayout, optionsTask) {
-	var _data = {
-		placeholderOffset: null
-	},
-	_hash = {},
-	_dataTemplate = new primitives.common.ObjectReader({
-		placeholderOffset: new primitives.common.ObjectReader({
-			x: new primitives.common.ValueReader(["number"], true),
-			y: new primitives.common.ValueReader(["number"], true)
-		}, true)
-	});
+primitives.orgdiagram.CurrentScrollPositionTask = function (layoutOptionsTask) {
+  var _data = {
+    placeholderOffset: null
+  },
+    _hash = {},
+    _dataTemplate = new primitives.common.ObjectReader({
+      placeholderOffset: new primitives.common.ObjectReader({
+        x: new primitives.common.ValueReader(["number"], true),
+        y: new primitives.common.ValueReader(["number"], true)
+      }, true)
+    });
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		},
-		layout = getLayout(),
-		currentLayout = {
-			placeholderOffset: new primitives.common.Point(layout.scrollPanel.scrollLeft, layout.scrollPanel.scrollTop)
-		};
-		_data = _dataTemplate.read(_data, currentLayout, "layout", context);
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    },
+      layoutOptions = layoutOptionsTask.getOptions();
+    _data = _dataTemplate.read(_data, layoutOptions, "layout", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getPlaceholderOffset() {
-		return _data.placeholderOffset;
-	}
+  function getPlaceholderOffset() {
+    return _data.placeholderOffset;
+  }
 
-	return {
-		process: process,
-		getPlaceholderOffset: getPlaceholderOffset
-	};
+  return {
+    process: process,
+    getPlaceholderOffset: getPlaceholderOffset
+  };
 };

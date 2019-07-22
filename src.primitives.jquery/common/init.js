@@ -1,5 +1,5 @@
 ﻿/**
- * @preserve jQuery Widgets for Basic Primitives Diagram v5.2.4
+ * @preserve jQuery Widgets for Basic Primitives Diagrams v5.4.0
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free

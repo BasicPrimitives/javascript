@@ -1,3 +1,11 @@
+#### Version 5.4.0
+* Added OrgDiagram & FamDiagram React components and samples.
+* Extracted platform specific functionality out of core.
+* Added onButtonsRender event to TemplateConfig.
+* Added support of cycles in objects defenitions of labels.
+* Fixed CSS scale bugs.
+* Removed jQuery UI Widget Organizational Chart Editor.
+* Removed PHP samples.
 #### Version 5.3.1
 * Fixed performance issue in react demo.
 #### Version 5.3.0

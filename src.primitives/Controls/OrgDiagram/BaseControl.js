@@ -74,7 +74,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 
     createLayout(_data.layout, _data.name);
     bind(_data.layout);
-    _data.tasks = taskManagerFactory(getOptions, getGraphics, getLayout, templates);
+    _data.tasks = taskManagerFactory(getOptions, getGraphics, getLayout, setLayout, templates);
     _data.graphics = primitives.common.createGraphics(_data.options.graphicsType, _data.layout.element);
     _data.graphics.debug = _debug;
 
@@ -111,6 +111,17 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     //_data.layout.scrollPanel.css({
     //	"-webkit-overflow-scrolling": "touch"
     //});
+
+    /* fix pixel alignment */
+    var pixelAlignmentFix = primitives.common.getFixOfPixelALignment(_data.layout.element);
+    primitives.common.JsonML.applyStyles(_data.layout.scrollPanel, {
+      "top": "0px",
+      "left": "0px",
+      "marginBottom": "0px",
+      "marginRight": "0px",
+      "marginLeft": pixelAlignmentFix.width + "px", /* fixes div pixel alignment */
+      "marginTop": pixelAlignmentFix.height + "px"
+    });
   }
 
   function positionHighlight(debug) {
@@ -122,7 +133,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 
   function redrawCurrentViewPort(debug) {
     _data.layout.forceCenterOnCursor = false;
-    _data.tasks.process('CurrentScrollPositionTask', null, debug);
+    _data.tasks.process('LayoutOptionsTask', null, debug);
 
     _data.graphics.end();
   }
@@ -191,7 +202,52 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
   }
 
   function getLayout() {
-    return _data.layout;
+    var layout = _data.layout,
+      scrollPanelSize = primitives.common.getInnerSize(layout.element),
+      placeholderOffset = new primitives.common.Point(layout.scrollPanel.scrollLeft, layout.scrollPanel.scrollTop);
+    return {
+      forceCenterOnCursor: layout.forceCenterOnCursor,
+      scrollPanelSize: scrollPanelSize,
+      placeholderOffset: placeholderOffset
+    }
+  }
+
+  function setLayout(layoutOptions) {
+    var layout = _data.layout;
+
+    /* set size of panel with content */
+    var mousePanelSize = new primitives.common.Size(layoutOptions.contentSize);
+    mousePanelSize.scale(1 * layoutOptions.scale);
+    primitives.common.JsonML.applyStyles(layout.mousePanel, mousePanelSize.getCSS());
+
+    /* set size of panel with content */
+    primitives.common.JsonML.applyStyles(layout.placeholder, layoutOptions.contentSize.getCSS());
+
+    /* set CSS scale of content */
+    var scaletext = "scale(" + layoutOptions.scale + "," + layoutOptions.scale + ")";
+
+    primitives.common.JsonML.applyStyles(layout.placeholder, {
+      "transform-origin": "0 0",
+      "transform": scaletext,
+      "-ms-transform": scaletext, /* IE 9 */
+      "-webkit-transform": scaletext, /* Safari and Chrome */
+      "-o-transform": scaletext, /* Opera */
+      "-moz-transform": scaletext /* Firefox */
+    });
+
+    var scrollPanelSize = new primitives.common.Size(layoutOptions.scrollPanelSize);
+    if (layoutOptions.autoSize) {
+      /* resize element to fit placeholder if control in autosize mode */
+      scrollPanelSize = new primitives.common.Size(mousePanelSize.width + 25, mousePanelSize.height + 25);
+      scrollPanelSize.cropBySize(layoutOptions.autoSizeMaximum);
+      scrollPanelSize.addSize(layoutOptions.autoSizeMinimum);//ignore jslint
+      primitives.common.JsonML.applyStyles(layout.element, scrollPanelSize.getCSS());
+    }
+
+    /* set scroll of content */
+    primitives.common.JsonML.applyStyles(layout.scrollPanel, scrollPanelSize.getCSS());
+
+    return scrollPanelSize;
   }
 
   function createLayout(layout, name) {

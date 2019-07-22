@@ -4,8 +4,8 @@
 	
 */
 primitives.orgdiagram.Config = function (name) {
-	this.name = (name !== undefined) ? name : "OrgDiagram";
-	this.classPrefix = "orgdiagram";
+  this.name = (name !== undefined) ? name : "OrgDiagram";
+  this.classPrefix = "orgdiagram";
 
 	/*
 		Property: navigationMode
@@ -22,7 +22,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.common.NavigationMode.Default>
 	*/
-	this.navigationMode = primitives.common.NavigationMode.Default;
+  this.navigationMode = primitives.common.NavigationMode.Default;
 
 	/*
 		Property: graphicsType
@@ -32,7 +32,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.common.GraphicsType.SVG>
 	*/
-	this.graphicsType = primitives.common.GraphicsType.SVG;
+  this.graphicsType = primitives.common.GraphicsType.SVG;
 
 	/*
 		Property: pageFitMode
@@ -52,7 +52,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.common.PageFitMode.FitToPage>
 	*/
-	this.pageFitMode = primitives.common.PageFitMode.FitToPage;
+  this.pageFitMode = primitives.common.PageFitMode.FitToPage;
 
 	/*
 		Property: minimalVisibility
@@ -64,7 +64,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.common.Visibility.Dot>
 	*/
-	this.minimalVisibility = primitives.common.Visibility.Dot;
+  this.minimalVisibility = primitives.common.Visibility.Dot;
 
 	/*
 		Property: orientationType
@@ -75,7 +75,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.common.OrientationType.Top>
 	*/
-	this.orientationType = primitives.common.OrientationType.Top;
+  this.orientationType = primitives.common.OrientationType.Top;
 
 	/*
 		Property: horizontalAlignment
@@ -85,7 +85,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.common.HorizontalAlignmentType.Center>
 	*/
-	this.horizontalAlignment = primitives.common.HorizontalAlignmentType.Center;
+  this.horizontalAlignment = primitives.common.HorizontalAlignmentType.Center;
 
 	/*
 	Property: verticalAlignment
@@ -95,7 +95,7 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		<primitives.common.VerticalAlignmentType.Middle>
 */
-	this.verticalAlignment = primitives.common.VerticalAlignmentType.Middle;
+  this.verticalAlignment = primitives.common.VerticalAlignmentType.Middle;
 
 	/*
 		Property: arrowsDirection
@@ -104,7 +104,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.common.GroupByType.None>
 	*/
-	this.arrowsDirection = primitives.common.GroupByType.None;
+  this.arrowsDirection = primitives.common.GroupByType.None;
 
 	/*
 		Property: showExtraArrows
@@ -114,7 +114,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			false
 	*/
-	this.showExtraArrows = false;
+  this.showExtraArrows = false;
 
 	/*
 	Property: extraArrowsMinimumSpace
@@ -124,7 +124,7 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		30
 	*/
-	this.extraArrowsMinimumSpace = 30;
+  this.extraArrowsMinimumSpace = 30;
 
 	/*
 		Property: showHorizontalArrows
@@ -133,7 +133,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			false
 	*/
-	this.showHorizontalArrows = false;
+  this.showHorizontalArrows = false;
 
 	/*
 		Property: connectorType
@@ -143,7 +143,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.common.ConnectorType.Squared>
 	*/
-	this.connectorType = primitives.common.ConnectorType.Squared;
+  this.connectorType = primitives.common.ConnectorType.Squared;
 
 	/*
 		Property: bevelSize
@@ -152,7 +152,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			4
 	*/
-	this.bevelSize = 4;
+  this.bevelSize = 4;
 
 	/*
 		Property: elbowType
@@ -161,7 +161,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.common.ElbowType.None>
 	*/
-	this.elbowType = primitives.common.ElbowType.None;
+  this.elbowType = primitives.common.ElbowType.None;
 
 	/*
 		Property: elbowDotSize
@@ -170,13 +170,13 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			4
 	*/
-	this.elbowDotSize = 4;
+  this.elbowDotSize = 4;
 
 	/*
 	Property: emptyDiagramMessage
 		Empty message in order to avoid blank screen. This option is supposed to say user that chart is empty when no data inside.
 	*/
-	this.emptyDiagramMessage = "Diagram is empty.";
+  this.emptyDiagramMessage = "Diagram is empty.";
 
 	/*
 	Property: items
@@ -190,7 +190,7 @@ primitives.orgdiagram.Config = function (name) {
 		<primitives.orgdiagram.ItemConfig.id>
 		<primitives.orgdiagram.ItemConfig.parent>
 	*/
-	this.items = [];
+  this.items = [];
 
 	/*
 	Property: annotations
@@ -204,7 +204,7 @@ primitives.orgdiagram.Config = function (name) {
 		<primitives.orgdiagram.BackgroundAnnotationConfig>
 		<primitives.orgdiagram.HighlightPathAnnotationConfig>
 	*/
-	this.annotations = [];
+  this.annotations = [];
 
 	/*
 	Property: cursorItem
@@ -220,7 +220,7 @@ primitives.orgdiagram.Config = function (name) {
 		<primitives.orgdiagram.Config.onCursorChanging>
 		<primitives.orgdiagram.Config.onCursorChanged>
 	*/
-	this.cursorItem = null;
+  this.cursorItem = null;
 
 	/*
 	Property: highlightItem
@@ -234,7 +234,7 @@ primitives.orgdiagram.Config = function (name) {
 		<primitives.orgdiagram.Config.onHighlightChanging>
 		<primitives.orgdiagram.Config.onHighlightChanged>
 	*/
-	this.highlightItem = null;
+  this.highlightItem = null;
 
 	/*
 	Property: highlightGravityRadius
@@ -243,7 +243,7 @@ primitives.orgdiagram.Config = function (name) {
 		This option defines highlight gravity radius, so minimized item gets highlighted when mouse pointer does not overlap marker but it is within gravity radius of its boundaries.
 		This property is ignored when nearest item is outside of screen boundaries and not visible to end user.
 	*/
-	this.highlightGravityRadius = 40;
+  this.highlightGravityRadius = 40;
 
 	/*
 	Property: selectedItems
@@ -258,7 +258,7 @@ primitives.orgdiagram.Config = function (name) {
 		<primitives.orgdiagram.Config.onSelectionChanging>
 		<primitives.orgdiagram.Config.onSelectionChanged>
 	*/
-	this.selectedItems = [];
+  this.selectedItems = [];
 
 	/*
 	Property: hasSelectorCheckbox
@@ -278,13 +278,13 @@ primitives.orgdiagram.Config = function (name) {
 		<primitives.orgdiagram.Config.onSelectionChanging>
 		<primitives.orgdiagram.Config.onSelectionChanged>
 	*/
-	this.hasSelectorCheckbox = primitives.common.Enabled.Auto;
+  this.hasSelectorCheckbox = primitives.common.Enabled.Auto;
 
 	/*
 		Property: selectCheckBoxLabel
 			Selection check box label. 
 	*/
-	this.selectCheckBoxLabel = "Selected";
+  this.selectCheckBoxLabel = "Selected";
 
 	/*
 	Property: selectionPathMode
@@ -295,7 +295,7 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		<primitives.common.SelectionPathMode.FullStack>
 	*/
-	this.selectionPathMode = primitives.common.SelectionPathMode.FullStack;
+  this.selectionPathMode = primitives.common.SelectionPathMode.FullStack;
 
 	/*
 	Property: templates
@@ -309,7 +309,7 @@ primitives.orgdiagram.Config = function (name) {
 		<primitives.orgdiagram.Config.defaultTemplateName>
 		<primitives.orgdiagram.ItemConfig.templateName>
 	*/
-	this.templates = [];
+  this.templates = [];
 
 	/*
 		Property: defaultTemplateName
@@ -321,7 +321,7 @@ primitives.orgdiagram.Config = function (name) {
 			<primitives.orgdiagram.TemplateConfig.name>
 			<primitives.orgdiagram.Config.templates>
 	*/
-	this.defaultTemplateName = null;
+  this.defaultTemplateName = null;
 
 	/*
 	Property: hasButtons
@@ -334,7 +334,7 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		<primitives.common.Enabled.Auto>
 	*/
-	this.hasButtons = primitives.common.Enabled.Auto;
+  this.hasButtons = primitives.common.Enabled.Auto;
 
 	/*
 	Property: buttons
@@ -345,7 +345,9 @@ primitives.orgdiagram.Config = function (name) {
 	See also:
 		<primitives.orgdiagram.ButtonConfig>
 	*/
-	this.buttons = [];
+  this.buttons = [];
+
+  this.onButtonsRender = null;
 
 	/*
 	Event: onHighlightChanging
@@ -355,7 +357,7 @@ primitives.orgdiagram.Config = function (name) {
 	See also:
 		<primitives.orgdiagram.EventArgs>
 	*/
-	this.onHighlightChanging = null;
+  this.onHighlightChanging = null;
 
 	/*
 	Event: onHighlightChanged
@@ -364,7 +366,7 @@ primitives.orgdiagram.Config = function (name) {
 	See also:
 		<primitives.orgdiagram.EventArgs>
 	*/
-	this.onHighlightChanged = null;
+  this.onHighlightChanged = null;
 
 	/*
 	Event: onCursorChanging
@@ -374,7 +376,7 @@ primitives.orgdiagram.Config = function (name) {
 	See also:
 		<primitives.orgdiagram.EventArgs>
 	*/
-	this.onCursorChanging = null;
+  this.onCursorChanging = null;
 
 	/*
 	Event: onCursorChanged
@@ -383,7 +385,7 @@ primitives.orgdiagram.Config = function (name) {
 	See also:
 		<primitives.orgdiagram.EventArgs>
 	*/
-	this.onCursorChanged = null;
+  this.onCursorChanged = null;
 
 	/*
 	Event: onSelectionChanging
@@ -392,7 +394,7 @@ primitives.orgdiagram.Config = function (name) {
 	See also:
 		<primitives.orgdiagram.EventArgs>
 	*/
-	this.onSelectionChanging = null;
+  this.onSelectionChanging = null;
 
 	/*
 	Event: onSelectionChanged
@@ -401,7 +403,7 @@ primitives.orgdiagram.Config = function (name) {
 	See also:
 		<primitives.orgdiagram.EventArgs>
 	*/
-	this.onSelectionChanged = null;
+  this.onSelectionChanged = null;
 
 	/*
 	Event: onButtonClick
@@ -410,7 +412,7 @@ primitives.orgdiagram.Config = function (name) {
 	See also:
 		<primitives.orgdiagram.EventArgs>
 	*/
-	this.onButtonClick = null;
+  this.onButtonClick = null;
 
 	/*
 	Event: onMouseClick
@@ -419,7 +421,7 @@ primitives.orgdiagram.Config = function (name) {
 	See also:
 		<primitives.orgdiagram.EventArgs>
 	*/
-	this.onMouseClick = null;
+  this.onMouseClick = null;
 
 	/*
 	Event: onMouseDblClick
@@ -428,7 +430,7 @@ primitives.orgdiagram.Config = function (name) {
 	See also:
 		<primitives.orgdiagram.EventArgs>
 	*/
-	this.onMouseDblClick = null;
+  this.onMouseDblClick = null;
 
 	/*
 	Event: onItemRender
@@ -440,7 +442,7 @@ primitives.orgdiagram.Config = function (name) {
 		<primitives.orgdiagram.TemplateConfig>
 		<primitives.orgdiagram.Config.templates>
 	*/
-	this.onItemRender = null;
+  this.onItemRender = null;
 
 	/*
 	Event: onHighlightRender
@@ -452,7 +454,7 @@ primitives.orgdiagram.Config = function (name) {
 		<primitives.orgdiagram.TemplateConfig>
 		<primitives.orgdiagram.Config.templates>
 	*/
-	this.onHighlightRender = null;
+  this.onHighlightRender = null;
 	/*
 	Event: onCursorRender
 		If user defined custom cursor template for item template 
@@ -463,38 +465,38 @@ primitives.orgdiagram.Config = function (name) {
 		<primitives.orgdiagram.TemplateConfig>
 		<primitives.orgdiagram.Config.templates>
 	*/
-	this.onCursorRender = null;
+  this.onCursorRender = null;
 	/*
 	Property: normalLevelShift
 		Defines interval after level of items in  diagram having items in normal state.
 	*/
-	this.normalLevelShift = 20;
+  this.normalLevelShift = 20;
 	/*
 	Property: dotLevelShift
 		Defines interval after level of items in  diagram having all items in dot state.
 	*/
-	this.dotLevelShift = 20;
+  this.dotLevelShift = 20;
 	/*
 	Property: lineLevelShift
 		Defines interval after level of items in  diagram having items in line state.
 	*/
-	this.lineLevelShift = 10;
+  this.lineLevelShift = 10;
 
 	/*
 	Property: normalItemsInterval
 		Defines interval between items at the same level in  diagram having items in normal state.
 	*/
-	this.normalItemsInterval = 10;
+  this.normalItemsInterval = 10;
 	/*
 	Property: dotItemsInterval
 		Defines interval between items at the same level in  diagram having items in dot state.
 	*/
-	this.dotItemsInterval = 1;
+  this.dotItemsInterval = 1;
 	/*
 	Property: lineItemsInterval
 		Defines interval between items at the same level in  diagram having items in line state.
 	*/
-	this.lineItemsInterval = 2;
+  this.lineItemsInterval = 2;
 
 	/*
 	Property: cousinsIntervalMultiplier
@@ -502,7 +504,7 @@ primitives.orgdiagram.Config = function (name) {
 		So children belonging to different parents have extra gap between them.
 		
 	*/
-	this.cousinsIntervalMultiplier = 5;
+  this.cousinsIntervalMultiplier = 5;
 
 	/*
 	method: update
@@ -534,13 +536,13 @@ primitives.orgdiagram.Config = function (name) {
 		<primitives.common.highestContrast>
 
 	*/
-	this.itemTitleFirstFontColor = primitives.common.Colors.White;
+  this.itemTitleFirstFontColor = primitives.common.Colors.White;
 
 	/*
 	Property: itemTitleSecondFontColor
 	Default template title second font color.
 	*/
-	this.itemTitleSecondFontColor = primitives.common.Colors.Navy;
+  this.itemTitleSecondFontColor = primitives.common.Colors.Navy;
 
 	/*
 		Property: minimizedItemShapeType
@@ -556,20 +558,20 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.common.ShapeType.None>
 	*/
-	this.minimizedItemShapeType = primitives.common.ShapeType.None;
+  this.minimizedItemShapeType = primitives.common.ShapeType.None;
 
 	/*
 	Property: linesColor
 		Connectors lines color. Connectors are basic connections betwen chart items 
 		defining their logical relationships, don't mix with connector annotations. 
 	*/
-	this.linesColor = primitives.common.Colors.Silver;
+  this.linesColor = primitives.common.Colors.Silver;
 
 	/*
 	Property: linesWidth
 		Connectors lines width.
 	*/
-	this.linesWidth = 1;
+  this.linesWidth = 1;
 
 	/*
 	Property: linesType
@@ -578,20 +580,20 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		<primitives.common.LineType.Solid>
 	*/
-	this.linesType = primitives.common.LineType.Solid;
+  this.linesType = primitives.common.LineType.Solid;
 
 	/*
 	Property: highlightLinesColor
 		Connectors highlight line color. Connectors are basic connections betwen chart items 
 		defining their logical relationships, don't mix with connector annotations. 
 	*/
-	this.highlightLinesColor = primitives.common.Colors.Red;
+  this.highlightLinesColor = primitives.common.Colors.Red;
 
 	/*
 	Property: highlightLinesWidth
 		Connectors highlight line width.
 	*/
-	this.highlightLinesWidth = 1;
+  this.highlightLinesWidth = 1;
 
 	/*
 	Property: highlightLinesType
@@ -600,7 +602,7 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		<primitives.common.LineType.Solid>
 	*/
-	this.highlightLinesType = primitives.common.LineType.Solid;
+  this.highlightLinesType = primitives.common.LineType.Solid;
 
 	/*
 		Property: calloutMaximumVisibility
@@ -612,7 +614,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.common.Visibility.Dot>
 	*/
-	this.calloutMaximumVisibility = primitives.common.Visibility.Dot;
+  this.calloutMaximumVisibility = primitives.common.Visibility.Dot;
 
 	/*
 	Property: showCallout
@@ -621,13 +623,13 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		true
 	*/
-	this.showCallout = true;
+  this.showCallout = true;
 
 	/*
 	Property: calloutPlacementOffset
 		Set this property value depending on size and intervals between markers so callout annotation does not overlap neighbouring items of marker it is shown for.
 	*/
-	this.calloutPlacementOffset = 100;
+  this.calloutPlacementOffset = 100;
 
 	/*
 	Property: defaultCalloutTemplateName
@@ -645,85 +647,85 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		null
 	*/
-	this.defaultCalloutTemplateName = null;
+  this.defaultCalloutTemplateName = null;
 
 	/*
 	Property: calloutfillColor
 		Annotation callout fill color.
 	*/
-	this.calloutfillColor = "#000000";
+  this.calloutfillColor = "#000000";
 
 	/*
 	Property: calloutBorderColor
 		Annotation callout border color.
 	*/
-	this.calloutBorderColor = null;
+  this.calloutBorderColor = null;
 
 	/*
 	Property: calloutOffset
 		Annotation callout offset.
 	*/
-	this.calloutOffset = 4;
+  this.calloutOffset = 4;
 
 	/*
 	Property: calloutCornerRadius
 		Annotation callout corner radius.
 	*/
-	this.calloutCornerRadius = 4;
+  this.calloutCornerRadius = 4;
 
 	/*
 	Property: calloutPointerWidth
 		Annotation callout pointer base width.
 	*/
-	this.calloutPointerWidth = "10%";
+  this.calloutPointerWidth = "10%";
 
 	/*
 	Property: calloutLineWidth
 		Annotation callout border line width.
 	*/
-	this.calloutLineWidth = 1;
+  this.calloutLineWidth = 1;
 
 	/*
 	Property: calloutOpacity
 		Annotation callout opacity.
 	*/
-	this.calloutOpacity = 0.2;
+  this.calloutOpacity = 0.2;
 
 	/*
 	Property: childrenPlacementType
 		Defines children placement form.
 	*/
-	this.childrenPlacementType = primitives.common.ChildrenPlacementType.Horizontal;
+  this.childrenPlacementType = primitives.common.ChildrenPlacementType.Horizontal;
 
 	/*
 	Property: leavesPlacementType
 		Defines leaves placement form. Leaves are children having no sub children.
 	*/
-	this.leavesPlacementType = primitives.common.ChildrenPlacementType.Horizontal;
+  this.leavesPlacementType = primitives.common.ChildrenPlacementType.Horizontal;
 
 	/*
 	Property: maximumColumnsInMatrix
 		Maximum number of columns for matrix leaves layout. Leaves are children having no sub children.
 	*/
-	this.maximumColumnsInMatrix = 6;
+  this.maximumColumnsInMatrix = 6;
 
 	/*
 	Property: buttonsPanelSize
 		User buttons panel size.
 	*/
-	this.buttonsPanelSize = 28;
+  this.buttonsPanelSize = 28;
 
 	/*
 	Property: groupTitlePanelSize
 		Group title panel size.
 	*/
-	this.groupTitlePanelSize = 24;
+  this.groupTitlePanelSize = 24;
 
 	/*
 	Property: checkBoxPanelSize
 		Selection check box panel size.
 	*/
-	this.checkBoxPanelSize = 24;
+  this.checkBoxPanelSize = 24;
 
 	/*
 	Property: groupTitlePlacementType
@@ -732,7 +734,7 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		<primitives.common.AdviserPlacementType.Left>
 	*/
-	this.groupTitlePlacementType = primitives.common.AdviserPlacementType.Left;
+  this.groupTitlePlacementType = primitives.common.AdviserPlacementType.Left;
 
 	/*
 		Property: groupTitleOrientation
@@ -741,7 +743,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.text.TextDirection.Auto>
 	*/
-	this.groupTitleOrientation = primitives.text.TextOrientationType.RotateRight;
+  this.groupTitleOrientation = primitives.text.TextOrientationType.RotateRight;
 
 	/*
 		Property: groupTitleVerticalAlignment
@@ -750,7 +752,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.common.VerticalAlignmentType.Center>
 	*/
-	this.groupTitleVerticalAlignment = primitives.common.VerticalAlignmentType.Middle;
+  this.groupTitleVerticalAlignment = primitives.common.VerticalAlignmentType.Middle;
 
 	/*
 		Property: groupTitleHorizontalAlignment
@@ -759,7 +761,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.common.HorizontalAlignmentType.Center>
 	*/
-	this.groupTitleHorizontalAlignment = primitives.common.HorizontalAlignmentType.Center;
+  this.groupTitleHorizontalAlignment = primitives.common.HorizontalAlignmentType.Center;
 
 	/*
 		Property: groupTitleFontSize
@@ -768,7 +770,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			15
 	*/
-	this.groupTitleFontSize = "12px";
+  this.groupTitleFontSize = "12px";
 
 	/*
 		Property: groupTitleFontFamily
@@ -777,7 +779,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			"Arial"
 	*/
-	this.groupTitleFontFamily = "Arial";
+  this.groupTitleFontFamily = "Arial";
 
 	/*
 		Property: groupTitleColor
@@ -786,7 +788,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			<primitives.common.Colors.Black>
 	*/
-	this.groupTitleColor = primitives.common.Colors.RoyalBlue;
+  this.groupTitleColor = primitives.common.Colors.RoyalBlue;
 
 	/*
 		Property: groupTitleFontWeight
@@ -795,7 +797,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			"normal"
 	*/
-	this.groupTitleFontWeight = "normal";
+  this.groupTitleFontWeight = "normal";
 
 	/*
 		Property: groupTitleFontStyle
@@ -804,28 +806,28 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			"normal"
 	*/
-	this.groupTitleFontStyle = "normal";
+  this.groupTitleFontStyle = "normal";
 
 
-	this.distance = 3;
+  this.distance = 3;
 
 	/*
 	Property: scale
 		CSS3 scale transform.
 	*/
-	this.scale = 1;
+  this.scale = 1;
 
 	/*
 	Property: minimumScale
 		Minimum CSS3 scale transform.
 	*/
-	this.minimumScale = 0.5;
+  this.minimumScale = 0.5;
 
 	/*
 	Property: maximumScale
 		Maximum CSS3 scale transform.
 	*/
-	this.maximumScale = 2;
+  this.maximumScale = 2;
 
 	/*
 	Property: showLabels
@@ -851,7 +853,7 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		<primitives.common.Enabled.Auto>
 	*/
-	this.showLabels = primitives.common.Enabled.Auto;
+  this.showLabels = primitives.common.Enabled.Auto;
 
 	/*
 	Property: labelSize
@@ -861,7 +863,7 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		new <primitives.common.Size>(80, 24);
 	*/
-	this.labelSize = new primitives.common.Size(80, 24);
+  this.labelSize = new primitives.common.Size(80, 24);
 
 	/*
 	Property: labelOffset
@@ -870,7 +872,7 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		1;
 	*/
-	this.labelOffset = 1;
+  this.labelOffset = 1;
 
 	/*
 	Property: labelOrientation
@@ -882,7 +884,7 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		<primitives.text.TextOrientationType.Horizontal>
 	*/
-	this.labelOrientation = primitives.text.TextOrientationType.Horizontal;
+  this.labelOrientation = primitives.text.TextOrientationType.Horizontal;
 
 	/*
 	Property: labelPlacement
@@ -895,7 +897,7 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		<primitives.common.PlacementType.Top>
 	*/
-	this.labelPlacement = primitives.common.PlacementType.Top;
+  this.labelPlacement = primitives.common.PlacementType.Top;
 
 	/*
 		Property: labelFontSize
@@ -904,7 +906,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			10px
 	*/
-	this.labelFontSize = "10px";
+  this.labelFontSize = "10px";
 
 	/*
 		Property: labelFontFamily
@@ -913,7 +915,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			"Arial"
 	*/
-	this.labelFontFamily = "Arial";
+  this.labelFontFamily = "Arial";
 
 	/*
 		Property: labelColor
@@ -922,7 +924,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			primitives.common.Colors.Black
 	*/
-	this.labelColor = primitives.common.Colors.Black;
+  this.labelColor = primitives.common.Colors.Black;
 
 	/*
 		Property: labelFontWeight
@@ -931,7 +933,7 @@ primitives.orgdiagram.Config = function (name) {
 		Default:
 			"normal"
 	*/
-	this.labelFontWeight = "normal";
+  this.labelFontWeight = "normal";
 
 	/*
 	Property: labelFontStyle
@@ -940,7 +942,7 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		"normal"
 	*/
-	this.labelFontStyle = "normal";
+  this.labelFontStyle = "normal";
 
 	/*
 	Property: enablePanning
@@ -950,7 +952,7 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		true
 	*/
-	this.enablePanning = true;
+  this.enablePanning = true;
 
 	/*
 	Property: autoSizeMinimum
@@ -958,7 +960,7 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		new <primitives.common.Size>(800, 600);
 	*/
-	this.autoSizeMinimum = new primitives.common.Size(800, 600);
+  this.autoSizeMinimum = new primitives.common.Size(800, 600);
 
 	/*
 	Property: autoSizeMaximum
@@ -966,5 +968,5 @@ primitives.orgdiagram.Config = function (name) {
 	Default:
 		new <primitives.common.Size>(1024, 768);
 	*/
-	this.autoSizeMaximum = new primitives.common.Size(1024, 768);
+  this.autoSizeMaximum = new primitives.common.Size(1024, 768);
 };

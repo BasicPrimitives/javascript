@@ -1,29 +1,44 @@
 ﻿primitives.common.ValueReader = function (acceptedTypes, isNullable, defaultValue) {
-	this.acceptedTypes = acceptedTypes;
-	this.isNullable = isNullable;
-	this.defaultValue = defaultValue;
+  this.acceptedTypes = acceptedTypes;
+  this.isNullable = isNullable;
+  this.defaultValue = defaultValue;
 
-	this.hash = {};
+  this.hash = {};
 
-	/* collect valid enumeration values */
-	for (var index = 0; index < acceptedTypes.length; index += 1) {
-		var acceptedType = acceptedTypes[index];
-		this.hash[acceptedType] = true;
-	}
+  /* collect valid enumeration values */
+  for (var index = 0; index < acceptedTypes.length; index += 1) {
+    var acceptedType = acceptedTypes[index];
+    this.hash[acceptedType] = true;
+  }
 };
 
+primitives.common.ValueReader.prototype.stringify = function (target) {
+  var processed = [];
+  var result = JSON.stringify(target, function (key, value) {
+    if (value !== null && typeof value == "object") {
+      if (processed.indexOf(value) == -1) {
+        processed.push(value);
+        return value;
+      }
+      return null;
+    }
+    return value;
+  });
+  return result;
+}
+
 primitives.common.ValueReader.prototype.read = function (target, source, path, context) {
-	var result = null;
+  var result = null;
 
-	if (source === null || typeof source == "undefined" || !this.hash.hasOwnProperty(typeof source)) {
-		source = this.isNullable ? null : this.defaultValue;
-	}
+  if (source === null || typeof source == "undefined" || !this.hash.hasOwnProperty(typeof source)) {
+    source = this.isNullable ? null : this.defaultValue;
+  }
 
-	result = source;
+  result = source;
 
-	if (JSON.stringify(target) !== JSON.stringify(source)) {
-		context.isChanged = true;
-	}
+  if (this.stringify(target) !== this.stringify(source)) {
+    context.isChanged = true;
+  }
 
-	return result;
+  return result;
 };

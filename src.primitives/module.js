@@ -1,5 +1,5 @@
 ﻿/**
- * @preserve Basic Primitives Diagram v5.3.1
+ * @preserve Basic Primitives Diagrams v5.4.0
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free

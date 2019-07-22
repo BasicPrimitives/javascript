@@ -2,7 +2,7 @@
 
 /* /common/init.js*/
 /**
- * @preserve jQuery Widgets for Basic Primitives Diagram v5.2.4
+ * @preserve jQuery Widgets for Basic Primitives Diagrams v5.4.0
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -216,19 +216,21 @@ primitives.orgdiagram.Widget.prototype._readOptions = function (options) {
  *	jquery.ui.widget.js
  */
 if (typeof jQuery != "undefined") {
-	(function ($) {
-		$.widget("ui.orgDiagram", new primitives.orgdiagram.Widget(primitives.orgdiagram.Config, primitives.orgdiagram.TaskManagerFactory, primitives.orgdiagram.EventArgsFactory, {
-			AnnotationLabelTemplate: primitives.common.AnnotationLabelTemplate,
-			ButtonsTemplate: primitives.common.jQueryButtonsTemplate,
-			CheckBoxTemplate: primitives.common.CheckBoxTemplate,
-			CursorTemplate: primitives.common.CursorTemplate,
-			DotHighlightTemplate: primitives.common.DotHighlightTemplate,
-			GroupTitleTemplate: primitives.common.GroupTitleTemplate,
-			HighlightTemplate: primitives.common.HighlightTemplate,
-			ItemTemplate: primitives.common.ItemTemplate,
-			UserTemplate: primitives.common.UserTemplate
-		}));
-	}(jQuery));
+  (function ($) {
+    $.widget("ui.orgDiagram", new primitives.orgdiagram.Widget(primitives.orgdiagram.Config, primitives.orgdiagram.TaskManagerFactory, primitives.orgdiagram.EventArgsFactory, {
+      AnnotationLabelTemplate: primitives.common.AnnotationLabelTemplate,
+      ButtonsTemplate: primitives.common.jQueryButtonsTemplate,
+      CheckBoxTemplate: primitives.common.CheckBoxTemplate,
+      CursorTemplate: primitives.common.CursorTemplate,
+      DotHighlightTemplate: primitives.common.DotHighlightTemplate,
+      GroupTitleTemplate: primitives.common.GroupTitleTemplate,
+      HighlightTemplate: primitives.common.HighlightTemplate,
+      ItemTemplate: primitives.common.ItemTemplate,
+      UserTemplate: primitives.common.UserTemplate,
+      /* famDiagram specific templates */
+      LabelAnnotationTemplate: primitives.common.LabelAnnotationTemplate
+    }));
+  }(jQuery));
 }; //ignore jslint
 
 /* /callout/configs/Config.js*/

@@ -1,7 +1,6 @@
 # [Basic Primitives](https://www.basicprimitives.com) Diagrams for JavaScript
 
-Data visualization components library implements organizational chart and multi-parent dependency diagrams. 
-Library contains implementations of JavaScript Controls and PDF rendering plugins.
+Data visualization components library that implements organizational chart and multi-parent dependency diagrams, contains implementations of JavaScript Controls and PDF rendering plugins.
 
 
 ## Supported Diagrams

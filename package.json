@@ -1,4 +1,7 @@
 {
+  "homepage": "https://www.basicprimitives.com/",
+  "author": "Basic Primitives Inc. <support@basicprimitives.com> (https://www.basicprimitives.com)",
+  "license": "SEE LICENSE IN license.pdf",
   "scripts": {
     "src.primitives.merge": "node merge.js src.primitives\\src.primitives.json",
     "src.primitives.compile": "compiler.jar --js=min\\primitives.latest.js --js_output_file=min\\primitives.min.js",
@@ -9,5 +12,10 @@
   },
   "dependencies": {
     "eslint": "^5.15.1"
+  },
+  "description": "Basic Primitives Diagrams for JavaScript - data visualization components library that implements organizational chart and multi-parent dependency diagrams, contains implementations of JavaScript Controls and PDF rendering plugins.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BasicPrimitives/javascript"
   }
 }

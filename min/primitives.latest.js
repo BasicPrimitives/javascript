@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagrams v5.4.0
+ * @preserve Basic Primitives Diagrams v5.4.14
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -27,7 +27,7 @@
 /* /common/init.js*/
 var primitives = {
   common: {
-    version: "5.4.0"
+    version: "5.4.14"
   },
   orgdiagram: {},
   famdiagram: {},
@@ -6818,6 +6818,9 @@ primitives.common.ValueReader = function (acceptedTypes, isNullable, defaultValu
 primitives.common.ValueReader.prototype.stringify = function (target) {
   var processed = [];
   var result = JSON.stringify(target, function (key, value) {
+    if(key[0] === '_') {
+      return null;
+    }
     if (value !== null && typeof value == "object") {
       if (processed.indexOf(value) == -1) {
         processed.push(value);

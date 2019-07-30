@@ -15,6 +15,9 @@
 primitives.common.ValueReader.prototype.stringify = function (target) {
   var processed = [];
   var result = JSON.stringify(target, function (key, value) {
+    if(key[0] === '_') {
+      return null;
+    }
     if (value !== null && typeof value == "object") {
       if (processed.indexOf(value) == -1) {
         processed.push(value);

@@ -1,3 +1,5 @@
+[![npm packge](https://img.shields.io/npm/v/basicprimitives.svg?label=basicprimitives)](https://www.npmjs.com/package/basicprimitives)
+
 # [Basic Primitives](https://www.basicprimitives.com) Diagrams for JavaScript
 
 Data visualization components library that implements organizational chart and multi-parent dependency diagrams, contains implementations of JavaScript Controls and PDF rendering plugins.

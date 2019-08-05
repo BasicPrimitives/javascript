@@ -2,7 +2,13 @@ primitives.common.DotHighlightTemplate = function (options, itemTemplateConfig) 
 	var _template = create(itemTemplateConfig);
 
 	function create(config) {
-		var radius = config.minimizedItemCornerRadius + config.highlightPadding.left;
+		var radius = config.minimizedItemCornerRadius;
+		if(radius == null) {
+			radius = Math.max(
+				config.highlightPadding.left + config.minimizedItemSize.width + config.highlightPadding.right,
+				config.highlightPadding.top + config.minimizedItemSize.height + config.highlightPadding.bottom
+			) + config.highlightBorderWidth; 
+		}
 		return ["div",
 				{
 					"style": {

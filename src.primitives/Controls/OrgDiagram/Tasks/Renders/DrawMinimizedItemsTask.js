@@ -73,7 +73,7 @@ primitives.orgdiagram.DrawMinimizedItemsTask = function (getGraphics, createTran
 								if (minimizedItemShapeType == null) {
 									minimizedItemShapeType = (templateConfig.minimizedItemShapeType !== null ? templateConfig.minimizedItemShapeType : _options.minimizedItemShapeType);
 								}
-								minimizedItemCornerRadius = templateConfig.minimizedItemCornerRadius === null ? templateConfig.minimizedItemSize.width / 2.0 : templateConfig.minimizedItemCornerRadius;
+								minimizedItemCornerRadius = templateConfig.minimizedItemCornerRadius === null ? templateConfig.minimizedItemSize.width : templateConfig.minimizedItemCornerRadius;
 
 								if (minimizedItemShapeType == null || minimizedItemShapeType == primitives.common.ShapeType.None) {
 									polyline = markers.getPolyline(new primitives.common.PaletteItem({

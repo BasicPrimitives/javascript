@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagrams v5.4.14
+ * @preserve Basic Primitives Diagrams v5.4.15
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -27,7 +27,7 @@
 /* /common/init.js*/
 var primitives = {
   common: {
-    version: "5.4.14"
+    version: "5.4.15"
   },
   orgdiagram: {},
   famdiagram: {},
@@ -18583,23 +18583,23 @@ primitives.orgdiagram.DrawHighlightTask = function (getGraphics, createTranfromT
 						, template.highlightTemplate.getHashCode()
 						, template.highlightTemplate.render
 						, uiHash
-						, null
+						, { "borderWidth": templateConfig.highlightBorderWidth }
 						);
 				} else {
 					element = _graphics.template(
-						x
-						, y
-						, width
-						, height
-						, position.x
-						, position.y
-						, position.width - 1
-						, position.height - 1
+						Math.round(x)
+						, Math.round(y)
+						, Math.round(width)
+						, Math.round(height)
+						, Math.round(position.x)
+						, Math.round(position.y)
+						, Math.round(position.width)
+						, Math.round(position.height)
 						, template.dotHighlightTemplate.template()
 						, template.dotHighlightTemplate.getHashCode()
 						, template.dotHighlightTemplate.render
 						, uiHash
-						, null
+						, { "borderWidth": templateConfig.highlightBorderWidth }
 						);
 				}
 			});
@@ -19093,7 +19093,7 @@ primitives.orgdiagram.DrawMinimizedItemsTask = function (getGraphics, createTran
 								if (minimizedItemShapeType == null) {
 									minimizedItemShapeType = (templateConfig.minimizedItemShapeType !== null ? templateConfig.minimizedItemShapeType : _options.minimizedItemShapeType);
 								}
-								minimizedItemCornerRadius = templateConfig.minimizedItemCornerRadius === null ? templateConfig.minimizedItemSize.width / 2.0 : templateConfig.minimizedItemCornerRadius;
+								minimizedItemCornerRadius = templateConfig.minimizedItemCornerRadius === null ? templateConfig.minimizedItemSize.width : templateConfig.minimizedItemCornerRadius;
 
 								if (minimizedItemShapeType == null || minimizedItemShapeType == 6/*primitives.common.ShapeType.None*/) {
 									polyline = markers.getPolyline(new primitives.common.PaletteItem({
@@ -22392,7 +22392,13 @@ primitives.common.DotHighlightTemplate = function (options, itemTemplateConfig) 
 	var _template = create(itemTemplateConfig);
 
 	function create(config) {
-		var radius = config.minimizedItemCornerRadius + config.highlightPadding.left;
+		var radius = config.minimizedItemCornerRadius;
+		if(radius == null) {
+			radius = Math.max(
+				config.highlightPadding.left + config.minimizedItemSize.width + config.highlightPadding.right,
+				config.highlightPadding.top + config.minimizedItemSize.height + config.highlightPadding.bottom
+			) + config.highlightBorderWidth; 
+		}
 		return ["div",
 				{
 					"style": {

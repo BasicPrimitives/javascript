@@ -1,3 +1,9 @@
+#### Version 5.4.15
+* Fixed minimised items highlight alignment in React  
+#### Version 5.4.14
+* Fixed objects comparison for React JSX 
+#### Version 5.4.12
+* Removed CSS file from React component
 #### Version 5.4.0
 * Added OrgDiagram & FamDiagram React components and samples.
 * Extracted platform specific functionality out of core.

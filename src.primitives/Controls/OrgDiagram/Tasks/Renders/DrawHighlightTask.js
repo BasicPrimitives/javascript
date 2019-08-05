@@ -56,23 +56,23 @@ primitives.orgdiagram.DrawHighlightTask = function (getGraphics, createTranfromT
 						, template.highlightTemplate.getHashCode()
 						, template.highlightTemplate.render
 						, uiHash
-						, null
+						, { "borderWidth": templateConfig.highlightBorderWidth }
 						);
 				} else {
 					element = _graphics.template(
-						x
-						, y
-						, width
-						, height
-						, position.x
-						, position.y
-						, position.width - 1
-						, position.height - 1
+						Math.round(x)
+						, Math.round(y)
+						, Math.round(width)
+						, Math.round(height)
+						, Math.round(position.x)
+						, Math.round(position.y)
+						, Math.round(position.width)
+						, Math.round(position.height)
 						, template.dotHighlightTemplate.template()
 						, template.dotHighlightTemplate.getHashCode()
 						, template.dotHighlightTemplate.render
 						, uiHash
-						, null
+						, { "borderWidth": templateConfig.highlightBorderWidth }
 						);
 				}
 			});

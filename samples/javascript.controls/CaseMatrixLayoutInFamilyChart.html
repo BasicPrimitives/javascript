@@ -38,6 +38,15 @@
       options.arrowsDirection = primitives.common.GroupByType.Children;
       options.pageFitMode = primitives.common.PageFitMode.None;
 
+      /* Intervals */
+      options.normalLevelShift = 20;
+      options.dotLevelShift = 16;
+      options.lineLevelShift = 10;
+      options.normalItemsInterval = 20;
+      options.dotItemsInterval = 10;
+      options.lineItemsInterval = 5;
+      options.cousinsIntervalMultiplier = 5;
+
       control = primitives.famdiagram.Control(document.getElementById('basicdiagram'), options);
     });
 

@@ -1,14 +1,14 @@
-# Adding new items to chart at runtime
+# Changing API Properties and Updating Diagrams
 
-Chart is designed to update only visual elements effected by the scope of changed API options. For example on screen annotations are being rendered on top of everything, so when we make changes to on-screen annotations definitions there is no need to redraw all chart elements. The same applies to other visual elements, chart compares current copy of definitions to the new one on API and in case of any changes it triggers rendering cycle for effected scope of visual elements.
+Our diagrams are designed to only update the visual elements that undergo changes in the API options. For example on screen annotations are being rendered on top of everything. So when we make changes to the on-screen annotations and their definitions, there is no need to rerender all of the chart elements. The same applies to all of the other visual elements. The diagram updates/edits are done by comparing the current copy of the definitions to the new ones in the API. If any changes are detected, the control triggers the rendering cycle for the effected scope of visual elements.
 
-Chart does not track individual items, if we make changes in one of the items then the whole collection of items is considered to be changed, so control will layout again all items in diagram. So adding or removing individual item to items collection, does not improve rendering performance. In order to find changes in items collection widget scans all items on every refresh cycle. The chart was designed to be used in modern UI frameworks like AngularJS, so end user may change all API properties on every update, the control will check for changed properties only and make visual updates in the scope of changed properties. The point of this statement is that if we assign new items array to items property, but we make no changes to actual items, chart will not perform any layout calculations and rendering. So usage of collection bindings in Modern UI frameworks is absolutely fine.
+The rendering engine does not track individual items. If we make changes to one of the items, then the whole collection of items is considered to be changed. As a result the component will rerender the entire diagram. So adding or removing an individual item from an items collection does not improve the rendering performance. In order to find changes in an items collection, widget scans all of the items during every refresh cycle. The chart was designed to be used in modern UI frameworks like AngularJS. So the end user may change/edit all of the API properties with every update. The control will also check for any changed properties and make the desired visual updates. The point of this statement is that; when we assign a new items array to the `items` collection property without making any changes to said items. The chart will not perform any layout calculations or rendering. So the usage of collection bindings in Modern UI frameworks is absolutely fine and is compatible with our product.
 
-Please, pay attention that chart does not update its visual representation on every property change and it does not make any guesses about required changes. Chart provides "update" method triggering reevaluation of API properties and rendering cycle. This "update" method is supposed to be explicitly called when all properties are set on chart's API. That means that opposite is true and it is possible to set individual chart properties one by one via sequential API calls. All these changes to API properties will not trigger any layout changes or rendering till method "update" is called.
+Please, pay attention to the fact that the chart does not self update it's visual representation when you change it's API properties. Instead the chart provides an `update` method, that triggers the reevaluation of the API properties and the rendering cycle. This `update` method is supposed to be explicitly called when all of the properties are set on the control's API. It is also possible to set individual chart properties one by one via sequential API calls. All these changes to API properties will not trigger any layout changes or rendering until the method: `update` is called.
 
-The "update" method supports optional parameter which let you choose how you want to redraw your diagram.
+The `update` method supports multiple optional parameters which allow you to choose how you want to rerender your diagram.
 
-## JavaScript
+## In [JavaScript](https://developer.mozilla.org/en-US/docs/Web/javascript): 
 ```Javascript
 control.update(primitives.orgdiagram.UpdateMode.Recreate);
 ```
@@ -25,11 +25,11 @@ control.update(primitives.orgdiagram.UpdateMode.PositonHighlight);
 ```
 It ignores any API changes except current highlight item position, it just positions highlight item, no layout recalculation or items rendering performed.
 
-## jQuery
+## In [jQuery](https://jqueryui.com/):
 ```Javascript
-jQuery("#basicdiagram").orgDiagram("update", primitives.orgdiagram.UpdateMode.Recreate); /* Recreate */
-jQuery("#placeholder").orgDiagram("update", primitives.orgdiagram.UpdateMode.Refresh); /* Refresh */
-jQuery("#placeholder").orgDiagram("update", primitives.orgdiagram.UpdateMode.PositonHighlight); /* Highlight placement */
+jQuery("#basicdiagram").orgDiagram(`update`, primitives.orgdiagram.UpdateMode.Recreate); /* Recreate */
+jQuery("#placeholder").orgDiagram(`update`, primitives.orgdiagram.UpdateMode.Refresh); /* Refresh */
+jQuery("#placeholder").orgDiagram(`update`, primitives.orgdiagram.UpdateMode.PositonHighlight); /* Highlight placement */
 ```
 The following example demonstrates adding new items to organizational chart at run time, or in other words this sample does not recreate control every time we make changes to its items collection. It uses fast refresh mode to update its layout. This example adds "delete" and "add" buttons and implements onButtonClick event handler for adding and removing items. For more complex implementation of chart editing functionality see chart editor demo.
 

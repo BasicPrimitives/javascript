@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html style="height: 95%">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Basic Primitives Diagrams PDFKit Plugin Matrix Children Layout Demo</title>
+
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <!-- PDFkit & Libs -->
+  <script src="../../packages/pdfkit/pdfkit.js"></script>
+  <script src="../../packages/pdfkit/blob-stream.js"></script>
+
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="../data/editordata.js"></script>
+  <!-- Demo Images -->
+  <script src="../data/photos.js"></script>
+
+  <script type='text/javascript'>
+    var control;
+    var timer = null;
+
+    function getUserData(data) {
+      var index, len;
+      for (index = 0, len = data.length; index < len; index += 1) {
+        var item = data[index];
+        var imageName = (item.image.match(/.*(.+?)\.png/m) || [])[1];
+        item.image = photos[imageName];
+      }
+      return data
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var sample3 = primitives.pdf.orgdiagram.Plugin({
+        items: (getUserData(data)),
+        cursorItem: null,
+        hasSelectorCheckbox: primitives.common.Enabled.False,
+        /* Layout */
+        pageFitMode: primitives.common.PageFitMode.FitToPage,
+        orientationType: primitives.common.OrientationType.Top,
+        verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
+        horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+        childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+        leavesPlacementType: primitives.common.ChildrenPlacementType.Matrix,
+        maximumColumnsInMatrix: 6,
+        minimalVisibility: primitives.common.Visibility.Dot,
+        selectionPathMode: primitives.common.SelectionPathMode.FullStack,
+
+        hasButtons: primitives.common.Enabled.Auto,
+        hasSelectorCheckbox: primitives.common.Enabled.True,
+        selectCheckBoxLabel: "Selected",
+        itemTitleFirstFontColor: primitives.common.Colors.White,
+        itemTitleSecondFontColor: primitives.common.Colors.White,
+        buttonsPanelSize: 28,
+        checkBoxPanelSize: 24,
+
+        /* group title options */
+        groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
+        groupTitlePanelSize: 24,
+        groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
+        groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
+        groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+        groupTitleFontSize: "12px",
+        groupTitleFontFamily: "Arial",
+        groupTitleColor: primitives.common.Colors.RoyalBlue,
+        groupTitleFontWeight: "normal",
+        groupTitleFontStyle: "normal",
+
+        /* Intervals */
+        normalLevelShift: 20,
+        dotLevelShift: 16,
+        lineLevelShift: 10,
+        normalItemsInterval: 20,
+        dotItemsInterval: 10,
+        lineItemsInterval: 5,
+        cousinsIntervalMultiplier: 5,
+
+        /* Connectors */
+        arrowsDirection: primitives.common.GroupByType.None,
+        showExtraArrows: false,
+        extraArrowsMinimumSpace: 30,
+        connectorType: primitives.common.ConnectorType.Squared,
+        elbowType: primitives.common.ElbowType.None,
+        bevelSize: 4,
+        elbowDotSize: 4,
+        linesType: primitives.common.LineType.Solid,
+        linesColor: primitives.common.Colors.Silver,
+        linesWidth: 1,
+
+        /* Labels */
+        showLabels: primitives.common.Enabled.True,
+        labelSize: new primitives.common.Size(10, 24),
+        labelOrientation: primitives.text.TextOrientationType.Horizontal,
+        labelPlacement: primitives.common.PlacementType.Top,
+        labelOffset: 1,
+        labelFontSize: "10px",
+        labelFontFamily: "Arial",
+        labelColor: primitives.common.Colors.Black,
+        labelFontWeight: "normal",
+        labelFontStyle: "normal",
+
+        /* Callout */
+        calloutMaximumVisibility: primitives.common.Visibility.Dot,
+        showCallout: "true",
+        calloutPlacementOffset: 100,
+        calloutfillColor: "#000000",
+        calloutBorderColor: null,
+        calloutOffset: 4,
+        calloutCornerRadius: 4,
+        calloutPointerWidth: "10%",
+        calloutLineWidth: 1,
+        calloutOpacity: 0.2,
+
+        /* Interactivity */
+        navigationMode: primitives.common.NavigationMode.Default,
+        highlightGravityRadius: 40,
+        enablePanning: true,
+
+        /* Graphics */
+        graphicsType: primitives.common.GraphicsType.SVG,
+
+        scale: 1.0
+      });
+
+      var sample3size = sample3.getSize();
+
+      var doc = new PDFDocument({ size: [sample3size.width + 100, sample3size.height + 150] });
+      var stream = doc.pipe(blobStream());
+
+      doc.save();
+
+      // draw some text
+      doc.fontSize(25)
+        .text('Basic Primitives Diagrams PDFKit Plugin Matrix Children Layout Demo', 50, 50);
+
+      sample3.draw(doc, 50, 100);
+
+      doc.restore();
+
+      doc.end();
+
+      stream.on('finish', function () {
+        var string = stream.toBlobURL('application/pdf');
+        document.getElementById("previewpanel").setAttribute("src", string);
+      });
+    });
+
+  </script>
+</head>
+
+<body style="height: 100%">
+  <div id="basicdiagram" style="width: 100%; height: 100%; border-style: none; border-width: 0px;">
+    <iframe id="previewpanel" type="application/pdf" width="100%" height="100%" frameborder="0"
+      style="position:relative;z-index:999">
+    </iframe>
+  </div>
+</body>
+
+</html>

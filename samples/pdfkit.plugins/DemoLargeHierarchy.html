@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html style="height: 95%">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Basic Primitives Diagrams PDFKit Plugin Large Hierarchy Demo</title>
+
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <!-- PDFkit & Libs -->
+  <script src="../../packages/pdfkit/pdfkit.js"></script>
+  <script src="../../packages/pdfkit/blob-stream.js"></script>
+  <script type="text/javascript" src="../data/largedataset.js"></script>
+
+  <!-- Demo Images -->
+  <script src="../data/photos.js"></script>
+
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+    var control;
+    var timer = null;
+
+    function getUserData(data) {
+      var index, len;
+      for (index = 0, len = data.length; index < len; index += 1) {
+        var item = data[index];
+        var imageName = (item.image.match(/.*(.+?)\.png/m) || [])[1];
+        item.image = photos[imageName];
+      }
+      return data
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var sample3 = primitives.pdf.orgdiagram.Plugin({
+        items: (getUserData(data)),
+        cursorItem: null,
+        hasSelectorCheckbox: primitives.common.Enabled.False
+      });
+
+      var sample3size = sample3.getSize();
+
+      var doc = new PDFDocument({ size: [sample3size.width + 100, sample3size.height + 150] });
+      var stream = doc.pipe(blobStream());
+
+      doc.save();
+
+      // draw some text
+      doc.fontSize(25)
+        .text('Basic Primitives Diagrams PDFKit Plugin Large Hierarchy Demo', 50, 50);
+
+      sample3.draw(doc, 50, 100);
+
+      doc.restore();
+
+      doc.end();
+
+      stream.on('finish', function () {
+        var string = stream.toBlobURL('application/pdf');
+        document.getElementById("previewpanel").setAttribute("src", string);
+      });
+    });
+
+  </script>
+</head>
+
+<body style="height: 100%">
+  <div id="basicdiagram" style="width: 100%; height: 100%; border-style: none; border-width: 0px;">
+    <iframe id="previewpanel" type="application/pdf" width="100%" height="100%" frameborder="0"
+      style="position:relative;z-index:999">
+    </iframe>
+  </div>
+</body>
+
+</html>

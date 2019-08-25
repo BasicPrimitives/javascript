@@ -1,20 +1,20 @@
 # Custom Placement of Children
-## Adviser & Assistant Item Types
+## Adviser & Assistant Item Types:
 
-Organizational Chart items are defined in form of regular tree, so every item may have only one parent in hierarchy. This is conceptually easy to understand for end user who edits organizational chart and software devloper to maintain required structures in database and in application.
+Organizational Charts are structured in the form of a regular tree. This means that every node can only have one logical parent in the hierarchy. This makes the organizational chart conceptually easy to work with for the end user who edits the organizational chart and for the software developer that has to maintain the required structures in the database and in the application.
 
-In the reality pure hierarchical relations are rare, so organizational chart provides means to represent none hierarchical realations in form of item types and on-screen annotations.
+In reality, pure hierarchical relations are rare. So in our organizational chart we provide the means to represent non-hierarchical realations in form of diffrent item types and on-screen annotations.
 
-Chart supports following itemType's:
+The chart is able to represent the following child positions in diagram layout relative to parent node:
 
-* Regular,
-* Adviser,
-* Assistant,
-* SubAdviser,
-* SubAssistant,
-* GeneralPartner,
-* LimitedPartner
-* AdviserPartner.
+* Regular
+* Adviser
+* Assistant
+* Sub Adviser
+* Sub Assistant
+* General Partner
+* Limited Partner
+* Adviser Partner
 
 All of them affect child placement relative to its parent in hierarchy. The following example demonstrates  Adviser and Assistant types. Adviser item placed at the same level as its parent and connected to it horizontally. Assistant item is placed at level between parent and its regular children and horizontally connected to connection line between parent and its children as well.
 

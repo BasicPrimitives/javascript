@@ -1,8 +1,19 @@
+/**
+ * Creates graph structure
+ * 
+ * @returns {graph} Returns graph object
+ */
 primitives.common.graph = function () {
 	var _edges = {},
 		MAXIMUMTOTALWEIGHT = 1,
 		MINIMUMWEIGHT = 2;
 
+	/**
+	 * Adds edge to the graph
+	 * @param {string} from The id of the start node 
+	 * @param {string} to The id of the end node
+	 * @param {object} edge The edge contextual object
+	 */
 	function addEdge(from, to, edge) {
 		if ((_edges[from] == null || _edges[from][to] == null)  && edge != null) {
 
@@ -18,6 +29,13 @@ primitives.common.graph = function () {
 		}
 	}
 
+	/**
+	 * Returns edge context object
+	 * 
+	 * @param {string} from The edge's from node id
+	 * @param {string} to The edge's to node id
+	 * @returns {object} The edge's context object
+	 */
 	function edge(from, to) {
 		var result = null;
 		if (_edges[from] != null && _edges[from][to]) {
@@ -26,11 +44,32 @@ primitives.common.graph = function () {
 		return result;
 	}
 
+	/**
+	 * Returns true if node exists in the graph
+	 * 
+	 * @param {string} from The node id
+	 * @returns {boolean} Returns true if node exists
+	 */
 	function hasNode(from) {
 		return _edges.hasOwnProperty(from);
 	}
 
-	function loopNodeEdges(thisArg, itemid, onEdge) { // onEdge = function(to, edge) {}
+	/**
+	 * Callback for itterating edges of the graph's node
+	 * 
+	 * @callback onEdgeCallback
+	 * @param {string} to The neighbouring node id
+	 * @param {Object} edge The edge's context object
+	 */
+
+	/**
+	 * Loop edges of the node
+	 * 
+	 * @param {object} thisArg The callback function invocation context
+	 * @param {string} itemid The node id
+	 * @param {onEdgeCallback} onEdge A callback function to call for every edge of the node
+	 */
+	function loopNodeEdges(thisArg, itemid, onEdge) {
 		var neighbours, neighbourKey;
 		if (onEdge != null) {
 			neighbours = _edges[itemid];
@@ -44,7 +83,22 @@ primitives.common.graph = function () {
 		}
 	}
 
-	function loopNodes(thisArg, startNode, onItem) { // onItem = function(itemid) {}
+	/**
+	 * Callback function for itterating graphs nodes
+	 * 
+	 * @callback onNodeCallback
+	 * @param {string} to The next neighbouring node id
+	 */
+
+	/**
+	 * Loop nodes of the graph
+	 * 
+	 * @param {object} thisArg The callback function invocation context
+	 * @param {string} [itemid=undefined] The optional start node id. If start node is undefined, 
+	 * function loops graphs node starting from first available node
+	 * @param {onNodeCallback} onItem A callback function to be called for every neighbouring node
+	 */
+	function loopNodes(thisArg, startNode, onItem) {
 		var processed = {};
 		if (startNode == null) {
 			for (startNode in _edges) {
@@ -59,8 +113,7 @@ primitives.common.graph = function () {
 		}
 	}
 
-	function _loopNodes(thisArg, startNode, processed, onItem) { // onItem = function(itemid) {}
-		/* Graph */
+	function _loopNodes(thisArg, startNode, processed, onItem) {
 		var margin = [],
 			marginKey,
 			newMargin,
@@ -92,17 +145,23 @@ primitives.common.graph = function () {
 		}
 	}
 
-	/*
-		Function: primitives.common.graph.getSpanningTree
-			Get maximum spanning tree. Graph may have disconnected sub graphs, so start node is nessasary.
-	
-		Parameters:
-		startNode - The node to start searching for maximum spanning tree. Graph is not nessasary connected
-		getWeightFunc - Call back function to get weight of edge. function(edge)
+	/**
+	 * Callback for finding edge weight
+	 * 
+	 * @callback getGraphEdgeWeightCallback
+	 * @param {object} edge The edge context object
+	 * @param {string} fromItem The edge's start node id
+	 * @param {string} toItem The edge's end node id
+	 * @return {number} Returns weight of the edge
+	 */
 
-		Returns: 
-			primitives.common.tree structure
-	*/
+	/**
+	 * Get maximum spanning tree. Graph may have disconnected sub graphs, so start node is nessasary.
+	 * 
+	 * @param {string} startNode The node to start searching for maximum spanning tree. Graph is not nessasary connected
+	 * @param {getGraphEdgeWeightCallback} getWeightFunc Callback function to get weight of an edge.
+	 * @returns {tree} Returns tree structure containing maximum spanning tree of the graph
+	 */
 	function getSpanningTree(startNode, getWeightFunc) {
 		var result = primitives.common.tree(),
 			margin = primitives.common.FibonacciHeap(true),
@@ -170,31 +229,27 @@ primitives.common.graph = function () {
 		return result;
 	}
 
-	/*
-		Function: primitives.common.graph.getTotalWeightGrowthSequence
-			Get graph growth sequence. The sequence of graph traversing order.
-	
-		Parameters:
-			thisArg - call back functions context
-			onEdgeWeight - Call back function to weight edge of graph. function(edge)
-			onItem - Call back function on next item found
-	*/
+	/**
+	 * Get graph growth sequence. The sequence of graph traversing order.
+	 * 
+	 * @param {object} thisArg The callback function invocation context
+	 * @param {getGraphEdgeWeightCallback} getWeightFunc Callback function to get weight of an edge. 
+	 * @param {onNodeCallback} onItem A callback function to be called for every node of the growth sequence 
+	 */
 	function getTotalWeightGrowthSequence(thisArg, onEdgeWeight, onItem) {
 		var startNode = _findStartNode(thisArg, onEdgeWeight);
 
 		_getGrowthSequence(thisArg, startNode, onEdgeWeight, onItem, MAXIMUMTOTALWEIGHT);
 	}
 
-	/*
-	Function: primitives.common.graph.getMinimumWeightGrowthSequence
-		Get graph growth sequence. The sequence of graph traversing order.
-
-	Parameters:
-		thisArg - call back functions context
-		startNode - The node to start searching for grows sequence.
-		onEdgeWeight - Call back function to weight edge of graph. function(edge)
-		onItem - Call back function on next item found
-	*/
+	/**
+	 * Get minimum weight graph growth sequence. The sequence of the traversing order of the graph nodes.
+	 * 
+	 * @param {object} thisArg The callback function invocation context
+	 * @param {string} [startNode=undefined] The optional start node id 
+	 * @param {getGraphEdgeWeightCallback} onEdgeWeight Callback function to get weight of an edge. 
+	 * @param {onNodeCallback} onItem A callback function to be called for every node of the growth sequence
+	 */
 	function getMinimumWeightGrowthSequence(thisArg, startNode, onEdgeWeight, onItem) {
 		_getGrowthSequence(thisArg, startNode, onEdgeWeight, onItem, MINIMUMWEIGHT);
 	}
@@ -300,19 +355,26 @@ primitives.common.graph = function () {
 		}
 	}
 
-	/*
-		Function: primitives.common.graph.getShortestPath
-		Get shortest path between two nodes in graph. Start and end nodes supposed to have connection path. All connections have the same weight.
-	
-		Parameters:
-		startNode - The node to start.
-		endNode - The end node.
-		getWeightFunc - Call back function to weight edge of graph. function(edge, fromItem, toItem)
-	
-		Returns: 
-			Array containing nodes names of connection path.
-	*/
-	function getShortestPath(thisArg, startNode, endNodes, getWeightFunc, onPathFound) { // getWeightFunc = function(edge, fromItem, toItem), onPathFound = function(path, to)
+	/**
+	 * Callback for returning optimal connection path for every end node.
+	 * 
+	 * @callback onPathFoundCallback
+	 * @param {string[]} path An array of connection path node ids.
+	 * @param {string} to The end node id, the connection path is found for.
+	 */
+
+	/**
+	 * Get shortest path between two nodes in graph. The start and the end nodes are supposed to have connection path.
+	 * 
+	 * @param {object} thisArg The callback function invocation context
+	 * @param {string} startNode The start node id 
+	 * @param {string[]} endNodes The array of end node ids.
+	 * @param {getGraphEdgeWeightCallback} getWeightFunc Callback function to get weight of an edge. 
+	 * @param {onNodeCallback} onItem A callback function to be called for every node of the growth sequence
+	 * @param {onPathFoundCallback} onPathFound A callback function to be called for every end node 
+	 * with the optimal connection path
+	 */
+	function getShortestPath(thisArg, startNode, endNodes, getWeightFunc, onPathFound) {
 		var margin = primitives.common.FibonacciHeap(false),
 			distance = {},
 			breadcramps = {},

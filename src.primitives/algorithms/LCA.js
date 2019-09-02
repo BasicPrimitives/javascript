@@ -1,4 +1,8 @@
-﻿primitives.common.LCA = function (tree) {
+﻿/**
+ * Creates Lowest Common Ancestor Structure for the given tree
+ * @param {tree} tree The tree structure
+ */
+primitives.common.LCA = function (tree) {
 	var _eulerSequence = [];
 	var _levels = [];
 	var _fai = {};
@@ -21,6 +25,12 @@
 		_rmq = primitives.common.RMQ(_levels);
 	}
 
+	/**
+	 * Returns lowest common ancestor for the given pair of tree nodes
+	 * @param {string} from The first tree node id
+	 * @param {string} to The second tree node id
+	 * @returns {string} Returns the lowest common ancestor tree node id
+	 */
 	function getLowestCommonAncestor(from, to) {
 		var fromIndex = _fai[from],
 			toIndex = _fai[to],

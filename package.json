@@ -8,7 +8,8 @@
     "src.primitives.jquery.merge": "node merge.js src.primitives.jquery\\src.primitives.jquery.json",
     "src.primitives.jquery.compile": "compiler.jar --js=min\\primitives.jquery.latest.js --js_output_file=min\\primitives.jquery.min.js",
     "src.tests.merge": "node merge.js src.tests\\src.tests.json",
-    "merge": "yarn src.primitives.merge && yarn src.primitives.compile && yarn src.primitives.jquery.merge && yarn src.primitives.jquery.compile && yarn src.tests.merge"
+    "merge": "yarn src.primitives.merge && yarn src.primitives.compile && yarn src.primitives.jquery.merge && yarn src.primitives.jquery.compile && yarn src.tests.merge",
+    "reference": "node --nolazy --inspect-brk=9229 reference.js reference.json"
   },
   "dependencies": {
     "eslint": "^5.15.1"

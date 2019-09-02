@@ -69,9 +69,9 @@ control.destroy();
 Historically Basic Primitives provides jQuery UI Widgets wrapping core controls, so you will find a lot of jQuery UI examples around our site. In order to use Basic Primitives jQuery UI widgets in your web application include following references for jQuery, jQuery UI and Basic Primitives libraries:
 
 ```Javascript
-<link rel="stylesheet" href="/jquery-ui.min.css" />
-<script type="text/javascript" src="/jquery-3.3.1.min.js"></script>
-<script type="text/javascript" src="/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="/jquery-ui-1.12.1/jquery-ui.min.css" />
+<script type="text/javascript" src="/jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+<script type="text/javascript" src="/jquery-ui-1.12.1/jquery-ui.min.js"></script>
  
 <script  type="text/javascript" src="/primitives.min.js"></script>
 <link href="/primitives.latest.css" media="screen" rel="stylesheet" type="text/css" />

@@ -2,93 +2,90 @@
 
 /* /common/init.js*/
 /**
- * @preserve jQuery Widgets for Basic Primitives Diagrams v5.4.0
+ * @preserve jQuery Widgets for Basic Primitives Diagrams v5.4.15
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
  * http://creativecommons.org/licenses/by-nc/3.0/
  *
  * Commercial and government licenses:
- * http://www.basicprimitives.com/pdf/license.pdf
+ * http://www.basicprimitives.com/license.pdf
  *
  */
 
 /* /orgdiagram/Templates/jQueryButtonsTemplate.js*/
 primitives.common.jQueryButtonsTemplate = function (options) {
-	var _template = create(),
-		_hashCode = primitives.common.hashCode(_template);
+  var _template = create(),
+    _hashCode = primitives.common.hashCode(_template);
 
-	function create() {
-		var template = jQuery("<ul></ul>");
+  function create() {
+    var template = jQuery("<ul></ul>");
 
-		template.css({
-			position: "absolute"
-		}).addClass("ui-widget ui-helper-clearfix");
+    template.css({
+      position: "absolute"
+    }).addClass("ui-widget ui-helper-clearfix");
 
-		return template.wrap('<div>').parent().html();
-	}
+    return template.wrap('<div>').parent().html();
+  }
 
-	function template() {
-		return _template;
-	}
+  function template() {
+    return _template;
+  }
 
-	function getHashCode() {
-		return _hashCode;
-	}
+  function getHashCode() {
+    return _hashCode;
+  }
 
-	function render(event, data) {
-		var name = "orgdiagram",
-			element = jQuery(data.element),
-			topOffset = 0,
-			buttonsInterval = 10,
-			buttonConfig,
-			buttons = data.buttons,
-			buttonprop,
-			button,
-			index;
+  function render(event, data) {
+    var name = "orgdiagram",
+      element = jQuery(data.element),
+      topOffset = 0,
+      buttonsInterval = 10,
+      buttonConfig,
+      buttons = data.buttons,
+      buttonprop,
+      button,
+      index;
 
-		switch (data.renderingMode) {
-			case primitives.common.RenderingMode.Create:
-				for (index = 0; index < buttons.length; index += 1) {
-					buttonConfig = buttons[index];
-					button = jQuery('<li data-buttonname="' + buttonConfig.name + '"></li>')
-						.css({
-							position: "absolute",
-							top: topOffset + "px",
-							left: "0px",
-							width: buttonConfig.size.width + "px",
-							height: buttonConfig.size.height + "px",
-							padding: "3px"
-						})
-						.addClass(name + "button");
-					element.append(button);
-					buttonprop = {
-						icons: { primary: buttonConfig.icon },
-						label: buttonConfig.label
-					};
-					if (buttonConfig.text != "") {
-						buttonprop.text = buttonConfig.text;
-					}
-					button.button(buttonprop);
+    switch (data.renderingMode) {
+      case primitives.common.RenderingMode.Create:
+        for (index = 0; index < buttons.length; index += 1) {
+          buttonConfig = buttons[index];
+          button = jQuery('<li data-buttonname="' + buttonConfig.name + '"></li>')
+            .css({
+              position: "absolute",
+              top: topOffset + "px",
+              left: "0px",
+              width: buttonConfig.size.width + "px",
+              height: buttonConfig.size.height + "px",
+              padding: "3px"
+            })
+            .addClass(name + "button");
+          element.append(button);
+          buttonprop = {
+            icons: { primary: buttonConfig.icon },
+            label: buttonConfig.label
+          };
+          if (buttonConfig.text != "") {
+            buttonprop.text = buttonConfig.text;
+          }
+          if (!primitives.common.isNullOrEmpty(buttonConfig.tooltip)) {
+            button.attr('title', buttonConfig.tooltip);
+          }
+          button.button(buttonprop);
+          topOffset += buttonsInterval + buttonConfig.size.height;
+        }
+        break;
+      case primitives.common.RenderingMode.Update:
+        break;
+    }
+  }
 
-					if (!primitives.common.isNullOrEmpty(buttonConfig.tooltip)) {
-						if (button.tooltip != null) {
-							button.tooltip({ content: buttonConfig.tooltip });
-						}
-					}
-					topOffset += buttonsInterval + buttonConfig.size.height;
-				}
-				break;
-			case primitives.common.RenderingMode.Update:
-				break;
-		}
-	}
-
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 

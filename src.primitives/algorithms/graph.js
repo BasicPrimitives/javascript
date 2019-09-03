@@ -55,7 +55,7 @@ primitives.common.graph = function () {
 	}
 
 	/**
-	 * Callback for itterating edges of the graph's node
+	 * Callback for iterating edges of the graph's node
 	 * 
 	 * @callback onEdgeCallback
 	 * @param {string} to The neighbouring node id
@@ -84,7 +84,7 @@ primitives.common.graph = function () {
 	}
 
 	/**
-	 * Callback function for itterating graphs nodes
+	 * Callback function for iterating graphs nodes
 	 * 
 	 * @callback onNodeCallback
 	 * @param {string} to The next neighbouring node id
@@ -126,7 +126,7 @@ primitives.common.graph = function () {
 			while (margin.length > 0) {
 				newMargin = [];
 
-				/* itterate neighbours of every node on margin */
+				/* iterate neighbours of every node on margin */
 				for (index = 0, len = margin.length; index < len; index += 1) {
 					marginKey = margin[index];
 
@@ -176,7 +176,7 @@ primitives.common.graph = function () {
 		/* search graph */
 		while ((marginNode = margin.extractRoot()) != null) {
 
-			/* itterate neighbours of every node on margin */
+			/* iterate neighbours of every node on margin */
 			neighbours = _edges[marginNode.key];
 
 			for (neighbourKey in neighbours) {
@@ -288,7 +288,7 @@ primitives.common.graph = function () {
 					nextMarginKey = null;
 					nextMarginWeight = null;
 					bestWeight = {};
-					/* itterate neighbours of every node on margin */
+					/* iterate neighbours of every node on margin */
 					for (marginKey in margin) {
 						if (margin.hasOwnProperty(marginKey)) {
 							neighbours = _edges[marginKey];
@@ -404,7 +404,7 @@ primitives.common.graph = function () {
 
 		/* search graph */
 		while ((bestNodeOnMargin = margin.extractRoot()) != null) {
-			/* itterate neighbours of selected node on margin */
+			/* iterate neighbours of selected node on margin */
 			children = _edges[bestNodeOnMargin.key];
 			for (key in children) {
 				if (children.hasOwnProperty(key)) {

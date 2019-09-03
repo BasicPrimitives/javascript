@@ -1,15 +1,19 @@
-/*
-	Function: primitives.common.mergeSort
-		Merges array of sorted arrays into one using call back function for comparison.
-	
-	Parameters:
-		arrays - Array of sorted arrays of objects.
-		getItemWeight - Call back function used to get items weight. 
-		ignoreDuplicates - return distinct items only.
+/**
+ * Callback function to measure item weights of merged arrays.
+ * 
+ * @callback getItemWeightCallback
+ * @param {object} item The item to weight
+ * @returns {number} Returns item's weight.
+ */
 
-	Returns: 
-		Array of merged sorted items. 
-*/
+/**
+ * Merges array of sorted arrays into one using call back function for comparison.
+ * 
+ * @param {object[][]} arrays  Array of sorted arrays of objects.
+ * @param {getItemWeightCallback} getItemWeight Callback function to measure item weight. 
+ * @param {boolean} ignoreDuplicates If true returns distinct weight items only.
+ * @returns {object[]} Returnes merged sorted array.
+ */
 primitives.common.mergeSort = function (arrays, getItemWeight, ignoreDuplicates) {
 	var result = null,
 		firstArray, secondArray, mergedArray, arrayIndex,

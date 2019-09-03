@@ -1,10 +1,19 @@
-﻿primitives.common.LinkedHashItems = function () {
+﻿/**
+ * Creates linked hash list collection.
+ * @returns {LinkedHashItems} Returns linked hash list structure
+ */
+primitives.common.LinkedHashItems = function () {
   var segmentsHash = {},
     nextKeys = {},
     prevKeys = {},
     startSegmentKey = null,
     endSegmentKey = null;
 
+  /**
+   * Adds new item to collection
+   * @param {string} key The new item key 
+   * @param {object} item The new item context object value
+   */
   function add(key, item) {
     if (segmentsHash.hasOwnProperty(key)) {
       throw "Duplicate segments are not supported!";
@@ -21,30 +30,70 @@
     endSegmentKey = key;
   }
 
+  /**
+   * Checks if collection is empty
+   * 
+   * @returns {boolean} Returns true if collection is empty
+   */
   function isEmpty() {
     return startSegmentKey == null;
   }
 
+  /**
+   * Item context object
+   * 
+   * @param {string} key The item's key
+   * @returns {object} Returns context object
+   */
   function item(key) {
     return segmentsHash[key];
   }
 
+  /**
+   * Gets next key
+   * 
+   * @param {string} key The item key
+   * @returns {string} Returns key of the next collection item
+   */
   function nextKey(key) {
     return nextKeys[key];
   }
 
+  /**
+   * Gets previous key
+   * 
+   * @param {string} key The item key
+   * @returns {string} Returns key of the previous collection item
+   */
   function prevKey(key) {
     return prevKeys[key];
   }
 
+  /**
+   * First collection item key
+   * 
+   * @returns {string} Returns the key of the first item in the collection
+   */
   function startKey() {
     return startSegmentKey;
   }
 
+  /**
+   * Last collection item key
+   * 
+   * @returns {string} Returns key of the last item in the collection
+   */
   function endKey() {
     return endSegmentKey;
   }
 
+   /**
+   * Adds new item to the head of the list
+   * 
+   * @param {string} key The new item key 
+   * @param {object} item The new item context object value
+   * @returns {string} Returns key of the last item in the collection
+   */ 
   function unshift(key, item) {
     if (segmentsHash.hasOwnProperty(key)) {
       throw "Duplicate segments are not supported!";
@@ -61,6 +110,13 @@
     startSegmentKey = key;
   }
 
+   /**
+   * Inserts new item into the list after the given key 
+   *  
+   * @param {string} afterKey The key that the new element is placed after 
+   * @param {string} key The new item key 
+   * @param {object} item The new item context object value
+   */ 
   function insertAfter(afterKey, key, item) {
     if (segmentsHash.hasOwnProperty(key)) {
       throw "Duplicate segments are not supported!";
@@ -82,6 +138,13 @@
     }
   }
 
+  /**
+   * Inserts new item into the list before the given key  
+   * 
+   * @param {string} beforeKey The key that the new element is placed before 
+   * @param {string} key The new item key 
+   * @param {object} item The new item context object value
+   */ 
   function insertBefore(beforeKey, key, item) {
     if (segmentsHash.hasOwnProperty(key)) {
       throw "Duplicate segments are not supported!";
@@ -97,6 +160,10 @@
     }
   }
 
+  /**
+   * Removes item
+   * @param {string} key The key of the item 
+   */
   function remove(key) {
     var prevKey = prevKeys[key],
       nextKey = nextKeys[key];
@@ -118,6 +185,9 @@
     delete prevKeys[key];
   }
 
+  /**
+   * Empties collection
+   */
   function empty() {
     segmentsHash = {};
     nextKeys = {};
@@ -152,20 +222,50 @@
     }
   }
 
+  /**
+   * Appends one list to another
+   * 
+   * @param {LinkedHashItems} list A list to append to the end of the current list  
+   */
   function attach(list) {
     list.iterate(function (segment, key) {
       add(key, segment);
     });
   }
 
+  /**
+   * Callback function for iterating list items
+   * 
+   * @callback onLinkedHashItemsCallback
+   * @param {object} item  The item context object
+   * @param {string} key The item key
+   * @returns {boolean} Returns true to break the iteration process
+   */
+
+  /**
+   * Loops items of the collection
+   * @param {onLinkedHashItemsCallback} onItem  Callback function for iterating collection items
+   * @param {string} startKey The key to start iteration from 
+   * @param {string} endKey The key to end iteration at
+   */
   function iterate(onItem, startKey, endKey) {
     _iterate(true, onItem, startKey, endKey);
   }
 
+  /**
+   * Loops items of the collection backward
+   * @param {onLinkedHashItemsCallback} onItem  Callback function for iterating collection items
+   * @param {string} startKey The key to start iteration from 
+   * @param {string} endKey The key to end iteration at
+   */
   function iterateBack(onItem, startKey, endKey) {
     _iterate(false, onItem, startKey, endKey);
   }
 
+  /**
+   * Validates internal data consistensy of the structure
+   * @returns {boolean} Returns true if it pass validation
+   */
   function validate(info) {
     var key, prevKey, nextKey;
     for (key in segmentsHash) {
@@ -221,6 +321,11 @@
     return true;
   }
 
+  /**
+   * Returns a regular javascript array of collection items
+   * 
+   * @returns{object[]} Returns array containing items of the collection
+   */
   function toArray() {
     var result = [];
 

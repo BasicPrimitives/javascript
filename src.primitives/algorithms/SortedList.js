@@ -1,3 +1,7 @@
+/**
+ * Creates self-balancing binary search tree structure.
+ * @returns {SortedList} Returns sorted list collection. 
+ */
 primitives.common.SortedList = function () {
   var _rootNode = null;
 
@@ -117,6 +121,20 @@ primitives.common.SortedList = function () {
     }
   }
 
+  /**
+   * Callback function to notify about duplicate values
+   * 
+   * @callback onSortedListDuplicateCallback
+   * @param {objct} context The context object of the duplicate value
+   */
+
+  /**
+   * Adds value to sorted list collection
+   * @param {number} value The value 
+   * @param {object} context The value context object
+   * @param {object} thisArg The callback function invocation context 
+   * @param {onSortedListDuplicateCallback} onDuplicate Callback function for duplicates values notification
+   */
   function add(value, context, thisArg, onDuplicate) {
     if (_rootNode == null) {
       _rootNode = new Node(value, context);
@@ -211,6 +229,10 @@ primitives.common.SortedList = function () {
     toNode.context = fromNode.context;
   }
 
+  /**
+   * Removes value from the sorted list
+   * @param {number} value The removed value 
+   */
   function remove(value) {
     var trace = [];
     var node = _rootNode;
@@ -273,6 +295,11 @@ primitives.common.SortedList = function () {
     }
   }
 
+  /**
+   * Returns context object of the next value following the given one
+   * @param {number} fromValue The value to start search from
+   * @returns {object} Returns context object of the first value in sorted list greater than the start value.
+   */
   function nextContext(fromValue) {
     var result = null;
     loopForward(this, fromValue, function (value, context) {
@@ -282,6 +309,21 @@ primitives.common.SortedList = function () {
     return result;
   }
 
+  /**
+   * Callback function for iterating values of the sorted list
+   * 
+   * @callback onSortedListItemCallback
+   * @param {number} value The value
+   * @param {object} context The value context object
+   * @returns {boolean} Returns true to break loop operation  
+   */
+
+  /**
+   * Loops sorted list values
+   * @param {object} thisArg The callback function invocation context 
+   * @param {number} fromValue The start value to loop items of sorted list
+   * @param {onSortedListItemCallback} onItem Callback function to iterate over sorted list values
+   */
   function loopForward(thisArg, fromValue, onItem) { //function onItem(value, context)
     if (onItem != null) {
       var trace = [];
@@ -317,6 +359,11 @@ primitives.common.SortedList = function () {
     }
   }
 
+  /**
+   * Returns context object of the previous value preceding the given one
+   * @param {number} fromValue The value to start search from
+   * @returns {object} Returns context object of the first value in sorted list less than the start value.
+   */
   function previousContext(fromValue) {
     var result = null;
     loopBackward(this, fromValue, function (nextValue, context) {
@@ -326,6 +373,12 @@ primitives.common.SortedList = function () {
     return result;
   }
 
+  /**
+   * Loops sorted list values backward
+   * @param {object} thisArg The callback function invocation context 
+   * @param {number} fromValue The start value to loop items of sorted list
+   * @param {onSortedListItemCallback} onItem Callback function to iterate over sorted list values
+   */
   function loopBackward(thisArg, fromValue, onItem) {
     if (onItem != null) {
       var trace = [];
@@ -388,6 +441,11 @@ primitives.common.SortedList = function () {
     return result;
   }
 
+  /**
+   * Validate internal data consistency of the self-balancing binary search tree structure
+   * 
+   * @returns {boolean} Returns true if structure pass validation
+   */
   function validate() {
     if (_rootNode != null) {
       var level = [_rootNode];

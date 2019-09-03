@@ -51,7 +51,7 @@ primitives.common.isArray = Array.isArray || function (val) {
 	
 	Parameters:
 	thisArg - Call back function call context.
-	items - array of items or object with properties to itterate on
+	items - array of items or object with properties to iterate on
 	onItem - call back function to call on each item in the array or object. If call back function returns true then break itteration
 */
 primitives.common.loop = function (thisArg, items, onItem) { // onItem([index,key], value)

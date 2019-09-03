@@ -280,7 +280,7 @@ primitives.common.family = function (source) {
   }
 
   /**
-   * Callback for itterating family nodes
+   * Callback for iterating family nodes
    * 
    * @callback onFamilyItemCallback
    * @param {string} itemid The node id
@@ -289,7 +289,7 @@ primitives.common.family = function (source) {
    */
 
   /**
-   * Loop through nodes of family struture
+   * Loops through nodes of family struture
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {onFamilyItemCallback} onItem A callback function to call for every family node 
@@ -348,7 +348,7 @@ primitives.common.family = function (source) {
   }
 
   /**
-   * Callback for itterating family nodes level by level
+   * Callback for iterating family nodes level by level
    * 
    * @callback onFamilyItemWithLevelCallback
    * @param {string} itemid The node id
@@ -358,7 +358,7 @@ primitives.common.family = function (source) {
    */
 
   /**
-   * Loop through child nodes of family struture level by level
+   * Loops through child nodes of family struture level by level
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {string} nodeid The node id to start children traversing
@@ -373,7 +373,7 @@ primitives.common.family = function (source) {
   }
 
   /**
-   * Loop through parent nodes of family struture level by level
+   * Loops through parent nodes of family struture level by level
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {string} nodeid The node id to start parents traversing
@@ -405,7 +405,7 @@ primitives.common.family = function (source) {
         }
       }
 
-      /* itterate queue and reduce reference counts via children */
+      /* iterate queue and reduce reference counts via children */
       position = 0;
       while (queue.length > 0) {
         newQueue = [];
@@ -433,7 +433,7 @@ primitives.common.family = function (source) {
   }
 
   /**
-   * Callback for itterating family nodes in topological sort order
+   * Callback for iterating family nodes in topological sort order
    * 
    * @callback onFamilyTopoCallback
    * @param {string} itemid The node id
@@ -443,7 +443,7 @@ primitives.common.family = function (source) {
    */
 
   /**
-   * Loop through topologically sorted nodes of family struture
+   * Loops through topologically sorted nodes of family struture
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {onFamilyTopoCallback} onItem A callback function to call for every node 
@@ -453,7 +453,7 @@ primitives.common.family = function (source) {
   }
 
   /**
-   * LLoop through reversed order topologically sorted nodes of family struture
+   * Loops through reversed order topologically sorted nodes of family struture
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {onFamilyTopoCallback} onItem A callback function to call for every node 
@@ -464,7 +464,7 @@ primitives.common.family = function (source) {
 
 
   /**
-   * Loop through nodes of family struture level by level. This function aligns nodes top or bottom.
+   * Loops through nodes of family struture level by level. This function aligns nodes top or bottom.
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {boolean} parentAligned True if nodes should be placed at the next level after their parents level,
@@ -645,7 +645,12 @@ primitives.common.family = function (source) {
     }
   }
 
-  function loopRoots(thisArg, onItem) { // onItem(itemid, item)
+  /**
+   * Loops root nodes of family structure. 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onFamilyItemCallback} onItem A callback function to call for every family root node 
+   */
+  function loopRoots(thisArg, onItem) {
     var result = null,
       minimum, counter = 0,
       famMembers = {},
@@ -753,6 +758,11 @@ primitives.common.family = function (source) {
     }
   }
 
+  /**
+   * Finds root node having largest number of nodes in its hierachy
+   * 
+   * @returns {string} Returns largest sub-hierarchy root node id.  
+   */
   function findLargestRoot() {
     var result = null,
       maximum,
@@ -804,8 +814,13 @@ primitives.common.family = function (source) {
     return result;
   }
 
-  /* common child should belong only to the given collection of parents, */
-  /* if child's parents don't match given parents, it is not considered as common child */
+  /**
+   * Checks whether parents share a child node. Common child should belong only to the given collection
+   * of parents, if child's parents don't match given collection of parents, 
+   * it is not considered as common child. 
+   * @param {string[]} parents Collection of parents
+   * @returns {boolean} Returns true if common child exist. 
+   */
   function hasCommonChild(parents) {
     var result = false,
       parentsHash, childrenHash,
@@ -926,10 +941,28 @@ primitives.common.family = function (source) {
     return isValid;
   }
 
+  /**
+   * Adds extra budnle item in between parent and its children. The parent node becomes parent of the bundle node,
+   * and bundle becomes parent of the children. Existing parent child relations are removed.
+   * @param {string} parent The parent node id
+   * @param {string[]} children The collection of child nodes ids
+   * @param {string} bundleItemId The bundle node id
+   * @param {object} bundleItem The bundle item context object
+   * @returns {boolean} Returns true if nodes bundle is valid
+   */
   function bundleChildren(parent, children, bundleItemId, bundleItem) {
     return _bundleNodes(parent, children, bundleItemId, bundleItem, _parents, _parentsCount, _children, _childrenCount, true);
   }
 
+  /**
+   * Adds extra budnle item in between child node and its parents. The child node becomes child of the bundle node,
+   * and bundle becomes child of the parents. Existing parent child relations are removed.
+   * @param {string} child The parent node id
+   * @param {string[]} parents The collection of child nodes ids
+   * @param {string} bundleItemId The bundle node id
+   * @param {object} bundleItem The bundle item context object
+   * @returns {boolean} Returns true if the bundle is valid
+   */
   function bundleParents(child, parents, bundleItemId, bundleItem) {
     return _bundleNodes(child, parents, bundleItemId, bundleItem, _children, _childrenCount, _parents, _parentsCount, true);
   }
@@ -999,6 +1032,19 @@ primitives.common.family = function (source) {
     return result;
   }
 
+  /**
+   * Callback function for cretion of new family nodes
+   * 
+   * @callback onNewFamilyNodeCallback
+   * @returns {object} Returns new family node.
+   */
+
+  /**
+   * Optimizes references between family members.
+   * It creates bundles eliminating excessive intersecions between nodes relations.
+   * 
+   * @param {onNewFamilyNodeCallback} onNewBundleItem Callback function to create a new family node context object. 
+   */
   function optimizeReferences(onNewBundleItem) {
     var sharedItemsByKey = {},
       sharedItemsById = {},
@@ -1157,6 +1203,12 @@ primitives.common.family = function (source) {
     }
   }
 
+  /**
+   * Eliminates many to many relations in family structure
+   * It is needed to simplify layout process of the diagram
+   * 
+   * @param {onNewFamilyNodeCallback} onNewBundleItem Callback function for creation of new bundle node  
+   */
   function eliminateManyToMany(onNewBundleItem) {
     var parent, bundleNode;
 
@@ -1181,6 +1233,11 @@ primitives.common.family = function (source) {
     this.key = parentid + "," + childid;
   }
 
+  /**
+   * Eliminates crossing parent child relations between nodes based of nodes order in treeLevels structure.
+   * @param {treeLevels} treeLevels Tree levels structure keeps orders of nodes level by level.
+   * @returns {family} Returns planar family structure. 
+   */
   function getPlanarFamily(treeLevels) {
     var result = new primitives.common.family(),
       familyEdgeIndex, familyEdgeLen,
@@ -1301,6 +1358,11 @@ primitives.common.family = function (source) {
     this.distance = 0;
   }
 
+  /**
+   * Eliminates direct relations between grand parent nodes.
+   * 
+   * @returns {family} Returns family structure without direct grand parent relations. 
+   */
   function getFamilyWithoutGrandParentsRelations() {
     var result = new primitives.common.family();
 
@@ -1363,14 +1425,30 @@ primitives.common.family = function (source) {
 
     return result;
   }
+
+  /**
+   * Returns number of children
+   * @param {string} parent The parent node id
+   * @returns {number} Number of children
+   */
   function countChildren(parent) {
     return _childrenCount[parent] || 0;
   }
 
+  /**
+   * Returns number of parents
+   * @param {string} child The child node id
+   * @returns {number} Number of parents
+   */
   function countParents(child) {
     return _parentsCount[child] || 0;
   }
 
+  /**
+   * First available child
+   * @param {string} parent The parent node id
+   * @returns {string} Returns first available child id or null.
+   */
   function firstChild(parent) {
     var result = null,
       children = _children[parent] || {};
@@ -1382,6 +1460,11 @@ primitives.common.family = function (source) {
     return null;
   }
 
+  /**
+   * First available parent
+   * @param {string} child The child node id
+   * @returns {string} Returns first available parent id or null.
+   */
   function firstParent(child) {
     var result = null,
       parents = _parents[child] || {};
@@ -1393,6 +1476,23 @@ primitives.common.family = function (source) {
     return null;
   }
 
+  /**
+   * Callback for iterating family node neighbours level by level
+   * 
+   * @callback onFamilyItemNeighbourCallback
+   * @param {string} itemid The node id
+   * @param {object} item The node
+   * @param {number} levelIndex The neigbour node distance from the start node
+   * @returns {number} Returns true to skip further neighbous traversing.
+   */
+
+  /**
+   * Loops through the node neighbours of the family struture level by level
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} itemid The node id to start traversing neighbour nodes
+   * @param {onFamilyItemNeighbourCallback} onItem A callback function to call for every neighbour node 
+   */
   function loopNeighbours(thisArg, itemid, onItem) {
     var processed = {};
 
@@ -1443,6 +1543,11 @@ primitives.common.family = function (source) {
     }
   }
 
+  /**
+   * Creates graph structure out of the family structure.
+   * 
+   * @returns {graph} Returns graph structure of the family.
+   */
   function getGraph() {
     var result = primitives.common.graph(),
       from, to;
@@ -1468,6 +1573,7 @@ primitives.common.family = function (source) {
     this.ids = [];
     this.nodes = [];
   }
+
 
   function groupBy(thisArg, size, onGroup) { //function onGroup(parent, child, nodes)
     if (onGroup != null) {
@@ -1500,6 +1606,10 @@ primitives.common.family = function (source) {
     }
   }
 
+  /**
+   * Validates internal data structure consitency of the family.
+   * @param {object} info Optional validation object. 
+   */
   function validate(info) {
     var parent, child;
 
@@ -1590,6 +1700,10 @@ primitives.common.family = function (source) {
     return true;
   }
 
+  /**
+   * Checks if family structure has loops in references. 
+   * @returns {boolean} Returns true if family structure contains loops in references.
+   */
   function hasLoops() {
     var tempFamily = clone();
     loopTopo(this, function (itemid, item, levelIndex) {
@@ -1599,6 +1713,11 @@ primitives.common.family = function (source) {
     return tempFamily.hasNodes();
   }
 
+  /**
+   * Clones family structure.
+   * 
+   * @returns {family} Returns copy of the family structure.
+   */
   function clone() {
     return primitives.common.family({
       roots: _roots,
@@ -1611,8 +1730,9 @@ primitives.common.family = function (source) {
     });
   }
 
-  /* Private objects */
-
+  /**
+   * @class family
+   */
   return {
     /* family structure modification */
     add: add,

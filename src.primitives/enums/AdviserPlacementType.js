@@ -1,15 +1,28 @@
-﻿/*
-	Enum: primitives.common.AdviserPlacementType
-		Defines item placement in tree relative to parent.
-	
-	Auto - Layout manager defined.
-	Left - Item placed on the left side of parent.
-	Right - Item placed on the right side of parent.
-*/
+﻿/**
+ * @typedef {number} AdviserPlacementType
+ **/
+
+
+/**
+ * Defines leftward or rightward item placement relative to the referenced item.
+ * In case of assitants and advisers the referenced item is their imediate parent.
+ * In case of family diagram the referenced item is spouse or sibling in the row. 
+ *  
+ * @enum {AdviserPlacementType}
+ */
 primitives.common.AdviserPlacementType =
 {
+	/**
+	 * Auto select by layout manager
+	 */
 	Auto: 0,
+	/**
+	 * Left side
+	 */
 	Left: 2,
+	/**
+	 * Right side
+	 */
 	Right: 3
 };
 

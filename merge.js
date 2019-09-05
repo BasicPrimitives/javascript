@@ -111,7 +111,10 @@ function read_enumerations(files, enums) {
 
 function getEnumValues(fileName) {
   const fileContent = fs.readFileSync(fileName, "utf8");
-  let fileText = fileContent.substring(fileContent.indexOf("*/") + 2);
+  let fileText = fileContent.replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gi, () => {
+    return '';
+  });
+
   const chars = ['\uFEFF', "\n", "\r", "\t", " "];
   chars.forEach(item => {
     fileText = fileText.replaceAll(item, '');

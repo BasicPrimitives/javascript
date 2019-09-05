@@ -12,104 +12,104 @@
  * @param {object[][]} arrays  Array of sorted arrays of objects.
  * @param {getItemWeightCallback} getItemWeight Callback function to measure item weight. 
  * @param {boolean} ignoreDuplicates If true returns distinct weight items only.
- * @returns {object[]} Returnes merged sorted array.
+ * @returns {object[]} Returns merged sorted array.
  */
 primitives.common.mergeSort = function (arrays, getItemWeight, ignoreDuplicates) {
-	var result = null,
-		firstArray, secondArray, mergedArray, arrayIndex,
-		firstIndex, secondIndex, firstLen, secondLen, firstItem, secondItem,
-		firstItemWeight, secondItemWeight,
-		currentValue;
+  var result = null,
+    firstArray, secondArray, mergedArray, arrayIndex,
+    firstIndex, secondIndex, firstLen, secondLen, firstItem, secondItem,
+    firstItemWeight, secondItemWeight,
+    currentValue;
 
-	switch (arrays.length) {
-		case 0:
-			result = [];
-			break;
-		default:
-			firstArray = [];
-			for (arrayIndex = 0; arrayIndex < arrays.length; arrayIndex += 1) {
-				secondArray = arrays[arrayIndex];
-				mergedArray = [];
+  switch (arrays.length) {
+    case 0:
+      result = [];
+      break;
+    default:
+      firstArray = [];
+      for (arrayIndex = 0; arrayIndex < arrays.length; arrayIndex += 1) {
+        secondArray = arrays[arrayIndex];
+        mergedArray = [];
 
-				firstLen = firstArray.length;
-				secondLen = secondArray.length;
+        firstLen = firstArray.length;
+        secondLen = secondArray.length;
 
-				firstIndex = 0;
-				secondIndex = 0;
+        firstIndex = 0;
+        secondIndex = 0;
 
-				firstItem = null;
-				firstItemWeight = null;
-				secondItem = null;
-				secondItemWeight = null;
+        firstItem = null;
+        firstItemWeight = null;
+        secondItem = null;
+        secondItemWeight = null;
 
-				if (firstLen > 0) {
-					firstItem = firstArray[firstIndex];
-					firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
-				}
+        if (firstLen > 0) {
+          firstItem = firstArray[firstIndex];
+          firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
+        }
 
-				if (secondLen > 0) {
-					secondItem = secondArray[secondIndex];
-					secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
-				}
-				currentValue = null;
-				while (firstIndex < firstLen || secondIndex < secondLen) {
+        if (secondLen > 0) {
+          secondItem = secondArray[secondIndex];
+          secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
+        }
+        currentValue = null;
+        while (firstIndex < firstLen || secondIndex < secondLen) {
 
-					if (firstIndex >= firstLen) {
-						if (!ignoreDuplicates || currentValue != secondItem) {
-							mergedArray.push(secondItem);
-							currentValue = secondItem;
-						}
-						secondIndex += 1;
+          if (firstIndex >= firstLen) {
+            if (!ignoreDuplicates || currentValue != secondItem) {
+              mergedArray.push(secondItem);
+              currentValue = secondItem;
+            }
+            secondIndex += 1;
 
-						
-						if (secondIndex < secondLen) {
-							secondItem = secondArray[secondIndex];
-							secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
-						}
-					} else {
-						if (secondIndex >= secondLen) {
-							if (!ignoreDuplicates || currentValue != firstItem) {
-								mergedArray.push(firstItem);
-								currentValue = firstItem;
-							}
-							firstIndex += 1;
 
-							
-							if (firstIndex < firstLen) {
-								firstItem = firstArray[firstIndex];
-								firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
-							}
-						} else {
-							if (firstItemWeight < secondItemWeight) {
-								if (!ignoreDuplicates || currentValue != firstItem) {
-									mergedArray.push(firstItem);
-									currentValue = firstItem;
-								}
-								firstIndex += 1;
+            if (secondIndex < secondLen) {
+              secondItem = secondArray[secondIndex];
+              secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
+            }
+          } else {
+            if (secondIndex >= secondLen) {
+              if (!ignoreDuplicates || currentValue != firstItem) {
+                mergedArray.push(firstItem);
+                currentValue = firstItem;
+              }
+              firstIndex += 1;
 
-								if (firstIndex < firstLen) {
-									firstItem = firstArray[firstIndex];
-									firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
-								}
-							} else {
-								if (!ignoreDuplicates || currentValue != secondItem) {
-									mergedArray.push(secondItem);
-									currentValue = secondItem;
-								}
-								secondIndex += 1;
-								
-								if (secondIndex < secondLen) {
-									secondItem = secondArray[secondIndex];
-									secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
-								}
-							}
-						}
-					}
-				}
-				firstArray = mergedArray;
-			}
-			result = firstArray;
-			break;
-	}
-	return result;
+
+              if (firstIndex < firstLen) {
+                firstItem = firstArray[firstIndex];
+                firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
+              }
+            } else {
+              if (firstItemWeight < secondItemWeight) {
+                if (!ignoreDuplicates || currentValue != firstItem) {
+                  mergedArray.push(firstItem);
+                  currentValue = firstItem;
+                }
+                firstIndex += 1;
+
+                if (firstIndex < firstLen) {
+                  firstItem = firstArray[firstIndex];
+                  firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
+                }
+              } else {
+                if (!ignoreDuplicates || currentValue != secondItem) {
+                  mergedArray.push(secondItem);
+                  currentValue = secondItem;
+                }
+                secondIndex += 1;
+
+                if (secondIndex < secondLen) {
+                  secondItem = secondArray[secondIndex];
+                  secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
+                }
+              }
+            }
+          }
+        }
+        firstArray = mergedArray;
+      }
+      result = firstArray;
+      break;
+  }
+  return result;
 };

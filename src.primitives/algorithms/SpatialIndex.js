@@ -1,99 +1,140 @@
+/**
+ * Create spatial index structure. It uses collection of sizes to distribute 
+ * rectangles into buckets of similar size elements. Elements of the same bucket 
+ * are aproximated to points. The search of rectangles is transformed to search of points 
+ * within given range plus offset for maximum linear rectangle size.
+ * 
+ * @returns {SpatialIndex} Returns spacial index data structure.
+ */
 primitives.common.SpatialIndex = function (sizes) {
-	var _buckets = [];
+  var _buckets = [];
 
-	sizes.sort(function (a, b) { return a - b;});
+  sizes.sort(function (a, b) { return a - b; });
 
-	switch (sizes.length) {
-		case 0:
-			_buckets.push(new Bucket(0, 1000000));
-			break;
-		case 1:
-			var size1 = sizes[0];
-			_buckets.push(new Bucket(0, size1));
-			break;
-		case 2:
-			size1 = sizes[0];
-			var size2 = sizes[1];
-			if (size2 > size1 * 2) {
-				_buckets.push(new Bucket(0, size1));
-				_buckets.push(new Bucket(size1, size2));
-			} else {
-				_buckets.push(new Bucket(0, size2));
-			}
-			break;
-		default:
-			var breaks = primitives.common.getLiniarBreaks(sizes);
-			var minimum = 0;
-			for (var index = 0; index < breaks.length; index += 1) {
-				var maximum = sizes[breaks[index]];
-				_buckets.push(new Bucket(minimum, maximum));
-				minimum = maximum;
-			}
-			break;
-	}
+  switch (sizes.length) {
+    case 0:
+      _buckets.push(new Bucket(0, 1000000));
+      break;
+    case 1:
+      var size1 = sizes[0];
+      _buckets.push(new Bucket(0, size1));
+      break;
+    case 2:
+      size1 = sizes[0];
+      var size2 = sizes[1];
+      if (size2 > size1 * 2) {
+        _buckets.push(new Bucket(0, size1));
+        _buckets.push(new Bucket(size1, size2));
+      } else {
+        _buckets.push(new Bucket(0, size2));
+      }
+      break;
+    default:
+      var breaks = primitives.common.getLiniarBreaks(sizes);
+      var minimum = 0;
+      for (var index = 0; index < breaks.length; index += 1) {
+        var maximum = sizes[breaks[index]];
+        _buckets.push(new Bucket(minimum, maximum));
+        minimum = maximum;
+      }
+      break;
+  }
 
-	function Bucket(minimum, maximum) {
-		this.minimum = minimum;
-		this.maximum = maximum;
-		this.quadTree = primitives.common.QuadTree(maximum * 2);
-	}
+  function Bucket(minimum, maximum) {
+    this.minimum = minimum;
+    this.maximum = maximum;
+    this.quadTree = primitives.common.QuadTree(maximum * 2);
+  }
 
-	function addRect(rect) {
-		var size = Math.max(rect.width, rect.height);
-		var point = rect.centerPoint();
+  /**
+   * Adds rectangle to spacial index
+   * @param {Rect} rect Rectangle
+   */
+  function addRect(rect) {
+    var size = Math.max(rect.width, rect.height);
+    var point = rect.centerPoint();
 
-		for (var index = 0, len = _buckets.length; index < len; index += 1) {
-			var bucket = _buckets[index];
+    for (var index = 0, len = _buckets.length; index < len; index += 1) {
+      var bucket = _buckets[index];
 
-			if (size <= bucket.maximum || index == len - 1) {
-				point.context = rect;
-				bucket.quadTree.addPoint(point);
-				break;
-			}
-		}
-	}
+      if (size <= bucket.maximum || index == len - 1) {
+        point.context = rect;
+        bucket.quadTree.addPoint(point);
+        break;
+      }
+    }
+  }
 
-	function loopArea(thisArg, rect, onItem) { // onItem = function(itemid) {}
-		if (onItem != null) {
-			for (var index = 0, len = _buckets.length; index < len; index += 1) {
-				var bucket = _buckets[index];
-				var bucketRect = new primitives.common.Rect(rect);
-				bucketRect.offset(bucket.maximum / 2.0);
-				bucket.quadTree.loopArea(this, bucketRect, function (point) {
-					var pointRect = point.context;
+  /**
+   * Callback function for iteration of spacial index rectangles
+   * 
+   * @callback onSpatialIndexItemCallback
+   * @param {React} rect Rectangle
+   * @returns {boolean} Returns true to break iteration process.
+   */
 
-					if (rect.overlaps(pointRect)) {
-						return onItem.call(thisArg, pointRect);
-					}
-				});
-			}
-		}
-	}
+  /**
+   * Loops rectangular area of spacial index
+   * 
+	 * @param {object} thisArg The callback function invocation context
+   * @param {Rect}} rect Rectangular search area
+   * @param {onSpatialIndexItemCallback} onItem Callback function to call for every rectangle intersecting given rectangular search area
+   */
+  function loopArea(thisArg, rect, onItem) { // onItem = function(itemid) {}
+    if (onItem != null) {
+      for (var index = 0, len = _buckets.length; index < len; index += 1) {
+        var bucket = _buckets[index];
+        var bucketRect = new primitives.common.Rect(rect);
+        bucketRect.offset(bucket.maximum / 2.0);
+        bucket.quadTree.loopArea(this, bucketRect, function (point) {
+          var pointRect = point.context;
 
-	function validate() {
-		var result = true;
-		for (var index = 0, len = _buckets.length; index < len; index += 1) {
-			var bucket = _buckets[index];
+          if (rect.overlaps(pointRect)) {
+            return onItem.call(thisArg, pointRect);
+          }
+        });
+      }
+    }
+  }
 
-			result = result && bucket.quadTree.validate();
-		}
-		return result;
-	}
+  /**
+   * Validates internal data consistency of spacial index data structure
+   * 
+   * @returns {boolean} Returns true if structure pass validation
+   */
+  function validate() {
+    var result = true;
+    for (var index = 0, len = _buckets.length; index < len; index += 1) {
+      var bucket = _buckets[index];
 
-	function getPositions(selection) {
-		var result = [];
-		for (var index = 0, len = _buckets.length; index < len; index += 1) {
-			var bucket = _buckets[index];
+      result = result && bucket.quadTree.validate();
+    }
+    return result;
+  }
 
-			result = result.concat(bucket.quadTree.getPositions(selection));
-		}
-		return result;
-	}
+  /**
+   * Returns collection of quadrands created in spacial index
+   * Quadrants exists only when elements exists in them.
+   * This method is used for visual debugging of the structure.
+   * 
+   * @param {React} selection Rectangular test area to highlight quadrants
+   * @returns {Rect[]} Returns collection of available quadrants.
+   * Quadrants containing points within selection area have context.highlight property set to true.
+   */
+  function getPositions(selection) {
+    var result = [];
+    for (var index = 0, len = _buckets.length; index < len; index += 1) {
+      var bucket = _buckets[index];
 
-	return {
-		addRect: addRect,
-		loopArea: loopArea,
-		validate: validate,
-		getPositions: getPositions
-	};
+      result = result.concat(bucket.quadTree.getPositions(selection));
+    }
+    return result;
+  }
+
+  return {
+    addRect: addRect,
+    loopArea: loopArea,
+    validate: validate,
+    getPositions: getPositions
+  };
 };

@@ -1,16 +1,26 @@
-﻿/*
-	Enum: primitives.common.ConnectorType
-		Defines diagram connectors style for dot and line elements.
-	
-	Squared - Connector lines use only right angles.
-	Angular - Connector lines use angular lines comming from common vertex.
-	Curved - Connector lines are splines comming from common vertex.
-*/
-primitives.common.ConnectorType =
-{
-	Squared: 0,
-	Angular: 1,
-	Curved: 2
+﻿/**
+ * @typedef {number} ConnectorType
+ **/
+
+/**
+ * Connection lines style. This option is only applicable to nodes minimized to markers or lines.
+ * Full size nodes are always connected with squared connection lines
+ *  
+ * @enum {ConnectorType}
+ */
+primitives.common.ConnectorType = {
+  /**
+   * Orthogonal connection lines
+   */
+  Squared: 0,
+  /**
+   * Angular direct node to node connection lines
+   */
+  Angular: 1,
+  /**
+   * Curved direct node to node connection lines
+   */
+  Curved: 2
 };
 
 primitives.orgdiagram.ConnectorType = primitives.common.ConnectorType;

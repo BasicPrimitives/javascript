@@ -1,23 +1,29 @@
-﻿/*
-	Enum: primitives.common.NavigationMode
-		Defines control navigation mode. By default control replicates interactivity of regular Tree control. 
-		It has highlight for mouse over feedback over nodes and it has cursor for showing currently selected single node in diagram.
-		In order to avoid children nodes folding and unfolding, this functionality is done automatically for current cursor item.
-		So cursor plays vital role for unfolding of nodes and zooming into area of user interest in diagram.
+﻿/**
+ * @typedef {number} NavigationMode
+ **/
 
-	Default - Highlight & Cursor 
-	CursorOnly - Cursor only.
-	HighlightOnly - Highlight only. This mode is usefull for touch devices. Since it requires minimal layout changes and renderings.
-	Inactive - No user interactivity.
-
-	See Also:
-		<primitives.orgdiagram.Config.navigationMode>
-		<primitives.famdiagram.Config.navigationMode>
-*/
-primitives.common.NavigationMode =
-{
-	Default: 0,
-	CursorOnly: 1,
-	HighlightOnly: 3,
-	Inactive: 2
+/**
+ * Interactivity mode. Control implements standard behaivour of classic desktop UI controls. It supports single selected node - cursor.
+ * It supports on mouse over node visual feedback - highlight. It supports selection of group of nodes - selected items. 
+ * All that functionality can be disabled depending on your application requirements. 
+ *  
+ * @enum {NavigationMode}
+ */
+primitives.common.NavigationMode = {
+  /**
+   * Everything is on.
+   */
+  Default: 0,
+  /**
+   * Cursor selection only without highlight. 
+   */
+  CursorOnly: 1,
+  /**
+   * Mouse over feedback only
+   */
+  HighlightOnly: 3,
+  /**
+   * No interactivity
+   */
+  Inactive: 2
 };

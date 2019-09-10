@@ -1,256 +1,242 @@
-/*
-	Class: primitives.famdiagram.ItemConfig
-		Defines item in family chart hierarchy. 
-		User is supposed to create hierarchy of this items and assign it to <primitives.famdiagram.Config.items> collection property.
-		Widget contains some generic properties used in default item template, 
-		but user can add as many custom properties to this class as needed. 
-		Just be careful and avoid widget malfunction.
-
-	See Also:
-		<primitives.famdiagram.Config.items>
-*/
+/**
+ * @class ItemConfig
+ * @classdesc Item Configuration Object defines properties of individual node in the family chart hierarchy. See `items` collection property
+ * of family control configuration object. 
+ * 
+ * @param {ItemConfig} arg0 Item config properties
+ * 
+ * @param {string} arg0 Item id
+ * @param {string[]|undefined} arg1 Parents ids
+ * @param {string} arg2 Title
+ * @param {string} arg3 Description 
+ * @param {string} arg4 Image
+ */
 primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   var property;
-	/*
-	Property: id
-	Unique item id.
-	*/
+  /**
+   * Item id. It should be unique per chart.
+   * 
+   * @type {string}
+   */
   this.id = null;
 
-	/*
-	Property: parents
-	Collection of parent id's. If parents collection is empty [] then item placed as a root item.
-	*/
+  /**
+   * Parents items ids. If this collection is empty then item considered as a root item.
+   * @type {string[] | undefined}
+   */
   this.parents = [];
 
-	/*
-	Property: spouses
-	Collection of spouses id's. Items in this collection share common connector line whether they have common children or not.
-	*/
+  /**
+   * Spouses items ids. The nodes of this collection create fake invisible child node, 
+   * so all of them are being connected with common child connection line.
+   * @type {string[] | undefined}
+   */
   this.spouses = [];
 
-  /*
-		Property: relativeItem
-      This property is used to control items mutual placement in order to keep consistent ordering within levels. Relative item is used 
-      for placing given item in diagram. We can place item on left or right side of relative item via setting placementType type property.
-      In case when multiple items use the same relative item then their order can be customized with position property.
-
-      If this property set to null, family layout algorithm will try to choose elements order via placing connected 
-      nodes as close to each other as posible.
-
-    Deafult:
-			null
-	*/
+  /**
+   * Relative item id. This property is used to control items mutual placement in order to keep consistent ordering within levels. Relative item is used 
+   * for placing given item in diagram. We can place item on left or right side of relative item via setting placementType type property.
+   * In case when multiple items use the same relative item then their order can be customized with position property.
+   * 
+   * If this property set to null, family layout algorithm will try to choose elements order via placing connected 
+   * nodes as close to each other as posible.
+   * 
+   * @type {string | undefined}
+   */
   this.relativeItem = null;
 
-	/*
-		Property: placementType
-      Placement type defines Left ot Right side placement relative to relativeItem.
-		Deafult:
-			<primitives.common.AdviserPlacementType.Auto>
-	*/
+  /**
+   * Relative placement type defines Left ot Right side placement of the node relative to the `relativeItem`.
+   * 
+   * @type {AdviserPlacementType}
+   */
   this.placementType = primitives.common.AdviserPlacementType.Right;
 
-	/*
-    Property: position
-      Property defines ordering of elements placed relative to the same item.
-	*/
+  /**
+   * Relative position defines order of elements placed relative to the same relative item on the same side.
+   * 
+   * @type {number}
+   */
   this.position = null;
 
-	/*
-	Property: title
-	Default template title property.
-	*/
+  /**
+   * Title
+   * 
+   * @type {string}
+   */
   this.title = null;
 
-	/*
-	Property: description
-	Default template description element.
-	*/
+  /**
+   * Description
+   * 
+   * @type {string}
+   */
   this.description = null;
 
-	/*
-	Property: image
-	Url to image. This property is used in default template.
-	*/
+  /**
+   * Image
+   * 
+   * @type {string}
+   */
   this.image = null;
 
-	/*
-	Property: context
-	User context object.
-	*/
+  /**
+   * Context object
+   * 
+   * @type {object}
+   */
   this.context = null;
 
-	/*
-	Property: itemTitleColor
-	Default template title background color. The same color is used to draw minimized/dotted item.
-	*/
+  /**
+   * Title background color. The same color is used for node marker when control has enabled auto fit mode.
+   * 
+   * @type {string}
+   */
   this.itemTitleColor = primitives.common.Colors.RoyalBlue;
 
-	/*
-	Property: minimizedItemShapeType
-		Defines minimized/dotted item shape type. By default it is set by ItemTemplate.minimizedItemShapeType property.
-		Use this property to set marker type individually per item.
-
-	See Also:
-		<primitives.common.ShapeType>
-	*/
+  /**
+   * Marker type. The shape of the marker when node is minimized by autofit. The control supports auto fit of diagram into available screen space.
+   * When diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
+   * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
+   * So this option sets marker shape for individual node.
+   * 
+   * @type {ShapeType}
+   */
   this.minimizedItemShapeType = null;
 
-	/*
-	Property: groupTitle
-	Auxiliary group title property. Displayed vertically on the side of item.
-	*/
+  /**
+   * Group Title. The group title on the side of the diagram node is one of controls default easy to use features.
+   * It gives extra dimension for nodes visual grouping in the diagram.
+   * 
+   * @type {string}
+   */
   this.groupTitle = null;
 
-	/*
-	Property: groupTitleColor
-	Group title background color.
-	*/
+  /**
+   * The group title background color.
+   * 
+   * @type {string}
+   */
   this.groupTitleColor = primitives.common.Colors.RoyalBlue;
 
-	/*
-	Property: isActive
-		If it is true then item is selectable in hierarchy and it has mouse over highlight. 
-
-	True - Item is clickable.
-	False - Item is inactive and user cannot set cursor item or highlight.
-
-	Default:
-		true
-	*/
+  /**
+   * If true it makes item inactive in the diagram layout. Inactive items are regular items excluded from navigation, that means 
+   * when diagram uses auto fit mode, selection of the neighboring nodes goes through inactive items, so all nodes next to inactive item
+   * become selected and shown in full size as well. Inactive items play a role of in layout annotations having no user interaction
+   * and templated with HTML. For example they can be used to add titles into family diagram layout or terminator items
+   * indicating that upon reaching them diagram would load extra nodes into layout.
+   * 
+   * @type {boolean}
+   */
   this.isActive = true;
 
-	/*
-	Property: hasSelectorCheckbox
-		If it is true then selection check box is shown for the item. 
-		Selected items are always shown in normal form, so if item is 
-		selected then its selection check box is visible and checked.
-
-	Auto - Depends on <primitives.famdiagram.Config.hasSelectorCheckbox> setting.
-	True - Selection check box is visible.
-	False - No selection check box.
-
-	Default:
-	<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Shows selection check box for the node.
+   * If Auto then selection check box visibility depends on control's configuration.
+   * 
+   * Auto - depends on `hasSelectorCheckbox` property of the control
+   * True - shown
+   * False - hidden
+   * 
+   * @type {Enabled}
+   */
   this.hasSelectorCheckbox = primitives.common.Enabled.Auto;
 
-	/*
-	Property: hasButtons
-		This option controls buttons panel visibility. 
-
-	Auto - Depends on <primitives.famdiagram.Config.hasButtons> setting.
-	True - Has buttons panel.
-	False - No buttons panel.
-
-	Default:
-	<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Shows context buttons panel for the node.
+   * If Auto then context buttons panel visibility depends on control's configuration.
+   * 
+   * Auto - depends on `hasButtons` property of the control
+   * True - shown
+   * False - hidden
+   * 
+   * @type {Enabled}
+   */
   this.hasButtons = primitives.common.Enabled.Auto;
 
-	/*
-	Property: templateName
-		This is template name used to render this item.
-
-		See Also:
-		<primitives.famdiagram.TemplateConfig>
-		<primitives.famdiagram.Config.templates> collection property.
-	*/
+  /**
+   * Template name. Templates are HTML fragments containing layout and styles used to render diagram nodes.
+   * They are defined with a named configuration objects. See `templates` property of control's configuration object.
+   * This option lets individually assign rendering template per individual node of the diagram.
+   * 
+   * @type {string}
+   */
   this.templateName = null;
 
-	/*
-	Property: showCallout
-		This option controls items callout visibility.
-
-	Auto - depends on <primitives.famdiagram.Config.showCallout> option
-	True - shown
-	False - hidden
-
-	Default:
-		<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Sets callout annotation visibility for individual node. The callout annotation is one of easy to use features of the control.
+   * By default it is displayed for markers in order to preview their node's content. The content is displayed using
+   * current template of the node it is rendered for.
+   * 
+   * The callout can be forced to be displayed for regular nodes as well. In that case use `calloutTemplateName` property
+   * to change their template.
+   * 
+   * Auto - depends on `showCallout` property of the control
+   * True - shown regardless of node's visibility
+   * False - hidden
+   * 
+   * @type {Enabled}
+   */
   this.showCallout = primitives.common.Enabled.Auto;
 
-	/*
-	Property: calloutTemplateName
-		This is template name used to render callout for dotted item. 
-		Actual callout template name is defined by following sequence:
-		<primitives.famdiagram.ItemConfig.calloutTemplateName> 
-		<primitives.famdiagram.ItemConfig.templateName>
-		<primitives.famdiagram.Config.defaultCalloutTemplateName>
-		<primitives.famdiagram.Config.defaultTemplateName>
-
-	See Also:
-		<primitives.famdiagram.Config.templates> collection property.
-	Default:
-		null
-	*/
+  /**
+   * Callout annotation template name. This option lets individually assign rendering callout annotation template
+   * per individual node of the diagram.
+   * 
+   * Templates are HTML fragments containing layout and styles used to render diagram nodes.
+   * They are defined with a named configuration objects. See `templates` property of control's configuration object.
+   * 
+   * @type {string}
+   */
   this.calloutTemplateName = null;
 
-	/*
-	Property: label
-	Items label text.
-	*/
+  /**
+   * Marker label.
+   * 
+   * @type {string}
+   */
   this.label = null;
 
-	/*
-	Property: showLabel
-		This option controls items label visibility. Label is displayed in form of div having text inside, long string is wrapped inside of it. 
-		User can control labels position relative to its item. Chart does not preserve space for label.
-
-	Auto - depends on <primitives.famdiagram.Config.labelOrientation> setting.
-	True - always shown.
-	False - hidden.
-
-	See Also:
-	<primitives.famdiagram.ItemConfig.label>
-	<primitives.famdiagram.Config.labelSize>
-
-	Default:
-		<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Sets label visibility for individual nodes. Labels are only rendered for a node's markers. 
+   * 
+   * The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes
+   * into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels.
+   * 
+   * Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict
+   * resoltion to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
+   * is going to stay visible.
+   * 
+   * Auto - displays label only when it has space to be rendered.
+   * True - shows label regardless, even if it overlaps other labels and nodes.
+   * False - hidden.
+   * 
+   * @type {Enabled}
+   */
   this.showLabel = primitives.common.Enabled.Auto;
 
-	/*
-	Property: labelSize
-		Defines label size. It is needed to avoid labels overlapping. If one label overlaps another label or item it will be hidden. 
-		Label string is wrapped when its length exceeds available width. 
-		By default it is equal to charts <primitives.famdiagram.Config.labelSize>.
-
-	See Also:
-		<primitives.common.Size>
-	Default:
-		null;
-	*/
+  /**
+   * Label size. Sets label's placeholder `div` size and controls conflict resolution if labels overlap each other.
+   * If `null` then it is set to `labelSize` property of the control configuration.
+   * 
+   * @type {Size}
+   */
   this.labelSize = null;
 
-	/*
-	Property: labelOrientation
-		Defines label orientation. 
-		In default <primitives.text.TextOrientationType.Auto> mode it depends on chart <primitives.famdiagram.Config.labelOrientation> setting.
-
-	See Also:
-	<primitives.famdiagram.Config.labelOrientation>
-	<primitives.text.TextOrientationType>
-
-	Default:
-		<primitives.text.TextOrientationType.Auto>
-	*/
+  /**
+   * Label orientation.
+   * If `Auto` then it is set to `labelOrientation` property of the control configuration.
+   * 
+   * @type {TextOrientationType}
+   */
   this.labelOrientation = primitives.text.TextOrientationType.Auto;
 
-	/*
-	Property: labelPlacement
-		Defines label placement relative to the item. 
-		In default <primitives.common.PlacementType.Auto> mode it depends on chart <primitives.famdiagram.Config.labelPlacement> setting.
-
-	See Also:
-		<primitives.famdiagram.Config.labelPlacement>
-		<primitives.common.PlacementType>
-
-	Default:
-		<primitives.common.PlacementType.Auto>
-	*/
+  /**
+   * Label placement. Sets label placement relative to the marker bounding rectangle.
+   * If `Auto` then it is set to `labelPlacement` of the control configuration.
+   * 
+   * @type {PlacementType}
+   */
   this.labelPlacement = primitives.common.PlacementType.Auto;
 
   switch (arguments.length) {
@@ -263,7 +249,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
       break;
     case 5:
       this.id = arg0;
-      this.parent = arg1;
+      this.parents = arg1;
       this.title = arg2;
       this.description = arg3;
       this.image = arg4;

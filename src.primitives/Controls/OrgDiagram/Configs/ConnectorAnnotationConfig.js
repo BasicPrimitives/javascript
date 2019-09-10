@@ -1,157 +1,136 @@
-/*
-	Class: primitives.orgdiagram.ConnectorAnnotationConfig
-		Options class. Populate annotation collection with instances of this objects to draw connector between two items.
-	
-	See Also:
-		<primitives.orgdiagram.Config.annotations>
-*/
+/**
+ * @class ConnectorAnnotationConfig
+ * @classdesc  Connector annotation configuration object. Connector annotations draws lines between two nodes of the diagram.
+ * They are drawn on top of existing diagram layout and they don't affect nodes placement. So it is users responsibility to
+ * preserve space between nodes for them. 
+ *
+ * @param {object} arg0 Object properties.
+ */
 primitives.orgdiagram.ConnectorAnnotationConfig = function (arg0, arg1) {
-	var property;
+  var property;
 
-	/*
-	Property: annotationType
-		Annotation type. All various annotations are defined in annotations collection property of <primitives.orgdiagram.Config>. 
-		So this property is needed to define annotation type when we use JavaScript non-prototype objects.
-		See other annotations as well.
+  /**
+   * Annotation type. All types of annotations objects are added to `annotations` collection property of the control.
+   * This property is needed to distiguish them when they are defined as JSON objects.
+   * 
+   * @type {AnnotationType}
+   */
+  this.annotationType = primitives.common.AnnotationType.Connector;
 
-	Default:
-		<primitives.common.AnnotationType.Connector>
+  /**
+   * Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other.
+   * If you place annotations over diagram nodes then you block mouse events of UI elements in their templates.
+   * Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item
+   * templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top
+   * of other visual elements. The control takes this into account and renders buttons panel on top of everyhting,
+   * so they are never blocked by annotations drawn in front of diagram nodes.
+   * 
+   * @type {ZOrderType}
+   */
+  this.zOrderType = primitives.common.ZOrderType.Foreground;
 
-	See Also:
-		<primitives.orgdiagram.Config.annotations>
-		<primitives.orgdiagram.ShapeAnnotationConfig>
-		<primitives.orgdiagram.BackgroundAnnotationConfig>
-		<primitives.orgdiagram.HighlightPathAnnotationConfig>
-	*/
-	this.annotationType = primitives.common.AnnotationType.Connector;
+  /**
+   * The start node of connection line
+   * 
+   * @type {string}
+   */
+  this.fromItem = null;
 
-	/*
-	Property: zOrderType
-		Defines annotation Z order placement relative to chart items. Chart items are drawn in layers on top of each other. We can draw annotations under the items or over them. 
-		If you place annotations over items then you block mouse events of UI elements in them. Browsers don't support mouse events transparentcy consistently. 
-		So in order to avoid mouse events blocking of UI elements in item templates you have to place annotation items under them.
-		Take into account that chart default buttons are drawn on top of everyhting, so they are never blocked by annotations drawn over items.
+  /**
+   * The end node of connection line
+   * 
+   * @type {string}
+   */
+  this.toItem = null;
 
-	Default:
-		<primitives.common.ZOrderType.Foreground>
-	*/
-	this.zOrderType = primitives.common.ZOrderType.Foreground;
+  /**
+   * Connector shape type defines number of lines and arrows at their ends drawn between nodes of the connector annotation.
+   * This feature combined with basic conflict resolution, which places overlapping annotations in parallel when they overlap each other,
+   * gives you full flexibility over variations of possible connector lines between two given nodes of diagram.
+   * 
+   * @type {ConnectorShapeType}
+   */
+  this.connectorShapeType = primitives.common.ConnectorShapeType.OneWay;
 
-	/*
-	Property: fromItem 
-		Reference to from item in hierarchy.
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-	*/
-	this.fromItem = null;
+  /**
+   * Connector placement type defines style of connector line drawing over diagram layout. It supports two options: 
+   * the `Straight` is classic direct line connecting two nodes, this is the most expected style of connector annotation
+   * drawing over diagram, the second style is called `Offbeat` and it is designed to dynamically adopt to nodes mutual 
+   * location and gap between them. It uses free hand line style drawing going from start to the end node. Since every diagram 
+   * is packed with various connection lines, this annotation placement style is deliberately made not straight, so it can be 
+   * noticeable on top of other lines of the diagram.
+   * 
+   * @type {ConnectorPlacementType}
+   */
+  this.connectorPlacementType = primitives.common.ConnectorPlacementType.Offbeat;
 
-	/*
-	Property: toItem 
-		Reference to from item in hierarchy.
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-	*/
-	this.toItem = null;
+  /**
+   * Label placement relative to connector annotation. Connector annotation is bound and drawn between two nodes
+   * defined by two properties: `fromItem` and `toItem`. Label can be placed close to "start", "end" nodes or in between of them
+   * along the connector line. 
+   * 
+   * @type {ConnectorLabelPlacementType}
+   */
+  this.labelPlacementType = primitives.common.ConnectorLabelPlacementType.Between;
 
-	/*
-	Property: connectorShapeType
-		Connector shape type. 
+  /**
+   * Connector line end points offset. By default connection lines start from the margin of the node's rectangle.
+   * If offset is positive then start point goes from outside of the rectangle, if it is negative then it starts from inside of the nodes rectangle.
+   * 
+   * @type {Thickness}
+   */
+  this.offset = new primitives.common.Thickness(0, 0, 0, 0);
 
-	Default:
-		<primitives.common.ConnectorShapeType.OneWay>
-	*/
-	this.connectorShapeType = primitives.common.ConnectorShapeType.OneWay;
+  /**
+   * Border line width.
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 2;
 
-	/*
-		Property: connectorPlacementType
-			Defines connector annotation shape placement mode between two items. 
-			It uses off beat placement mode as default in order to avoid overlapping
-			of base hierarchy connecting lines.
+  /**
+   * Color
+   * 
+   * @type {string}
+   */
+  this.color = primitives.common.Colors.Black;
 
-		Default:
-			<primitives.common.ConnectorPlacementType.Offbeat>
-	*/
-	this.connectorPlacementType = primitives.common.ConnectorPlacementType.Offbeat;
+  /**
+   * Line pattern
+   * 
+   * @type {LineType}
+   */
+  this.lineType = primitives.common.LineType.Solid;
 
-	/*
-	Property: labelPlacementType
-		Label placement type along connection line(s). 
+  /**
+   * If true then annotated nodes are shown full size regardless of controls autofit mode and available screen space.
+   * @type {boolean}
+   */
+  this.selectItems = true;
 
-	Default:
-		<primitives.common.ConnectorLabelPlacementType.Between>
-	*/
-	this.labelPlacementType = primitives.common.ConnectorLabelPlacementType.Between;
+  /**
+   * Label. Label styled with css class name "bp-connector-label".
+   * @type {string}
+   */
+  this.label = null;
 
-	/*
-	Property: offset
-		Connector's from and to points offset off the rectangles side. Connectors connection points can be outside of rectangles and inside for negative offset value.
-	See also:
-		<primitives.common.Thickness>
-	*/
-	this.offset = new primitives.common.Thickness(0, 0, 0, 0);
+  /**
+   * Label size
+   * @type {Size}
+   */
+  this.labelSize = new primitives.common.Size(60, 30);
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 2;
-
-	/*
-	Property: color
-		Connector's color.
-	
-	Default:
-		<primitives.common.Colors.Black>
-	*/
-	this.color = primitives.common.Colors.Black;
-
-	/*
-	Property: lineType
-		Connector's line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = primitives.common.LineType.Solid;
-
-	/*
-	Property: selectItems
-		Always show annotated items in normal state. Setting this option is equivalent to adding annotated items to collection of selected items.
-
-	Default:
-		true
-
-	See Also:
-		<primitives.orgdiagram.Config.selectedItems>
-	*/
-	this.selectItems = true;
-
-	/*
-	Property: label
-		Annotation label text. Label styled with css class name "bp-connector-label".
-	*/
-	this.label = null;
-
-	/*
-	Property: labelSize
-		Annotation label size.
-
-	Default:
-		new <primitives.common.Size>(60, 30);
-	*/
-	this.labelSize = new primitives.common.Size(60, 30);
-
-	switch (arguments.length) {
-		case 1:
-			for (property in arg0) {
-				if (arg0.hasOwnProperty(property)) {
-					this[property] = arg0[property];
-				}
-			}
-			break;
-		case 2:
-			this.fromItem = arg0;
-			this.toItem = arg1;
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      for (property in arg0) {
+        if (arg0.hasOwnProperty(property)) {
+          this[property] = arg0[property];
+        }
+      }
+      break;
+    case 2:
+      this.fromItem = arg0;
+      this.toItem = arg1;
+      break;
+  }
 };

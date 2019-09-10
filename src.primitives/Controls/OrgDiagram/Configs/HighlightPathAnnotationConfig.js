@@ -1,112 +1,95 @@
-/*
-	Class: primitives.orgdiagram.HighlightPathAnnotationConfig
-		Options class. Populate annotation collection with instances of this objects to draw path between items.
-		Path is drawn along base connection lines displaying relationships between item of the chart.
-	See Also:
-		<primitives.orgdiagram.Config.annotations>
-*/
+/**
+ * @class HighlightPathAnnotationConfig
+ * @classdesc  Highlight path annotation configuration object. Highlight path annotation traces path between given sequence of nodes 
+ * over existing connector lines in the diagram.
+ *
+ * @param {object} arg0 Object properties.
+ */
 primitives.orgdiagram.HighlightPathAnnotationConfig = function (arg0) {
-	var property;
+  var property;
 
-	/*
-	Property: annotationType
-		Annotation type. All various annotations are defined in annotations collection property of <primitives.orgdiagram.Config>. 
-		So this property is needed to define annotation type when we use JavaScript non-prototype objects.
-		See other annotations as well.
+  /**
+   * Annotation type. All types of annotations objects are added to `annotations` collection property of the control.
+   * This property is needed to distiguish them when they are defined as JSON objects.
+   * 
+   * @type {AnnotationType}
+   */
+  this.annotationType = primitives.common.AnnotationType.HighlightPath;
 
-	Default:
-		<primitives.common.AnnotationType.HighlightPath>
+  /**
+   * Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other.
+   * If you place annotations over diagram nodes then you block mouse events of UI elements in their templates.
+   * Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item
+   * templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top
+   * of other visual elements. The control takes this into account and renders buttons panel on top of everyhting,
+   * so they are never blocked by annotations drawn in front of diagram nodes.
+   * 
+   * @type {ZOrderType}
+   */
+  this.zOrderType = primitives.common.ZOrderType.Foreground;
 
-	See Also:
-		<primitives.orgdiagram.Config.annotations>
-		<primitives.orgdiagram.ConnectorAnnotationConfig>
-		<primitives.orgdiagram.ShapeAnnotationConfig>
-		<primitives.orgdiagram.BackgroundAnnotationConfig>
-	*/
-	this.annotationType = primitives.common.AnnotationType.HighlightPath;
+  /**
+   * Collection of nodes ids this annotation is drawn for. Please, pay attention that this is array of nodes ids. So if diagram finds
+   * wrong path from start to end node you have possibility to define every intermediate node in the sequence yourself.
+   * 
+   * @type {string[]}
+   */
+  this.items = [];
 
-	/*
-	Property: zOrderType
-		Defines annotation Z order placement relative to chart items. Chart items are drawn in layers on top of each other.
-		Highlight path annotations can be placed under main connectors wire or over. 
+  /**
+   * Border line width
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 2;
 
-	Default:
-		<primitives.common.ZOrderType.Foreground>
-	*/
-	this.zOrderType = primitives.common.ZOrderType.Foreground;
+  /**
+   * Line color
+   * 
+   * @type {string}
+   */
+  this.color = primitives.common.Colors.Red;
 
-	/*
-	Property: items 
-		Array of item ids in hierarchy.
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-	*/
-	this.items = [];
+  /**
+   * Line type
+   * 
+   * @type {LineType}
+   */
+  this.lineType = primitives.common.LineType.Solid;
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 2;
+  /**
+   * Opacity.
+   * 
+   * @type {number}
+   */
+  this.opacity = 1;
 
-	/*
-	Property: color
-		Connector's color.
-	
-	Default:
-		<primitives.common.Colors.Black>
-	*/
-	this.color = primitives.common.Colors.Red;
+  /**
+   * If true then annotation has arrows along the highlight path line.
+   * 
+   * @type {boolean}
+   */
+  this.showArrows = true;
 
-	/*
-	Property: lineType
-		Connector's line pattern.
+  /**
+   * If true then annotated nodes are shown full size regardless of controls autofit mode and available screen space.
+   * @type {boolean}
+   */
+  this.selectItems = false;
 
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = primitives.common.LineType.Solid;
-
-	/*
-	Property: opacity
-		Connector's line opacity.
-	*/
-	this.opacity = 1;
-
-	/*
-	Property: showArrows
-		This option controls arrows visibility along highlight path. 
-
-	Default:
-		true
-	*/
-	this.showArrows = true;
-
-	/*
-	Property: selectItems
-		Always show annotated items in normal state. Setting this option is equivalent to adding annotated items to collection of selected items.
-
-	Default:
-		true
-
-	See Also:
-		<primitives.orgdiagram.Config.selectedItems>
-	*/
-	this.selectItems = false;
-
-	switch (arguments.length) {
-		case 1:
-			if (arg0 !== null) {
-				if (arg0 instanceof Array) {
-					this.items = arg0;
-				} else if (typeof arg0 == "object") {
-					for (property in arg0) {
-						if (arg0.hasOwnProperty(property)) {
-							this[property] = arg0[property];
-						}
-					}
-				}
-			}
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      if (arg0 !== null) {
+        if (arg0 instanceof Array) {
+          this.items = arg0;
+        } else if (typeof arg0 == "object") {
+          for (property in arg0) {
+            if (arg0.hasOwnProperty(property)) {
+              this[property] = arg0[property];
+            }
+          }
+        }
+      }
+      break;
+  }
 };

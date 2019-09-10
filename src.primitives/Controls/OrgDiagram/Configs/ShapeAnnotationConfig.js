@@ -1,174 +1,141 @@
-/*
-	Class: primitives.orgdiagram.ShapeAnnotationConfig
-		Options class. Populate annotation collection with instances of this objects to draw shape benith or on top of several items.
-		Shape is drawn as rectangular area.
-	See Also:
-		<primitives.orgdiagram.Config.annotations>
-*/
+/**
+ * @class ShapeAnnotationConfig
+ * @classdesc  Shape annotation configuration object. Shape annotation is a possibility to draw some geometrical
+ * shapes over nodes of the diagram. 
+ *
+ * @param {object} arg0 Object properties.
+ */
 primitives.orgdiagram.ShapeAnnotationConfig = function (arg0) {
-	var property;
+  var property;
 
-	/*
-	Property: annotationType
-		Annotation type. All various annotations are defined in annotations collection property of <primitives.orgdiagram.Config>. 
-		So this property is needed to define annotation type when we use JavaScript non-prototype objects.
-		See other annotations as well.
+  /**
+   * Annotation type. All types of annotations objects are added to `annotations` collection property of the control.
+   * This property is needed to distiguish them when they are defined as JSON objects.
+   * 
+   * @type {AnnotationType}
+   */
+  this.annotationType = primitives.common.AnnotationType.Shape;
 
-	Default:
-		<primitives.common.AnnotationType.Shape>
+  /**
+   * Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other.
+   * If you place annotations over diagram nodes then you block mouse events of UI elements in their templates.
+   * Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item
+   * templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top
+   * of other visual elements. The control takes this into account and renders buttons panel on top of everyhting,
+   * so they are never blocked by annotations drawn in front of diagram nodes.
+   * 
+   * @type {ZOrderType}
+   */
+  this.zOrderType = primitives.common.ZOrderType.Auto;
 
-	See Also:
-		<primitives.orgdiagram.Config.annotations>
-		<primitives.orgdiagram.ConnectorAnnotationConfig>
-		<primitives.orgdiagram.BackgroundAnnotationConfig>
-		<primitives.orgdiagram.HighlightPathAnnotationConfig>
-	*/
-	this.annotationType = primitives.common.AnnotationType.Shape;
+  /**
+   * Collection of nodes ids this shape annotation is drawn for.
+   * 
+   * @type {string[]}
+   */
+  this.items = [];
 
-	/*
-	Property: zOrderType
-		Defines annotation Z order placement relative to chart items. Chart items are drawn in layers on top of each other. We can draw annotations under the items or over them. 
-		If you place annotations over items then you block mouse events of UI elements in them. Browsers don't support mouse events transparentcy consistently. 
-		So in order to avoid mouse events blocking of UI elements in item templates you have to place annotation items under them.
-		Take into account that chart default buttons are drawn on top of everyhting, so they are never blocked by annotations drawn over items.
+	/**
+   * Shape
+   * 
+   * @type {ShapeType}
+   */
+  this.shapeType = primitives.common.ShapeType.Rectangle;
 
-	Default:
-		<primitives.common.ZOrderType.Auto>
-	*/
-	this.zOrderType = primitives.common.ZOrderType.Auto;
+  /**
+   * Sets shape offset around annotated items.
+   * 
+   * @type {Thickness}
+   */
+  this.offset = new primitives.common.Thickness(0, 0, 0, 0);
 
-	/*
-	Property: items 
-		Array of items ids in hierarchy.
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-	*/
-	this.items = [];
+  /**
+   * Border line width
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 2;
 
-	/*
-	Property: shapeType
-		Shape type. 
+  /**
+   * Corner radius. Body corner radius in percents or pixels. For applicable shapes only.
+   * 
+   * @type {string|number}
+   */
+  this.cornerRadius = "10%";
 
-	Default:
-		<primitives.common.ShapeType.Rectangle>
-	*/
-	this.shapeType = primitives.common.ShapeType.Rectangle;
+  /**
+   * Background color opacity.
+   * 
+   * @type {number}
+   */
+  this.opacity = 1;
 
-	/*
-	Property: offset
-		Connector's from and to points offset off the rectangles side. Connectors connection points can be outside of rectangles and inside for negative offset value.
-	See also:
-		<primitives.common.Thickness>
-	*/
-	this.offset = new primitives.common.Thickness(0, 0, 0, 0);
+  /**
+   * Shape border line color
+   * 
+   * @type {string}
+   */
+  this.borderColor = null;
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 2;
+  /**
+   * Shape fill color
+   * 
+   * @type {string}
+   */
+  this.fillColor = null;
 
-	/*
-	Property: cornerRadius
-		Body corner radius in percents or pixels. For applicable shapes only.
-	*/
-	this.cornerRadius = "10%";
+  /**
+   * Border line type
+   * 
+   * @type {LineType}
+   */
+  this.lineType = primitives.common.LineType.Solid;
 
-	/*
-	Property: opacity
-		Background color opacity. For applicable shapes only.
-	*/
-	this.opacity = 1;
+  /**
+   * If true then annotated nodes are shown full size regardless of controls autofit mode and available screen space.
+   * @type {boolean}
+   */
+  this.selectItems = false;
 
-	/*
-	Property: borderColor
-		Shape border line color.
-	
-	Default:
-		null
-	*/
-	this.borderColor = null;
+  /**
+   * Label. Label styled with css class name "bp-connector-label".
+   * @type {string}
+   */
+  this.label = null;
 
-	/*
-	Property: fillColor
-		Fill Color. 
+  /**
+   * Label size
+   * @type {Size}
+   */
+  this.labelSize = new primitives.common.Size(60, 30);
 
-	Default:
-		null
-	*/
-	this.fillColor = null;
+  /**
+   * Label placement relative to the annotation.
+   * 
+   * @type {PlacementType}
+   */
+  this.labelPlacement = primitives.common.PlacementType.Auto;
 
-	/*
-	Property: lineType
-		Connector's line pattern.
+  /**
+   * Label offset from shape in pixels.
+   * 
+   * @type {number}
+   */
+  this.labelOffset = 4;
 
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = primitives.common.LineType.Solid;
-
-	/*
-	Property: selectItems
-		Always show annotated items in normal state. Setting this option is equivalent to adding annotated items to collection of selected items.
-
-	Default:
-		true
-
-	See Also:
-		<primitives.orgdiagram.Config.selectedItems>
-	*/
-	this.selectItems = false;
-
-	/*
-	Property: label
-		Annotation label text. Label styled with css class name "bp-connector-label".
-	*/
-	this.label = null;
-
-	/*
-	Property: labelSize
-		Annotation label size.
-
-	Default:
-		new <primitives.common.Size>(60, 30);
-	*/
-	this.labelSize = new primitives.common.Size(60, 30);
-
-	/*
-	Property: labelPlacement
-		Defines label placement relative to the shape. 
-
-	See Also:
-		<primitives.orgdiagram.Config.labelPlacement>
-		<primitives.common.PlacementType>
-
-	Default:
-		<primitives.common.PlacementType.Auto>
-	*/
-	this.labelPlacement = primitives.common.PlacementType.Auto;
-
-	/*
-	Property: labelOffset
-		Defines label offset from shape in pixels.
-
-	Default:
-		4;
-	*/
-	this.labelOffset = 4;
-
-	switch (arguments.length) {
-		case 1:
-			if (arg0 !== null) {
-				if (arg0 instanceof Array) {
-					this.items = arg0;
-				} else if (typeof arg0 == "object") {
-					for (property in arg0) {
-						if (arg0.hasOwnProperty(property)) {
-							this[property] = arg0[property];
-						}
-					}
-				}
-			}
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      if (arg0 !== null) {
+        if (arg0 instanceof Array) {
+          this.items = arg0;
+        } else if (typeof arg0 == "object") {
+          for (property in arg0) {
+            if (arg0.hasOwnProperty(property)) {
+              this[property] = arg0[property];
+            }
+          }
+        }
+      }
+      break;
+  }
 };

@@ -10,20 +10,19 @@
  *  
  * @enum {AdviserPlacementType}
  */
-primitives.common.AdviserPlacementType =
-{
+primitives.common.AdviserPlacementType = {
 	/**
 	 * Auto select by layout manager
 	 */
-	Auto: 0,
+  Auto: 0,
 	/**
 	 * Left side
 	 */
-	Left: 2,
+  Left: 2,
 	/**
 	 * Right side
 	 */
-	Right: 3
+  Right: 3
 };
 
 primitives.orgdiagram.AdviserPlacementType = primitives.common.AdviserPlacementType;

@@ -1,27 +1,25 @@
-/*
-	Class: primitives.famdiagram.Config
-		famDiagram options class. Multi-parent hierarchical chart configuration.
-	
-*/
+/**
+ * @class Config
+ * @classdesc Family Chart configuration object. Use this object as a reference 
+ * for available properties and their default values.
+ * 
+ * @param {string} name
+ */
 primitives.famdiagram.Config = function (name) {
   this.name = (name !== undefined) ? name : "FamDiagram";
   this.classPrefix = "famdiagram";
 
-	/*
-		Property: navigationMode
-			Defines control navigation mode. By default control replicates interactivity of regular Tree control. 
-			It has highlight for mouse over feedback and it has cursor for showing currently selected single node in diagram.
-			In order to avoid creation of plus/minus buttons for children nodes folding and unfolding, 
-			this functionality is done automatically for current cursor item. This is especially true for family diagram, 
-			because it has no logical root, so cursor plays vital role for unfolding of nodes 
-			and zooming into area of user interest in diagram.
-			Use this option to disable highlight which does not make sense on touch devices or make control inactive completly.
-
-		See Also:
-			<primitives.common.NavigationMode>
-		Default:
-			<primitives.common.NavigationMode.Default>
-	*/
+  /**
+   * Sets control navigation mode.
+   * 
+   * By default control replicates interactivity of regular collection control. It has cursor to select single
+   * item in the collection. So user can click and select any node in the diagram. The control has highlight for mouse over feedback.
+   * So user can move mouse and see highlight frame and callout callback annotation for node under cursor.
+   * 
+   * By `Default` the control has both cursor and highlight. If they are disabled then control is rendered as a static image.
+   * 
+   * @type {NavigationMode}
+   */
   this.navigationMode = primitives.common.NavigationMode.Default;
 
 	/*

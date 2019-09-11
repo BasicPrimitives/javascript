@@ -1,8 +1,10 @@
-/*
-	Class: primitives.orgdiagram.Config
-		jQuery orgDiagram Widget options class. Organizational chart configuration object.
-	
-*/
+/**
+ * @class Config
+ * @classdesc Organizational Chart configuration object. Use this object as a reference 
+ * for available properties and their default values.
+ * 
+ * @param {string} name
+ */
 primitives.orgdiagram.Config = function (name) {
   this.name = (name !== undefined) ? name : "OrgDiagram";
   this.classPrefix = "orgdiagram";
@@ -14,7 +16,7 @@ primitives.orgdiagram.Config = function (name) {
    * item in the collection. So user can click and select any node in the diagram. The control has highlight for mouse over feedback.
    * So user can move mouse and see highlight frame and callout callback annotation for node under cursor.
    * 
-   * By `Default` the control has both cursor and highlight. If they are disabled then control is rendered as static image.
+   * By `Default` the control has both cursor and highlight. If they are disabled then control is rendered as a static image.
    * 
    * @type {NavigationMode}
    */
@@ -136,54 +138,53 @@ primitives.orgdiagram.Config = function (name) {
    */
   this.emptyDiagramMessage = "Diagram is empty.";
 
-	/*
-	Property: items
-		This is chart items collection. It is regular array of items of type ItemConfig. Items reference each other via parent property. 
-		So every item may have only one parent in chart. If parent set to null then item displayed at root of chart. 
-		Chart can have multiple root items simultaniously. If item references missing item, then it is ignored. 
-		If items loop each other they are ignored as well. It is applications responsiblity to avoid such issues.
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig>
-		<primitives.orgdiagram.ItemConfig.id>
-		<primitives.orgdiagram.ItemConfig.parent>
-	*/
+  /**
+   * Items collection. Ths property defines data we render in the diagram.
+   * 
+   * Every items should have unique `id` property set. They are used to create relations
+   * between items in the diagram and for rendering various UI elements bound to nodes.
+   * 
+   * @type {ItemConfig[]}
+   */
   this.items = [];
 
-	/*
-	Property: annotations
-		Array of annotaion objects. Chart supports several types of annotations. By default they are drawn on top of chart items and they block mouse events of UI elements placed in item templates.
-		The design assumes only few of them being displayed simultanuosly in other words chart does not resolve mutual overlaps of annotations, so don't over use them. 
-		This is especially true for connectors and background annotations.
-
-	See also:
-		<primitives.orgdiagram.ConnectorAnnotationConfig>
-		<primitives.orgdiagram.ShapeAnnotationConfig>
-		<primitives.orgdiagram.BackgroundAnnotationConfig>
-		<primitives.orgdiagram.HighlightPathAnnotationConfig>
-	*/
+  /**
+   * Annotations. Annotations are API elements that are attached to the diagram nodes.
+   * We draw our annotations either in front of the nodes or in the background. The annotations 
+   * don't affect the nodes placement in any way. As a result the control redraws them 
+   * instantaneously without rerendering or recalculating the actual diagram layout.
+   * 
+   * @type {Array.<(ShapeAnnotationConfig | BackgroundAnnotationConfig | ConnectorAnnotationConfig | HighlightPathAnnotationConfig)>}
+   */
   this.annotations = [];
 
-	/*
-	Property: cursorItem
-		Cursor item id - it is single item selection mode, user selects new cursor item on mouse click. 
-		Cursor defines current local zoom placement or in other words current navigation item in the chart,
-		all items relative to cursor always shoun in full size. So user can see all possible items around cursor in full size 
-		and can continue navigation around chart. So when user navigates from one item to another clicking on thems and changing cursor item
-		in chart, chart minimizes items going out of cursor scope and shows in full size items relative to new cursor position.
-		If it is null then no cursor shown on diagram.
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-		<primitives.orgdiagram.Config.onCursorChanging>
-		<primitives.orgdiagram.Config.onCursorChanged>
-	*/
+  /**
+   * Cursor item. Organization Chart control has API options equivalent to regular UI controls.
+   * The cursor item is used to select single item in the hierarchy with mouse click, 
+   * highlight item provides visual feed back on mouse over. Selected items collection 
+   * is equivalent to checked items in ListView or TreeView controls.
+   * 
+   * Chart navigation depends on current cursor item, chart shows cursor and its neighbours 
+   * in full size regardless of enabled page fit mode. So cursor item plays a role of local 
+   * zoom in the chart hierarchy. User navigates around chart via clicking and moving
+   * cursor item around and zooming into data around new cursor item.
+   * 
+   * The control notifies about this property chnges with `onHighlightChanging` and `onHighlightChanged` events.
+   * 
+   * If `null` then no cursor item selected in the diagram.
+   * 
+   * @type {string}
+   */
   this.cursorItem = null;
 
   /**
    * Highlighted item. Shows highlight and callout annotation for given item id. It does not trigger diagram
    * layout or scrolling so it can be used to syncronize mouse over feedback of the diagram nodes with other
-   * collection controls or UI elements. If it is `null` then no highlight shown on the diagram.
+   * collection controls or UI elements. 
+   * 
+   * The control notifies about this property chnges with `onHighlightChanging` and `onHighlightChanged` events.
+   * 
+   * If `null` then no highlight shown on the diagram.
    * 
    * @type {string}
    */
@@ -205,7 +206,7 @@ primitives.orgdiagram.Config = function (name) {
    * Selected items collection. Selected items is a collection of items ids having checked their check boxes.
    * The control always shows selected items in the full size form, regardless of enabled page fit mode.
    * 
-   * The control notifies about use made changes in this collection with `onSelectionChanging` and `onSelectionChanged` events.
+   * The control notifies about user made changes in this collection with `onSelectionChanging` and `onSelectionChanged` events.
    * 
    * @type {string[]}
    */

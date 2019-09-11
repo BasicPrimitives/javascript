@@ -22,614 +22,541 @@ primitives.famdiagram.Config = function (name) {
    */
   this.navigationMode = primitives.common.NavigationMode.Default;
 
-	/*
-		Property: graphicsType
-			Preferable graphics type. If preferred graphics type 
-			is not supported widget switches to first available. 
-
-		Default:
-			<primitives.common.GraphicsType.SVG>
-	*/
+  /**
+   * Sets prefered rendering technology. If selected graphics type is not supported on the device,
+   * then control will auto fallback to the first available one.
+   * 
+   * @type {GraphicsType}
+   */
   this.graphicsType = primitives.common.GraphicsType.SVG;
 
-	/*
-		Property: pageFitMode
-			Defines the way diagram is fit into page. By default chart minimize items when it has not enough space to fit all of them into screen. 
-			Chart has its maximum size when all items shown in full size and  its minimal size when all items shown as dots. 
-			It is equivalent of full zoom out of the chart items, dot size items are not readable, but such presentation of them 
-			gives possibility to overview chart layout. So chart tryes to combine both presenation modes and keep chart as small 
-			as possible in order to give user possibility to see big picture. Collapsed items provide ideal way for analitical reiew of 
-			diagram. If chart shown in its maximum size when all items are unfolded, it becomes impossible 
-			to navigate betwen parents close to the root item. In such mode chart is usable only at bottom levels when children are close to their parents.
-			If we try to navigate up to the root of hierarchy, gaps between parents sometimes as big as screen size. So in order to solve these 
-			issues chart partially collapses hierarchy into dots and lines depending on this option.
-
-		See also:
-			<primitives.famdiagram.Config.minimalVisibility>
-
-		Default:
-			<primitives.common.PageFitMode.FitToPage>
-	*/
+  /**
+   * Page fit mode. Minimizing nodes into markers and labels. This option provides a special mode that renders the diagram
+   * nodes in the form of markers. This is a highly scalable form that is capable of rendering large numbers of nodes
+   * while not affecting the rendering performance. With this, huge diagrams can be fit into avaialable screen space.
+   * 
+   * When using a graphics editor to manually draw your diagrams, it is common place to have large gaps between the nodes.
+   * This can make the diagram/chart unreadable, hard to edit and navigate. On top of that, on a large scale the diagram could have screen size
+   * intervals between items. Admittedly the computer UI does allow the user to scale and fit the diagram in order to visualize it
+   * on a single screen. But in that case, the items become small and unreadable as there is no scaling priority and the items
+   * are just too small to be readable.
+   * 
+   * @type {PageFitMode}
+   */
   this.pageFitMode = primitives.common.PageFitMode.FitToPage;
 
-	/*
-		Property: minimalVisibility
-			Defines minimal allowed item form size for page fit mode. See description for pageFitMode.
-	
-		See also:
-			<primitives.famdiagram.Config.pageFitMode>
-
-		Default:
-			<primitives.common.Visibility.Dot>
-	*/
+  /**
+   * Minimal nodes visibility in the diagram. If auto fit of the diagram into current page size is enabled, then
+   * this option controls minimum allowed size of the diagram nodes.
+   * 
+   * @type {Visibility}
+   */
   this.minimalVisibility = primitives.common.Visibility.Dot;
 
-	/*
-		Property: orientationType
-			Chart orientation. Chart can be rotated left, right and bottom.
-			Rotation to the right side is equivalent to left side placement 
-			in countries writing from right to left, so it is important for localization.
-
-		Default:
-			<primitives.common.OrientationType.Top>
-	*/
+  /**
+   * Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction,
+   * this is needed for Arabic support and various layouts.
+   * 
+   * @type {OrientationType}
+   */
   this.orientationType = primitives.common.OrientationType.Top;
 
-	/*
-	Property: verticalAlignment
-		Defines items vertical alignment relative to each other within one level of hierarchy. 
-		It does not affect levels having same size items.
-	
-	Default:
-		<primitives.common.VerticalAlignmentType.Middle>
-	*/
+  /**
+   * Sets items vertical alignment relative to each other within one level of the hierarchy. 
+   * It does not change anything if diagram nodes are all of the same size.
+   * 
+   * @type {VerticalAlignmentType}
+   */
   this.verticalAlignment = primitives.common.VerticalAlignmentType.Middle;
 
-	/*
-		Property: arrowsDirection
-			Sets direction of connector lines arrows.
-
-		Default:
-			<primitives.common.GroupByType.None>
-	*/
+  /**
+   * Sets arrows direction for connector lines. If this property set to `Parents` then arrows are drawn
+   * from logical children towards logical parents. By default diagram has no arrows.
+   * 
+   * @type {GroupByType}
+   */
   this.arrowsDirection = primitives.common.GroupByType.None;
 
-	/*
-	Property: showExtraArrows
-		Show extra horizontal arrows on top of connectors for easy navigation between parents and children through connector lines.
-		This options if off by default for organizational diagram.
-
-	Default:
-		false
-	*/
+  /**
+   * Show extra horizontal arrows on top of long horizontal connection lines for the easy visual tracing 
+   * of relations between parents and children. By default it is off.
+   * 
+   * @type {boolean}
+   */
   this.showExtraArrows = true;
 
-	/*
-	Property: extraArrowsMinimumSpace
-		If diagram is small relations between objects are easy to trace, so mutual positions of parents and children are enough to navigate from parent to children and backward.
-		If diagram is large and one row of children exceeds screen width then it use this option to activate horizontal arrows for large intervals between items.
-
-	Default:
-		30
-	*/
+  /**
+   * Set minimum space for placement of extra arrows on horizontal connection lines. See `showExtraArrows` property.
+   * 
+   * @type {number}
+   */
   this.extraArrowsMinimumSpace = 30;
 
-	/*
-		Property: groupByType
-			Defines the way item gravitates to parent or child layout having big vertical gap between levels.
-
-		Default:
-			<primitives.common.GroupByType.Children>
-	*/
+  /**
+   * This property sets loose nodes alignment between rows. Nodes can be placed close towards parents or children.
+   * 
+   * @type {GroupByType}
+   */
   this.groupByType = primitives.common.GroupByType.Children;
 
-	/*
-	Property: alignBylevels
-		This option keeps items at the same levels after connections bundling.
-
-	Default:
-		true
-	*/
+  /**
+   * This option keeps items at the same levels after connections bundling.
+   */
   this.alignBylevels = true;
 
-	/*
-		Property: enableMatrixLayout
-			This option enables automatic layout of nodes sharing the same set of parents and children in form of matrix.
-
-		Default:
-			false
-
-		See Also:
-			<primitives.famdiagram.Config.minimumMatrixSize>
-			<primitives.famdiagram.Config.maximumColumnsInMatrix>
-	*/
+  /**
+   * This option enables automatic layout of nodes sharing the same set of parents and children in form of matrix.
+   * 
+   * @type {boolean}
+   */
   this.enableMatrixLayout = false;
 
-	/*
-		Property: minimumMatrixSize
-			Minimum number of nodes placed into matrix layout. In order to place nodes in form of matrix they should share the same set of parents and children.
-
-		See Also:
-			<primitives.famdiagram.Config.enableMatrixLayout>
-			<primitives.famdiagram.Config.maximumColumnsInMatrix>
-
-		Default:
-			4
-	*/
+  /**
+   * Sets Minimum number of nodes needed to be shaped into matrix formtion. In order to shape nodes in 
+   * form of matrix they should share the same set of parents and children. See `enableMatrixLayout` property.
+   */
   this.minimumMatrixSize = 4;
 
-	/*
-		Property: maximumColumnsInMatrix
-			Maximum number of columns for matrix layout. Matrix layout keeps square shape up to number of columns defined by this option.
-			If number of columns reaches this value then matrix will grow by number of rows without adding new columns.
-			In order to place nodes in form of matrix they should share the same set of parents and children.
-
-		See Also:
-			<primitives.famdiagram.Config.minimumMatrixSize>
-			<primitives.famdiagram.Config.maximumColumnsInMatrix>
-	*/
+  /**
+   * Sets maximum number of columns in the matrix formation. The matrix formation stays squared as long as total number 
+   * of columns does not exceed this property value. In order to shape nodes into matrix formation they should
+   * share the same set of parents and children. See `enableMatrixLayout` property.
+   * 
+   * @type {number}
+   */
   this.maximumColumnsInMatrix = 6;
 
-	/*
-	Property: hideGrandParentsConnectors
-		This option hides direct connectors to grand parents. It helps to reduce diagrams connectors layout complexity. 
-		By default it is set to false, so control will always display all available connectors, 
-		but the same connetors could be displayed dynamically via usage of connectors annotations highlighting passes between nodes and all its dependents.
-		In order to give extra indication that node has direct connection to grand parent via its immidiate parent it may sense to use custom templates 
-		for all nodes it is connected to.
-
-	Default:
-		false
-	*/
+  /**
+   * Set this property to enable hiding of direct connectors to grand parents. It helps to reduce diagrams connectors layout complexity.
+   * 
+   * @type {boolean}
+   */
   this.hideGrandParentsConnectors = false;
 
-	/*
-		Property: elbowType
-			Style squared connectors with custom elbows.
-
-		Default:
-			<primitives.common.ElbowType.None>
-	*/
+  /**
+   * Set style of squared connectors with custom elbows.
+   * 
+   * @type {ElbowType}
+   */
   this.elbowType = primitives.common.ElbowType.Round;
 
-	/*
-		Property: bevelSize
-			Size of connector bevel.
-
-		Default:
-			4
-	*/
+  /**
+   * The bevel size of squared connector lines.
+   * 
+   * @type {number}
+   */
   this.bevelSize = 4;
 
-	/*
-		Property: elbowDotSize
-			Size of elbow dot.
-			
-		Default:
-			4
-	*/
+  /**
+   * The size of dot markers placed in the elbows of connector lines.
+   * 
+   * @type {number}
+   */
   this.elbowDotSize = 4;
 
-	/*
-	Property: emptyDiagramMessage
-		Empty message in order to avoid blank screen. This option is supposed to say user that chart is empty when no data inside.
-	*/
+  /**
+   * Empty diagram message. This option is supposed to say user that chart is empty when no data is available for rendering.
+   * 
+   * @type {string}
+   */
   this.emptyDiagramMessage = "Diagram is empty.";
 
-	/*
-	Property: items
-		This is chart items collection. It is regular array of items of type ItemConfig. Items reference each other via parents collection property. 
-		So every item may have multiple parents in chart. If parents collection is empty or set to null then item supposed to be root parent.
-		If items loop each other they are ignored as well. It is applications responsiblity to avoid such issues.
-
-	See Also:
-		<primitives.famdiagram.ItemConfig>
-		<primitives.famdiagram.ItemConfig.id>
-		<primitives.famdiagram.ItemConfig.parents>
-	*/
+  /**
+   * Items collection. Ths property defines data we render in the diagram.
+   * 
+   * Every items should have unique `id` property set. They are used to create relations
+   * between items in the diagram and for rendering various UI elements bound to nodes.
+   * 
+   * @type {ItemConfig[]}
+   */
   this.items = [];
 
-	/*
-	Property: annotations
-		Defines array of annotaions objects. Chart supports several types of annotations. They are drawn on top of chart and they may block view of some of them.
-		So chart's layout mechanism does not account available annotations. Don't over use this feature. 
-		The design assumes only few of them being displayed simultanuosly. This is especially true for connectors.
-
-	See also:
-		<primitives.famdiagram.ConnectorAnnotationConfig>
-		<primitives.famdiagram.ShapeAnnotationConfig>
-		<primitives.famdiagram.LabelAnnotationConfig>
-		<primitives.famdiagram.BackgroundAnnotationConfig>
-		<primitives.famdiagram.HighlightPathAnnotationConfig>
-	*/
+  /**
+   * Annotations. Annotations are API elements that are attached to the diagram nodes.
+   * We draw our annotations either in front of the nodes or in the background. The annotations 
+   * don't affect the nodes placement in any way. As a result the control redraws them 
+   * instantaneously without rerendering or recalculating the actual diagram layout.
+   * 
+   * @type {Array.<(ShapeAnnotationConfig | BackgroundAnnotationConfig | ConnectorAnnotationConfig | HighlightPathAnnotationConfig)>}
+   */
   this.annotations = [];
 
-	/*
-	Property: cursorItem
-		Cursor item id - it is single item selection mode, user selects new cursor item on mouse click. 
-		Cursor defines current local zoom placement or in other words current navigation item in the chart,
-		all items relative to cursor always shoun in full size. So user can see all possible items around cursor in full size 
-		and can continue navigation around chart. So when user navigates from one item to another clicking on thems and changing cursor item
-		in chart, chart minimizes items going out of cursor scope and shows in full size items relative to new cursor position.
-		If it is null then no cursor shown on diagram.
-
-	See Also:
-		<primitives.famdiagram.ItemConfig.id>
-		<primitives.famdiagram.Config.onCursorChanging>
-		<primitives.famdiagram.Config.onCursorChanged>
-	*/
+  /**
+   * Cursor item. Family Chart control has API options equivalent to regular UI controls.
+   * The cursor item is used to select single item in the hierarchy with mouse click, 
+   * highlight item provides visual feed back on mouse over. Selected items collection 
+   * is equivalent to checked items in ListView or TreeView controls.
+   * 
+   * Chart navigation depends on current cursor item, chart shows cursor and its neighbours 
+   * in full size regardless of enabled page fit mode. So cursor item plays a role of local 
+   * zoom in the chart hierarchy. User navigates around chart via clicking and moving
+   * cursor item around and zooming into data around new cursor item.
+   * 
+   * The control notifies about this property chnges with `onHighlightChanging` and `onHighlightChanged` events.
+   * 
+   * If `null` then no cursor item selected in the diagram.
+   * 
+   * @type {string}
+   */
   this.cursorItem = null;
 
-	/*
-	Property: highlightItem
-		Highlighted item id. Highlight is mouse over affect, but using this option applicatin can set highlight at any item 
-		in the chart programmatically. It can be used for chart syncronization with other controls on UI having mouse over effect. 
-		See primitives.famdiagram.Config.update method arguments description for fast chart update.
-		If it is null then no highlight shown on diagram.
-
-	See Also:
-		<primitives.famdiagram.ItemConfig.id>
-		<primitives.famdiagram.Config.onHighlightChanging>
-		<primitives.famdiagram.Config.onHighlightChanged>
-	*/
+  /**
+   * Highlighted item. Shows highlight and callout annotation for given item id. It does not trigger diagram
+   * layout or scrolling so it can be used to syncronize mouse over feedback of the diagram nodes with other
+   * collection controls or UI elements. 
+   * 
+   * The control notifies about this property chnges with `onHighlightChanging` and `onHighlightChanged` events.
+   * 
+   * If `null` then no highlight shown on the diagram.
+   * 
+   * @type {string}
+   */
   this.highlightItem = null;
 
-	/*
-	Property: highlightGravityRadius
-		The normal item has mouse over feedback in form of highlight border only when mouse pointer is inside of its boundaries. 
-		When items is minimized its marker can be so small that it is going to be difficult for end user to place mouse pointer inside of it.
-		This option defines highlight gravity radius, so minimized item gets highlighted when mouse pointer does not overlap marker but it is within gravity radius of its boundaries.
-		This property is ignored when nearest item is outside of screen boundaries and not visible to end user.
-	*/
+  /**
+   * Highlight gravity radius. This property controls mouse over feedback and callout annotation visibility for nodes
+   * rendered as markers when diagram auto fits nodes into available screen space. It makes marker highlighted when 
+   * mouse pointer is inside of the gravity radius cycle of the marker. This property is ignored when the nearest item
+   * is outside of the screen boundaries and is not visible to the end user.
+   *
+   * The normal item has mouse over feedback in form of highlight border only when mouse pointer is inside of its boundaries. 
+   * 
+   * @type {number}
+   */
   this.highlightGravityRadius = 40;
 
 
-	/*
-	Property: selectedItems
-		Defines array of selected item ids. Chart allows to select items via checking checkboxes under items. Checkboxes are 
-		shown only for full size items. So when item is selected it is always shown in full size, so check box always visible for selcted items.
-		User can navigate around large diagram and check intrested items in order to keep them opened. So that way chart provides 
-		means to show several items on large diagram and fit everything into minimal space ideally into available screen space.
-		Application can select items programmatically using this array or receive notifications from chart about user selections with following events.
-
-	See Also:
-		<primitives.famdiagram.ItemConfig.id>
-		<primitives.famdiagram.Config.onSelectionChanging>
-		<primitives.famdiagram.Config.onSelectionChanged>
-	*/
+  /**
+   * Selected items collection. Selected items is a collection of items ids having checked their check boxes.
+   * The control always shows selected items in the full size form, regardless of enabled page fit mode.
+   * 
+   * The control notifies about user made changes in this collection with `onSelectionChanging` and `onSelectionChanged` events.
+   * 
+   * @type {string[]}
+   */
   this.selectedItems = [];
 
-	/*
-	Property: hasSelectorCheckbox
-		This option controls selection check boxes visibility. 
-
-	Auto - Checkbox shown only for current cursor item only.
-	True - Every full size item has selection check box.
-	False - No check boxes. Application can still programmatically select some items in the chart. 
-	Application may provide custom item template having checkbox inside of item. If application defined check box inside of item template has name="checkbox"
-	it is auto used as default selection check box.
-
-	Default:
-		<primitives.common.Enabled.Auto>
-
-	See Also:
-		<primitives.famdiagram.ItemConfig.hasSelectorCheckbox>
-		<primitives.famdiagram.Config.onSelectionChanging>
-		<primitives.famdiagram.Config.onSelectionChanged>
-	*/
+  /**
+  * Sets visibility of selection check boxes for the diagram nodes.
+  * 
+  * `Auto` - visible for cursor item only
+  * `True` - visible
+  * `False` - hiddens
+  * 
+  * See `selectedItems` property. All items listed in this property are going to have checked selection checkboxes.
+  * Checkbox can be added to item template, in that case it should be named="checkbox", so control can use it as built in checkbox element.
+  * 
+  * @type {Enabled}
+  */
   this.hasSelectorCheckbox = primitives.common.Enabled.Auto;
 
-	/*
-		Property: selectCheckBoxLabel
-			Select check box label.
-	*/
+  /**
+   * Selection check box label. See `hasSelectorCheckbox` and `selectedItems` properties.
+   * 
+   * @type {string}
+   */
   this.selectCheckBoxLabel = "Selected";
 
-	/*
-	Property: selectionPathMode
-		Defines the way items between root item and selectedItems displayed in diagram. Chart always shows all items between cursor item and its root in full size.
-		But if cursor positioned on root item, then chart shows in full size only selected items in the chart. So this option controls items size between 
-		selected items and root item of the chart. By default all items betwen root and selected items shown in full size.
-		
-	Default:
-		<primitives.common.SelectionPathMode.None>
-	*/
+  /**
+   * Selection path mode. This property controls visibility of nodes between cursor and the root of the diagram in the auto fit mode. It allows to draw 
+   * them in full size regardless of available space and auto fit mode.
+   * 
+   * The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers.
+   * So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items
+   * of the diagram in full size and draw all other diagram nodes as markers.
+   *
+   * @type {SelectionPathMode}
+   */
   this.selectionPathMode = primitives.common.SelectionPathMode.None;
 
 	/*
 	Property: neighboursSelectionMode
-		Defines the display mode for items related to current cursor item in diagram. By default only parents and children are shown in regular size without minimization.
-
+		
 	Default:
 		<primitives.common.NeighboursSelectionMode.ParentsAndChildren>
 	*/
+  /**
+   * Sets the neighbours selection mode, it defines how many neighbours are selected around cursor.
+   * 
+   * @type {NeighboursSelectionMode}
+   */
   this.neighboursSelectionMode = primitives.common.NeighboursSelectionMode.ParentsAndChildren;
 
-	/*
-	Property: templates
-		Custom user templates collection. TemplateConfig is complex object providing options to customize item's content template, 
-		cursor tempate and highlight template. Every template config should have unique name property, which is used by chart and its item configs 
-		to reference them. Chart's defaultTemplateName allows to make template default for all items in the chart. On other hand user may define templates
-		to individual items in the chart by templateName property of item config.
-
-	See also:
-		<primitives.famdiagram.TemplateConfig>
-		<primitives.famdiagram.Config.defaultTemplateName>
-		<primitives.famdiagram.ItemConfig.templateName>
-	*/
+  /**
+   * Collection of named templates used to define content for nodes, cursor and highlight.
+   * By default control provides templates for all types of visual elements.
+   * 
+   * @type {TemplateConfig[]}
+   */
   this.templates = [];
 
-	/*
-		Property: defaultTemplateName
-			This is template name used to render items having no <primitives.famdiagram.ItemConfig.templateName> defined.
-
-
-		See Also:
-			<primitives.famdiagram.TemplateConfig>
-			<primitives.famdiagram.TemplateConfig.name>
-			<primitives.famdiagram.Config.templates>
-	*/
+  /**
+   * Name of the template used to render nodes in the diagram. See `templates` property. Template name
+   * can be set individually for every node see `templateName` property of `ItemConfig`.
+   * 
+   * @type {string}
+   */
   this.defaultTemplateName = null;
 
-	/*
-		Property: defaultLabelAnnotationTemplate
-			This is name of template used to render label annotations having no <primitives.famdiagram.LabelAnnotationConfig.templateName> defined.
-			Label annotations are labels placed inside diagram layout. They occupy space and digram gurantees no overlapping of them.
-
-		See Also:
-			<primitives.famdiagram.LabelAnnotationConfig>
-			<primitives.famdiagram.TemplateConfig>
-			<primitives.famdiagram.TemplateConfig.name>
-			<primitives.famdiagram.Config.templates>
-	*/
+  /**
+   * Sets the name of template used to render label annotations. Label annotations are labels placed in layout of the diagram. 
+   * 
+   * @type {string}
+   */
   this.defaultLabelAnnotationTemplate = null;
 
-	/*
-	Property: hasButtons
-		This option controls user buttons visibility. 
-
-	Auto - Buttons visible only for cursor item.
-	True - Every normal item has buttons visible.
-	False - No buttons.
-
-	Default:
-		<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Sets buttons visibility.
+   * 
+   * `Auto` - cursor item only.
+   * `True` - visible
+   * `False` - hidden
+   * 
+   * @type {Enabled}
+   */
   this.hasButtons = primitives.common.Enabled.Auto;
 
-	/*
-	Property: buttons
-		Custom user buttons displayed on right side of item. This collection provides simple way to define context buttons for every item. 
-		The only limitation, they are all the same. So if you need to have unique buttons for every item, then you have to 
-		customize cursor templates and manually create custom buttons inside of them.
-		
-	See also:
-		<primitives.famdiagram.ButtonConfig>
-	*/
+  /**
+   * Buttons configuration objects collection. The buttons panel on the side of the diagram nodes is one of our default easy to use features.
+   * This gives you the possibility to try and see how context buttons work being placed inside of diagram layout.
+   * This collection of buttons provides configuration properties for buttons rendered using HTML buttons elements.
+   * 
+   * @type {ButtonConfig[]}
+   */
   this.buttons = [];
 
+  /**
+   * On buttons panel render event. This callback function is called to render context of buttons panel.
+   * It is used to replace `buttons` collection property in ReactJS component. So we preserve context buttons panel as a functional 
+   * concept, but eliminate buttons customization API.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   * @ignore
+   */
   this.onButtonsRender = null;
 
-	/*
-	Event: onHighlightChanging
-		Notifies about changing highlight item <primitives.famdiagram.Config.highlightItem> in diagram.
-		This coupled event with <primitives.famdiagram.Config.onHighlightChanged>, it is fired before highlight update.
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * On highlight item being changed event. See `highlightItem` property. This callback function is called before `onHighlightChanged` event.
+   * Use this callabck function to stop event propogation. See `EventArgs` for details.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onHighlightChanging = null;
 
-	/*
-	Event: onHighlightChanged
-		Notifies about changed highlight item <primitives.famdiagram.Config.highlightItem> in diagram.
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * On highlight item changed event. See `highlightItem` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onHighlightChanged = null;
 
-	/*
-	Event: onCursorChanging
-		Notifies about changing cursor item <primitives.famdiagram.Config.cursorItem> in diagram.
-		This coupled event with <primitives.famdiagram.Config.onCursorChanged>, it is fired before layout update.
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * On cursor item being changed event. See `cursorItem` property. This callback function is called before `onCursorChanged` event.
+   * Use this callabck function to stop event propogation. See `EventArgs` for details.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onCursorChanging = null;
 
-	/*
-	Event: onCursorChanged
-		Notifies about changed cursor item <primitives.famdiagram.Config.cursorItem> in diagram .
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * On cursor item changed event. See `cursorItem` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onCursorChanged = null;
 
-	/*
-	Event: onSelectionChanging
-		Notifies about changing selected items collection of <primitives.famdiagram.Config.selectedItems>.
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * On selected items being changed event. See `selectedItems` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onSelectionChanging = null;
 
-	/*
-	Event: onSelectionChanged
-		Notifies about changes in collection of <primitives.famdiagram.Config.selectedItems>.
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * On selected items changed event. See `selectedItems` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onSelectionChanged = null;
 
-	/*
-	Event: onButtonClick
-		Notifies about click of custom user button defined in colelction of <primitives.famdiagram.Config.buttons>.
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * Button click event. See `buttons` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onButtonClick = null;
 
-	/*
-	Event: onMouseClick
-		On mouse click event. 
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * Mouse click event. 
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onMouseClick = null;
 
-	/*
-	Event: onMouseDblClick
-		On mouse double click event. 
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * Mouse double click event. 
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onMouseDblClick = null;
 
-	/*
-	Event: onItemRender
-		Item templates don't provide means to bind data of items into templates. So this event handler gives application such possibility.
-		If application uses custom templates then this method is called to populate template with items properties.
-
-	See also:
-		<primitives.common.RenderEventArgs>
-		<primitives.famdiagram.TemplateConfig>
-		<primitives.famdiagram.Config.templates>
-	*/
+  /**
+   * Callback function for rendering content of the diagram nodes. This callback is only 
+   * called when custom item template is defined in the template object configuration.
+   * This callback receives reference to DOM element and context object of the rendered item.
+   * The control reuses exisitng elements in the DOM, so it is applications responsibility 
+   * to properly update their content.
+   *
+   * @callback
+   * @param {Object} event Event if available
+   * @param {RenderEventArgs} data The context information
+   */
   this.onItemRender = null;
 
-	/*
-	Event: onHighlightRender
-		If user defined custom highlight template for item template 
-		then this method is called to populate it with context data.
-
-	See also:
-		<primitives.common.RenderEventArgs>
-		<primitives.famdiagram.TemplateConfig>
-		<primitives.famdiagram.Config.templates>
-	*/
+  /**
+   * Callback function for rendering content of the highlight template. This callback is only 
+   * called when custom highlight is defined in the template configuration.
+   *
+   * @callback
+   * @param {Object} event Event if available
+   * @param {RenderEventArgs} data The context information
+   */
   this.onHighlightRender = null;
-	/*
-	Event: onCursorRender
-		If user defined custom cursor template for item template 
-		then this method is called to populate it with context data.
 
-	See also:
-		<primitives.common.RenderEventArgs>
-		<primitives.famdiagram.TemplateConfig>
-		<primitives.famdiagram.Config.templates>
-	*/
+  /**
+   * Callback function for rendering content of the cursor template. This callback is only 
+   * called when custom cursor is defined in the template configuration.
+   *
+   * @callback
+   * @param {Object} event Event if available
+   * @param {RenderEventArgs} data The context information
+   */
   this.onCursorRender = null;
-	/*
-	Property: normalLevelShift
-		Defines interval after level of items in  diagram having items in normal state.
-	*/
+
+  /**
+   * Sets the spacing between rows.
+   * 
+   * @type {number}
+   */
   this.normalLevelShift = 20;
-	/*
-	Property: dotLevelShift
-		Defines interval after level of items in  diagram having all items in dot state.
-	*/
+
+  /**
+   * Sets the spacing after the row containing nodes minimized down to markers.
+   * 
+   * @type {number}
+   */
   this.dotLevelShift = 20;
-	/*
-	Property: lineLevelShift
-		Defines interval after level of items in  diagram having items in line state.
-	*/
+
+  /**
+   * Sets the spacing after the row containing nodes minimized down to lines.
+   * 
+   * @type {number}
+   */
   this.lineLevelShift = 10;
 
-	/*
-	Property: normalItemsInterval
-		Defines interval between items at the same level in  diagram having items in normal state.
-	*/
+  /**
+   * Sets interval between nodes of the same row.
+   * 
+   * @type {number}
+   */
   this.normalItemsInterval = 10;
-	/*
-	Property: dotItemsInterval
-		Defines interval between items at the same level in  diagram having items in dot state.
-	*/
+
+  /**
+   * Sets interval between nodes of the same row, minimized down to markers.
+   * 
+   * @type {number}
+   */
   this.dotItemsInterval = 1;
-	/*
-	Property: lineItemsInterval
-		Defines interval between items at the same level in  diagram having items in line state.
-	*/
+
+  /**
+   * Sets interval between nodes of the same row, minimized down to lines.
+   * 
+   * @type {number}
+   */
   this.lineItemsInterval = 2;
 
-	/*
-	Property: cousinsIntervalMultiplier
-		Use this interval multiplier between cousins in hiearchy. The idea of this option to make extra space between cousins. 
-		So children belonging to different parents have extra gap between them.
-		
-	*/
+  /**
+   * Set cousins interval multiplier. This values adds extra space between branches of the hierarchy.
+   * For example nodes of the same parent have interval 20 and nodes of two different parents are going to have interval 100.
+   * 
+   * @type {number}
+   */
   this.cousinsIntervalMultiplier = 5;
 
-	/*
-	Property: itemTitleFirstFontColor
-	This property customizes default template title font color. 
-	Item background color sometimes play a role of logical value and 
-	can vary over a wide range, so as a result title having 
-	default font color may become unreadable. Widgets selects the best font color 
-	between this option and <primitives.famdiagram.Config.itemTitleSecondFontColor>.
-
-	See Also:
-		<primitives.famdiagram.ItemConfig.itemTitleColor>
-		<primitives.famdiagram.Config.itemTitleSecondFontColor>
-		<primitives.common.highestContrast>
-
-	*/
+  /**
+   * The first font color of the title.
+   * 
+   * The title background color is designed to be one of the avalaible dimensitions to group nodes in the diagram,
+   * so title can be unreadable if its color matches its background color. This property is created to auto resolve this issue
+   * via automatic switch between two available font title colors.
+   * 
+   * @type {string}
+   */
   this.itemTitleFirstFontColor = primitives.common.Colors.White;
 
-	/*
-	Property: itemTitleSecondFontColor
-	Default template title second font color.
-	*/
+  /**
+   * The second font color of the title.
+   * 
+   * @type {string}
+   */
   this.itemTitleSecondFontColor = primitives.common.Colors.Navy;
 
-	/*
-		Property: minimizedItemShapeType
-			Defines minimized item shape. The border line width is set with <primitives.famdiagram.TemplateConfig.minimizedItemBorderWidth>
-			By default minimized item is rounded rectangle filled with item title color.
-
-
-		See also:
-			<primitives.famdiagram.TemplateConfig.minimizedItemCornerRadius>
-			<primitives.famdiagram.ItemConfig.itemTitleColor>
-			<primitives.famdiagram.ItemConfig.minimizedItemShapeType>
-
-		Default:
-			<primitives.common.ShapeType.None>
-	*/
+  /**
+   * Markers. The shape of the markers when nodes are minimized by autofit. The control supports auto fit of the diagram into available screen space.
+   * When the diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
+   * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
+   * So this option sets default marker shape for nodes. It can be set individually per node in items configurations.
+   * 
+   * The default color of shape is the same as `itemTitleColor` property set for individual items.
+   * 
+   * @type {ShapeType}
+   */
   this.minimizedItemShapeType = primitives.common.ShapeType.None;
 
-	/*
-	Property: linesColor
-		Connectors lines color. Connectors are basic connections betwen chart items 
-		defining their logical relationships, don't mix with connector annotations. 
-	*/
+  /**
+   * The relations lines color. The control uses this lines color to render basic relations between nodes.
+   * 
+   * @type {string}
+   */
   this.linesColor = primitives.common.Colors.Silver;
 
-	/*
-	Property: linesWidth
-		Connectors lines width.
-	*/
+  /**
+   * The relations lines width
+   * 
+   * @type {number}
+   */
   this.linesWidth = 1;
 
-	/*
-	Property: linesType
-		Connectors line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
+  /**
+   * The relations lines pattern
+   * 
+   * @type {LineType}
+   */
   this.linesType = primitives.common.LineType.Solid;
 
 	/*
 	Property: showNeigboursConnectorsHighlighted
-		Show connection lines between current cursor item and its neighbours highlighted. Neighbours selection mode is defined by neighboursSelectionMode option.
+		
 	See also:
 		<primitives.famdiagram.Config.neighboursSelectionMode>,
 		<primitives.famdiagram.Config.highlightLinesColor>,
@@ -638,6 +565,11 @@ primitives.famdiagram.Config = function (name) {
 	Default:
 		false
 	*/
+  /**
+   * Showa connection lines between current cursor item and its neighbours highlighted. Neighbours selection mode is defined by neighboursSelectionMode option.
+   * 
+   * @type {boolean}
+   */
   this.showNeigboursConnectorsHighlighted = false;
 
 	/*

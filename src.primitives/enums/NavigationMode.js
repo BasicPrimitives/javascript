@@ -5,7 +5,7 @@
 /**
  * Interactivity mode. Control implements standard behaivour of classic desktop UI controls. It supports single selected node - cursor.
  * It supports on mouse over node visual feedback - highlight. It supports selection of group of nodes - selected items. 
- * All that functionality can be disabled depending on your application requirements. 
+ * All that functionality can be disabled depending on your application requirements.
  *  
  * @enum {NavigationMode}
  */

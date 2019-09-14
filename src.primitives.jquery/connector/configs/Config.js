@@ -1,127 +1,111 @@
-/*
-	Class: primitives.connector.Config
-		Connector options class.
-	
-*/
+/**
+ * @class primitives.connector.Config
+ * 
+ * Connector configuration object
+ */
 primitives.connector.Config = function () {
-	this.classPrefix = "bpconnector";
+  this.classPrefix = "bpconnector";
 
-	/*
-		Property: graphicsType
-			Preferable graphics type. If preferred graphics type is not supported widget switches to first available. 
+  /**
+   * Sets prefered rendering technology. If selected graphics type is not supported on the device,
+   * then control will auto fallback to the first available one.
+   * 
+   * @type {GraphicsType}
+   */
+  this.graphicsType = primitives.common.GraphicsType.Canvas;
 
-		Default:
-			<primitives.common.GraphicsType.SVG>
-	*/
-	this.graphicsType = primitives.common.GraphicsType.Canvas;
+  /**
+   * Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction,
+   * this is needed for Arabic support and various layouts.
+   * 
+   * @type {OrientationType}
+   */
+  this.orientationType = primitives.common.OrientationType.Top;
 
-	/*
-		Property: orientationType
-			Diagram orientation. 
+  /**
+   * Connector placement type defines style of connector line drawing over diagram layout. It supports two options: 
+   * the `Straight` is classic direct line connecting two nodes, this is the most expected style of connector annotation
+   * drawing over diagram, the second style is called `Offbeat` and it is designed to dynamically adopt to nodes mutual 
+   * location and gap between them. It uses free hand line style drawing going from start to the end node. Since every diagram 
+   * is packed with various connection lines, this annotation placement style is deliberately made not straight, so it can be 
+   * noticeable on top of other lines of the diagram.
+   * 
+   * @type {ConnectorPlacementType}
+   */
+  this.connectorPlacementType = primitives.common.ConnectorPlacementType.Offbeat;
 
-		Default:
-			<primitives.common.OrientationType.Top>
-	*/
-	this.orientationType = primitives.common.OrientationType.Top;
+  /**
+   * Connector shape type defines number of lines and arrows at their ends drawn between nodes of the connector annotation.
+   * This feature combined with basic conflict resolution, which places overlapping annotations in parallel when they overlap each other,
+   * gives you full flexibility over variations of possible connector lines between two given nodes of diagram.
+   * 
+   * @type {ConnectorShapeType}
+   */
+  this.connectorShapeType = primitives.common.ConnectorShapeType.OneWay;
 
-	/*
-		Property: connectorPlacementType
-			Defines connector annotation shape placement mode between two rectangles. 
-			It uses off beat placement mode as default in order to avoid overlapping
-			of base hierarchy connector lines.
+  /**
+   * Defines connectors starting rectangle position. 
+   * 
+   * @type {Rect}
+   */
+  this.fromRectangle = null;
 
-		Default:
-			<primitives.common.ConnectorPlacementType.Offbeat>
-	*/
-	this.connectorPlacementType = primitives.common.ConnectorPlacementType.Offbeat;
-
-	/*
-		Property: connectorShapeType
-			Connector shape type. 
-
-		Default:
-			<primitives.common.ConnectorShapeType.OneWay>
-	*/
-	this.connectorShapeType = primitives.common.ConnectorShapeType.OneWay;
-
-	/*
-	Property: position
-		Defines connectors starting rectangle position. 
-		
-	Type:
-		<primitives.common.Rect>.
-	*/
-	this.fromRectangle = null;
-
-	/*
-	Property: position
-		Defines connectors ending rectangle position. 
-		
-	Type:
-		<primitives.common.Rect>.
-	*/
-	this.toRectangle = null;
+  /**
+   * Defines connectors ending rectangle position. 
+   * 
+   * @type {Rect}
+   */
+  this.toRectangle = null;
 
 
-	/*
-	Property: offset
-		Connector's from and to points offset off the rectangles side. Connectors connection points can be outside of rectangles and inside for negative offset value.
-	See also:
-		<primitives.common.Thickness>
-	*/
-	this.offset = new primitives.common.Thickness(0, 0, 0, 0);
+  /**
+   * Connector line end points offset. By default connection lines start from the margin of the node's rectangle.
+   * If offset is positive then start point goes from outside of the rectangle, if it is negative then it starts from inside of the nodes rectangle.
+   * 
+   * @type {Thickness}
+   */
+  this.offset = new primitives.common.Thickness(0, 0, 0, 0);
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 3;
+  /**
+   * Connector line width
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 3;
 
-	/*
-	Property: color
-		Connector's color.
-	
-	Default:
-		<primitives.common.Colors.Black>
-	*/
-	this.color = primitives.common.Colors.Black;
+  /**
+   * Connector line color
+   * 
+   * @type {string}
+   */
+  this.color = primitives.common.Colors.Black;
 
-	/*
-	Property: lineType
-		Connector's line pattern.
+  /**
+   * Connector line pattern
+   * 
+   * @type {string}
+   */
+  this.lineType = primitives.common.LineType.Solid;
 
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = primitives.common.LineType.Solid;
+  /**
+   * Annotation label text. Label styled with css class name "bp-connector-label".
+   * 
+   * @type {string}
+   */
+  this.label = null;
 
+  /**
+   * Label size. It is used to position label without overlapping connected items.
+   * 
+   * @type {Size}
+   */
+  this.labelSize = new primitives.common.Size(60, 30);
 
-	/*
-	Property: label
-		Annotation label text. Label styled with css class name "bp-connector-label".
-	*/
-	this.label = null;
-
-	/*
-	Property: labelSize
-		Defines label size. It is needed to preserve space for label without overlapping connected items.
-
-	Default:
-		new <primitives.common.Size>(60, 30);
-	*/
-	this.labelSize = new primitives.common.Size(60, 30);
-
-	/*
-	Property: labelPlacementType
-		Defines conector label placement. Label can be placed between rectangles along connector line or close to one of them.
-
-	Default:
-		new <primitives.common.Size>(60, 30);
-	*/
-	this.labelPlacementType = primitives.common.ConnectorLabelPlacementType.Between;
-
-	/*
-	method: update
-		Makes full redraw of connector widget contents reevaluating all options.
-	*/
+  /**
+   * Sets conector label placement relative to connection line end points. Label can be placed between
+   * rectangles along connector line or close to one of them.
+   * 
+   * @type {ConnectorLabelPlacementType}
+   */
+  this.labelPlacementType = primitives.common.ConnectorLabelPlacementType.Between;
 };

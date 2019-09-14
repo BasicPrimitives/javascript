@@ -641,7 +641,6 @@ primitives.orgdiagram.Config = function (name) {
    * 
    * @type {number}
    */
-
   this.buttonsPanelSize = 28;
 
   /**
@@ -839,7 +838,7 @@ primitives.orgdiagram.Config = function (name) {
    * Enable panning. Enable chart panning with mouse drag & drop for desktop browsers.
    * Disable it if you need to support items Drag & Drop.
    * 
-   * @tye {boolean}
+   * @type {boolean}
    */
   this.enablePanning = true;
 

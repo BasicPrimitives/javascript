@@ -269,12 +269,6 @@ primitives.famdiagram.Config = function (name) {
    */
   this.selectionPathMode = primitives.common.SelectionPathMode.None;
 
-	/*
-	Property: neighboursSelectionMode
-		
-	Default:
-		<primitives.common.NeighboursSelectionMode.ParentsAndChildren>
-	*/
   /**
    * Sets the neighbours selection mode, it defines how many neighbours are selected around cursor.
    * 
@@ -554,402 +548,349 @@ primitives.famdiagram.Config = function (name) {
    */
   this.linesType = primitives.common.LineType.Solid;
 
-	/*
-	Property: showNeigboursConnectorsHighlighted
-		
-	See also:
-		<primitives.famdiagram.Config.neighboursSelectionMode>,
-		<primitives.famdiagram.Config.highlightLinesColor>,
-		<primitives.famdiagram.Config.highlightLinesWidth>,
-		<primitives.famdiagram.Config.highlightLinesType>
-	Default:
-		false
-	*/
   /**
-   * Showa connection lines between current cursor item and its neighbours highlighted. Neighbours selection mode is defined by neighboursSelectionMode option.
+   * Shows connection lines between current cursor item and its neighbours highlighted. Neighbours selection mode
+   * is set by `neighboursSelectionMode` property.
+   * 
+   * Set following properties: `highlightLinesColor`, `highlightLinesWidth` and `highlightLinesType` to
+   * style highlighted lines.
    * 
    * @type {boolean}
    */
   this.showNeigboursConnectorsHighlighted = false;
 
-	/*
-	Property: highlightLinesColor
-		Connectors highlight line color. Connectors are basic connections betwen chart items 
-		defining their logical relationships, don't mix with connector annotations. 
-	*/
+  /**
+   * Sets highlight lines color. The diagram uses highlight lines to render highlighted relation lines between nodes.
+   * See `showNeigboursConnectorsHighlighted` property.
+   * 
+   * @type {string}
+   */
   this.highlightLinesColor = primitives.common.Colors.Red;
 
-	/*
-	Property: highlightLinesWidth
-		Connectors highlight line width.
-	*/
+  /**
+   * Sets highlight lines width. See `showNeigboursConnectorsHighlighted` property.
+   * 
+   * @type {number}
+   */
   this.highlightLinesWidth = 1;
 
-	/*
-	Property: highlightLinesType
-		Connectors highlight line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
+  /**
+   * Sets highlight lines pattern. See `showNeigboursConnectorsHighlighted` property.
+   * 
+   * @type {LineType}
+   */
   this.highlightLinesType = primitives.common.LineType.Solid;
 
-	/*
-	Property: linesPalette
-		This collection contains elements of type PaletteItemConfig. It is used to draw connector lines between families in different styles. 
-		It is similar concept to regular line chart having lines intersections. 
-		If this collection is empty then default linesColor, linesWidth and linesType are used for all connector lines.
-	
-	See Also:
-		<primitives.famdiagram.PaletteItemConfig>
-	*/
+  /**
+   * This collection contains lines styles for rendering relations going across family hierarchy.
+   * The purpose of this collection is to draw long horizontal parallel lines drawn between family branches in different styles.
+   * If this collection is empty then default `linesColor`, `linesWidth` and `linesType` are used for all connector lines.
+   * 
+   * @type {PaletteItemConfig[]}
+   */
   this.linesPalette = [];
 
-	/*
-	Property: calloutMaximumVisibility
-		Defines maximum allowed item form size to show callout.
-
-	See also:
-		<primitives.orgdiagram.Config.showCallout>
-
-	Default:
-		<primitives.common.Visibility.Dot>
-	*/
-  this.calloutMaximumVisibility = primitives.common.Visibility.Dot;
-
-	/*
-	Property: showCallout
-		This option controls callout visibility for dotted items. 
-
-	Default:
-		true
-	*/
+  /**
+   * Sets callout visibility.
+   * 
+   * @type {boolean}
+   */
   this.showCallout = true;
 
-	/*
-	Property: calloutPlacementOffset
-		Set this property value depending on size and intervals between markers so callout annotation does not overlap neighbouring items of marker it is shown for.
-	*/
+  /**
+   * Sets visibility of the callout annotation depending on size of a node it is shown for. See `pageFitMode` property.
+   * 
+   * @type {Visibility}
+   */
+  this.calloutMaximumVisibility = primitives.common.Visibility.Dot;
+
+  /**
+   * Callout annotation placement offset. Sets how far callout content is offset from the marker it is displayed for.
+   * 
+   * @type {number}
+   */
   this.calloutPlacementOffset = 100;
 
-	/*
-	Property: defaultCalloutTemplateName
-		This is template name used to render callouts for dotted items. 
-		Actual callout template name is defined by following sequence:
-		<primitives.famdiagram.ItemConfig.calloutTemplateName> 
-		<primitives.famdiagram.ItemConfig.templateName>
-		<primitives.famdiagram.Config.defaultCalloutTemplateName>
-		<primitives.famdiagram.Config.defaultTemplateName>
-
-
-	See Also:
-		<primitives.famdiagram.Config.templates> collection property.
-
-	Default:
-		null
-	*/
+  /**
+   * Callout annotation default template name.
+   * 
+   * Templates are HTML fragments containing layout and styles used to render diagram nodes.
+   * They are defined with a named configuration objects. See `templates` property of control's configuration object.
+   * 
+   * @type {string|undefined}
+   */
   this.defaultCalloutTemplateName = null;
 
-	/*
-	Property: calloutfillColor
-		Annotation callout fill color.
-	*/
+  /**
+   * Callout annotation fill color.
+   * 
+   * @type {string}
+   */
   this.calloutfillColor = "#000000";
 
-	/*
-	Property: calloutBorderColor
-		Annotation callout border color.
-	*/
+  /**
+   * Callout annotation border color.
+   * 
+   * @type {string}
+   */
   this.calloutBorderColor = null;
 
-	/*
-	Property: calloutOffset
-		Annotation callout offset.
-	*/
+  /**
+   * Callout annotation border line offset.
+   * 
+   * @type {number}
+   */
   this.calloutOffset = 4;
 
-	/*
-	Property: calloutCornerRadius
-		Annotation callout corner radius.
-	*/
+  /**
+   * Callout annotation corner radius.
+   * 
+   * @type {number}
+   */
   this.calloutCornerRadius = 4;
 
-	/*
-	Property: calloutPointerWidth
-		Annotation callout pointer base width.
-	*/
+  /**
+   * Callout annotation pointer width.
+   * 
+   * @type {string}
+   */
   this.calloutPointerWidth = "10%";
 
-	/*
-	Property: calloutLineWidth
-		Annotation callout border line width.
-	*/
+  /**
+   * Callout annotation border line width.
+   * 
+   * @type {number}
+   */
   this.calloutLineWidth = 1;
 
-	/*
-	Property: calloutOpacity
-		Annotation callout opacity.
-	*/
+  /**
+   * Callout annotation opacity
+   * 
+   * @type {number}
+   */
   this.calloutOpacity = 0.2;
 
-	/*
-	Property: buttonsPanelSize
-		User buttons panel size.
-	*/
+  /**
+   * The size of the panel containing context buttons.
+   * 
+   * @type {number}
+   */
   this.buttonsPanelSize = 28;
 
-	/*
-	Property: groupTitlePanelSize
-		Group title panel size.
-	*/
+  /**
+   * The size of the panel containing group title.
+   * 
+   * @type {number}
+   */
   this.groupTitlePanelSize = 24;
 
-	/*
-	Property: checkBoxPanelSize
-		Selection check box panel size.
-	*/
+  /**
+   * The size of the panel containing selection checkbox.
+   * 
+   * @type {number}
+   */
   this.checkBoxPanelSize = 24;
 
-	/*
-	Property: groupTitlePlacementType
-		Group title placement style. Defines group title and buttons panel position relative to item. By default group title is on the left and buttons are on the right.
-		If the value is set to <primitives.common.AdviserPlacementType.Left> then group title placed on the right and buttons on the left side of items.
-
-	Default:
-		<primitives.common.AdviserPlacementType.Left>
-	*/
+  /**
+   * Group titles placement. Defines group title and buttons panel position relative to the node. By default it is on the left.
+   * The group title on the side of the diagram node is one of controls default easy to use features. It gives extra dimension 
+   * for nodes visual grouping in the diagram.
+   * 
+   * @type {AdviserPlacementType}
+   */
   this.groupTitlePlacementType = primitives.common.AdviserPlacementType.Left;
 
-	/*
-		Property: groupTitleOrientation
-			Group title direction style. 
-
-		Default:
-			<primitives.text.TextDirection.Auto>
-	*/
+  /**
+   * Group titles orientation.
+   * 
+   * @type {TextOrientationType}
+   */
   this.groupTitleOrientation = primitives.text.TextOrientationType.RotateRight;
 
-	/*
-		Property: groupTitleVerticalAlignment
-			Group title vertical alignment. 
-
-		Default:
-			<primitives.common.VerticalAlignmentType.Center>
-	*/
+  /**
+   * Group titles vertical alignment.
+   * 
+   * @type {VerticalAlignmentType}
+   */
   this.groupTitleVerticalAlignment = primitives.common.VerticalAlignmentType.Middle;
 
-	/*
-		Property: groupTitleHorizontalAlignment
-			Group title horizontal alignment. 
-
-		Default:
-			<primitives.common.HorizontalAlignmentType.Center>
-	*/
+  /**
+   * Group titles horizontal alignment.
+   * 
+   * @type {HorizontalAlignmentType}
+   */
   this.groupTitleHorizontalAlignment = primitives.common.HorizontalAlignmentType.Center;
 
-	/*
-		Property: groupTitleFontSize
-			Group title font size. 
-
-		Default:
-			15
-	*/
+  /**
+   * 	Group titles font size.
+   * 
+   * @type {number}
+   */
   this.groupTitleFontSize = "12px";
 
-	/*
-		Property: groupTitleFontFamily
-			Group title font family. 
-
-		Default:
-			"Arial"
-	*/
+  /**
+   * Group titles font family.
+   * 
+   * @type {string}
+   */
   this.groupTitleFontFamily = "Arial";
 
-	/*
-		Property: groupTitleColor
-			Group title color. 
-
-		Default:
-			<primitives.common.Colors.Black>
-	*/
+  /**
+   * Group titles color. 
+   * 
+   * @type {string}
+   */
   this.groupTitleColor = primitives.common.Colors.RoyalBlue;
 
-	/*
-		Property: groupTitleFontWeight
-			Group title font weight: normal | bold
-
-		Default:
-			"normal"
-	*/
+  /**
+   * Group titles font weight: normal | bold
+   * 
+   * @type {string}
+   */
   this.groupTitleFontWeight = "normal";
 
-	/*
-		Property: groupTitleFontStyle
-			Group title font style: normal | italic
-		
-		Default:
-			"normal"
-	*/
+  /**
+   * Group titles font style: normal | italic
+   * 
+   * @type {string}
+   */
   this.groupTitleFontStyle = "normal";
 
+  /**
+   * @ignore
+   */
   this.distance = 3;
 
-	/*
-	Property: scale
-		CSS3 scale transform.
-	*/
+  /**
+   * CSS3 scale transform. Control supports content scaling using CSS scale transform. It scales everything except scroll bars.
+   * It properly handles mouse event coordinates. The CSS scale transform produces unreadable text and corrupted lines in desktop browsers,
+   * it looks good only in mobile browsers, so our recomendation is to use zoom with collection of item templates of various sizes.
+   * Templates gives you better control over quality of your content at various zoom levels.
+   * 
+   * @type {number}
+   */
   this.scale = 1;
 
-	/*
-	Property: minimumScale
-		Minimum CSS3 scale transform. Available on mobile safary only.
-	*/
+  /**
+   * Minimum CSS3 scale transform.
+   * 
+   * @ignore
+   */
   this.minimumScale = 0.5;
 
-	/*
-	Property: maximumScale
-		Maximum CSS3 scale transform. Available on mobile safary only.
-	*/
+  /**
+   * Maximum CSS3 scale transform.
+   * 
+   * @ignore
+   */
   this.maximumScale = 1;
 
-	/*
-	Property: showLabels
-		This option controls labels visibility for minimized items. If you need to show labels outside of borders of regular items then use item template for customization.
-		Labels placed inside HTML DIV element and long strings are wrapped inside. 
-		User can control labels position relative to its item. Chart does not measure labels and does reserve space for them, 
-		so if label overlap each other then horizontal or vertical intervals between rows and items shoud be manually increased.
-	
-	Auto - depends on available space.
-	True - always shown.
-	False - hidden.
-
-	See Also:
-		<primitives.famdiagram.ItemConfig.label>
-		<primitives.famdiagram.Config.labelSize>
-		<primitives.famdiagram.Config.normalItemsInterval>
-		<primitives.famdiagram.Config.dotItemsInterval>
-		<primitives.famdiagram.Config.lineItemsInterval>
-		<primitives.famdiagram.Config.normalLevelShift>
-		<primitives.famdiagram.Config.dotLevelShift>
-		<primitives.famdiagram.Config.lineLevelShift>
-
-	Default:
-		<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Sets labels visibility for nodes when they are minimized into markers by page auto fit. See `pageFitMode` property.
+   * 
+   * The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes
+   * into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels.
+   * 
+   * Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict
+   * resoltion to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
+   * is going to stay visible.
+   * 
+   * Auto - displays label only when it has space to be rendered.
+   * True - shows label regardless, even if it overlaps other labels and nodes.
+   * False - hidden.
+   * 
+   * @type {Enabled}
+   */
   this.showLabels = primitives.common.Enabled.Auto;
 
-	/*
-	Property: labelSize
-		Defines label size. It is needed to avoid labels overlapping. If one label overlaps another label or item it will be hidden. 
-		Label string is wrapped when its length exceeds available width.
-
-	Default:
-		new <primitives.common.Size>(80, 24);
-	*/
+  /**
+   * Label size. Sets labels placeholders `div`s size. It is needed to resolve labels overlapping.
+   * If one label overlaps another label the or item it will be hidden.
+   * 
+   * @type {Size}
+   */
   this.labelSize = new primitives.common.Size(80, 24);
 
-	/*
-	Property: labelOffset
-		Defines label offset from dot in pixels.
-
-	Default:
-		1;
-	*/
+  /**
+   * Sets labels offset from the merkers bounding rectangles.
+   * 
+   * @type {number}
+   */
   this.labelOffset = 1;
 
-	/*
-	Property: labelOrientation
-		Defines label orientation. 
-
-	See Also:
-	<primitives.text.TextOrientationType>
-
-	Default:
-		<primitives.text.TextOrientationType.Horizontal>
-	*/
+  /**
+   * Labels orientation.
+   * 
+   * @type {TextOrientationType}
+   */
   this.labelOrientation = primitives.text.TextOrientationType.Horizontal;
 
-	/*
-	Property: labelPlacement
-		Defines label placement relative to its dot. 
-		Label is aligned to opposite side of its box.
-
-	See Also:
-	<primitives.common.PlacementType>
-
-	Default:
-		<primitives.common.PlacementType.Top>
-	*/
+  /**
+   * Labels placement. Sets labels placement relative to the markers bounding rectangles.
+   * 
+   * @type {PlacementType}
+   */
   this.labelPlacement = primitives.common.PlacementType.Top;
 
-	/*
-	Property: labelFontSize
-		Label font size. 
-
-	Default:
-		10px
-*/
+  /**
+   * Labels font size.
+   * 
+   * @type {string}
+   */
   this.labelFontSize = "10px";
 
-	/*
-		Property: labelFontFamily
-			Label font family. 
-
-		Default:
-			"Arial"
-	*/
+  /**
+   * Labels font family.
+   * 
+   * @type {string}
+   */
   this.labelFontFamily = "Arial";
 
-	/*
-		Property: labelColor
-			Label color. 
-
-		Default:
-			primitives.common.Colors.Black
-	*/
+  /**
+   * Labels color
+   * 
+   * @type {string}
+   */
   this.labelColor = primitives.common.Colors.Black;
 
-	/*
-		Property: labelFontWeight
-			Font weight: normal | bold
-
-		Default:
-			"normal"
-	*/
+  /**
+   * Labels font weight
+   * Font weight: normal | bold
+   * 
+   * @type {string}
+   */
   this.labelFontWeight = "normal";
 
-	/*
-	Property: labelFontStyle
-		Font style: normal | italic
-		
-	Default:
-		"normal"
-	*/
+  /**
+   * Labels font style. Font style: normal | italic
+   * 
+   * @type {string}
+   */
   this.labelFontStyle = "normal";
 
-	/*
-	Property: enablePanning
-		Enable chart panning with mouse drag & drop for desktop browsers.
-		Disable it if you need to support items Drag & Drop.
-
-	Default:
-		true
-	*/
+  /**
+   * Enable panning. Enable chart panning with mouse drag & drop for desktop browsers.
+   * Disable it if you need to support items Drag & Drop.
+   * 
+   * @type {boolean}
+   */
   this.enablePanning = true;
 
-	/*
-	Property: autoSizeMinimum
-		Defines minimum diagram size in autosize mode. If diagram has no elements, it is going to be of this size on the page.  
-	Default:
-		new <primitives.common.Size>(800, 600);
-	*/
+  /**
+   * Sets minimum size the diagram can shrink itself in autosize mode. See `pageFitMode` property.
+   * In the auto size mode diagram controls its placeholder size itself,
+   * it sets its size to accomodate all nodes and render them normally.
+   * 
+   * @type {Size}
+   */
   this.autoSizeMinimum = new primitives.common.Size(800, 600);
 
-	/*
-	Property: autoSizeMaximum
-		Defines maximum diagram size in autosize mode.
-	Default:
-		new <primitives.common.Size>(1024, 768);
-	*/
+  /**
+   * Sets maximum size the diagram can expand itself in autosize mode. See `pageFitMode` property.
+   * In the auto size mode diagram controls its placeholder size itself,
+   * it sets its size to accomodate all nodes and render them normally.
+   * 
+   * @type {Size}
+   */
   this.autoSizeMaximum = new primitives.common.Size(1024, 768);
 };

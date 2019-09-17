@@ -1,7 +1,9 @@
 /**
  * @class EventArgs
+ * 
+ * Context object
  */
-primitives.orgdiagram.EventArgs = function () {
+primitives.famdiagram.EventArgs = function () {
 	/**
    * Current item
    * 

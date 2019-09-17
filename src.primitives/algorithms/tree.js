@@ -1,5 +1,6 @@
 /**
  * Creates tree structure
+ * @class tree
  * 
  * @param {tree} source A source tree structure to clone properties from
  * @returns {tree} Returns new tree structure

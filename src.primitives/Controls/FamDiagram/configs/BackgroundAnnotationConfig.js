@@ -1,13 +1,13 @@
-/*
-	Class: primitives.famdiagram.BackgroundAnnotationConfig
-		Consider background annotation as another way to highlight some items in diagram.
-		In order to use it you have to create instances of this class and populate annotation collection.
-		Background annotation is drawn as rectangular area offset around annotated item. 
-		If two items backgrounds overlap each other they are merged into one background area.
 
-	See Also:
-		<primitives.famdiagram.Config.annotations>
-*/
+/**
+ * @class BackgroundAnnotationConfig
+ * @classdesc Consider background annotation as another way to highlight some items in diagram. 
+ * In order to use it you have to create instances of this class and populate annotation collection.
+ * Background annotation is drawn as rectangular area offset around annotated item. 
+ * If two items backgrounds overlap each other they are merged into one background area.
+ *
+ * @param {object} arg0 Object properties.
+ */
 primitives.famdiagram.BackgroundAnnotationConfig = function (arg0) {
   var property;
 

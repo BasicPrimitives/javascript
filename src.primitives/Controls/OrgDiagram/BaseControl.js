@@ -1,3 +1,7 @@
+/**
+ * JavaScript Abstract Control
+ * @class BaseControl
+ */
 primitives.orgdiagram.BaseControl = function (element, options, taskManagerFactory, eventArgsFactory, templates) {
   var _data = {
     name: "orgdiagram",

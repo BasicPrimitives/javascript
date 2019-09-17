@@ -3,6 +3,7 @@
  * 
  * @param {number} value The number to test.
  * @returns {boolean} Returns true if the value is even.
+ * @ignore
  */
 primitives.common.isEven = function (value) {
   return value % 2 == 0;
@@ -11,6 +12,7 @@ primitives.common.isEven = function (value) {
 /**
  * Indicates whether the specified string is null or an Empty string.
  * 
+ * @ignore
  * @param {string} value The string to test.
  * @returns {boolean} Returns true if the value is null or an empty string(""); otherwise, false.
  */
@@ -31,6 +33,7 @@ primitives.common.isNullOrEmpty = function (value) {
  * 
  * @param {*} value The value to test.
  * @returns {boolean} Returns true if the value is array; otherwise, false.
+ * @ignore
  */
 primitives.common.isArray = Array.isArray || function (val) {
   return (val instanceof Array);
@@ -51,6 +54,7 @@ primitives.common.isArray = Array.isArray || function (val) {
  * @param {Object} thisArg The callback function invocation context
  * @param {Object|Object[]} items - Array of items or object with properties to iterate on
  * @param {onLoopItemCallback} onItem A call back function to call on each item in the array or object.
+ * @ignore
  */
 primitives.common.loop = function (thisArg, items, onItem) {
   var key, index, len;
@@ -78,6 +82,7 @@ primitives.common.loop = function (thisArg, items, onItem) {
  * 
  * @param {string} name String of cameled words
  * @returns {string[]} Returns array of cameled words
+ * @ignore
  */
 primitives.common.splitCamelCaseName = function (name) {
   var result = [];
@@ -104,6 +109,7 @@ primitives.common.splitCamelCaseName = function (name) {
  * 
  * @param {string} item The value to test.
  * @returns {boolean} Returns true if the item is object otherwise, false.
+ * @ignore
  */
 primitives.common.isObject = function (item) {
   return item !== null && typeof item == 'object';
@@ -114,6 +120,7 @@ primitives.common.isObject = function (item) {
  * 
  * @param {string} item The object to test.
  * @returns {boolean} Returns true if the item is empty object otherwise, false.
+ * @ignore
  */
 primitives.common.isEmptyObject = function (item) {
   var key;
@@ -131,6 +138,7 @@ primitives.common.isEmptyObject = function (item) {
  * @param {object} source The source object to take values from
  * @param {boolean} isShallow If true then method makes shallow copy
  * @returns {object} Returns cloned copy of the object
+ * @ignore
  */
 primitives.common.cloneObject = function (source, isShallow) {
   var result;
@@ -173,6 +181,7 @@ primitives.common.cloneObject = function (source, isShallow) {
  * @param {object} destination The object to add properties to
  * @param {object} source The source object to take values from
  * @returns {object} Returns reference to destination object
+ * @ignore
  */
 primitives.common.mergeObjects = function (destination, source) {
   for (var index = 1; index < arguments.length; index += 1) {
@@ -226,8 +235,8 @@ primitives.common.hashCode = function (value) {
  * 
  * @param {object[]} vector An array through which to search.
  * @param {object} item  The value to search for.
- * @param {compFuncCallback} compFunc Callback function to compair two objects for equivalents
- * @return {number} Returns index of the item in the array or -1 if item is not found
+ * @param {compFuncCallback} compFunc Callback function to compair two objects
+ * @returns {number} Returns index of the item in the array or -1 if item is not found
  */
 primitives.common.indexOf = function (vector, item, compFunc) {
   var index,
@@ -247,6 +256,7 @@ primitives.common._supportsSVG = null;
  * Checks if browser supports HTML SVG graphics.
  * 
  * @returns {boolean} Returns true if browser supports SVG canvas graphics.
+ * @ignore
  */
 primitives.common.supportsSVG = function () {
   if (primitives.common._supportsSVG === null) {
@@ -261,6 +271,7 @@ primitives.common._supportsCanvas = null;
 /**
  * Checks if browser supports HTML Canvas graphics.
  * 
+ * @ignore
  * @returns {boolean} Returns true if browser supports HTML canvas graphics.
  */
 primitives.common.supportsCanvas = function () {

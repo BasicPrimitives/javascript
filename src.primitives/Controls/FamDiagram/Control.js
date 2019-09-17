@@ -1,6 +1,6 @@
 /**
 * Creates JavaScript Family Chart Control
- * 
+ * @class Control
  * @param {object} element Reference to placeholder `div` element in the DOM. The control renders diagram content
  * inside of that div element and adds events listeners.
  * @param {Config} options Family Chart Configuration object

@@ -1,5 +1,7 @@
 /**
  * @class EventArgs
+ * 
+ * Context object
  */
 primitives.orgdiagram.EventArgs = function () {
 	/**

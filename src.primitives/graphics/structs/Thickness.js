@@ -5,7 +5,7 @@
  * @param {number} left Left.
  * @param {number} top Top.
  * @param {number} right Right.
- * * @param {number} bottom Bottom.
+ * @param {number} bottom Bottom.
  */
 primitives.common.Thickness = function (left, top, right, bottom) {
   /**

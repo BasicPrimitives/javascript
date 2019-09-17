@@ -6,7 +6,7 @@
  * @param {ItemConfig} arg0 Item config properties
  * 
  * @param {string} arg0 Item id
- * @param {string[]|undefined} arg1 Parent id
+ * @param {string[]} arg1 Parent id
  * @param {string} arg2 Title
  * @param {string} arg3 Description 
  * @param {string} arg4 Image
@@ -22,7 +22,7 @@ primitives.orgdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 
   /**
    * Parent item id. If `null` then node is the root item of the hierarchy.
-   * @type {string | undefined}
+   * @type {string}
    */
   this.parent = null;
 

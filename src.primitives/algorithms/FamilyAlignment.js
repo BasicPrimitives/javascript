@@ -9,6 +9,7 @@
 
 /**
  * Creates family alignment data structure. This structure aligns horizontaly planar family of nodes.
+ * @class FamilyAlignment
  * 
  * @param {Object} thisArg The callback function invocation context
  * @param {family} family Family data structure

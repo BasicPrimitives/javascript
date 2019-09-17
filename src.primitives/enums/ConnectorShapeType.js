@@ -10,7 +10,6 @@
  *
  * @enum {ConnectorShapeType}
  */
-
 primitives.common.ConnectorShapeType = {
   /**
    * Single line with one arrow

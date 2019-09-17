@@ -1,7 +1,8 @@
 ﻿/**
  * Creates range minimum query structure
+ * @class RMQ
  * 
- * @params {number[]} items Collection of numbers
+ * @param {number[]} items Collection of numbers
  * @returns {rmq} Returns range minimum query structure
  */
 primitives.common.RMQ = function (items) {

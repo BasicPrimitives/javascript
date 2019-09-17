@@ -1,3 +1,11 @@
+/**
+ * Creates PDFKit Family Diagram Plugin
+ * @class Plugin
+ * 
+ * @param {Config} options Family Diagram Configuration object
+ * 
+ * @returns {orgdiagram} Returns reference to family chart PDFKit renderer instance.
+ */
 primitives.pdf.famdiagram.Plugin = function (options) {
   var _data = {
     name: "famdiagram",
@@ -205,6 +213,14 @@ primitives.pdf.famdiagram.Plugin = function (options) {
     _data.options.autoSizeMaximum = new primitives.common.Size(100000, 100000);
   }
 
+  /**
+   * Calculates size of the diagram required to render all nodes without truncation.
+   * 
+   * @param {object} doc PDFKit document
+   * @param {number} positionX Diagram placement X coordinate
+   * @param {number} positionY Diagram placement Y coordinate
+   * @returns {Size} Returns size of the diagram
+   */
   function draw(doc, positionX, positionY) {
     _data.doc = doc;
 
@@ -227,6 +243,11 @@ primitives.pdf.famdiagram.Plugin = function (options) {
     return new primitives.common.Size(alignDiagramTask.getContentSize());
   }
 
+  /**
+   * Calculates size of the diagram required to render all nodes without truncation.
+   * 
+   * @returns {Size} Returns size of the diagram
+   */
   function getSize() {
     _data.tasks = createTaskManager(getOptions, getGraphics);
 

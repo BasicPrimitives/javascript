@@ -1,5 +1,7 @@
 ﻿/**
  * Creates linked hash list collection.
+ * @class LinkedHashItems
+ * 
  * @returns {LinkedHashItems} Returns linked hash list structure
  */
 primitives.common.LinkedHashItems = function () {
@@ -87,13 +89,13 @@ primitives.common.LinkedHashItems = function () {
     return endSegmentKey;
   }
 
-   /**
-   * Adds new item to the head of the list
-   * 
-   * @param {string} key The new item key 
-   * @param {object} item The new item context object value
-   * @returns {string} Returns key of the last item in the collection
-   */ 
+  /**
+  * Adds new item to the head of the list
+  * 
+  * @param {string} key The new item key 
+  * @param {object} item The new item context object value
+  * @returns {string} Returns key of the last item in the collection
+  */
   function unshift(key, item) {
     if (segmentsHash.hasOwnProperty(key)) {
       throw "Duplicate segments are not supported!";
@@ -110,13 +112,13 @@ primitives.common.LinkedHashItems = function () {
     startSegmentKey = key;
   }
 
-   /**
-   * Inserts new item into the list after the given key 
-   *  
-   * @param {string} afterKey The key that the new element is placed after 
-   * @param {string} key The new item key 
-   * @param {object} item The new item context object value
-   */ 
+  /**
+  * Inserts new item into the list after the given key 
+  *  
+  * @param {string} afterKey The key that the new element is placed after 
+  * @param {string} key The new item key 
+  * @param {object} item The new item context object value
+  */
   function insertAfter(afterKey, key, item) {
     if (segmentsHash.hasOwnProperty(key)) {
       throw "Duplicate segments are not supported!";
@@ -144,7 +146,7 @@ primitives.common.LinkedHashItems = function () {
    * @param {string} beforeKey The key that the new element is placed before 
    * @param {string} key The new item key 
    * @param {object} item The new item context object value
-   */ 
+   */
   function insertBefore(beforeKey, key, item) {
     if (segmentsHash.hasOwnProperty(key)) {
       throw "Duplicate segments are not supported!";
@@ -324,7 +326,7 @@ primitives.common.LinkedHashItems = function () {
   /**
    * Returns a regular javascript array of collection items
    * 
-   * @returns{object[]} Returns array containing items of the collection
+   * @returns {object[]} Returns array containing items of the collection
    */
   function toArray() {
     var result = [];

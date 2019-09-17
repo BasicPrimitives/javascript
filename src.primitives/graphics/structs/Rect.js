@@ -66,7 +66,7 @@ primitives.common.Rect = function (arg0, arg1, arg2, arg3) {
 /**
  * Left
  * 
- * @return {number} Returns x coordinate of the rectangle
+ * @returns {number} Returns x coordinate of the rectangle
  */
 primitives.common.Rect.prototype.left = function () {
   return this.x;
@@ -75,7 +75,7 @@ primitives.common.Rect.prototype.left = function () {
 /**
  * Top
  * 
- * @return {number} Returns y coordinate of the rectangle
+ * @returns {number} Returns y coordinate of the rectangle
  */
 primitives.common.Rect.prototype.top = function () {
   return this.y;
@@ -84,7 +84,7 @@ primitives.common.Rect.prototype.top = function () {
 /**
  * Right
  * 
- * @return {number} Returns x-axis coordinate of the right side of the rectangle
+ * @returns {number} Returns x-axis coordinate of the right side of the rectangle
  */
 primitives.common.Rect.prototype.right = function () {
   return this.x + this.width;
@@ -93,7 +93,7 @@ primitives.common.Rect.prototype.right = function () {
 /**
  * Bottom
  * 
- * @return {number} Returns y-axis coordinate of the bottom side of the rectangle
+ * @returns {number} Returns y-axis coordinate of the bottom side of the rectangle
  */
 primitives.common.Rect.prototype.bottom = function () {
   return this.y + this.height;
@@ -102,7 +102,7 @@ primitives.common.Rect.prototype.bottom = function () {
 /**
  * Vertical center
  * 
- * @return {number} Returns y-axis coordinate of the center point of the rectangle.
+ * @returns {number} Returns y-axis coordinate of the center point of the rectangle.
  */
 primitives.common.Rect.prototype.verticalCenter = function () {
   return this.y + this.height / 2.0;
@@ -111,7 +111,7 @@ primitives.common.Rect.prototype.verticalCenter = function () {
 /**
  * Horizontal center
  * 
- * @return {number} Returns x-axis coordinate of the center point of the rectangle.
+ * @returns {number} Returns x-axis coordinate of the center point of the rectangle.
  */
 primitives.common.Rect.prototype.horizontalCenter = function () {
   return this.x + this.width / 2.0;
@@ -120,7 +120,7 @@ primitives.common.Rect.prototype.horizontalCenter = function () {
 /**
  * Center point
  * 
- * @return {Point} Returns center point of the rectangle.
+ * @returns {Point} Returns center point of the rectangle.
  */
 primitives.common.Rect.prototype.centerPoint = function () {
   return new primitives.common.Point(this.horizontalCenter(), this.verticalCenter());
@@ -129,7 +129,7 @@ primitives.common.Rect.prototype.centerPoint = function () {
 /**
  * Checks if rectangle is empty. Rectangle is empty if one of its sizes is undefined or less than zero.
  * 
- * @return {boolean} Returns true if rectangle is empty.
+ * @returns {boolean} Returns true if rectangle is empty.
  */
 primitives.common.Rect.prototype.isEmpty = function () {
   return this.x === null || this.y === null || this.width === null || this.height === null || this.width < 0 || this.height < 0;

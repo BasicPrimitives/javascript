@@ -22,14 +22,14 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 
   /**
    * Parents items ids. If this collection is empty then item considered as a root item.
-   * @type {string[] | undefined}
+   * @type {string[]}
    */
   this.parents = [];
 
   /**
    * Spouses items ids. The nodes of this collection create fake invisible child node, 
    * so all of them are being connected with common child connection line.
-   * @type {string[] | undefined}
+   * @type {string[]}
    */
   this.spouses = [];
 
@@ -41,7 +41,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
    * If this property set to null, family layout algorithm will try to choose elements order via placing connected 
    * nodes as close to each other as posible.
    * 
-   * @type {string | undefined}
+   * @type {string}
    */
   this.relativeItem = null;
 

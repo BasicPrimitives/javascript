@@ -1,6 +1,7 @@
 /**
  * Creates Tree Levels structure. It is diagraming specific auxiliary structure
  * that keeps tree nodes order level by level.
+ * @class TreeLevels
  * 
  * @param {TreeLevels} [source=undefined] Optional source object to clone content from into the new instance of the structure.
  * @returns {TreeLevels} Returns tree levels structure.
@@ -278,7 +279,7 @@ primitives.common.TreeLevels = function (source) {
    * Gets number of elements at level
    * 
    * @param {number} levelIndex Level index
-   * @retuens {number} Returns number of elements at the level
+   * @returns {number} Returns number of elements at the level
    */
   function getLevelLength(levelIndex) {
     var result = 0,

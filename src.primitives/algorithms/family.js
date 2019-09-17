@@ -2,6 +2,8 @@
 /**
  * Creates a family object
  * 
+ * @class family
+ * 
  * @param {family} [source=undefined] Reference to optional family object to clone properties from
  * 
  * @returns {family} Returns new instance of family structure
@@ -273,7 +275,7 @@ primitives.common.family = function (source) {
   /**
    * Returns true if structure has nodes.
    * 
-   * @return {boolean} Returns true if family structure has nodes
+   * @returns {boolean} Returns true if family structure has nodes
    */
   function hasNodes() {
     return !primitives.common.isEmptyObject(_nodes);
@@ -1730,9 +1732,6 @@ primitives.common.family = function (source) {
     });
   }
 
-  /**
-   * @class family
-   */
   return {
     /* family structure modification */
     add: add,

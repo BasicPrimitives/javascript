@@ -3,6 +3,7 @@
  * rectangles into buckets of similar size elements. Elements of the same bucket 
  * are aproximated to points. The search of rectangles is transformed to search of points 
  * within given range plus offset for maximum linear rectangle size.
+ * @class SpatialIndex
  * 
  * @returns {SpatialIndex} Returns spacial index data structure.
  */

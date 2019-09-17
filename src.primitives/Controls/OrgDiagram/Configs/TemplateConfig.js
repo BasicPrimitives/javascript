@@ -159,7 +159,7 @@ primitives.orgdiagram.TemplateConfig = function () {
   this.cursorBorderWidth = 2;
 
   /**
-   * Highlight Template.
+   * Cursor Template.
    * 
    * The control calls `onCursorRender` callback function when specific node cursor needs to be rendered with this template.
    * 

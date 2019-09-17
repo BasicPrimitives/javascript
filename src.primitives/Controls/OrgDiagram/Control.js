@@ -1,11 +1,11 @@
 /**
  * Creates JavaScript Organizational Chart Control
- * 
+ * @class Control
  * @param {object} element Reference to placeholder `div` element in the DOM. The control renders diagram content
  * inside of that div element and adds events listeners.
- * @param {Config} options Family Chart Configuration object
+ * @param {Config} options Organizational Chart Configuration object
  * 
- * @returns {orgdiagram} Returns reference to family diagram control. Since control adds event listeners bound
+ * @returns {orgdiagram} Returns reference to Organizational Chart control. Since control adds event listeners bound
  * to its contents, call `destroy` method to clean up everything.
  */
 primitives.orgdiagram.Control = function (element, options) {

@@ -617,7 +617,7 @@ primitives.famdiagram.Config = function (name) {
    * Templates are HTML fragments containing layout and styles used to render diagram nodes.
    * They are defined with a named configuration objects. See `templates` property of control's configuration object.
    * 
-   * @type {string|undefined}
+   * @type {string}
    */
   this.defaultCalloutTemplateName = null;
 
@@ -743,14 +743,14 @@ primitives.famdiagram.Config = function (name) {
   this.groupTitleColor = primitives.common.Colors.RoyalBlue;
 
   /**
-   * Group titles font weight: normal | bold
+   * Group titles font weight: normal, bold
    * 
    * @type {string}
    */
   this.groupTitleFontWeight = "normal";
 
   /**
-   * Group titles font style: normal | italic
+   * Group titles font style: normal, italic
    * 
    * @type {string}
    */
@@ -855,14 +855,14 @@ primitives.famdiagram.Config = function (name) {
 
   /**
    * Labels font weight
-   * Font weight: normal | bold
+   * Font weight: normal, bold
    * 
    * @type {string}
    */
   this.labelFontWeight = "normal";
 
   /**
-   * Labels font style. Font style: normal | italic
+   * Labels font style. Font style: normal, italic
    * 
    * @type {string}
    */

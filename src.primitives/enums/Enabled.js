@@ -1,14 +1,21 @@
-﻿/*
-	Enum: primitives.common.Enabled
-		Defines option state.
-	
-	Auto - Option state is auto defined.
-	True - Enabled.
-	False - Disabled.
-*/
-primitives.common.Enabled =
-{
-	Auto: 0,
-	True: 1,
-	False: 2
+﻿/**
+ * Defines option state.
+ * 
+ * @readonly
+ * @enum {number}
+ */
+primitives.common.Enabled = {
+  /**
+   * Option state is auto defined.
+   */
+  Auto: 0,
+  /**
+   * Enabled
+   */
+  True: 1,
+  /**
+   * Disabled
+   */
+  False: 2
 };
+

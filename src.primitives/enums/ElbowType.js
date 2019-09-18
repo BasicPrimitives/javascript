@@ -1,15 +1,27 @@
-﻿/*
-	Enum: primitives.common.ElbowType
-		Defines type of connector line elbow style.
-	
-	Dot - Two lines intersection marked with dot.
-	Angular - Squared connection has angular .
-	Dashed - Dashes.
-*/
-primitives.common.ElbowType =
-{
-	None: 0,
-	Dot: 1,
-	Bevel: 2,
-	Round: 3
+﻿/**
+ * @typedef {number} ElbowType
+ **/
+
+/**
+ * Elbow style of connection lines
+ *  
+ * @enum {ElbowType}
+ */
+primitives.common.ElbowType = {
+  /**
+   * No elbow
+   */
+  None: 0,
+  /**
+   * Dot marker at the intersection
+   */
+  Dot: 1,
+  /**
+   * Bevel elbow
+   */
+  Bevel: 2,
+  /**
+   * Round elbow
+   */
+  Round: 3
 };

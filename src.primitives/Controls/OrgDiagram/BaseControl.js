@@ -1,3 +1,7 @@
+/**
+ * JavaScript Abstract Control
+ * @class BaseControl
+ */
 primitives.orgdiagram.BaseControl = function (element, options, taskManagerFactory, eventArgsFactory, templates) {
   var _data = {
     name: "orgdiagram",
@@ -23,22 +27,13 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     _debug = false,
     _timer = null;
 
-	/*
-		method: update
-			Makes full redraw of diagram contents reevaluating all options. This method has to be called explisitly after all options are set in order to update controls contents.
-	
-		Parameters:
-			updateMode: This parameter defines severaty of update <primitives.common.UpdateMode>. 
-			For example <primitives.common.UpdateMode.Refresh> updates only 
-			items and selection reusing existing elements where ever it is possible.
-			forceCenterOnCursor: Set this paramter to false, if you don't need to recenter diagram on cursor item.
-
-		See also:
-			<primitives.common.UpdateMode>
-
-		Default:
-			<primitives.common.UpdateMode.Recreate>
-	*/
+  /**
+   * Makes full redraw of diagram contents reevaluating all options. This method has to be called explisitly
+   * after all options are set in order to update controls contents.
+   * 
+   * @param {UpdateMode} updateMode 
+   * @param {bollean} forceCenterOnCursor 
+   */
   function update(updateMode, forceCenterOnCursor) {
     if (forceCenterOnCursor == null) {
       forceCenterOnCursor = true;
@@ -56,10 +51,9 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     }
   }
 
-	/*
-		method: destroy
-			Removes all elements control added to DOM incluidng event listeners.
-	*/
+  /**
+   * Removes all elements control added to DOM incluidng event listeners.
+   */
   function destroy() {
     unbind(_data.layout);
     cleanLayout(_data.layout);
@@ -148,13 +142,12 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     }
   }
 
-	/*
-		method: setOptions
-			Call this method to update controls configuration. Control uses default Config instance to initialize itself, so it sets only options provided in the options parameter.
-
-		Parameters:
-		options - JavaScript object containing options.
-	*/
+  /**
+   * Call this method to update controls configuration. Control uses default Config instance to initialize itself, 
+   * so it sets only options provided in the options parameter.
+   * 
+   * @param {object} options Options
+   */
   function setOptions(options) {
     for (var option in options) {
       if (options.hasOwnProperty(option)) {
@@ -163,36 +156,30 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     }
   }
 
-	/*
-		method: getOptions
-			This method returns current configuration object.
-
-		Returns:
-		Reference to current configuration object
-	*/
+  /**
+   * This method returns current configuration object.
+   * 
+   * @returns {object} Returns reference to current configuration object
+   */
   function getOptions() {
     return _data.options;
   }
 
-	/*
-		method: getOption
-			This method returns configuration option by name.
-
-		Returns:
-		Option value by name
-	*/
+  /**
+   * This method returns configuration option by name.
+   * 
+   * @param {*} option Option name
+   */
   function getOption(option) {
     return _data.options[option];
   }
 
-	/*
-		method: setOption
-			Method to set configuration option of the control by name.
-
-		Parameters:
-		option - option name
-		value - value
-	*/
+  /**
+   * Sets configuration option of the control by name.
+   * 
+   * @param {*} option Option name
+   * @param {*} value Option value
+   */
   function setOption(option, value) {
     return _data.options[option] = value;
   }

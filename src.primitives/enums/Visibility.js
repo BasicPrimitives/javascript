@@ -1,22 +1,36 @@
-﻿/*
-	Enum: primitives.common.Visibility
-		Defines nodes visibility mode.
-	
-	Auto - Auto select best visibility mode.
-	Normal - Show node in normal template mode.
-	Dot - Show node as dot.
-	Line - Show node as line.
-	Invisible - Make node invisible.
+﻿/**
+ * @typedef {number} Visibility
+ **/
 
-	See Also:
 
-		<primitives.orgdiagram.Config.minimalVisibility>
-*/
-primitives.common.Visibility =
-{
-	Auto: 0,
-	Normal: 1,
-	Dot: 2,
-	Line: 3,
-	Invisible: 4
+/**
+ * Minimal nodes visibility in the diagram. If auto fit of diagram into current page size is enabled, then
+ * this option controls minimum allowed size of diagram nodes.
+ *  
+ * @enum {Visibility}
+ */
+primitives.common.Visibility = {
+  /**
+   * Selects best visibility mode.
+   */
+  Auto: 0,
+  /**
+   * Regular template based diagram nodes
+   */
+  Normal: 1,
+  /**
+   * Diagram draws nodes in form of markers
+   */
+  Dot: 2,
+  /**
+   * Diagram only draws connection lines and hides actuall nodes.
+   */
+  Line: 3,
+  /**
+   * Makes node invisible in layout. If node has no parents then 
+   * its connection lines are hidden as well.
+   * 
+   * @ignore
+   */
+  Invisible: 4
 };

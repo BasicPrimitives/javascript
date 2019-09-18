@@ -1,32 +1,28 @@
-/*
-	Class: primitives.common.Point
-	Class represents pair of x and y coordinates that defines a point in 2D plane.
-
-	Parameters:
-		point - <primitives.common.Point> object.
-
-	Parameters:
-		x - X coordinate of 2D point.
-		y - Y coordinate of 2D point.
-*/
+/**
+ * @class Point
+ * @classdesc Class represents pair of x and y coordinates that define a point in 2D plane.
+ * 
+ * @param {Size} arg0 Point object to clone.
+ * 
+ * @param {number} arg0 The x coordinate.
+ * @param {number} arg1 The y coordinate.
+ */
 primitives.common.Point = function (arg0, arg1) {
-	/*
-	Property: x
-		The x coordinate.
-	*/
-
+	/**
+   * The x coordinate
+   * @type {number}
+   */
   this.x = null;
-	/*
-	Property: y
-		The y coordinate.
-	*/
-
+	/**
+   * The y coordinate
+   * @type {number}
+   */
   this.y = null;
 
-	/*
-	Property: context
-		This property holds reference to context object associated with this datapoint.
-	*/
+  /**
+   * Reference to the context object associated with this point.
+   * @type {object}
+   */
   this.context = null;
 
   switch (arguments.length) {
@@ -44,27 +40,28 @@ primitives.common.Point = function (arg0, arg1) {
   }
 };
 
-/*
-	Method: scale
-		Scales width and height.
-*/
+/**
+ * Scales the point location by the specified value
+ * 
+ * @param {number} scale
+ * @returns {Point} Returns reference to the current point.
+ */
 primitives.common.Point.prototype.scale = function (scale) {
   this.x = this.x * scale;
   this.y = this.y * scale;
   return this;
 };
 
-/*
-	Method: distanceTo
-		Returns distance to point.
-
-	Parameters:
-		point - <primitives.common.Point> object.
-
-	Parameters:
-		x - X coordinate of 2D point.
-		y - Y coordinate of 2D point.
-*/
+/**
+ * Calculates distance to the specified point
+ * 
+ * @param {Point} arg0 Point
+ * 
+ * @param {number} arg0 X coordinate
+ * @param {number} arg1 Y coordinate
+ * 
+ * @returns {number} Returns distance to the specified point
+ */
 primitives.common.Point.prototype.distanceTo = function (arg0, arg1) {
   var x2 = 0,
     y2 = 0,
@@ -87,17 +84,21 @@ primitives.common.Point.prototype.distanceTo = function (arg0, arg1) {
   return Math.sqrt(a * a + b * b);
 };
 
+/**
+ * Checks if points are equal
+ * 
+ * @param {Point} point Point
+ * @returns {boolean} Returns true if points are equal.
+ */
 primitives.common.Point.prototype.equalTo = function (point) {
   return this.x == point.x && this.y == point.y;
 };
 
-/*
-	Method: swap
-		Swaps values of two points.
-
-	Parameters:
-		point - <primitives.common.Point> object.
-*/
+/**
+ * Swaps values of 2 points
+ * 
+ * @param {Point} point The point to swap values with
+ */
 primitives.common.Point.prototype.swap = function (point) {
   var x = point.x,
     y = point.y;
@@ -109,24 +110,21 @@ primitives.common.Point.prototype.swap = function (point) {
   this.y = y;
 };
 
-/*
-	Method: clone
-		Clones current point.
-*/
+/**
+ * Clones the point
+ * 
+ * @returns {Point} Returns copy of the point.
+ */
 primitives.common.Point.prototype.clone = function () {
   return new primitives.common.Point(this);
 };
 
-/*
-	Method: toString
-		Returns rectangle location in form of CSS style string.
-
-	Parameters:
-		units - The string name of units. Uses "px" if not defined.
-
-	Returns:
-		CSS style string.
-*/
+/**
+ * Returns point in form of CSS style string.
+ * 
+ * @param {string} [units="px"] The string name of units.
+ * @returns {string} CSS style string.
+ */
 primitives.common.Point.prototype.toString = function (units) {
   var result = "";
 
@@ -138,16 +136,12 @@ primitives.common.Point.prototype.toString = function (units) {
   return result;
 };
 
-/*
-	Method: getCSS
-		Returns rectangle location in form of CSS style object.
-
-	Parameters:
-		units - The string name of units. Uses "px" if not defined.
-
-	Returns:
-		CSS style object.
-*/
+/**
+ * Returns size in form of CSS style object.
+ * 
+ * @param {string} [units="px"] The string name of units.
+ * @returns {object} CSS style object
+ */
 primitives.common.Point.prototype.getCSS = function (units) {
   units = (units !== undefined) ? units : "px";
 

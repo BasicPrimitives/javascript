@@ -39,12 +39,11 @@ primitives.common.hasClass = function (element, className) {
   return false;
 };
 
-/*
-	Function: primitives.common.stopPropagation
-	This method uses various approaches used in different browsers to stop event propagation.
-	Parameters:
-	event - Event to be stopped.
-*/
+/**
+ * This method uses various approaches used in different browsers to stop event propagation.
+ * @param {object} event Event to be stopped
+ * @ignore
+ */
 primitives.common.stopPropagation = function (event) {
   if (event.stopPropagation !== undefined) {
     event.stopPropagation();

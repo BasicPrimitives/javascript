@@ -1,50 +1,58 @@
-/*
-	Class: primitives.orgdiagram.ButtonConfig
-		Options class. Custom user button options class. 
-		Buttons displayed on the right side of item. 
-		See jQuery UI Button options description for details.
-		In order to receive button click event make binding 
-		to <primitives.orgdiagram.Config.onButtonClick>.
-	
-	See Also:
-		<primitives.orgdiagram.Config.buttons>
-*/
+/**
+ * @class ButtonConfig
+ * @classdesc The buttons panel on the side of the diagram nodes is one of our default easy to use features.
+ * This gives you the possibility to try and see how context buttons work being placed inside of diagram layout.
+ * This object provides configuration properties for buttons rendered using HTML buttons elements.
+ * 
+ * Please, pay attention that diagram visual element are rendered in layers on top of each other, so buttons panel
+ * is rendered as the very last layer of the diagram, so its mouse events are never blocked by any other visual elements.
+ * 
+ * See `onButtonClick` event handler in control's configuration object.
+ *
+ * @param {string} name Name
+ * @param {string} icon Icon
+ * @param {string} tooltip Tooltip
+ */
 primitives.orgdiagram.ButtonConfig = function (name, icon, tooltip) {
-	/*
-	Property: name 
-		It should be unique string name of the button. 
-		It is needed to distinguish click events from different butons.
-	*/
-	this.name = name;
+  /**
+   * Button name. It is needed for `onButtonClick` event handler.
+   * 
+   * @type {string}
+   */
+  this.name = name;
 
-	/*
-	Property: icon
-	Name of icon used in jQuery UI.
-	*/
-	this.icon = icon;
+  /**
+   * Name of icon used in jQuery UI.
+   * 
+   * @type {string}
+   */
+  this.icon = icon;
 
-	/*
-	Property: text
-	Whether to show any text -when set to false (display no text), 
-	icon must be enabled, otherwise it'll be ignored.
-	*/
-	this.text = false;
+  /**
+   * If true show button text
+   * @type {boolean}
+   */
+  this.text = false;
 
-	/*
-	Property: label
-	Text to show on the button.
-	*/
-	this.label = null;
+  /**
+   * Text to show on the button.
+   * 
+   * @type {string}
+   */
+  this.label = null;
 
-	/*
-	Property: tooltip
-	Button tooltip content. Tooltip is based on jQuery UI tooltip widget, so it should be part of jQuery UI distribution in order to make this property work.
-	*/
-	this.tooltip = tooltip;
+  /**
+   * Button tooltip content. Tooltip is rendered using jQuery UI tooltip widget, so it should be part of jQuery UI distribution
+   * in order to make this property work.
+   * 
+   * @type {string}
+   */
+  this.tooltip = tooltip;
 
-	/*
-	Property: size
-	Size of the button of type <primitives.common.Size>.
-	*/
-	this.size = new primitives.common.Size(16, 16);
+  /**
+   * Button size
+   * 
+   * @type {Size}
+   */
+  this.size = new primitives.common.Size(16, 16);
 };

@@ -1,0 +1,26 @@
+{
+  "destination": "apireference/",
+  "source": "./min/primitives.latest.js",
+  "orgdiagram.md": [
+    "Config",
+    "ItemConfig",
+    "TemplateConfig",
+    "ShapeAnnotationConfig",
+    "BackgroundAnnotationConfig",
+    "ConnectorAnnotationConfig",
+    "HighlightPathAnnotationConfig",
+    "ButtonConfig"
+  ],
+  "famdiagram.md": [
+    "Config",
+    "ItemConfig",
+    "TemplateConfig",
+    "ShapeAnnotationConfig",
+    "BackgroundAnnotationConfig",
+    "ConnectorAnnotationConfig",
+    "HighlightPathAnnotationConfig",
+    "LabelAnnotationConfig",
+    "PaletteItemConfig",
+    "ButtonConfig"
+  ]
+}

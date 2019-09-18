@@ -1,14 +1,15 @@
-/*
-	Enum: primitives.common.VerticalAlignmentType
-	Defines text label alignment inside text box boundaries.
-	
-	Top - Positined at the top of text box
-	Middle - Aligned to the middle
-	Bottom - Aligned to the bottom of text box
-*/
-primitives.common.VerticalAlignmentType =
-{
-	Top: 0,
-	Middle: 1,
-	Bottom: 2
+/**
+ * @typedef {number} VerticalAlignmentType
+ **/
+
+/**
+ * Controls nodes vertical alignment inside row of nodes. If row of nodes contains nodes of
+ * multiple sizes then small nodes are vertically aligned relative to their large neighbours.
+ *  
+ * @enum {VerticalAlignmentType}
+ */
+primitives.common.VerticalAlignmentType = {
+  Top: 0,
+  Middle: 1,
+  Bottom: 2
 };

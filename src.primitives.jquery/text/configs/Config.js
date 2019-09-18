@@ -1,101 +1,80 @@
-/*
-	Class: primitives.text.Config
-		Text options class.
-	
-*/
+/**
+ * @class primitives.text.Config
+ * 
+ * Rotated text configuration object
+ */
 primitives.text.Config = function () {
-	this.classPrefix = "bptext";
+  this.classPrefix = "bptext";
 
-	/*
-		Property: graphicsType
-			Preferable graphics type. If preferred graphics type is not supported widget switches to first available. 
+  /**
+   * Sets prefered rendering technology. If selected graphics type is not supported on the device,
+   * then control will auto fallback to the first available one.
+   * 
+   * @type {GraphicsType}
+   */
+  this.graphicsType = primitives.common.GraphicsType.SVG;
 
-		Default:
-			<primitives.common.GraphicsType.SVG>
-	*/
-	this.graphicsType = primitives.common.GraphicsType.SVG;
+  /**
+   * Label orientation.
+   * 
+   * @type {TextOrientationType}
+   */
+  this.orientation = primitives.text.TextOrientationType.Horizontal;
 
-	/*
-		Property: textDirection
-			Direction style. 
-
-		Default:
-			<primitives.text.TextDirection.Auto>
-	*/
-	this.orientation = primitives.text.TextOrientationType.Horizontal;
-
-	/*
-		Property: text
-			Text
-	*/
-	this.text = "";
+  /**
+   * The text
+   * 
+   * @type {string}
+   */
+  this.text = "";
 
 
-	/*
-		Property: verticalAlignment
-			Vertical alignment. 
+  /**
+   * Label vertical alignment inside bounding rectangle.
+   * 
+   * @type {VerticalAlignmentType}
+   */
+  this.verticalAlignment = primitives.common.VerticalAlignmentType.Middle;
 
-		Default:
-			<primitives.common.VerticalAlignmentType.Center>
-	*/
-	this.verticalAlignment = primitives.common.VerticalAlignmentType.Middle;
+  /**
+   * Label horizontal alignment inside bounding rectangle.
+   * 
+   * @type {HorizontalAlignmentType}
+   */
+  this.horizontalAlignment = primitives.common.HorizontalAlignmentType.Center;
 
-	/*
-		Property: horizontalAlignment
-			Horizontal alignment. 
+  /**
+   * Font size
+   * 
+   * @type {string}
+   */
+  this.fontSize = "16px";
 
-		Default:
-			<primitives.common.HorizontalAlignmentType.Center>
-	*/
-	this.horizontalAlignment = primitives.common.HorizontalAlignmentType.Center;
+  /**
+   * Font family
+   * 
+   * @type {string}
+   */
+  this.fontFamily = "Arial";
 
-	/*
-		Property: fontSize
-			Font size. 
+  /**
+   * Font color
+   * 
+   * @type {string}
+   */
+  this.color = primitives.common.Colors.Black;
 
-		Default:
-			15
-	*/
-	this.fontSize = "16px";
+  /**
+   * Font weight: normal | bold
+   * 
+   * @type {string}
+   */
+  this.fontWeight = "normal";
 
-	/*
-		Property: fontFamily
-			Font family. 
-
-		Default:
-			"Arial"
-	*/
-	this.fontFamily = "Arial";
-
-	/*
-		Property: color
-			Color. 
-
-		Default:
-			<primitives.common.Colors.Black>
-	*/
-	this.color = primitives.common.Colors.Black;
-
-	/*
-		Property: fontWeight
-			Font weight: normal | bold
-
-		Default:
-			"normal"
-	*/
-	this.fontWeight = "normal";
-
-	/*
-		Property: fontStyle
-			Font style: normal | italic
-		
-		Default:
-			"normal"
-	*/
-	this.fontStyle = "normal";
-
-	/*
-	method: update
-		Makes full redraw of text widget contents reevaluating all options.
-	*/
+  /**
+   * Font style: normal | italic
+   * 
+   * @type {string}
+   */
+  this.fontStyle = "normal";
 };

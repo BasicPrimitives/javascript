@@ -1,22 +1,26 @@
-﻿/*
-	Enum: primitives.common.UpdateMode
-		Defines redraw mode of diagram.
-	
-	Recreate - Forces widget to make a full chart redraw. It is equivalent to initial chart creation. 
-	It removes everything from chart layout and recreares all elements again. 
-	Refresh - This update mode is optimized for widget fast redraw caused by resize or changes of 
-	next options: <primitives.orgdiagram.Config.items>, <primitives.orgdiagram.Config.cursorItem> 
-	or <primitives.orgdiagram.Config.selectedItems>.
-	PositonHighlight - This update mode redraws only <primitives.orgdiagram.Config.highlightItem>.
+﻿/**
+ * @typedef {number} UpdateMode
+ **/
 
-	See Also:
-		<primitives.orgdiagram.Config.update>
-*/
-primitives.common.UpdateMode =
-{
-	Recreate: 0,
-	Refresh: 1,
-	PositonHighlight: 2
+/**
+ * Controls update of the diagram
+ *
+ * @enum {UpdateMode}
+ */
+primitives.common.UpdateMode = {
+  /**
+   * Forces control to make a full chart redraw. It is equivalent to initial chart creation. 
+   * It removes everything from placeholder and renders all elements again.
+   */
+  Recreate: 0,
+  /**
+   * Optimized refresh. It only updates visual elements which needs to be updated.
+   */
+  Refresh: 1,
+  /**
+   * Updates highlight position only
+   */
+  PositonHighlight: 2
 };
 
 primitives.orgdiagram.UpdateMode = primitives.common.UpdateMode;

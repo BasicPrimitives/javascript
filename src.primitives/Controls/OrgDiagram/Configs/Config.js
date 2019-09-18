@@ -1,972 +1,864 @@
-/*
-	Class: primitives.orgdiagram.Config
-		jQuery orgDiagram Widget options class. Organizational chart configuration object.
-	
-*/
+/**
+ * @class Config
+ * @classdesc Organizational Chart configuration object. Use this object as a reference 
+ * for available properties and their default values.
+ * 
+ * @param {string} name
+ */
 primitives.orgdiagram.Config = function (name) {
   this.name = (name !== undefined) ? name : "OrgDiagram";
   this.classPrefix = "orgdiagram";
 
-	/*
-		Property: navigationMode
-			Defines control navigation mode. By default control replicates interactivity of regular Tree control. 
-			It has highlight for mouse over feedback and it has cursor for showing currently selected single node in diagram.
-			In order to avoid creation of plus/minus buttons for children nodes folding and unfolding, 
-			this functionality is done automatically for current cursor item. This is especially true for family diagram, 
-			because it has no logical root, so cursor plays vital role for unfolding of nodes 
-			and zooming into area of user interest in diagram.
-			Use this option to disable highlight which does not make sense on touch devices or make control inactive completly.
-
-		See Also:
-			<primitives.common.NavigationMode>
-		Default:
-			<primitives.common.NavigationMode.Default>
-	*/
+  /**
+   * Sets control navigation mode.
+   * 
+   * By default control replicates interactivity of regular collection control. It has cursor to select single
+   * item in the collection. So user can click and select any node in the diagram. The control has highlight for mouse over feedback.
+   * So user can move mouse and see highlight frame and callout callback annotation for node under cursor.
+   * 
+   * By `Default` the control has both cursor and highlight. If they are disabled then control is rendered as a static image.
+   * 
+   * @type {NavigationMode}
+   */
   this.navigationMode = primitives.common.NavigationMode.Default;
 
-	/*
-		Property: graphicsType
-			Preferable graphics type. If preferred graphics type 
-			is not supported widget switches to first available. 
-
-		Default:
-			<primitives.common.GraphicsType.SVG>
-	*/
+  /**
+   * Sets prefered rendering technology. If selected graphics type is not supported on the device,
+   * then control will auto fallback to the first available one.
+   * 
+   * @type {GraphicsType}
+   */
   this.graphicsType = primitives.common.GraphicsType.SVG;
 
-	/*
-		Property: pageFitMode
-			Defines the way diagram is fit into page. By default chart minimize items when it has not enough space to fit all of them into screen. 
-			Chart has its maximum size when all items shown in full size and  its minimal size when all items shown as dots. 
-			It is equivalent of full zoom out of the chart items, dot size items are not readable, but such presentation of them 
-			gives possibility to overview chart layout. So chart tryes to combine both presenation modes and keep chart as small 
-			as possible in order to give user possibility to see big picture. Collapsed items provide ideal way for analitical reiew of 
-			organizational diagram. If chart shown in its maximum size when all items are unfolded, it becomes impossible 
-			to navigate betwen parents close to the root item. In such mode chart is usable only at bottom levels when children are close to their parents.
-			If we try to navigate up to the root of hierarchy, gaps between parents sometimes as big as screen size. So in order to solve these 
-			issues chart partially collapses hierarchy into dots and lines depending on this option.
-
-		See also:
-			<primitives.orgdiagram.Config.minimalVisibility>
-
-		Default:
-			<primitives.common.PageFitMode.FitToPage>
-	*/
+  /**
+   * Page fit mode. Minimizing nodes into markers and labels. This option provides a special mode that renders the diagram
+   * nodes in the form of markers. This is a highly scalable form that is capable of rendering large numbers of nodes
+   * while not affecting the rendering performance. With this, huge diagrams can be fit into avaialable screen space.
+   * 
+   * When using a graphics editor to manually draw your diagrams, it is common place to have large gaps between the nodes.
+   * This can make the diagram/chart unreadable, hard to edit and navigate. On top of that, on a large scale the diagram could have screen size
+   * intervals between items. Admittedly the computer UI does allow the user to scale and fit the diagram in order to visualize it
+   * on a single screen. But in that case, the items become small and unreadable as there is no scaling priority and the items
+   * are just too small to be readable.
+   * 
+   * @type {PageFitMode}
+   */
   this.pageFitMode = primitives.common.PageFitMode.FitToPage;
 
-	/*
-		Property: minimalVisibility
-			Defines minimal allowed item form size for page fit mode. See description for pageFitMode.
-	
-		See also:
-			<primitives.orgdiagram.Config.pageFitMode>
-
-		Default:
-			<primitives.common.Visibility.Dot>
-	*/
+  /**
+   * Minimal nodes visibility in the diagram. If auto fit of the diagram into current page size is enabled, then
+   * this option controls minimum allowed size of the diagram nodes.
+   * 
+   * @type {Visibility}
+   */
   this.minimalVisibility = primitives.common.Visibility.Dot;
 
-	/*
-		Property: orientationType
-			Chart orientation. Chart can be rotated left, right and bottom.
-			Rotation to the right side is equivalent to left side placement 
-			in countries writing from right to left, so it is important for localization.
-
-		Default:
-			<primitives.common.OrientationType.Top>
-	*/
+  /**
+   * Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction,
+   * this is needed for Arabic support and various layouts.
+   * 
+   * @type {OrientationType}
+   */
   this.orientationType = primitives.common.OrientationType.Top;
 
-	/*
-		Property: horizontalAlignment
-			Defines items horizontal alignment relative to their parent. 
-			This is usefull for control localization for right-to-left countries.
-		
-		Default:
-			<primitives.common.HorizontalAlignmentType.Center>
-	*/
+  /**
+   * Sets children horizontal alignment relative to their parent. The children by default are measured in size and then aligned 
+   * towards the parent node. If it is `Center` aligned then parent node is placed in the middle of the children. In the `Left`
+   * alignment mode parent is aligned to left of the children and vice versa for `Right` alignment.
+   * 
+   * @type {HorizontalAlignmentType}
+   */
   this.horizontalAlignment = primitives.common.HorizontalAlignmentType.Center;
 
-	/*
-	Property: verticalAlignment
-		Defines items vertical alignment relative to each other within one level of hierarchy. 
-		It does not affect levels having same size items.
-	
-	Default:
-		<primitives.common.VerticalAlignmentType.Middle>
-*/
+  /**
+   * Sets items vertical alignment relative to each other within one level of the hierarchy. 
+   * It does not change anything if diagram nodes are all of the same size.
+   * 
+   * @type {VerticalAlignmentType}
+   */
   this.verticalAlignment = primitives.common.VerticalAlignmentType.Middle;
 
-	/*
-		Property: arrowsDirection
-			Sets direction of connector lines arrows.
-
-		Default:
-			<primitives.common.GroupByType.None>
-	*/
+  /**
+   * Sets arrows direction for connector lines. If this property set to `Parents` then arrows are drawn
+   * from logical children towards logical parents. By default diagram has no arrows.
+   * 
+   * @type {GroupByType}
+   */
   this.arrowsDirection = primitives.common.GroupByType.None;
 
-	/*
-		Property: showExtraArrows
-			Show extra horizontal arrows on top of connectors for easy navigation between parents and children through connector lines.
-			This options if off by default for organizational diagram.
-
-		Default:
-			false
-	*/
+  /**
+   * Show extra horizontal arrows on top of long horizontal connection lines for the easy visual tracing 
+   * of relations between parents and children. By default it is off.
+   * 
+   * @type {boolean}
+   */
   this.showExtraArrows = false;
 
-	/*
-	Property: extraArrowsMinimumSpace
-		If diagram is small relations between objects are easy to trace, so mutual positions of parents and children are enough to navigate from parent to children and backward.
-		If diagram is large and one row of children exceeds screen width then it use this option to activate horizontal arrows for large intervals between items.
-
-	Default:
-		30
-	*/
+  /**
+   * Set minimum space for placement of extra arrows on horizontal connection lines. See `showExtraArrows` property.
+   * 
+   * @type {number}
+   */
   this.extraArrowsMinimumSpace = 30;
 
-	/*
-		Property: showHorizontalArrows
-			Show extra horizontal arrows for easy navigation to connection line between parents and children.
-
-		Default:
-			false
-	*/
-  this.showHorizontalArrows = false;
-
-	/*
-		Property: connectorType
-			Defines connector lines style for dot and line elements. If elements are in their normal full size 
-			form they are connected with squired connection lines. So this option controls connector lines style for dots only.
-
-		Default:
-			<primitives.common.ConnectorType.Squared>
-	*/
+  /**
+   * Connection lines style. This option is only applicable to nodes minimized to markers or lines. Full size nodes
+   * are always connected with squared connection lines
+   * 
+   * @type {ConnectorType}
+   */
   this.connectorType = primitives.common.ConnectorType.Squared;
 
-	/*
-		Property: bevelSize
-			Size of squared connector bevel.
-
-		Default:
-			4
-	*/
+  /**
+   * The bevel size of squared connector lines.
+   * 
+   * @type {number}
+   */
   this.bevelSize = 4;
 
-	/*
-		Property: elbowType
-			Style squared connectors with custom elbows.
-
-		Default:
-			<primitives.common.ElbowType.None>
-	*/
+  /**
+   * Set style of squared connectors with custom elbows.
+   * 
+   * @type {ElbowType}
+   */
   this.elbowType = primitives.common.ElbowType.None;
 
-	/*
-		Property: elbowDotSize
-			Size of elbow dot.
-
-		Default:
-			4
-	*/
+  /**
+   * The size of dot markers placed in the elbows of connector lines.
+   * 
+   * @type {number}
+   */
   this.elbowDotSize = 4;
 
-	/*
-	Property: emptyDiagramMessage
-		Empty message in order to avoid blank screen. This option is supposed to say user that chart is empty when no data inside.
-	*/
+
+  /**
+   * Empty diagram message. This option is supposed to say user that chart is empty when no data is available for rendering.
+   * 
+   * @type {string}
+   */
   this.emptyDiagramMessage = "Diagram is empty.";
 
-	/*
-	Property: items
-		This is chart items collection. It is regular array of items of type ItemConfig. Items reference each other via parent property. 
-		So every item may have only one parent in chart. If parent set to null then item displayed at root of chart. 
-		Chart can have multiple root items simultaniously. If item references missing item, then it is ignored. 
-		If items loop each other they are ignored as well. It is applications responsiblity to avoid such issues.
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig>
-		<primitives.orgdiagram.ItemConfig.id>
-		<primitives.orgdiagram.ItemConfig.parent>
-	*/
+  /**
+   * Items collection. Ths property defines data we render in the diagram.
+   * 
+   * Every items should have unique `id` property set. They are used to create relations
+   * between items in the diagram and for rendering various UI elements bound to nodes.
+   * 
+   * @type {ItemConfig[]}
+   */
   this.items = [];
 
-	/*
-	Property: annotations
-		Array of annotaion objects. Chart supports several types of annotations. By default they are drawn on top of chart items and they block mouse events of UI elements placed in item templates.
-		The design assumes only few of them being displayed simultanuosly in other words chart does not resolve mutual overlaps of annotations, so don't over use them. 
-		This is especially true for connectors and background annotations.
-
-	See also:
-		<primitives.orgdiagram.ConnectorAnnotationConfig>
-		<primitives.orgdiagram.ShapeAnnotationConfig>
-		<primitives.orgdiagram.BackgroundAnnotationConfig>
-		<primitives.orgdiagram.HighlightPathAnnotationConfig>
-	*/
+  /**
+   * Annotations. Annotations are API elements that are attached to the diagram nodes.
+   * We draw our annotations either in front of the nodes or in the background. The annotations 
+   * don't affect the nodes placement in any way. As a result the control redraws them 
+   * instantaneously without rerendering or recalculating the actual diagram layout.
+   * 
+   * @type {Array.<(ShapeAnnotationConfig | BackgroundAnnotationConfig | ConnectorAnnotationConfig | HighlightPathAnnotationConfig)>}
+   */
   this.annotations = [];
 
-	/*
-	Property: cursorItem
-		Cursor item id - it is single item selection mode, user selects new cursor item on mouse click. 
-		Cursor defines current local zoom placement or in other words current navigation item in the chart,
-		all items relative to cursor always shoun in full size. So user can see all possible items around cursor in full size 
-		and can continue navigation around chart. So when user navigates from one item to another clicking on thems and changing cursor item
-		in chart, chart minimizes items going out of cursor scope and shows in full size items relative to new cursor position.
-		If it is null then no cursor shown on diagram.
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-		<primitives.orgdiagram.Config.onCursorChanging>
-		<primitives.orgdiagram.Config.onCursorChanged>
-	*/
+  /**
+   * Cursor item. Organization Chart control has API options equivalent to regular UI controls.
+   * The cursor item is used to select single item in the hierarchy with mouse click, 
+   * highlight item provides visual feed back on mouse over. Selected items collection 
+   * is equivalent to checked items in ListView or TreeView controls.
+   * 
+   * Chart navigation depends on current cursor item, chart shows cursor and its neighbours 
+   * in full size regardless of enabled page fit mode. So cursor item plays a role of local 
+   * zoom in the chart hierarchy. User navigates around chart via clicking and moving
+   * cursor item around and zooming into data around new cursor item.
+   * 
+   * The control notifies about this property chnges with `onHighlightChanging` and `onHighlightChanged` events.
+   * 
+   * If `null` then no cursor item selected in the diagram.
+   * 
+   * @type {string}
+   */
   this.cursorItem = null;
 
-	/*
-	Property: highlightItem
-		Highlighted item id. Highlight is mouse over affect, but using this option applicatin can set highlight at any item 
-		in the chart programmatically. It can be used for chart syncronization with other controls on UI having mouse over effect. 
-		See primitives.orgdiagram.Config.update method arguments description for fast chart update.
-		If it is null then no highlight shown on diagram.
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-		<primitives.orgdiagram.Config.onHighlightChanging>
-		<primitives.orgdiagram.Config.onHighlightChanged>
-	*/
+  /**
+   * Highlighted item. Shows highlight and callout annotation for given item id. It does not trigger diagram
+   * layout or scrolling so it can be used to syncronize mouse over feedback of the diagram nodes with other
+   * collection controls or UI elements. 
+   * 
+   * The control notifies about this property chnges with `onHighlightChanging` and `onHighlightChanged` events.
+   * 
+   * If `null` then no highlight shown on the diagram.
+   * 
+   * @type {string}
+   */
   this.highlightItem = null;
 
-	/*
-	Property: highlightGravityRadius
-		The normal item has mouse over feedback in form of highlight border only when mouse pointer is inside of its boundaries. 
-		When items is minimized its marker can be so small that it is going to be difficult for end user to place mouse pointer inside of it.
-		This option defines highlight gravity radius, so minimized item gets highlighted when mouse pointer does not overlap marker but it is within gravity radius of its boundaries.
-		This property is ignored when nearest item is outside of screen boundaries and not visible to end user.
-	*/
+  /**
+   * Highlight gravity radius. This property controls mouse over feedback and callout annotation visibility for nodes
+   * rendered as markers when diagram auto fits nodes into available screen space. It makes marker highlighted when 
+   * mouse pointer is inside of the gravity radius cycle of the marker. This property is ignored when the nearest item
+   * is outside of the screen boundaries and is not visible to the end user.
+   *
+   * The normal item has mouse over feedback in form of highlight border only when mouse pointer is inside of its boundaries. 
+   * 
+   * @type {number}
+   */
   this.highlightGravityRadius = 40;
 
-	/*
-	Property: selectedItems
-		Defines array of selected item ids. Chart allows to select items via checking checkboxes under items. Checkboxes are 
-		shown only for full size items. So when item is selected it is always shown in full size, so check box always visible for selcted items.
-		User can navigate around large diagram and check intrested items in order to keep them opened. So that way chart provides 
-		means to show several items on large diagram and fit everything into minimal space ideally into available screen space.
-		Application can select items programmatically using this array or receive notifications from chart about user selections with following events.
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-		<primitives.orgdiagram.Config.onSelectionChanging>
-		<primitives.orgdiagram.Config.onSelectionChanged>
-	*/
+  /**
+   * Selected items collection. Selected items is a collection of items ids having checked their check boxes.
+   * The control always shows selected items in the full size form, regardless of enabled page fit mode.
+   * 
+   * The control notifies about user made changes in this collection with `onSelectionChanging` and `onSelectionChanged` events.
+   * 
+   * @type {string[]}
+   */
   this.selectedItems = [];
 
-	/*
-	Property: hasSelectorCheckbox
-		This option controls selection check boxes visibility. 
-
-	Auto - Checkbox shown only for current cursor item only.
-	True - Every full size item has selection check box.
-	False - No check boxes. Application can still programmatically select some items in the chart. 
-	Application may provide custom item template having checkbox inside of item. If application defined check box inside of item template has name="checkbox"
-	it is auto used as default selection check box.
-
-	Default:
-		<primitives.common.Enabled.Auto>
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig.hasSelectorCheckbox>
-		<primitives.orgdiagram.Config.onSelectionChanging>
-		<primitives.orgdiagram.Config.onSelectionChanged>
-	*/
+  /**
+  * Sets visibility of selection check boxes for the diagram nodes.
+  * 
+  * `Auto` - visible for cursor item only
+  * `True` - visible
+  * `False` - hiddens
+  * 
+  * See `selectedItems` property. All items listed in this property are going to have checked selection checkboxes.
+  * Checkbox can be added to item template, in that case it should be named="checkbox", so control can use it as built in checkbox element.
+  * 
+  * @type {Enabled}
+  */
   this.hasSelectorCheckbox = primitives.common.Enabled.Auto;
 
-	/*
-		Property: selectCheckBoxLabel
-			Selection check box label. 
-	*/
+  /**
+   * Selection check box label. See `hasSelectorCheckbox` and `selectedItems` properties.
+   * 
+   * @type {string}
+   */
   this.selectCheckBoxLabel = "Selected";
 
-	/*
-	Property: selectionPathMode
-		Defines the way items between root item and selectedItems displayed in diagram. Chart always shows all items between cursor item and its root in full size.
-		But if cursor positioned on root item, then chart shows in full size only selected items in the chart. So this option controls items size between 
-		selected items and root item of the chart. By default all items betwen root and selected items shown in full size.
-
-	Default:
-		<primitives.common.SelectionPathMode.FullStack>
-	*/
+  /**
+   * Selection path mode. This property controls visibility of nodes between cursor and the root of the diagram in the auto fit mode. It allows to draw 
+   * them in full size regardless of available space and auto fit mode.
+   * 
+   * The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers.
+   * So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items
+   * of the diagram in full size and draw all other diagram nodes as markers.
+   *
+   * @type {SelectionPathMode}
+   */
   this.selectionPathMode = primitives.common.SelectionPathMode.FullStack;
 
-	/*
-	Property: templates
-		Custom user templates collection. TemplateConfig is complex object providing options to customize item's content template, 
-		cursor tempate and highlight template. Every template config should have unique name property, which is used by chart and its item configs 
-		to reference them. Chart's defaultTemplateName allows to make template default for all items in the chart. On other hand user may define templates
-		to individual items in the chart by templateName property of item config.
-
-	See also:
-		<primitives.orgdiagram.TemplateConfig>
-		<primitives.orgdiagram.Config.defaultTemplateName>
-		<primitives.orgdiagram.ItemConfig.templateName>
-	*/
+  /**
+   * Collection of named templates used to define content for nodes, cursor and highlight.
+   * By default control provides templates for all types of visual elements.
+   * 
+   * @type {TemplateConfig[]}
+   */
   this.templates = [];
 
-	/*
-		Property: defaultTemplateName
-			This is template name used to render items having no <primitives.orgdiagram.ItemConfig.templateName> defined.
-
-
-		See Also:
-			<primitives.orgdiagram.TemplateConfig>
-			<primitives.orgdiagram.TemplateConfig.name>
-			<primitives.orgdiagram.Config.templates>
-	*/
+  /**
+   * Name of the template used to render nodes in the diagram. See `templates` property. Template name can be set individually for every node
+   * see `templateName` property of `ItemConfig`.
+   * 
+   * @type {string}
+   */
   this.defaultTemplateName = null;
 
-	/*
-	Property: hasButtons
-		This option controls user buttons visibility. 
-
-	Auto - Buttons visible only for cursor item.
-	True - Every normal item has buttons visible.
-	False - No buttons.
-
-	Default:
-		<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Sets buttons visibility.
+   * 
+   * `Auto` - cursor item only.
+   * `True` - visible
+   * `False` - hidden
+   * 
+   * @type {Enabled}
+   */
   this.hasButtons = primitives.common.Enabled.Auto;
 
-	/*
-	Property: buttons
-		Custom user buttons displayed on right side of item. This collection provides simple way to define context buttons for every item. 
-		The only limitation, they are all the same. So if you need to have unique buttons for every item, then you have to 
-		customize cursor templates and manually create custom buttons inside of them.
-
-	See also:
-		<primitives.orgdiagram.ButtonConfig>
-	*/
+  /**
+   * Buttons configuration objects collection. The buttons panel on the side of the diagram nodes is one of our default easy to use features.
+   * This gives you the possibility to try and see how context buttons work being placed inside of diagram layout.
+   * This collection of buttons provides configuration properties for buttons rendered using HTML buttons elements.
+   * 
+   * @type {ButtonConfig[]}
+   */
   this.buttons = [];
 
+  /**
+   * On buttons panel render event. This callback function is called to render context of buttons panel.
+   * It is used to replace `buttons` collection property in ReactJS component. So we preserve context buttons panel as a functional 
+   * concept, but eliminate buttons customization API.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   * @ignore
+   */
   this.onButtonsRender = null;
 
-	/*
-	Event: onHighlightChanging
-		Notifies about changing highlight item <primitives.orgdiagram.Config.highlightItem> in diagram.
-		This coupled event with <primitives.orgdiagram.Config.onHighlightChanged>, it is fired before highlight update.
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * On highlight item being changed event. See `highlightItem` property. This callback function is called before `onHighlightChanged` event.
+   * Use this callabck function to stop event propogation. See `EventArgs` for details.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onHighlightChanging = null;
 
-	/*
-	Event: onHighlightChanged
-		Notifies about changed highlight item <primitives.orgdiagram.Config.highlightItem> in diagram.
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * On highlight item changed event. See `highlightItem` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onHighlightChanged = null;
 
-	/*
-	Event: onCursorChanging
-		Notifies about changing cursor item <primitives.orgdiagram.Config.cursorItem> in diagram.
-		This coupled event with <primitives.orgdiagram.Config.onCursorChanged>, it is fired before layout update.
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * On cursor item being changed event. See `cursorItem` property. This callback function is called before `onCursorChanged` event.
+   * Use this callabck function to stop event propogation. See `EventArgs` for details.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onCursorChanging = null;
 
-	/*
-	Event: onCursorChanged
-		Notifies about changed cursor item <primitives.orgdiagram.Config.cursorItem> in diagram .
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * On cursor item changed event. See `cursorItem` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onCursorChanged = null;
 
-	/*
-	Event: onSelectionChanging
-		Notifies about changing selected items collection of <primitives.orgdiagram.Config.selectedItems>.
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * On selected items being changed event. See `selectedItems` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onSelectionChanging = null;
 
-	/*
-	Event: onSelectionChanged
-		Notifies about changes in collection of <primitives.orgdiagram.Config.selectedItems>.
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * On selected items changed event. See `selectedItems` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onSelectionChanged = null;
 
-	/*
-	Event: onButtonClick
-		Notifies about click of custom user button defined in colelction of <primitives.orgdiagram.Config.buttons>.
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * Button click event. See `buttons` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onButtonClick = null;
 
-	/*
-	Event: onMouseClick
-		On mouse click event. 
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * Mouse click event. 
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onMouseClick = null;
 
-	/*
-	Event: onMouseDblClick
-		On mouse double click event. 
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * Mouse double click event. 
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onMouseDblClick = null;
 
-	/*
-	Event: onItemRender
-		Item templates don't provide means to bind data of items into templates. So this event handler gives application such possibility.
-		If application uses custom templates then this method is called to populate template with items properties.
-
-	See also:
-		<primitives.common.RenderEventArgs>
-		<primitives.orgdiagram.TemplateConfig>
-		<primitives.orgdiagram.Config.templates>
-	*/
+  /**
+   * Callback function for rendering content of the diagram nodes. This callback is only 
+   * called when custom item template is defined in the template object configuration.
+   * This callback receives reference to DOM element and context object of the rendered item.
+   * The control reuses exisitng elements in the DOM, so it is applications responsibility 
+   * to properly update their content.
+   *
+   * @callback
+   * @param {Object} event Event if available
+   * @param {RenderEventArgs} data The context information
+   */
   this.onItemRender = null;
 
-	/*
-	Event: onHighlightRender
-		If user defined custom highlight template for item template 
-		then this method is called to populate it with context data.
-
-	See also:
-		<primitives.common.RenderEventArgs>
-		<primitives.orgdiagram.TemplateConfig>
-		<primitives.orgdiagram.Config.templates>
-	*/
+  /**
+   * Callback function for rendering content of the highlight template. This callback is only 
+   * called when custom highlight is defined in the template configuration.
+   *
+   * @callback
+   * @param {Object} event Event if available
+   * @param {RenderEventArgs} data The context information
+   */
   this.onHighlightRender = null;
-	/*
-	Event: onCursorRender
-		If user defined custom cursor template for item template 
-		then this method is called to populate it with context data.
 
-	See also:
-		<primitives.common.RenderEventArgs>
-		<primitives.orgdiagram.TemplateConfig>
-		<primitives.orgdiagram.Config.templates>
-	*/
+  /**
+   * Callback function for rendering content of the cursor template. This callback is only 
+   * called when custom cursor is defined in the template configuration.
+   *
+   * @callback
+   * @param {Object} event Event if available
+   * @param {RenderEventArgs} data The context information
+   */
   this.onCursorRender = null;
-	/*
-	Property: normalLevelShift
-		Defines interval after level of items in  diagram having items in normal state.
-	*/
+
+  /**
+   * Sets the spacing between rows.
+   * 
+   * @type {number}
+   */
   this.normalLevelShift = 20;
-	/*
-	Property: dotLevelShift
-		Defines interval after level of items in  diagram having all items in dot state.
-	*/
+
+  /**
+   * Sets the spacing after the row containing nodes minimized down to markers.
+   * 
+   * @type {number}
+   */
   this.dotLevelShift = 20;
-	/*
-	Property: lineLevelShift
-		Defines interval after level of items in  diagram having items in line state.
-	*/
+
+  /**
+   * Sets the spacing after the row containing nodes minimized down to lines.
+   * 
+   * @type {number}
+   */
   this.lineLevelShift = 10;
 
-	/*
-	Property: normalItemsInterval
-		Defines interval between items at the same level in  diagram having items in normal state.
-	*/
+  /**
+   * Sets interval between nodes of the same row.
+   * 
+   * @type {number}
+   */
   this.normalItemsInterval = 10;
-	/*
-	Property: dotItemsInterval
-		Defines interval between items at the same level in  diagram having items in dot state.
-	*/
+
+  /**
+   * Sets interval between nodes of the same row, minimized down to markers.
+   * 
+   * @type {number}
+   */
   this.dotItemsInterval = 1;
-	/*
-	Property: lineItemsInterval
-		Defines interval between items at the same level in  diagram having items in line state.
-	*/
+
+  /**
+   * Sets interval between nodes of the same row, minimized down to lines.
+   * 
+   * @type {number}
+   */
   this.lineItemsInterval = 2;
 
-	/*
-	Property: cousinsIntervalMultiplier
-		Use this interval multiplier between cousins in hiearchy. The idea of this option to make extra space between cousins. 
-		So children belonging to different parents have extra gap between them.
-		
-	*/
+  /**
+   * Set cousins interval multiplier. This values adds extra space between branches of the hierarchy.
+   * For example nodes of the same parent have interval 20 and nodes of two different parents are going to have interval 100.
+   * 
+   * @type {number}
+   */
   this.cousinsIntervalMultiplier = 5;
 
-	/*
-	method: update
-		Makes full redraw of diagram contents reevaluating all options. This method has to be called explisitly after all options are set in order to update widget contents.
-	
-	Parameters:
-		updateMode: This parameter defines severaty of update <primitives.common.UpdateMode>. 
-		For example <primitives.common.UpdateMode.Refresh> updates only 
-		items and selection reusing existing elements where ever it is possible.
-
-	See also:
-		<primitives.common.UpdateMode>
-
-	Default:
-		<primitives.common.UpdateMode.Recreate>
-	*/
-
-	/*
-	Property: itemTitleFirstFontColor
-	This property customizes default template title font color. 
-	Item background color sometimes play a role of logical value and 
-	can vary over a wide range, so as a result title having 
-	default font color may become unreadable. Widgets selects the best font color 
-	between this option and <primitives.orgdiagram.Config.itemTitleSecondFontColor>.
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig.itemTitleColor>
-		<primitives.orgdiagram.Config.itemTitleSecondFontColor>
-		<primitives.common.highestContrast>
-
-	*/
+  /**
+   * The first font color of the title.
+   * 
+   * The title background color is designed to be one of the avalaible dimensitions to group nodes in the diagram,
+   * so title can be unreadable if its color matches its background color. This property is created to auto resolve this issue
+   * via automatic switch between two available font title colors.
+   * 
+   * @type {string}
+   */
   this.itemTitleFirstFontColor = primitives.common.Colors.White;
 
-	/*
-	Property: itemTitleSecondFontColor
-	Default template title second font color.
-	*/
+  /**
+   * The second font color of the title.
+   * 
+   * @type {string}
+   */
   this.itemTitleSecondFontColor = primitives.common.Colors.Navy;
 
-	/*
-		Property: minimizedItemShapeType
-			Defines minimized item shape. The border line width is set with <primitives.orgdiagram.TemplateConfig.minimizedItemBorderWidth>
-			By default minimized item is rounded rectangle filled with item title color.
-
-
-		See also:
-			<primitives.orgdiagram.TemplateConfig.minimizedItemCornerRadius>
-			<primitives.orgdiagram.ItemConfig.itemTitleColor>
-			<primitives.orgdiagram.ItemConfig.minimizedItemShapeType>
-
-		Default:
-			<primitives.common.ShapeType.None>
-	*/
+  /**
+   * Markers. The shape of the markers when nodes are minimized by autofit. The control supports auto fit of the diagram into available screen space.
+   * When the diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
+   * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
+   * So this option sets default marker shape for nodes. It can be set individually per node in items configurations.
+   * 
+   * The default color of shape is the same as `itemTitleColor` property set for individual items.
+   * 
+   * @type {ShapeType}
+   */
   this.minimizedItemShapeType = primitives.common.ShapeType.None;
 
-	/*
-	Property: linesColor
-		Connectors lines color. Connectors are basic connections betwen chart items 
-		defining their logical relationships, don't mix with connector annotations. 
-	*/
+  /**
+   * The relations lines color. The control uses this lines color to render basic relations between nodes.
+   * 
+   * @type {string}
+   */
   this.linesColor = primitives.common.Colors.Silver;
 
-	/*
-	Property: linesWidth
-		Connectors lines width.
-	*/
+  /**
+   * The relations lines width
+   * 
+   * @type {number}
+   */
   this.linesWidth = 1;
 
-	/*
-	Property: linesType
-		Connectors line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
+  /**
+   * The relations lines pattern
+   * 
+   * @type {LineType}
+   */
   this.linesType = primitives.common.LineType.Solid;
 
-	/*
-	Property: highlightLinesColor
-		Connectors highlight line color. Connectors are basic connections betwen chart items 
-		defining their logical relationships, don't mix with connector annotations. 
-	*/
+  /**
+   * Sets highlight lines color. The diagram uses highlight lines to render highlighted relation lines between nodes.
+   * 
+   * @type {string}
+   */
   this.highlightLinesColor = primitives.common.Colors.Red;
 
-	/*
-	Property: highlightLinesWidth
-		Connectors highlight line width.
-	*/
+  /**
+   * Sets highlight lines width.
+   * 
+   * @type {number}
+   */
   this.highlightLinesWidth = 1;
 
-	/*
-	Property: highlightLinesType
-		Connectors highlight line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
+  /**
+   * Sets highlight lines pattern.
+   * 
+   * @type {LineType}
+   */
   this.highlightLinesType = primitives.common.LineType.Solid;
 
-	/*
-		Property: calloutMaximumVisibility
-			Defines maximum allowed item form size to show callout.
-	
-		See also:
-			<primitives.orgdiagram.Config.showCallout>
-
-		Default:
-			<primitives.common.Visibility.Dot>
-	*/
-  this.calloutMaximumVisibility = primitives.common.Visibility.Dot;
-
-	/*
-	Property: showCallout
-		This option controls callout visibility for items. 
-
-	Default:
-		true
-	*/
+  /**
+   * Sets callout visibility.
+   * 
+   * @type {boolean}
+   */
   this.showCallout = true;
 
-	/*
-	Property: calloutPlacementOffset
-		Set this property value depending on size and intervals between markers so callout annotation does not overlap neighbouring items of marker it is shown for.
-	*/
+  /**
+   * Sets visibility of the callout annotation depending on size of a node it is shown for. See `pageFitMode` property.
+   * 
+   * @type {Visibility}
+   */
+  this.calloutMaximumVisibility = primitives.common.Visibility.Dot;
+
+  /**
+   * Callout annotation placement offset. Sets how far callout content is offset from the marker it is displayed for.
+   * 
+   * @type {number}
+   */
   this.calloutPlacementOffset = 100;
 
-	/*
-	Property: defaultCalloutTemplateName
-		This is template name used to render callouts for dotted items. 
-		Actual callout template name is defined by following sequence:
-		<primitives.orgdiagram.ItemConfig.calloutTemplateName> 
-		<primitives.orgdiagram.ItemConfig.templateName>
-		<primitives.orgdiagram.Config.defaultCalloutTemplateName>
-		<primitives.orgdiagram.Config.defaultTemplateName>
-
-
-	See Also:
-		<primitives.orgdiagram.Config.templates> collection property.
-
-	Default:
-		null
-	*/
+  /**
+   * Callout annotation default template name.
+   * 
+   * Templates are HTML fragments containing layout and styles used to render diagram nodes.
+   * They are defined with a named configuration objects. See `templates` property of control's configuration object.
+   * 
+   * @type {string}
+   */
   this.defaultCalloutTemplateName = null;
 
-	/*
-	Property: calloutfillColor
-		Annotation callout fill color.
-	*/
+  /**
+   * Callout annotation fill color.
+   * 
+   * @type {string}
+   */
   this.calloutfillColor = "#000000";
 
-	/*
-	Property: calloutBorderColor
-		Annotation callout border color.
-	*/
+  /**
+   * Callout annotation border color.
+   * 
+   * @type {string}
+   */
   this.calloutBorderColor = null;
 
-	/*
-	Property: calloutOffset
-		Annotation callout offset.
-	*/
+  /**
+   * Callout annotation border line offset.
+   * 
+   * @type {number}
+   */
   this.calloutOffset = 4;
 
-	/*
-	Property: calloutCornerRadius
-		Annotation callout corner radius.
-	*/
+  /**
+   * Callout annotation corner radius.
+   * 
+   * @type {number}
+   */
   this.calloutCornerRadius = 4;
 
-	/*
-	Property: calloutPointerWidth
-		Annotation callout pointer base width.
-	*/
+  /**
+   * Callout annotation pointer width.
+   * 
+   * @type {string}
+   */
   this.calloutPointerWidth = "10%";
 
-	/*
-	Property: calloutLineWidth
-		Annotation callout border line width.
-	*/
+  /**
+   * Callout annotation border line width.
+   * 
+   * @type {number}
+   */
   this.calloutLineWidth = 1;
 
-	/*
-	Property: calloutOpacity
-		Annotation callout opacity.
-	*/
+  /**
+   * Callout annotation opacity
+   * 
+   * @type {number}
+   */
   this.calloutOpacity = 0.2;
 
-	/*
-	Property: childrenPlacementType
-		Defines children placement form.
-	*/
+  /**
+   * Sets default formation of child nodes. By default all children that belong to a parent node are always aligned 
+   * below and placed in a horizontal line. On a large scale this may result in the end user having to scroll screens
+   * in order to view all of the nodes. To compensate for this, we provide the option of placing all of the children
+   * of a parent node in a sqaure/matrix formation. This will reduce sideways screen scrolling by compacting the child
+   * nodes into a much smaller area on the screen.
+   * 
+   * @type {ChildrenPlacementType}
+   */
   this.childrenPlacementType = primitives.common.ChildrenPlacementType.Horizontal;
 
-	/*
-	Property: leavesPlacementType
-		Defines leaves placement form. Leaves are children having no sub children.
-	*/
+  /**
+   * Sets formation of leave children.
+   * 
+   * @type {ChildrenPlacementType}
+   */
   this.leavesPlacementType = primitives.common.ChildrenPlacementType.Horizontal;
 
-	/*
-	Property: maximumColumnsInMatrix
-		Maximum number of columns for matrix leaves layout. Leaves are children having no sub children.
-	*/
+  /**
+   * Maximum number of columns for matrix layout of children.
+   * 
+   * @type {number}
+   */
   this.maximumColumnsInMatrix = 6;
 
-	/*
-	Property: buttonsPanelSize
-		User buttons panel size.
-	*/
+  /**
+   * The size of the panel containing context buttons.
+   * 
+   * @type {number}
+   */
   this.buttonsPanelSize = 28;
 
-	/*
-	Property: groupTitlePanelSize
-		Group title panel size.
-	*/
+  /**
+   * The size of the panel containing group title.
+   * 
+   * @type {number}
+   */
   this.groupTitlePanelSize = 24;
 
-	/*
-	Property: checkBoxPanelSize
-		Selection check box panel size.
-	*/
+  /**
+   * The size of the panel containing selection checkbox.
+   * 
+   * @type {number}
+   */
   this.checkBoxPanelSize = 24;
 
-	/*
-	Property: groupTitlePlacementType
-		Group title placement style. Defines group title and buttons panel position relative to item. By default it is left.
-
-	Default:
-		<primitives.common.AdviserPlacementType.Left>
-	*/
+  /**
+   * Group titles placement. Defines group title and buttons panel position relative to the node. By default it is on the left.
+   * The group title on the side of the diagram node is one of controls default easy to use features. It gives extra dimension 
+   * for nodes visual grouping in the diagram.
+   * 
+   * @type {AdviserPlacementType}
+   */
   this.groupTitlePlacementType = primitives.common.AdviserPlacementType.Left;
 
-	/*
-		Property: groupTitleOrientation
-			Group title direction style. 
-
-		Default:
-			<primitives.text.TextDirection.Auto>
-	*/
+  /**
+   * Group titles orientation.
+   * 
+   * @type {TextOrientationType}
+   */
   this.groupTitleOrientation = primitives.text.TextOrientationType.RotateRight;
 
-	/*
-		Property: groupTitleVerticalAlignment
-			Group title vertical alignment. 
-
-		Default:
-			<primitives.common.VerticalAlignmentType.Center>
-	*/
+  /**
+   * Group titles vertical alignment.
+   * 
+   * @type {VerticalAlignmentType}
+   */
   this.groupTitleVerticalAlignment = primitives.common.VerticalAlignmentType.Middle;
 
-	/*
-		Property: groupTitleHorizontalAlignment
-			Group title horizontal alignment. 
-
-		Default:
-			<primitives.common.HorizontalAlignmentType.Center>
-	*/
+  /**
+   * Group titles horizontal alignment.
+   * 
+   * @type {HorizontalAlignmentType}
+   */
   this.groupTitleHorizontalAlignment = primitives.common.HorizontalAlignmentType.Center;
 
-	/*
-		Property: groupTitleFontSize
-			Group title font size. 
-
-		Default:
-			15
-	*/
+  /**
+   * 	Group titles font size.
+   * 
+   * @type {number}
+   */
   this.groupTitleFontSize = "12px";
 
-	/*
-		Property: groupTitleFontFamily
-			Group title font family. 
-
-		Default:
-			"Arial"
-	*/
+  /**
+   * Group titles font family.
+   * 
+   * @type {string}
+   */
   this.groupTitleFontFamily = "Arial";
 
-	/*
-		Property: groupTitleColor
-			Group title color. 
-
-		Default:
-			<primitives.common.Colors.Black>
-	*/
+  /**
+   * Group titles color. 
+   * 
+   * @type {string}
+   */
   this.groupTitleColor = primitives.common.Colors.RoyalBlue;
 
-	/*
-		Property: groupTitleFontWeight
-			Group title font weight: normal | bold
-
-		Default:
-			"normal"
-	*/
+  /**
+   * Group titles font weight: normal, bold
+   * 
+   * @type {string}
+   */
   this.groupTitleFontWeight = "normal";
 
-	/*
-		Property: groupTitleFontStyle
-			Group title font style: normal | italic
-		
-		Default:
-			"normal"
-	*/
+  /**
+   * Group titles font style: normal, italic
+   * 
+   * @type {string}
+   */
   this.groupTitleFontStyle = "normal";
 
-
+  /**
+   * @ignore
+   */
   this.distance = 3;
 
-	/*
-	Property: scale
-		CSS3 scale transform.
-	*/
+  /**
+   * CSS3 scale transform. Control supports content scaling using CSS scale transform. It scales everything except scroll bars.
+   * It properly handles mouse event coordinates. The CSS scale transform produces unreadable text and corrupted lines in desktop browsers,
+   * it looks good only in mobile browsers, so our recomendation is to use zoom with collection of item templates of various sizes.
+   * Templates gives you better control over quality of your content at various zoom levels.
+   * 
+   * @type {number}
+   */
   this.scale = 1;
 
-	/*
-	Property: minimumScale
-		Minimum CSS3 scale transform.
-	*/
+  /**
+   * Minimum CSS3 scale transform.
+   * 
+   * @ignore
+   * @type {number}
+   */
   this.minimumScale = 0.5;
 
-	/*
-	Property: maximumScale
-		Maximum CSS3 scale transform.
-	*/
+  /**
+   * Maximum CSS3 scale transform.
+   * 
+   * @ignore
+   * @type {number}
+   */
   this.maximumScale = 2;
 
-	/*
-	Property: showLabels
-		This option controls labels visibility for minimized items. If you need to show labels outside of borders of regular items then use item template for customization.
-		Labels placed inside HTML DIV element and long strings are wrapped inside. 
-		User can control labels position relative to its item. Chart does not measure labels and does reserve space for them, 
-		so if label overlap each other then horizontal or vertical intervals between rows and items shoud be manually increased.
-	
-	Auto - depends on available space.
-	True - always shown.
-	False - hidden.
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig.label>
-		<primitives.orgdiagram.Config.labelSize>
-		<primitives.orgdiagram.Config.normalItemsInterval>
-		<primitives.orgdiagram.Config.dotItemsInterval>
-		<primitives.orgdiagram.Config.lineItemsInterval>
-		<primitives.orgdiagram.Config.normalLevelShift>
-		<primitives.orgdiagram.Config.dotLevelShift>
-		<primitives.orgdiagram.Config.lineLevelShift>
-
-	Default:
-		<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Sets labels visibility for nodes when they are minimized into markers by page auto fit. See `pageFitMode` property.
+   * 
+   * The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes
+   * into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels.
+   * 
+   * Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict
+   * resoltion to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
+   * is going to stay visible.
+   * 
+   * Auto - displays label only when it has space to be rendered.
+   * True - shows label regardless, even if it overlaps other labels and nodes.
+   * False - hidden.
+   * 
+   * @type {Enabled}
+   */
   this.showLabels = primitives.common.Enabled.Auto;
 
-	/*
-	Property: labelSize
-		Defines label size. It is needed to avoid labels overlapping. If one label overlaps another label or item it will be hidden. 
-		Label string is wrapped when its length exceeds available width.
-
-	Default:
-		new <primitives.common.Size>(80, 24);
-	*/
+  /**
+   * Label size. Sets labels placeholders `div`s size. It is needed to resolve labels overlapping.
+   * If one label overlaps another label the or item it will be hidden.
+   * 
+   * @type {Size}
+   */
   this.labelSize = new primitives.common.Size(80, 24);
 
-	/*
-	Property: labelOffset
-		Defines label offset from dot in pixels.
-
-	Default:
-		1;
-	*/
+  /**
+   * Sets labels offset from the merkers bounding rectangles.
+   * 
+   * @type {number}
+   */
   this.labelOffset = 1;
 
-	/*
-	Property: labelOrientation
-		Defines label orientation. 
-
-	See Also:
-	<primitives.text.TextOrientationType>
-
-	Default:
-		<primitives.text.TextOrientationType.Horizontal>
-	*/
+  /**
+   * Labels orientation.
+   * 
+   * @type {TextOrientationType}
+   */
   this.labelOrientation = primitives.text.TextOrientationType.Horizontal;
 
-	/*
-	Property: labelPlacement
-		Defines label placement relative to its dot. 
-		Label is aligned to opposite side of its box.
-
-	See Also:
-	<primitives.common.PlacementType>
-
-	Default:
-		<primitives.common.PlacementType.Top>
-	*/
+  /**
+   * Labels placement. Sets labels placement relative to the markers bounding rectangles.
+   * 
+   * @type {PlacementType}
+   */
   this.labelPlacement = primitives.common.PlacementType.Top;
 
-	/*
-		Property: labelFontSize
-			Label font size. 
-
-		Default:
-			10px
-	*/
+  /**
+   * Labels font size.
+   * 
+   * @type {string}
+   */
   this.labelFontSize = "10px";
 
-	/*
-		Property: labelFontFamily
-			Label font family. 
-
-		Default:
-			"Arial"
-	*/
+  /**
+   * Labels font family.
+   * 
+   * @type {string}
+   */
   this.labelFontFamily = "Arial";
 
-	/*
-		Property: labelColor
-			Label color. 
-
-		Default:
-			primitives.common.Colors.Black
-	*/
+  /**
+   * Labels color
+   * 
+   * @type {string}
+   */
   this.labelColor = primitives.common.Colors.Black;
 
-	/*
-		Property: labelFontWeight
-			Font weight: normal | bold
-
-		Default:
-			"normal"
-	*/
+  /**
+   * Labels font weight
+   * Font weight: normal, bold
+   * 
+   * @type {string}
+   */
   this.labelFontWeight = "normal";
 
-	/*
-	Property: labelFontStyle
-		Font style: normal | italic
-		
-	Default:
-		"normal"
-	*/
+  /**
+   * Labels font style. Font style: normal, italic
+   * 
+   * @type {string}
+   */
   this.labelFontStyle = "normal";
 
-	/*
-	Property: enablePanning
-		Enable chart panning with mouse drag & drop for desktop browsers.
-		Disable it if you need to support items Drag & Drop.
-
-	Default:
-		true
-	*/
+  /**
+   * Enable panning. Enable chart panning with mouse drag & drop for desktop browsers.
+   * Disable it if you need to support items Drag & Drop.
+   * 
+   * @type {boolean}
+   */
   this.enablePanning = true;
 
-	/*
-	Property: autoSizeMinimum
-		Defines minimum diagram size in autosize mode. If diagram has no elements, it is going to be of this size on the page.  
-	Default:
-		new <primitives.common.Size>(800, 600);
-	*/
+  /**
+   * Sets minimum size the diagram can shrink itself in autosize mode. See `pageFitMode` property.
+   * In the auto size mode diagram controls its placeholder size itself,
+   * it sets its size to accomodate all nodes and render them normally.
+   * 
+   * @type {Size}
+   */
   this.autoSizeMinimum = new primitives.common.Size(800, 600);
 
-	/*
-	Property: autoSizeMaximum
-		Defines maximum diagram size in autosize mode.
-	Default:
-		new <primitives.common.Size>(1024, 768);
-	*/
+  /**
+   * Sets maximum size the diagram can expand itself in autosize mode. See `pageFitMode` property.
+   * In the auto size mode diagram controls its placeholder size itself,
+   * it sets its size to accomodate all nodes and render them normally.
+   * 
+   * @type {Size}
+   */
   this.autoSizeMaximum = new primitives.common.Size(1024, 768);
 };

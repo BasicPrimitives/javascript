@@ -1,3 +1,6 @@
+#### Version 5.5.0
+* Added IntelliSense API annotations to code
+* Added API annotations conversion into markdown    
 #### Version 5.4.15
 * Fixed minimised items highlight alignment in React  
 #### Version 5.4.14

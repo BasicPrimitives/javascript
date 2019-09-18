@@ -1,14 +1,17 @@
-﻿/*
-	Enum: primitives.common.ZOrderType
-		Defines elements Z order. This option is used to place annotations relative to chart.
-	
-	Auto - Auto selects best order depending on type of element.
-	Background - Place element in chart background.
-	Foreground - Place element into foreground.
-*/
-primitives.common.ZOrderType =
-{
-	Auto: 0,
-	Background: 1,
-	Foreground: 2
+﻿/**
+ * @typedef {number} ZOrderType
+ **/
+
+/**
+ * Option to draw annotation in the foreground or in the backgound of diagram nodes.
+ *  
+ * @enum {ZOrderType}
+ */
+primitives.common.ZOrderType = {
+  /**
+   * Depends on annotation type.
+   */
+  Auto: 0,
+  Background: 1,
+  Foreground: 2
 };

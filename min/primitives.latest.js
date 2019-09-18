@@ -7127,7 +7127,16 @@ primitives.famdiagram.EventArgs = function () {
    * @type {string[]}
    * @ignore
    */
-  this.parentItems = null;
+  this.parentItems = [];
+
+    /**
+   * Child items
+   * 
+   * @type {string[]}
+   * @ignore
+   */
+  this.childrenItems = [];
+   
 
   /**
    * Node position on the diagram.

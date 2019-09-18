@@ -101,6 +101,8 @@ primitives.famdiagram.Config = function (name) {
 
   /**
    * This option keeps items at the same levels after connections bundling.
+   * 
+   * @type {boolean}
    */
   this.alignBylevels = true;
 
@@ -114,6 +116,8 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Sets Minimum number of nodes needed to be shaped into matrix formtion. In order to shape nodes in 
    * form of matrix they should share the same set of parents and children. See `enableMatrixLayout` property.
+   * 
+   * @type {number}
    */
   this.minimumMatrixSize = 4;
 

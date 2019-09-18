@@ -4,7 +4,8 @@
 
 /**
  * Just a list of named colors.
- *  
+ * 
+ * @ignore
  * @enum {Colors}
  */
 primitives.common.Colors = {

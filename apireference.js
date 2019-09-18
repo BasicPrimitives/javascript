@@ -29,7 +29,8 @@ var priorities = config["orgdiagram.md"].reduce((agg, name, index) => {
   return agg;
 }, {})
 
-var orgdiagramclasses = doc.classes.filter(item => { return item.namespace[1] == "orgdiagram" });
+var orgdiagramclasses = doc.classes.filter(item => { return item.namespace[1] == "orgdiagram"
+&& item.name != "Control" && item.name != "BaseControl" });
 orgdiagramclasses = orgdiagramclasses.sort((a, b) => {
   var ap = priorities[a.name] || 100;
   var bp = priorities[b.name] || 100;
@@ -45,7 +46,8 @@ var priorities = config["famdiagram.md"].reduce((agg, name, index) => {
   return agg;
 }, {})
 
-var famdiagramclasses = doc.classes.filter(item => { return item.namespace[1] == "famdiagram" });
+var famdiagramclasses = doc.classes.filter(item => { return item.namespace[1] == "famdiagram"
+&& item.name != "Control" && item.name != "BaseControl" });
 famdiagramclasses = famdiagramclasses.sort((a, b) => {
   var ap = priorities[a.name] || 100;
   var bp = priorities[b.name] || 100;
@@ -56,10 +58,8 @@ famdiagramclasses = famdiagramclasses.sort((a, b) => {
 
 fs.writeFileSync(config.destination + "famdiagram.md", create_classes_md("Family Diagram Configuration Objects", famdiagramclasses));
 
-
 var controlsclasses = get_controls_annotations(doc);
 fs.writeFileSync(config.destination + "javascriptcontrols.md", create_classes_md("JavaScript Controls", controlsclasses));
-
 
 var pdfkitclasses = get_pdfkit_annotations(doc);
 fs.writeFileSync(config.destination + "pdfkitplugins.md", create_classes_md("[PDFKit Plugins](https://pdfkit.org/)", pdfkitclasses));
@@ -187,7 +187,7 @@ function create_classes_md(title, classes) {
       agg += "\r\n### Properties";
       agg += "\r\n| Name | Type | Default | Description | ";
       agg += "\r\n| --- | --- | --- | --- | ";
-      properties.forEach(({ name, value, type, description }) => {
+      properties.filter(item => item.ignore == undefined).forEach(({ name, value, type, description }) => {
         type = replaceAll(type, "|", ", ");
         agg += "\r\n | <code>" + name + "</code> | " + type + " | <code>" + value + "</code> | " + (description || spaceCamelCaseName(name)) + " | ";
       });
@@ -233,7 +233,7 @@ function create_function_md({ name, signature, description, params, returns, cal
 
 function create_enums_md(title, doc) {
   var result = "# " + title;
-  return doc.enums.reduce((agg, { name, description, namespace, items, type }) => {
+  return doc.enums.filter(item => item.ignore == undefined).reduce((agg, { name, description, namespace, items, type }) => {
     agg += "\r\n## " + name;
     agg += "\r\n" + description;
     agg += "\r\n";

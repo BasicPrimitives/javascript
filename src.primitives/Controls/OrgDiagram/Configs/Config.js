@@ -741,6 +741,7 @@ primitives.orgdiagram.Config = function (name) {
    * Minimum CSS3 scale transform.
    * 
    * @ignore
+   * @type {number}
    */
   this.minimumScale = 0.5;
 
@@ -748,6 +749,7 @@ primitives.orgdiagram.Config = function (name) {
    * Maximum CSS3 scale transform.
    * 
    * @ignore
+   * @type {number}
    */
   this.maximumScale = 2;
 

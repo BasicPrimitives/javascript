@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagrams v5.4.15
+ * @preserve Basic Primitives Diagrams v5.5.0
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -25,9 +25,17 @@
   
 
 /* /common/init.js*/
+/** @namespace primitives */
+/** @namespace primitives.common */
+/** @namespace primitives.orgdiagram */
+/** @namespace primitives.famdiagram */
+/** @namespace primitives.pdf */
+/** @namespace primitives.pdf.orgdiagram */
+/** @namespace primitives.pdf.famdiagram */
+
 var primitives = {
   common: {
-    version: "5.4.15"
+    version: "5.5.0"
   },
   orgdiagram: {},
   famdiagram: {},
@@ -83,12 +91,11 @@ primitives.common.hasClass = function (element, className) {
   return false;
 };
 
-/*
-	Function: primitives.common.stopPropagation
-	This method uses various approaches used in different browsers to stop event propagation.
-	Parameters:
-	event - Event to be stopped.
-*/
+/**
+ * This method uses various approaches used in different browsers to stop event propagation.
+ * @param {object} event Event to be stopped
+ * @ignore
+ */
 primitives.common.stopPropagation = function (event) {
   if (event.stopPropagation !== undefined) {
     event.stopPropagation();
@@ -106,598 +113,580 @@ primitives.common.getInnerSize = function (element) {
 };
 
 /* /common/functions.js*/
-/*
-	Function: primitives.common.isEven
-	Indicates whether the specified number is even or not.
-	
-	Parameters:
-	value - The number to test.
-	Returns: 
-	true if the value is even.
-*/
+/**
+ * Indicates whether the specified number is even or not.
+ * 
+ * @param {number} value The number to test.
+ * @returns {boolean} Returns true if the value is even.
+ * @ignore
+ */
 primitives.common.isEven = function (value) {
-	return value%2 == 0;
+  return value % 2 == 0;
 };
 
-/*
-	Function: primitives.common.isNullOrEmpty
-	Indicates whether the specified string is null or an Empty string.
-	
-	Parameters:
-	value - The string to test.
-	Returns: 
-	true if the value is null or an empty string(""); otherwise, false.
-*/
+/**
+ * Indicates whether the specified string is null or an Empty string.
+ * 
+ * @ignore
+ * @param {string} value The string to test.
+ * @returns {boolean} Returns true if the value is null or an empty string(""); otherwise, false.
+ */
 primitives.common.isNullOrEmpty = function (value) {
-	var result = true,
-		string;
-	if (value !== undefined && value !== null) {
-		string = value.toString();
-		if (string.length > 0) {
-			result = false;
-		}
-	}
-	return result;
+  var result = true,
+    string;
+  if (value !== undefined && value !== null) {
+    string = value.toString();
+    if (string.length > 0) {
+      result = false;
+    }
+  }
+  return result;
 };
 
-/*
-	Function: primitives.common.isArray
-	Indicates whether the specified value is array.
-	
-	Parameters:
-	value - The value to test.
-	Returns: 
-	true if the value is array; otherwise, false.
-*/
+/**
+ * Indicates whether the specified value is array.
+ * 
+ * @param {*} value The value to test.
+ * @returns {boolean} Returns true if the value is array; otherwise, false.
+ * @ignore
+ */
 primitives.common.isArray = Array.isArray || function (val) {
-	return (val instanceof Array);
+  return (val instanceof Array);
 };
 
-/*
-	Function: primitives.common.loop
-	Method to loop through array of object properties
-	
-	Parameters:
-	thisArg - Call back function call context.
-	items - array of items or object with properties to itterate on
-	onItem - call back function to call on each item in the array or object. If call back function returns true then break itteration
-*/
-primitives.common.loop = function (thisArg, items, onItem) { // onItem([index,key], value)
-	var key, index, len;
-	if (onItem != null) {
-		if (primitives.common.isArray(items)) {
-			for (index = 0, len = items.length; index < len; index += 1) {
-				if (onItem.call(thisArg, index, items[index])) {
-					break;
-				}
-			}
-		} else {
-			for (key in items) {
-				if (items.hasOwnProperty(key)) {
-					if (onItem.call(thisArg, key, items[key])) {
-						break;
-					}
-				}
-			}
-		}
-	}
+/**
+ * Callback for looping collection items
+ *
+ * @callback onLoopItemCallback
+ * @param {number} index An index of the collection item
+ * @param {Object} item A collection item
+ * @returns {boolean} Returns true to break iteration process
+ */
+
+/**
+ * Loops array elements or object properties.
+ *
+ * @param {Object} thisArg The callback function invocation context
+ * @param {Object|Object[]} items - Array of items or object with properties to iterate on
+ * @param {onLoopItemCallback} onItem A call back function to call on each item in the array or object.
+ * @ignore
+ */
+primitives.common.loop = function (thisArg, items, onItem) {
+  var key, index, len;
+  if (onItem != null) {
+    if (primitives.common.isArray(items)) {
+      for (index = 0, len = items.length; index < len; index += 1) {
+        if (onItem.call(thisArg, index, items[index])) {
+          break;
+        }
+      }
+    } else {
+      for (key in items) {
+        if (items.hasOwnProperty(key)) {
+          if (onItem.call(thisArg, key, items[key])) {
+            break;
+          }
+        }
+      }
+    }
+  }
 };
 
-/*
-	Function: primitives.common.splitCamelCaseName
-	Split string of merged cameled words into array.
-	
-	Parameters:
-	name - The string to split.
-	Returns: 
-	array of split words
-*/
+/**
+ * Splits string of merged cameled words into array.
+ * 
+ * @param {string} name String of cameled words
+ * @returns {string[]} Returns array of cameled words
+ * @ignore
+ */
 primitives.common.splitCamelCaseName = function (name) {
-	var result = [];
-	var word = "";
-	for (var i = 0; i < name.length; i += 1) {
-		var c = name[i];
-		if (c >= 'A' && c <= 'Z') {
-			if (word !== "") {
-				result.push(word);
-			}
-			word = c;
-		} else {
-			word += c;
-		}
-	}
-	if (word !== "") {
-		result.push(word);
-	}
-	return result;
+  var result = [];
+  var word = "";
+  for (var i = 0; i < name.length; i += 1) {
+    var c = name[i];
+    if (c >= 'A' && c <= 'Z') {
+      if (word !== "") {
+        result.push(word);
+      }
+      word = c;
+    } else {
+      word += c;
+    }
+  }
+  if (word !== "") {
+    result.push(word);
+  }
+  return result;
 };
 
-/*
-	Function: primitives.common.isEmptyObject
-	Indicates whether the specified object is empty.
-	
-	Parameters:
-	item - The object to test.
-	Returns: 
-	true if the item is object otherwise, false.
-*/
+/**
+ * Indicates whether the specified value is object
+ * 
+ * @param {string} item The value to test.
+ * @returns {boolean} Returns true if the item is object otherwise, false.
+ * @ignore
+ */
 primitives.common.isObject = function (item) {
-	return item !== null && typeof item == 'object';
+  return item !== null && typeof item == 'object';
 };
 
-/*
-	Function: primitives.common.isEmptyObject
-	Indicates whether the specified object is empty.
-	
-	Parameters:
-	item - The object to test.
-	Returns: 
-	true if the item is object otherwise, false.
-*/
+/**
+ * Indicates whether the specified object is empty.
+ * 
+ * @param {string} item The object to test.
+ * @returns {boolean} Returns true if the item is empty object otherwise, false.
+ * @ignore
+ */
 primitives.common.isEmptyObject = function (item) {
-	var key;
-	for (key in item) {
-		if (item.hasOwnProperty(key)) {
-			return false;
-		}
-	}
-	return true;
+  var key;
+  for (key in item) {
+    if (item.hasOwnProperty(key)) {
+      return false;
+    }
+  }
+  return true;
 };
 
-/*
-	Function: primitives.common.deepClone
-	Makes deep copy of variable.
-	
-	Parameters:
-	source - Source value.
-	keepContext - if true then it makes _context reference property of every copied object
-	callback - is function called for every object property function(result, source, property) {}
-
-	Returns: 
-	Copy of cloned variable.
-*/
-
+/**
+ * Makes deep copy of the object.
+ * 
+ * @param {object} source The source object to take values from
+ * @param {boolean} isShallow If true then method makes shallow copy
+ * @returns {object} Returns cloned copy of the object
+ * @ignore
+ */
 primitives.common.cloneObject = function (source, isShallow) {
-	var result;
-	if (source === null) {
-		result = null;
-	} else if (source instanceof Array) {
-		if (isShallow) {
-			result = source.slice(0);
-		} else {
-			result = [];
-			for (var index = 0, len = source.length; index < len; index += 1) {
-				result.push(primitives.common.cloneObject(source[index], isShallow));
-			}
-		}
-	} else {
-		switch (typeof source) {
-			case 'object':
-				result = {};
-				for (var property in source) {
-					if (source.hasOwnProperty(property)) {
-						if (isShallow) {
-							result[property] = source[property];
-						} else {
-							result[property] = primitives.common.cloneObject(source[property], isShallow);
-						}
-					}
-				}
-				break;
-			default:
-				result = source;
-				break;
-		}
-	}
-	return result;
+  var result;
+  if (source === null) {
+    result = null;
+  } else if (source instanceof Array) {
+    if (isShallow) {
+      result = source.slice(0);
+    } else {
+      result = [];
+      for (var index = 0, len = source.length; index < len; index += 1) {
+        result.push(primitives.common.cloneObject(source[index], isShallow));
+      }
+    }
+  } else {
+    switch (typeof source) {
+      case 'object':
+        result = {};
+        for (var property in source) {
+          if (source.hasOwnProperty(property)) {
+            if (isShallow) {
+              result[property] = source[property];
+            } else {
+              result[property] = primitives.common.cloneObject(source[property], isShallow);
+            }
+          }
+        }
+        break;
+      default:
+        result = source;
+        break;
+    }
+  }
+  return result;
 };
 
-/*
-	Function: primitives.common.mergeObjects
-	Shallow copy of source object properites into destination
-	
-	Parameters:
-	destination - The object to add properties to
-	source - The source object
-	Returns: 
-	destination object
-*/
+/**
+ * Shallow copy of source object properites into destination
+ * 
+ * @param {object} destination The object to add properties to
+ * @param {object} source The source object to take values from
+ * @returns {object} Returns reference to destination object
+ * @ignore
+ */
 primitives.common.mergeObjects = function (destination, source) {
-	for (var index = 1; index < arguments.length; index += 1) {
-		var src = arguments[index];
-		if (src != null) {
-			for (var key in src) {
-				if (src.hasOwnProperty(key)) {
-					destination[key] = src[key];
-				}
-			}
-		}
-	}
-	return destination;
+  for (var index = 1; index < arguments.length; index += 1) {
+    var src = arguments[index];
+    if (src != null) {
+      for (var key in src) {
+        if (src.hasOwnProperty(key)) {
+          destination[key] = src[key];
+        }
+      }
+    }
+  }
+  return destination;
 };
 
-/*
-	Function: primitives.common.hashCode
-	Returns hash code for specified string value.
-	
-	Parameters:
-	value - The string to calculate hash code.
-	Returns:
-	int hash code.
-*/
+/**
+ * Returns hash code for specified string value. This function is not needed because 
+ * JavaScript supports near unlimited length of object property names.
+ * 
+ * @param {string} value The string to calculate hash code for.
+ * @returns {number} Returns hash code for the given string
+ * @ignore
+ */
 primitives.common.hashCode = function (value) {
-	var hash = 0,
-		character,
-		i;
-	/*ignore jslint start*/
-	if (value.length > 0) {
-		for (i = 0; i < value.length; i += 1) {
-			character = value.charCodeAt(i);
-			hash = ((hash << 5) - hash) + character;
-			hash = hash & hash;
-		}
-	}
-	/*ignore jslint end*/
-	return hash;
+  var hash = 0,
+    character,
+    i;
+  /*ignore jslint start*/
+  if (value.length > 0) {
+    for (i = 0; i < value.length; i += 1) {
+      character = value.charCodeAt(i);
+      hash = ((hash << 5) - hash) + character;
+      hash = hash & hash;
+    }
+  }
+  /*ignore jslint end*/
+  return hash;
 };
 
-/*
-	Function: primitives.common.indexOf
-	Searches array for specified item and returns index (or -1 if not found)
-	Parameters:
-	vector - An array through which to search.
-	item - The value to search for.
-	Returns:
-	Index of search item or -1 if not found.
-*/
+/**
+ * Callback for items comparison
+ *
+ * @callback compFuncCallback
+ * @param {Object} item1 First item to compare
+ * @param {Object} item2 Second item to compare
+ * @returns {number} Returns true if items are equal
+ */
+
+/**
+ * Searches specified item in the array
+ * 
+ * @param {object[]} vector An array through which to search.
+ * @param {object} item  The value to search for.
+ * @param {compFuncCallback} compFunc Callback function to compair two objects
+ * @returns {number} Returns index of the item in the array or -1 if item is not found
+ */
 primitives.common.indexOf = function (vector, item, compFunc) {
-	var index,
-		treeItem;
-	for (index = 0; index < vector.length; index += 1) {
-		treeItem = vector[index];
-		if (compFunc != null ? compFunc(treeItem, item) : treeItem == item) {
-			return index;
-		}
-	}
-	return -1;
+  var index,
+    treeItem;
+  for (index = 0; index < vector.length; index += 1) {
+    treeItem = vector[index];
+    if (compFunc != null ? compFunc(treeItem, item) : treeItem == item) {
+      return index;
+    }
+  }
+  return -1;
 };
 
 primitives.common._supportsSVG = null;
 
-/*
-	Function: primitives.common.supportsSVG
-	Indicates whether the browser supports SVG graphics.
-	
-	Returns: 
-	true if browser supports SVG graphics.
-*/
+/**
+ * Checks if browser supports HTML SVG graphics.
+ * 
+ * @returns {boolean} Returns true if browser supports SVG canvas graphics.
+ * @ignore
+ */
 primitives.common.supportsSVG = function () {
-	if (primitives.common._supportsSVG === null) {
-		primitives.common._supportsSVG = document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1") ||
-			document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.0");
-	}
-	return primitives.common._supportsSVG;
+  if (primitives.common._supportsSVG === null) {
+    primitives.common._supportsSVG = document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1") ||
+      document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.0");
+  }
+  return primitives.common._supportsSVG;
 };
 
 primitives.common._supportsCanvas = null;
 
-/*
-	Function: primitives.common.supportsCanvas
-	Indicates whether the browser supports HTML Canvas graphics.
-	
-	Returns: 
-	true if browser supports HTML Canvas graphics.
-*/
+/**
+ * Checks if browser supports HTML Canvas graphics.
+ * 
+ * @ignore
+ * @returns {boolean} Returns true if browser supports HTML canvas graphics.
+ */
 primitives.common.supportsCanvas = function () {
-	if (primitives.common._supportsCanvas === null) {
-		primitives.common._supportsCanvas = !!window.HTMLCanvasElement;
-	}
-	return primitives.common._supportsCanvas;
+  if (primitives.common._supportsCanvas === null) {
+    primitives.common._supportsCanvas = !!window.HTMLCanvasElement;
+  }
+  return primitives.common._supportsCanvas;
 };
 
+/**
+ * Creates graphics object for chart rendering
+ * 
+ * @param {GraphicsType} preferred Preferred graphics type by user
+ * @param {object} widget Reference to control the graphics object is created for
+ * @returns {Graphics} Returns graphics object
+ * @ignore
+ */
 primitives.common.createGraphics = function (preferred, widget) {
-	var result = null,
-		modes,
-		key,
-		index;
+  var result = null,
+    modes,
+    key,
+    index;
 
-	modes = [preferred];
-	for (key in primitives.common.GraphicsType) {
-		if (primitives.common.GraphicsType.hasOwnProperty(key)) {
-			modes.push(primitives.common.GraphicsType[key]);
-		}
-	}
-	for (index = 0; result === null && index < modes.length; index += 1) {
-		switch (modes[index]) {
-			case 0/*primitives.common.GraphicsType.SVG*/:
-				if (primitives.common.supportsSVG()) {
-					result = new primitives.common.SvgGraphics(widget);
-				}
-				break;
-			case 1/*primitives.common.GraphicsType.Canvas*/:
-				if (primitives.common.supportsCanvas()) {
-					result = new primitives.common.CanvasGraphics(widget);
-				}
-				break;
-		}
-	}
-	return result;
+  modes = [preferred];
+  for (key in primitives.common.GraphicsType) {
+    if (primitives.common.GraphicsType.hasOwnProperty(key)) {
+      modes.push(primitives.common.GraphicsType[key]);
+    }
+  }
+  for (index = 0; result === null && index < modes.length; index += 1) {
+    switch (modes[index]) {
+      case 0/*primitives.common.GraphicsType.SVG*/:
+        if (primitives.common.supportsSVG()) {
+          result = new primitives.common.SvgGraphics(widget);
+        }
+        break;
+      case 1/*primitives.common.GraphicsType.Canvas*/:
+        if (primitives.common.supportsCanvas()) {
+          result = new primitives.common.CanvasGraphics(widget);
+        }
+        break;
+    }
+  }
+  return result;
 };
 
+/**
+ * Checks if browser is Chrome.
+ * 
+ * @returns {boolean} Returns true if browser is chrome.
+ * @ignore
+ */
 primitives.common.isChrome = function () {
-	if (navigator != null) { //ignore jslint
-		return /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor); //ignore jslint
-	}
-	return false;
+  if (navigator != null) { //ignore jslint
+    return /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor); //ignore jslint
+  }
+  return false;
 };
 
-/*
-	Function: primitives.common.getColorHexValue
-	Converts color string into HEX color string.
-	
-	Parameters:
-	color - regular HTML color string.
-
-	Returns: 
-		Color value in form of HEX string.
-*/
+/**
+ * Converts color string into HEX color string.
+ * 
+ * @param {string} color Regular HTML color string.
+ * @returns {string} Returns color value in form of HEX string.
+ */
 primitives.common.getColorHexValue = function (color) {
-	var digits,
-		red,
-		green,
-		blue,
-		rgb,
-		colorIndex,
-		colorKey;
-	if (color.substr(0, 1) === '#') {
-		return color;
-	}
+  var digits,
+    red,
+    green,
+    blue,
+    rgb,
+    colorIndex,
+    colorKey;
+  if (color.substr(0, 1) === '#') {
+    return color;
+  }
 
-	/*ignore jslint start*/
-	digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);
-	/*ignore jslint end*/
-	if (digits !== null && digits.length > 0) {
-		red = parseInt(digits[2], 10);
-		green = parseInt(digits[3], 10);
-		blue = parseInt(digits[4], 10);
+  /*ignore jslint start*/
+  digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);
+  /*ignore jslint end*/
+  if (digits !== null && digits.length > 0) {
+    red = parseInt(digits[2], 10);
+    green = parseInt(digits[3], 10);
+    blue = parseInt(digits[4], 10);
 
-		/*ignore jslint start*/
-		rgb = ((red << 16) | (green << 8) | blue).toString(16);
-		/*ignore jslint end*/
-		return digits[1] + "000000".substr(0, 6 - rgb.length) + rgb;
-	}
-	if (primitives.common.ColorHexs === undefined) {
-		primitives.common.ColorHexs = {};
-		colorIndex = 0;
-		for (colorKey in primitives.common.Colors) {
-			if (primitives.common.Colors.hasOwnProperty(colorKey)) {
-				primitives.common.ColorHexs[colorKey.toUpperCase()] = primitives.common.Colors[colorKey];
-				colorIndex += 1;
-			}
-		}
-	}
+    /*ignore jslint start*/
+    rgb = ((red << 16) | (green << 8) | blue).toString(16);
+    /*ignore jslint end*/
+    return digits[1] + "000000".substr(0, 6 - rgb.length) + rgb;
+  }
+  if (primitives.common.ColorHexs === undefined) {
+    primitives.common.ColorHexs = {};
+    colorIndex = 0;
+    for (colorKey in primitives.common.Colors) {
+      if (primitives.common.Colors.hasOwnProperty(colorKey)) {
+        primitives.common.ColorHexs[colorKey.toUpperCase()] = primitives.common.Colors[colorKey];
+        colorIndex += 1;
+      }
+    }
+  }
 
-	return primitives.common.ColorHexs[color.toUpperCase()];
+  return primitives.common.ColorHexs[color.toUpperCase()];
 };
 
-/*
-	Function: primitives.common.getColorName
-		Converts color string into HTML color name string or return hex color string.
-	
-	Parameters:
-	color - regular HTML color string.
-
-	Returns: 
-		HTML Color name or HEX string.
-*/
+/**
+ * Converts color string into HTML color name string or return hex color string.
+ * 
+ * @param {string} color Regular HTML color string
+ * @returns {string} Returns HTML Color name or HEX string.
+ */
 primitives.common.getColorName = function (color) {
-	var colorIndex,
-		colorKey;
-	color = primitives.common.getColorHexValue(color);
+  var colorIndex,
+    colorKey;
+  color = primitives.common.getColorHexValue(color);
 
-	if (primitives.common.ColorNames === undefined) {
-		primitives.common.ColorNames = {};
-		colorIndex = 0;
-		for (colorKey in primitives.common.Colors) {
-			if (primitives.common.Colors.hasOwnProperty(colorKey)) {
-				primitives.common.ColorNames[primitives.common.Colors[colorKey]] = colorKey;
-				colorIndex += 1;
-			}
-		}
-	}
+  if (primitives.common.ColorNames === undefined) {
+    primitives.common.ColorNames = {};
+    colorIndex = 0;
+    for (colorKey in primitives.common.Colors) {
+      if (primitives.common.Colors.hasOwnProperty(colorKey)) {
+        primitives.common.ColorNames[primitives.common.Colors[colorKey]] = colorKey;
+        colorIndex += 1;
+      }
+    }
+  }
 
-	return primitives.common.ColorNames[color];
+  return primitives.common.ColorNames[color];
 };
 
-/*
-	Function: primitives.common.getRed
-		Gets red value of HEX color string.
-	
-	Parameters:
-	color - HEX string color value.
-
-	Returns: 
-		Int value.
-*/
+/**
+ * Gets red value of HEX color string.
+ * 
+ * @param {string} color Color
+ * @returns {number} Returns red value of the HEX color string. 
+ */
 primitives.common.getRed = function (color) {
-	if (color.substr(0, 1) === '#' && color.length === 7) {
-		return parseInt(color.substr(1, 2), 16);
-	}
-	return null;
+  if (color.substr(0, 1) === '#' && color.length === 7) {
+    return parseInt(color.substr(1, 2), 16);
+  }
+  return null;
 };
 
-/*
-	Function: primitives.common.getGreen
-		Gets green value of HEX color string.
-
-	Parameters:
-	color - HEX string color value.
-	
-	Returns: 
-		Int value.
-*/
+/**
+ * Gets green value of HEX color string.
+ * 
+ * @param {string} color Color
+ * @returns {number} Returns green value of the HEX color string. 
+ */
 primitives.common.getGreen = function (color) {
-	if (color.substr(0, 1) === '#' && color.length === 7) {
-		return parseInt(color.substr(3, 2), 16);
-	}
-	return null;
+  if (color.substr(0, 1) === '#' && color.length === 7) {
+    return parseInt(color.substr(3, 2), 16);
+  }
+  return null;
 };
 
-/*
-	Function: primitives.common.getBlue
-		Gets blue value of HEX color string.
-	
-	Parameters:
-	color - HEX string color value.
-
-	Returns: 
-		Int value.
-*/
+/**
+ * Gets blue value of HEX color string.
+ * 
+ * @param {string} color Color
+ * @returns {number} Returns blue value of the HEX color string. 
+ */
 primitives.common.getBlue = function (color) {
-	if (color.substr(0, 1) === '#' && color.length === 7) {
-		return parseInt(color.substr(5, 2), 16);
-	}
-	return null;
+  if (color.substr(0, 1) === '#' && color.length === 7) {
+    return parseInt(color.substr(5, 2), 16);
+  }
+  return null;
 };
 
-/*
-	Function: primitives.common.beforeOpacity
-		Calculates before opacity color value producing color you need after applying opacity.
-	
-	Parameters:
-	color - Color you need after applying opacity.
-	opacity - Value of opacity.
-
-	Returns: 
-		HEX color value.
-*/
+/**
+ * Calculates before opacity color value producing color you need after applying opacity.
+ * 
+ * @param {string} color The color you want to get after applying opacity.
+ * @param {number} opacity Opacity
+ * @returns {string} The HEX color before opacity
+ */
 primitives.common.beforeOpacity = function (color, opacity) {
-	var common = primitives.common,
-		red,
-		green,
-		blue,
-		rgb;
-	color = common.getColorHexValue(color);
+  var common = primitives.common,
+    red,
+    green,
+    blue,
+    rgb;
+  color = common.getColorHexValue(color);
 
-	red = Math.ceil((common.getRed(color) - (1.0 - opacity) * 255.0) / opacity);
-	green = Math.ceil((common.getGreen(color) - (1.0 - opacity) * 255.0) / opacity);
-	blue = Math.ceil((common.getBlue(color) - (1.0 - opacity) * 255.0) / opacity);
+  red = Math.ceil((common.getRed(color) - (1.0 - opacity) * 255.0) / opacity);
+  green = Math.ceil((common.getGreen(color) - (1.0 - opacity) * 255.0) / opacity);
+  blue = Math.ceil((common.getBlue(color) - (1.0 - opacity) * 255.0) / opacity);
 
-	/*ignore jslint start*/
-	rgb = ((red << 16) | (green << 8) | blue).toString(16);
-	/*ignore jslint end*/
-	return '#' + "000000".substr(0, 6 - rgb.length) + rgb;
+  /*ignore jslint start*/
+  rgb = ((red << 16) | (green << 8) | blue).toString(16);
+  /*ignore jslint end*/
+  return '#' + "000000".substr(0, 6 - rgb.length) + rgb;
 };
 
-/*
-	Function: primitives.common.highestContrast
-		Calculates contrast between base color and two optional first and second colors
-		and returns the one which has highest contrast.
-	
-	Parameters:
-	baseColor - Base color to compare with.
-	firstColor - First color.
-	secondColor - Second color.
-
-	Returns: 
-		Color value.
-*/
+/**
+ * Finds contrast between base color and two optional first and second colors and returns the one which has highest contrast.
+ * 
+ * @param {string} baseColor Base color to compare with
+ * @param {string} firstColor First color.
+ * @param {string} secondColor Second color.
+ * 
+ * @returns {string} Returns highest contrast color compared to base color.
+ */
 primitives.common.highestContrast = function (baseColor, firstColor, secondColor) {
-	var result = firstColor,
-		common = primitives.common,
-		key = baseColor + "," + firstColor  + "," + secondColor;
+  var result = firstColor,
+    common = primitives.common,
+    key = baseColor + "," + firstColor + "," + secondColor;
 
-	if (common.highestContrasts === undefined) {
-		common.highestContrasts = {};
-	}
-	if (common.highestContrasts.hasOwnProperty(key)) {
-		result = common.highestContrasts[key];
-	} else {
-		if (common.luminosity(firstColor, baseColor) < common.luminosity(secondColor, baseColor)) {
-			result = secondColor;
-		}
-		common.highestContrasts[key] = result;
-	}
-	return result;
+  if (common.highestContrasts === undefined) {
+    common.highestContrasts = {};
+  }
+  if (common.highestContrasts.hasOwnProperty(key)) {
+    result = common.highestContrasts[key];
+  } else {
+    if (common.luminosity(firstColor, baseColor) < common.luminosity(secondColor, baseColor)) {
+      result = secondColor;
+    }
+    common.highestContrasts[key] = result;
+  }
+  return result;
 };
 
-/*
-	Function: primitives.common.luminosity
-		Calculates luminosity between two HEX string colors.
-	
-	Parameters:
-	firstColor - First color.
-	secondColor - Second color.
-
-	Returns: 
-		Luminosity value
-*/
+/**
+ * Calculates luminosity between two HEX string colors.
+ * 
+ * @param {string} firstColor First color.
+ * @param {string} secondColor Second color.
+ * 
+ * @returns {number} Returns luminosity value
+ */
 primitives.common.luminosity = function (firstColor, secondColor) {
-	var result,
-		common = primitives.common,
-		first = common.getColorHexValue(firstColor),
-		second = common.getColorHexValue(secondColor),
-		firstLuminosity =
-			0.2126 * Math.pow(common.getRed(first) / 255.0, 2.2) +
-			0.7152 * Math.pow(common.getRed(first) / 255.0, 2.2) +
-			0.0722 * Math.pow(common.getRed(first) / 255.0, 2.2),
-		secondLuminosity =
-			0.2126 * Math.pow(common.getRed(second) / 255.0, 2.2) +
-			0.7152 * Math.pow(common.getRed(second) / 255.0, 2.2) +
-			0.0722 * Math.pow(common.getRed(second) / 255.0, 2.2);
+  var result,
+    common = primitives.common,
+    first = common.getColorHexValue(firstColor),
+    second = common.getColorHexValue(secondColor),
+    firstLuminosity =
+      0.2126 * Math.pow(common.getRed(first) / 255.0, 2.2) +
+      0.7152 * Math.pow(common.getRed(first) / 255.0, 2.2) +
+      0.0722 * Math.pow(common.getRed(first) / 255.0, 2.2),
+    secondLuminosity =
+      0.2126 * Math.pow(common.getRed(second) / 255.0, 2.2) +
+      0.7152 * Math.pow(common.getRed(second) / 255.0, 2.2) +
+      0.0722 * Math.pow(common.getRed(second) / 255.0, 2.2);
 
-	if (firstLuminosity > secondLuminosity) {
-		result = (firstLuminosity + 0.05) / (secondLuminosity + 0.05);
-	}
-	else {
-		result = (secondLuminosity + 0.05) / (firstLuminosity + 0.05);
-	}
+  if (firstLuminosity > secondLuminosity) {
+    result = (firstLuminosity + 0.05) / (secondLuminosity + 0.05);
+  }
+  else {
+    result = (secondLuminosity + 0.05) / (firstLuminosity + 0.05);
+  }
 
-	return result;
+  return result;
 };
 
-/*
-	Function: primitives.common.compareArrays
-		Compares non-object non-sorted arrays.
-	
-	Parameters:
-	array1 - First array.
-	array2 - Second array.
+/**
+ * Callback for getting item key for an element of the array
+ *
+ * @callback getKeyFuncCallback
+ * @param {Object} item A collection item
+ * @returns {number} Returns key of the item 
+ */
 
-	Returns: 
-		True if arrays are identical.
+/**
+ * Compares non-sorted arrays.
+ *
+ * @param {Object[]} array1 - The first collection of elements.
+ * @param {Object[]} array2 - The second collection of elements.
+ * @param {getKeyFuncCallback|undefined} getKeyFunc If callback function is defined it is used to get a key for an array element
+ * @returns {boolean} Returns true if the arrays are identical.
 */
 primitives.common.compareArrays = function (array1, array2, getKeyFunc) {
-	var result = true,
-		index, len, value,
-		hashArray1;
-	if (array1.length != array2.length) {
-		result = false;
-	} else {
-		hashArray1 = {};
-		for (index = 0, len = array1.length; index < len; index += 1) {
-			value = getKeyFunc != null ? getKeyFunc(array1[index]) : array1[index];
-			if (hashArray1.hasOwnProperty(value)) {
-				hashArray1[value] += 1;
-			} else {
-				hashArray1[value] = 1;
-			}
-		}
-		for (index = 0, len = array2.length; index < len; index += 1) {
-			value = getKeyFunc != null ? getKeyFunc(array2[index]) : array2[index];
-			if (!hashArray1.hasOwnProperty(value)) {
-				result = false;
-				break;
-			} else {
-				hashArray1[value] -= 1;
-				if (hashArray1[value] < 0) {
-					result = false;
-					break;
-				}
-			}
-		}
-	}
-	return result;
+  var result = true,
+    index, len, value,
+    hashArray1;
+  if (array1.length != array2.length) {
+    result = false;
+  } else {
+    hashArray1 = {};
+    for (index = 0, len = array1.length; index < len; index += 1) {
+      value = getKeyFunc != null ? getKeyFunc(array1[index]) : array1[index];
+      if (hashArray1.hasOwnProperty(value)) {
+        hashArray1[value] += 1;
+      } else {
+        hashArray1[value] = 1;
+      }
+    }
+    for (index = 0, len = array2.length; index < len; index += 1) {
+      value = getKeyFunc != null ? getKeyFunc(array2[index]) : array2[index];
+      if (!hashArray1.hasOwnProperty(value)) {
+        result = false;
+        break;
+      } else {
+        hashArray1[value] -= 1;
+        if (hashArray1[value] < 0) {
+          result = false;
+          break;
+        }
+      }
+    }
+  }
+  return result;
 };
 
 /* /common/jsonml-html.js*/
@@ -1458,414 +1447,571 @@ if (typeof document !== 'undefined') {
 
 
 /* /enums/AdviserPlacementType.js*/
-/*
-	Enum: primitives.common.AdviserPlacementType
-		Defines item placement in tree relative to parent.
-	
-	Auto - Layout manager defined.
-	Left - Item placed on the left side of parent.
-	Right - Item placed on the right side of parent.
-*/
-primitives.common.AdviserPlacementType =
-{
-	Auto: 0,
-	Left: 2,
-	Right: 3
+/**
+ * @typedef {number} AdviserPlacementType
+ **/
+
+
+/**
+ * Defines leftward or rightward item placement relative to the referenced item.
+ * In case of assitants and advisers the referenced item is their imediate parent.
+ * In case of family diagram the referenced item is spouse or sibling in the row. 
+ *  
+ * @enum {AdviserPlacementType}
+ */
+primitives.common.AdviserPlacementType = {
+	/**
+	 * Auto select by layout manager
+	 */
+  Auto: 0,
+	/**
+	 * Left side
+	 */
+  Left: 2,
+	/**
+	 * Right side
+	 */
+  Right: 3
 };
 
 primitives.orgdiagram.AdviserPlacementType = primitives.common.AdviserPlacementType;
 
 /* /enums/AnnotationType.js*/
-/*
-	Enum: primitives.common.AnnotationType
-		Defines type of annotation object.
-	
-	Connector - Connector lines between two rectangular areas.
-	Shape - Shape around rectanglur area.
-	HighlightPath - Use highlight properties for connector lines between items.
-*/
-primitives.common.AnnotationType =
-{
-	Connector: 0,
-	Shape: 1,
-	HighlightPath: 2,
-	Label: 3,
-	Background: 4
+/**
+ * @typedef {number} AnnotationType
+ **/
+
+
+/**
+	Defines type of on-screen and in-layout annotation object. Annotations are geometrical 
+	figures drawn around or bound to existing nodes of the diagram.
+*  
+ * @enum {AnnotationType}
+ */
+primitives.common.AnnotationType = {
+	/**
+	 * Connector lines between two nodes of the diagram. They are drawn on top of existing
+	 * diagram layout and they don't affect nodes placement. So it is users responsibility to
+	 * prserve space between nodes for them.
+	 */
+  Connector: 0,
+	/**
+	 * Shape annotation is a possibility to draw some geometrical
+	 * shapes over several nodes of the diagram. 
+	 */
+  Shape: 1,
+	/**
+	 * Highlight path annotation traces path between given sequence of nodes 
+	 * over existing connector lines in the diagram.
+	 */
+  HighlightPath: 2,
+	/**
+	 * In-layout label annotation. Label anntations are placed in layout between nodes,
+	 * they preserve space between nodes, so they don't overlap neighbouring nodes.
+	 * Label annotations are designed for autoplacement and bundling of connection lines between 
+	 * nodes when needed.
+	 */
+  Label: 3,
+	/**
+	 * Background annotation highlights nodes via drawing rectangular shape in background.
+	 * If shapes overlap the same style neighbouring shapes they are merged into one continuous shape. 
+	 */
+  Background: 4
 };
 
 /* /enums/ChildrenPlacementType.js*/
-/*
-	Enum: primitives.common.ChildrenPlacementType
-		Defines children placement shape.
-	
-	Auto - Children placement auto defined.
-	Vertical - Children form vertical column.
-	Horizontal - Children placed horizontally.
-	Matrix - Children placed in form of matrix.
-*/
-primitives.common.ChildrenPlacementType =
-{
-	Auto: 0,
-	Vertical: 1,
-	Horizontal: 2,
-	Matrix: 3
+/**
+ * @typedef {number} ChildrenPlacementType
+ **/
+
+
+/**
+ * Defines shape of children formation. By default a node's children are always placed in a horizontal line 
+ * below the parent node. On a large scale this may result in the end user having to scroll screens 
+ * in order to view all of the nodes. To compensate for this, we provide the option of placing all 
+ * of the children of a parent node in a sqaure/matrix formation. This will reduce sideways screen 
+ * scrolling by compacting the child nodes into a much smaller area on the screen.
+ *  
+ * @enum {ChildrenPlacementType}
+ */
+primitives.common.ChildrenPlacementType = {
+  /**
+   * Auto. This mode lets you set children layout at the component level
+   * and then redefine it for individual nodes if needed.
+   */
+  Auto: 0,
+  /**
+   * Children placed in vertical column
+   */
+  Vertical: 1,
+  /**
+   * Horizontal children layout
+   */
+  Horizontal: 2,
+  /**
+   * Matrix formation of the children
+   */
+  Matrix: 3
 };
 
 primitives.orgdiagram.ChildrenPlacementType = primitives.common.ChildrenPlacementType;
 
 /* /enums/Colors.js*/
-/*
-	Enum: primitives.common.Colors
-		Named colors.
+/**
+ * @typedef {string} Colors
+ **/
 
-*/
-primitives.common.Colors =
-{
-	AliceBlue: "#f0f8ff",
-	AntiqueWhite: "#faebd7",
-	Aqua: "#00ffff",
-	Aquamarine: "#7fffd4",
-	Azure: "#f0ffff",
+/**
+ * Just a list of named colors.
+ * 
+ * @ignore
+ * @enum {Colors}
+ */
+primitives.common.Colors = {
+  AliceBlue: "#f0f8ff",
+  AntiqueWhite: "#faebd7",
+  Aqua: "#00ffff",
+  Aquamarine: "#7fffd4",
+  Azure: "#f0ffff",
 
-	Beige: "#f5f5dc",
-	Bisque: "#ffe4c4",
-	Black: "#000000",
-	BlanchedAlmond: "#ffebcd",
-	Blue: "#0000ff",
-	BlueViolet: "#8a2be2",
-	Brown: "#a52a2a",
-	BurlyWood: "#deb887",
-	Bronze: "#cd7f32",
+  Beige: "#f5f5dc",
+  Bisque: "#ffe4c4",
+  Black: "#000000",
+  BlanchedAlmond: "#ffebcd",
+  Blue: "#0000ff",
+  BlueViolet: "#8a2be2",
+  Brown: "#a52a2a",
+  BurlyWood: "#deb887",
+  Bronze: "#cd7f32",
 
-	CadetBlue: "#5f9ea0",
-	ChartReuse: "#7fff00",
-	Chocolate: "#d2691e",
-	Coral: "#ff7f50",
-	CornflowerBlue: "#6495ed",
-	Cornsilk: "#fff8dc",
-	Crimson: "#dc143c",
-	Cyan: "#00ffff",
-	DarkBlue: "#00008b",
-	DarkCyan: "#008b8b",
-	DarkGoldenrod: "#b8860b",
-	DarkGray: "#a9a9a9",
-	DarkGreen: "#006400",
-	DarkKhaki: "#bdb76b",
-	DarkMagenta: "#8b008b",
-	DarkOliveGreen: "#556b2f",
-	Darkorange: "#ff8c00",
-	DarkOrchid: "#9932cc",
-	DarkRed: "#8b0000",
-	DarkSalmon: "#e9967a",
-	DarkSeaGreen: "#8fbc8f",
-	DarkSlateBlue: "#483d8b",
-	DarkSlateGray: "#2f4f4f",
-	DarkTurquoise: "#00ced1",
-	DarkViolet: "#9400d3",
-	DeepPink: "#ff1493",
-	DeepSkyBlue: "#00bfff",
-	DimGray: "#696969",
-	DodgerBlue: "#1e90ff",
+  CadetBlue: "#5f9ea0",
+  ChartReuse: "#7fff00",
+  Chocolate: "#d2691e",
+  Coral: "#ff7f50",
+  CornflowerBlue: "#6495ed",
+  Cornsilk: "#fff8dc",
+  Crimson: "#dc143c",
+  Cyan: "#00ffff",
+  DarkBlue: "#00008b",
+  DarkCyan: "#008b8b",
+  DarkGoldenrod: "#b8860b",
+  DarkGray: "#a9a9a9",
+  DarkGreen: "#006400",
+  DarkKhaki: "#bdb76b",
+  DarkMagenta: "#8b008b",
+  DarkOliveGreen: "#556b2f",
+  Darkorange: "#ff8c00",
+  DarkOrchid: "#9932cc",
+  DarkRed: "#8b0000",
+  DarkSalmon: "#e9967a",
+  DarkSeaGreen: "#8fbc8f",
+  DarkSlateBlue: "#483d8b",
+  DarkSlateGray: "#2f4f4f",
+  DarkTurquoise: "#00ced1",
+  DarkViolet: "#9400d3",
+  DeepPink: "#ff1493",
+  DeepSkyBlue: "#00bfff",
+  DimGray: "#696969",
+  DodgerBlue: "#1e90ff",
 
-	FireBrick: "#b22222",
-	FloralWhite: "#fffaf0",
-	ForestGreen: "#228b22",
-	Fuchsia: "#ff00ff",
+  FireBrick: "#b22222",
+  FloralWhite: "#fffaf0",
+  ForestGreen: "#228b22",
+  Fuchsia: "#ff00ff",
 
-	Gainsboro: "#dcdcdc",
-	GhostWhite: "#f8f8ff",
-	Gold: "#ffd700",
-	Goldenrod: "#daa520",
-	Gray: "#808080",
-	Green: "#008000",
-	GreenYellow: "#adff2f",
+  Gainsboro: "#dcdcdc",
+  GhostWhite: "#f8f8ff",
+  Gold: "#ffd700",
+  Goldenrod: "#daa520",
+  Gray: "#808080",
+  Green: "#008000",
+  GreenYellow: "#adff2f",
 
-	Honeydew: "#f0fff0",
-	Hotpink: "#ff69b4",
+  Honeydew: "#f0fff0",
+  Hotpink: "#ff69b4",
 
-	IndianRed: "#cd5c5c",
-	Indigo: "#4b0082",
-	Ivory: "#fffff0",
-	Khaki: "#f0e68c",
+  IndianRed: "#cd5c5c",
+  Indigo: "#4b0082",
+  Ivory: "#fffff0",
+  Khaki: "#f0e68c",
 
-	Lavender: "#e6e6fa",
-	LavenderBlush: "#fff0f5",
-	Lawngreen: "#7cfc00",
-	Lemonchiffon: "#fffacd",
-	LightBlue: "#add8e6",
-	LightCoral: "#f08080",
-	LightCyan: "#e0ffff",
-	LightGoldenrodYellow: "#fafad2",
+  Lavender: "#e6e6fa",
+  LavenderBlush: "#fff0f5",
+  Lawngreen: "#7cfc00",
+  Lemonchiffon: "#fffacd",
+  LightBlue: "#add8e6",
+  LightCoral: "#f08080",
+  LightCyan: "#e0ffff",
+  LightGoldenrodYellow: "#fafad2",
 
-	LightGray: "#d3d3d3",
-	LightGreen: "#90ee90",
-	LightPink: "#ffb6c1",
-	LightSalmon: "#ffa07a",
-	LightSeaGreen: "#20b2aa",
-	LightSkyBlue: "#87cefa",
-	LightSlateGray: "#778899",
-	LightSteelBlue: "#b0c4de",
+  LightGray: "#d3d3d3",
+  LightGreen: "#90ee90",
+  LightPink: "#ffb6c1",
+  LightSalmon: "#ffa07a",
+  LightSeaGreen: "#20b2aa",
+  LightSkyBlue: "#87cefa",
+  LightSlateGray: "#778899",
+  LightSteelBlue: "#b0c4de",
 
-	LightYellow: "#ffffe0",
-	Lime: "#00ff00",
-	Limegreen: "#32cd32",
-	Linen: "#faf0e6",
+  LightYellow: "#ffffe0",
+  Lime: "#00ff00",
+  Limegreen: "#32cd32",
+  Linen: "#faf0e6",
 
-	Magenta: "#ff00ff",
-	Maroon: "#800000",
-	MediumAquamarine: "#66cdaa",
-	MediumBlue: "#0000cd",
-	MediumOrchid: "#ba55d3",
-	MediumPurple: "#9370d8",
-	MediumSeaGreen: "#3cb371",
-	MediumSlateBlue: "#7b68ee",
+  Magenta: "#ff00ff",
+  Maroon: "#800000",
+  MediumAquamarine: "#66cdaa",
+  MediumBlue: "#0000cd",
+  MediumOrchid: "#ba55d3",
+  MediumPurple: "#9370d8",
+  MediumSeaGreen: "#3cb371",
+  MediumSlateBlue: "#7b68ee",
 
-	MediumSpringGreen: "#00fa9a",
-	MediumTurquoise: "#48d1cc",
-	MediumVioletRed: "#c71585",
-	MidnightBlue: "#191970",
-	MintCream: "#f5fffa",
-	MistyRose: "#ffe4e1",
-	Moccasin: "#ffe4b5",
+  MediumSpringGreen: "#00fa9a",
+  MediumTurquoise: "#48d1cc",
+  MediumVioletRed: "#c71585",
+  MidnightBlue: "#191970",
+  MintCream: "#f5fffa",
+  MistyRose: "#ffe4e1",
+  Moccasin: "#ffe4b5",
 
-	NavajoWhite: "#ffdead",
-	Navy: "#000080",
+  NavajoWhite: "#ffdead",
+  Navy: "#000080",
 
-	Oldlace: "#fdf5e6",
-	Olive: "#808000",
-	Olivedrab: "#6b8e23",
-	Orange: "#ffa500",
-	OrangeRed: "#ff4500",
-	Orchid: "#da70d6",
+  Oldlace: "#fdf5e6",
+  Olive: "#808000",
+  Olivedrab: "#6b8e23",
+  Orange: "#ffa500",
+  OrangeRed: "#ff4500",
+  Orchid: "#da70d6",
 
-	PaleGoldenRod: "#eee8aa",
-	PaleGreen: "#98fb98",
-	PaleTurquoise: "#afeeee",
-	PaleVioletRed: "#d87093",
-	Papayawhip: "#ffefd5",
-	Peachpuff: "#ffdab9",
-	Peru: "#cd853f",
-	Pink: "#ffc0cb",
-	Plum: "#dda0dd",
-	PowderBlue: "#b0e0e6",
-	Purple: "#800080",
+  PaleGoldenRod: "#eee8aa",
+  PaleGreen: "#98fb98",
+  PaleTurquoise: "#afeeee",
+  PaleVioletRed: "#d87093",
+  Papayawhip: "#ffefd5",
+  Peachpuff: "#ffdab9",
+  Peru: "#cd853f",
+  Pink: "#ffc0cb",
+  Plum: "#dda0dd",
+  PowderBlue: "#b0e0e6",
+  Purple: "#800080",
 
-	Red: "#ff0000",
-	RosyBrown: "#bc8f8f",
-	RoyalBlue: "#4169e1",
+  Red: "#ff0000",
+  RosyBrown: "#bc8f8f",
+  RoyalBlue: "#4169e1",
 
-	SaddleBrown: "#8b4513",
-	Salmon: "#fa8072",
-	SandyBrown: "#f4a460",
-	SeaGreen: "#2e8b57",
-	Seashell: "#fff5ee",
-	Sienna: "#a0522d",
-	Silver: "#c0c0c0",
-	SkyBlue: "#87ceeb",
-	SlateBlue: "#6a5acd",
-	SlateGray: "#708090",
-	Snow: "#fffafa",
-	SpringGreen: "#00ff7f",
-	SteelBlue: "#4682b4",
+  SaddleBrown: "#8b4513",
+  Salmon: "#fa8072",
+  SandyBrown: "#f4a460",
+  SeaGreen: "#2e8b57",
+  Seashell: "#fff5ee",
+  Sienna: "#a0522d",
+  Silver: "#c0c0c0",
+  SkyBlue: "#87ceeb",
+  SlateBlue: "#6a5acd",
+  SlateGray: "#708090",
+  Snow: "#fffafa",
+  SpringGreen: "#00ff7f",
+  SteelBlue: "#4682b4",
 
-	Tan: "#d2b48c",
-	Teal: "#008080",
-	Thistle: "#d8bfd8",
-	Tomato: "#ff6347",
-	Turquoise: "#40e0d0",
+  Tan: "#d2b48c",
+  Teal: "#008080",
+  Thistle: "#d8bfd8",
+  Tomato: "#ff6347",
+  Turquoise: "#40e0d0",
 
-	Violet: "#ee82ee",
+  Violet: "#ee82ee",
 
-	Wheat: "#f5deb3",
-	White: "#ffffff",
-	WhiteSmoke: "#f5f5f5",
+  Wheat: "#f5deb3",
+  White: "#ffffff",
+  WhiteSmoke: "#f5f5f5",
 
-	Yellow: "#ffff00",
-	YellowGreen: "#9acd32"
+  Yellow: "#ffff00",
+  YellowGreen: "#9acd32"
 };
 
 /* /enums/ConnectorLabelPlacementType.js*/
-/*
-	Enum: primitives.common.ConnectorLabelPlacementType
-	Defines connector label placement.
-	
-	
-	From - Place at the "from" rectangle
-	Between - Place along connector line, between rectangles
-	To - Place at "to" rectangle
-*/
-primitives.common.ConnectorLabelPlacementType =
-{
-	From: 0,
-	Between: 1,
-	To: 2
+/**
+ * @typedef {number} ConnectorLabelPlacementType
+ **/
+
+
+/**
+ * Label placement relative to connector annotation. Connector annotation is bound and drawn between two nodes
+ * defined by two properties: `fromItem` and `toItem`. Label can be placed close to "start", "end" nodes or in between of them
+ *  along the connector line. 
+ *
+ * @enum {ConnectorLabelPlacementType}
+ */
+primitives.common.ConnectorLabelPlacementType = {
+  From: 0,
+  Between: 1,
+  To: 2
 };
 
 /* /enums/ConnectorPlacementType.js*/
-/*
-	Enum: primitives.common.ConnectorPlacementType
-		Defines connector annotation shape placement mode between two rectangles.
-	
-	Offbeat - place connector annotation in the way that it does not overlap base hierarchy connector lines.
-	Straight - direct connection between centers of rectangles.
-*/
-primitives.common.ConnectorPlacementType =
-{
-	Offbeat: 0,
-	Straight: 1
+/**
+ * @typedef {number} ConnectorPlacementType
+ **/
+
+
+/**
+ * Connector placement type defines style of connector line drawing over diagram layout. It supports two options: 
+ * the `Straight` is classic direct line connecting two nodes, this is the most expected style of connector annotation
+ * drawing over diagram, the second style is called `Offbeat` and it design to dynamically adopt to nodes mutual 
+ * location and gap between them. It uses free hand line style drawing going from start to the end nodes. Since every diagram 
+ * is packed with various connection lines, this annotation placement style is deliberately made not straight, so it can be 
+ * noticeable on top of other lines of the diagram.
+ *
+ * @enum {ConnectorPlacementType}
+ */
+primitives.common.ConnectorPlacementType = {
+  /**
+   * Places connector annotation in the way that it does not overlap underlying diagram connector lines.
+   * If nodes are close to each other and gap between them cannot fit annotation, then 
+   * it will be drawn on the side of the nodes, so it will have enough space for arrow and label.
+   */
+  Offbeat: 0,
+  /**
+   * Straight line annotation between nodes. This annotation mode provides basic conflict resolution between annotations
+   * overlapping each other. If two or more straight annotations overlap each other then layout engine will 
+   * add extra offset to them, so they will be drawn in parallel to each other.
+   */
+  Straight: 1
 };
 
 /* /enums/ConnectorShapeType.js*/
-/*
-	Enum: primitives.common.ConnectorShapeType
-		Defines connector shape style between two rectangles.
-	
-	SingleLine - Single line.
-	DoubleLine - Double line.
-*/
-primitives.common.ConnectorShapeType =
-{
-	OneWay: 0,
-	TwoWay: 1,
-	BothWay: 2
+/**
+ * @typedef {number} ConnectorShapeType
+ **/
+
+
+/**
+ * Connector shape type defines number of lines and arrows at their ends drawn between nodes of the connector annotation.
+ * This feature combined with basic conflict resolution, which places overlapping annotations in parallel when they overlap each other,
+ * gives you full flexibility over variations of possible connector lines between two given nodes of diagram.
+ *
+ * @enum {ConnectorShapeType}
+ */
+primitives.common.ConnectorShapeType = {
+  /**
+   * Single line with one arrow
+   */
+  OneWay: 0,
+  /**
+   * Two parallel lines with single arrows
+   */
+  TwoWay: 1,
+  /**
+   * Single line with 2 arrows.
+   */
+  BothWay: 2
 };
 
 /* /enums/ConnectorStyleType.js*/
-primitives.common.ConnectorStyleType =
-{
-	Extra: 0,
-	Regular: 1,
-	Highlight: 2
+primitives.common.ConnectorStyleType = {
+  Extra: 0,
+  Regular: 1,
+  Highlight: 2
 };
 
 /* /enums/ConnectorType.js*/
-/*
-	Enum: primitives.common.ConnectorType
-		Defines diagram connectors style for dot and line elements.
-	
-	Squared - Connector lines use only right angles.
-	Angular - Connector lines use angular lines comming from common vertex.
-	Curved - Connector lines are splines comming from common vertex.
-*/
-primitives.common.ConnectorType =
-{
-	Squared: 0,
-	Angular: 1,
-	Curved: 2
+/**
+ * @typedef {number} ConnectorType
+ **/
+
+/**
+ * Connection lines style. This option is only applicable to nodes minimized to markers or lines.
+ * Full size nodes are always connected with squared connection lines
+ *  
+ * @enum {ConnectorType}
+ */
+primitives.common.ConnectorType = {
+  /**
+   * Orthogonal connection lines
+   */
+  Squared: 0,
+  /**
+   * Angular direct node to node connection lines
+   */
+  Angular: 1,
+  /**
+   * Curved direct node to node connection lines
+   */
+  Curved: 2
 };
 
 primitives.orgdiagram.ConnectorType = primitives.common.ConnectorType;
 
 /* /enums/ElbowType.js*/
-/*
-	Enum: primitives.common.ElbowType
-		Defines type of connector line elbow style.
-	
-	Dot - Two lines intersection marked with dot.
-	Angular - Squared connection has angular .
-	Dashed - Dashes.
-*/
-primitives.common.ElbowType =
-{
-	None: 0,
-	Dot: 1,
-	Bevel: 2,
-	Round: 3
+/**
+ * @typedef {number} ElbowType
+ **/
+
+/**
+ * Elbow style of connection lines
+ *  
+ * @enum {ElbowType}
+ */
+primitives.common.ElbowType = {
+  /**
+   * No elbow
+   */
+  None: 0,
+  /**
+   * Dot marker at the intersection
+   */
+  Dot: 1,
+  /**
+   * Bevel elbow
+   */
+  Bevel: 2,
+  /**
+   * Round elbow
+   */
+  Round: 3
 };
 
 
 /* /enums/Enabled.js*/
-/*
-	Enum: primitives.common.Enabled
-		Defines option state.
-	
-	Auto - Option state is auto defined.
-	True - Enabled.
-	False - Disabled.
-*/
-primitives.common.Enabled =
-{
-	Auto: 0,
-	True: 1,
-	False: 2
+/**
+ * Defines option state.
+ * 
+ * @readonly
+ * @enum {number}
+ */
+primitives.common.Enabled = {
+  /**
+   * Option state is auto defined.
+   */
+  Auto: 0,
+  /**
+   * Enabled
+   */
+  True: 1,
+  /**
+   * Disabled
+   */
+  False: 2
 };
 
+
+
 /* /enums/GraphicsType.js*/
-/*
-	Enum: primitives.ocommon.GraphicsType
-		Graphics type. 
-	
-	SVG - Scalable Vector Graphics. Proportionally scales on majority of devices.
-	Canvas - HTML canvas graphics. It requires widget update after zooming page.
-*/
-primitives.common.GraphicsType =
-{
-	SVG: 0,
-	Canvas: 1
+/**
+ * @typedef {number} GraphicsType
+ **/
+
+/**
+ * Graphics primitives elements rendering mode
+ *  
+ * @enum {GraphicsType}
+ */
+primitives.common.GraphicsType = {
+  /**
+   * Scalable Vector Graphics
+   */
+  SVG: 0,
+  /**
+   * HTML Canvas
+   */
+  Canvas: 1
 };
 
 /* /enums/GroupByType.js*/
-/*
-	Enum: primitives.common.GroupByType
-		Defines objects gravity in chart.
-	
-	Parents - To parents.
-	Children - To children.
-*/
-primitives.common.GroupByType =
-{
-	None: 0,
-	Parents: 1,
-	Children: 2
+/**
+ * @typedef {number} GroupByType
+ **/
+
+/**
+ * This enumeration defines objects gravity in the chart relative to parents and children.
+ * For example connection lines can be drawn with arrows, so this enumeration controls
+ * direction of arrows up towards parents or down towards children in the hierarchy.
+ * The other example is nodes placement close to their immediate parents or immediate children 
+ * in case when parents and children are offset from them by multiple levels in hierarchy.
+ *  
+ * @enum {GroupByType}
+ */
+primitives.common.GroupByType = {
+  None: 0,
+  Parents: 1,
+  Children: 2
 };
 
 /* /enums/HorizontalAlignmentType.js*/
-/*
-	Enum: primitives.common.HorizontalAlignmentType
-	Defines text label alignment inside text box boundaries.
-	
-	Center - Positooned in the middle of the text box
-	Left - Aligned to the begging of the text box
-	Right - Aligned to the end of text box
-*/
-primitives.common.HorizontalAlignmentType =
-{
-	Center: 0,
-	Left: 1,
-	Right: 2
+/**
+ * @typedef {number} HorizontalAlignmentType
+ **/
+
+/**
+ * Horizontal alignment
+ *  
+ * @enum {HorizontalAlignmentType}
+ */
+primitives.common.HorizontalAlignmentType = {
+  Center: 0,
+  Left: 1,
+  Right: 2
 };
 
 /* /enums/ItemType.js*/
-/*
-	Enum: primitives.orgdiagram.ItemType
-		Defines diagram item type.
-	
-	Regular - Regular item.
-	Assistant - Child item which is placed at separate level above all other children, but below parent item. It has connection on its side.
-	Adviser - Child item which is placed at the same level as parent item. It has connection on its side.
-	SubAssistant - Child item which is placed at separate level above all other children, but below parent item.  It has connection on its top.
-	SubAdviser - Child item placed at the same level as parent item. It has connection on its top.
-	GeneralPartner - Child item placed at the same level as parent item and visually grouped with it together via sharing common parent and children.
-	LimitedPartner - Child item placed at the same level as parent item and visually grouped with it via sharing common children.
-	AdviserPartner - Child item placed at the same level as parent item. It has connection on its side. It is visually grouped with it via sharing common children.
-*/
-primitives.orgdiagram.ItemType =
-{
-	Regular: 0,
+/**
+ * @typedef {number} ItemType
+ **/
 
-	Assistant: 1,
-	SubAssistant: 4,
-	SuperAssistant: 10,
-
-	SuperAdviser: 9,
-	SubAdviser: 5,
-	Adviser: 2,
-
-	Director: 11,
-
-	GeneralPartner: 6,
-	LimitedPartner: 7,
-	AdviserPartner: 8
+/**
+ * This enumeration defines child node placement relative to its parent node. By default all children that belong 
+ * to a parent node are of the same rank and status between each other and due to that, are always aligned below
+ * the parent and are organized in the same way. However for special cases were the end user wishes to have a child
+ * that is seperate from the rest of it's siblings, we provide custom child types that the end user can use to
+ * place diffrent ranking nodes anywhere around the parent node. These placement options give a lot of space for
+ * the creation of roles such as an Assistant, Adviser, various Partners and co-heads that may be in the organization.
+ * Additionally, by default a node's regular children are always placed in a horizontal line below the parent node. See children
+ * placement type options for regular children layout.
+ *  
+ * @enum {ItemType}
+ */
+primitives.orgdiagram.ItemType = {
+  /**
+   * Regular node is a default placement of child nodes in form of horizontal row.
+   */
+  Regular: 0,
+  /**
+   * Adviser is drawn at the same row as parent node on the left or right side and connected horizontally to it. 
+   */
+  Adviser: 2,
+  /**
+   * Assitant node is drawn at row in between parent and child rows and connected horizontally
+   * to connection line going from parent to the regualr children
+   */
+  Assistant: 1,
+  /**
+   * Sub assitant is variation of assitant node type.
+   * It has the same placement but it is connected by the top side of the node to the connector line going to the parent node.
+   */
+  SubAssistant: 4,
+  /**
+   * Sub adviser is variation of adviser node type.
+   * It has the same placement but it is connected by the top side of the node to the connector line going to the parent node.
+   */
+  SubAdviser: 5,
+  /**
+   * General partner is immitation of multiple inheritance in the oraganizational chart hierarchy.
+   * General partner node is drawn side by side with its parent and remaining regular children
+   * are visually connected to both of them like they are their parents.
+   * Another layout feature of the general partner is that it is connected to parents of its immediate logical parent as well,
+   * so visually it becomes a child of its grand parent.
+   */
+  GeneralPartner: 6,
+  /**
+   * Limited partner is variation of general partner. The only difference is that is is not conencte to its logical grand parent.
+   */
+  LimitedPartner: 7,
+  /**
+   * Adviser partner is a variation of limited partner. The only difference is that it has an extra connection line to its parent.
+   */
+  AdviserPartner: 8
 };
 
 /* /enums/LabelType.js*/
@@ -1898,158 +2044,195 @@ primitives.common.Layers =
 };
 
 /* /enums/LineType.js*/
-/*
-	Enum: primitives.common.LineType
-		Defines type of line pattern. Dash and dot intervals depend on line width. 
-	
-	Solid - Regular solid line.
-	Dotted - Dots.
-	Dashed - Dashes.
-*/
-primitives.common.LineType =
-{
-	Solid: 0,
-	Dotted: 1,
-	Dashed: 2
+/**
+ * @typedef {number} LineType
+ **/
+
+/**
+ * Line style of connection lines.
+ *  
+ * @enum {LineType}
+ */
+primitives.common.LineType = {
+  Solid: 0,
+  Dotted: 1,
+  Dashed: 2
 };
 
 
 /* /enums/NavigationMode.js*/
-/*
-	Enum: primitives.common.NavigationMode
-		Defines control navigation mode. By default control replicates interactivity of regular Tree control. 
-		It has highlight for mouse over feedback over nodes and it has cursor for showing currently selected single node in diagram.
-		In order to avoid children nodes folding and unfolding, this functionality is done automatically for current cursor item.
-		So cursor plays vital role for unfolding of nodes and zooming into area of user interest in diagram.
+/**
+ * @typedef {number} NavigationMode
+ **/
 
-	Default - Highlight & Cursor 
-	CursorOnly - Cursor only.
-	HighlightOnly - Highlight only. This mode is usefull for touch devices. Since it requires minimal layout changes and renderings.
-	Inactive - No user interactivity.
-
-	See Also:
-		<primitives.orgdiagram.Config.navigationMode>
-		<primitives.famdiagram.Config.navigationMode>
-*/
-primitives.common.NavigationMode =
-{
-	Default: 0,
-	CursorOnly: 1,
-	HighlightOnly: 3,
-	Inactive: 2
+/**
+ * Interactivity mode. Control implements standard behaivour of classic desktop UI controls. It supports single selected node - cursor.
+ * It supports on mouse over node visual feedback - highlight. It supports selection of group of nodes - selected items. 
+ * All that functionality can be disabled depending on your application requirements.
+ *  
+ * @enum {NavigationMode}
+ */
+primitives.common.NavigationMode = {
+  /**
+   * Everything is on.
+   */
+  Default: 0,
+  /**
+   * Cursor selection only without highlight. 
+   */
+  CursorOnly: 1,
+  /**
+   * Mouse over feedback only
+   */
+  HighlightOnly: 3,
+  /**
+   * No interactivity
+   */
+  Inactive: 2
 };
 
 /* /enums/NeighboursSelectionMode.js*/
-/*
-	Enum: primitives.common.NeighboursSelectionMode
-		Defines the display mode for items related to current cursor item in diagram.
-	
-	ParentsAndChildren - Parents and children of cursor item placed and sized as regular diagram items.
-	ParentsChildrenSiblingsAndSpouses - Parents, children, siblings and spouses of cursor item placed and sized as regular diagram items.
-*/
-primitives.common.NeighboursSelectionMode =
-{
-	ParentsAndChildren: 0,
-	ParentsChildrenSiblingsAndSpouses: 1
+/**
+ * @typedef {number} NavigationMode
+ **/
+
+/**
+ * Neighbors selection mode. The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers.
+ * So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items
+ * of the diagram in full size and draw all other as markers.
+ *
+ * This enumeration controls visibility of neighbours of the cursor node in the auto fit mode. It allows to draw 
+ * them in full size regardless of available space.
+ *
+ * @enum {NavigationMode}
+ */
+primitives.common.NeighboursSelectionMode = {
+  /**
+   * Selects parents and children of the cursor item
+   */
+  ParentsAndChildren: 0,
+  /**
+   * Selects parents, children, spouses and siblings of the cursor item.
+   */
+  ParentsChildrenSiblingsAndSpouses: 1
 };
 
 
 
 /* /enums/OrientationType.js*/
-/*
-	Enum: primitives.common.OrientationType
-		Defines diagram orientation type.
-	
-	Top - Vertical orientation having root item at the top.
-	Bottom - Vertical orientation having root item at the bottom.
-	Left - Horizontal orientation having root item on the left.
-	Right - Horizontal orientation having root item on the right.
-*/
-primitives.common.OrientationType =
-{
-	Top: 0,
-	Bottom: 1,
-	Left: 2,
-	Right: 3,
-	None: 4
+/**
+ * @typedef {number} OrientationType
+ **/
+
+/**
+ * Controls diagram layout orientation. The control can be rotated in any direction, this is needed for arabic support and various layout.
+ *  
+ * @enum {OrientationType}
+ */
+primitives.common.OrientationType = {
+  Top: 0,
+  Bottom: 1,
+  Left: 2,
+  Right: 3,
+  None: 4
 };
 
 primitives.orgdiagram.OrientationType = primitives.common.OrientationType;
 
 /* /enums/PageFitMode.js*/
-/*
-	Enum: primitives.common.PageFitMode
-		Defines diagram auto fit mode.
-	
-	None - All diagram items are shown in normal template mode.
-	PageWidth - Diagram tries to layout and auto size items in order to fit diagram into available page width.
-	PageHeight - Diagram tries to layout and auto size items in order to fit diagram into available page height.
-	FitToPage - Diagram tries to layout and auto size items in order to fit diagram into available page size.
-	AutoSize - Chart sets its placeholder div size to fit its contents without minimizing items.
-*/
-primitives.common.PageFitMode =
-{
-	None: 0,
-	PageWidth: 1,
-	PageHeight: 2,
-	FitToPage: 3,
-	AutoSize: 5,
-	SelectionOnly: 6
+/**
+ * @typedef {number} PageFitMode
+ **/
+
+/**
+ * Fits diagram into available screen space. When diagram size significantly larger that available screen space, its scrolling and navigation
+ * becomes problematic, so we support automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
+ * Control supports several page fit mode options which can match your requirements depending on diagram layout, orientation and number of nodes.
+ * 
+ * Autosize - this option is opposite to auto fit. It lets you expand control size to fit all diagram nodes full size without scrollbars.
+ *  
+ * @enum {PageFitMode}
+ */
+primitives.common.PageFitMode = {
+  /**
+   * Disabled. All nodes rendered with their templates.
+   */
+  None: 0,
+  /**
+   * Fits diagram into the view width, so it has no horizontal scrollbar.
+   */
+  PageWidth: 1,
+  /**
+   * Fits diagram into the view hight, so it has no vertical scrollbar.
+   */
+  PageHeight: 2,
+  /**
+   * Fits diagram into the view so it has no scrollbars.
+   */
+  FitToPage: 3,
+  /**
+   * This is opposite mode to auto fit. In this mode diagram controls its size, it sets its size to accomodate all nodes and render them normally.
+   */
+  AutoSize: 5,
+  /**
+   * Renders all nodes as markers regardless of available screen space. Control selects and renders full size cursor, its neighbours and selected nodes only.
+   * Don't forget to disable selection path as well, so nodes from cursor up to the root are not selected.
+   */
+  SelectionOnly: 6
 };
 
 primitives.orgdiagram.PageFitMode = primitives.common.PageFitMode;
 
 /* /enums/PlacementType.js*/
-/*
-	Enum: primitives.common.PlacementType
-		Defines element placement relative to rectangular area.
-	
-	Auto - Depends on implementation
-	Left - Left side
-	Top - Top side
-	Right - Right side
-	Bottom - Bottom side
-	TopLeft - Top left side
-	TopRight - Top right side
-	BottomLeft - Bottom left side
-	BottomRight - Bottom right side
-	LeftTop - Left Top side
-	LeftBottom - Left Bottom side
-	RightTop - Right Top side
-	RightBottom - Right Bottom side
-*/
-primitives.common.PlacementType =
-{
-	Auto: 0,
-	TopLeft: 8,
-	Top: 1,
-	TopRight: 2,
-	RightTop: 11,
-	Right: 3,
-	RightBottom: 12,
-	BottomRight: 4,
-	Bottom: 5,
-	BottomLeft: 6,
-	LeftBottom: 10,
-	Left: 7,
-	LeftTop: 9
+/**
+ * @typedef {number} PlacementType
+ **/
+
+
+/**
+ * Defines element placement relative to rectangular area it is bound to.
+ *  
+ * @enum {PlacementType}
+ */
+primitives.common.PlacementType = {
+  /**
+   * Defined by other control options.
+   */
+  Auto: 0,
+  TopLeft: 8,
+  Top: 1,
+  TopRight: 2,
+  RightTop: 11,
+  Right: 3,
+  RightBottom: 12,
+  BottomRight: 4,
+  Bottom: 5,
+  BottomLeft: 6,
+  LeftBottom: 10,
+  Left: 7,
+  LeftTop: 9
 };
 
 /* /enums/RenderingMode.js*/
-/*
-	Enum: primitives.common.RenderingMode
-	This enumeration is used as option in arguments of rendering events.
-	It helps to tell template initialization stage, 
-	for example user can widgitize some parts of template on create
-	and update and refresh them in template update stage.
-	
-	Create - Template is just created.
-	Update - Template is reused and update needed.
-*/
-primitives.common.RenderingMode =
-{
-	Create: 0,
-	Update: 1
+/**
+ * @typedef {number} RenderingMode
+ **/
+
+/**
+ * This enumeration is used to tell rendering callback functions current state of the template.
+ * It is needed for proper events binding and content updates.
+ *
+ * @enum {RenderingMode}
+ */
+primitives.common.RenderingMode = {
+  /**
+   * Template is just created.
+   */
+  Create: 0,
+  /**
+   * Template is reused and update is needed.
+   */
+  Update: 1
 };
 
 /* /enums/SegmentType.js*/
@@ -2063,52 +2246,56 @@ primitives.common.SegmentType =
 };
 
 /* /enums/SelectionPathMode.js*/
-/*
-	Enum: primitives.common.SelectionPathMode
-		Defines the display mode for items between root item of diagram and selected items.
-	
-	None - Selection path items placed and sized as regular diagram items.
-	FullStack - Selection path items are shown in normal template mode.
-*/
-primitives.common.SelectionPathMode =
-{
-	None: 0,
-	FullStack: 1
+/**
+ * @typedef {number} SelectionPathMode
+ **/
+
+/**
+ * Selection path mode. This enumeration controls visibility of nodes between cursor and the root of the diagram in the auto fit mode. It allows to draw 
+ * them in full size regardless of available space and auto fit mode.
+ * 
+ * The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers.
+ * So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items
+ * of the diagram in full size and draw all other diagram nodes as markers.
+ *
+ * @enum {SelectionPathMode}
+ */
+primitives.common.SelectionPathMode = {
+  /**
+   * No selection path
+   */
+  None: 0,
+  /**
+   * Selects cursor node parents up to the root are renders them full size regardless of available space.
+   */
+  FullStack: 1
 };
 
 primitives.orgdiagram.SelectionPathMode = primitives.common.SelectionPathMode;
 
 /* /enums/ShapeType.js*/
-/*
-	Enum: primitives.common.ShapeType
-		Defines shape type.
-	
-	Rectangle - rectangle
-	Oval - oval
-	Triangle - triangle
-	CrossOut - cross out
-	Circle - circle
-	Rhombus - rhombus
-	Wedge - wedge
-	FramedOval - Framed Oval
-	FramedTriangle - Framed Triangle
-	FramedWedge - Framed Wedge
-	FramedRhombus - Framed Rhombus
-*/
-primitives.common.ShapeType =
-{
-	Rectangle: 0,
-	Oval: 1,
-	Triangle: 2,
-	CrossOut: 3,
-	Circle: 4,
-	Rhombus: 5,
-	Wedge: 7,
-	FramedOval: 8,
-	FramedTriangle: 9,
-	FramedWedge: 10,
-	FramedRhombus: 11,
-	None: 6
+/**
+ * @typedef {number} ShapeType
+ **/
+
+/**
+ * Shapes
+ *  
+ * @enum {ShapeType}
+ */
+primitives.common.ShapeType = {
+  Rectangle: 0,
+  Oval: 1,
+  Triangle: 2,
+  CrossOut: 3,
+  Circle: 4,
+  Rhombus: 5,
+  Wedge: 7,
+  FramedOval: 8,
+  FramedTriangle: 9,
+  FramedWedge: 10,
+  FramedRhombus: 11,
+  None: 6
 };
 
 /* /enums/SideFlag.js*/
@@ -2121,167 +2308,200 @@ primitives.common.SideFlag =
 };
 
 /* /enums/TextOrientationType.js*/
-/*
-	Enum: primitives.text.TextOrientationType
-		Defines label orientation type.
-	
-	Horizontal - Regular horizontal text.
-	RotateLeft - Rotate all text 90 degree.
-	RotateRight - Rotate all text 270 degree.
-*/
-primitives.text.TextOrientationType =
-{
-	Horizontal: 0,
-	RotateLeft: 1,
-	RotateRight: 2,
-	Auto: 3
+/**
+ * @typedef {number} TextOrientationType
+ **/
+
+/**
+ * Text rotation
+ *  
+ * @enum {TextOrientationType}
+ */
+primitives.text.TextOrientationType = {
+  /**
+   * Regular horizontal text
+   */
+  Horizontal: 0,
+  /**
+   * Rotate text left for 90 degree.
+   */
+  RotateLeft: 1,
+  /**
+   * Rotate text right for 90 degree.
+   */
+  RotateRight: 2,
+  /**
+   * Depends on other options.
+   */
+  Auto: 3
 };
 
 /* /enums/UpdateMode.js*/
-/*
-	Enum: primitives.common.UpdateMode
-		Defines redraw mode of diagram.
-	
-	Recreate - Forces widget to make a full chart redraw. It is equivalent to initial chart creation. 
-	It removes everything from chart layout and recreares all elements again. 
-	Refresh - This update mode is optimized for widget fast redraw caused by resize or changes of 
-	next options: <primitives.orgdiagram.Config.items>, <primitives.orgdiagram.Config.cursorItem> 
-	or <primitives.orgdiagram.Config.selectedItems>.
-	PositonHighlight - This update mode redraws only <primitives.orgdiagram.Config.highlightItem>.
+/**
+ * @typedef {number} UpdateMode
+ **/
 
-	See Also:
-		<primitives.orgdiagram.Config.update>
-*/
-primitives.common.UpdateMode =
-{
-	Recreate: 0,
-	Refresh: 1,
-	PositonHighlight: 2
+/**
+ * Controls update of the diagram
+ *
+ * @enum {UpdateMode}
+ */
+primitives.common.UpdateMode = {
+  /**
+   * Forces control to make a full chart redraw. It is equivalent to initial chart creation. 
+   * It removes everything from placeholder and renders all elements again.
+   */
+  Recreate: 0,
+  /**
+   * Optimized refresh. It only updates visual elements which needs to be updated.
+   */
+  Refresh: 1,
+  /**
+   * Updates highlight position only
+   */
+  PositonHighlight: 2
 };
 
 primitives.orgdiagram.UpdateMode = primitives.common.UpdateMode;
 
 /* /enums/VectorRelationType.js*/
-primitives.common.VectorRelationType =
-{
-	None: 0,
-	Null: 1,
-	Collinear: 2,
-	Opposite: 3
+/**
+ * @typedef {number} VectorRelationType
+ **/
+
+/**
+ * Defines relation between two vectors
+ *
+ * @enum {VectorRelationType}
+ */
+primitives.common.VectorRelationType = {
+  None: 0,
+  Null: 1,
+  Collinear: 2,
+  Opposite: 3
 };
 
 /* /enums/VerticalAlignmentType.js*/
-/*
-	Enum: primitives.common.VerticalAlignmentType
-	Defines text label alignment inside text box boundaries.
-	
-	Top - Positined at the top of text box
-	Middle - Aligned to the middle
-	Bottom - Aligned to the bottom of text box
-*/
-primitives.common.VerticalAlignmentType =
-{
-	Top: 0,
-	Middle: 1,
-	Bottom: 2
+/**
+ * @typedef {number} VerticalAlignmentType
+ **/
+
+/**
+ * Controls nodes vertical alignment inside row of nodes. If row of nodes contains nodes of
+ * multiple sizes then small nodes are vertically aligned relative to their large neighbours.
+ *  
+ * @enum {VerticalAlignmentType}
+ */
+primitives.common.VerticalAlignmentType = {
+  Top: 0,
+  Middle: 1,
+  Bottom: 2
 };
 
 /* /enums/Visibility.js*/
-/*
-	Enum: primitives.common.Visibility
-		Defines nodes visibility mode.
-	
-	Auto - Auto select best visibility mode.
-	Normal - Show node in normal template mode.
-	Dot - Show node as dot.
-	Line - Show node as line.
-	Invisible - Make node invisible.
+/**
+ * @typedef {number} Visibility
+ **/
 
-	See Also:
 
-		<primitives.orgdiagram.Config.minimalVisibility>
-*/
-primitives.common.Visibility =
-{
-	Auto: 0,
-	Normal: 1,
-	Dot: 2,
-	Line: 3,
-	Invisible: 4
+/**
+ * Minimal nodes visibility in the diagram. If auto fit of diagram into current page size is enabled, then
+ * this option controls minimum allowed size of diagram nodes.
+ *  
+ * @enum {Visibility}
+ */
+primitives.common.Visibility = {
+  /**
+   * Selects best visibility mode.
+   */
+  Auto: 0,
+  /**
+   * Regular template based diagram nodes
+   */
+  Normal: 1,
+  /**
+   * Diagram draws nodes in form of markers
+   */
+  Dot: 2,
+  /**
+   * Diagram only draws connection lines and hides actuall nodes.
+   */
+  Line: 3,
+  /**
+   * Makes node invisible in layout. If node has no parents then 
+   * its connection lines are hidden as well.
+   * 
+   * @ignore
+   */
+  Invisible: 4
 };
 
 /* /enums/ZOrderType.js*/
-/*
-	Enum: primitives.common.ZOrderType
-		Defines elements Z order. This option is used to place annotations relative to chart.
-	
-	Auto - Auto selects best order depending on type of element.
-	Background - Place element in chart background.
-	Foreground - Place element into foreground.
-*/
-primitives.common.ZOrderType =
-{
-	Auto: 0,
-	Background: 1,
-	Foreground: 2
+/**
+ * @typedef {number} ZOrderType
+ **/
+
+/**
+ * Option to draw annotation in the foreground or in the backgound of diagram nodes.
+ *  
+ * @enum {ZOrderType}
+ */
+primitives.common.ZOrderType = {
+  /**
+   * Depends on annotation type.
+   */
+  Auto: 0,
+  Background: 1,
+  Foreground: 2
 };
 
 /* /events/RenderEventArgs.js*/
-/*
-	Class: primitives.common.RenderEventArgs
-		Rendering event details class.
-*/
+/**
+ * @class RenderEventArgs
+ * @classdesc This is object parameter of rendering callback function 
+ */
 primitives.common.RenderEventArgs = function () {
-	/*
-	Property: id
-	*/
-	this.id = null;
+  /**
+   * Node id
+   * @type {string}
+   */
+  this.id = null;
 
-	/*
-	Property: element
-		DOM element.
-	*/
-	this.element = null;
+  /**
+   * Reference to DOM element.
+   * @type {object}
+   */
+  this.element = null;
 
-	/*
-	Property: context
-		Reference to item.
-	*/
-	this.context = null;
+  /**
+   * Context object of the node
+   * @type {object}
+   */
+  this.context = null;
 
-	/*
-	Property: templateName
-		This is template name used to render this item.
+  /**
+   * Node template name
+   * @type {string}
+   */
+  this.templateName = null;
 
-		See Also:
-		<primitives.orgdiagram.TemplateConfig>
-		<primitives.orgdiagram.Config.templates> collection property.
-	*/
-	this.templateName = null;
+  /**
+   * This option indicates current template state.
+   * @type {RenderingMode}
+   */
+  this.renderingMode = null;
 
-	/*
-	Property: renderingMode
-		This option indicates current template state.
+  /**
+   * The rendered item is current diagram cursor item
+   * @type {boolean}
+   */
+  this.isCursor = false;
 
-	Default:
-		<primitives.common.RenderingMode.Update>
-
-	See also:
-		<primitives.common.RenderingMode>
-	*/
-	this.renderingMode = null;
-
-	/*
-	Property: isCursor
-		Rendered item is cursor.
-	*/
-	this.isCursor = false;
-
-	/*
-	Property: isSelected
-		Rendered item is selected.
-	*/
-	this.isSelected = false;
+	/**
+   * The rendered item is selected
+   * @type {boolean}
+   */
+  this.isSelected = false;
 };
 
 /* /graphics/shapes/BaseShape.js*/
@@ -3081,35 +3301,31 @@ primitives.common.Shape.prototype.draw = function (position, uiHash) {
 
 
 /* /graphics/structs/Point.js*/
-/*
-	Class: primitives.common.Point
-	Class represents pair of x and y coordinates that defines a point in 2D plane.
-
-	Parameters:
-		point - <primitives.common.Point> object.
-
-	Parameters:
-		x - X coordinate of 2D point.
-		y - Y coordinate of 2D point.
-*/
+/**
+ * @class Point
+ * @classdesc Class represents pair of x and y coordinates that define a point in 2D plane.
+ * 
+ * @param {Size} arg0 Point object to clone.
+ * 
+ * @param {number} arg0 The x coordinate.
+ * @param {number} arg1 The y coordinate.
+ */
 primitives.common.Point = function (arg0, arg1) {
-	/*
-	Property: x
-		The x coordinate.
-	*/
-
+	/**
+   * The x coordinate
+   * @type {number}
+   */
   this.x = null;
-	/*
-	Property: y
-		The y coordinate.
-	*/
-
+	/**
+   * The y coordinate
+   * @type {number}
+   */
   this.y = null;
 
-	/*
-	Property: context
-		This property holds reference to context object associated with this datapoint.
-	*/
+  /**
+   * Reference to the context object associated with this point.
+   * @type {object}
+   */
   this.context = null;
 
   switch (arguments.length) {
@@ -3127,27 +3343,28 @@ primitives.common.Point = function (arg0, arg1) {
   }
 };
 
-/*
-	Method: scale
-		Scales width and height.
-*/
+/**
+ * Scales the point location by the specified value
+ * 
+ * @param {number} scale
+ * @returns {Point} Returns reference to the current point.
+ */
 primitives.common.Point.prototype.scale = function (scale) {
   this.x = this.x * scale;
   this.y = this.y * scale;
   return this;
 };
 
-/*
-	Method: distanceTo
-		Returns distance to point.
-
-	Parameters:
-		point - <primitives.common.Point> object.
-
-	Parameters:
-		x - X coordinate of 2D point.
-		y - Y coordinate of 2D point.
-*/
+/**
+ * Calculates distance to the specified point
+ * 
+ * @param {Point} arg0 Point
+ * 
+ * @param {number} arg0 X coordinate
+ * @param {number} arg1 Y coordinate
+ * 
+ * @returns {number} Returns distance to the specified point
+ */
 primitives.common.Point.prototype.distanceTo = function (arg0, arg1) {
   var x2 = 0,
     y2 = 0,
@@ -3170,17 +3387,21 @@ primitives.common.Point.prototype.distanceTo = function (arg0, arg1) {
   return Math.sqrt(a * a + b * b);
 };
 
+/**
+ * Checks if points are equal
+ * 
+ * @param {Point} point Point
+ * @returns {boolean} Returns true if points are equal.
+ */
 primitives.common.Point.prototype.equalTo = function (point) {
   return this.x == point.x && this.y == point.y;
 };
 
-/*
-	Method: swap
-		Swaps values of two points.
-
-	Parameters:
-		point - <primitives.common.Point> object.
-*/
+/**
+ * Swaps values of 2 points
+ * 
+ * @param {Point} point The point to swap values with
+ */
 primitives.common.Point.prototype.swap = function (point) {
   var x = point.x,
     y = point.y;
@@ -3192,24 +3413,21 @@ primitives.common.Point.prototype.swap = function (point) {
   this.y = y;
 };
 
-/*
-	Method: clone
-		Clones current point.
-*/
+/**
+ * Clones the point
+ * 
+ * @returns {Point} Returns copy of the point.
+ */
 primitives.common.Point.prototype.clone = function () {
   return new primitives.common.Point(this);
 };
 
-/*
-	Method: toString
-		Returns rectangle location in form of CSS style string.
-
-	Parameters:
-		units - The string name of units. Uses "px" if not defined.
-
-	Returns:
-		CSS style string.
-*/
+/**
+ * Returns point in form of CSS style string.
+ * 
+ * @param {string} [units="px"] The string name of units.
+ * @returns {string} CSS style string.
+ */
 primitives.common.Point.prototype.toString = function (units) {
   var result = "";
 
@@ -3221,16 +3439,12 @@ primitives.common.Point.prototype.toString = function (units) {
   return result;
 };
 
-/*
-	Method: getCSS
-		Returns rectangle location in form of CSS style object.
-
-	Parameters:
-		units - The string name of units. Uses "px" if not defined.
-
-	Returns:
-		CSS style object.
-*/
+/**
+ * Returns size in form of CSS style object.
+ * 
+ * @param {string} [units="px"] The string name of units.
+ * @returns {object} CSS style object
+ */
 primitives.common.Point.prototype.getCSS = function (units) {
   units = (units !== undefined) ? units : "px";
 
@@ -3242,463 +3456,466 @@ primitives.common.Point.prototype.getCSS = function (units) {
 };
 
 /* /graphics/structs/Rect.js*/
-/*
-	Class: primitives.common.Rect
-	Class describes the width, height and location of rectangle.
-
-	Parameters:
-		rect - Copy constructor. It takes as a parameter copy of <primitives.common.Rect> object.
-
-	Parameters:
-		pointTopLeft - Top left point <primitives.common.Point> object.
-		pointBottomRight - Bottom right point <primitives.common.Point> object.
-
-	Parameters:
-		x - The x coordinate of top left corner.
-		y - The y coordinate of top left corner.
-		width - Rect width.
-		height - Rect height.
-*/
+/**
+ * @class Rect
+ * @classdesc Class describes the width, height and location of rectangle.
+ * 
+ * @param {Rect} arg0 Rectangle to clone.
+ * 
+ * @param {Point} arg0 The top left point.
+ * @param {Point} arg1 The bottom right point.
+ * 
+ * @param {number} arg0 The x coordinate of top left corner.
+ * @param {number} arg1 The y coordinate of top left corner.
+ * @param {number} arg2 Rect width.
+ * @param {number} arg3 Rect height.
+ */
 primitives.common.Rect = function (arg0, arg1, arg2, arg3) {
-	/*
-	Property: x
-		The location x coordinate.
-	*/
-	this.x = null;
-	/*
-	Property: y
-		The location y coordinate.
-	*/
-	this.y = null;
-	/*
-	Property: width
-		The width of rectangle.
-	*/
-	this.width = null;
-	/*
-	Property: height
-		The height of rectangle.
-	*/
-	this.height = null;
+  /**
+   * The location x coordinate
+   * @type {number}
+   */
+  this.x = null;
+	/**
+   * The location y coordinate
+   * @type {number}
+   */
+  this.y = null;
+  /**
+   * The width of rectangle.
+   * @type {number}
+   */
+  this.width = null;
+  /**
+   * The height of rectangle.
+   * @type {number}
+   */
+  this.height = null;
+  /**
+   * Reference to context object associated with this rectangle.
+   * @type {object}
+   */
+  this.context = null;
 
-	/*
-	Property: context
-		This property holds reference to context object associated with this rectangle.
-	*/
-	this.context = null;
-
-	switch (arguments.length) {
-		case 1:
-			this.x = arg0.x;
-			this.y = arg0.y;
-			this.width = arg0.width;
-			this.height = arg0.height;
-			break;
-		case 2:
-			this.x = Math.min(arg0.x, arg1.x);
-			this.y = Math.min(arg0.y, arg1.y);
-			this.width = Math.abs(arg1.x - arg0.x);
-			this.height = Math.abs(arg1.y - arg0.y);
-			break;
-		case 4:
-			this.x = arg0;
-			this.y = arg1;
-			this.width = arg2;
-			this.height = arg3;
-			break;
-		default:
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      this.x = arg0.x;
+      this.y = arg0.y;
+      this.width = arg0.width;
+      this.height = arg0.height;
+      break;
+    case 2:
+      this.x = Math.min(arg0.x, arg1.x);
+      this.y = Math.min(arg0.y, arg1.y);
+      this.width = Math.abs(arg1.x - arg0.x);
+      this.height = Math.abs(arg1.y - arg0.y);
+      break;
+    case 4:
+      this.x = arg0;
+      this.y = arg1;
+      this.width = arg2;
+      this.height = arg3;
+      break;
+    default:
+      break;
+  }
 };
 
-/*
-	Method: left
-		Gets the x-axis value of the left side of the rectangle.
-*/
+/**
+ * Left
+ * 
+ * @returns {number} Returns x coordinate of the rectangle
+ */
 primitives.common.Rect.prototype.left = function () {
-	return this.x;
+  return this.x;
 };
 
-/*
-	Method: top
-		Gets the y-axis value of the top side of the rectangle.
-*/
+/**
+ * Top
+ * 
+ * @returns {number} Returns y coordinate of the rectangle
+ */
 primitives.common.Rect.prototype.top = function () {
-	return this.y;
+  return this.y;
 };
 
-/*
-	Method: right
-		Gets the x-axis value of the right side of the rectangle.
-*/
+/**
+ * Right
+ * 
+ * @returns {number} Returns x-axis coordinate of the right side of the rectangle
+ */
 primitives.common.Rect.prototype.right = function () {
-	return this.x + this.width;
+  return this.x + this.width;
 };
 
-/*
-	Method: bottom
-		Gets the y-axis value of the bottom of the rectangle.
-*/
+/**
+ * Bottom
+ * 
+ * @returns {number} Returns y-axis coordinate of the bottom side of the rectangle
+ */
 primitives.common.Rect.prototype.bottom = function () {
-	return this.y + this.height;
+  return this.y + this.height;
 };
 
-/*
-	Method: verticalCenter
-		Gets the y-axis value of the center point of the rectangle.
-*/
+/**
+ * Vertical center
+ * 
+ * @returns {number} Returns y-axis coordinate of the center point of the rectangle.
+ */
 primitives.common.Rect.prototype.verticalCenter = function () {
-	return this.y + this.height / 2.0;
+  return this.y + this.height / 2.0;
 };
 
-/*
-	Method: horizontalCenter
-		Gets the x-axis value of the center point of the rectangle.
-*/
+/**
+ * Horizontal center
+ * 
+ * @returns {number} Returns x-axis coordinate of the center point of the rectangle.
+ */
 primitives.common.Rect.prototype.horizontalCenter = function () {
-	return this.x + this.width / 2.0;
+  return this.x + this.width / 2.0;
 };
 
-/*
-	Method: centerPoint
-		Gets the point of the geometrical center of the rectangle.
-*/
+/**
+ * Center point
+ * 
+ * @returns {Point} Returns center point of the rectangle.
+ */
 primitives.common.Rect.prototype.centerPoint = function () {
-	return new primitives.common.Point(this.horizontalCenter(), this.verticalCenter());
+  return new primitives.common.Point(this.horizontalCenter(), this.verticalCenter());
 };
 
-/*
-	Method: isEmpty
-		Gets the value that indicates whether  the rectangle is the Empty rectangle.
-*/
+/**
+ * Checks if rectangle is empty. Rectangle is empty if one of its sizes is undefined or less than zero.
+ * 
+ * @returns {boolean} Returns true if rectangle is empty.
+ */
 primitives.common.Rect.prototype.isEmpty = function () {
-	return this.x === null || this.y === null || this.width === null || this.height === null || this.width < 0 || this.height < 0;
+  return this.x === null || this.y === null || this.width === null || this.height === null || this.width < 0 || this.height < 0;
 };
 
-/*
-	Method: offset
-		Expands the rectangle by using specified value in all directions.
-
-	Parameters:
-		value - The amount by which to expand or shrink the sides of the rectangle.
-
-	Parameters:
-		left - The amount by which to expand or shrink the left side of the rectangle.	
-		top - The amount by which to expand or shrink the top side of the rectangle.		
-		right - The amount by which to expand or shrink the right side of the rectangle.		
-		bottom - The amount by which to expand or shrink the bottom side of the rectangle.		
-*/
+/**
+ * Expands rectangle boundaries by using specified value in all directions. Value can be negative.
+ * 
+ * @param {number} arg0 The amount by which to expand or shrink the sides of the rectangle.
+ * @param {number} arg0 Left side
+ * @param {number} arg1 Top side
+ * @param {number} arg2 Right side
+ * @param {number} arg3 Bottom side
+ */
 primitives.common.Rect.prototype.offset = function (arg0, arg1, arg2, arg3) {
-	switch (arguments.length) {
-		case 1:
-			if (arg0 !== null && typeof arg0 == "object") {
-				this.x = this.x - arg0.left;
-				this.y = this.y - arg0.top;
+  switch (arguments.length) {
+    case 1:
+      if (arg0 !== null && typeof arg0 == "object") {
+        this.x = this.x - arg0.left;
+        this.y = this.y - arg0.top;
 
-				this.width = this.width + arg0.left + arg0.right;
-				this.height = this.height + arg0.top + arg0.bottom;
-			} else {
-				this.x = this.x - arg0;
-				this.y = this.y - arg0;
+        this.width = this.width + arg0.left + arg0.right;
+        this.height = this.height + arg0.top + arg0.bottom;
+      } else {
+        this.x = this.x - arg0;
+        this.y = this.y - arg0;
 
-				this.width = this.width + arg0 * 2.0;
-				this.height = this.height + arg0 * 2.0;
-			}
-			break;
-		case 4:
-			this.x = this.x - arg0;
-			this.y = this.y - arg1;
+        this.width = this.width + arg0 * 2.0;
+        this.height = this.height + arg0 * 2.0;
+      }
+      break;
+    case 4:
+      this.x = this.x - arg0;
+      this.y = this.y - arg1;
 
-			this.width = this.width + arg0 + arg2;
-			this.height = this.height + arg1 + arg3;
-			break;
-	}
-	return this;
+      this.width = this.width + arg0 + arg2;
+      this.height = this.height + arg1 + arg3;
+      break;
+  }
+  return this;
 };
 
-/*
-	Method: scale
-		Scales rectangle position.
-*/
+/**
+ * Scales the rectangle by the specified value
+ * 
+ * @param {number} scale
+ * @returns {Rect} Returns reference to the current rectangle.
+ */
 primitives.common.Rect.prototype.scale = function (scale) {
-	this.x = this.x * scale;
-	this.y = this.y * scale;
-	this.width = this.width * scale;
-	this.height = this.height * scale;
-	return this;
+  this.x = this.x * scale;
+  this.y = this.y * scale;
+  this.width = this.width * scale;
+  this.height = this.height * scale;
+  return this;
 };
 
-/*
-	Method: translate
-		Moves the rectangle to by the specified horizontal and vertical amounts.
-
-	Parameters:
-		x - The amount to move the rectangle horizontally.
-		y - The amount to move the rectangle vertically.
-*/
+/**
+ * Moves the rectangle by the specified horizontal and vertical offsets.
+ * 
+ * @param {number} x Horizontal offset
+ * @param {number} y Vertical offset
+ * 
+ * @returns {Rect} Returns reference to the current rectangle.
+ */
 primitives.common.Rect.prototype.translate = function (x, y) {
-	this.x = this.x + x;
-	this.y = this.y + y;
+  this.x = this.x + x;
+  this.y = this.y + y;
 
-	return this;
+  return this;
 };
 
-/*
-	Method: invert
-		Inverts rectangle.
-*/
+/**
+ * Inverts rectangle coordinates
+ * 
+ * @returns {Rect} Returns reference to the current rectangle.
+ */
 primitives.common.Rect.prototype.invert = function () {
-	var width = this.width,
-		x = this.x;
-	this.width = this.height;
-	this.height = width;
-	this.x = this.y;
-	this.y = x;
-	return this;
+  var width = this.width,
+    x = this.x;
+  this.width = this.height;
+  this.height = width;
+  this.x = this.y;
+  this.y = x;
+  return this;
 };
 
-/*
-	Method: loopEdges
-		Loops edges of rectangle in the following order: Top, Right, Bottom, Left
+/**
+ * Callback for iterating rectangle's sides
+ *
+ * @callback loopRectEdgesCallback
+ * @param {Vector} vector Vector connecting two corners of the rectangle's side
+ * @param {PlacementType} placementType The current side
+ * @returns {boolean} Returns true to break iteration process
+ */
+
+/**
+ * Loops edges of the rectangle in the clockwise order: Top, Right, Bottom, Left
+ *
+ * @param {loopRectEdgesCallback} callback A callback function to iterate over sides of the rectangle. 
+ * @returns {Rect} Returns reference to the current rectangle.
 */
 primitives.common.Rect.prototype.loopEdges = function (callback) { // function(vector, placementType) {}
-	var vertexes = [
-		new primitives.common.Point(this.left(), this.top()),
-		new primitives.common.Point(this.right(), this.top()),
-		new primitives.common.Point(this.right(), this.bottom()),
-		new primitives.common.Point(this.left(), this.bottom())
-	],
-	placements = [
-		1/*primitives.common.PlacementType.Top*/,
-		3/*primitives.common.PlacementType.Right*/,
-		5/*primitives.common.PlacementType.Bottom*/,
-		7/*primitives.common.PlacementType.Left*/
-	];
+  var vertexes = [
+    new primitives.common.Point(this.left(), this.top()),
+    new primitives.common.Point(this.right(), this.top()),
+    new primitives.common.Point(this.right(), this.bottom()),
+    new primitives.common.Point(this.left(), this.bottom())
+  ],
+    placements = [
+      1/*primitives.common.PlacementType.Top*/,
+      3/*primitives.common.PlacementType.Right*/,
+      5/*primitives.common.PlacementType.Bottom*/,
+      7/*primitives.common.PlacementType.Left*/
+    ];
 
-	vertexes.push(vertexes[0]);
+  vertexes.push(vertexes[0]);
 
 
 
-	if (callback != null) {
-		for (var index = 1, len = vertexes.length; index < len; index += 1) {
-			if (callback(new primitives.common.Vector(vertexes[index - 1], vertexes[index]), placements[index - 1])) {
-				break;
-			}
-		}
-	}
-	return this;
+  if (callback != null) {
+    for (var index = 1, len = vertexes.length; index < len; index += 1) {
+      if (callback(new primitives.common.Vector(vertexes[index - 1], vertexes[index]), placements[index - 1])) {
+        break;
+      }
+    }
+  }
+  return this;
 };
 
-/*
-	Method: contains
-		Indicates whether the rectangle contains the specified point.
-
-	Parameters:
-		point - The point to check.
-
-	Parameters:	
-		x - The x coordinate of the point to check.
-		y - The y coordinate of the point to check.
-	
-	Returns:
-		true if the rectangle contains the specified point; otherwise, false.	
-*/
+/**
+ * Checks if the rectangle contains given point
+ * 
+ * @param {Point} arg0 The point to check.
+ * 
+ * @param {number} arg0  The x coordinate of the point to check.
+ * @param {number} arg1  The y coordinate of the point to check.
+ * @returns {boolean} Returns true if the rectangle contains the specified point; otherwise, false.
+ */
 primitives.common.Rect.prototype.contains = function (arg0, arg1) {
-	switch (arguments.length) {
-		case 1:
-			return this.x <= arg0.x && arg0.x <= this.x + this.width && this.y <= arg0.y && arg0.y <= this.y + this.height;
-		case 2:
-			return this.x <= arg0 && arg0 <= this.x + this.width && this.y <= arg1 && arg1 <= this.y + this.height;
-		default:
-			return false;
-	}
+  switch (arguments.length) {
+    case 1:
+      return this.x <= arg0.x && arg0.x <= this.x + this.width && this.y <= arg0.y && arg0.y <= this.y + this.height;
+    case 2:
+      return this.x <= arg0 && arg0 <= this.x + this.width && this.y <= arg1 && arg1 <= this.y + this.height;
+    default:
+      return false;
+  }
 };
 
-/*
-	Method: cropByRect
-		Crops the rectangle by the boundaries of specified rectangle.
-
-	Parameters:
-		rect - The rectangle to use as the crop boundaries.
-*/
+/**
+ * Crops the rectangle by the boundaries of the specified rectangle.
+ * 
+ * @param {Rect} rect The rectangle that is used to crop boundaries by
+ * @returns {Rect} Returns reference to the current rectangle.
+ */
 primitives.common.Rect.prototype.cropByRect = function (rect) {
-	if (this.x < rect.x) {
-		this.width -= (rect.x - this.x);
-		this.x = rect.x;
-	}
+  if (this.x < rect.x) {
+    this.width -= (rect.x - this.x);
+    this.x = rect.x;
+  }
 
-	if (this.right() > rect.right()) {
-		this.width -= (this.right() - rect.right());
-	}
+  if (this.right() > rect.right()) {
+    this.width -= (this.right() - rect.right());
+  }
 
-	if (this.y < rect.y) {
-		this.height -= (rect.y - this.y);
-		this.y = rect.y;
-	}
+  if (this.y < rect.y) {
+    this.height -= (rect.y - this.y);
+    this.y = rect.y;
+  }
 
-	if (this.bottom() > rect.bottom()) {
-		this.height -= this.bottom() - rect.bottom();
-	}
+  if (this.bottom() > rect.bottom()) {
+    this.height -= this.bottom() - rect.bottom();
+  }
 
-	if (this.isEmpty()) {
-		this.x = null;
-		this.y = null;
-		this.width = null;
-		this.height = null;
-	}
+  if (this.isEmpty()) {
+    this.x = null;
+    this.y = null;
+    this.width = null;
+    this.height = null;
+  }
 
-	return this;
+  return this;
 };
 
-/*
-	Method: overlaps
-		Returns true if the rectangle overlaps specified rectangle.
-
-	Parameters:
-		rect - The rectangle to use as overlaping rectangle.
-*/
+/**
+ * Checks if the rectangle overlaps the specified rectangle
+ * 
+ * @param {Rect} rect The rectangle to check overlaping for.
+ * @returns {boolean} Returns true if two rectangles overlap each other.
+ */
 primitives.common.Rect.prototype.overlaps = function (rect) {
-	var result = true;
-	if (this.x + this.width < rect.x || rect.x + rect.width < this.x || this.y + this.height < rect.y || rect.y + rect.height < this.y) {
-		result = false;
-	}
-	return result;
+  var result = true;
+  if (this.x + this.width < rect.x || rect.x + rect.width < this.x || this.y + this.height < rect.y || rect.y + rect.height < this.y) {
+    result = false;
+  }
+  return result;
 };
 
-/*
-	Method: addRect
-		Expands the current rectangle to contain specified rectangle.
-
-	Parameters:
-		rect - The rectangle to contain.
-
-	Parameters:	
-		x - The x coordinate of the point to contain.
-		y - The y coordinate of the point to contain.
-
-	Parameters:
-		x - The x coordinate of top left corner.
-		y - The y coordinate of top left corner.
-		width - Rect width.
-		height - Rect height.
-*/
+/**
+ * Expands the rectangle boundaries to contain the specified rectangle.
+ * 
+ * @param {Rect} arg0 The rectangle to contain.
+ * 
+ * @param {number} arg0 The x coordinate of top left corner.
+ * @param {number} arg1 The y coordinate of top left corner.
+ * @param {number} [arg2=undefined] Width.
+ * @param {number} [arg3=undefined] Height.
+ * @returns {Rect} Returns reference to the current rectangle.
+ */
 primitives.common.Rect.prototype.addRect = function (arg0, arg1, arg2, arg3) {
-	var right,
-		bottom;
-	switch (arguments.length) {
-		case 1:
-			if (!arg0.isEmpty()) {
-				if (this.isEmpty()) {
-					this.x = arg0.x;
-					this.y = arg0.y;
-					this.width = arg0.width;
-					this.height = arg0.height;
-				}
-				else {
-					right = Math.max(this.right(), arg0.right());
-					bottom = Math.max(this.bottom(), arg0.bottom());
+  var right,
+    bottom;
+  switch (arguments.length) {
+    case 1:
+      if (!arg0.isEmpty()) {
+        if (this.isEmpty()) {
+          this.x = arg0.x;
+          this.y = arg0.y;
+          this.width = arg0.width;
+          this.height = arg0.height;
+        }
+        else {
+          right = Math.max(this.right(), arg0.right());
+          bottom = Math.max(this.bottom(), arg0.bottom());
 
-					this.x = Math.min(this.x, arg0.x);
-					this.y = Math.min(this.y, arg0.y);
-					this.width = right - this.x;
-					this.height = bottom - this.y;
-				}
-			}
-			break;
-		case 2:
-			if (this.isEmpty()) {
-				this.x = arg0;
-				this.y = arg1;
-				this.width = 0;
-				this.height = 0;
-			}
-			else {
-				right = Math.max(this.right(), arg0);
-				bottom = Math.max(this.bottom(), arg1);
+          this.x = Math.min(this.x, arg0.x);
+          this.y = Math.min(this.y, arg0.y);
+          this.width = right - this.x;
+          this.height = bottom - this.y;
+        }
+      }
+      break;
+    case 2:
+      if (this.isEmpty()) {
+        this.x = arg0;
+        this.y = arg1;
+        this.width = 0;
+        this.height = 0;
+      }
+      else {
+        right = Math.max(this.right(), arg0);
+        bottom = Math.max(this.bottom(), arg1);
 
-				this.x = Math.min(this.x, arg0);
-				this.y = Math.min(this.y, arg1);
-				this.width = right - this.x;
-				this.height = bottom - this.y;
-			}
-			break;
-		case 4:
-			if (this.isEmpty()) {
-				this.x = arg0;
-				this.y = arg1;
-				this.width = arg2;
-				this.height = arg3;
-			}
-			else {
-				right = Math.max(this.right(), arg0 + arg2);
-				bottom = Math.max(this.bottom(), arg1 + arg3);
+        this.x = Math.min(this.x, arg0);
+        this.y = Math.min(this.y, arg1);
+        this.width = right - this.x;
+        this.height = bottom - this.y;
+      }
+      break;
+    case 4:
+      if (this.isEmpty()) {
+        this.x = arg0;
+        this.y = arg1;
+        this.width = arg2;
+        this.height = arg3;
+      }
+      else {
+        right = Math.max(this.right(), arg0 + arg2);
+        bottom = Math.max(this.bottom(), arg1 + arg3);
 
-				this.x = Math.min(this.x, arg0);
-				this.y = Math.min(this.y, arg1);
-				this.width = right - this.x;
-				this.height = bottom - this.y;
-			}
-			break;
-	}
+        this.x = Math.min(this.x, arg0);
+        this.y = Math.min(this.y, arg1);
+        this.width = right - this.x;
+        this.height = bottom - this.y;
+      }
+      break;
+  }
 
-	return this;
+  return this;
 };
 
-/*
-	Method: getCSS
-		Returns rectangle location and size in form of CSS style object.
-
-	Parameters:
-		units - The string name of units. Uses "px" if not defined.
-
-	Returns:
-		CSS style object.
-*/
+/**
+ * Returns rectangle location and size in form of CSS style object.
+ * 
+ * @param {string} [units="px"] The string name of units.
+ * @returns {object} CSS style object
+ */
 primitives.common.Rect.prototype.getCSS = function (units) {
-	units = (units !== undefined) ? units : "px";
+  units = (units !== undefined) ? units : "px";
 
-	var result = {
-		left: this.x + units,
-		top: this.y + units,
-		width: this.width + units,
-		height: this.height + units
-	};
-	return result;
+  var result = {
+    left: this.x + units,
+    top: this.y + units,
+    width: this.width + units,
+    height: this.height + units
+  };
+  return result;
 };
 
-/*
-	Method: toString
-		Returns rectangle location and size in form of CSS style string.
-
-	Parameters:
-		units - The string name of units. Uses "px" if not defined.
-
-	Returns:
-		CSS style string.
-*/
+/**
+ * Returns rectangle location and size in form of CSS style string.
+ * 
+ * @param {string} [units="px"] The string name of units.
+ * @returns {string} CSS style string.
+ */
 primitives.common.Rect.prototype.toString = function (units) {
-	var result = "";
+  var result = "";
 
-	units = (units !== undefined) ? units : "px";
+  units = (units !== undefined) ? units : "px";
 
-	result += "left:" + this.x + units + ";";
-	result += "top:" + this.y + units + ";";
-	result += "width:" + this.width + units + ";";
-	result += "height:" + this.height + units + ";";
+  result += "left:" + this.x + units + ";";
+  result += "top:" + this.y + units + ";";
+  result += "width:" + this.width + units + ";";
+  result += "height:" + this.height + units + ";";
 
-	return result;
+  return result;
 };
 
+/**
+ * Validates rectangle properties
+ * 
+ * @returns {boolean} Returns true if rectangle properties are valid.
+ */
 primitives.common.Rect.prototype.validate = function () {
-	if (isNaN(this.x) || isNaN(this.y) || isNaN(this.width) || isNaN(this.height)) {
-		throw "Invalid rect position.";
-	}
+  if (isNaN(this.x) || isNaN(this.y) || isNaN(this.width) || isNaN(this.height)) {
+    throw "Invalid rect position.";
+  }
 };
 
+/**
+ * Checks if rectangles are equal
+ * 
+ * @param {Rect} rect Rectangle
+ * @returns {boolean} Returns true if rectangles are equal.
+ */
 primitives.common.Rect.prototype.equalTo = function (rect) {
-	return this.x == rect.x && this.y == rect.y && this.width == rect.width && this.height == rect.height;
+  return this.x == rect.x && this.y == rect.y && this.width == rect.width && this.height == rect.height;
 };
-
 
 
 /* /graphics/structs/MoveSegment.js*/
@@ -3925,47 +4142,49 @@ primitives.common.LineSegment.prototype.offsetPoint = function (first, second, o
 };
 
 /* /graphics/structs/Matrix.js*/
-/*
-	Class: primitives.common.Matrix
-	Class represents square matrix having 2 rows and 2 columns.
-
-	Parameters:
-		matrix - <primitives.common.Matrix> object.
-
-	Parameters:
-		a1 - top left.
-		b1 - top right.
-		a2 - bottom left
-		b2 - bottom right
-*/
+/**
+ * @class Matrix
+ * @classdesc Square matrix having 2 rows and 2 columns.
+ * 
+ * @param {Matrix} arg0 Matrix to clone
+ * 
+ * @param {number} arg0 A1 - top left.
+ * @param {number} arg1 B1 - top right.
+ * @param {number} arg2 A2 - bottom left.
+ * @param {number} arg3 B2 - bottom right.
+ */
 primitives.common.Matrix = function (arg0, arg1, arg2, arg3) {
 
-	this.a1 = null;
-	this.b1 = null;
-	this.a2 = null;
-	this.b2 = null;
+  this.a1 = null;
+  this.b1 = null;
+  this.a2 = null;
+  this.b2 = null;
 
-	switch (arguments.length) {
-		case 1:
-			this.a1 = arg0.a1;
-			this.b1 = arg0.b1;
-			this.a2 = arg0.a2;
-			this.b2 = arg0.b2;
-			break;
-		case 4:
-			this.a1 = arg0;
-			this.b1 = arg1;
-			this.a2 = arg2;
-			this.b2 = arg3;
-			break;
-		default:
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      this.a1 = arg0.a1;
+      this.b1 = arg0.b1;
+      this.a2 = arg0.a2;
+      this.b2 = arg0.b2;
+      break;
+    case 4:
+      this.a1 = arg0;
+      this.b1 = arg1;
+      this.a2 = arg2;
+      this.b2 = arg3;
+      break;
+    default:
+      break;
+  }
 };
 
-
+/**
+ * Finds matrix determinant
+ * 
+ * @returns {number} Returns matrix determinant
+ */
 primitives.common.Matrix.prototype.determinant = function () {
-	return this.a1 * this.b2 - this.b1 * this.a2;
+  return this.a1 * this.b2 - this.b1 * this.a2;
 };
 
 /* /graphics/structs/PaletteItem.js*/
@@ -4727,407 +4946,439 @@ primitives.common.QuadraticArcSegment.prototype.offsetPoint = function (firstX, 
 };
 
 /* /graphics/structs/Size.js*/
-/*
-	Class: primitives.common.Size
-	Class describes the size of an object.
-
-	Parameters:
-		size - Copy constructor. It takes as a parameter copy of <primitives.common.Size> object.
-
-	Parameters:
-		width - The initial width of the instance.
-		height - The initial height of the instance.
-*/
+/**
+ * @class Size
+ * @classdesc Size object defines width and height.
+ * 
+ * @param {Size} arg0 Size object to clone.
+ * 
+ * @param {number} arg0 Width.
+ * @param {number} arg1 Height.
+ */
 primitives.common.Size = function (arg0, arg1) {
-	/*
-	Property: width
-		The value that specifies the width of the size class.
-	*/
+  /**
+   * The width
+   * @type {number}
+   */
+  this.width = 0;
 
-	this.width = 0;
+  /**
+   * The height
+   * @type {number}
+   */
+  this.height = 0;
 
-	/*
-	Property: height
-		The value that specifies the height of the size class.
-	*/
-
-	this.height = 0;
-
-	switch (arguments.length) {
-		case 1:
-			this.width = arg0.width;
-			this.height = arg0.height;
-			break;
-		case 2:
-			this.width = arg0;
-			this.height = arg1;
-			break;
-		default:
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      this.width = arg0.width;
+      this.height = arg0.height;
+      break;
+    case 2:
+      this.width = arg0;
+      this.height = arg1;
+      break;
+    default:
+      break;
+  }
 };
 
-/*
-	Method: invert
-		Swaps width and height.
-*/
+/**
+ * Inverts size dimensions
+ * 
+ * @returns {Size} Returns reference to the current size.
+ */
 primitives.common.Size.prototype.invert = function () {
-	var width = this.width;
-	this.width = this.height;
-	this.height = width;
-	return this;
+  var width = this.width;
+  this.width = this.height;
+  this.height = width;
+  return this;
 };
 
-/*
-	Method: scale
-		Scales width and height.
-*/
+/**
+ * Scales the size by the specified value
+ * 
+ * @param {number} scale
+ * @returns {Size} Returns reference to the current size.
+ */
 primitives.common.Size.prototype.scale = function (scale) {
-	this.width = this.width * scale;
-	this.height = this.height * scale;
-	return this;
+  this.width = this.width * scale;
+  this.height = this.height * scale;
+  return this;
 };
 
-/*
-	Method: getCSS
-		Returns rectangle location and size in form of CSS style object.
 
-	Parameters:
-		units - The string name of units. Uses "px" if not defined.
-
-	Returns:
-		CSS style object.
-*/
+/**
+ * Returns size in form of CSS style object.
+ * 
+ * @param {string} [units="px"] The string name of units.
+ * @returns {object} CSS style object
+ */
 primitives.common.Size.prototype.getCSS = function (units) {
-	units = (units !== undefined) ? units : "px";
+  units = (units !== undefined) ? units : "px";
 
-	var result = {
-		left: this.x + units,
-		top: this.y + units,
-		width: this.width + units,
-		height: this.height + units
-	};
-	return result;
+  var result = {
+    left: this.x + units,
+    top: this.y + units,
+    width: this.width + units,
+    height: this.height + units
+  };
+  return result;
 };
 
-/*
-	Method: cropBySize
-		Crops the size by the other size.
-
-	Parameters:
-		size - The size to use as the crop boundaries.
-*/
+/**
+ * Crops the size by the other size object.
+ * 
+ * @param {Size} size The size to use as the crop boundaries.
+ * @returns {Size} Returns reference to the current size object
+ */
 primitives.common.Size.prototype.cropBySize = function (size) {
-	this.width = Math.min(this.width, size.width);
-	this.height = Math.min(this.height, size.height);
+  this.width = Math.min(this.width, size.width);
+  this.height = Math.min(this.height, size.height);
 
-	return this;
+  return this;
 };
 
-/*
-	Method: addSize
-		Extend size by the other size.
-
-	Parameters:
-		size - The size to use as extension.
-*/
+/**
+ * Extends the current size by the other size.
+ * 
+ * @param {Size} size The size to use as extension.
+ * @returns {Size} Returns reference to the current size object
+ */
 primitives.common.Size.prototype.addSize = function (size) {
-	this.width = Math.max(this.width, size.width);
-	this.height = Math.max(this.height, size.height);
+  this.width = Math.max(this.width, size.width);
+  this.height = Math.max(this.height, size.height);
 
-	return this;
+  return this;
 };
 
+/**
+ * Validates size properties
+ * 
+ * @returns {boolean} Returns true if size properties are valid.
+ */
 primitives.common.Size.prototype.validate = function () {
-	if (isNaN(this.width) || isNaN(this.height)) {
-		throw "Invalid size.";
-	}
+  if (isNaN(this.width) || isNaN(this.height)) {
+    throw "Invalid size.";
+  }
 };
 
 /* /graphics/structs/Thickness.js*/
-/*
-	Class: primitives.common.Thickness
-	Class describes the thickness of a frame around rectangle.
-
-	Parameters:
-		left - The thickness for the left side of the rectangle.
-		height - The thickness for the upper side of the rectangle.
-		right - The thickness for the right side of the rectangle.
-		bottom - The thickness for the bottom side of the rectangle.
-*/
+/**
+ * @class Thickness
+ * @classdesc Class describes the thickness of a frame around rectangle.
+ * 
+ * @param {number} left Left.
+ * @param {number} top Top.
+ * @param {number} right Right.
+ * @param {number} bottom Bottom.
+ */
 primitives.common.Thickness = function (left, top, right, bottom) {
-	/*
-	Property: left
-		The thickness for the left side of the rectangle.
-	*/
+  /**
+   * The thickness for the left side of the rectangle.
+   */
+  this.left = left;
 
-	this.left = left;
+  /**
+   * The thickness for the upper side of the rectangle.
+   */
+  this.top = top;
 
-	/*
-	Property: top
-		The thickness for the upper side of the rectangle.
-	*/
+  /**
+   * The thickness for the right side of the rectangle.
+   */
+  this.right = right;
 
-	this.top = top;
-
-	/*
-	Property: right
-		The thickness for the right side of the rectangle.
-	*/
-	this.right = right;
-
-	/*
-	Property: bottom
-		The thickness for the bottom side of the rectangle.
-	*/
-	this.bottom = bottom;
+  /**
+   * The thickness for the bottom side of the rectangle.
+   */
+  this.bottom = bottom;
 };
 
-/*
-	Method: isEmpty
-		Gets the value that indicates whether the thickness is the Empty.
-*/
-
+/**
+ * Checks object is empty
+ * 
+ * @returns {boolean} Returns true if object has no thickness defined for any of its sides
+ */
 primitives.common.Thickness.prototype.isEmpty = function () {
-	return this.left === 0 && this.top === 0 && this.right === 0 && this.bottom === 0;
+  return this.left === 0 && this.top === 0 && this.right === 0 && this.bottom === 0;
 };
 
-/*
-	Method: toString
-		Returns thickness in form of CSS style string. It is conversion to padding style string.
-
-	Parameters:
-		units - The string name of units. Uses "px" if not defined.
-
-	Returns:
-		CSS style string.
-*/
-
+/**
+ * Returns thickness object in form of CSS style string. It is conversion to padding style string.
+ * 
+ * @param {string} [units="px"] The string name of units.
+ * @returns {string} CSS style string.
+ */
 primitives.common.Thickness.prototype.toString = function (units) {
-	units = (units !== undefined) ? units : "px";
+  units = (units !== undefined) ? units : "px";
 
-	return this.left + units + ", " + this.top + units + ", " + this.right + units + ", " + this.bottom + units;
+  return this.left + units + ", " + this.top + units + ", " + this.right + units + ", " + this.bottom + units;
 };
 
 /* /graphics/structs/Vector.js*/
-/*
-	Class: primitives.common.Vector
-	Class represents pair of points that defines a vector in 2D plane.
-
-	Parameters:
-		vector - <primitives.common.Vector> object.
-
-	Parameters:
-		from - From 2D point.
-		to - To 2D point.
-*/
+/**
+ * @class Vector
+ * @classdesc Class defines a vector in 2D plane.
+ * 
+ * @param {Vector} arg0 Vector object to clone.
+ * 
+ * @param {Point} arg0 From point.
+ * @param {Point} arg1 To point
+ */
 primitives.common.Vector = function (arg0, arg1) {
-	/*
-	Property: from
-		The from point of vector.
-	*/
+  /**
+   * The start point
+   */
+  this.from = null;
 
-	this.from = null;
+  /**
+   * The end point
+   */
+  this.to = null;
 
-	/*
-	Property: to
-		The to point of vector.
-	*/
+  /**
+   * Reference to context object associated with this vector.
+   * @type {object}
+   */
+  this.context = null;
 
-	this.to = null;
-
-	/*
-	Property: context
-		This property holds reference to context object associated with this vector.
-	*/
-	this.context = null;
-
-	switch (arguments.length) {
-		case 1:
-			this.from = arg0.from;
-			this.to = arg0.to;
-			break;
-		case 2:
-			this.from = arg0;
-			this.to = arg1;
-			break;
-		default:
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      this.from = arg0.from;
+      this.to = arg0.to;
+      break;
+    case 2:
+      this.from = arg0;
+      this.to = arg1;
+      break;
+    default:
+      break;
+  }
 };
 
+/**
+ * Checks if start and end points are the same
+ * 
+ * @returns {boolean} Returns true if start and end points are the same.
+ */
 primitives.common.Vector.prototype.isNull = function () {
-	return this.from.x == this.to && this.from.y == this.to.y;
+  return this.from.x == this.to && this.from.y == this.to.y;
 };
 
-/*
-	Method: length
-		Returns length of vector.
-
-	Returns:
-		Vector length.
-*/
+/**
+ * Vector length
+ * 
+ * @returns {number} Returns vector length
+ */
 primitives.common.Vector.prototype.length = function () {
-	return this.from.distanceTo(this.to);
+  return this.from.distanceTo(this.to);
 };
 
+/**
+ * Checks if vectors are equal
+ * 
+ * @param {Vector} vector Vector
+ * @returns {boolean} Returns true if vectors are equal.
+ */
 primitives.common.Vector.prototype.equalTo = function (vector) {
-	return this.from.equalTo(vector.from) && this.to.equalTo(vector.to);
+  return this.from.equalTo(vector.from) && this.to.equalTo(vector.to);
 };
 
+/**
+ * Returns middle point of the current vector
+ * 
+ * @returns {Point} Returns middle point
+ */
 primitives.common.Vector.prototype.getMiddlePoint = function () {
-	return new primitives.common.Point((this.from.x + this.to.x) / 2, (this.from.y + this.to.y) / 2);
+  return new primitives.common.Point((this.from.x + this.to.x) / 2, (this.from.y + this.to.y) / 2);
 };
 
+/**
+ * Finds how two vectors relate to each other
+ * 
+ * @param {Vector} vector The vector to relate with
+ * @returns {VectorRelationType} Returns how the vector relates to the specified vector
+ */
 primitives.common.Vector.prototype.relateTo = function (vector) {
-	var result = 0/*primitives.common.VectorRelationType.None*/,
-		x1 = this.to.x - this.from.x,
-		y1 = this.to.y - this.from.y,
-		x2 = vector.to.x - vector.from.x,
-		y2 = vector.to.y - vector.from.y,
-		key = (x1 ? 8 : 0) + (y1 ? 4 : 0) + (x2 ? 2 : 0) + (y2 ? 1 : 0);
+  var result = 0/*primitives.common.VectorRelationType.None*/,
+    x1 = this.to.x - this.from.x,
+    y1 = this.to.y - this.from.y,
+    x2 = vector.to.x - vector.from.x,
+    y2 = vector.to.y - vector.from.y,
+    key = (x1 ? 8 : 0) + (y1 ? 4 : 0) + (x2 ? 2 : 0) + (y2 ? 1 : 0);
 
-	switch (key) {
-		case 0: //0000
-		case 1: //0001
-		case 2: //0010
-		case 3: //0011
-		case 4: //0100
-		case 8: //1000
-		case 12://1100
-			result = 1/*primitives.common.VectorRelationType.Null*/;
-			break;
-		case 5: //0101
-			if (y1 * y2 > 0) {
-				result = 2/*primitives.common.VectorRelationType.Collinear*/;
-			} else {
-				result = 3/*primitives.common.VectorRelationType.Opposite*/;
-			}
-			break;
-		case 10://1010
-			if (x1 * x2 > 0) {
-				result = 2/*primitives.common.VectorRelationType.Collinear*/;
-			} else {
-				result = 3/*primitives.common.VectorRelationType.Opposite*/;
-			}
-			break;
-		case 15://1111
-			if (x1 / x2 == y1 / y2) {
-				if (x1 / x2 > 0) {
-					result = 2/*primitives.common.VectorRelationType.Collinear*/;
-				} else {
-					result = 3/*primitives.common.VectorRelationType.Opposite*/;
-				}
-			}
-			break;
-	}
-	return result;
+  switch (key) {
+    case 0: //0000
+    case 1: //0001
+    case 2: //0010
+    case 3: //0011
+    case 4: //0100
+    case 8: //1000
+    case 12://1100
+      result = 1/*primitives.common.VectorRelationType.Null*/;
+      break;
+    case 5: //0101
+      if (y1 * y2 > 0) {
+        result = 2/*primitives.common.VectorRelationType.Collinear*/;
+      } else {
+        result = 3/*primitives.common.VectorRelationType.Opposite*/;
+      }
+      break;
+    case 10://1010
+      if (x1 * x2 > 0) {
+        result = 2/*primitives.common.VectorRelationType.Collinear*/;
+      } else {
+        result = 3/*primitives.common.VectorRelationType.Opposite*/;
+      }
+      break;
+    case 15://1111
+      if (x1 / x2 == y1 / y2) {
+        if (x1 / x2 > 0) {
+          result = 2/*primitives.common.VectorRelationType.Collinear*/;
+        } else {
+          result = 3/*primitives.common.VectorRelationType.Opposite*/;
+        }
+      }
+      break;
+  }
+  return result;
 };
 
+/**
+ * Offsets vector coordinates
+ * 
+ * @param {number} offset Offset
+ */
 primitives.common.Vector.prototype.offset = function (offset) {
-	var length = this.length(),
-		/* in order to rotate right multiply vector on 3D vector (0, 0, -1)*/
-		x = (this.to.y - this.from.y) * offset / length,
-		y = - (this.to.x - this.from.x) * offset / length;
+  var length = this.length(),
+    /* in order to rotate right multiply vector on 3D vector (0, 0, -1)*/
+    x = (this.to.y - this.from.y) * offset / length,
+    y = - (this.to.x - this.from.x) * offset / length;
 
-	this.from.x += x;
-	this.from.y += y;
-	this.to.x += x;
-	this.to.y += y;
+  this.from.x += x;
+  this.from.y += y;
+  this.to.x += x;
+  this.to.y += y;
 };
 
+/**
+ * Gets line
+ * 
+ * @returns {number[]} Returns line coefficients
+ */
 primitives.common.Vector.prototype.getLine = function () {
-	var x1 = this.from.x,
-		y1 = this.from.y,
-		x2 = this.to.x,
-		y2 = this.to.y,
-		a = y2 - y1,
-		b = x1 - x2,
-		c = x1 * (y1 - y2) + y1 * (x2 - x1);
+  var x1 = this.from.x,
+    y1 = this.from.y,
+    x2 = this.to.x,
+    y2 = this.to.y,
+    a = y2 - y1,
+    b = x1 - x2,
+    c = x1 * (y1 - y2) + y1 * (x2 - x1);
 
-	return [a, b, c];
+  return [a, b, c];
 };
 
+/**
+ * Gets line key
+ * 
+ * @returns {string} Returns unique line key
+ */
 primitives.common.Vector.prototype.getLineKey = function () {
-	var line = this.getLine(),
-		a = line[0],
-		b = line[1],
-		c = line[2],
-		r = 10000;
-	if (b !== 0) {
-		line = [Math.floor(a / b * r), 1, Math.floor(c / b * r)];
-	} else {
-		line = [1, 0, Math.floor(c / a * r)];
-	}
-	return line.toString();
+  var line = this.getLine(),
+    a = line[0],
+    b = line[1],
+    c = line[2],
+    r = 10000;
+  if (b !== 0) {
+    line = [Math.floor(a / b * r), 1, Math.floor(c / b * r)];
+  } else {
+    line = [1, 0, Math.floor(c / a * r)];
+  }
+  return line.toString();
 };
 
-
+/**
+ * Checks if two vectors have intersection point
+ * 
+ * @param {vector} vector The vector to check intersection with
+ * @returns {boolean} Returns true if vectors intersect
+ */
 primitives.common.Vector.prototype.intersect = function (vector) {
-	var v1 = this.getLine(),
-		v2 = vector.getLine(),
-		m = new primitives.common.Matrix(v1[0], v1[1], v2[0], v2[1]),
-		d = m.determinant(),
-		mx, my, dx, dy,
-		x, y,
-		result = false;
+  var v1 = this.getLine(),
+    v2 = vector.getLine(),
+    m = new primitives.common.Matrix(v1[0], v1[1], v2[0], v2[1]),
+    d = m.determinant(),
+    mx, my, dx, dy,
+    x, y,
+    result = false;
 
-	if (d !== 0) {
-		mx = new primitives.common.Matrix(-v1[2], v1[1], -v2[2], v2[1]);
-		dx = mx.determinant();
-		my = new primitives.common.Matrix(v1[0], -v1[2], v2[0], -v2[2]);
-		dy = my.determinant();
-		x = dx / d;
-		y = dy / d;
+  if (d !== 0) {
+    mx = new primitives.common.Matrix(-v1[2], v1[1], -v2[2], v2[1]);
+    dx = mx.determinant();
+    my = new primitives.common.Matrix(v1[0], -v1[2], v2[0], -v2[2]);
+    dy = my.determinant();
+    x = dx / d;
+    y = dy / d;
 
-		vector.to.x = x;
-		vector.to.y = y;
+    vector.to.x = x;
+    vector.to.y = y;
 
-		this.from.x = x;
-		this.from.y = y;
+    this.from.x = x;
+    this.from.y = y;
 
-		result = true;
-	}
+    result = true;
+  }
 
-	return result;
+  return result;
 };
 
+/**
+ * Finds intersection point of two vectors
+ * 
+ * @param {Vector} vector The vector to find intersection with
+ * @param {boolean} strict If true then intersection point should belong to both vectors
+ * @param {number} rounding The precision of calculations
+ * @returns {Point|null} Returns intersection point or null if intersection does not exists
+ */
 primitives.common.Vector.prototype.getIntersectionPoint = function (vector, strict, rounding) {
-	var v1 = this.getLine(),
-		v2 = vector.getLine(),
-		m = new primitives.common.Matrix(v1[0], v1[1], v2[0], v2[1]),
-		d = m.determinant(),
-		mx, my, dx, dy,
-		x, y,
-		result = null;
+  var v1 = this.getLine(),
+    v2 = vector.getLine(),
+    m = new primitives.common.Matrix(v1[0], v1[1], v2[0], v2[1]),
+    d = m.determinant(),
+    mx, my, dx, dy,
+    x, y,
+    result = null;
 
-	if (d !== 0) {
-		mx = new primitives.common.Matrix(-v1[2], v1[1], -v2[2], v2[1]);
-		dx = mx.determinant();
-		my = new primitives.common.Matrix(v1[0], -v1[2], v2[0], -v2[2]);
-		dy = my.determinant();
-		x = dx / d;
-		y = dy / d;
+  if (d !== 0) {
+    mx = new primitives.common.Matrix(-v1[2], v1[1], -v2[2], v2[1]);
+    dx = mx.determinant();
+    my = new primitives.common.Matrix(v1[0], -v1[2], v2[0], -v2[2]);
+    dy = my.determinant();
+    x = dx / d;
+    y = dy / d;
 
-		if (strict) {
-			if (vector._contains(x, y, rounding) && this._contains(x, y, rounding)) {
-				result = new primitives.common.Point(x, y);
-			}
-		} else {
-			result = new primitives.common.Point(x, y);
-		}
-	}
+    if (strict) {
+      if (vector._contains(x, y, rounding) && this._contains(x, y, rounding)) {
+        result = new primitives.common.Point(x, y);
+      }
+    } else {
+      result = new primitives.common.Point(x, y);
+    }
+  }
 
-	return result;
+  return result;
 };
 
+/**
+ * @ignore
+ */
 primitives.common.Vector.prototype._contains = function (x, y, rounding) {
-	var x1 = Math.min(this.from.x, this.to.x),
-		y1 = Math.min(this.from.y, this.to.y),
-		x2 = Math.max(this.from.x, this.to.x),
-		y2 = Math.max(this.from.y, this.to.y);
+  var x1 = Math.min(this.from.x, this.to.x),
+    y1 = Math.min(this.from.y, this.to.y),
+    x2 = Math.max(this.from.x, this.to.x),
+    y2 = Math.max(this.from.y, this.to.y);
 
-	return x1 - rounding <= x && x <= x2 + rounding && y1 - rounding <= y && y <= y2 + rounding;
+  return x1 - rounding <= x && x <= x2 + rounding && y1 - rounding <= y && y <= y2 + rounding;
 };
 
 
@@ -6850,1958 +7101,1787 @@ primitives.common.ValueReader.prototype.read = function (target, source, path, c
 };
 
 /* /Controls/FamDiagram/events/EventArgs.js*/
-/*
-	Class: primitives.famdiagram.EventArgs
-		Event details class.
-*/
+/**
+ * @class EventArgs
+ * 
+ * Context object
+ */
 primitives.famdiagram.EventArgs = function () {
-	/*
-	Property: oldContext
-		Reference to associated previous item in hierarchy.
-	*/
-	this.oldContext = null;
+	/**
+   * Current item
+   * 
+   * @type {string}
+   */
+  this.oldContext = null;
 
-	/*
-	Property: context
-		Reference to associated new item in hierarchy.
-	*/
-	this.context = null;
+  /**
+   * New item
+   * 
+   * @type {string}
+   */
+  this.context = null;
 
-	/*
-	Property: parentItems
-		Collection of immidiate parent items of item in context.
-	*/
-	this.parentItems = [];
+  /**
+   * Parent items
+   * 
+   * @type {string[]}
+   * @ignore
+   */
+  this.parentItems = null;
 
-	/*
-	Property: childrenItems
-		Collection of immidiate children items of item in context.
-	*/
-	this.childrenItems = [];
+  /**
+   * Node position on the diagram.
+   * 
+   * @type {Rect}
+   */
+  this.position = null;
 
-	/*
-	Property: position
-		Absolute item position on diagram.
+  /**
+   * Relative object name.
+   * 
+   * @type {string}
+   */
+  this.name = null;
 
-	See also:
-		<primitives.common.Rect>
-	*/
-	this.position = null;
-
-	/*
-	Property: name
-		Relative object name.
-
-	*/
-	this.name = null;
-
-	/*
-	Property: cancel
-		Allows cancelation of coupled event processing. This option allows to cancel layout update 
-		and subsequent <primitives.famdiagram.Config.onCursorChanged> event 
-		in handler of <primitives.famdiagram.Config.onCursorChanging> event.
-	*/
-	this.cancel = false;
+  /**
+   * If true cancels subsequent event and layout update.
+   * 
+   * @type {boolean}
+   */
+  this.cancel = false;
 };
 
 /* /Controls/FamDiagram/configs/TemplateConfig.js*/
-/*
-	Class: primitives.famdiagram.TemplateConfig
-		User defines item template class. It may optionaly define template for item, 
-		custom cursor and highlight. If template is null then default template is used.
-
-	See Also:
-		<primitives.famdiagram.Config.templates>
-*/
+/**
+ * @class TemplateConfig
+ * @classdesc Template configuration object defines DOM elements for node content, cursor and highlight visual representation.
+ * They are grouped into one configuration object because if we decide to customize cursor or highlight templates most likely
+ * we are going to make them item template specific. At the same time control does not require all 3 of them to be defined.
+ * If cursor or highlight templates properties are not set in template configuration object then control uses internal
+ * default template for all of them. Generally all 3 templates can be set to null, so default templates are going to be used
+ * by control.
+ */
 primitives.famdiagram.TemplateConfig = function () {
-	/*
-	Property: name
-		Every template should have unique name. It is used as reference when 
-		custom template is defined in <primitives.famdiagram.ItemConfig.templateName>.
-	*/
+  /**
+   * Name. Every template configuration object has name property, it is being used to reference templates from items.
+   * This name is used to as an argument of call back rendering function as well. If item has not template name set 
+   * it uses default template for rendering.
+   * 
+   * @type {string}
+   */
   this.name = null;
 
-	/*
-	Property: isActive
-		If it is true then item having this template is selectable in hierarchy and it has mouse over highlight.
-
-	True - Item is clickable.
-	False - Item is inactive and user cannot set cursor item or highlight.
-
-	Default:
-		true
-	*/
+  /**
+   * If true it makes templated items inactive in diagram layout. Inactive items are regular items excluded from navigation, that means 
+   * when use auto fit mode, selection of neighboring node to inactive item makes all nodes of inactive item shown in full
+   * size as well. Inactive items play a role of in layout annotations having no user interaction and templated with HTML.
+   * For example they can be used to add titles into family diagram layout or terminator items indicating that upon reaching
+   * them diagram would load extra nodes into layout.
+   * 
+   * @type {boolean}
+   */
   this.isActive = true;
 
-	/*
-	Property: itemSize
-	This is item size of type <primitives.common.Size>, templates should have 
-	fixed size, so famDiagram uses this value in order to layout items properly.
-	*/
+  /**
+   * Size. Control deals with fixed size layout, it makes no guesses about content and size of nodes.
+   * So we don't support in any form nodes auto sizing. In order to support such feature control should measure content
+   * of every node before rendering cycle. Taking into account that nodes visibility depends on available space it is going
+   * to be infinite loop of diagram layout and nodes measure iterations. The more space we provide to nodes the less number 
+   * of diagram nodes is going to be visible. So control expect that node size is hard valued in template configuration.
+   * 
+   * @type {Size}
+   */
   this.itemSize = new primitives.common.Size(120, 100);
 
-	/*
-	Property: itemBorderWidth
-		Item template border width.
-	*/
+  /**
+   * Border width. We use archaic method to layout cursor and highlight frames around nodes, so we need to know border
+   * width in order measure gaps between them proeprly.
+   * 
+   * @type {number}
+   */
   this.itemBorderWidth = 1;
 
-	/*
-	Property: itemTemplate
-	Item template, if it is null then default item template is used. It supposed 
-	to be div html element containing named elements inside for setting them 
-	in <primitives.famdiagram.Config.onItemRender> event.
-	*/
+  /**
+   * Item template. Supported template formats: Control provide two distinct ways to define item templates.
+   * The original one is based on setting HTML elements content via innerHTML DOM element property, see following reference 
+   * at https://developer.mozilla.org web site for more details. The modern way is to use JSON ML library that is our recommended
+   * solution for templates definition, see following web site for more details http://www.jsonml.org/. This is only 3d party
+   * MIT licensed code included into our code base, everything else is 100% authentic. We adopted it with minor modifications,
+   * it generaly works according to its original design.
+   * 
+   * The control calls `onItemRender` callback function when specific node cursor needs to be rendered with this template.
+   * 
+   * @type {string|object}
+   */
   this.itemTemplate = null;
 
-	/*
-		Property: minimizedItemShapeType
-			Defines minimized item shape. The border line width is set with <primitives.famdiagram.TemplateConfig.minimizedItemBorderWidth>
-			By default minimized item is rounded rectangle filled with item title color.
-
-
-		See also:
-			<primitives.famdiagram.TemplateConfig.minimizedItemCornerRadius>
-			<primitives.famdiagram.ItemConfig.itemTitleColor>
-			<primitives.famdiagram.ItemConfig.minimizedItemShapeType>
-
-		Default:
-			null
-	*/
+  /**
+   * Marker type. The shape of the marker when node is minimized by autofit. The control supports auto fit of the diagram into available screen space.
+   * When diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
+   * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
+   * So this option sets marker shape for nodes templated with this template.
+   * 
+   * @type {ShapeType}
+   */
   this.minimizedItemShapeType = null;
 
-	/*
-	Property: minimizedItemSize
-	This is size dot used to display item in minimized form, type of <primitives.common.Size>.
-	*/
+  /**
+   * Marker size.
+   * 
+   * @type {Size}
+   */
   this.minimizedItemSize = new primitives.common.Size(4, 4);
 
-	/*
-	Property: minimizedItemCornerRadius
-	Set corner radias for dots in order to display them as squares having rounded corners.
-	By default it is null and dots displayed as cycles. If corner radius set to 0 then they are displayed as regular squares.
-	*/
+  /**
+   * Marker corder radius for simple squares. By default it is null and dots displayed as cycles. If corner radius set to 0 then
+   * they are displayed as regular squares.
+   * 
+   * @type {number}
+   */
   this.minimizedItemCornerRadius = null;
 
-	/*
-	Property: minimizedItemLineWidth
-		Minimized item shape border width.
-	*/
+  /**
+   * Marker border line width
+   * 
+   * @type {number}
+   */
   this.minimizedItemLineWidth = 1;
 
-	/*
-	Property: minimizedItemBorderColor
-		Minimized item line color. By default it is the same as <primitives.famdiagram.ItemConfig.itemTitleColor>
-	*/
+  /**
+   * Marker border line color. By default it is the same as `itemTitleColor` of rendered node.
+   * 
+   * @type {string}
+   */
   this.minimizedItemBorderColor = null;
 
-	/*
-	Property: minimizedItemLineType
-		Minimized item shape border line type.
-	*/
+  /*
+    Marker border line pattern
+    
+    @type {LineType}
+  */
   this.minimizedItemLineType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-	Property: minimizedItemFillColor
-		Minimized item fill color. By default it is the same as <primitives.famdiagram.ItemConfig.itemTitleColor>
-	*/
+  /**
+   * Marker fill color. By default it is the same as `itemTitleColor` of rendered node.
+   * 
+   * @type {string}
+   */
   this.minimizedItemFillColor = null;
 
-	/*
-	Property: minimizedItemOpacity
-		Minimized item fill color opacity.
-	*/
+  /**
+   * Marker fill color opacity.
+   * 
+   * @type {number}
+   */
   this.minimizedItemOpacity = 1;
 
-	/*
-	Property: highlightPadding
-	This padding around item defines relative size of highlight object, 
-	ts type is <primitives.common.Thickness>.
-	*/
+  /**
+   * Highlight frame offset from node.
+   * 
+   * @type {Thickness}
+   */
   this.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
 
-	/*
-	Property: highlightBorderWidth
-		Highlight border width.
-	*/
+  /**
+   * Highlight frame border width.
+   * 
+   * @type {number}
+   */
   this.highlightBorderWidth = 1;
 
-	/*
-	Property: highlightTemplate
-	Highlight template, if it is null then default highlight template is used. 
-	It supposed to be div html element containing named elements inside for 
-	setting them in <primitives.famdiagram.Config.onHighlightRender> event.
-	*/
+  /**
+   * Highlight Template.
+   * 
+   * The control calls `onHighlightRender` callback function when specific node highlight needs to be rendered with this template.
+   * 
+   * @type {string|object}
+   */
   this.highlightTemplate = null;
 
-	/*
-	Property: cursorPadding
-	This padding around item defines relative size of cursor object, 
-	its type is <primitives.common.Thickness>.
-	*/
+  /**
+   * Cursor frame offset from node.
+   * 
+   * @type {Thickness}
+   */
   this.cursorPadding = new primitives.common.Thickness(3, 3, 3, 3);
 
-	/*
-	Property: cursorBorderWidth
-		Cursor border width.
-	*/
+  /**
+   * Cursor frame border width.
+   * 
+   * @type {number}
+   */
   this.cursorBorderWidth = 2;
 
-	/*
-	Property: cursorTemplate
-	Cursor template, if it is null then default cursor template is used. 
-	It supposed to be div html element containing named elements inside 
-	for setting them in <primitives.famdiagram.Config.onCursorRender> event.
-	*/
+  /**
+   * Cursor Template.
+   * 
+   * The control calls `onCursorRender` callback function when specific node cursor needs to be rendered with this template.
+   * 
+   * @type {string|object}
+   */
   this.cursorTemplate = null;
 
-	/*
-	Property: buttons
-		Custom user buttons displayed on right side of item. This collection provides simple way to define context buttons for every template. 
-	
-	See also:
-		<primitives.famdiagram.ButtonConfig>
-	*/
+  /**
+   * Template specific context buttons.
+   * 
+   * @type {ButtonConfig[]}
+   */
   this.buttons = null;
 
+  /**
+   * This callback function is used in React component. It basically makes buttons obsolete 
+   * and gives end user possibility to render any content in buttons panel.
+   * 
+   * @ignore
+   */
   this.onButtonsRender = null;
 };
 
 
 /* /Controls/FamDiagram/configs/BackgroundAnnotationConfig.js*/
-/*
-	Class: primitives.famdiagram.BackgroundAnnotationConfig
-		Consider background annotation as another way to highlight some items in diagram.
-		In order to use it you have to create instances of this class and populate annotation collection.
-		Background annotation is drawn as rectangular area offset around annotated item. 
-		If two items backgrounds overlap each other they are merged into one background area.
 
-	See Also:
-		<primitives.famdiagram.Config.annotations>
-*/
+/**
+ * @class BackgroundAnnotationConfig
+ * @classdesc Consider background annotation as another way to highlight some items in diagram. 
+ * In order to use it you have to create instances of this class and populate annotation collection.
+ * Background annotation is drawn as rectangular area offset around annotated item. 
+ * If two items backgrounds overlap each other they are merged into one background area.
+ *
+ * @param {object} arg0 Object properties.
+ */
 primitives.famdiagram.BackgroundAnnotationConfig = function (arg0) {
-	var property;
+  var property;
 
-	/*
-	Property: annotationType
-		Annotation type. All various annotations are defined in annotation collection property of <primitives.famdiagram.Config>. 
-		So this property is needed to define annotation type when we use JavaScript non-prototype objects.
-		See other annotations as well.
+  /**
+   * Annotation type. All types of annotations objects are added to `annotations` collection property of the control.
+   * This property is needed to distiguish them when they are defined as JSON objects.
+   * 
+   * @type {AnnotationType}
+   */
+  this.annotationType = 4/*primitives.common.AnnotationType.Background*/;
 
-	Default:
-		<primitives.common.AnnotationType.Background>
+  /**
+   * Collection of nodes ids this background annotation is drawn for.
+   * 
+   * @type {string[]}
+   */
+  this.items = [];
 
-	See Also:
-		<primitives.famdiagram.Config.annotations>
-		<primitives.famdiagram.ConnectorAnnotationConfig>
-		<primitives.famdiagram.ShapeAnnotationConfig>
-		<primitives.famdiagram.LabelAnnotationConfig>
-		<primitives.famdiagram.HighlightPathAnnotationConfig>
-	*/
-	this.annotationType = 4/*primitives.common.AnnotationType.Background*/;
-
-	/*
-	Property: items 
-		Array of items ids in hierarchy.
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-	*/
-	this.items = [];
-
-	/*
-	Property: zOrderType
-		Defines annotation Z order placement relative to chart items. Chart items are drawn in layers on top of each other. We can draw annotations under the items or over them. 
-		If you place annotations over items then you block mouse events of UI elements in them. Browsers don't support mouse events transparentcy consistently. 
-		So in order to avoid mouse events blocking of UI elements in item templates you have to place annotation items under them.
-		Take into account that chart default buttons are drawn on top of everyhting, so they are never blocked by annotations drawn over items.
-
-	Default:
-		<primitives.common.ZOrderType.Auto>
-	*/
-	this.zOrderType = 0/*primitives.common.ZOrderType.Auto*/;
+  /**
+   * Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other.
+   * If you place annotations over diagram nodes then you block mouse events of UI elements in their templates.
+   * Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item
+   * templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top
+   * of other visual elements. The control takes this into account and renders buttons panel on top of everyhting,
+   * so they are never blocked by annotations drawn in front of diagram nodes.
+   * 
+   * @type {ZOrderType}
+   */
+  this.zOrderType = 0/*primitives.common.ZOrderType.Auto*/;
 
 
-	/*
-	Property: offset
-		Sets background offset around annotated item.
-	See also:
-		<primitives.common.Thickness>
-	*/
-	this.offset = new primitives.common.Thickness(18, 18, 18, 18);
+  /**
+   * Sets background offset around annotated items.
+   * 
+   * @type {Thickness}
+   */
+  this.offset = new primitives.common.Thickness(18, 18, 18, 18);
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 2;
+  /**
+   * Border line width
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 2;
 
-	/*
-	Property: opacity
-		Background color opacity. For applicable shapes only.
-	*/
-	this.opacity = 1;
+  /**
+   * Background color opacity.
+   * 
+   * @type {number}
+   */
+  this.opacity = 1;
 
-	/*
-	Property: borderColor
-		Shape border line color.
-	
-	Default:
-		null
-	*/
-	this.borderColor = null;
+  /**
+   * Shape border line color
+   * 
+   * @type {string}
+   */
+  this.borderColor = null;
 
-	/*
-	Property: fillColor
-		Fill Color. 
+  /**
+   * Fill Color.
+   * 
+   * @type {string}
+   */
+  this.fillColor = null;
 
-	Default:
-		null
-	*/
-	this.fillColor = null;
+  /**
+   * Border line type
+   * 
+   * @type {LineType}
+   */
+  this.lineType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-	Property: lineType
-		Connector's line pattern.
+  /**
+   * If true then annotated nodes are shown full size regardless of controls autofit mode and available screen space.
+   * @type {boolean}
+   */
+  this.selectItems = false;
 
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-
-	/*
-	Property: selectItems
-		Always show annotated items in normal state. Setting this option is equivalent to adding annotated items to collection of selected items.
-
-	Default:
-		true
-
-	See Also:
-		<primitives.famdiagram.Config.selectedItems>
-	*/
-	this.selectItems = false;
-
-	switch (arguments.length) {
-		case 1:
-			if (arg0 !== null) {
-				if (arg0 instanceof Array) {
-					this.items = arg0;
-				} else if (typeof arg0 == "object") {
-					for (property in arg0) {
-						if (arg0.hasOwnProperty(property)) {
-							this[property] = arg0[property];
-						}
-					}
-				}
-			}
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      if (arg0 !== null) {
+        if (arg0 instanceof Array) {
+          this.items = arg0;
+        } else if (typeof arg0 == "object") {
+          for (property in arg0) {
+            if (arg0.hasOwnProperty(property)) {
+              this[property] = arg0[property];
+            }
+          }
+        }
+      }
+      break;
+  }
 };
 
 /* /Controls/FamDiagram/configs/ButtonConfig.js*/
-/*
-	Class: primitives.famdiagram.ButtonConfig
-		Options class. Custom user button options class. 
-		Buttons displayed on the right side of items. 
-		See jQuery UI Button options description for details.
-		In order to receive button click event make binding 
-		to <primitives.famdiagram.Config.onButtonClick>.
-	
-	See Also:
-		<primitives.famdiagram.Config.buttons>
-*/
+/**
+ * @class ButtonConfig
+ * @classdesc The buttons panel on the side of the diagram nodes is one of controls default easy to use features.
+ * This gives you the possibility to try and see how context buttons work being placed inside of diagram layout.
+ * This object provides configuration properties for buttons rendered using HTML buttons elements.
+ * 
+ * Please, pay attention that diagram visual element are rendered in layers on top of each other, so buttons panel
+ * is rendered as the very last layer of the diagram, so its mouse events are never blocked by any other visual elements.
+ * 
+ * See `onButtonClick` event handler in control's configuration object.
+ *
+ * @param {string} name Name
+ * @param {string} icon Icon
+ * @param {string} tooltip Tooltip
+ */
 primitives.famdiagram.ButtonConfig = function (name, icon, tooltip) {
-	/*
-	Property: name 
-		It should be unique string name of the button. 
-		It is needed to distinguish click events from different butons.
-	*/
-	this.name = name;
+  /**
+   * Button name. It is needed for `onButtonClick` event handler.
+   * 
+   * @type {string}
+   */
+  this.name = name;
 
-	/*
-	Property: icon
-	Name of icon used in jQuery UI.
-	*/
-	this.icon = icon;
-	/*
-	Property: text
-	Whether to show any text -when set to false (display no text), 
-	icon must be enabled, otherwise it'll be ignored.
-	*/
-	this.text = false;
-	/*
-	Property: label
-	Text to show on the button.
-	*/
-	this.label = null;
-	/*
-	Property: tooltip
-	Button tooltip content. Tooltip is based on jQuery UI tooltip widget, so it should be part of jQuery UI distribution in order to make this property work.
-	*/
-	this.tooltip = tooltip;
-	/*
-	Property: size
-	Size of the button of type <primitives.common.Size>.
-	*/
-	this.size = new primitives.common.Size(16, 16);
+  /**
+   * Name of icon used in jQuery UI.
+   * 
+   * @type {string}
+   */
+  this.icon = icon;
+
+  /**
+   * If true show button text
+   * @type {boolean}
+   */
+  this.text = false;
+
+  /**
+   * Text to show on the button.
+   * 
+   * @type {string}
+   */
+  this.label = null;
+
+  /**
+   * Button tooltip content. Tooltip is rendered using jQuery UI tooltip widget, so it should be part of jQuery UI distribution
+   * in order to make this property work.
+   * 
+   * @type {string}
+   */
+  this.tooltip = tooltip;
+
+  /**
+   * Button size
+   * 
+   * @type {Size}
+   */
+  this.size = new primitives.common.Size(16, 16);
 };
 
 /* /Controls/FamDiagram/configs/Config.js*/
-/*
-	Class: primitives.famdiagram.Config
-		famDiagram options class. Multi-parent hierarchical chart configuration.
-	
-*/
+/**
+ * @class Config
+ * @classdesc Family Chart configuration object. Use this object as a reference 
+ * for available properties and their default values.
+ * 
+ * @param {string} name
+ */
 primitives.famdiagram.Config = function (name) {
   this.name = (name !== undefined) ? name : "FamDiagram";
   this.classPrefix = "famdiagram";
 
-	/*
-		Property: navigationMode
-			Defines control navigation mode. By default control replicates interactivity of regular Tree control. 
-			It has highlight for mouse over feedback and it has cursor for showing currently selected single node in diagram.
-			In order to avoid creation of plus/minus buttons for children nodes folding and unfolding, 
-			this functionality is done automatically for current cursor item. This is especially true for family diagram, 
-			because it has no logical root, so cursor plays vital role for unfolding of nodes 
-			and zooming into area of user interest in diagram.
-			Use this option to disable highlight which does not make sense on touch devices or make control inactive completly.
-
-		See Also:
-			<primitives.common.NavigationMode>
-		Default:
-			<primitives.common.NavigationMode.Default>
-	*/
+  /**
+   * Sets control navigation mode.
+   * 
+   * By default control replicates interactivity of regular collection control. It has cursor to select single
+   * item in the collection. So user can click and select any node in the diagram. The control has highlight for mouse over feedback.
+   * So user can move mouse and see highlight frame and callout callback annotation for node under cursor.
+   * 
+   * By `Default` the control has both cursor and highlight. If they are disabled then control is rendered as a static image.
+   * 
+   * @type {NavigationMode}
+   */
   this.navigationMode = 0/*primitives.common.NavigationMode.Default*/;
 
-	/*
-		Property: graphicsType
-			Preferable graphics type. If preferred graphics type 
-			is not supported widget switches to first available. 
-
-		Default:
-			<primitives.common.GraphicsType.SVG>
-	*/
+  /**
+   * Sets prefered rendering technology. If selected graphics type is not supported on the device,
+   * then control will auto fallback to the first available one.
+   * 
+   * @type {GraphicsType}
+   */
   this.graphicsType = 0/*primitives.common.GraphicsType.SVG*/;
 
-	/*
-		Property: pageFitMode
-			Defines the way diagram is fit into page. By default chart minimize items when it has not enough space to fit all of them into screen. 
-			Chart has its maximum size when all items shown in full size and  its minimal size when all items shown as dots. 
-			It is equivalent of full zoom out of the chart items, dot size items are not readable, but such presentation of them 
-			gives possibility to overview chart layout. So chart tryes to combine both presenation modes and keep chart as small 
-			as possible in order to give user possibility to see big picture. Collapsed items provide ideal way for analitical reiew of 
-			diagram. If chart shown in its maximum size when all items are unfolded, it becomes impossible 
-			to navigate betwen parents close to the root item. In such mode chart is usable only at bottom levels when children are close to their parents.
-			If we try to navigate up to the root of hierarchy, gaps between parents sometimes as big as screen size. So in order to solve these 
-			issues chart partially collapses hierarchy into dots and lines depending on this option.
-
-		See also:
-			<primitives.famdiagram.Config.minimalVisibility>
-
-		Default:
-			<primitives.common.PageFitMode.FitToPage>
-	*/
+  /**
+   * Page fit mode. Minimizing nodes into markers and labels. This option provides a special mode that renders the diagram
+   * nodes in the form of markers. This is a highly scalable form that is capable of rendering large numbers of nodes
+   * while not affecting the rendering performance. With this, huge diagrams can be fit into avaialable screen space.
+   * 
+   * When using a graphics editor to manually draw your diagrams, it is common place to have large gaps between the nodes.
+   * This can make the diagram/chart unreadable, hard to edit and navigate. On top of that, on a large scale the diagram could have screen size
+   * intervals between items. Admittedly the computer UI does allow the user to scale and fit the diagram in order to visualize it
+   * on a single screen. But in that case, the items become small and unreadable as there is no scaling priority and the items
+   * are just too small to be readable.
+   * 
+   * @type {PageFitMode}
+   */
   this.pageFitMode = 3/*primitives.common.PageFitMode.FitToPage*/;
 
-	/*
-		Property: minimalVisibility
-			Defines minimal allowed item form size for page fit mode. See description for pageFitMode.
-	
-		See also:
-			<primitives.famdiagram.Config.pageFitMode>
-
-		Default:
-			<primitives.common.Visibility.Dot>
-	*/
+  /**
+   * Minimal nodes visibility in the diagram. If auto fit of the diagram into current page size is enabled, then
+   * this option controls minimum allowed size of the diagram nodes.
+   * 
+   * @type {Visibility}
+   */
   this.minimalVisibility = 2/*primitives.common.Visibility.Dot*/;
 
-	/*
-		Property: orientationType
-			Chart orientation. Chart can be rotated left, right and bottom.
-			Rotation to the right side is equivalent to left side placement 
-			in countries writing from right to left, so it is important for localization.
-
-		Default:
-			<primitives.common.OrientationType.Top>
-	*/
+  /**
+   * Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction,
+   * this is needed for Arabic support and various layouts.
+   * 
+   * @type {OrientationType}
+   */
   this.orientationType = 0/*primitives.common.OrientationType.Top*/;
 
-	/*
-	Property: verticalAlignment
-		Defines items vertical alignment relative to each other within one level of hierarchy. 
-		It does not affect levels having same size items.
-	
-	Default:
-		<primitives.common.VerticalAlignmentType.Middle>
-	*/
+  /**
+   * Sets items vertical alignment relative to each other within one level of the hierarchy. 
+   * It does not change anything if diagram nodes are all of the same size.
+   * 
+   * @type {VerticalAlignmentType}
+   */
   this.verticalAlignment = 1/*primitives.common.VerticalAlignmentType.Middle*/;
 
-	/*
-		Property: arrowsDirection
-			Sets direction of connector lines arrows.
-
-		Default:
-			<primitives.common.GroupByType.None>
-	*/
+  /**
+   * Sets arrows direction for connector lines. If this property set to `Parents` then arrows are drawn
+   * from logical children towards logical parents. By default diagram has no arrows.
+   * 
+   * @type {GroupByType}
+   */
   this.arrowsDirection = 0/*primitives.common.GroupByType.None*/;
 
-	/*
-	Property: showExtraArrows
-		Show extra horizontal arrows on top of connectors for easy navigation between parents and children through connector lines.
-		This options if off by default for organizational diagram.
-
-	Default:
-		false
-	*/
+  /**
+   * Show extra horizontal arrows on top of long horizontal connection lines for the easy visual tracing 
+   * of relations between parents and children. By default it is off.
+   * 
+   * @type {boolean}
+   */
   this.showExtraArrows = true;
 
-	/*
-	Property: extraArrowsMinimumSpace
-		If diagram is small relations between objects are easy to trace, so mutual positions of parents and children are enough to navigate from parent to children and backward.
-		If diagram is large and one row of children exceeds screen width then it use this option to activate horizontal arrows for large intervals between items.
-
-	Default:
-		30
-	*/
+  /**
+   * Set minimum space for placement of extra arrows on horizontal connection lines. See `showExtraArrows` property.
+   * 
+   * @type {number}
+   */
   this.extraArrowsMinimumSpace = 30;
 
-	/*
-		Property: groupByType
-			Defines the way item gravitates to parent or child layout having big vertical gap between levels.
-
-		Default:
-			<primitives.common.GroupByType.Children>
-	*/
+  /**
+   * This property sets loose nodes alignment between rows. Nodes can be placed close towards parents or children.
+   * 
+   * @type {GroupByType}
+   */
   this.groupByType = 2/*primitives.common.GroupByType.Children*/;
 
-	/*
-	Property: alignBylevels
-		This option keeps items at the same levels after connections bundling.
-
-	Default:
-		true
-	*/
+  /**
+   * This option keeps items at the same levels after connections bundling.
+   * 
+   * @type {boolean}
+   */
   this.alignBylevels = true;
 
-	/*
-		Property: enableMatrixLayout
-			This option enables automatic layout of nodes sharing the same set of parents and children in form of matrix.
-
-		Default:
-			false
-
-		See Also:
-			<primitives.famdiagram.Config.minimumMatrixSize>
-			<primitives.famdiagram.Config.maximumColumnsInMatrix>
-	*/
+  /**
+   * This option enables automatic layout of nodes sharing the same set of parents and children in form of matrix.
+   * 
+   * @type {boolean}
+   */
   this.enableMatrixLayout = false;
 
-	/*
-		Property: minimumMatrixSize
-			Minimum number of nodes placed into matrix layout. In order to place nodes in form of matrix they should share the same set of parents and children.
-
-		See Also:
-			<primitives.famdiagram.Config.enableMatrixLayout>
-			<primitives.famdiagram.Config.maximumColumnsInMatrix>
-
-		Default:
-			4
-	*/
+  /**
+   * Sets Minimum number of nodes needed to be shaped into matrix formtion. In order to shape nodes in 
+   * form of matrix they should share the same set of parents and children. See `enableMatrixLayout` property.
+   * 
+   * @type {number}
+   */
   this.minimumMatrixSize = 4;
 
-	/*
-		Property: maximumColumnsInMatrix
-			Maximum number of columns for matrix layout. Matrix layout keeps square shape up to number of columns defined by this option.
-			If number of columns reaches this value then matrix will grow by number of rows without adding new columns.
-			In order to place nodes in form of matrix they should share the same set of parents and children.
-
-		See Also:
-			<primitives.famdiagram.Config.minimumMatrixSize>
-			<primitives.famdiagram.Config.maximumColumnsInMatrix>
-	*/
+  /**
+   * Sets maximum number of columns in the matrix formation. The matrix formation stays squared as long as total number 
+   * of columns does not exceed this property value. In order to shape nodes into matrix formation they should
+   * share the same set of parents and children. See `enableMatrixLayout` property.
+   * 
+   * @type {number}
+   */
   this.maximumColumnsInMatrix = 6;
 
-	/*
-	Property: hideGrandParentsConnectors
-		This option hides direct connectors to grand parents. It helps to reduce diagrams connectors layout complexity. 
-		By default it is set to false, so control will always display all available connectors, 
-		but the same connetors could be displayed dynamically via usage of connectors annotations highlighting passes between nodes and all its dependents.
-		In order to give extra indication that node has direct connection to grand parent via its immidiate parent it may sense to use custom templates 
-		for all nodes it is connected to.
-
-	Default:
-		false
-	*/
+  /**
+   * Set this property to enable hiding of direct connectors to grand parents. It helps to reduce diagrams connectors layout complexity.
+   * 
+   * @type {boolean}
+   */
   this.hideGrandParentsConnectors = false;
 
-	/*
-		Property: elbowType
-			Style squared connectors with custom elbows.
-
-		Default:
-			<primitives.common.ElbowType.None>
-	*/
+  /**
+   * Set style of squared connectors with custom elbows.
+   * 
+   * @type {ElbowType}
+   */
   this.elbowType = 3/*primitives.common.ElbowType.Round*/;
 
-	/*
-		Property: bevelSize
-			Size of connector bevel.
-
-		Default:
-			4
-	*/
+  /**
+   * The bevel size of squared connector lines.
+   * 
+   * @type {number}
+   */
   this.bevelSize = 4;
 
-	/*
-		Property: elbowDotSize
-			Size of elbow dot.
-			
-		Default:
-			4
-	*/
+  /**
+   * The size of dot markers placed in the elbows of connector lines.
+   * 
+   * @type {number}
+   */
   this.elbowDotSize = 4;
 
-	/*
-	Property: emptyDiagramMessage
-		Empty message in order to avoid blank screen. This option is supposed to say user that chart is empty when no data inside.
-	*/
+  /**
+   * Empty diagram message. This option is supposed to say user that chart is empty when no data is available for rendering.
+   * 
+   * @type {string}
+   */
   this.emptyDiagramMessage = "Diagram is empty.";
 
-	/*
-	Property: items
-		This is chart items collection. It is regular array of items of type ItemConfig. Items reference each other via parents collection property. 
-		So every item may have multiple parents in chart. If parents collection is empty or set to null then item supposed to be root parent.
-		If items loop each other they are ignored as well. It is applications responsiblity to avoid such issues.
-
-	See Also:
-		<primitives.famdiagram.ItemConfig>
-		<primitives.famdiagram.ItemConfig.id>
-		<primitives.famdiagram.ItemConfig.parents>
-	*/
+  /**
+   * Items collection. Ths property defines data we render in the diagram.
+   * 
+   * Every items should have unique `id` property set. They are used to create relations
+   * between items in the diagram and for rendering various UI elements bound to nodes.
+   * 
+   * @type {ItemConfig[]}
+   */
   this.items = [];
 
-	/*
-	Property: annotations
-		Defines array of annotaions objects. Chart supports several types of annotations. They are drawn on top of chart and they may block view of some of them.
-		So chart's layout mechanism does not account available annotations. Don't over use this feature. 
-		The design assumes only few of them being displayed simultanuosly. This is especially true for connectors.
-
-	See also:
-		<primitives.famdiagram.ConnectorAnnotationConfig>
-		<primitives.famdiagram.ShapeAnnotationConfig>
-		<primitives.famdiagram.LabelAnnotationConfig>
-		<primitives.famdiagram.BackgroundAnnotationConfig>
-		<primitives.famdiagram.HighlightPathAnnotationConfig>
-	*/
+  /**
+   * Annotations. Annotations are API elements that are attached to the diagram nodes.
+   * We draw our annotations either in front of the nodes or in the background. The annotations 
+   * don't affect the nodes placement in any way. As a result the control redraws them 
+   * instantaneously without rerendering or recalculating the actual diagram layout.
+   * 
+   * @type {Array.<(ShapeAnnotationConfig | BackgroundAnnotationConfig | ConnectorAnnotationConfig | HighlightPathAnnotationConfig)>}
+   */
   this.annotations = [];
 
-	/*
-	Property: cursorItem
-		Cursor item id - it is single item selection mode, user selects new cursor item on mouse click. 
-		Cursor defines current local zoom placement or in other words current navigation item in the chart,
-		all items relative to cursor always shoun in full size. So user can see all possible items around cursor in full size 
-		and can continue navigation around chart. So when user navigates from one item to another clicking on thems and changing cursor item
-		in chart, chart minimizes items going out of cursor scope and shows in full size items relative to new cursor position.
-		If it is null then no cursor shown on diagram.
-
-	See Also:
-		<primitives.famdiagram.ItemConfig.id>
-		<primitives.famdiagram.Config.onCursorChanging>
-		<primitives.famdiagram.Config.onCursorChanged>
-	*/
+  /**
+   * Cursor item. Family Chart control has API options equivalent to regular UI controls.
+   * The cursor item is used to select single item in the hierarchy with mouse click, 
+   * highlight item provides visual feed back on mouse over. Selected items collection 
+   * is equivalent to checked items in ListView or TreeView controls.
+   * 
+   * Chart navigation depends on current cursor item, chart shows cursor and its neighbours 
+   * in full size regardless of enabled page fit mode. So cursor item plays a role of local 
+   * zoom in the chart hierarchy. User navigates around chart via clicking and moving
+   * cursor item around and zooming into data around new cursor item.
+   * 
+   * The control notifies about this property chnges with `onHighlightChanging` and `onHighlightChanged` events.
+   * 
+   * If `null` then no cursor item selected in the diagram.
+   * 
+   * @type {string}
+   */
   this.cursorItem = null;
 
-	/*
-	Property: highlightItem
-		Highlighted item id. Highlight is mouse over affect, but using this option applicatin can set highlight at any item 
-		in the chart programmatically. It can be used for chart syncronization with other controls on UI having mouse over effect. 
-		See primitives.famdiagram.Config.update method arguments description for fast chart update.
-		If it is null then no highlight shown on diagram.
-
-	See Also:
-		<primitives.famdiagram.ItemConfig.id>
-		<primitives.famdiagram.Config.onHighlightChanging>
-		<primitives.famdiagram.Config.onHighlightChanged>
-	*/
+  /**
+   * Highlighted item. Shows highlight and callout annotation for given item id. It does not trigger diagram
+   * layout or scrolling so it can be used to syncronize mouse over feedback of the diagram nodes with other
+   * collection controls or UI elements. 
+   * 
+   * The control notifies about this property chnges with `onHighlightChanging` and `onHighlightChanged` events.
+   * 
+   * If `null` then no highlight shown on the diagram.
+   * 
+   * @type {string}
+   */
   this.highlightItem = null;
 
-	/*
-	Property: highlightGravityRadius
-		The normal item has mouse over feedback in form of highlight border only when mouse pointer is inside of its boundaries. 
-		When items is minimized its marker can be so small that it is going to be difficult for end user to place mouse pointer inside of it.
-		This option defines highlight gravity radius, so minimized item gets highlighted when mouse pointer does not overlap marker but it is within gravity radius of its boundaries.
-		This property is ignored when nearest item is outside of screen boundaries and not visible to end user.
-	*/
+  /**
+   * Highlight gravity radius. This property controls mouse over feedback and callout annotation visibility for nodes
+   * rendered as markers when diagram auto fits nodes into available screen space. It makes marker highlighted when 
+   * mouse pointer is inside of the gravity radius cycle of the marker. This property is ignored when the nearest item
+   * is outside of the screen boundaries and is not visible to the end user.
+   *
+   * The normal item has mouse over feedback in form of highlight border only when mouse pointer is inside of its boundaries. 
+   * 
+   * @type {number}
+   */
   this.highlightGravityRadius = 40;
 
 
-	/*
-	Property: selectedItems
-		Defines array of selected item ids. Chart allows to select items via checking checkboxes under items. Checkboxes are 
-		shown only for full size items. So when item is selected it is always shown in full size, so check box always visible for selcted items.
-		User can navigate around large diagram and check intrested items in order to keep them opened. So that way chart provides 
-		means to show several items on large diagram and fit everything into minimal space ideally into available screen space.
-		Application can select items programmatically using this array or receive notifications from chart about user selections with following events.
-
-	See Also:
-		<primitives.famdiagram.ItemConfig.id>
-		<primitives.famdiagram.Config.onSelectionChanging>
-		<primitives.famdiagram.Config.onSelectionChanged>
-	*/
+  /**
+   * Selected items collection. Selected items is a collection of items ids having checked their check boxes.
+   * The control always shows selected items in the full size form, regardless of enabled page fit mode.
+   * 
+   * The control notifies about user made changes in this collection with `onSelectionChanging` and `onSelectionChanged` events.
+   * 
+   * @type {string[]}
+   */
   this.selectedItems = [];
 
-	/*
-	Property: hasSelectorCheckbox
-		This option controls selection check boxes visibility. 
-
-	Auto - Checkbox shown only for current cursor item only.
-	True - Every full size item has selection check box.
-	False - No check boxes. Application can still programmatically select some items in the chart. 
-	Application may provide custom item template having checkbox inside of item. If application defined check box inside of item template has name="checkbox"
-	it is auto used as default selection check box.
-
-	Default:
-		<primitives.common.Enabled.Auto>
-
-	See Also:
-		<primitives.famdiagram.ItemConfig.hasSelectorCheckbox>
-		<primitives.famdiagram.Config.onSelectionChanging>
-		<primitives.famdiagram.Config.onSelectionChanged>
-	*/
+  /**
+  * Sets visibility of selection check boxes for the diagram nodes.
+  * 
+  * `Auto` - visible for cursor item only
+  * `True` - visible
+  * `False` - hiddens
+  * 
+  * See `selectedItems` property. All items listed in this property are going to have checked selection checkboxes.
+  * Checkbox can be added to item template, in that case it should be named="checkbox", so control can use it as built in checkbox element.
+  * 
+  * @type {Enabled}
+  */
   this.hasSelectorCheckbox = 0/*primitives.common.Enabled.Auto*/;
 
-	/*
-		Property: selectCheckBoxLabel
-			Select check box label.
-	*/
+  /**
+   * Selection check box label. See `hasSelectorCheckbox` and `selectedItems` properties.
+   * 
+   * @type {string}
+   */
   this.selectCheckBoxLabel = "Selected";
 
-	/*
-	Property: selectionPathMode
-		Defines the way items between root item and selectedItems displayed in diagram. Chart always shows all items between cursor item and its root in full size.
-		But if cursor positioned on root item, then chart shows in full size only selected items in the chart. So this option controls items size between 
-		selected items and root item of the chart. By default all items betwen root and selected items shown in full size.
-		
-	Default:
-		<primitives.common.SelectionPathMode.None>
-	*/
+  /**
+   * Selection path mode. This property controls visibility of nodes between cursor and the root of the diagram in the auto fit mode. It allows to draw 
+   * them in full size regardless of available space and auto fit mode.
+   * 
+   * The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers.
+   * So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items
+   * of the diagram in full size and draw all other diagram nodes as markers.
+   *
+   * @type {SelectionPathMode}
+   */
   this.selectionPathMode = 0/*primitives.common.SelectionPathMode.None*/;
 
-	/*
-	Property: neighboursSelectionMode
-		Defines the display mode for items related to current cursor item in diagram. By default only parents and children are shown in regular size without minimization.
-
-	Default:
-		<primitives.common.NeighboursSelectionMode.ParentsAndChildren>
-	*/
+  /**
+   * Sets the neighbours selection mode, it defines how many neighbours are selected around cursor.
+   * 
+   * @type {NeighboursSelectionMode}
+   */
   this.neighboursSelectionMode = 0/*primitives.common.NeighboursSelectionMode.ParentsAndChildren*/;
 
-	/*
-	Property: templates
-		Custom user templates collection. TemplateConfig is complex object providing options to customize item's content template, 
-		cursor tempate and highlight template. Every template config should have unique name property, which is used by chart and its item configs 
-		to reference them. Chart's defaultTemplateName allows to make template default for all items in the chart. On other hand user may define templates
-		to individual items in the chart by templateName property of item config.
-
-	See also:
-		<primitives.famdiagram.TemplateConfig>
-		<primitives.famdiagram.Config.defaultTemplateName>
-		<primitives.famdiagram.ItemConfig.templateName>
-	*/
+  /**
+   * Collection of named templates used to define content for nodes, cursor and highlight.
+   * By default control provides templates for all types of visual elements.
+   * 
+   * @type {TemplateConfig[]}
+   */
   this.templates = [];
 
-	/*
-		Property: defaultTemplateName
-			This is template name used to render items having no <primitives.famdiagram.ItemConfig.templateName> defined.
-
-
-		See Also:
-			<primitives.famdiagram.TemplateConfig>
-			<primitives.famdiagram.TemplateConfig.name>
-			<primitives.famdiagram.Config.templates>
-	*/
+  /**
+   * Name of the template used to render nodes in the diagram. See `templates` property. Template name
+   * can be set individually for every node see `templateName` property of `ItemConfig`.
+   * 
+   * @type {string}
+   */
   this.defaultTemplateName = null;
 
-	/*
-		Property: defaultLabelAnnotationTemplate
-			This is name of template used to render label annotations having no <primitives.famdiagram.LabelAnnotationConfig.templateName> defined.
-			Label annotations are labels placed inside diagram layout. They occupy space and digram gurantees no overlapping of them.
-
-		See Also:
-			<primitives.famdiagram.LabelAnnotationConfig>
-			<primitives.famdiagram.TemplateConfig>
-			<primitives.famdiagram.TemplateConfig.name>
-			<primitives.famdiagram.Config.templates>
-	*/
+  /**
+   * Sets the name of template used to render label annotations. Label annotations are labels placed in layout of the diagram. 
+   * 
+   * @type {string}
+   */
   this.defaultLabelAnnotationTemplate = null;
 
-	/*
-	Property: hasButtons
-		This option controls user buttons visibility. 
-
-	Auto - Buttons visible only for cursor item.
-	True - Every normal item has buttons visible.
-	False - No buttons.
-
-	Default:
-		<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Sets buttons visibility.
+   * 
+   * `Auto` - cursor item only.
+   * `True` - visible
+   * `False` - hidden
+   * 
+   * @type {Enabled}
+   */
   this.hasButtons = 0/*primitives.common.Enabled.Auto*/;
 
-	/*
-	Property: buttons
-		Custom user buttons displayed on right side of item. This collection provides simple way to define context buttons for every item. 
-		The only limitation, they are all the same. So if you need to have unique buttons for every item, then you have to 
-		customize cursor templates and manually create custom buttons inside of them.
-		
-	See also:
-		<primitives.famdiagram.ButtonConfig>
-	*/
+  /**
+   * Buttons configuration objects collection. The buttons panel on the side of the diagram nodes is one of our default easy to use features.
+   * This gives you the possibility to try and see how context buttons work being placed inside of diagram layout.
+   * This collection of buttons provides configuration properties for buttons rendered using HTML buttons elements.
+   * 
+   * @type {ButtonConfig[]}
+   */
   this.buttons = [];
 
+  /**
+   * On buttons panel render event. This callback function is called to render context of buttons panel.
+   * It is used to replace `buttons` collection property in ReactJS component. So we preserve context buttons panel as a functional 
+   * concept, but eliminate buttons customization API.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   * @ignore
+   */
   this.onButtonsRender = null;
 
-	/*
-	Event: onHighlightChanging
-		Notifies about changing highlight item <primitives.famdiagram.Config.highlightItem> in diagram.
-		This coupled event with <primitives.famdiagram.Config.onHighlightChanged>, it is fired before highlight update.
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * On highlight item being changed event. See `highlightItem` property. This callback function is called before `onHighlightChanged` event.
+   * Use this callabck function to stop event propogation. See `EventArgs` for details.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onHighlightChanging = null;
 
-	/*
-	Event: onHighlightChanged
-		Notifies about changed highlight item <primitives.famdiagram.Config.highlightItem> in diagram.
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * On highlight item changed event. See `highlightItem` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onHighlightChanged = null;
 
-	/*
-	Event: onCursorChanging
-		Notifies about changing cursor item <primitives.famdiagram.Config.cursorItem> in diagram.
-		This coupled event with <primitives.famdiagram.Config.onCursorChanged>, it is fired before layout update.
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * On cursor item being changed event. See `cursorItem` property. This callback function is called before `onCursorChanged` event.
+   * Use this callabck function to stop event propogation. See `EventArgs` for details.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onCursorChanging = null;
 
-	/*
-	Event: onCursorChanged
-		Notifies about changed cursor item <primitives.famdiagram.Config.cursorItem> in diagram .
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * On cursor item changed event. See `cursorItem` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onCursorChanged = null;
 
-	/*
-	Event: onSelectionChanging
-		Notifies about changing selected items collection of <primitives.famdiagram.Config.selectedItems>.
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * On selected items being changed event. See `selectedItems` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onSelectionChanging = null;
 
-	/*
-	Event: onSelectionChanged
-		Notifies about changes in collection of <primitives.famdiagram.Config.selectedItems>.
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * On selected items changed event. See `selectedItems` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onSelectionChanged = null;
 
-	/*
-	Event: onButtonClick
-		Notifies about click of custom user button defined in colelction of <primitives.famdiagram.Config.buttons>.
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * Button click event. See `buttons` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onButtonClick = null;
 
-	/*
-	Event: onMouseClick
-		On mouse click event. 
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * Mouse click event. 
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onMouseClick = null;
 
-	/*
-	Event: onMouseDblClick
-		On mouse double click event. 
-
-	See also:
-		<primitives.famdiagram.EventArgs>
-	*/
+  /**
+   * Mouse double click event. 
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onMouseDblClick = null;
 
-	/*
-	Event: onItemRender
-		Item templates don't provide means to bind data of items into templates. So this event handler gives application such possibility.
-		If application uses custom templates then this method is called to populate template with items properties.
-
-	See also:
-		<primitives.common.RenderEventArgs>
-		<primitives.famdiagram.TemplateConfig>
-		<primitives.famdiagram.Config.templates>
-	*/
+  /**
+   * Callback function for rendering content of the diagram nodes. This callback is only 
+   * called when custom item template is defined in the template object configuration.
+   * This callback receives reference to DOM element and context object of the rendered item.
+   * The control reuses exisitng elements in the DOM, so it is applications responsibility 
+   * to properly update their content.
+   *
+   * @callback
+   * @param {Object} event Event if available
+   * @param {RenderEventArgs} data The context information
+   */
   this.onItemRender = null;
 
-	/*
-	Event: onHighlightRender
-		If user defined custom highlight template for item template 
-		then this method is called to populate it with context data.
-
-	See also:
-		<primitives.common.RenderEventArgs>
-		<primitives.famdiagram.TemplateConfig>
-		<primitives.famdiagram.Config.templates>
-	*/
+  /**
+   * Callback function for rendering content of the highlight template. This callback is only 
+   * called when custom highlight is defined in the template configuration.
+   *
+   * @callback
+   * @param {Object} event Event if available
+   * @param {RenderEventArgs} data The context information
+   */
   this.onHighlightRender = null;
-	/*
-	Event: onCursorRender
-		If user defined custom cursor template for item template 
-		then this method is called to populate it with context data.
 
-	See also:
-		<primitives.common.RenderEventArgs>
-		<primitives.famdiagram.TemplateConfig>
-		<primitives.famdiagram.Config.templates>
-	*/
+  /**
+   * Callback function for rendering content of the cursor template. This callback is only 
+   * called when custom cursor is defined in the template configuration.
+   *
+   * @callback
+   * @param {Object} event Event if available
+   * @param {RenderEventArgs} data The context information
+   */
   this.onCursorRender = null;
-	/*
-	Property: normalLevelShift
-		Defines interval after level of items in  diagram having items in normal state.
-	*/
+
+  /**
+   * Sets the spacing between rows.
+   * 
+   * @type {number}
+   */
   this.normalLevelShift = 20;
-	/*
-	Property: dotLevelShift
-		Defines interval after level of items in  diagram having all items in dot state.
-	*/
+
+  /**
+   * Sets the spacing after the row containing nodes minimized down to markers.
+   * 
+   * @type {number}
+   */
   this.dotLevelShift = 20;
-	/*
-	Property: lineLevelShift
-		Defines interval after level of items in  diagram having items in line state.
-	*/
+
+  /**
+   * Sets the spacing after the row containing nodes minimized down to lines.
+   * 
+   * @type {number}
+   */
   this.lineLevelShift = 10;
 
-	/*
-	Property: normalItemsInterval
-		Defines interval between items at the same level in  diagram having items in normal state.
-	*/
+  /**
+   * Sets interval between nodes of the same row.
+   * 
+   * @type {number}
+   */
   this.normalItemsInterval = 10;
-	/*
-	Property: dotItemsInterval
-		Defines interval between items at the same level in  diagram having items in dot state.
-	*/
+
+  /**
+   * Sets interval between nodes of the same row, minimized down to markers.
+   * 
+   * @type {number}
+   */
   this.dotItemsInterval = 1;
-	/*
-	Property: lineItemsInterval
-		Defines interval between items at the same level in  diagram having items in line state.
-	*/
+
+  /**
+   * Sets interval between nodes of the same row, minimized down to lines.
+   * 
+   * @type {number}
+   */
   this.lineItemsInterval = 2;
 
-	/*
-	Property: cousinsIntervalMultiplier
-		Use this interval multiplier between cousins in hiearchy. The idea of this option to make extra space between cousins. 
-		So children belonging to different parents have extra gap between them.
-		
-	*/
+  /**
+   * Set cousins interval multiplier. This values adds extra space between branches of the hierarchy.
+   * For example nodes of the same parent have interval 20 and nodes of two different parents are going to have interval 100.
+   * 
+   * @type {number}
+   */
   this.cousinsIntervalMultiplier = 5;
 
-	/*
-	Property: itemTitleFirstFontColor
-	This property customizes default template title font color. 
-	Item background color sometimes play a role of logical value and 
-	can vary over a wide range, so as a result title having 
-	default font color may become unreadable. Widgets selects the best font color 
-	between this option and <primitives.famdiagram.Config.itemTitleSecondFontColor>.
-
-	See Also:
-		<primitives.famdiagram.ItemConfig.itemTitleColor>
-		<primitives.famdiagram.Config.itemTitleSecondFontColor>
-		<primitives.common.highestContrast>
-
-	*/
+  /**
+   * The first font color of the title.
+   * 
+   * The title background color is designed to be one of the avalaible dimensitions to group nodes in the diagram,
+   * so title can be unreadable if its color matches its background color. This property is created to auto resolve this issue
+   * via automatic switch between two available font title colors.
+   * 
+   * @type {string}
+   */
   this.itemTitleFirstFontColor = "#ffffff"/*primitives.common.Colors.White*/;
 
-	/*
-	Property: itemTitleSecondFontColor
-	Default template title second font color.
-	*/
+  /**
+   * The second font color of the title.
+   * 
+   * @type {string}
+   */
   this.itemTitleSecondFontColor = "#000080"/*primitives.common.Colors.Navy*/;
 
-	/*
-		Property: minimizedItemShapeType
-			Defines minimized item shape. The border line width is set with <primitives.famdiagram.TemplateConfig.minimizedItemBorderWidth>
-			By default minimized item is rounded rectangle filled with item title color.
-
-
-		See also:
-			<primitives.famdiagram.TemplateConfig.minimizedItemCornerRadius>
-			<primitives.famdiagram.ItemConfig.itemTitleColor>
-			<primitives.famdiagram.ItemConfig.minimizedItemShapeType>
-
-		Default:
-			<primitives.common.ShapeType.None>
-	*/
+  /**
+   * Markers. The shape of the markers when nodes are minimized by autofit. The control supports auto fit of the diagram into available screen space.
+   * When the diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
+   * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
+   * So this option sets default marker shape for nodes. It can be set individually per node in items configurations.
+   * 
+   * The default color of shape is the same as `itemTitleColor` property set for individual items.
+   * 
+   * @type {ShapeType}
+   */
   this.minimizedItemShapeType = 6/*primitives.common.ShapeType.None*/;
 
-	/*
-	Property: linesColor
-		Connectors lines color. Connectors are basic connections betwen chart items 
-		defining their logical relationships, don't mix with connector annotations. 
-	*/
+  /**
+   * The relations lines color. The control uses this lines color to render basic relations between nodes.
+   * 
+   * @type {string}
+   */
   this.linesColor = "#c0c0c0"/*primitives.common.Colors.Silver*/;
 
-	/*
-	Property: linesWidth
-		Connectors lines width.
-	*/
+  /**
+   * The relations lines width
+   * 
+   * @type {number}
+   */
   this.linesWidth = 1;
 
-	/*
-	Property: linesType
-		Connectors line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
+  /**
+   * The relations lines pattern
+   * 
+   * @type {LineType}
+   */
   this.linesType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-	Property: showNeigboursConnectorsHighlighted
-		Show connection lines between current cursor item and its neighbours highlighted. Neighbours selection mode is defined by neighboursSelectionMode option.
-	See also:
-		<primitives.famdiagram.Config.neighboursSelectionMode>,
-		<primitives.famdiagram.Config.highlightLinesColor>,
-		<primitives.famdiagram.Config.highlightLinesWidth>,
-		<primitives.famdiagram.Config.highlightLinesType>
-	Default:
-		false
-	*/
+  /**
+   * Shows connection lines between current cursor item and its neighbours highlighted. Neighbours selection mode
+   * is set by `neighboursSelectionMode` property.
+   * 
+   * Set following properties: `highlightLinesColor`, `highlightLinesWidth` and `highlightLinesType` to
+   * style highlighted lines.
+   * 
+   * @type {boolean}
+   */
   this.showNeigboursConnectorsHighlighted = false;
 
-	/*
-	Property: highlightLinesColor
-		Connectors highlight line color. Connectors are basic connections betwen chart items 
-		defining their logical relationships, don't mix with connector annotations. 
-	*/
+  /**
+   * Sets highlight lines color. The diagram uses highlight lines to render highlighted relation lines between nodes.
+   * See `showNeigboursConnectorsHighlighted` property.
+   * 
+   * @type {string}
+   */
   this.highlightLinesColor = "#ff0000"/*primitives.common.Colors.Red*/;
 
-	/*
-	Property: highlightLinesWidth
-		Connectors highlight line width.
-	*/
+  /**
+   * Sets highlight lines width. See `showNeigboursConnectorsHighlighted` property.
+   * 
+   * @type {number}
+   */
   this.highlightLinesWidth = 1;
 
-	/*
-	Property: highlightLinesType
-		Connectors highlight line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
+  /**
+   * Sets highlight lines pattern. See `showNeigboursConnectorsHighlighted` property.
+   * 
+   * @type {LineType}
+   */
   this.highlightLinesType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-	Property: linesPalette
-		This collection contains elements of type PaletteItemConfig. It is used to draw connector lines between families in different styles. 
-		It is similar concept to regular line chart having lines intersections. 
-		If this collection is empty then default linesColor, linesWidth and linesType are used for all connector lines.
-	
-	See Also:
-		<primitives.famdiagram.PaletteItemConfig>
-	*/
+  /**
+   * This collection contains lines styles for rendering relations going across family hierarchy.
+   * The purpose of this collection is to draw long horizontal parallel lines drawn between family branches in different styles.
+   * If this collection is empty then default `linesColor`, `linesWidth` and `linesType` are used for all connector lines.
+   * 
+   * @type {PaletteItemConfig[]}
+   */
   this.linesPalette = [];
 
-	/*
-	Property: calloutMaximumVisibility
-		Defines maximum allowed item form size to show callout.
-
-	See also:
-		<primitives.orgdiagram.Config.showCallout>
-
-	Default:
-		<primitives.common.Visibility.Dot>
-	*/
-  this.calloutMaximumVisibility = 2/*primitives.common.Visibility.Dot*/;
-
-	/*
-	Property: showCallout
-		This option controls callout visibility for dotted items. 
-
-	Default:
-		true
-	*/
+  /**
+   * Sets callout visibility.
+   * 
+   * @type {boolean}
+   */
   this.showCallout = true;
 
-	/*
-	Property: calloutPlacementOffset
-		Set this property value depending on size and intervals between markers so callout annotation does not overlap neighbouring items of marker it is shown for.
-	*/
+  /**
+   * Sets visibility of the callout annotation depending on size of a node it is shown for. See `pageFitMode` property.
+   * 
+   * @type {Visibility}
+   */
+  this.calloutMaximumVisibility = 2/*primitives.common.Visibility.Dot*/;
+
+  /**
+   * Callout annotation placement offset. Sets how far callout content is offset from the marker it is displayed for.
+   * 
+   * @type {number}
+   */
   this.calloutPlacementOffset = 100;
 
-	/*
-	Property: defaultCalloutTemplateName
-		This is template name used to render callouts for dotted items. 
-		Actual callout template name is defined by following sequence:
-		<primitives.famdiagram.ItemConfig.calloutTemplateName> 
-		<primitives.famdiagram.ItemConfig.templateName>
-		<primitives.famdiagram.Config.defaultCalloutTemplateName>
-		<primitives.famdiagram.Config.defaultTemplateName>
-
-
-	See Also:
-		<primitives.famdiagram.Config.templates> collection property.
-
-	Default:
-		null
-	*/
+  /**
+   * Callout annotation default template name.
+   * 
+   * Templates are HTML fragments containing layout and styles used to render diagram nodes.
+   * They are defined with a named configuration objects. See `templates` property of control's configuration object.
+   * 
+   * @type {string}
+   */
   this.defaultCalloutTemplateName = null;
 
-	/*
-	Property: calloutfillColor
-		Annotation callout fill color.
-	*/
+  /**
+   * Callout annotation fill color.
+   * 
+   * @type {string}
+   */
   this.calloutfillColor = "#000000";
 
-	/*
-	Property: calloutBorderColor
-		Annotation callout border color.
-	*/
+  /**
+   * Callout annotation border color.
+   * 
+   * @type {string}
+   */
   this.calloutBorderColor = null;
 
-	/*
-	Property: calloutOffset
-		Annotation callout offset.
-	*/
+  /**
+   * Callout annotation border line offset.
+   * 
+   * @type {number}
+   */
   this.calloutOffset = 4;
 
-	/*
-	Property: calloutCornerRadius
-		Annotation callout corner radius.
-	*/
+  /**
+   * Callout annotation corner radius.
+   * 
+   * @type {number}
+   */
   this.calloutCornerRadius = 4;
 
-	/*
-	Property: calloutPointerWidth
-		Annotation callout pointer base width.
-	*/
+  /**
+   * Callout annotation pointer width.
+   * 
+   * @type {string}
+   */
   this.calloutPointerWidth = "10%";
 
-	/*
-	Property: calloutLineWidth
-		Annotation callout border line width.
-	*/
+  /**
+   * Callout annotation border line width.
+   * 
+   * @type {number}
+   */
   this.calloutLineWidth = 1;
 
-	/*
-	Property: calloutOpacity
-		Annotation callout opacity.
-	*/
+  /**
+   * Callout annotation opacity
+   * 
+   * @type {number}
+   */
   this.calloutOpacity = 0.2;
 
-	/*
-	Property: buttonsPanelSize
-		User buttons panel size.
-	*/
+  /**
+   * The size of the panel containing context buttons.
+   * 
+   * @type {number}
+   */
   this.buttonsPanelSize = 28;
 
-	/*
-	Property: groupTitlePanelSize
-		Group title panel size.
-	*/
+  /**
+   * The size of the panel containing group title.
+   * 
+   * @type {number}
+   */
   this.groupTitlePanelSize = 24;
 
-	/*
-	Property: checkBoxPanelSize
-		Selection check box panel size.
-	*/
+  /**
+   * The size of the panel containing selection checkbox.
+   * 
+   * @type {number}
+   */
   this.checkBoxPanelSize = 24;
 
-	/*
-	Property: groupTitlePlacementType
-		Group title placement style. Defines group title and buttons panel position relative to item. By default group title is on the left and buttons are on the right.
-		If the value is set to <primitives.common.AdviserPlacementType.Left> then group title placed on the right and buttons on the left side of items.
-
-	Default:
-		<primitives.common.AdviserPlacementType.Left>
-	*/
+  /**
+   * Group titles placement. Defines group title and buttons panel position relative to the node. By default it is on the left.
+   * The group title on the side of the diagram node is one of controls default easy to use features. It gives extra dimension 
+   * for nodes visual grouping in the diagram.
+   * 
+   * @type {AdviserPlacementType}
+   */
   this.groupTitlePlacementType = 2/*primitives.common.AdviserPlacementType.Left*/;
 
-	/*
-		Property: groupTitleOrientation
-			Group title direction style. 
-
-		Default:
-			<primitives.text.TextDirection.Auto>
-	*/
+  /**
+   * Group titles orientation.
+   * 
+   * @type {TextOrientationType}
+   */
   this.groupTitleOrientation = 2/*primitives.text.TextOrientationType.RotateRight*/;
 
-	/*
-		Property: groupTitleVerticalAlignment
-			Group title vertical alignment. 
-
-		Default:
-			<primitives.common.VerticalAlignmentType.Center>
-	*/
+  /**
+   * Group titles vertical alignment.
+   * 
+   * @type {VerticalAlignmentType}
+   */
   this.groupTitleVerticalAlignment = 1/*primitives.common.VerticalAlignmentType.Middle*/;
 
-	/*
-		Property: groupTitleHorizontalAlignment
-			Group title horizontal alignment. 
-
-		Default:
-			<primitives.common.HorizontalAlignmentType.Center>
-	*/
+  /**
+   * Group titles horizontal alignment.
+   * 
+   * @type {HorizontalAlignmentType}
+   */
   this.groupTitleHorizontalAlignment = 0/*primitives.common.HorizontalAlignmentType.Center*/;
 
-	/*
-		Property: groupTitleFontSize
-			Group title font size. 
-
-		Default:
-			15
-	*/
+  /**
+   * 	Group titles font size.
+   * 
+   * @type {number}
+   */
   this.groupTitleFontSize = "12px";
 
-	/*
-		Property: groupTitleFontFamily
-			Group title font family. 
-
-		Default:
-			"Arial"
-	*/
+  /**
+   * Group titles font family.
+   * 
+   * @type {string}
+   */
   this.groupTitleFontFamily = "Arial";
 
-	/*
-		Property: groupTitleColor
-			Group title color. 
-
-		Default:
-			<primitives.common.Colors.Black>
-	*/
+  /**
+   * Group titles color. 
+   * 
+   * @type {string}
+   */
   this.groupTitleColor = "#4169e1"/*primitives.common.Colors.RoyalBlue*/;
 
-	/*
-		Property: groupTitleFontWeight
-			Group title font weight: normal | bold
-
-		Default:
-			"normal"
-	*/
+  /**
+   * Group titles font weight: normal, bold
+   * 
+   * @type {string}
+   */
   this.groupTitleFontWeight = "normal";
 
-	/*
-		Property: groupTitleFontStyle
-			Group title font style: normal | italic
-		
-		Default:
-			"normal"
-	*/
+  /**
+   * Group titles font style: normal, italic
+   * 
+   * @type {string}
+   */
   this.groupTitleFontStyle = "normal";
 
+  /**
+   * @ignore
+   */
   this.distance = 3;
 
-	/*
-	Property: scale
-		CSS3 scale transform.
-	*/
+  /**
+   * CSS3 scale transform. Control supports content scaling using CSS scale transform. It scales everything except scroll bars.
+   * It properly handles mouse event coordinates. The CSS scale transform produces unreadable text and corrupted lines in desktop browsers,
+   * it looks good only in mobile browsers, so our recomendation is to use zoom with collection of item templates of various sizes.
+   * Templates gives you better control over quality of your content at various zoom levels.
+   * 
+   * @type {number}
+   */
   this.scale = 1;
 
-	/*
-	Property: minimumScale
-		Minimum CSS3 scale transform. Available on mobile safary only.
-	*/
+  /**
+   * Minimum CSS3 scale transform.
+   * 
+   * @ignore
+   */
   this.minimumScale = 0.5;
 
-	/*
-	Property: maximumScale
-		Maximum CSS3 scale transform. Available on mobile safary only.
-	*/
+  /**
+   * Maximum CSS3 scale transform.
+   * 
+   * @ignore
+   */
   this.maximumScale = 1;
 
-	/*
-	Property: showLabels
-		This option controls labels visibility for minimized items. If you need to show labels outside of borders of regular items then use item template for customization.
-		Labels placed inside HTML DIV element and long strings are wrapped inside. 
-		User can control labels position relative to its item. Chart does not measure labels and does reserve space for them, 
-		so if label overlap each other then horizontal or vertical intervals between rows and items shoud be manually increased.
-	
-	Auto - depends on available space.
-	True - always shown.
-	False - hidden.
-
-	See Also:
-		<primitives.famdiagram.ItemConfig.label>
-		<primitives.famdiagram.Config.labelSize>
-		<primitives.famdiagram.Config.normalItemsInterval>
-		<primitives.famdiagram.Config.dotItemsInterval>
-		<primitives.famdiagram.Config.lineItemsInterval>
-		<primitives.famdiagram.Config.normalLevelShift>
-		<primitives.famdiagram.Config.dotLevelShift>
-		<primitives.famdiagram.Config.lineLevelShift>
-
-	Default:
-		<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Sets labels visibility for nodes when they are minimized into markers by page auto fit. See `pageFitMode` property.
+   * 
+   * The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes
+   * into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels.
+   * 
+   * Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict
+   * resoltion to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
+   * is going to stay visible.
+   * 
+   * Auto - displays label only when it has space to be rendered.
+   * True - shows label regardless, even if it overlaps other labels and nodes.
+   * False - hidden.
+   * 
+   * @type {Enabled}
+   */
   this.showLabels = 0/*primitives.common.Enabled.Auto*/;
 
-	/*
-	Property: labelSize
-		Defines label size. It is needed to avoid labels overlapping. If one label overlaps another label or item it will be hidden. 
-		Label string is wrapped when its length exceeds available width.
-
-	Default:
-		new <primitives.common.Size>(80, 24);
-	*/
+  /**
+   * Label size. Sets labels placeholders `div`s size. It is needed to resolve labels overlapping.
+   * If one label overlaps another label the or item it will be hidden.
+   * 
+   * @type {Size}
+   */
   this.labelSize = new primitives.common.Size(80, 24);
 
-	/*
-	Property: labelOffset
-		Defines label offset from dot in pixels.
-
-	Default:
-		1;
-	*/
+  /**
+   * Sets labels offset from the merkers bounding rectangles.
+   * 
+   * @type {number}
+   */
   this.labelOffset = 1;
 
-	/*
-	Property: labelOrientation
-		Defines label orientation. 
-
-	See Also:
-	<primitives.text.TextOrientationType>
-
-	Default:
-		<primitives.text.TextOrientationType.Horizontal>
-	*/
+  /**
+   * Labels orientation.
+   * 
+   * @type {TextOrientationType}
+   */
   this.labelOrientation = 0/*primitives.text.TextOrientationType.Horizontal*/;
 
-	/*
-	Property: labelPlacement
-		Defines label placement relative to its dot. 
-		Label is aligned to opposite side of its box.
-
-	See Also:
-	<primitives.common.PlacementType>
-
-	Default:
-		<primitives.common.PlacementType.Top>
-	*/
+  /**
+   * Labels placement. Sets labels placement relative to the markers bounding rectangles.
+   * 
+   * @type {PlacementType}
+   */
   this.labelPlacement = 1/*primitives.common.PlacementType.Top*/;
 
-	/*
-	Property: labelFontSize
-		Label font size. 
-
-	Default:
-		10px
-*/
+  /**
+   * Labels font size.
+   * 
+   * @type {string}
+   */
   this.labelFontSize = "10px";
 
-	/*
-		Property: labelFontFamily
-			Label font family. 
-
-		Default:
-			"Arial"
-	*/
+  /**
+   * Labels font family.
+   * 
+   * @type {string}
+   */
   this.labelFontFamily = "Arial";
 
-	/*
-		Property: labelColor
-			Label color. 
-
-		Default:
-			primitives.common.Colors.Black
-	*/
+  /**
+   * Labels color
+   * 
+   * @type {string}
+   */
   this.labelColor = "#000000"/*primitives.common.Colors.Black*/;
 
-	/*
-		Property: labelFontWeight
-			Font weight: normal | bold
-
-		Default:
-			"normal"
-	*/
+  /**
+   * Labels font weight
+   * Font weight: normal, bold
+   * 
+   * @type {string}
+   */
   this.labelFontWeight = "normal";
 
-	/*
-	Property: labelFontStyle
-		Font style: normal | italic
-		
-	Default:
-		"normal"
-	*/
+  /**
+   * Labels font style. Font style: normal, italic
+   * 
+   * @type {string}
+   */
   this.labelFontStyle = "normal";
 
-	/*
-	Property: enablePanning
-		Enable chart panning with mouse drag & drop for desktop browsers.
-		Disable it if you need to support items Drag & Drop.
-
-	Default:
-		true
-	*/
+  /**
+   * Enable panning. Enable chart panning with mouse drag & drop for desktop browsers.
+   * Disable it if you need to support items Drag & Drop.
+   * 
+   * @type {boolean}
+   */
   this.enablePanning = true;
 
-	/*
-	Property: autoSizeMinimum
-		Defines minimum diagram size in autosize mode. If diagram has no elements, it is going to be of this size on the page.  
-	Default:
-		new <primitives.common.Size>(800, 600);
-	*/
+  /**
+   * Sets minimum size the diagram can shrink itself in autosize mode. See `pageFitMode` property.
+   * In the auto size mode diagram controls its placeholder size itself,
+   * it sets its size to accomodate all nodes and render them normally.
+   * 
+   * @type {Size}
+   */
   this.autoSizeMinimum = new primitives.common.Size(800, 600);
 
-	/*
-	Property: autoSizeMaximum
-		Defines maximum diagram size in autosize mode.
-	Default:
-		new <primitives.common.Size>(1024, 768);
-	*/
+  /**
+   * Sets maximum size the diagram can expand itself in autosize mode. See `pageFitMode` property.
+   * In the auto size mode diagram controls its placeholder size itself,
+   * it sets its size to accomodate all nodes and render them normally.
+   * 
+   * @type {Size}
+   */
   this.autoSizeMaximum = new primitives.common.Size(1024, 768);
 };
 
 /* /Controls/FamDiagram/configs/ConnectorAnnotationConfig.js*/
-/*
-	Class: primitives.famdiagram.ConnectorAnnotationConfig
-		Options class. Populate annotation collection with instances of this objects to draw connector between two items.
-	
-	See Also:
-		<primitives.famdiagram.Config.annotations>
-*/
+/**
+ * @class ConnectorAnnotationConfig
+ * @classdesc  Connector annotation configuration object. Connector annotations draws lines between two nodes of the diagram.
+ * They are drawn on top of existing diagram layout and they don't affect nodes placement. So it is users responsibility to
+ * preserve space between nodes for them. 
+ *
+ * @param {object} arg0 Object properties.
+ */
 primitives.famdiagram.ConnectorAnnotationConfig = function (arg0, arg1) {
-	var property;
+  var property;
 
-	/*
-	Property: annotationType
-		Annotation type. All various annotations are defined in annotation collection property of <primitives.famdiagram.Config>. 
-		So this property is needed to define annotation type when we use JavaScript non-prototype objects.
-		See other annotations as well.
+  /**
+   * Annotation type. All types of annotations objects are added to `annotations` collection property of the control.
+   * This property is needed to distiguish them when they are defined as JSON objects.
+   * 
+   * @type {AnnotationType}
+   */
+  this.annotationType = 0/*primitives.common.AnnotationType.Connector*/;
 
-	Default:
-		<primitives.common.AnnotationType.Connector>
+  /**
+   * Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other.
+   * If you place annotations over diagram nodes then you block mouse events of UI elements in their templates.
+   * Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item
+   * templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top
+   * of other visual elements. The control takes this into account and renders buttons panel on top of everyhting,
+   * so they are never blocked by annotations drawn in front of diagram nodes.
+   * 
+   * @type {ZOrderType}
+   */
+  this.zOrderType = 2/*primitives.common.ZOrderType.Foreground*/;
 
-	See Also:
-		<primitives.famdiagram.Config.annotations>
-		<primitives.famdiagram.ShapeAnnotationConfig>
-		<primitives.famdiagram.LabelAnnotationConfig>
-		<primitives.famdiagram.BackgroundAnnotationConfig>
-		<primitives.famdiagram.HighlightPathAnnotationConfig>
-	*/
-	this.annotationType = 0/*primitives.common.AnnotationType.Connector*/;
+  /**
+   * The start node of connection line
+   * 
+   * @type {string}
+   */
+  this.fromItem = null;
 
-	/*
-	Property: zOrderType
-		Defines annotation Z order placement relative to chart items. Chart items are drawn in layers on top of each other. We can draw annotations under the items or over them. 
-		If you place annotations over items then you block mouse events of UI elements in them. Browsers don't support mouse events transparentcy consistently. 
-		So in order to avoid mouse events blocking of UI elements in item templates you have to place annotation items under them.
-		Take into account that chart default buttons are drawn on top of everyhting, so they are never blocked by annotations drawn over items.
+  /**
+   * The end node of connection line
+   * 
+   * @type {string}
+   */
+  this.toItem = null;
 
-	Default:
-		<primitives.common.ZOrderType.Foreground>
-	*/
-	this.zOrderType = 2/*primitives.common.ZOrderType.Foreground*/;
+  /**
+   * Connector shape type defines number of lines and arrows at their ends drawn between nodes of the connector annotation.
+   * This feature combined with basic conflict resolution, which places overlapping annotations in parallel when they overlap each other,
+   * gives you full flexibility over variations of possible connector lines between two given nodes of diagram.
+   * 
+   * @type {ConnectorShapeType}
+   */
+  this.connectorShapeType = 0/*primitives.common.ConnectorShapeType.OneWay*/;
 
-	/*
-	Property: fromItem 
-		Reference to from item in hierarchy.
-	See Also:
-		<primitives.famdiagram.ItemConfig.id>
-	*/
-	this.fromItem = null;
+  /**
+   * Connector placement type defines style of connector line drawing over diagram layout. It supports two options: 
+   * the `Straight` is classic direct line connecting two nodes, this is the most expected style of connector annotation
+   * drawing over diagram, the second style is called `Offbeat` and it is designed to dynamically adopt to nodes mutual 
+   * location and gap between them. It uses free hand line style drawing going from start to the end node. Since every diagram 
+   * is packed with various connection lines, this annotation placement style is deliberately made not straight, so it can be 
+   * noticeable on top of other lines of the diagram.
+   * 
+   * @type {ConnectorPlacementType}
+   */
+  this.connectorPlacementType = 0/*primitives.common.ConnectorPlacementType.Offbeat*/;
 
-	/*
-	Property: toItem 
-		Reference to from item in hierarchy.
-	See Also:
-		<primitives.famdiagram.ItemConfig.id>
-	*/
-	this.toItem = null;
+  /**
+   * Label placement relative to connector annotation. Connector annotation is bound and drawn between two nodes
+   * defined by two properties: `fromItem` and `toItem`. Label can be placed close to "start", "end" nodes or in between of them
+   * along the connector line. 
+   * 
+   * @type {ConnectorLabelPlacementType}
+   */
+  this.labelPlacementType = 1/*primitives.common.ConnectorLabelPlacementType.Between*/;
 
-	/*
-	Property: connectorShapeType
-		Connector shape type. 
+  /**
+   * Connector line end points offset. By default connection lines start from the margin of the node's rectangle.
+   * If offset is positive then start point goes from outside of the rectangle, if it is negative then it starts from inside of the nodes rectangle.
+   * 
+   * @type {Thickness}
+   */
+  this.offset = new primitives.common.Thickness(0, 0, 0, 0);
 
-	Default:
-		<primitives.common.ConnectorShapeType.OneWay>
-	*/
-	this.connectorShapeType = 0/*primitives.common.ConnectorShapeType.OneWay*/;
+  /**
+   * Border line width.
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 2;
 
-	/*
-	Property: connectorPlacementType
-		Defines connector annotation shape placement mode between two items. 
-		It uses off beat placement mode as default in order to avoid overlapping
-		of base hierarchy connecting lines.
+  /**
+   * Color
+   * 
+   * @type {string}
+   */
+  this.color = "#000000"/*primitives.common.Colors.Black*/;
 
-	Default:
-		<primitives.common.ConnectorPlacementType.Offbeat>
-*/
-	this.connectorPlacementType = 0/*primitives.common.ConnectorPlacementType.Offbeat*/;
+  /**
+   * Line pattern
+   * 
+   * @type {LineType}
+   */
+  this.lineType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-	Property: labelPlacementType
-		Label placement type along connection line(s). 
+  /**
+   * If true then annotated nodes are shown full size regardless of controls autofit mode and available screen space.
+   * @type {boolean}
+   */
+  this.selectItems = true;
 
-	Default:
-		<primitives.common.ConnectorLabelPlacementType.Between>
-	*/
-	this.labelPlacementType = 1/*primitives.common.ConnectorLabelPlacementType.Between*/;
+  /**
+   * Label. Label styled with css class name "bp-connector-label".
+   * @type {string}
+   */
+  this.label = null;
 
-	/*
-	Property: offset
-		Connector's from and to points offset off the rectangles side. Connectors connection points can be outside of rectangles and inside for negative offset value.
-	See also:
-		<primitives.common.Thickness>
-	*/
-	this.offset = new primitives.common.Thickness(0, 0, 0, 0);
+  /**
+   * Label size
+   * @type {Size}
+   */
+  this.labelSize = new primitives.common.Size(60, 30);
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 2;
-
-	/*
-	Property: color
-		Connector's color.
-	
-	Default:
-		<primitives.common.Colors.Black>
-	*/
-	this.color = "#000000"/*primitives.common.Colors.Black*/;
-
-	/*
-	Property: lineType
-		Connector's line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-
-	/*
-	Property: selectItems
-		Always show annotated items in normal state. Setting this option is equivalent to adding annotated items to collection of selected items.
-
-	Default:
-		true
-
-	See Also:
-		<primitives.famdiagram.Config.selectedItems>
-	*/
-	this.selectItems = true;
-
-	/*
-	Property: label
-		Annotation label text. Label styled with css class name "bp-connector-label".
-	*/
-	this.label = null;
-
-	/*
-	Property: labelSize
-		Annotation label size.
-
-	Default:
-		new <primitives.common.Size>(60, 30);
-	*/
-	this.labelSize = new primitives.common.Size(60, 30);
-
-	switch (arguments.length) {
-		case 1:
-			for (property in arg0) {
-				if (arg0.hasOwnProperty(property)) {
-					this[property] = arg0[property];
-				}
-			}
-			break;
-		case 2:
-			this.fromItem = arg0;
-			this.toItem = arg1;
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      for (property in arg0) {
+        if (arg0.hasOwnProperty(property)) {
+          this[property] = arg0[property];
+        }
+      }
+      break;
+    case 2:
+      this.fromItem = arg0;
+      this.toItem = arg1;
+      break;
+  }
 };
 
 /* /Controls/FamDiagram/configs/HighlightPathAnnotationConfig.js*/
-/*
-	Class: primitives.famdiagram.HighlightPathAnnotationConfig
-		Options class. Populate annotation collection with instances of this objects to draw path between items.
-		Path is drawn along base connection lines displaying relationships between item of the chart.
-	See Also:
-		<primitives.famdiagram.Config.annotations>
-*/
+/**
+ * @class HighlightPathAnnotationConfig
+ * @classdesc  Highlight path annotation configuration object. Highlight path annotation traces path between given sequence of nodes 
+ * over existing connector lines in the diagram.
+ *
+ * @param {object} arg0 Object properties.
+ */
 primitives.famdiagram.HighlightPathAnnotationConfig = function (arg0) {
-	var property;
+  var property;
 
-	/*
-	Property: annotationType
-		Annotation type. All various annotations are defined in annotation collection property of <primitives.famdiagram.Config>. 
-		So this property is needed to define annotation type when we use JavaScript non-prototype objects.
-		See other annotations as well.
+  /**
+   * Annotation type. All types of annotations objects are added to `annotations` collection property of the control.
+   * This property is needed to distiguish them when they are defined as JSON objects.
+   * 
+   * @type {AnnotationType}
+   */
+  this.annotationType = 2/*primitives.common.AnnotationType.HighlightPath*/;
 
-	Default:
-		<primitives.common.AnnotationType.HighlightPath>
+  /**
+   * Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other.
+   * If you place annotations over diagram nodes then you block mouse events of UI elements in their templates.
+   * Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item
+   * templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top
+   * of other visual elements. The control takes this into account and renders buttons panel on top of everyhting,
+   * so they are never blocked by annotations drawn in front of diagram nodes.
+   * 
+   * @type {ZOrderType}
+   */
+  this.zOrderType = 2/*primitives.common.ZOrderType.Foreground*/;
 
-	See Also:
-		<primitives.famdiagram.Config.annotations>
-		<primitives.famdiagram.ConnectorAnnotationConfig>
-		<primitives.famdiagram.ShapeAnnotationConfig>
-		<primitives.famdiagram.LabelAnnotationConfig>
-		<primitives.famdiagram.BackgroundAnnotationConfig>
-	*/
-	this.annotationType = 2/*primitives.common.AnnotationType.HighlightPath*/;
+  /**
+   * Collection of nodes ids this annotation is drawn for. Please, pay attention that this is array of nodes ids. So if diagram finds
+   * wrong path from start to end node you have possibility to define every intermediate node in the sequence yourself.
+   * 
+   * @type {string[]}
+   */
+  this.items = [];
 
-	/*
-	Property: zOrderType
-		Defines annotation Z order placement relative to chart items. Chart items are drawn in layers on top of each other.
-		Highlight path annotations can be placed under main connectors wire or over. 
+  /**
+   * Border line width
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 2;
 
-	Default:
-		<primitives.common.ZOrderType.Foreground>
-	*/
-	this.zOrderType = 2/*primitives.common.ZOrderType.Foreground*/;
+  /**
+   * Line color
+   * 
+   * @type {string}
+   */
+  this.color = "#ff0000"/*primitives.common.Colors.Red*/;
 
-	/*
-	Property: items 
-		Array of item ids in hierarchy.
-	See Also:
-		<primitives.famdiagram.ItemConfig.id>
-	*/
-	this.items = [];
+  /**
+   * Line type
+   * 
+   * @type {LineType}
+   */
+  this.lineType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 2;
+  /**
+   * Opacity.
+   * 
+   * @type {number}
+   */
+  this.opacity = 1;
 
-	/*
-	Property: color
-		Connector's color.
-	
-	Default:
-		<primitives.common.Colors.Black>
-	*/
-	this.color = "#ff0000"/*primitives.common.Colors.Red*/;
+  /**
+   * If true then annotation has arrows along the highlight path line.
+   * 
+   * @type {boolean}
+   */
+  this.showArrows = true;
 
-	/*
-	Property: lineType
-		Connector's line pattern.
+  /**
+   * If true then annotated nodes are shown full size regardless of controls autofit mode and available screen space.
+   * @type {boolean}
+   */
+  this.selectItems = false;
 
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-
-
-	/*
-	Property: opacity
-		Connector's line opacity.
-	*/
-	this.opacity = 1;
-
-	/*
-	Property: showArrows
-		This option controls arrows visibility along highlight path. 
-
-	Default:
-		true
-	*/
-	this.showArrows = true;
-
-	/*
-	Property: selectItems
-		Always show annotated items in normal state. Setting this option is equivalent to adding annotated items to collection of selected items.
-
-	Default:
-		true
-
-	See Also:
-		<primitives.famdiagram.Config.selectedItems>
-	*/
-	this.selectItems = false;
-
-	switch (arguments.length) {
-		case 1:
-			if (arg0 !== null) {
-				if (arg0 instanceof Array) {
-					this.items = arg0;
-				} else if (typeof arg0 == "object") {
-					for (property in arg0) {
-						if (arg0.hasOwnProperty(property)) {
-							this[property] = arg0[property];
-						}
-					}
-				}
-			}
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      if (arg0 !== null) {
+        if (arg0 instanceof Array) {
+          this.items = arg0;
+        } else if (typeof arg0 == "object") {
+          for (property in arg0) {
+            if (arg0.hasOwnProperty(property)) {
+              this[property] = arg0[property];
+            }
+          }
+        }
+      }
+      break;
+  }
 };
 
 /* /Controls/FamDiagram/configs/ItemConfig.js*/
-/*
-	Class: primitives.famdiagram.ItemConfig
-		Defines item in family chart hierarchy. 
-		User is supposed to create hierarchy of this items and assign it to <primitives.famdiagram.Config.items> collection property.
-		Widget contains some generic properties used in default item template, 
-		but user can add as many custom properties to this class as needed. 
-		Just be careful and avoid widget malfunction.
-
-	See Also:
-		<primitives.famdiagram.Config.items>
-*/
+/**
+ * @class ItemConfig
+ * @classdesc Item Configuration Object defines properties of individual node in the family chart hierarchy. See `items` collection property
+ * of family control configuration object. 
+ * 
+ * @param {ItemConfig} arg0 Item config properties
+ * 
+ * @param {string} arg0 Item id
+ * @param {string[]|undefined} arg1 Parents ids
+ * @param {string} arg2 Title
+ * @param {string} arg3 Description 
+ * @param {string} arg4 Image
+ */
 primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   var property;
-	/*
-	Property: id
-	Unique item id.
-	*/
+  /**
+   * Item id. It should be unique per chart.
+   * 
+   * @type {string}
+   */
   this.id = null;
 
-	/*
-	Property: parents
-	Collection of parent id's. If parents collection is empty [] then item placed as a root item.
-	*/
+  /**
+   * Parents items ids. If this collection is empty then item considered as a root item.
+   * @type {string[]}
+   */
   this.parents = [];
 
-	/*
-	Property: spouses
-	Collection of spouses id's. Items in this collection share common connector line whether they have common children or not.
-	*/
+  /**
+   * Spouses items ids. The nodes of this collection create fake invisible child node, 
+   * so all of them are being connected with common child connection line.
+   * @type {string[]}
+   */
   this.spouses = [];
 
-  /*
-		Property: relativeItem
-      This property is used to control items mutual placement in order to keep consistent ordering within levels. Relative item is used 
-      for placing given item in diagram. We can place item on left or right side of relative item via setting placementType type property.
-      In case when multiple items use the same relative item then their order can be customized with position property.
-
-      If this property set to null, family layout algorithm will try to choose elements order via placing connected 
-      nodes as close to each other as posible.
-
-    Deafult:
-			null
-	*/
+  /**
+   * Relative item id. This property is used to control items mutual placement in order to keep consistent ordering within levels. Relative item is used 
+   * for placing given item in diagram. We can place item on left or right side of relative item via setting placementType type property.
+   * In case when multiple items use the same relative item then their order can be customized with position property.
+   * 
+   * If this property set to null, family layout algorithm will try to choose elements order via placing connected 
+   * nodes as close to each other as posible.
+   * 
+   * @type {string}
+   */
   this.relativeItem = null;
 
-	/*
-		Property: placementType
-      Placement type defines Left ot Right side placement relative to relativeItem.
-		Deafult:
-			<primitives.common.AdviserPlacementType.Auto>
-	*/
+  /**
+   * Relative placement type defines Left ot Right side placement of the node relative to the `relativeItem`.
+   * 
+   * @type {AdviserPlacementType}
+   */
   this.placementType = 3/*primitives.common.AdviserPlacementType.Right*/;
 
-	/*
-    Property: position
-      Property defines ordering of elements placed relative to the same item.
-	*/
+  /**
+   * Relative position defines order of elements placed relative to the same relative item on the same side.
+   * 
+   * @type {number}
+   */
   this.position = null;
 
-	/*
-	Property: title
-	Default template title property.
-	*/
+  /**
+   * Title
+   * 
+   * @type {string}
+   */
   this.title = null;
 
-	/*
-	Property: description
-	Default template description element.
-	*/
+  /**
+   * Description
+   * 
+   * @type {string}
+   */
   this.description = null;
 
-	/*
-	Property: image
-	Url to image. This property is used in default template.
-	*/
+  /**
+   * Image
+   * 
+   * @type {string}
+   */
   this.image = null;
 
-	/*
-	Property: context
-	User context object.
-	*/
+  /**
+   * Context object
+   * 
+   * @type {object}
+   */
   this.context = null;
 
-	/*
-	Property: itemTitleColor
-	Default template title background color. The same color is used to draw minimized/dotted item.
-	*/
+  /**
+   * Title background color. The same color is used for node marker when control has enabled auto fit mode.
+   * 
+   * @type {string}
+   */
   this.itemTitleColor = "#4169e1"/*primitives.common.Colors.RoyalBlue*/;
 
-	/*
-	Property: minimizedItemShapeType
-		Defines minimized/dotted item shape type. By default it is set by ItemTemplate.minimizedItemShapeType property.
-		Use this property to set marker type individually per item.
-
-	See Also:
-		<primitives.common.ShapeType>
-	*/
+  /**
+   * Marker type. The shape of the marker when node is minimized by autofit. The control supports auto fit of diagram into available screen space.
+   * When diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
+   * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
+   * So this option sets marker shape for individual node.
+   * 
+   * @type {ShapeType}
+   */
   this.minimizedItemShapeType = null;
 
-	/*
-	Property: groupTitle
-	Auxiliary group title property. Displayed vertically on the side of item.
-	*/
+  /**
+   * Group Title. The group title on the side of the diagram node is one of controls default easy to use features.
+   * It gives extra dimension for nodes visual grouping in the diagram.
+   * 
+   * @type {string}
+   */
   this.groupTitle = null;
 
-	/*
-	Property: groupTitleColor
-	Group title background color.
-	*/
+  /**
+   * The group title background color.
+   * 
+   * @type {string}
+   */
   this.groupTitleColor = "#4169e1"/*primitives.common.Colors.RoyalBlue*/;
 
-	/*
-	Property: isActive
-		If it is true then item is selectable in hierarchy and it has mouse over highlight. 
-
-	True - Item is clickable.
-	False - Item is inactive and user cannot set cursor item or highlight.
-
-	Default:
-		true
-	*/
+  /**
+   * If true it makes item inactive in the diagram layout. Inactive items are regular items excluded from navigation, that means 
+   * when diagram uses auto fit mode, selection of the neighboring nodes goes through inactive items, so all nodes next to inactive item
+   * become selected and shown in full size as well. Inactive items play a role of in layout annotations having no user interaction
+   * and templated with HTML. For example they can be used to add titles into family diagram layout or terminator items
+   * indicating that upon reaching them diagram would load extra nodes into layout.
+   * 
+   * @type {boolean}
+   */
   this.isActive = true;
 
-	/*
-	Property: hasSelectorCheckbox
-		If it is true then selection check box is shown for the item. 
-		Selected items are always shown in normal form, so if item is 
-		selected then its selection check box is visible and checked.
-
-	Auto - Depends on <primitives.famdiagram.Config.hasSelectorCheckbox> setting.
-	True - Selection check box is visible.
-	False - No selection check box.
-
-	Default:
-	<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Shows selection check box for the node.
+   * If Auto then selection check box visibility depends on control's configuration.
+   * 
+   * Auto - depends on `hasSelectorCheckbox` property of the control
+   * True - shown
+   * False - hidden
+   * 
+   * @type {Enabled}
+   */
   this.hasSelectorCheckbox = 0/*primitives.common.Enabled.Auto*/;
 
-	/*
-	Property: hasButtons
-		This option controls buttons panel visibility. 
-
-	Auto - Depends on <primitives.famdiagram.Config.hasButtons> setting.
-	True - Has buttons panel.
-	False - No buttons panel.
-
-	Default:
-	<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Shows context buttons panel for the node.
+   * If Auto then context buttons panel visibility depends on control's configuration.
+   * 
+   * Auto - depends on `hasButtons` property of the control
+   * True - shown
+   * False - hidden
+   * 
+   * @type {Enabled}
+   */
   this.hasButtons = 0/*primitives.common.Enabled.Auto*/;
 
-	/*
-	Property: templateName
-		This is template name used to render this item.
-
-		See Also:
-		<primitives.famdiagram.TemplateConfig>
-		<primitives.famdiagram.Config.templates> collection property.
-	*/
+  /**
+   * Template name. Templates are HTML fragments containing layout and styles used to render diagram nodes.
+   * They are defined with a named configuration objects. See `templates` property of control's configuration object.
+   * This option lets individually assign rendering template per individual node of the diagram.
+   * 
+   * @type {string}
+   */
   this.templateName = null;
 
-	/*
-	Property: showCallout
-		This option controls items callout visibility.
-
-	Auto - depends on <primitives.famdiagram.Config.showCallout> option
-	True - shown
-	False - hidden
-
-	Default:
-		<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Sets callout annotation visibility for individual node. The callout annotation is one of easy to use features of the control.
+   * By default it is displayed for markers in order to preview their node's content. The content is displayed using
+   * current template of the node it is rendered for.
+   * 
+   * The callout can be forced to be displayed for regular nodes as well. In that case use `calloutTemplateName` property
+   * to change their template.
+   * 
+   * Auto - depends on `showCallout` property of the control
+   * True - shown regardless of node's visibility
+   * False - hidden
+   * 
+   * @type {Enabled}
+   */
   this.showCallout = 0/*primitives.common.Enabled.Auto*/;
 
-	/*
-	Property: calloutTemplateName
-		This is template name used to render callout for dotted item. 
-		Actual callout template name is defined by following sequence:
-		<primitives.famdiagram.ItemConfig.calloutTemplateName> 
-		<primitives.famdiagram.ItemConfig.templateName>
-		<primitives.famdiagram.Config.defaultCalloutTemplateName>
-		<primitives.famdiagram.Config.defaultTemplateName>
-
-	See Also:
-		<primitives.famdiagram.Config.templates> collection property.
-	Default:
-		null
-	*/
+  /**
+   * Callout annotation template name. This option lets individually assign rendering callout annotation template
+   * per individual node of the diagram.
+   * 
+   * Templates are HTML fragments containing layout and styles used to render diagram nodes.
+   * They are defined with a named configuration objects. See `templates` property of control's configuration object.
+   * 
+   * @type {string}
+   */
   this.calloutTemplateName = null;
 
-	/*
-	Property: label
-	Items label text.
-	*/
+  /**
+   * Marker label.
+   * 
+   * @type {string}
+   */
   this.label = null;
 
-	/*
-	Property: showLabel
-		This option controls items label visibility. Label is displayed in form of div having text inside, long string is wrapped inside of it. 
-		User can control labels position relative to its item. Chart does not preserve space for label.
-
-	Auto - depends on <primitives.famdiagram.Config.labelOrientation> setting.
-	True - always shown.
-	False - hidden.
-
-	See Also:
-	<primitives.famdiagram.ItemConfig.label>
-	<primitives.famdiagram.Config.labelSize>
-
-	Default:
-		<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Sets label visibility for individual nodes. Labels are only rendered for a node's markers. 
+   * 
+   * The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes
+   * into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels.
+   * 
+   * Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict
+   * resoltion to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
+   * is going to stay visible.
+   * 
+   * Auto - displays label only when it has space to be rendered.
+   * True - shows label regardless, even if it overlaps other labels and nodes.
+   * False - hidden.
+   * 
+   * @type {Enabled}
+   */
   this.showLabel = 0/*primitives.common.Enabled.Auto*/;
 
-	/*
-	Property: labelSize
-		Defines label size. It is needed to avoid labels overlapping. If one label overlaps another label or item it will be hidden. 
-		Label string is wrapped when its length exceeds available width. 
-		By default it is equal to charts <primitives.famdiagram.Config.labelSize>.
-
-	See Also:
-		<primitives.common.Size>
-	Default:
-		null;
-	*/
+  /**
+   * Label size. Sets label's placeholder `div` size and controls conflict resolution if labels overlap each other.
+   * If `null` then it is set to `labelSize` property of the control configuration.
+   * 
+   * @type {Size}
+   */
   this.labelSize = null;
 
-	/*
-	Property: labelOrientation
-		Defines label orientation. 
-		In default <primitives.text.TextOrientationType.Auto> mode it depends on chart <primitives.famdiagram.Config.labelOrientation> setting.
-
-	See Also:
-	<primitives.famdiagram.Config.labelOrientation>
-	<primitives.text.TextOrientationType>
-
-	Default:
-		<primitives.text.TextOrientationType.Auto>
-	*/
+  /**
+   * Label orientation.
+   * If `Auto` then it is set to `labelOrientation` property of the control configuration.
+   * 
+   * @type {TextOrientationType}
+   */
   this.labelOrientation = 3/*primitives.text.TextOrientationType.Auto*/;
 
-	/*
-	Property: labelPlacement
-		Defines label placement relative to the item. 
-		In default <primitives.common.PlacementType.Auto> mode it depends on chart <primitives.famdiagram.Config.labelPlacement> setting.
-
-	See Also:
-		<primitives.famdiagram.Config.labelPlacement>
-		<primitives.common.PlacementType>
-
-	Default:
-		<primitives.common.PlacementType.Auto>
-	*/
+  /**
+   * Label placement. Sets label placement relative to the marker bounding rectangle.
+   * If `Auto` then it is set to `labelPlacement` of the control configuration.
+   * 
+   * @type {PlacementType}
+   */
   this.labelPlacement = 0/*primitives.common.PlacementType.Auto*/;
 
   switch (arguments.length) {
@@ -8814,7 +8894,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
       break;
     case 5:
       this.id = arg0;
-      this.parent = arg1;
+      this.parents = arg1;
       this.title = arg2;
       this.description = arg3;
       this.image = arg4;
@@ -8824,324 +8904,272 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
 
 
 /* /Controls/FamDiagram/configs/LabelAnnotationConfig.js*/
-/*
-	Class: primitives.famdiagram.LabelAnnotationConfig
-		Options class. Populate annotation collection with instances of this object to draw labels between items in diagram layout.
-		This label annotation is created over connection line going from item to its children or parents.
-		It is required that label annotation references subset of item's parents or children.
-		If you need to create cross chart reference then use connector annotation.
-	
-	See Also:
-		<primitives.famdiagram.Config.annotations>
-*/
+/**
+ * @class LabelAnnotationConfig
+ * @classdesc In-layout label annotation. Label anntations are placed in layout between nodes, they preserve
+ * space between nodes, so they don't overlap neighbouring nodes. Label annotations are designed 
+ * for autoplacement and bundling of connection lines between nodes when needed.
+ *
+ * @param {object} arg0 Object properties.
+ */
 primitives.famdiagram.LabelAnnotationConfig = function (arg0, arg1) {
-	var property;
+  var property;
 
-	/*
-	Property: annotationType
-		Annotation type. All various annotations are defined in annotation collection property of <primitives.famdiagram.Config>. 
-		So this property is needed to define annotation type when we use JavaScript non-prototype objects.
-		See other annotations as well.
+  /**
+   * Annotation type. All types of annotations objects are added to `annotations` collection property of the control.
+   * This property is needed to distiguish them when they are defined as JSON objects.
+   * 
+   * @type {AnnotationType}
+   */
+  this.annotationType = 3/*primitives.common.AnnotationType.Label*/;
 
-	Default:
-		<primitives.common.AnnotationType.Label>
+  /**
+   * This is the item id you are creating annotation for.
+   * @type {string}
+   */
+  this.fromItem = null;
 
-	See Also:
-		<primitives.famdiagram.Config.annotations>
-		<primitives.famdiagram.ConnectorAnnotationConfig>
-		<primitives.famdiagram.ShapeAnnotationConfig>
-		<primitives.famdiagram.BackgroundAnnotationConfig>
-		<primitives.famdiagram.HighlightPathAnnotationConfig>
-	*/
-	this.annotationType = 3/*primitives.common.AnnotationType.Label*/;
+  /**
+   * This collection should contain only child or parent items of the annotated item. It cannot conatain children and parents at the same time.
+   * If it contain sub set of children then annotaion label bundles children into subset and annotations form cascades 
+   * of labels over connection lines in the diagram.
+   * 
+   * @type {string[]}
+   */
+  this.toItems = [];
 
-	/*
-	Property: fromItem 
-		This is the item you are creating annotation for.
-	See Also:
-		<primitives.famdiagram.ItemConfig.id>
-	*/
-	this.fromItem = null;
+  /**
+   * Title. Annotation label text, it is styled with css class name "bp-connector-label".
+   * 
+   * @type {string}
+   */
+  this.title = null;
 
-	/*
-	Property: toItems 
-		This collection should contain only child or parent items of annotated item.
-		You cannot add child and parent items at the same time.
-		It may contain sub set of child or parent items. In that case existing annotation labels are drawn as a cascade.
-		
-	See Also:
-		<primitives.famdiagram.ItemConfig.id>
-	*/
-	this.toItems = [];
+  /**
+   * Default template title background color.
+   * 
+   * @type {string}
+   */
+  this.itemTitleColor = "#4169e1"/*primitives.common.Colors.RoyalBlue*/;
 
-	/*
-	Property: label
-		Annotation label text. Label styled with css class name "bp-connector-label".
-	*/
-	this.title = null;
+  /**
+   * Template name used to render this label.
+   * 
+   * @type {string}
+   */
+  this.templateName = null;
 
-	/*
-	Property: itemTitleColor
-	Default template title background color.
-	*/
-	this.itemTitleColor = "#4169e1"/*primitives.common.Colors.RoyalBlue*/;
-
-	/*
-	Property: templateName
-		This is template name used to render this label.
-
-		See Also:
-		<primitives.famdiagram.TemplateConfig>
-		<primitives.famdiagram.Config.templates>
-		<primitives.famdiagram.Config.onItemRender>
-	*/
-	this.templateName = null;
-
-	switch (arguments.length) {
-		case 1:
-			for (property in arg0) {
-				if (arg0.hasOwnProperty(property)) {
-					this[property] = arg0[property];
-				}
-			}
-			break;
-		case 2:
-			this.fromItem = arg0;
-			this.toItem = arg1;
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      for (property in arg0) {
+        if (arg0.hasOwnProperty(property)) {
+          this[property] = arg0[property];
+        }
+      }
+      break;
+    case 2:
+      this.fromItem = arg0;
+      this.toItem = arg1;
+      break;
+  }
 };
 
 /* /Controls/FamDiagram/configs/PaletteItemConfig.js*/
-/*
-	Class: primitives.famdiagram.PaletteItemConfig
-		This class is used to define cross family connectors styles. 
-		Multi-parent charts are supposed to have multiple cross hierarchy connectors, so in order to trace them more easely on chart
-		every connector may have separate style. It is the same strategy as for visualization of regular line charts.
-
-	See Also:
-		<primitives.famdiagram.Config.linesPalette>
-*/
+/**
+ * @class PaletteItemConfig
+ * @classdesc Palette Item configuration object defines cross family connections lines styles. Multi-parent diagrams have cross hirearchy 
+ * relation lines, so in order to make their visual tracing more easy on diagram every connection line can be styled differently.
+ * (This is the same approach as for visualization of regular classic line charts. If we have multiple lines in chart area it makes
+ * sense to style every line individually.)
+ * 
+ * @param {PaletteItemConfig} arg0 Palette properties object.
+ * 
+ * @param {string} arg0 Line color
+ * @param {number} arg1 Line width
+ * @param {LineType} arg2 Line type
+ */
 primitives.famdiagram.PaletteItemConfig = function (arg0, arg1, arg2) {
-	var property;
+  var property;
 
-	/*
-	Property: lineColor
-		Line color.
+  /**
+   * Line color
+   * 
+   * @type {string}
+   */
+  this.lineColor = "#c0c0c0"/*primitives.common.Colors.Silver*/;
 
-	Default:
-		<primitives.common.Colors.Silver>
-	*/
-	this.lineColor = "#c0c0c0"/*primitives.common.Colors.Silver*/;
+  /**
+   * Line width
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 1;
 
-	/*
-	Property: lineWidth
-		Line width.
-	Default:
-		1
-	*/
-	this.lineWidth = 1;
+  /**
+   * Line type
+   * 
+   * @type {LineType}
+   */
+  this.lineType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-	Property: lineType
-		Line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-
-	switch (arguments.length) {
-		case 1:
-			for (property in arg0) {
-				if (arg0.hasOwnProperty(property)) {
-					this[property] = arg0[property];
-				}
-			}
-			break;
-		case 3:
-			this.lineColor = arg0;
-			this.lineWidth = arg1;
-			this.lineType = arg2;
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      for (property in arg0) {
+        if (arg0.hasOwnProperty(property)) {
+          this[property] = arg0[property];
+        }
+      }
+      break;
+    case 3:
+      this.lineColor = arg0;
+      this.lineWidth = arg1;
+      this.lineType = arg2;
+      break;
+  }
 };
 
 
 /* /Controls/FamDiagram/configs/ShapeAnnotationConfig.js*/
-/*
-	Class: primitives.famdiagram.ShapeAnnotationConfig
-		Options class. Populate annotation collection with instances of this objects to draw shape benith or on top of several items.
-		Shape is drawn as rectangular area.
-	See Also:
-		<primitives.famdiagram.Config.annotations>
-*/
+/**
+ * @class ShapeAnnotationConfig
+ * @classdesc  Shape annotation configuration object. Shape annotation is a possibility to draw some geometrical
+ * shapes over nodes of the diagram. 
+ *
+ * @param {object} arg0 Object properties.
+ */
 primitives.famdiagram.ShapeAnnotationConfig = function (arg0) {
-	var property;
-	/*
-	Property: annotationType
-		Annotation type. All various annotations are defined in annotation collection property of <primitives.famdiagram.Config>. 
-		So this property is needed to define annotation type when we use JavaScript non-prototype objects.
-		See other annotations as well.
+  var property;
 
-	Default:
-		<primitives.common.AnnotationType.Shape>
+  /**
+   * Annotation type. All types of annotations objects are added to `annotations` collection property of the control.
+   * This property is needed to distiguish them when they are defined as JSON objects.
+   * 
+   * @type {AnnotationType}
+   */
+  this.annotationType = 1/*primitives.common.AnnotationType.Shape*/;
 
-	See Also:
-		<primitives.famdiagram.Config.annotations>
-		<primitives.famdiagram.ConnectorAnnotationConfig>
-		<primitives.famdiagram.LabelAnnotationConfig>
-		<primitives.famdiagram.BackgroundAnnotationConfig>
-		<primitives.famdiagram.HighlightPathAnnotationConfig>
-	*/
-	this.annotationType = 1/*primitives.common.AnnotationType.Shape*/;
+  /**
+   * Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other.
+   * If you place annotations over diagram nodes then you block mouse events of UI elements in their templates.
+   * Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item
+   * templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top
+   * of other visual elements. The control takes this into account and renders buttons panel on top of everyhting,
+   * so they are never blocked by annotations drawn in front of diagram nodes.
+   * 
+   * @type {ZOrderType}
+   */
+  this.zOrderType = 0/*primitives.common.ZOrderType.Auto*/;
 
-	/*
-	Property: zOrderType
-		Defines annotation Z order placement relative to chart items. Chart items are drawn in layers on top of each other. We can draw annotations under the items or over them. 
-		If you place annotations over items then you block mouse events of UI elements in them. Browsers don't support mouse events transparentcy consistently. 
-		So in order to avoid mouse events blocking of UI elements in item templates you have to place annotation items under them.
-		Take into account that chart default buttons are drawn on top of everyhting, so they are never blocked by annotations drawn over items.
+  /**
+   * Collection of nodes ids this shape annotation is drawn for.
+   * 
+   * @type {string[]}
+   */
+  this.items = [];
 
-	Default:
-		<primitives.common.ZOrderType.Auto>
-	*/
-	this.zOrderType = 0/*primitives.common.ZOrderType.Auto*/;
+	/**
+   * Shape
+   * 
+   * @type {ShapeType}
+   */
+  this.shapeType = 0/*primitives.common.ShapeType.Rectangle*/;
 
-	/*
-	Property: items 
-		Array of items ids in hierarchy.
-	See Also:
-		<primitives.famdiagram.ItemConfig.id>
-	*/
-	this.items = [];
+  /**
+   * Sets shape offset around annotated items.
+   * 
+   * @type {Thickness}
+   */
+  this.offset = new primitives.common.Thickness(0, 0, 0, 0);
 
-	/*
-	Property: shapeType
-		Shape type. 
+  /**
+   * Border line width
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 2;
 
-	Default:
-		<primitives.common.ShapeType.Rectangle>
-	*/
-	this.shapeType = 0/*primitives.common.ShapeType.Rectangle*/;
+  /**
+   * Corner radius. Body corner radius in percents or pixels. For applicable shapes only.
+   * 
+   * @type {string|number}
+   */
+  this.cornerRadius = "10%";
 
-	/*
-	Property: offset
-		Connector's from and to points offset off the rectangles side. Connectors connection points can be outside of rectangles and inside for negative offset value.
-	See also:
-		<primitives.common.Thickness>
-	*/
-	this.offset = new primitives.common.Thickness(0, 0, 0, 0);
+  /**
+   * Background color opacity.
+   * 
+   * @type {number}
+   */
+  this.opacity = 1;
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 2;
+  /**
+   * Shape border line color
+   * 
+   * @type {string}
+   */
+  this.borderColor = null;
 
-	/*
-	Property: cornerRadius
-		Body corner radius in percents or pixels. For applicable shapes only.
-	*/
-	this.cornerRadius = "10%";
+  /**
+   * Shape fill color
+   * 
+   * @type {string}
+   */
+  this.fillColor = null;
 
-	/*
-	Property: opacity
-		Background color opacity. For applicable shapes only.
-	*/
-	this.opacity = 1;
+  /**
+   * Border line type
+   * 
+   * @type {LineType}
+   */
+  this.lineType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-	Property: borderColor
-		Shape border line color.
-	
-	Default:
-		null
-	*/
-	this.borderColor = null;
+  /**
+   * If true then annotated nodes are shown full size regardless of controls autofit mode and available screen space.
+   * @type {boolean}
+   */
+  this.selectItems = false;
 
-	/*
-	Property: fillColor
-		Fill Color. 
+  /**
+   * Label. Label styled with css class name "bp-connector-label".
+   * @type {string}
+   */
+  this.label = null;
 
-	Default:
-		null
-	*/
-	this.fillColor = null;
+  /**
+   * Label size
+   * @type {Size}
+   */
+  this.labelSize = new primitives.common.Size(60, 30);
 
-	/*
-	Property: lineType
-		Connector's line pattern.
+  /**
+   * Label placement relative to the annotation.
+   * 
+   * @type {PlacementType}
+   */
+  this.labelPlacement = 0/*primitives.common.PlacementType.Auto*/;
 
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
+  /**
+   * Label offset from shape in pixels.
+   * 
+   * @type {number}
+   */
+  this.labelOffset = 4;
 
-	/*
-	Property: selectItems
-		Always show annotated items in normal state. Setting this option is equivalent to adding annotated items to collection of selected items.
-
-	Default:
-		true
-
-	See Also:
-		<primitives.famdiagram.Config.selectedItems>
-	*/
-	this.selectItems = false;
-
-	/*
-	Property: label
-		Annotation label text. Label styled with css class name "bp-connector-label".
-	*/
-	this.label = null;
-
-	/*
-	Property: labelSize
-		Annotation label size.
-
-	Default:
-		new <primitives.common.Size>(60, 30);
-	*/
-	this.labelSize = new primitives.common.Size(60, 30);
-
-	/*
-	Property: labelPlacement
-		Defines label placement relative to the shape. 
-
-	See Also:
-		<primitives.famdiagram.Config.labelPlacement>
-		<primitives.common.PlacementType>
-
-	Default:
-		<primitives.common.PlacementType.Auto>
-	*/
-	this.labelPlacement = 0/*primitives.common.PlacementType.Auto*/;
-
-	/*
-	Property: labelOffset
-		Defines label offset from shape in pixels.
-
-	Default:
-		4;
-	*/
-	this.labelOffset = 4;
-
-	switch (arguments.length) {
-		case 1:
-			if (arg0 !== null) {
-				if (arg0 instanceof Array) {
-					this.items = arg0;
-				} else if (typeof arg0 == "object") {
-					for (property in arg0) {
-						if (arg0.hasOwnProperty(property)) {
-							this[property] = arg0[property];
-						}
-					}
-				}
-			}
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      if (arg0 !== null) {
+        if (arg0 instanceof Array) {
+          this.items = arg0;
+        } else if (typeof arg0 == "object") {
+          for (property in arg0) {
+            if (arg0.hasOwnProperty(property)) {
+              this[property] = arg0[property];
+            }
+          }
+        }
+      }
+      break;
+  }
 };
 
 /* /Controls/FamDiagram/models/EdgeItem.js*/
@@ -12849,32 +12877,30 @@ primitives.famdiagram.UserDefinedNodesOrderTask = function (orderFamilyNodesOpti
 };
 
 /* /Controls/FamDiagram/Control.js*/
-/*
-	Class: primitives.famdiagram.Control
-	Constructs Family Diagram Control. 
-	
-	Parameters:
-	element - reference to DOM element which is used as new control placeholder. 
-		Control renders diagram content inside of that DIV placeholder and  adds events listeners.
-	options - reference to primitives.famdiagram.Config class instance.
-
-	Returns: 
-	reference to new instance of the control. Control adds event listeners bound to its contents, so if you need to remove it from DOM call destroy() method on the control's instance.
-*/
+/**
+* Creates JavaScript Family Chart Control
+ * @class Control
+ * @param {object} element Reference to placeholder `div` element in the DOM. The control renders diagram content
+ * inside of that div element and adds events listeners.
+ * @param {Config} options Family Chart Configuration object
+ * 
+ * @returns {famdiagram} Returns reference to family diagram control. Since control adds event listeners bound
+ * to its contents, call `destroy` method to clean up everything.
+ */
 primitives.famdiagram.Control = function (element, options) {
-	return primitives.orgdiagram.BaseControl(element, options, primitives.famdiagram.TaskManagerFactory, primitives.famdiagram.EventArgsFactory, {
-		AnnotationLabelTemplate: primitives.common.AnnotationLabelTemplate,
-		ButtonsTemplate: primitives.common.ButtonsTemplate,
-		CheckBoxTemplate: primitives.common.CheckBoxTemplate,
-		CursorTemplate: primitives.common.CursorTemplate,
-		DotHighlightTemplate: primitives.common.DotHighlightTemplate,
-		GroupTitleTemplate: primitives.common.GroupTitleTemplate,
-		HighlightTemplate: primitives.common.HighlightTemplate,
-		ItemTemplate: primitives.common.ItemTemplate,
-		UserTemplate: primitives.common.UserTemplate,
-		/* famDiagram specific templates */
-		LabelAnnotationTemplate: primitives.common.LabelAnnotationTemplate
-	});
+  return primitives.orgdiagram.BaseControl(element, options, primitives.famdiagram.TaskManagerFactory, primitives.famdiagram.EventArgsFactory, {
+    AnnotationLabelTemplate: primitives.common.AnnotationLabelTemplate,
+    ButtonsTemplate: primitives.common.ButtonsTemplate,
+    CheckBoxTemplate: primitives.common.CheckBoxTemplate,
+    CursorTemplate: primitives.common.CursorTemplate,
+    DotHighlightTemplate: primitives.common.DotHighlightTemplate,
+    GroupTitleTemplate: primitives.common.GroupTitleTemplate,
+    HighlightTemplate: primitives.common.HighlightTemplate,
+    ItemTemplate: primitives.common.ItemTemplate,
+    UserTemplate: primitives.common.UserTemplate,
+    /* famDiagram specific templates */
+    LabelAnnotationTemplate: primitives.common.LabelAnnotationTemplate
+  });
 };
 
 
@@ -13116,2115 +13142,1924 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 
 
 /* /Controls/OrgDiagram/Configs/TemplateConfig.js*/
-/*
-	Class: primitives.orgdiagram.TemplateConfig
-		User defines item template class. It may optionaly define template for item, 
-		custom cursor and highlight. If template is null then default template is used.
-
-	See Also:
-		<primitives.orgdiagram.Config.templates>
-*/
+/**
+ * @class TemplateConfig
+ * @classdesc Template configuration object defines DOM elements for node content, cursor and highlight visual representation.
+ * They are grouped into one configuration object because if we decide to customize cursor or highlight templates most likely
+ * we are going to make them item template specific. At the same time control does not require all 3 of them to be defined.
+ * If cursor or highlight templates properties are not set in template configuration object then control uses internal
+ * default template for all of them. Generally all 3 templates can be set to null, so default templates are going to be used
+ * by control.
+ */
 primitives.orgdiagram.TemplateConfig = function () {
-	/*
-	Property: name
-		Every template should have unique name. It is used as reference when 
-		custom template is defined in <primitives.orgdiagram.ItemConfig.templateName>.
-	*/
+  /**
+   * Name. Every template configuration object has name property, it is being used to reference templates from items.
+   * This name is used to as an argument of call back rendering function as well. If item has not template name set 
+   * it uses default template for rendering.
+   * 
+   * @type {string}
+   */
   this.name = null;
 
-	/*
-	Property: isActive
-		If it is true then item having this template is selectable in hierarchy and it has mouse over highlight.
-
-	True - Item is clickable.
-	False - Item is inactive and user cannot set cursor item or highlight.
-
-	Default:
-		true
-	*/
+  /**
+   * If true it makes templated items inactive in diagram layout. Inactive items are regular items excluded from navigation, that means 
+   * when use auto fit mode, selection of neighboring node to inactive item makes all nodes of inactive item shown in full
+   * size as well. Inactive items play a role of in layout annotations having no user interaction and templated with HTML.
+   * For example they can be used to add titles into family diagram layout or terminator items indicating that upon reaching
+   * them diagram would load extra nodes into layout.
+   * 
+   * @type {boolean}
+   */
   this.isActive = true;
 
-	/*
-	Property: itemSize
-	This is item size of type <primitives.common.Size>, templates should have 
-	fixed size, so orgDiagram uses this value in order to layout items properly.
-	*/
+  /**
+   * Size. Control deals with fixed size layout, it makes no guesses about content and size of nodes.
+   * So we don't support in any form nodes auto sizing. In order to support such feature control should measure content
+   * of every node before rendering cycle. Taking into account that nodes visibility depends on available space it is going
+   * to be infinite loop of diagram layout and nodes measure iterations. The more space we provide to nodes the less number 
+   * of diagram nodes is going to be visible. So control expect that node size is hard valued in template configuration.
+   * 
+   * @type {Size}
+   */
   this.itemSize = new primitives.common.Size(120, 100);
 
-	/*
-	Property: itemBorderWidth
-		Item template border width.
-	*/
+  /**
+   * Border width. We use archaic method to layout cursor and highlight frames around nodes, so we need to know border
+   * width in order measure gaps between them proeprly.
+   * 
+   * @type {number}
+   */
   this.itemBorderWidth = 1;
 
-	/*
-	Property: itemTemplate
-	Item template, if it is null then default item template is used. It supposed 
-	to be div html element containing named elements inside for setting them 
-	in <primitives.orgdiagram.Config.onItemRender> event.
-	*/
+  /**
+   * Item template. Supported template formats: Control provide two distinct ways to define item templates.
+   * The original one is based on setting HTML elements content via innerHTML DOM element property, see following reference 
+   * at https://developer.mozilla.org web site for more details. The modern way is to use JSON ML library that is our recommended
+   * solution for templates definition, see following web site for more details http://www.jsonml.org/. This is only 3d party
+   * MIT licensed code included into our code base, everything else is 100% authentic. We adopted it with minor modifications,
+   * it generaly works according to its original design.
+   * 
+   * The control calls `onItemRender` callback function when specific node cursor needs to be rendered with this template.
+   * 
+   * @type {string|object}
+   */
   this.itemTemplate = null;
 
-	/*
-		Property: minimizedItemShapeType
-			Defines minimized item shape. The border line width is set with <primitives.orgdiagram.TemplateConfig.minimizedItemBorderWidth>
-			By default minimized item is rounded rectangle filled with item title color.
-
-
-		See also:
-			<primitives.orgdiagram.TemplateConfig.minimizedItemCornerRadius>
-			<primitives.orgdiagram.ItemConfig.itemTitleColor>
-			<primitives.orgdiagram.ItemConfig.minimizedItemShapeType>
-
-		Default:
-			null
-	*/
+  /**
+   * Marker type. The shape of the marker when node is minimized by autofit. The control supposts auto fit of diagram into available screen space.
+   * When diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
+   * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
+   * So this option sets marker shape for nodes templated with this template.
+   * 
+   * @type {ShapeType}
+   */
   this.minimizedItemShapeType = null;
 
-	/*
-	Property: minimizedItemSize
-	This is size dot used to display item in minimized form, type of <primitives.common.Size>.
-	*/
+  /**
+   * Marker size.
+   * 
+   * @type {Size}
+   */
   this.minimizedItemSize = new primitives.common.Size(4, 4);
 
-	/*
-	Property: minimizedItemCornerRadius
-	Set corner radias for dots in order to display them as squares having rounded corners.
-	By default it is null and dots displayed as cycles. If corner radius set to 0 then they are displayed as regular squares.
-	*/
+  /**
+   * Marker corder radius for simple squares. By default it is null and dots displayed as cycles. If corner radius set to 0 then
+   * they are displayed as regular squares.
+   * 
+   * @type {number}
+   */
   this.minimizedItemCornerRadius = null;
 
-	/*
-	Property: minimizedItemLineWidth
-		Minimized item shape border width.
-	*/
+  /**
+   * Marker border line width
+   * 
+   * @type {number}
+   */
   this.minimizedItemLineWidth = 1;
 
-	/*
-	Property: minimizedItemBorderColor
-		Minimized item line color. By default it is the same as <primitives.orgdiagram.ItemConfig.itemTitleColor>
-	*/
+  /**
+   * Marker border line color. By default it is the same as `itemTitleColor` of rendered node.
+   * 
+   * @type {string}
+   */
   this.minimizedItemBorderColor = null;
 
-	/*
-	Property: minimizedItemLineType
-		Minimized item shape border line type.
-	*/
+  /*
+    Marker border line pattern
+    
+    @type {LineType}
+  */
   this.minimizedItemLineType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-	Property: minimizedItemFillColor
-		Minimized item fill color. By default it is the same as <primitives.orgdiagram.ItemConfig.itemTitleColor>
-	*/
+  /**
+   * Marker fill color. By default it is the same as `itemTitleColor` of rendered node.
+   * 
+   * @type {string}
+   */
   this.minimizedItemFillColor = null;
 
-	/*
-	Property: minimizedItemOpacity
-		Minimized item fill color opacity.
-	*/
+  /**
+   * Marker fill color opacity.
+   * 
+   * @type {number}
+   */
   this.minimizedItemOpacity = 1;
 
-	/*
-	Property: highlightPadding
-	This padding around item defines relative size of highlight object, 
-	its type is <primitives.common.Thickness>.
-	*/
+  /**
+   * Highlight frame offset from node.
+   * 
+   * @type {Thickness}
+   */
   this.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
 
-	/*
-	Property: highlightBorderWidth
-		Highlight border width.
-	*/
+  /**
+   * Highlight frame border width.
+   * 
+   * @type {number}
+   */
   this.highlightBorderWidth = 1;
 
-	/*
-	Property: highlightTemplate
-	Highlight template, if it is null then default highlight template is used. 
-	It supposed to be div html element containing named elements inside for 
-	setting them in <primitives.orgdiagram.Config.onHighlightRender> event.
-	*/
+  /**
+   * Highlight Template.
+   * 
+   * The control calls `onHighlightRender` callback function when specific node highlight needs to be rendered with this template.
+   * 
+   * @type {string|object}
+   */
   this.highlightTemplate = null;
 
-	/*
-	Property: cursorPadding
-	This padding around item defines relative size of cursor object, 
-	its type is <primitives.common.Thickness>.
-	*/
+  /**
+   * Cursor frame offset from node.
+   * 
+   * @type {Thickness}
+   */
   this.cursorPadding = new primitives.common.Thickness(3, 3, 3, 3);
 
-	/*
-	Property: cursorBorderWidth
-		Cursor border width.
-	*/
+  /**
+   * Cursor frame border width.
+   * 
+   * @type {number}
+   */
   this.cursorBorderWidth = 2;
 
-	/*
-	Property: cursorTemplate
-	Cursor template, if it is null then default cursor template is used. 
-	It supposed to be div html element containing named elements inside 
-	for setting them in <primitives.orgdiagram.Config.onCursorRender> event.
-	*/
+  /**
+   * Cursor Template.
+   * 
+   * The control calls `onCursorRender` callback function when specific node cursor needs to be rendered with this template.
+   * 
+   * @type {string|object}
+   */
   this.cursorTemplate = null;
 
-	/*
-	Property: buttons
-		Custom user buttons displayed on right side of item. This collection provides simple way to define context buttons for every template. 
-	
-	See also:
-		<primitives.orgdiagram.ButtonConfig>
-	*/
+  /**
+   * Template specific context buttons.
+   * 
+   * @type {ButtonConfig[]}
+   */
   this.buttons = null;
 
-  /*
-  Property: onButtonsRender
-    Callback method to render content in buttons panel. 
-  */
+  /**
+   * This callback function is used in React component. It basically makes buttons obsolete 
+   * and gives end user possibility to render any content in buttons panel.
+   * 
+   * @ignore
+   */
   this.onButtonsRender = null;
 };
 
 
 /* /Controls/OrgDiagram/Configs/BackgroundAnnotationConfig.js*/
-/*
-	Class: primitives.orgdiagram.BackgroundAnnotationConfig
-		Consider background annotation as another way to highlight some items in diagram.
-		In order to use it you have to create instances of this class and populate annotation collection.
-		Background annotation is drawn as rectangular area offset around annotated item. 
-		If two items backgrounds overlap each other they are merged into one background area.
-	See Also:
-		<primitives.orgdiagram.Config.annotations>
-*/
+/**
+ * @class BackgroundAnnotationConfig
+ * @classdesc  Background annotation configuration object.
+ * Background annotation highlights nodes via drawing rectangular shape around nodes in the background of the diagram.
+ * If shapes overlap each other and they have the same style then they are merged into one continuous shape.
+ *
+ * @param {object} arg0 Object properties.
+ */
 primitives.orgdiagram.BackgroundAnnotationConfig = function (arg0) {
-	var property;
+  var property;
 
-	/*
-	Property: annotationType
-		Annotation type. All various annotations are defined in annotations collection property of <primitives.orgdiagram.Config>. 
-		So this property is needed to define annotation type when we use JavaScript non-prototype objects.
-		See other annotations as well.
+  /**
+   * Annotation type. All types of annotations objects are added to `annotations` collection property of the control.
+   * This property is needed to distiguish them when they are defined as JSON objects.
+   * 
+   * @type {AnnotationType}
+   */
+  this.annotationType = 4/*primitives.common.AnnotationType.Background*/;
 
-	Default:
-		<primitives.common.AnnotationType.Background>
+  /**
+   * Collection of nodes ids this background annotation is drawn for.
+   * 
+   * @type {string[]}
+   */
+  this.items = [];
 
-	See Also:
-		<primitives.orgdiagram.Config.annotations>
-		<primitives.orgdiagram.ConnectorAnnotationConfig>
-		<primitives.orgdiagram.ShapeAnnotationConfig>
-		<primitives.orgdiagram.HighlightPathAnnotationConfig>
-	*/
-	this.annotationType = 4/*primitives.common.AnnotationType.Background*/;
+  /**
+   * If this property is true then background annotation includes all descendants of every item in `items` collection.
+   * 
+   * @type {boolean}
+   */
+  this.includeChildren = false;
 
-	/*
-	Property: items 
-		Array of items ids in hierarchy.
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-	*/
-	this.items = [];
+  /**
+   * Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other.
+   * If you place annotations over diagram nodes then you block mouse events of UI elements in their templates.
+   * Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item
+   * templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top
+   * of other visual elements. The control takes this into account and renders buttons panel on top of everyhting,
+   * so they are never blocked by annotations drawn in front of diagram nodes.
+   * 
+   * @type {ZOrderType}
+   */
+  this.zOrderType = 0/*primitives.common.ZOrderType.Auto*/;
 
-	/*
-	Property: includeChildren
-		Include all descendants of every item in items collection. If you add root item then all chart items are going to be added to annotation.
+  /**
+   * Sets background offset around annotated items.
+   * 
+   * @type {Thickness}
+   */
+  this.offset = new primitives.common.Thickness(18, 18, 18, 18);
 
-	Default:
-		false
-	*/
-	this.includeChildren = false;
+  /**
+   * Border line width
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 2;
 
-	/*
-	Property: zOrderType
-		Defines annotation Z order placement relative to chart items. Chart items are drawn in layers on top of each other. We can draw annotations under the items or over them. 
-		If you place annotations over items then you block mouse events of UI elements in them. Browsers don't support mouse events transparentcy consistently. 
-		So in order to avoid mouse events blocking of UI elements in item templates you have to place annotation items under them.
-		Take into account that chart default buttons are drawn on top of everyhting, so they are never blocked by annotations drawn over items.
+  /**
+   * Background color opacity.
+   * 
+   * @type {number}
+   */
+  this.opacity = 1;
 
-	Default:
-		<primitives.common.ZOrderType.Auto>
-	*/
-	this.zOrderType = 0/*primitives.common.ZOrderType.Auto*/;
+  /**
+   * Shape border line color
+   * 
+   * @type {string}
+   */
+  this.borderColor = null;
 
-	/*
-	Property: offset
-		Sets background offset around annotated item.
-	See also:
-		<primitives.common.Thickness>
-	*/
-	this.offset = new primitives.common.Thickness(18, 18, 18, 18);
+  /**
+   * Fill Color.
+   * 
+   * @type {string}
+   */
+  this.fillColor = null;
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 2;
+  /**
+   * Border line type
+   * 
+   * @type {LineType}
+   */
+  this.lineType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-	Property: opacity
-		Background color opacity. For applicable shapes only.
-	*/
-	this.opacity = 1;
+  /**
+   * If true then annotated nodes are shown full size regardless of controls autofit mode and available screen space.
+   * @type {boolean}
+   */
+  this.selectItems = false;
 
-	/*
-	Property: borderColor
-		Shape border line color.
-	
-	Default:
-		null
-	*/
-	this.borderColor = null;
-
-	/*
-	Property: fillColor
-		Fill Color. 
-
-	Default:
-		null
-	*/
-	this.fillColor = null;
-
-	/*
-	Property: lineType
-		Connector's line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-
-	/*
-	Property: selectItems
-		Always show annotated items in normal state. Setting this option is equivalent to adding annotated items to collection of selected items.
-
-	Default:
-		true
-
-	See Also:
-		<primitives.orgdiagram.Config.selectedItems>
-	*/
-	this.selectItems = false;
-
-	switch (arguments.length) {
-		case 1:
-			if (arg0 !== null) {
-				if (arg0 instanceof Array) {
-					this.items = arg0;
-				} else if (typeof arg0 == "object") {
-					for (property in arg0) {
-						if (arg0.hasOwnProperty(property)) {
-							this[property] = arg0[property];
-						}
-					}
-				}
-			}
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      if (arg0 !== null) {
+        if (arg0 instanceof Array) {
+          this.items = arg0;
+        } else if (typeof arg0 == "object") {
+          for (property in arg0) {
+            if (arg0.hasOwnProperty(property)) {
+              this[property] = arg0[property];
+            }
+          }
+        }
+      }
+      break;
+  }
 };
 
 /* /Controls/OrgDiagram/Configs/ButtonConfig.js*/
-/*
-	Class: primitives.orgdiagram.ButtonConfig
-		Options class. Custom user button options class. 
-		Buttons displayed on the right side of item. 
-		See jQuery UI Button options description for details.
-		In order to receive button click event make binding 
-		to <primitives.orgdiagram.Config.onButtonClick>.
-	
-	See Also:
-		<primitives.orgdiagram.Config.buttons>
-*/
+/**
+ * @class ButtonConfig
+ * @classdesc The buttons panel on the side of the diagram nodes is one of our default easy to use features.
+ * This gives you the possibility to try and see how context buttons work being placed inside of diagram layout.
+ * This object provides configuration properties for buttons rendered using HTML buttons elements.
+ * 
+ * Please, pay attention that diagram visual element are rendered in layers on top of each other, so buttons panel
+ * is rendered as the very last layer of the diagram, so its mouse events are never blocked by any other visual elements.
+ * 
+ * See `onButtonClick` event handler in control's configuration object.
+ *
+ * @param {string} name Name
+ * @param {string} icon Icon
+ * @param {string} tooltip Tooltip
+ */
 primitives.orgdiagram.ButtonConfig = function (name, icon, tooltip) {
-	/*
-	Property: name 
-		It should be unique string name of the button. 
-		It is needed to distinguish click events from different butons.
-	*/
-	this.name = name;
+  /**
+   * Button name. It is needed for `onButtonClick` event handler.
+   * 
+   * @type {string}
+   */
+  this.name = name;
 
-	/*
-	Property: icon
-	Name of icon used in jQuery UI.
-	*/
-	this.icon = icon;
+  /**
+   * Name of icon used in jQuery UI.
+   * 
+   * @type {string}
+   */
+  this.icon = icon;
 
-	/*
-	Property: text
-	Whether to show any text -when set to false (display no text), 
-	icon must be enabled, otherwise it'll be ignored.
-	*/
-	this.text = false;
+  /**
+   * If true show button text
+   * @type {boolean}
+   */
+  this.text = false;
 
-	/*
-	Property: label
-	Text to show on the button.
-	*/
-	this.label = null;
+  /**
+   * Text to show on the button.
+   * 
+   * @type {string}
+   */
+  this.label = null;
 
-	/*
-	Property: tooltip
-	Button tooltip content. Tooltip is based on jQuery UI tooltip widget, so it should be part of jQuery UI distribution in order to make this property work.
-	*/
-	this.tooltip = tooltip;
+  /**
+   * Button tooltip content. Tooltip is rendered using jQuery UI tooltip widget, so it should be part of jQuery UI distribution
+   * in order to make this property work.
+   * 
+   * @type {string}
+   */
+  this.tooltip = tooltip;
 
-	/*
-	Property: size
-	Size of the button of type <primitives.common.Size>.
-	*/
-	this.size = new primitives.common.Size(16, 16);
+  /**
+   * Button size
+   * 
+   * @type {Size}
+   */
+  this.size = new primitives.common.Size(16, 16);
 };
 
 /* /Controls/OrgDiagram/Configs/Config.js*/
-/*
-	Class: primitives.orgdiagram.Config
-		jQuery orgDiagram Widget options class. Organizational chart configuration object.
-	
-*/
+/**
+ * @class Config
+ * @classdesc Organizational Chart configuration object. Use this object as a reference 
+ * for available properties and their default values.
+ * 
+ * @param {string} name
+ */
 primitives.orgdiagram.Config = function (name) {
   this.name = (name !== undefined) ? name : "OrgDiagram";
   this.classPrefix = "orgdiagram";
 
-	/*
-		Property: navigationMode
-			Defines control navigation mode. By default control replicates interactivity of regular Tree control. 
-			It has highlight for mouse over feedback and it has cursor for showing currently selected single node in diagram.
-			In order to avoid creation of plus/minus buttons for children nodes folding and unfolding, 
-			this functionality is done automatically for current cursor item. This is especially true for family diagram, 
-			because it has no logical root, so cursor plays vital role for unfolding of nodes 
-			and zooming into area of user interest in diagram.
-			Use this option to disable highlight which does not make sense on touch devices or make control inactive completly.
-
-		See Also:
-			<primitives.common.NavigationMode>
-		Default:
-			<primitives.common.NavigationMode.Default>
-	*/
+  /**
+   * Sets control navigation mode.
+   * 
+   * By default control replicates interactivity of regular collection control. It has cursor to select single
+   * item in the collection. So user can click and select any node in the diagram. The control has highlight for mouse over feedback.
+   * So user can move mouse and see highlight frame and callout callback annotation for node under cursor.
+   * 
+   * By `Default` the control has both cursor and highlight. If they are disabled then control is rendered as a static image.
+   * 
+   * @type {NavigationMode}
+   */
   this.navigationMode = 0/*primitives.common.NavigationMode.Default*/;
 
-	/*
-		Property: graphicsType
-			Preferable graphics type. If preferred graphics type 
-			is not supported widget switches to first available. 
-
-		Default:
-			<primitives.common.GraphicsType.SVG>
-	*/
+  /**
+   * Sets prefered rendering technology. If selected graphics type is not supported on the device,
+   * then control will auto fallback to the first available one.
+   * 
+   * @type {GraphicsType}
+   */
   this.graphicsType = 0/*primitives.common.GraphicsType.SVG*/;
 
-	/*
-		Property: pageFitMode
-			Defines the way diagram is fit into page. By default chart minimize items when it has not enough space to fit all of them into screen. 
-			Chart has its maximum size when all items shown in full size and  its minimal size when all items shown as dots. 
-			It is equivalent of full zoom out of the chart items, dot size items are not readable, but such presentation of them 
-			gives possibility to overview chart layout. So chart tryes to combine both presenation modes and keep chart as small 
-			as possible in order to give user possibility to see big picture. Collapsed items provide ideal way for analitical reiew of 
-			organizational diagram. If chart shown in its maximum size when all items are unfolded, it becomes impossible 
-			to navigate betwen parents close to the root item. In such mode chart is usable only at bottom levels when children are close to their parents.
-			If we try to navigate up to the root of hierarchy, gaps between parents sometimes as big as screen size. So in order to solve these 
-			issues chart partially collapses hierarchy into dots and lines depending on this option.
-
-		See also:
-			<primitives.orgdiagram.Config.minimalVisibility>
-
-		Default:
-			<primitives.common.PageFitMode.FitToPage>
-	*/
+  /**
+   * Page fit mode. Minimizing nodes into markers and labels. This option provides a special mode that renders the diagram
+   * nodes in the form of markers. This is a highly scalable form that is capable of rendering large numbers of nodes
+   * while not affecting the rendering performance. With this, huge diagrams can be fit into avaialable screen space.
+   * 
+   * When using a graphics editor to manually draw your diagrams, it is common place to have large gaps between the nodes.
+   * This can make the diagram/chart unreadable, hard to edit and navigate. On top of that, on a large scale the diagram could have screen size
+   * intervals between items. Admittedly the computer UI does allow the user to scale and fit the diagram in order to visualize it
+   * on a single screen. But in that case, the items become small and unreadable as there is no scaling priority and the items
+   * are just too small to be readable.
+   * 
+   * @type {PageFitMode}
+   */
   this.pageFitMode = 3/*primitives.common.PageFitMode.FitToPage*/;
 
-	/*
-		Property: minimalVisibility
-			Defines minimal allowed item form size for page fit mode. See description for pageFitMode.
-	
-		See also:
-			<primitives.orgdiagram.Config.pageFitMode>
-
-		Default:
-			<primitives.common.Visibility.Dot>
-	*/
+  /**
+   * Minimal nodes visibility in the diagram. If auto fit of the diagram into current page size is enabled, then
+   * this option controls minimum allowed size of the diagram nodes.
+   * 
+   * @type {Visibility}
+   */
   this.minimalVisibility = 2/*primitives.common.Visibility.Dot*/;
 
-	/*
-		Property: orientationType
-			Chart orientation. Chart can be rotated left, right and bottom.
-			Rotation to the right side is equivalent to left side placement 
-			in countries writing from right to left, so it is important for localization.
-
-		Default:
-			<primitives.common.OrientationType.Top>
-	*/
+  /**
+   * Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction,
+   * this is needed for Arabic support and various layouts.
+   * 
+   * @type {OrientationType}
+   */
   this.orientationType = 0/*primitives.common.OrientationType.Top*/;
 
-	/*
-		Property: horizontalAlignment
-			Defines items horizontal alignment relative to their parent. 
-			This is usefull for control localization for right-to-left countries.
-		
-		Default:
-			<primitives.common.HorizontalAlignmentType.Center>
-	*/
+  /**
+   * Sets children horizontal alignment relative to their parent. The children by default are measured in size and then aligned 
+   * towards the parent node. If it is `Center` aligned then parent node is placed in the middle of the children. In the `Left`
+   * alignment mode parent is aligned to left of the children and vice versa for `Right` alignment.
+   * 
+   * @type {HorizontalAlignmentType}
+   */
   this.horizontalAlignment = 0/*primitives.common.HorizontalAlignmentType.Center*/;
 
-	/*
-	Property: verticalAlignment
-		Defines items vertical alignment relative to each other within one level of hierarchy. 
-		It does not affect levels having same size items.
-	
-	Default:
-		<primitives.common.VerticalAlignmentType.Middle>
-*/
+  /**
+   * Sets items vertical alignment relative to each other within one level of the hierarchy. 
+   * It does not change anything if diagram nodes are all of the same size.
+   * 
+   * @type {VerticalAlignmentType}
+   */
   this.verticalAlignment = 1/*primitives.common.VerticalAlignmentType.Middle*/;
 
-	/*
-		Property: arrowsDirection
-			Sets direction of connector lines arrows.
-
-		Default:
-			<primitives.common.GroupByType.None>
-	*/
+  /**
+   * Sets arrows direction for connector lines. If this property set to `Parents` then arrows are drawn
+   * from logical children towards logical parents. By default diagram has no arrows.
+   * 
+   * @type {GroupByType}
+   */
   this.arrowsDirection = 0/*primitives.common.GroupByType.None*/;
 
-	/*
-		Property: showExtraArrows
-			Show extra horizontal arrows on top of connectors for easy navigation between parents and children through connector lines.
-			This options if off by default for organizational diagram.
-
-		Default:
-			false
-	*/
+  /**
+   * Show extra horizontal arrows on top of long horizontal connection lines for the easy visual tracing 
+   * of relations between parents and children. By default it is off.
+   * 
+   * @type {boolean}
+   */
   this.showExtraArrows = false;
 
-	/*
-	Property: extraArrowsMinimumSpace
-		If diagram is small relations between objects are easy to trace, so mutual positions of parents and children are enough to navigate from parent to children and backward.
-		If diagram is large and one row of children exceeds screen width then it use this option to activate horizontal arrows for large intervals between items.
-
-	Default:
-		30
-	*/
+  /**
+   * Set minimum space for placement of extra arrows on horizontal connection lines. See `showExtraArrows` property.
+   * 
+   * @type {number}
+   */
   this.extraArrowsMinimumSpace = 30;
 
-	/*
-		Property: showHorizontalArrows
-			Show extra horizontal arrows for easy navigation to connection line between parents and children.
-
-		Default:
-			false
-	*/
-  this.showHorizontalArrows = false;
-
-	/*
-		Property: connectorType
-			Defines connector lines style for dot and line elements. If elements are in their normal full size 
-			form they are connected with squired connection lines. So this option controls connector lines style for dots only.
-
-		Default:
-			<primitives.common.ConnectorType.Squared>
-	*/
+  /**
+   * Connection lines style. This option is only applicable to nodes minimized to markers or lines. Full size nodes
+   * are always connected with squared connection lines
+   * 
+   * @type {ConnectorType}
+   */
   this.connectorType = 0/*primitives.common.ConnectorType.Squared*/;
 
-	/*
-		Property: bevelSize
-			Size of squared connector bevel.
-
-		Default:
-			4
-	*/
+  /**
+   * The bevel size of squared connector lines.
+   * 
+   * @type {number}
+   */
   this.bevelSize = 4;
 
-	/*
-		Property: elbowType
-			Style squared connectors with custom elbows.
-
-		Default:
-			<primitives.common.ElbowType.None>
-	*/
+  /**
+   * Set style of squared connectors with custom elbows.
+   * 
+   * @type {ElbowType}
+   */
   this.elbowType = 0/*primitives.common.ElbowType.None*/;
 
-	/*
-		Property: elbowDotSize
-			Size of elbow dot.
-
-		Default:
-			4
-	*/
+  /**
+   * The size of dot markers placed in the elbows of connector lines.
+   * 
+   * @type {number}
+   */
   this.elbowDotSize = 4;
 
-	/*
-	Property: emptyDiagramMessage
-		Empty message in order to avoid blank screen. This option is supposed to say user that chart is empty when no data inside.
-	*/
+
+  /**
+   * Empty diagram message. This option is supposed to say user that chart is empty when no data is available for rendering.
+   * 
+   * @type {string}
+   */
   this.emptyDiagramMessage = "Diagram is empty.";
 
-	/*
-	Property: items
-		This is chart items collection. It is regular array of items of type ItemConfig. Items reference each other via parent property. 
-		So every item may have only one parent in chart. If parent set to null then item displayed at root of chart. 
-		Chart can have multiple root items simultaniously. If item references missing item, then it is ignored. 
-		If items loop each other they are ignored as well. It is applications responsiblity to avoid such issues.
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig>
-		<primitives.orgdiagram.ItemConfig.id>
-		<primitives.orgdiagram.ItemConfig.parent>
-	*/
+  /**
+   * Items collection. Ths property defines data we render in the diagram.
+   * 
+   * Every items should have unique `id` property set. They are used to create relations
+   * between items in the diagram and for rendering various UI elements bound to nodes.
+   * 
+   * @type {ItemConfig[]}
+   */
   this.items = [];
 
-	/*
-	Property: annotations
-		Array of annotaion objects. Chart supports several types of annotations. By default they are drawn on top of chart items and they block mouse events of UI elements placed in item templates.
-		The design assumes only few of them being displayed simultanuosly in other words chart does not resolve mutual overlaps of annotations, so don't over use them. 
-		This is especially true for connectors and background annotations.
-
-	See also:
-		<primitives.orgdiagram.ConnectorAnnotationConfig>
-		<primitives.orgdiagram.ShapeAnnotationConfig>
-		<primitives.orgdiagram.BackgroundAnnotationConfig>
-		<primitives.orgdiagram.HighlightPathAnnotationConfig>
-	*/
+  /**
+   * Annotations. Annotations are API elements that are attached to the diagram nodes.
+   * We draw our annotations either in front of the nodes or in the background. The annotations 
+   * don't affect the nodes placement in any way. As a result the control redraws them 
+   * instantaneously without rerendering or recalculating the actual diagram layout.
+   * 
+   * @type {Array.<(ShapeAnnotationConfig | BackgroundAnnotationConfig | ConnectorAnnotationConfig | HighlightPathAnnotationConfig)>}
+   */
   this.annotations = [];
 
-	/*
-	Property: cursorItem
-		Cursor item id - it is single item selection mode, user selects new cursor item on mouse click. 
-		Cursor defines current local zoom placement or in other words current navigation item in the chart,
-		all items relative to cursor always shoun in full size. So user can see all possible items around cursor in full size 
-		and can continue navigation around chart. So when user navigates from one item to another clicking on thems and changing cursor item
-		in chart, chart minimizes items going out of cursor scope and shows in full size items relative to new cursor position.
-		If it is null then no cursor shown on diagram.
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-		<primitives.orgdiagram.Config.onCursorChanging>
-		<primitives.orgdiagram.Config.onCursorChanged>
-	*/
+  /**
+   * Cursor item. Organization Chart control has API options equivalent to regular UI controls.
+   * The cursor item is used to select single item in the hierarchy with mouse click, 
+   * highlight item provides visual feed back on mouse over. Selected items collection 
+   * is equivalent to checked items in ListView or TreeView controls.
+   * 
+   * Chart navigation depends on current cursor item, chart shows cursor and its neighbours 
+   * in full size regardless of enabled page fit mode. So cursor item plays a role of local 
+   * zoom in the chart hierarchy. User navigates around chart via clicking and moving
+   * cursor item around and zooming into data around new cursor item.
+   * 
+   * The control notifies about this property chnges with `onHighlightChanging` and `onHighlightChanged` events.
+   * 
+   * If `null` then no cursor item selected in the diagram.
+   * 
+   * @type {string}
+   */
   this.cursorItem = null;
 
-	/*
-	Property: highlightItem
-		Highlighted item id. Highlight is mouse over affect, but using this option applicatin can set highlight at any item 
-		in the chart programmatically. It can be used for chart syncronization with other controls on UI having mouse over effect. 
-		See primitives.orgdiagram.Config.update method arguments description for fast chart update.
-		If it is null then no highlight shown on diagram.
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-		<primitives.orgdiagram.Config.onHighlightChanging>
-		<primitives.orgdiagram.Config.onHighlightChanged>
-	*/
+  /**
+   * Highlighted item. Shows highlight and callout annotation for given item id. It does not trigger diagram
+   * layout or scrolling so it can be used to syncronize mouse over feedback of the diagram nodes with other
+   * collection controls or UI elements. 
+   * 
+   * The control notifies about this property chnges with `onHighlightChanging` and `onHighlightChanged` events.
+   * 
+   * If `null` then no highlight shown on the diagram.
+   * 
+   * @type {string}
+   */
   this.highlightItem = null;
 
-	/*
-	Property: highlightGravityRadius
-		The normal item has mouse over feedback in form of highlight border only when mouse pointer is inside of its boundaries. 
-		When items is minimized its marker can be so small that it is going to be difficult for end user to place mouse pointer inside of it.
-		This option defines highlight gravity radius, so minimized item gets highlighted when mouse pointer does not overlap marker but it is within gravity radius of its boundaries.
-		This property is ignored when nearest item is outside of screen boundaries and not visible to end user.
-	*/
+  /**
+   * Highlight gravity radius. This property controls mouse over feedback and callout annotation visibility for nodes
+   * rendered as markers when diagram auto fits nodes into available screen space. It makes marker highlighted when 
+   * mouse pointer is inside of the gravity radius cycle of the marker. This property is ignored when the nearest item
+   * is outside of the screen boundaries and is not visible to the end user.
+   *
+   * The normal item has mouse over feedback in form of highlight border only when mouse pointer is inside of its boundaries. 
+   * 
+   * @type {number}
+   */
   this.highlightGravityRadius = 40;
 
-	/*
-	Property: selectedItems
-		Defines array of selected item ids. Chart allows to select items via checking checkboxes under items. Checkboxes are 
-		shown only for full size items. So when item is selected it is always shown in full size, so check box always visible for selcted items.
-		User can navigate around large diagram and check intrested items in order to keep them opened. So that way chart provides 
-		means to show several items on large diagram and fit everything into minimal space ideally into available screen space.
-		Application can select items programmatically using this array or receive notifications from chart about user selections with following events.
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-		<primitives.orgdiagram.Config.onSelectionChanging>
-		<primitives.orgdiagram.Config.onSelectionChanged>
-	*/
+  /**
+   * Selected items collection. Selected items is a collection of items ids having checked their check boxes.
+   * The control always shows selected items in the full size form, regardless of enabled page fit mode.
+   * 
+   * The control notifies about user made changes in this collection with `onSelectionChanging` and `onSelectionChanged` events.
+   * 
+   * @type {string[]}
+   */
   this.selectedItems = [];
 
-	/*
-	Property: hasSelectorCheckbox
-		This option controls selection check boxes visibility. 
-
-	Auto - Checkbox shown only for current cursor item only.
-	True - Every full size item has selection check box.
-	False - No check boxes. Application can still programmatically select some items in the chart. 
-	Application may provide custom item template having checkbox inside of item. If application defined check box inside of item template has name="checkbox"
-	it is auto used as default selection check box.
-
-	Default:
-		<primitives.common.Enabled.Auto>
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig.hasSelectorCheckbox>
-		<primitives.orgdiagram.Config.onSelectionChanging>
-		<primitives.orgdiagram.Config.onSelectionChanged>
-	*/
+  /**
+  * Sets visibility of selection check boxes for the diagram nodes.
+  * 
+  * `Auto` - visible for cursor item only
+  * `True` - visible
+  * `False` - hiddens
+  * 
+  * See `selectedItems` property. All items listed in this property are going to have checked selection checkboxes.
+  * Checkbox can be added to item template, in that case it should be named="checkbox", so control can use it as built in checkbox element.
+  * 
+  * @type {Enabled}
+  */
   this.hasSelectorCheckbox = 0/*primitives.common.Enabled.Auto*/;
 
-	/*
-		Property: selectCheckBoxLabel
-			Selection check box label. 
-	*/
+  /**
+   * Selection check box label. See `hasSelectorCheckbox` and `selectedItems` properties.
+   * 
+   * @type {string}
+   */
   this.selectCheckBoxLabel = "Selected";
 
-	/*
-	Property: selectionPathMode
-		Defines the way items between root item and selectedItems displayed in diagram. Chart always shows all items between cursor item and its root in full size.
-		But if cursor positioned on root item, then chart shows in full size only selected items in the chart. So this option controls items size between 
-		selected items and root item of the chart. By default all items betwen root and selected items shown in full size.
-
-	Default:
-		<primitives.common.SelectionPathMode.FullStack>
-	*/
+  /**
+   * Selection path mode. This property controls visibility of nodes between cursor and the root of the diagram in the auto fit mode. It allows to draw 
+   * them in full size regardless of available space and auto fit mode.
+   * 
+   * The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers.
+   * So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items
+   * of the diagram in full size and draw all other diagram nodes as markers.
+   *
+   * @type {SelectionPathMode}
+   */
   this.selectionPathMode = 1/*primitives.common.SelectionPathMode.FullStack*/;
 
-	/*
-	Property: templates
-		Custom user templates collection. TemplateConfig is complex object providing options to customize item's content template, 
-		cursor tempate and highlight template. Every template config should have unique name property, which is used by chart and its item configs 
-		to reference them. Chart's defaultTemplateName allows to make template default for all items in the chart. On other hand user may define templates
-		to individual items in the chart by templateName property of item config.
-
-	See also:
-		<primitives.orgdiagram.TemplateConfig>
-		<primitives.orgdiagram.Config.defaultTemplateName>
-		<primitives.orgdiagram.ItemConfig.templateName>
-	*/
+  /**
+   * Collection of named templates used to define content for nodes, cursor and highlight.
+   * By default control provides templates for all types of visual elements.
+   * 
+   * @type {TemplateConfig[]}
+   */
   this.templates = [];
 
-	/*
-		Property: defaultTemplateName
-			This is template name used to render items having no <primitives.orgdiagram.ItemConfig.templateName> defined.
-
-
-		See Also:
-			<primitives.orgdiagram.TemplateConfig>
-			<primitives.orgdiagram.TemplateConfig.name>
-			<primitives.orgdiagram.Config.templates>
-	*/
+  /**
+   * Name of the template used to render nodes in the diagram. See `templates` property. Template name can be set individually for every node
+   * see `templateName` property of `ItemConfig`.
+   * 
+   * @type {string}
+   */
   this.defaultTemplateName = null;
 
-	/*
-	Property: hasButtons
-		This option controls user buttons visibility. 
-
-	Auto - Buttons visible only for cursor item.
-	True - Every normal item has buttons visible.
-	False - No buttons.
-
-	Default:
-		<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Sets buttons visibility.
+   * 
+   * `Auto` - cursor item only.
+   * `True` - visible
+   * `False` - hidden
+   * 
+   * @type {Enabled}
+   */
   this.hasButtons = 0/*primitives.common.Enabled.Auto*/;
 
-	/*
-	Property: buttons
-		Custom user buttons displayed on right side of item. This collection provides simple way to define context buttons for every item. 
-		The only limitation, they are all the same. So if you need to have unique buttons for every item, then you have to 
-		customize cursor templates and manually create custom buttons inside of them.
-
-	See also:
-		<primitives.orgdiagram.ButtonConfig>
-	*/
+  /**
+   * Buttons configuration objects collection. The buttons panel on the side of the diagram nodes is one of our default easy to use features.
+   * This gives you the possibility to try and see how context buttons work being placed inside of diagram layout.
+   * This collection of buttons provides configuration properties for buttons rendered using HTML buttons elements.
+   * 
+   * @type {ButtonConfig[]}
+   */
   this.buttons = [];
 
+  /**
+   * On buttons panel render event. This callback function is called to render context of buttons panel.
+   * It is used to replace `buttons` collection property in ReactJS component. So we preserve context buttons panel as a functional 
+   * concept, but eliminate buttons customization API.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   * @ignore
+   */
   this.onButtonsRender = null;
 
-	/*
-	Event: onHighlightChanging
-		Notifies about changing highlight item <primitives.orgdiagram.Config.highlightItem> in diagram.
-		This coupled event with <primitives.orgdiagram.Config.onHighlightChanged>, it is fired before highlight update.
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * On highlight item being changed event. See `highlightItem` property. This callback function is called before `onHighlightChanged` event.
+   * Use this callabck function to stop event propogation. See `EventArgs` for details.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onHighlightChanging = null;
 
-	/*
-	Event: onHighlightChanged
-		Notifies about changed highlight item <primitives.orgdiagram.Config.highlightItem> in diagram.
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * On highlight item changed event. See `highlightItem` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onHighlightChanged = null;
 
-	/*
-	Event: onCursorChanging
-		Notifies about changing cursor item <primitives.orgdiagram.Config.cursorItem> in diagram.
-		This coupled event with <primitives.orgdiagram.Config.onCursorChanged>, it is fired before layout update.
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * On cursor item being changed event. See `cursorItem` property. This callback function is called before `onCursorChanged` event.
+   * Use this callabck function to stop event propogation. See `EventArgs` for details.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onCursorChanging = null;
 
-	/*
-	Event: onCursorChanged
-		Notifies about changed cursor item <primitives.orgdiagram.Config.cursorItem> in diagram .
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * On cursor item changed event. See `cursorItem` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onCursorChanged = null;
 
-	/*
-	Event: onSelectionChanging
-		Notifies about changing selected items collection of <primitives.orgdiagram.Config.selectedItems>.
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * On selected items being changed event. See `selectedItems` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onSelectionChanging = null;
 
-	/*
-	Event: onSelectionChanged
-		Notifies about changes in collection of <primitives.orgdiagram.Config.selectedItems>.
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * On selected items changed event. See `selectedItems` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onSelectionChanged = null;
 
-	/*
-	Event: onButtonClick
-		Notifies about click of custom user button defined in colelction of <primitives.orgdiagram.Config.buttons>.
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * Button click event. See `buttons` property.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onButtonClick = null;
 
-	/*
-	Event: onMouseClick
-		On mouse click event. 
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * Mouse click event. 
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onMouseClick = null;
 
-	/*
-	Event: onMouseDblClick
-		On mouse double click event. 
-
-	See also:
-		<primitives.orgdiagram.EventArgs>
-	*/
+  /**
+   * Mouse double click event. 
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
+   */
   this.onMouseDblClick = null;
 
-	/*
-	Event: onItemRender
-		Item templates don't provide means to bind data of items into templates. So this event handler gives application such possibility.
-		If application uses custom templates then this method is called to populate template with items properties.
-
-	See also:
-		<primitives.common.RenderEventArgs>
-		<primitives.orgdiagram.TemplateConfig>
-		<primitives.orgdiagram.Config.templates>
-	*/
+  /**
+   * Callback function for rendering content of the diagram nodes. This callback is only 
+   * called when custom item template is defined in the template object configuration.
+   * This callback receives reference to DOM element and context object of the rendered item.
+   * The control reuses exisitng elements in the DOM, so it is applications responsibility 
+   * to properly update their content.
+   *
+   * @callback
+   * @param {Object} event Event if available
+   * @param {RenderEventArgs} data The context information
+   */
   this.onItemRender = null;
 
-	/*
-	Event: onHighlightRender
-		If user defined custom highlight template for item template 
-		then this method is called to populate it with context data.
-
-	See also:
-		<primitives.common.RenderEventArgs>
-		<primitives.orgdiagram.TemplateConfig>
-		<primitives.orgdiagram.Config.templates>
-	*/
+  /**
+   * Callback function for rendering content of the highlight template. This callback is only 
+   * called when custom highlight is defined in the template configuration.
+   *
+   * @callback
+   * @param {Object} event Event if available
+   * @param {RenderEventArgs} data The context information
+   */
   this.onHighlightRender = null;
-	/*
-	Event: onCursorRender
-		If user defined custom cursor template for item template 
-		then this method is called to populate it with context data.
 
-	See also:
-		<primitives.common.RenderEventArgs>
-		<primitives.orgdiagram.TemplateConfig>
-		<primitives.orgdiagram.Config.templates>
-	*/
+  /**
+   * Callback function for rendering content of the cursor template. This callback is only 
+   * called when custom cursor is defined in the template configuration.
+   *
+   * @callback
+   * @param {Object} event Event if available
+   * @param {RenderEventArgs} data The context information
+   */
   this.onCursorRender = null;
-	/*
-	Property: normalLevelShift
-		Defines interval after level of items in  diagram having items in normal state.
-	*/
+
+  /**
+   * Sets the spacing between rows.
+   * 
+   * @type {number}
+   */
   this.normalLevelShift = 20;
-	/*
-	Property: dotLevelShift
-		Defines interval after level of items in  diagram having all items in dot state.
-	*/
+
+  /**
+   * Sets the spacing after the row containing nodes minimized down to markers.
+   * 
+   * @type {number}
+   */
   this.dotLevelShift = 20;
-	/*
-	Property: lineLevelShift
-		Defines interval after level of items in  diagram having items in line state.
-	*/
+
+  /**
+   * Sets the spacing after the row containing nodes minimized down to lines.
+   * 
+   * @type {number}
+   */
   this.lineLevelShift = 10;
 
-	/*
-	Property: normalItemsInterval
-		Defines interval between items at the same level in  diagram having items in normal state.
-	*/
+  /**
+   * Sets interval between nodes of the same row.
+   * 
+   * @type {number}
+   */
   this.normalItemsInterval = 10;
-	/*
-	Property: dotItemsInterval
-		Defines interval between items at the same level in  diagram having items in dot state.
-	*/
+
+  /**
+   * Sets interval between nodes of the same row, minimized down to markers.
+   * 
+   * @type {number}
+   */
   this.dotItemsInterval = 1;
-	/*
-	Property: lineItemsInterval
-		Defines interval between items at the same level in  diagram having items in line state.
-	*/
+
+  /**
+   * Sets interval between nodes of the same row, minimized down to lines.
+   * 
+   * @type {number}
+   */
   this.lineItemsInterval = 2;
 
-	/*
-	Property: cousinsIntervalMultiplier
-		Use this interval multiplier between cousins in hiearchy. The idea of this option to make extra space between cousins. 
-		So children belonging to different parents have extra gap between them.
-		
-	*/
+  /**
+   * Set cousins interval multiplier. This values adds extra space between branches of the hierarchy.
+   * For example nodes of the same parent have interval 20 and nodes of two different parents are going to have interval 100.
+   * 
+   * @type {number}
+   */
   this.cousinsIntervalMultiplier = 5;
 
-	/*
-	method: update
-		Makes full redraw of diagram contents reevaluating all options. This method has to be called explisitly after all options are set in order to update widget contents.
-	
-	Parameters:
-		updateMode: This parameter defines severaty of update <primitives.common.UpdateMode>. 
-		For example <primitives.common.UpdateMode.Refresh> updates only 
-		items and selection reusing existing elements where ever it is possible.
-
-	See also:
-		<primitives.common.UpdateMode>
-
-	Default:
-		<primitives.common.UpdateMode.Recreate>
-	*/
-
-	/*
-	Property: itemTitleFirstFontColor
-	This property customizes default template title font color. 
-	Item background color sometimes play a role of logical value and 
-	can vary over a wide range, so as a result title having 
-	default font color may become unreadable. Widgets selects the best font color 
-	between this option and <primitives.orgdiagram.Config.itemTitleSecondFontColor>.
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig.itemTitleColor>
-		<primitives.orgdiagram.Config.itemTitleSecondFontColor>
-		<primitives.common.highestContrast>
-
-	*/
+  /**
+   * The first font color of the title.
+   * 
+   * The title background color is designed to be one of the avalaible dimensitions to group nodes in the diagram,
+   * so title can be unreadable if its color matches its background color. This property is created to auto resolve this issue
+   * via automatic switch between two available font title colors.
+   * 
+   * @type {string}
+   */
   this.itemTitleFirstFontColor = "#ffffff"/*primitives.common.Colors.White*/;
 
-	/*
-	Property: itemTitleSecondFontColor
-	Default template title second font color.
-	*/
+  /**
+   * The second font color of the title.
+   * 
+   * @type {string}
+   */
   this.itemTitleSecondFontColor = "#000080"/*primitives.common.Colors.Navy*/;
 
-	/*
-		Property: minimizedItemShapeType
-			Defines minimized item shape. The border line width is set with <primitives.orgdiagram.TemplateConfig.minimizedItemBorderWidth>
-			By default minimized item is rounded rectangle filled with item title color.
-
-
-		See also:
-			<primitives.orgdiagram.TemplateConfig.minimizedItemCornerRadius>
-			<primitives.orgdiagram.ItemConfig.itemTitleColor>
-			<primitives.orgdiagram.ItemConfig.minimizedItemShapeType>
-
-		Default:
-			<primitives.common.ShapeType.None>
-	*/
+  /**
+   * Markers. The shape of the markers when nodes are minimized by autofit. The control supports auto fit of the diagram into available screen space.
+   * When the diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
+   * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
+   * So this option sets default marker shape for nodes. It can be set individually per node in items configurations.
+   * 
+   * The default color of shape is the same as `itemTitleColor` property set for individual items.
+   * 
+   * @type {ShapeType}
+   */
   this.minimizedItemShapeType = 6/*primitives.common.ShapeType.None*/;
 
-	/*
-	Property: linesColor
-		Connectors lines color. Connectors are basic connections betwen chart items 
-		defining their logical relationships, don't mix with connector annotations. 
-	*/
+  /**
+   * The relations lines color. The control uses this lines color to render basic relations between nodes.
+   * 
+   * @type {string}
+   */
   this.linesColor = "#c0c0c0"/*primitives.common.Colors.Silver*/;
 
-	/*
-	Property: linesWidth
-		Connectors lines width.
-	*/
+  /**
+   * The relations lines width
+   * 
+   * @type {number}
+   */
   this.linesWidth = 1;
 
-	/*
-	Property: linesType
-		Connectors line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
+  /**
+   * The relations lines pattern
+   * 
+   * @type {LineType}
+   */
   this.linesType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-	Property: highlightLinesColor
-		Connectors highlight line color. Connectors are basic connections betwen chart items 
-		defining their logical relationships, don't mix with connector annotations. 
-	*/
+  /**
+   * Sets highlight lines color. The diagram uses highlight lines to render highlighted relation lines between nodes.
+   * 
+   * @type {string}
+   */
   this.highlightLinesColor = "#ff0000"/*primitives.common.Colors.Red*/;
 
-	/*
-	Property: highlightLinesWidth
-		Connectors highlight line width.
-	*/
+  /**
+   * Sets highlight lines width.
+   * 
+   * @type {number}
+   */
   this.highlightLinesWidth = 1;
 
-	/*
-	Property: highlightLinesType
-		Connectors highlight line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
+  /**
+   * Sets highlight lines pattern.
+   * 
+   * @type {LineType}
+   */
   this.highlightLinesType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-		Property: calloutMaximumVisibility
-			Defines maximum allowed item form size to show callout.
-	
-		See also:
-			<primitives.orgdiagram.Config.showCallout>
-
-		Default:
-			<primitives.common.Visibility.Dot>
-	*/
-  this.calloutMaximumVisibility = 2/*primitives.common.Visibility.Dot*/;
-
-	/*
-	Property: showCallout
-		This option controls callout visibility for items. 
-
-	Default:
-		true
-	*/
+  /**
+   * Sets callout visibility.
+   * 
+   * @type {boolean}
+   */
   this.showCallout = true;
 
-	/*
-	Property: calloutPlacementOffset
-		Set this property value depending on size and intervals between markers so callout annotation does not overlap neighbouring items of marker it is shown for.
-	*/
+  /**
+   * Sets visibility of the callout annotation depending on size of a node it is shown for. See `pageFitMode` property.
+   * 
+   * @type {Visibility}
+   */
+  this.calloutMaximumVisibility = 2/*primitives.common.Visibility.Dot*/;
+
+  /**
+   * Callout annotation placement offset. Sets how far callout content is offset from the marker it is displayed for.
+   * 
+   * @type {number}
+   */
   this.calloutPlacementOffset = 100;
 
-	/*
-	Property: defaultCalloutTemplateName
-		This is template name used to render callouts for dotted items. 
-		Actual callout template name is defined by following sequence:
-		<primitives.orgdiagram.ItemConfig.calloutTemplateName> 
-		<primitives.orgdiagram.ItemConfig.templateName>
-		<primitives.orgdiagram.Config.defaultCalloutTemplateName>
-		<primitives.orgdiagram.Config.defaultTemplateName>
-
-
-	See Also:
-		<primitives.orgdiagram.Config.templates> collection property.
-
-	Default:
-		null
-	*/
+  /**
+   * Callout annotation default template name.
+   * 
+   * Templates are HTML fragments containing layout and styles used to render diagram nodes.
+   * They are defined with a named configuration objects. See `templates` property of control's configuration object.
+   * 
+   * @type {string}
+   */
   this.defaultCalloutTemplateName = null;
 
-	/*
-	Property: calloutfillColor
-		Annotation callout fill color.
-	*/
+  /**
+   * Callout annotation fill color.
+   * 
+   * @type {string}
+   */
   this.calloutfillColor = "#000000";
 
-	/*
-	Property: calloutBorderColor
-		Annotation callout border color.
-	*/
+  /**
+   * Callout annotation border color.
+   * 
+   * @type {string}
+   */
   this.calloutBorderColor = null;
 
-	/*
-	Property: calloutOffset
-		Annotation callout offset.
-	*/
+  /**
+   * Callout annotation border line offset.
+   * 
+   * @type {number}
+   */
   this.calloutOffset = 4;
 
-	/*
-	Property: calloutCornerRadius
-		Annotation callout corner radius.
-	*/
+  /**
+   * Callout annotation corner radius.
+   * 
+   * @type {number}
+   */
   this.calloutCornerRadius = 4;
 
-	/*
-	Property: calloutPointerWidth
-		Annotation callout pointer base width.
-	*/
+  /**
+   * Callout annotation pointer width.
+   * 
+   * @type {string}
+   */
   this.calloutPointerWidth = "10%";
 
-	/*
-	Property: calloutLineWidth
-		Annotation callout border line width.
-	*/
+  /**
+   * Callout annotation border line width.
+   * 
+   * @type {number}
+   */
   this.calloutLineWidth = 1;
 
-	/*
-	Property: calloutOpacity
-		Annotation callout opacity.
-	*/
+  /**
+   * Callout annotation opacity
+   * 
+   * @type {number}
+   */
   this.calloutOpacity = 0.2;
 
-	/*
-	Property: childrenPlacementType
-		Defines children placement form.
-	*/
+  /**
+   * Sets default formation of child nodes. By default all children that belong to a parent node are always aligned 
+   * below and placed in a horizontal line. On a large scale this may result in the end user having to scroll screens
+   * in order to view all of the nodes. To compensate for this, we provide the option of placing all of the children
+   * of a parent node in a sqaure/matrix formation. This will reduce sideways screen scrolling by compacting the child
+   * nodes into a much smaller area on the screen.
+   * 
+   * @type {ChildrenPlacementType}
+   */
   this.childrenPlacementType = 2/*primitives.common.ChildrenPlacementType.Horizontal*/;
 
-	/*
-	Property: leavesPlacementType
-		Defines leaves placement form. Leaves are children having no sub children.
-	*/
+  /**
+   * Sets formation of leave children.
+   * 
+   * @type {ChildrenPlacementType}
+   */
   this.leavesPlacementType = 2/*primitives.common.ChildrenPlacementType.Horizontal*/;
 
-	/*
-	Property: maximumColumnsInMatrix
-		Maximum number of columns for matrix leaves layout. Leaves are children having no sub children.
-	*/
+  /**
+   * Maximum number of columns for matrix layout of children.
+   * 
+   * @type {number}
+   */
   this.maximumColumnsInMatrix = 6;
 
-	/*
-	Property: buttonsPanelSize
-		User buttons panel size.
-	*/
+  /**
+   * The size of the panel containing context buttons.
+   * 
+   * @type {number}
+   */
   this.buttonsPanelSize = 28;
 
-	/*
-	Property: groupTitlePanelSize
-		Group title panel size.
-	*/
+  /**
+   * The size of the panel containing group title.
+   * 
+   * @type {number}
+   */
   this.groupTitlePanelSize = 24;
 
-	/*
-	Property: checkBoxPanelSize
-		Selection check box panel size.
-	*/
+  /**
+   * The size of the panel containing selection checkbox.
+   * 
+   * @type {number}
+   */
   this.checkBoxPanelSize = 24;
 
-	/*
-	Property: groupTitlePlacementType
-		Group title placement style. Defines group title and buttons panel position relative to item. By default it is left.
-
-	Default:
-		<primitives.common.AdviserPlacementType.Left>
-	*/
+  /**
+   * Group titles placement. Defines group title and buttons panel position relative to the node. By default it is on the left.
+   * The group title on the side of the diagram node is one of controls default easy to use features. It gives extra dimension 
+   * for nodes visual grouping in the diagram.
+   * 
+   * @type {AdviserPlacementType}
+   */
   this.groupTitlePlacementType = 2/*primitives.common.AdviserPlacementType.Left*/;
 
-	/*
-		Property: groupTitleOrientation
-			Group title direction style. 
-
-		Default:
-			<primitives.text.TextDirection.Auto>
-	*/
+  /**
+   * Group titles orientation.
+   * 
+   * @type {TextOrientationType}
+   */
   this.groupTitleOrientation = 2/*primitives.text.TextOrientationType.RotateRight*/;
 
-	/*
-		Property: groupTitleVerticalAlignment
-			Group title vertical alignment. 
-
-		Default:
-			<primitives.common.VerticalAlignmentType.Center>
-	*/
+  /**
+   * Group titles vertical alignment.
+   * 
+   * @type {VerticalAlignmentType}
+   */
   this.groupTitleVerticalAlignment = 1/*primitives.common.VerticalAlignmentType.Middle*/;
 
-	/*
-		Property: groupTitleHorizontalAlignment
-			Group title horizontal alignment. 
-
-		Default:
-			<primitives.common.HorizontalAlignmentType.Center>
-	*/
+  /**
+   * Group titles horizontal alignment.
+   * 
+   * @type {HorizontalAlignmentType}
+   */
   this.groupTitleHorizontalAlignment = 0/*primitives.common.HorizontalAlignmentType.Center*/;
 
-	/*
-		Property: groupTitleFontSize
-			Group title font size. 
-
-		Default:
-			15
-	*/
+  /**
+   * 	Group titles font size.
+   * 
+   * @type {number}
+   */
   this.groupTitleFontSize = "12px";
 
-	/*
-		Property: groupTitleFontFamily
-			Group title font family. 
-
-		Default:
-			"Arial"
-	*/
+  /**
+   * Group titles font family.
+   * 
+   * @type {string}
+   */
   this.groupTitleFontFamily = "Arial";
 
-	/*
-		Property: groupTitleColor
-			Group title color. 
-
-		Default:
-			<primitives.common.Colors.Black>
-	*/
+  /**
+   * Group titles color. 
+   * 
+   * @type {string}
+   */
   this.groupTitleColor = "#4169e1"/*primitives.common.Colors.RoyalBlue*/;
 
-	/*
-		Property: groupTitleFontWeight
-			Group title font weight: normal | bold
-
-		Default:
-			"normal"
-	*/
+  /**
+   * Group titles font weight: normal, bold
+   * 
+   * @type {string}
+   */
   this.groupTitleFontWeight = "normal";
 
-	/*
-		Property: groupTitleFontStyle
-			Group title font style: normal | italic
-		
-		Default:
-			"normal"
-	*/
+  /**
+   * Group titles font style: normal, italic
+   * 
+   * @type {string}
+   */
   this.groupTitleFontStyle = "normal";
 
-
+  /**
+   * @ignore
+   */
   this.distance = 3;
 
-	/*
-	Property: scale
-		CSS3 scale transform.
-	*/
+  /**
+   * CSS3 scale transform. Control supports content scaling using CSS scale transform. It scales everything except scroll bars.
+   * It properly handles mouse event coordinates. The CSS scale transform produces unreadable text and corrupted lines in desktop browsers,
+   * it looks good only in mobile browsers, so our recomendation is to use zoom with collection of item templates of various sizes.
+   * Templates gives you better control over quality of your content at various zoom levels.
+   * 
+   * @type {number}
+   */
   this.scale = 1;
 
-	/*
-	Property: minimumScale
-		Minimum CSS3 scale transform.
-	*/
+  /**
+   * Minimum CSS3 scale transform.
+   * 
+   * @ignore
+   * @type {number}
+   */
   this.minimumScale = 0.5;
 
-	/*
-	Property: maximumScale
-		Maximum CSS3 scale transform.
-	*/
+  /**
+   * Maximum CSS3 scale transform.
+   * 
+   * @ignore
+   * @type {number}
+   */
   this.maximumScale = 2;
 
-	/*
-	Property: showLabels
-		This option controls labels visibility for minimized items. If you need to show labels outside of borders of regular items then use item template for customization.
-		Labels placed inside HTML DIV element and long strings are wrapped inside. 
-		User can control labels position relative to its item. Chart does not measure labels and does reserve space for them, 
-		so if label overlap each other then horizontal or vertical intervals between rows and items shoud be manually increased.
-	
-	Auto - depends on available space.
-	True - always shown.
-	False - hidden.
-
-	See Also:
-		<primitives.orgdiagram.ItemConfig.label>
-		<primitives.orgdiagram.Config.labelSize>
-		<primitives.orgdiagram.Config.normalItemsInterval>
-		<primitives.orgdiagram.Config.dotItemsInterval>
-		<primitives.orgdiagram.Config.lineItemsInterval>
-		<primitives.orgdiagram.Config.normalLevelShift>
-		<primitives.orgdiagram.Config.dotLevelShift>
-		<primitives.orgdiagram.Config.lineLevelShift>
-
-	Default:
-		<primitives.common.Enabled.Auto>
-	*/
+  /**
+   * Sets labels visibility for nodes when they are minimized into markers by page auto fit. See `pageFitMode` property.
+   * 
+   * The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes
+   * into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels.
+   * 
+   * Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict
+   * resoltion to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
+   * is going to stay visible.
+   * 
+   * Auto - displays label only when it has space to be rendered.
+   * True - shows label regardless, even if it overlaps other labels and nodes.
+   * False - hidden.
+   * 
+   * @type {Enabled}
+   */
   this.showLabels = 0/*primitives.common.Enabled.Auto*/;
 
-	/*
-	Property: labelSize
-		Defines label size. It is needed to avoid labels overlapping. If one label overlaps another label or item it will be hidden. 
-		Label string is wrapped when its length exceeds available width.
-
-	Default:
-		new <primitives.common.Size>(80, 24);
-	*/
+  /**
+   * Label size. Sets labels placeholders `div`s size. It is needed to resolve labels overlapping.
+   * If one label overlaps another label the or item it will be hidden.
+   * 
+   * @type {Size}
+   */
   this.labelSize = new primitives.common.Size(80, 24);
 
-	/*
-	Property: labelOffset
-		Defines label offset from dot in pixels.
-
-	Default:
-		1;
-	*/
+  /**
+   * Sets labels offset from the merkers bounding rectangles.
+   * 
+   * @type {number}
+   */
   this.labelOffset = 1;
 
-	/*
-	Property: labelOrientation
-		Defines label orientation. 
-
-	See Also:
-	<primitives.text.TextOrientationType>
-
-	Default:
-		<primitives.text.TextOrientationType.Horizontal>
-	*/
+  /**
+   * Labels orientation.
+   * 
+   * @type {TextOrientationType}
+   */
   this.labelOrientation = 0/*primitives.text.TextOrientationType.Horizontal*/;
 
-	/*
-	Property: labelPlacement
-		Defines label placement relative to its dot. 
-		Label is aligned to opposite side of its box.
-
-	See Also:
-	<primitives.common.PlacementType>
-
-	Default:
-		<primitives.common.PlacementType.Top>
-	*/
+  /**
+   * Labels placement. Sets labels placement relative to the markers bounding rectangles.
+   * 
+   * @type {PlacementType}
+   */
   this.labelPlacement = 1/*primitives.common.PlacementType.Top*/;
 
-	/*
-		Property: labelFontSize
-			Label font size. 
-
-		Default:
-			10px
-	*/
+  /**
+   * Labels font size.
+   * 
+   * @type {string}
+   */
   this.labelFontSize = "10px";
 
-	/*
-		Property: labelFontFamily
-			Label font family. 
-
-		Default:
-			"Arial"
-	*/
+  /**
+   * Labels font family.
+   * 
+   * @type {string}
+   */
   this.labelFontFamily = "Arial";
 
-	/*
-		Property: labelColor
-			Label color. 
-
-		Default:
-			primitives.common.Colors.Black
-	*/
+  /**
+   * Labels color
+   * 
+   * @type {string}
+   */
   this.labelColor = "#000000"/*primitives.common.Colors.Black*/;
 
-	/*
-		Property: labelFontWeight
-			Font weight: normal | bold
-
-		Default:
-			"normal"
-	*/
+  /**
+   * Labels font weight
+   * Font weight: normal, bold
+   * 
+   * @type {string}
+   */
   this.labelFontWeight = "normal";
 
-	/*
-	Property: labelFontStyle
-		Font style: normal | italic
-		
-	Default:
-		"normal"
-	*/
+  /**
+   * Labels font style. Font style: normal, italic
+   * 
+   * @type {string}
+   */
   this.labelFontStyle = "normal";
 
-	/*
-	Property: enablePanning
-		Enable chart panning with mouse drag & drop for desktop browsers.
-		Disable it if you need to support items Drag & Drop.
-
-	Default:
-		true
-	*/
+  /**
+   * Enable panning. Enable chart panning with mouse drag & drop for desktop browsers.
+   * Disable it if you need to support items Drag & Drop.
+   * 
+   * @type {boolean}
+   */
   this.enablePanning = true;
 
-	/*
-	Property: autoSizeMinimum
-		Defines minimum diagram size in autosize mode. If diagram has no elements, it is going to be of this size on the page.  
-	Default:
-		new <primitives.common.Size>(800, 600);
-	*/
+  /**
+   * Sets minimum size the diagram can shrink itself in autosize mode. See `pageFitMode` property.
+   * In the auto size mode diagram controls its placeholder size itself,
+   * it sets its size to accomodate all nodes and render them normally.
+   * 
+   * @type {Size}
+   */
   this.autoSizeMinimum = new primitives.common.Size(800, 600);
 
-	/*
-	Property: autoSizeMaximum
-		Defines maximum diagram size in autosize mode.
-	Default:
-		new <primitives.common.Size>(1024, 768);
-	*/
+  /**
+   * Sets maximum size the diagram can expand itself in autosize mode. See `pageFitMode` property.
+   * In the auto size mode diagram controls its placeholder size itself,
+   * it sets its size to accomodate all nodes and render them normally.
+   * 
+   * @type {Size}
+   */
   this.autoSizeMaximum = new primitives.common.Size(1024, 768);
 };
 
 /* /Controls/OrgDiagram/Configs/ConnectorAnnotationConfig.js*/
-/*
-	Class: primitives.orgdiagram.ConnectorAnnotationConfig
-		Options class. Populate annotation collection with instances of this objects to draw connector between two items.
-	
-	See Also:
-		<primitives.orgdiagram.Config.annotations>
-*/
+/**
+ * @class ConnectorAnnotationConfig
+ * @classdesc  Connector annotation configuration object. Connector annotations draws lines between two nodes of the diagram.
+ * They are drawn on top of existing diagram layout and they don't affect nodes placement. So it is users responsibility to
+ * preserve space between nodes for them. 
+ *
+ * @param {object} arg0 Object properties.
+ */
 primitives.orgdiagram.ConnectorAnnotationConfig = function (arg0, arg1) {
-	var property;
+  var property;
 
-	/*
-	Property: annotationType
-		Annotation type. All various annotations are defined in annotations collection property of <primitives.orgdiagram.Config>. 
-		So this property is needed to define annotation type when we use JavaScript non-prototype objects.
-		See other annotations as well.
+  /**
+   * Annotation type. All types of annotations objects are added to `annotations` collection property of the control.
+   * This property is needed to distiguish them when they are defined as JSON objects.
+   * 
+   * @type {AnnotationType}
+   */
+  this.annotationType = 0/*primitives.common.AnnotationType.Connector*/;
 
-	Default:
-		<primitives.common.AnnotationType.Connector>
+  /**
+   * Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other.
+   * If you place annotations over diagram nodes then you block mouse events of UI elements in their templates.
+   * Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item
+   * templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top
+   * of other visual elements. The control takes this into account and renders buttons panel on top of everyhting,
+   * so they are never blocked by annotations drawn in front of diagram nodes.
+   * 
+   * @type {ZOrderType}
+   */
+  this.zOrderType = 2/*primitives.common.ZOrderType.Foreground*/;
 
-	See Also:
-		<primitives.orgdiagram.Config.annotations>
-		<primitives.orgdiagram.ShapeAnnotationConfig>
-		<primitives.orgdiagram.BackgroundAnnotationConfig>
-		<primitives.orgdiagram.HighlightPathAnnotationConfig>
-	*/
-	this.annotationType = 0/*primitives.common.AnnotationType.Connector*/;
+  /**
+   * The start node of connection line
+   * 
+   * @type {string}
+   */
+  this.fromItem = null;
 
-	/*
-	Property: zOrderType
-		Defines annotation Z order placement relative to chart items. Chart items are drawn in layers on top of each other. We can draw annotations under the items or over them. 
-		If you place annotations over items then you block mouse events of UI elements in them. Browsers don't support mouse events transparentcy consistently. 
-		So in order to avoid mouse events blocking of UI elements in item templates you have to place annotation items under them.
-		Take into account that chart default buttons are drawn on top of everyhting, so they are never blocked by annotations drawn over items.
+  /**
+   * The end node of connection line
+   * 
+   * @type {string}
+   */
+  this.toItem = null;
 
-	Default:
-		<primitives.common.ZOrderType.Foreground>
-	*/
-	this.zOrderType = 2/*primitives.common.ZOrderType.Foreground*/;
+  /**
+   * Connector shape type defines number of lines and arrows at their ends drawn between nodes of the connector annotation.
+   * This feature combined with basic conflict resolution, which places overlapping annotations in parallel when they overlap each other,
+   * gives you full flexibility over variations of possible connector lines between two given nodes of diagram.
+   * 
+   * @type {ConnectorShapeType}
+   */
+  this.connectorShapeType = 0/*primitives.common.ConnectorShapeType.OneWay*/;
 
-	/*
-	Property: fromItem 
-		Reference to from item in hierarchy.
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-	*/
-	this.fromItem = null;
+  /**
+   * Connector placement type defines style of connector line drawing over diagram layout. It supports two options: 
+   * the `Straight` is classic direct line connecting two nodes, this is the most expected style of connector annotation
+   * drawing over diagram, the second style is called `Offbeat` and it is designed to dynamically adopt to nodes mutual 
+   * location and gap between them. It uses free hand line style drawing going from start to the end node. Since every diagram 
+   * is packed with various connection lines, this annotation placement style is deliberately made not straight, so it can be 
+   * noticeable on top of other lines of the diagram.
+   * 
+   * @type {ConnectorPlacementType}
+   */
+  this.connectorPlacementType = 0/*primitives.common.ConnectorPlacementType.Offbeat*/;
 
-	/*
-	Property: toItem 
-		Reference to from item in hierarchy.
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-	*/
-	this.toItem = null;
+  /**
+   * Label placement relative to connector annotation. Connector annotation is bound and drawn between two nodes
+   * defined by two properties: `fromItem` and `toItem`. Label can be placed close to "start", "end" nodes or in between of them
+   * along the connector line. 
+   * 
+   * @type {ConnectorLabelPlacementType}
+   */
+  this.labelPlacementType = 1/*primitives.common.ConnectorLabelPlacementType.Between*/;
 
-	/*
-	Property: connectorShapeType
-		Connector shape type. 
+  /**
+   * Connector line end points offset. By default connection lines start from the margin of the node's rectangle.
+   * If offset is positive then start point goes from outside of the rectangle, if it is negative then it starts from inside of the nodes rectangle.
+   * 
+   * @type {Thickness}
+   */
+  this.offset = new primitives.common.Thickness(0, 0, 0, 0);
 
-	Default:
-		<primitives.common.ConnectorShapeType.OneWay>
-	*/
-	this.connectorShapeType = 0/*primitives.common.ConnectorShapeType.OneWay*/;
+  /**
+   * Border line width.
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 2;
 
-	/*
-		Property: connectorPlacementType
-			Defines connector annotation shape placement mode between two items. 
-			It uses off beat placement mode as default in order to avoid overlapping
-			of base hierarchy connecting lines.
+  /**
+   * Color
+   * 
+   * @type {string}
+   */
+  this.color = "#000000"/*primitives.common.Colors.Black*/;
 
-		Default:
-			<primitives.common.ConnectorPlacementType.Offbeat>
-	*/
-	this.connectorPlacementType = 0/*primitives.common.ConnectorPlacementType.Offbeat*/;
+  /**
+   * Line pattern
+   * 
+   * @type {LineType}
+   */
+  this.lineType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-	Property: labelPlacementType
-		Label placement type along connection line(s). 
+  /**
+   * If true then annotated nodes are shown full size regardless of controls autofit mode and available screen space.
+   * @type {boolean}
+   */
+  this.selectItems = true;
 
-	Default:
-		<primitives.common.ConnectorLabelPlacementType.Between>
-	*/
-	this.labelPlacementType = 1/*primitives.common.ConnectorLabelPlacementType.Between*/;
+  /**
+   * Label. Label styled with css class name "bp-connector-label".
+   * @type {string}
+   */
+  this.label = null;
 
-	/*
-	Property: offset
-		Connector's from and to points offset off the rectangles side. Connectors connection points can be outside of rectangles and inside for negative offset value.
-	See also:
-		<primitives.common.Thickness>
-	*/
-	this.offset = new primitives.common.Thickness(0, 0, 0, 0);
+  /**
+   * Label size
+   * @type {Size}
+   */
+  this.labelSize = new primitives.common.Size(60, 30);
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 2;
-
-	/*
-	Property: color
-		Connector's color.
-	
-	Default:
-		<primitives.common.Colors.Black>
-	*/
-	this.color = "#000000"/*primitives.common.Colors.Black*/;
-
-	/*
-	Property: lineType
-		Connector's line pattern.
-
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-
-	/*
-	Property: selectItems
-		Always show annotated items in normal state. Setting this option is equivalent to adding annotated items to collection of selected items.
-
-	Default:
-		true
-
-	See Also:
-		<primitives.orgdiagram.Config.selectedItems>
-	*/
-	this.selectItems = true;
-
-	/*
-	Property: label
-		Annotation label text. Label styled with css class name "bp-connector-label".
-	*/
-	this.label = null;
-
-	/*
-	Property: labelSize
-		Annotation label size.
-
-	Default:
-		new <primitives.common.Size>(60, 30);
-	*/
-	this.labelSize = new primitives.common.Size(60, 30);
-
-	switch (arguments.length) {
-		case 1:
-			for (property in arg0) {
-				if (arg0.hasOwnProperty(property)) {
-					this[property] = arg0[property];
-				}
-			}
-			break;
-		case 2:
-			this.fromItem = arg0;
-			this.toItem = arg1;
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      for (property in arg0) {
+        if (arg0.hasOwnProperty(property)) {
+          this[property] = arg0[property];
+        }
+      }
+      break;
+    case 2:
+      this.fromItem = arg0;
+      this.toItem = arg1;
+      break;
+  }
 };
 
 /* /Controls/OrgDiagram/Configs/HighlightPathAnnotationConfig.js*/
-/*
-	Class: primitives.orgdiagram.HighlightPathAnnotationConfig
-		Options class. Populate annotation collection with instances of this objects to draw path between items.
-		Path is drawn along base connection lines displaying relationships between item of the chart.
-	See Also:
-		<primitives.orgdiagram.Config.annotations>
-*/
+/**
+ * @class HighlightPathAnnotationConfig
+ * @classdesc  Highlight path annotation configuration object. Highlight path annotation traces path between given sequence of nodes 
+ * over existing connector lines in the diagram.
+ *
+ * @param {object} arg0 Object properties.
+ */
 primitives.orgdiagram.HighlightPathAnnotationConfig = function (arg0) {
-	var property;
+  var property;
 
-	/*
-	Property: annotationType
-		Annotation type. All various annotations are defined in annotations collection property of <primitives.orgdiagram.Config>. 
-		So this property is needed to define annotation type when we use JavaScript non-prototype objects.
-		See other annotations as well.
+  /**
+   * Annotation type. All types of annotations objects are added to `annotations` collection property of the control.
+   * This property is needed to distiguish them when they are defined as JSON objects.
+   * 
+   * @type {AnnotationType}
+   */
+  this.annotationType = 2/*primitives.common.AnnotationType.HighlightPath*/;
 
-	Default:
-		<primitives.common.AnnotationType.HighlightPath>
+  /**
+   * Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other.
+   * If you place annotations over diagram nodes then you block mouse events of UI elements in their templates.
+   * Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item
+   * templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top
+   * of other visual elements. The control takes this into account and renders buttons panel on top of everyhting,
+   * so they are never blocked by annotations drawn in front of diagram nodes.
+   * 
+   * @type {ZOrderType}
+   */
+  this.zOrderType = 2/*primitives.common.ZOrderType.Foreground*/;
 
-	See Also:
-		<primitives.orgdiagram.Config.annotations>
-		<primitives.orgdiagram.ConnectorAnnotationConfig>
-		<primitives.orgdiagram.ShapeAnnotationConfig>
-		<primitives.orgdiagram.BackgroundAnnotationConfig>
-	*/
-	this.annotationType = 2/*primitives.common.AnnotationType.HighlightPath*/;
+  /**
+   * Collection of nodes ids this annotation is drawn for. Please, pay attention that this is array of nodes ids. So if diagram finds
+   * wrong path from start to end node you have possibility to define every intermediate node in the sequence yourself.
+   * 
+   * @type {string[]}
+   */
+  this.items = [];
 
-	/*
-	Property: zOrderType
-		Defines annotation Z order placement relative to chart items. Chart items are drawn in layers on top of each other.
-		Highlight path annotations can be placed under main connectors wire or over. 
+  /**
+   * Border line width
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 2;
 
-	Default:
-		<primitives.common.ZOrderType.Foreground>
-	*/
-	this.zOrderType = 2/*primitives.common.ZOrderType.Foreground*/;
+  /**
+   * Line color
+   * 
+   * @type {string}
+   */
+  this.color = "#ff0000"/*primitives.common.Colors.Red*/;
 
-	/*
-	Property: items 
-		Array of item ids in hierarchy.
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-	*/
-	this.items = [];
+  /**
+   * Line type
+   * 
+   * @type {LineType}
+   */
+  this.lineType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 2;
+  /**
+   * Opacity.
+   * 
+   * @type {number}
+   */
+  this.opacity = 1;
 
-	/*
-	Property: color
-		Connector's color.
-	
-	Default:
-		<primitives.common.Colors.Black>
-	*/
-	this.color = "#ff0000"/*primitives.common.Colors.Red*/;
+  /**
+   * If true then annotation has arrows along the highlight path line.
+   * 
+   * @type {boolean}
+   */
+  this.showArrows = true;
 
-	/*
-	Property: lineType
-		Connector's line pattern.
+  /**
+   * If true then annotated nodes are shown full size regardless of controls autofit mode and available screen space.
+   * @type {boolean}
+   */
+  this.selectItems = false;
 
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-
-	/*
-	Property: opacity
-		Connector's line opacity.
-	*/
-	this.opacity = 1;
-
-	/*
-	Property: showArrows
-		This option controls arrows visibility along highlight path. 
-
-	Default:
-		true
-	*/
-	this.showArrows = true;
-
-	/*
-	Property: selectItems
-		Always show annotated items in normal state. Setting this option is equivalent to adding annotated items to collection of selected items.
-
-	Default:
-		true
-
-	See Also:
-		<primitives.orgdiagram.Config.selectedItems>
-	*/
-	this.selectItems = false;
-
-	switch (arguments.length) {
-		case 1:
-			if (arg0 !== null) {
-				if (arg0 instanceof Array) {
-					this.items = arg0;
-				} else if (typeof arg0 == "object") {
-					for (property in arg0) {
-						if (arg0.hasOwnProperty(property)) {
-							this[property] = arg0[property];
-						}
-					}
-				}
-			}
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      if (arg0 !== null) {
+        if (arg0 instanceof Array) {
+          this.items = arg0;
+        } else if (typeof arg0 == "object") {
+          for (property in arg0) {
+            if (arg0.hasOwnProperty(property)) {
+              this[property] = arg0[property];
+            }
+          }
+        }
+      }
+      break;
+  }
 };
 
 /* /Controls/OrgDiagram/Configs/ItemConfig.js*/
-/*
-	Class: primitives.orgdiagram.ItemConfig
-		Defines item in diagram hierarchy. 
-		User is supposed to create hierarchy of this items and assign it to <primitives.orgdiagram.Config.items> collection property.
-		Widget contains some generic properties used in default item template, 
-		but user can add as many custom properties to this class as needed. 
-		Just be careful and avoid widget malfunction.
-
-	See Also:
-		<primitives.orgdiagram.Config.items>
-*/
+/**
+ * @class ItemConfig
+ * @classdesc Item Configuration Object defines properties of individual node in the organizational chart hierarchy. See `items` collection property
+ * of organizational chart control configuration object. 
+ * 
+ * @param {ItemConfig} arg0 Item config properties
+ * 
+ * @param {string} arg0 Item id
+ * @param {string[]} arg1 Parent id
+ * @param {string} arg2 Title
+ * @param {string} arg3 Description 
+ * @param {string} arg4 Image
+ */
 primitives.orgdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
-	var property;
-	/*
-	Property: id
-	Unique item id.
-	*/
-	this.id = null;
+  var property;
+  /**
+   * Item id. It should be unique per chart.
+   * 
+   * @type {string}
+   */
+  this.id = null;
 
-	/*
-	Property: parent
-	Parent id. If parent is null then item placed as a root item.
-	*/
-	this.parent = null;
+  /**
+   * Parent item id. If `null` then node is the root item of the hierarchy.
+   * @type {string}
+   */
+  this.parent = null;
 
-	/*
-	Property: title
-	Default template title property.
-	*/
-	this.title = null;
+  /**
+   * Title
+   * 
+   * @type {string}
+   */
+  this.title = null;
 
-	/*
-	Property: description
-	Default template description element.
-	*/
-	this.description = null;
+  /**
+   * Description
+   * 
+   * @type {string}
+   */
+  this.description = null;
 
-	/*
-	Property: image
-	Url to image. This property is used in default template.
-	*/
-	this.image = null;
+  /**
+   * Image
+   * 
+   * @type {string}
+   */
+  this.image = null;
 
-	/*
-	Property: context
-	User context object.
-	*/
-	this.context = null;
+  /**
+   * Context object
+   * 
+   * @type {object}
+   */
+  this.context = null;
 
-	/*
-	Property: itemTitleColor
-	Default template title background color.
-	*/
-	this.itemTitleColor = "#4169e1"/*primitives.common.Colors.RoyalBlue*/;
+  /**
+   * Title background color. The same color is used for node marker when control has enabled auto fit mode.
+   * 
+   * @type {string}
+   */
+  this.itemTitleColor = "#4169e1"/*primitives.common.Colors.RoyalBlue*/;
 
-	/*
-	Property: minimizedItemShapeType
-		Defines minimized/dotted item shape type. By default it is set by ItemTemplate.minimizedItemShapeType property.
-		Use this property to set marker type individually per item.
+  /**
+   * Marker type. The shape of the marker when node is minimized by autofit. The control supports auto fit of diagram into available screen space.
+   * When diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
+   * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
+   * So this option sets marker shape for individual node.
+   * 
+   * @type {ShapeType}
+   */
+  this.minimizedItemShapeType = null;
 
-	See Also:
-		<primitives.common.ShapeType>
-	*/
-	this.minimizedItemShapeType = null;
+  /**
+   * Group Title. The group title on the side of the diagram node is one of controls default easy to use features.
+   * It gives extra dimension for nodes visual grouping in the diagram.
+   * 
+   * @type {string}
+   */
+  this.groupTitle = null;
 
-	/*
-	Property: groupTitle
-	Auxiliary group title property. Displayed vertically on the side of item.
-	*/
-	this.groupTitle = null;
+  /**
+   * The group title background color.
+   * 
+   * @type {string}
+   */
+  this.groupTitleColor = "#4169e1"/*primitives.common.Colors.RoyalBlue*/;
 
-	/*
-	Property: groupTitleColor
-	Group title background color.
-	*/
-	this.groupTitleColor = "#4169e1"/*primitives.common.Colors.RoyalBlue*/;
+  /**
+   * If `false` it makes item invisible in the layout. If item has no visible parents then its connections are hidden as well.
+   * From navigation perspetive invisible items make all their children to be children of their parents.
+   * 
+   * @type {boolean}
+   */
+  this.isVisible = true;
 
-	/*
-	Property: isVisible
-		If it is true then item is shown and selectable in hierarchy. 
-		If item is hidden and it has visible children then only connector line is drawn instead of it.
+  /**
+   * If true it makes item inactive in the diagram layout. Inactive items are regular items excluded from navigation, that means 
+   * when diagram uses auto fit mode, selection of the neighboring nodes goes through inactive items, so all nodes next to inactive item
+   * become selected and shown in full size as well. Inactive items play a role of in layout annotations having no user interaction
+   * and templated with HTML. For example they can be used to add titles into family diagram layout or terminator items
+   * indicating that upon reaching them diagram would load extra nodes into layout.
+   * 
+   * @type {boolean}
+   */
+  this.isActive = true;
 
-	True - Item is shown.
-	False - Item is hidden.
+  /**
+   * Shows selection check box for the node.
+   * If Auto then selection check box visibility depends on control's configuration.
+   * 
+   * Auto - depends on `hasSelectorCheckbox` property of the control
+   * True - shown
+   * False - hidden
+   * 
+   * @type {Enabled}
+   */
+  this.hasSelectorCheckbox = 0/*primitives.common.Enabled.Auto*/;
 
-	Default:
-		true
-	*/
-	this.isVisible = true;
+  /**
+   * Shows context buttons panel for the node.
+   * If Auto then context buttons panel visibility depends on control's configuration.
+   * 
+   * Auto - depends on `hasButtons` property of the control
+   * True - shown
+   * False - hidden
+   * 
+   * @type {Enabled}
+   */
+  this.hasButtons = 0/*primitives.common.Enabled.Auto*/;
 
-	/*
-	Property: isActive
-		If it is true then item is selectable in hierarchy and it has mouse over highlight. 
+  /**
+   * Item type. This property defines child node placement relative to its parent node. By default all children that belong 
+   * to a parent node are of the same rank and status between each other and due to that, are always aligned below
+   * the parent and are organized in the same way. However for special cases were the end user wishes to have a child
+   * that is seperate from the rest of it's siblings, we provide custom child types that the end user can use to
+   * place diffrent ranking nodes anywhere around the parent node. These placement options give a lot of space for
+   * the creation of roles such as an Assistant, Adviser, various Partners and co-heads that may be in the organization.
+   * Additionally, by default `Regular` children are always placed in a horizontal line below the parent node.
+   * 
+   * @type {ItemType}
+   */
+  this.itemType = 0/*primitives.orgdiagram.ItemType.Regular*/;
 
-	True - Item is clickable.
-	False - Item is inactive and user cannot set cursor item or highlight.
+  /**
+   * Defines leftward or rightward item placement relative to the parent item.
+   * By default it is `Auto` and depends on general diagram layout orientation.
+   *  
+   * @type {AdviserPlacementType}
+   */
+  this.adviserPlacementType = 0/*primitives.common.AdviserPlacementType.Auto*/;
 
-	Default:
-		true
-	*/
-	this.isActive = true;
+  /**
+   * Defines shape of children formation. By default a node's children are always placed in a horizontal line 
+   * below the parent node. On a large scale this may result in the end user having to scroll screens 
+   * in order to view all of the nodes. To compensate for this, we provide the option of placing all 
+   * of the children of a parent node in a sqaure/matrix formation. This will reduce sideways screen 
+   * scrolling by compacting the child nodes into a much smaller area on the screen.
+   *  
+   * @type {ChildrenPlacementType}
+   */
+  this.childrenPlacementType = 0/*primitives.common.ChildrenPlacementType.Auto*/;
 
-	/*
-	Property: hasSelectorCheckbox
-		If it is true then selection check box is shown for the item. 
-		Selected items are always shown in normal form, so if item is 
-		selected then its selection check box is visible and checked.
+  /**
+   * Template name. Templates are HTML fragments containing layout and styles used to render diagram nodes.
+   * They are defined with a named configuration objects. See `templates` property of control's configuration object.
+   * This option lets individually assign rendering template per individual node of the diagram.
+   * 
+   * @type {string}
+   */
+  this.templateName = null;
 
-	Auto - Depends on <primitives.orgdiagram.Config.hasSelectorCheckbox> setting.
-	True - Selection check box is visible.
-	False - No selection check box.
+  /**
+   * Sets callout annotation visibility for individual node. The callout annotation is one of easy to use features of the control.
+   * By default it is displayed for markers in order to preview their node's content. The content is displayed using
+   * current template of the node it is rendered for.
+   * 
+   * The callout can be forced to be displayed for regular nodes as well. In that case use `calloutTemplateName` property
+   * to change their template.
+   * 
+   * Auto - depends on `showCallout` property of the control
+   * True - shown regardless of node's visibility
+   * False - hidden
+   * 
+   * @type {Enabled}
+   */
+  this.showCallout = 0/*primitives.common.Enabled.Auto*/;
 
-	Default:
-	<primitives.common.Enabled.Auto>
-	*/
-	this.hasSelectorCheckbox = 0/*primitives.common.Enabled.Auto*/;
+  /**
+   * Callout annotation template name. This option lets individually assign rendering callout annotation template
+   * per individual node of the diagram.
+   * 
+   * Templates are HTML fragments containing layout and styles used to render diagram nodes.
+   * They are defined with a named configuration objects. See `templates` property of control's configuration object.
+   * 
+   * @type {string}
+   */
+  this.calloutTemplateName = null;
 
-	/*
-	Property: hasButtons
-		This option controls buttons panel visibility. 
+  /**
+   * Marker label.
+   * 
+   * @type {string}
+   */
+  this.label = null;
 
-	Auto - Depends on <primitives.orgdiagram.Config.hasButtons> setting.
-	True - Has buttons panel.
-	False - No buttons panel.
+  /**
+   * Sets label visibility for individual nodes. Labels are only rendered for a node's markers. 
+   * 
+   * The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes
+   * into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels.
+   * 
+   * Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict
+   * resoltion to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
+   * is going to stay visible.
+   * 
+   * Auto - displays label only when it has space to be rendered.
+   * True - shows label regardless, even if it overlaps other labels and nodes.
+   * False - hidden.
+   * 
+   * @type {Enabled}
+   */
+  this.showLabel = 0/*primitives.common.Enabled.Auto*/;
 
-	Default:
-	<primitives.common.Enabled.Auto>
-	*/
-	this.hasButtons = 0/*primitives.common.Enabled.Auto*/;
+  /**
+   * Label size. Sets label's placeholder `div` size and controls conflict resolution if labels overlap each other.
+   * If `null` then it is set to `labelSize` property of the control configuration.
+   * 
+   * @type {Size}
+   */
+  this.labelSize = null;
 
-	/*
-		Property: itemType
-			This property defines how item should be shown. 
-			So far it is only possible to make it invisible.
-	
-		See Also:
-			<primitives.orgdiagram.ItemType>
-		
-		Deafult:
-			<primitives.orgdiagram.ItemType.Regular>
-	*/
-	this.itemType = 0/*primitives.orgdiagram.ItemType.Regular*/;
+  /**
+   * Label orientation.
+   * If `Auto` then it is set to `labelOrientation` property of the control configuration.
+   * 
+   * @type {TextOrientationType}
+   */
+  this.labelOrientation = 3/*primitives.text.TextOrientationType.Auto*/;
 
-	/*
-		Property: adviserPlacementType
-			In case of item types <primitives.orgdiagram.ItemType.Assistant> 
-			and <primitives.orgdiagram.ItemType.Adviser> this option defines item 
-			placement side relative to parent. By default items placed on 
-			the right side of parent item.
+  /**
+   * Label placement. Sets label placement relative to the marker bounding rectangle.
+   * If `Auto` then it is set to `labelPlacement` of the control configuration.
+   * 
+   * @type {PlacementType}
+   */
+  this.labelPlacement = 0/*primitives.common.PlacementType.Auto*/;
 
-		Deafult:
-			<primitives.common.AdviserPlacementType.Auto>
-	*/
-	this.adviserPlacementType = 0/*primitives.common.AdviserPlacementType.Auto*/;
-
-	/*
-	Property: childrenPlacementType
-		Defines children placement form.
-	*/
-	this.childrenPlacementType = 0/*primitives.common.ChildrenPlacementType.Auto*/;
-
-	/*
-	Property: templateName
-		This is template name used to render this item.
-
-		See Also:
-		<primitives.orgdiagram.TemplateConfig>
-		<primitives.orgdiagram.Config.templates> collection property.
-	*/
-	this.templateName = null;
-
-	/*
-	Property: showCallout
-		This option controls items callout visibility.
-
-	Auto - depends on <primitives.orgdiagram.Config.showCallout> option
-	True - shown
-	False - hidden
-
-	Default:
-		<primitives.common.Enabled.Auto>
-	*/
-	this.showCallout = 0/*primitives.common.Enabled.Auto*/;
-
-	/*
-	Property: calloutTemplateName
-		This is template name used to render callout for dotted item. 
-		Actual callout template name is defined by following sequence:
-		<primitives.orgdiagram.ItemConfig.calloutTemplateName> 
-		<primitives.orgdiagram.ItemConfig.templateName>
-		<primitives.orgdiagram.Config.defaultCalloutTemplateName>
-		<primitives.orgdiagram.Config.defaultTemplateName>
-
-	See Also:
-		<primitives.orgdiagram.Config.templates> collection property.
-	Default:
-		null
-	*/
-	this.calloutTemplateName = null;
-
-	/*
-	Property: label
-	Items label text.
-	*/
-	this.label = null;
-
-	/*
-	Property: showLabel
-		This option controls items label visibility. Label is displayed in form of div having text inside, long string is wrapped inside of it. 
-		User can control labels position relative to its item. Chart does not preserve space for label.
-
-	Auto - depends on <primitives.orgdiagram.Config.labelOrientation> setting.
-	True - always shown.
-	False - hidden.
-
-	See Also:
-	<primitives.orgdiagram.ItemConfig.label>
-	<primitives.orgdiagram.Config.labelSize>
-
-	Default:
-		<primitives.common.Enabled.Auto>
-	*/
-	this.showLabel = 0/*primitives.common.Enabled.Auto*/;
-
-	/*
-	Property: labelSize
-		Defines label size. It is needed to avoid labels overlapping. If one label overlaps another label or item it will be hidden. 
-		Label string is wrapped when its length exceeds available width. 
-		By default it is equal to charts <primitives.orgdiagram.Config.labelSize>.
-
-	See Also:
-		<primitives.common.Size>
-	Default:
-		null;
-	*/
-	this.labelSize = null;
-
-	/*
-	Property: labelOrientation
-		Defines label orientation. 
-		In default <primitives.text.TextOrientationType.Auto> mode it depends on chart <primitives.orgdiagram.Config.labelOrientation> setting.
-
-	See Also:
-	<primitives.orgdiagram.Config.labelOrientation>
-	<primitives.text.TextOrientationType>
-
-	Default:
-		<primitives.text.TextOrientationType.Auto>
-	*/
-	this.labelOrientation = 3/*primitives.text.TextOrientationType.Auto*/;
-
-	/*
-	Property: labelPlacement
-		Defines label placement relative to the item. 
-		In default <primitives.common.PlacementType.Auto> mode it depends on chart <primitives.orgdiagram.Config.labelPlacement> setting.
-
-	See Also:
-		<primitives.orgdiagram.Config.labelPlacement>
-		<primitives.common.PlacementType>
-
-	Default:
-		<primitives.common.PlacementType.Auto>
-	*/
-	this.labelPlacement = 0/*primitives.common.PlacementType.Auto*/;
-
-	switch (arguments.length) {
-		case 1:
-			for (property in arg0) {
-				if (arg0.hasOwnProperty(property)) {
-					this[property] = arg0[property];
-				}
-			}
-			break;
-		case 5:
-			this.id = arg0;
-			this.parent = arg1;
-			this.title = arg2;
-			this.description = arg3;
-			this.image = arg4;
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      for (property in arg0) {
+        if (arg0.hasOwnProperty(property)) {
+          this[property] = arg0[property];
+        }
+      }
+      break;
+    case 5:
+      this.id = arg0;
+      this.parent = arg1;
+      this.title = arg2;
+      this.description = arg3;
+      this.image = arg4;
+      break;
+  }
 };
 
 
 /* /Controls/OrgDiagram/Configs/ShapeAnnotationConfig.js*/
-/*
-	Class: primitives.orgdiagram.ShapeAnnotationConfig
-		Options class. Populate annotation collection with instances of this objects to draw shape benith or on top of several items.
-		Shape is drawn as rectangular area.
-	See Also:
-		<primitives.orgdiagram.Config.annotations>
-*/
+/**
+ * @class ShapeAnnotationConfig
+ * @classdesc  Shape annotation configuration object. Shape annotation is a possibility to draw some geometrical
+ * shapes over nodes of the diagram. 
+ *
+ * @param {object} arg0 Object properties.
+ */
 primitives.orgdiagram.ShapeAnnotationConfig = function (arg0) {
-	var property;
+  var property;
 
-	/*
-	Property: annotationType
-		Annotation type. All various annotations are defined in annotations collection property of <primitives.orgdiagram.Config>. 
-		So this property is needed to define annotation type when we use JavaScript non-prototype objects.
-		See other annotations as well.
+  /**
+   * Annotation type. All types of annotations objects are added to `annotations` collection property of the control.
+   * This property is needed to distiguish them when they are defined as JSON objects.
+   * 
+   * @type {AnnotationType}
+   */
+  this.annotationType = 1/*primitives.common.AnnotationType.Shape*/;
 
-	Default:
-		<primitives.common.AnnotationType.Shape>
+  /**
+   * Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other.
+   * If you place annotations over diagram nodes then you block mouse events of UI elements in their templates.
+   * Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item
+   * templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top
+   * of other visual elements. The control takes this into account and renders buttons panel on top of everyhting,
+   * so they are never blocked by annotations drawn in front of diagram nodes.
+   * 
+   * @type {ZOrderType}
+   */
+  this.zOrderType = 0/*primitives.common.ZOrderType.Auto*/;
 
-	See Also:
-		<primitives.orgdiagram.Config.annotations>
-		<primitives.orgdiagram.ConnectorAnnotationConfig>
-		<primitives.orgdiagram.BackgroundAnnotationConfig>
-		<primitives.orgdiagram.HighlightPathAnnotationConfig>
-	*/
-	this.annotationType = 1/*primitives.common.AnnotationType.Shape*/;
+  /**
+   * Collection of nodes ids this shape annotation is drawn for.
+   * 
+   * @type {string[]}
+   */
+  this.items = [];
 
-	/*
-	Property: zOrderType
-		Defines annotation Z order placement relative to chart items. Chart items are drawn in layers on top of each other. We can draw annotations under the items or over them. 
-		If you place annotations over items then you block mouse events of UI elements in them. Browsers don't support mouse events transparentcy consistently. 
-		So in order to avoid mouse events blocking of UI elements in item templates you have to place annotation items under them.
-		Take into account that chart default buttons are drawn on top of everyhting, so they are never blocked by annotations drawn over items.
+	/**
+   * Shape
+   * 
+   * @type {ShapeType}
+   */
+  this.shapeType = 0/*primitives.common.ShapeType.Rectangle*/;
 
-	Default:
-		<primitives.common.ZOrderType.Auto>
-	*/
-	this.zOrderType = 0/*primitives.common.ZOrderType.Auto*/;
+  /**
+   * Sets shape offset around annotated items.
+   * 
+   * @type {Thickness}
+   */
+  this.offset = new primitives.common.Thickness(0, 0, 0, 0);
 
-	/*
-	Property: items 
-		Array of items ids in hierarchy.
-	See Also:
-		<primitives.orgdiagram.ItemConfig.id>
-	*/
-	this.items = [];
+  /**
+   * Border line width
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 2;
 
-	/*
-	Property: shapeType
-		Shape type. 
+  /**
+   * Corner radius. Body corner radius in percents or pixels. For applicable shapes only.
+   * 
+   * @type {string|number}
+   */
+  this.cornerRadius = "10%";
 
-	Default:
-		<primitives.common.ShapeType.Rectangle>
-	*/
-	this.shapeType = 0/*primitives.common.ShapeType.Rectangle*/;
+  /**
+   * Background color opacity.
+   * 
+   * @type {number}
+   */
+  this.opacity = 1;
 
-	/*
-	Property: offset
-		Connector's from and to points offset off the rectangles side. Connectors connection points can be outside of rectangles and inside for negative offset value.
-	See also:
-		<primitives.common.Thickness>
-	*/
-	this.offset = new primitives.common.Thickness(0, 0, 0, 0);
+  /**
+   * Shape border line color
+   * 
+   * @type {string}
+   */
+  this.borderColor = null;
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 2;
+  /**
+   * Shape fill color
+   * 
+   * @type {string}
+   */
+  this.fillColor = null;
 
-	/*
-	Property: cornerRadius
-		Body corner radius in percents or pixels. For applicable shapes only.
-	*/
-	this.cornerRadius = "10%";
+  /**
+   * Border line type
+   * 
+   * @type {LineType}
+   */
+  this.lineType = 0/*primitives.common.LineType.Solid*/;
 
-	/*
-	Property: opacity
-		Background color opacity. For applicable shapes only.
-	*/
-	this.opacity = 1;
+  /**
+   * If true then annotated nodes are shown full size regardless of controls autofit mode and available screen space.
+   * @type {boolean}
+   */
+  this.selectItems = false;
 
-	/*
-	Property: borderColor
-		Shape border line color.
-	
-	Default:
-		null
-	*/
-	this.borderColor = null;
+  /**
+   * Label. Label styled with css class name "bp-connector-label".
+   * @type {string}
+   */
+  this.label = null;
 
-	/*
-	Property: fillColor
-		Fill Color. 
+  /**
+   * Label size
+   * @type {Size}
+   */
+  this.labelSize = new primitives.common.Size(60, 30);
 
-	Default:
-		null
-	*/
-	this.fillColor = null;
+  /**
+   * Label placement relative to the annotation.
+   * 
+   * @type {PlacementType}
+   */
+  this.labelPlacement = 0/*primitives.common.PlacementType.Auto*/;
 
-	/*
-	Property: lineType
-		Connector's line pattern.
+  /**
+   * Label offset from shape in pixels.
+   * 
+   * @type {number}
+   */
+  this.labelOffset = 4;
 
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-
-	/*
-	Property: selectItems
-		Always show annotated items in normal state. Setting this option is equivalent to adding annotated items to collection of selected items.
-
-	Default:
-		true
-
-	See Also:
-		<primitives.orgdiagram.Config.selectedItems>
-	*/
-	this.selectItems = false;
-
-	/*
-	Property: label
-		Annotation label text. Label styled with css class name "bp-connector-label".
-	*/
-	this.label = null;
-
-	/*
-	Property: labelSize
-		Annotation label size.
-
-	Default:
-		new <primitives.common.Size>(60, 30);
-	*/
-	this.labelSize = new primitives.common.Size(60, 30);
-
-	/*
-	Property: labelPlacement
-		Defines label placement relative to the shape. 
-
-	See Also:
-		<primitives.orgdiagram.Config.labelPlacement>
-		<primitives.common.PlacementType>
-
-	Default:
-		<primitives.common.PlacementType.Auto>
-	*/
-	this.labelPlacement = 0/*primitives.common.PlacementType.Auto*/;
-
-	/*
-	Property: labelOffset
-		Defines label offset from shape in pixels.
-
-	Default:
-		4;
-	*/
-	this.labelOffset = 4;
-
-	switch (arguments.length) {
-		case 1:
-			if (arg0 !== null) {
-				if (arg0 instanceof Array) {
-					this.items = arg0;
-				} else if (typeof arg0 == "object") {
-					for (property in arg0) {
-						if (arg0.hasOwnProperty(property)) {
-							this[property] = arg0[property];
-						}
-					}
-				}
-			}
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      if (arg0 !== null) {
+        if (arg0 instanceof Array) {
+          this.items = arg0;
+        } else if (typeof arg0 == "object") {
+          for (property in arg0) {
+            if (arg0.hasOwnProperty(property)) {
+              this[property] = arg0[property];
+            }
+          }
+        }
+      }
+      break;
+  }
 };
 
 /* /Controls/OrgDiagram/Events/EventArgs.js*/
-/*
-	Class: primitives.orgdiagram.EventArgs
-		Event details class.
-*/
+/**
+ * @class EventArgs
+ * 
+ * Context object
+ */
 primitives.orgdiagram.EventArgs = function () {
-	/*
-	Property: oldContext
-		Reference to associated previous item in hierarchy.
-	*/
-	this.oldContext = null;
+	/**
+   * Current item
+   * 
+   * @type {string}
+   */
+  this.oldContext = null;
 
-	/*
-	Property: context
-		Reference to associated new item in hierarchy.
-	*/
-	this.context = null;
+  /**
+   * New item
+   * 
+   * @type {string}
+   */
+  this.context = null;
 
-	/*
-	Property: parentItem
-		Reference parent item of item in context.
-	*/
-	this.parentItem = null;
+  /**
+   * Parent item
+   * 
+   * @type {string}
+   * @ignore
+   */
+  this.parentItem = null;
 
-	/*
-	Property: position
-		Absolute item position on diagram.
+  /**
+   * Node position on the diagram.
+   * 
+   * @type {Rect}
+   */
+  this.position = null;
 
-	See also:
-		<primitives.common.Rect>
-	*/
-	this.position = null;
+  /**
+   * Relative object name.
+   * 
+   * @type {string}
+   */
+  this.name = null;
 
-	/*
-	Property: name
-		Relative object name.
-
-	*/
-	this.name = null;
-
-	/*
-	Property: cancel
-		Allows cancelation of coupled event processing. This option allows to cancel layout update 
-		and subsequent <primitives.orgdiagram.Config.onCursorChanged> event 
-		in handler of <primitives.orgdiagram.Config.onCursorChanging> event.
-	*/
-	this.cancel = false;
+  /**
+   * If true cancels subsequent event and layout update.
+   * 
+   * @type {boolean}
+   */
+  this.cancel = false;
 };
 
 /* /Controls/OrgDiagram/Models/ConnectorBundles/BaseConnectorBundle.js*/
@@ -22821,6 +22656,10 @@ primitives.common.UserTemplate = function (options, content, onRender) {
 };
 
 /* /Controls/OrgDiagram/BaseControl.js*/
+/**
+ * JavaScript Abstract Control
+ * @class BaseControl
+ */
 primitives.orgdiagram.BaseControl = function (element, options, taskManagerFactory, eventArgsFactory, templates) {
   var _data = {
     name: "orgdiagram",
@@ -22846,22 +22685,13 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     _debug = false,
     _timer = null;
 
-	/*
-		method: update
-			Makes full redraw of diagram contents reevaluating all options. This method has to be called explisitly after all options are set in order to update controls contents.
-	
-		Parameters:
-			updateMode: This parameter defines severaty of update <primitives.common.UpdateMode>. 
-			For example <primitives.common.UpdateMode.Refresh> updates only 
-			items and selection reusing existing elements where ever it is possible.
-			forceCenterOnCursor: Set this paramter to false, if you don't need to recenter diagram on cursor item.
-
-		See also:
-			<primitives.common.UpdateMode>
-
-		Default:
-			<primitives.common.UpdateMode.Recreate>
-	*/
+  /**
+   * Makes full redraw of diagram contents reevaluating all options. This method has to be called explisitly
+   * after all options are set in order to update controls contents.
+   * 
+   * @param {UpdateMode} updateMode 
+   * @param {bollean} forceCenterOnCursor 
+   */
   function update(updateMode, forceCenterOnCursor) {
     if (forceCenterOnCursor == null) {
       forceCenterOnCursor = true;
@@ -22879,10 +22709,9 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     }
   }
 
-	/*
-		method: destroy
-			Removes all elements control added to DOM incluidng event listeners.
-	*/
+  /**
+   * Removes all elements control added to DOM incluidng event listeners.
+   */
   function destroy() {
     unbind(_data.layout);
     cleanLayout(_data.layout);
@@ -22971,13 +22800,12 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     }
   }
 
-	/*
-		method: setOptions
-			Call this method to update controls configuration. Control uses default Config instance to initialize itself, so it sets only options provided in the options parameter.
-
-		Parameters:
-		options - JavaScript object containing options.
-	*/
+  /**
+   * Call this method to update controls configuration. Control uses default Config instance to initialize itself, 
+   * so it sets only options provided in the options parameter.
+   * 
+   * @param {object} options Options
+   */
   function setOptions(options) {
     for (var option in options) {
       if (options.hasOwnProperty(option)) {
@@ -22986,36 +22814,30 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     }
   }
 
-	/*
-		method: getOptions
-			This method returns current configuration object.
-
-		Returns:
-		Reference to current configuration object
-	*/
+  /**
+   * This method returns current configuration object.
+   * 
+   * @returns {object} Returns reference to current configuration object
+   */
   function getOptions() {
     return _data.options;
   }
 
-	/*
-		method: getOption
-			This method returns configuration option by name.
-
-		Returns:
-		Option value by name
-	*/
+  /**
+   * This method returns configuration option by name.
+   * 
+   * @param {*} option Option name
+   */
   function getOption(option) {
     return _data.options[option];
   }
 
-	/*
-		method: setOption
-			Method to set configuration option of the control by name.
-
-		Parameters:
-		option - option name
-		value - value
-	*/
+  /**
+   * Sets configuration option of the control by name.
+   * 
+   * @param {*} option Option name
+   * @param {*} value Option value
+   */
   function setOption(option, value) {
     return _data.options[option] = value;
   }
@@ -23461,18 +23283,16 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 
 
 /* /Controls/OrgDiagram/Control.js*/
-/*
-	Class: primitives.orgdiagram.Control
-	JavaScript Organizational Diagram Control. 
-	
-	Parameters:
-	element - reference to DOM element which is used as new control placeholder. 
-		Control renders diagram content inside of that DIV placeholder and  adds events listeners.
-	options - reference to primitives.orgdiagram.Config class instance.
-
-	Returns: 
-	reference to new instance of the control. Control adds event listeners bound to its contents, so if you need to remove it from DOM call destroy() method on the control's instance.
-*/
+/**
+ * Creates JavaScript Organizational Chart Control
+ * @class Control
+ * @param {object} element Reference to placeholder `div` element in the DOM. The control renders diagram content
+ * inside of that div element and adds events listeners.
+ * @param {Config} options Organizational Chart Configuration object
+ * 
+ * @returns {orgdiagram} Returns reference to Organizational Chart control. Since control adds event listeners bound
+ * to its contents, call `destroy` method to clean up everything.
+ */
 primitives.orgdiagram.Control = function (element, options) {
   return primitives.orgdiagram.BaseControl(element, options, primitives.orgdiagram.TaskManagerFactory, primitives.orgdiagram.EventArgsFactory, {
     AnnotationLabelTemplate: primitives.common.AnnotationLabelTemplate,
@@ -23695,1827 +23515,2097 @@ primitives.orgdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 
 
 /* /algorithms/binarySearch.js*/
-/*
-	Function: primitives.common.binarySearch
-		Search sorted list of elements for nearest item.
-	
-	Parameters:
-		items - Array of elements.
-		funcDistance - Call back function used to get ditance for current item. 
+/**
+ * Callback for finding distance for a collection item
+ *
+ * @callback funcDistance
+ * @param {Object} item A collection item
+ * @param {number} index An index of the collection item
+ * @returns {number} Returns a distance for the item 
+ */
 
-	Returns: 
-		Nearest item.
+/**
+* @typedef {Object} BinarySearchResult
+* @property {number} index The index of the nearest item in the collection
+* @property {Object} item The nearest item
 */
-primitives.common.binarySearch = function (items, funcDistance, startMinimum, startMaximum) {
-	var result = null,
-		distance,
-		bestDistance,
-		minimum = startMinimum || 0,
-		maximum = startMaximum || (items.length - 1),
-		middle,
-		item;
 
-	if (items.length > 0) {
-		item = items[minimum];
-		result = { index: minimum, item: item };
-		distance = funcDistance(item, minimum);
-		if (distance > 0) {
-			bestDistance = Math.abs(distance);
+/**
+ * Search sorted list of elements for the nearest item.
+ *
+ * @param {Object[]} items - The collection of elements.
+ * @param {funcDistance} callback - A callback function to get distance for the collection item. 
+ * @param {number} [startMinimum=undefined] - The minimum index in the array to start search from
+ * @param {number} [startMaximum=undefined] - The maximum index in the array to start search from
+ * @returns {BinarySearchResult} Returns an item of the collection, which is nearest to optimal measured by callback function
+*/
+primitives.common.binarySearch = function (items, callback, startMinimum, startMaximum) {
+  var result = null,
+    distance,
+    bestDistance,
+    minimum = startMinimum || 0,
+    maximum = startMaximum || (items.length - 1),
+    middle,
+    item;
 
-			item = items[maximum];
-			distance = funcDistance(item, maximum);
-			if (distance >= 0) {
-				result = { index: maximum, item: item };
-			} else {
-				distance = Math.abs(distance);
-				if (bestDistance > distance) {
-					bestDistance = distance;
-					result = { index: maximum, item: item };
-				}
-				while (minimum + 1 < maximum) {
-					middle = Math.round((minimum + maximum) / 2.0);
-					item = items[middle];
-					distance = funcDistance(item, middle);
-					if (distance === 0) {
-						result = { index: middle, item: item };
-						break;
-					} else {
-						if (distance > 0) {
-							minimum = middle;
-						} else {
-							maximum = middle;
-						}
-						distance = Math.abs(distance);
-						if (bestDistance > distance) {
-							bestDistance = distance;
-							result = { index: middle, item: item };
-						}
-					}
-				}
-			}
-		}
-	}
-	return result;
+  if (items.length > 0) {
+    item = items[minimum];
+    result = { index: minimum, item: item };
+    distance = callback(item, minimum);
+    if (distance > 0) {
+      bestDistance = Math.abs(distance);
+
+      item = items[maximum];
+      distance = callback(item, maximum);
+      if (distance >= 0) {
+        result = { index: maximum, item: item };
+      } else {
+        distance = Math.abs(distance);
+        if (bestDistance > distance) {
+          bestDistance = distance;
+          result = { index: maximum, item: item };
+        }
+        while (minimum + 1 < maximum) {
+          middle = Math.round((minimum + maximum) / 2.0);
+          item = items[middle];
+          distance = callback(item, middle);
+          if (distance === 0) {
+            result = { index: middle, item: item };
+            break;
+          } else {
+            if (distance > 0) {
+              minimum = middle;
+            } else {
+              maximum = middle;
+            }
+            distance = Math.abs(distance);
+            if (bestDistance > distance) {
+              bestDistance = distance;
+              result = { index: middle, item: item };
+            }
+          }
+        }
+      }
+    }
+  }
+  return result;
 };
-
-
 
 /* /algorithms/family.js*/
+
+/**
+ * Creates a family object
+ * 
+ * @class family
+ * 
+ * @param {family} [source=undefined] Reference to optional family object to clone properties from
+ * 
+ * @returns {family} Returns new instance of family structure
+ */
 primitives.common.family = function (source) {
-	var _roots = {},     // children hash of orphant parent id
-		_rootsCount = {},
-		_children = {},  // children hash by node id
-		_childrenCount = {},
-		_parents = {},   // parents hash by node id
-		_parentsCount = {},
-		_nodes = {},     // nodes by node id
-		BREAK = 1,
-		SKIP = 2;
-	
-	_init(source);
-
-	function _init(source) {
-		if (primitives.common.isObject(source)) {
-			_roots = primitives.common.cloneObject(source.roots, false);
-			_rootsCount = primitives.common.cloneObject(source.rootsCount, true);
-			_children = primitives.common.cloneObject(source.children, false);
-			_childrenCount = primitives.common.cloneObject(source.childrenCount, true);
-			_parents = primitives.common.cloneObject(source.parents, false);
-			_parentsCount = primitives.common.cloneObject(source.parentsCount, true);
-			_nodes = primitives.common.cloneObject(source.nodes, true);
-		}
-	}
-
-	function _loop(thisArg, collection, itemid, onItem) {
-		var item, items;
-		if (onItem != null) {
-			items = collection[itemid];
-			if (items != null) {
-				for (item in items) {
-					if (items.hasOwnProperty(item)) {
-						if (onItem.call(thisArg, item, items[item])) {
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	function add(parents, nodeid, node) {
-		var index, len,
-			parentid,
-			processed = {};
-
-		if (!parents || parents.length === 0) {
-			parents = [null];
-		}
-
-		if (_nodes[nodeid] == null && node != null) {
-			_nodes[nodeid] = node;
-			for (index = 0, len = parents.length; index < len; index += 1) {
-				parentid = parents[index];
-
-
-				if (processed[parentid] == null && parentid != nodeid) {
-					processed[parentid] = true;
-					if (_nodes[parentid] != null) {
-						if (_parents[nodeid] == null) {
-							_parents[nodeid] = {};
-							_parentsCount[nodeid] = 0;
-						}
-						if (!_parents[nodeid][parentid]) {
-							_parents[nodeid][parentid] = true;
-							_parentsCount[nodeid] += 1;
-						}
-
-						if (_children[parentid] == null) {
-							_children[parentid] = {};
-							_childrenCount[parentid] = 0;
-						}
-						if (!_children[parentid][nodeid]) {
-							_children[parentid][nodeid] = true;
-							_childrenCount[parentid] += 1;
-						}
-					} else {
-						if (_roots[parentid] == null) {
-							_roots[parentid] = {};
-							_rootsCount[parentid] = 0;
-						}
-						if (!_roots[parentid][nodeid]) {
-							_roots[parentid][nodeid] = true;
-							_rootsCount[parentid] += 1;
-						}
-					}
-				}
-			}
-			if (_roots[nodeid] != null) {
-				_children[nodeid] = _roots[nodeid];
-				_childrenCount[nodeid] = _rootsCount[nodeid];
-				delete _roots[nodeid];
-				delete _rootsCount[nodeid];
-				_loop(this, _children, nodeid, function (itemid) {
-					if (_parents[itemid] == null) {
-						_parents[itemid] = {};
-						_parentsCount[itemid] = 0;
-					}
-					if (!_parents[itemid][nodeid]) {
-						_parents[itemid][nodeid] = true;
-						_parentsCount[itemid] += 1;
-					}
-				});
-			}
-		}
-	}
-
-	function node(nodeid) {
-		return _nodes[nodeid];
-	}
-
-	function adopt(parents, nodeid) {
-		var index, len,
-			parentid;
-		if (_nodes[nodeid] != null) {
-			for (index = 0, len = parents.length; index < len; index += 1) {
-				parentid = parents[index];
-
-				if (_parents[nodeid] == null) {
-					_parents[nodeid] = {};
-					_parentsCount[nodeid] = 0;
-				}
-
-				if (parentid != nodeid && _nodes[parentid] != null) {
-					if (!_parents[nodeid][parentid]) {
-						_parents[nodeid][parentid] = true;
-						_parentsCount[nodeid] += 1;
-					}
-
-					if (_children[parentid] == null) {
-						_children[parentid] = {};
-						_childrenCount[parentid] = 0;
-					}
-					if (!_children[parentid][nodeid]) {
-						_children[parentid][nodeid] = true;
-						_childrenCount[parentid] += 1;
-					}
-				} else {
-					throw "Item cannot be parent of itself and parent should exist in the structure!";
-				}
-			}
-		} else {
-			throw "Child should be in hierarchy!";
-		}
-	}
-
-	function removeNode(nodeid) {
-		if (_nodes[nodeid] != null) {
-			_loop(this, _children, nodeid, function (itemid) {
-				delete _parents[itemid][nodeid];
-				_parentsCount[itemid] -= 1;
-
-				if (!_parentsCount[itemid]) {
-					delete _parents[itemid];
-					delete _parentsCount[itemid];
-
-					if (_roots[null] == null) {
-						_roots[null] = {};
-						_rootsCount[null] = 0;
-					}
-					if (!_roots[null][itemid]) {
-						_roots[null][itemid] = true;
-						_rootsCount[null] += 1;
-					}
-				}
-			});
-			_loop(this, _parents, nodeid, function (itemid) {
-				delete _children[itemid][nodeid];
-				_childrenCount[itemid] -= 1;
-				if (!_childrenCount[itemid]) {
-					delete _children[itemid];
-					delete _childrenCount[itemid];
-				}
-			});
-			if (_roots[null] != null && _roots[null][nodeid] != null) {
-				delete _roots[null][nodeid];
-				_rootsCount[null] -= 1;
-
-				if (!_rootsCount[null]) {
-					delete _roots[null];
-					delete _rootsCount[null];
-				}
-			}
-			delete _children[nodeid];
-			delete _childrenCount[nodeid];
-			delete _parents[nodeid];
-			delete _parentsCount[nodeid];
-			delete _nodes[nodeid];
-		}
-	}
-
-	function _removeChildReference(parentid, childid) {
-		var result = false;
-		if (_children[parentid] != null && _children[parentid][childid] != null) {
-			delete _children[parentid][childid];
-			_childrenCount[parentid] -= 1;
-
-			delete _parents[childid][parentid];
-			_parentsCount[childid] -= 1;
-
-			if (!_childrenCount[parentid]) {
-				delete _children[parentid];
-				delete _childrenCount[parentid];
-			}
-
-			if (!_parents[childid]) {
-				delete _parents[childid];
-				delete _parentsCount[childid];
-
-				if (_roots[null] == null) {
-					_roots[null] = {};
-					_rootsCount[null] = 0;
-				}
-				_roots[null][childid] = true;
-				_rootsCount[null] += 1;
-			}
-			result = true;
-		}
-		return result;
-	}
-
-	function removeRelation(fromid, toid) {
-		var result = false;
-		if (_nodes[fromid] != null && _nodes[toid] != null) {
-			result = _removeChildReference(fromid, toid) || _removeChildReference(toid, fromid);
-		}
-		return result;
-	}
-
-	function hasNodes() {
-		return !primitives.common.isEmptyObject(_nodes);
-	}
-
-	function loop(thisArg, onItem) {
-		var item;
-		if (onItem != null) {
-			for (item in _nodes) {
-				if (_nodes.hasOwnProperty(item)) {
-					if (onItem.call(thisArg, item, _nodes[item])) {
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	function _loopItems(thisArg, collection, items, onItem) { // onItem(itemid, item, levelIndex)
-		var newItems, itemid,
-			processed = {},
-			levelIndex = 0,
-			hasItems = true;
-
-
-		while (hasItems) {
-			newItems = {};
-			hasItems = false;
-
-			for (itemid in items) {
-				if (items.hasOwnProperty(itemid)) {
-					if (!processed[itemid]) {
-						processed[itemid] = true;
-
-						switch (onItem.call(thisArg, itemid, _nodes[itemid], levelIndex)) {
-							case 1/*BREAK*/:
-								newItems = {};
-								hasItems = false;
-								break;
-							case 2/*SKIP*/:
-								break;
-							default:
-								_loop(this, collection, itemid, function (newItemId) {
-									if (!processed[newItemId]) {
-										newItems[newItemId] = true;
-										hasItems = true;
-									}
-								}); //ignore jslint
-								break;
-						}
-					}
-				}
-			}
-			items = newItems;
-			levelIndex += 1;
-		}
-	}
-
-	function loopChildren(thisArg, nodeid, onItem) { // onItem(itemid, item, levelIndex)
-		if (onItem != null) {
-			if (nodeid != null && _nodes[nodeid] != null && _children[nodeid] != null) {
-				_loopItems(thisArg, _children, _children[nodeid], onItem);
-			}
-		}
-	}
-
-	function loopParents(thisArg, nodeid, onItem) { // onItem(itemid, item, levelIndex)
-		if (onItem != null) {
-			if (nodeid != null && _nodes[nodeid] != null && _parents[nodeid] != null) {
-				_loopItems(thisArg, _parents, _parents[nodeid], onItem);
-			}
-		}
-	}
-
-	function _loopTopo(thisArg, backwardCol, backwardCount, forwardCol, forwardCount, onItem) { // onItem(itemid, item, position)
-		var index, len, nodeid, references,
-			queue, newQueue, position;
-
-		if (onItem != null) {
-			/* count parents for every node */
-			queue = [];
-			references = {};
-			for (nodeid in _nodes) {
-				if (_nodes.hasOwnProperty(nodeid)) {
-					references[nodeid] = (backwardCount[nodeid] || 0);
-
-					if (!references[nodeid]) {
-						queue.push(nodeid);
-					}
-				}
-			}
-
-			/* itterate queue and reduce reference counts via children */
-			position = 0;
-			while (queue.length > 0) {
-				newQueue = [];
-
-				for (index = 0, len = queue.length; index < len; index += 1) {
-					nodeid = queue[index];
-
-					if (onItem.call(thisArg, nodeid, _nodes[nodeid], position)) {
-						newQueue = [];
-						break;
-					}
-
-					position += 1;
-
-					_loop(this, forwardCol, nodeid, function (itemid) {
-						references[itemid] -= 1;
-						if (references[itemid] === 0) {
-							newQueue.push(itemid);
-						}
-					}); //ignore jslint
-				}
-				queue = newQueue;
-			}
-		}
-	}
-
-	function loopTopo(thisArg, onItem) { // onItem(itemid, item, position)
-		_loopTopo(thisArg, _parents, _parentsCount, _children, _childrenCount, onItem);
-	}
-
-	function loopTopoReversed(thisArg, onItem) { // onItem(itemid, item, position)
-		_loopTopo(thisArg, _children, _childrenCount, _parents, _parentsCount, onItem);
-	}
-
-
-	/* argument parentAligned set to true alignes nodes to top otherwise to bottom */
-	function loopLevels(thisArg, parentAligned, onItem) { // onItem(itemid, item, levelIndex)
-		var topoSorted = [],
-			topoSortedPositions = {},
-			processed = {},
-			margin = [],
-			/* result items distribution by levels */
-			levels = {}, levelIndex,
-			groups = {}, hasGroups, newGroups, groupIndex, group,
-			itemsAtLevel, itemid,
-			minimumLevel = null,
-			loopFunc = parentAligned ? loopTopo : loopTopoReversed,
-			index, len,
-			mIndex, mLen, mItem, mLevel,
-			topoSortedItem,
-			bestPosition, bestItem, bestLevel, bestIsParent,
-			newMargin, hasNeighbours;
-
-		function Group() {
-			this.items = {};
-			this.minimumLevel = null;
-		}
-
-		Group.prototype.addItemToLevel = function (itemid, level) {
-			var items = this.items[level];
-			if (!items) {
-				items = [itemid];
-				this.items[level] = items;
-			} else {
-				items.push(itemid);
-			}
-			this.minimumLevel = this.minimumLevel == null ? level : Math.min(this.minimumLevel, level);
-		};
-
-		function addItemToLevel(itemid, index, level) {
-			var group = groups[index];
-			if (!group) {
-				group = new Group();
-				groups[index] = group;
-			}
-
-			group.addItemToLevel(itemid, level);
-
-			minimumLevel = minimumLevel == null ? level : Math.min(minimumLevel, level);
-
-			levels[itemid] = level;
-			processed[itemid] = true;
-		}
-
-
-		if (onItem != null) {
-			/* sort items topologically */
-			loopFunc(this, function (itemid, item, position) {
-				topoSorted.push(itemid);
-				topoSortedPositions[itemid] = position;
-			});
-
-			/* search for the first available non processed item in topological order */
-			for (index = 0, len = topoSorted.length; index < len; index += 1) {
-				topoSortedItem = topoSorted[index];
-				if (processed[topoSortedItem] == null) {
-					margin.push(topoSortedItem);
-
-					addItemToLevel(topoSortedItem, index, 0);
-
-					/* use regular graph breadth first search */
-					while (margin.length > 0) {
-						bestPosition = null;
-						bestItem = null;
-						bestLevel = null;
-						bestIsParent = !parentAligned;
-						newMargin = [];
-						for (mIndex = 0, mLen = margin.length; mIndex < mLen; mIndex += 1) {
-							mItem = margin[mIndex];
-							mLevel = levels[mItem];
-							hasNeighbours = false;
-
-							if (parentAligned) {
-								_loop(this, _parents, mItem, function (parentid) {
-									var topoSortedPosition;
-									if (!processed[parentid]) {
-										hasNeighbours = true;
-										topoSortedPosition = topoSortedPositions[parentid];
-										if (bestPosition == null || !bestIsParent || bestPosition < topoSortedPosition || (bestPosition == topoSortedPosition && bestLevel > mLevel - 1)) {
-											bestPosition = topoSortedPosition;
-											bestItem = parentid;
-											bestLevel = mLevel - 1;
-											bestIsParent = true;
-										}
-									}
-								}); //ignore jslint
-								_loop(this, _children, mItem, function (childid) {
-									var topoSortedPosition;
-									if (!processed[childid]) {
-										hasNeighbours = true;
-										topoSortedPosition = topoSortedPositions[childid];
-										if (bestPosition == null || (!bestIsParent && (bestPosition > topoSortedPosition || (bestPosition == topoSortedPosition && bestLevel < mLevel + 1)))) {
-											bestPosition = topoSortedPosition;
-											bestItem = childid;
-											bestLevel = mLevel + 1;
-											bestIsParent = false;
-										}
-									}
-								}); //ignore jslint
-							} else {
-								_loop(this, _children, mItem, function (childid) {
-									var topoSortedPosition;
-									if (!processed[childid]) {
-										hasNeighbours = true;
-										topoSortedPosition = topoSortedPositions[childid];
-										if (bestPosition == null || bestIsParent || bestPosition < topoSortedPosition || (bestPosition == topoSortedPosition && bestLevel < mLevel + 1)) {
-											bestPosition = topoSortedPosition;
-											bestItem = childid;
-											bestLevel = mLevel + 1;
-											bestIsParent = false;
-										}
-									}
-								}); //ignore jslint
-								_loop(this, _parents, mItem, function (parentid) {
-									var topoSortedPosition;
-									if (!processed[parentid]) {
-										hasNeighbours = true;
-										topoSortedPosition = topoSortedPositions[parentid];
-										if (bestPosition == null || (bestIsParent && (bestPosition > topoSortedPosition || (bestPosition == topoSortedPosition && bestLevel > mLevel - 1)))) {
-											bestPosition = topoSortedPosition;
-											bestItem = parentid;
-											bestLevel = mLevel - 1;
-											bestIsParent = true;
-										}
-									}
-								}); //ignore jslint
-							}
-							if (hasNeighbours) {
-								newMargin.push(mItem);
-							}
-						}
-						if (bestItem != null) {
-							newMargin.push(bestItem);
-
-							addItemToLevel(bestItem, index, bestLevel);
-						}
-						margin = newMargin;
-					}
-				}
-			}
-
-			hasGroups = true;
-			levelIndex = minimumLevel;
-			while (hasGroups) {
-				newGroups = {};
-				hasGroups = false;
-				for (groupIndex in groups) {
-					if (groups.hasOwnProperty(groupIndex)) {
-						group = groups[groupIndex];
-						itemsAtLevel = group.items[(group.minimumLevel - minimumLevel) + levelIndex];
-						if (itemsAtLevel != null) {
-							newGroups[groupIndex] = group;
-							hasGroups = true;
-
-							for (index = 0, len = itemsAtLevel.length; index < len; index += 1) {
-								itemid = itemsAtLevel[index];
-								if (onItem.call(thisArg, itemid, _nodes[itemid], levelIndex - minimumLevel)) {
-									hasGroups = false;
-									return true;
-								}
-							}
-						}
-					}
-				}
-				groups = newGroups;
-				levelIndex += 1;
-			}
-		}
-	}
-
-	function loopRoots(thisArg, onItem) { // onItem(itemid, item)
-		var result = null,
-			minimum, counter = 0,
-			famMembers = {},
-			famCount = {},
-			isRoot,
-			roots = {},
-			processed = {},
-			famItemId, member, members, rootid,
-			membersRoots, memberRoots, memberRoot,
-			index, len;
-
-		loopTopoReversed(this, function (famItemId, famItem, position) {
-			/* every node has at least itself in members */
-			if (!famMembers.hasOwnProperty(famItemId)) {
-				famMembers[famItemId] = {};
-				famCount[famItemId] = 0;
-			}
-			famMembers[famItemId][famItemId] = true;
-			famCount[famItemId] += 1;
-
-			isRoot = true;
-			loopParents(this, famItem.id, function (parentid, parent, levelIndex) {
-				var items, itemid;
-				isRoot = false;
-				if (!famMembers.hasOwnProperty(parentid)) {
-					famMembers[parentid] = {};
-					famCount[parentid] = 0;
-				}
-				/* push famItem members to parent members collection */
-				if (!famCount[parentid] && _parentsCount[famItemId] == 1) {
-					famMembers[parentid] = famMembers[famItemId];
-					famCount[parentid] = famCount[famItemId];
-				} else {
-					items = famMembers[famItemId];
-					for (itemid in items) {
-						if (items.hasOwnProperty(itemid)) {
-							if (!famMembers[parentid][itemid]) {
-								famMembers[parentid][itemid] = true;
-								famCount[parentid] += 1;
-							}
-						}
-					}
-				}
-				return SKIP;
-			});
-			if (isRoot) {
-				roots[famItemId] = true;
-				counter += 1;
-
-
-			}
-		});
-
-		/* create collection of roots per member */
-		membersRoots = {};
-		for (rootid in roots) {
-			if (roots.hasOwnProperty(rootid)) {
-				members = famMembers[rootid];
-
-				for (member in members) {
-					if (members.hasOwnProperty(member)) {
-
-						if (!membersRoots[member]) {
-							membersRoots[member] = [];
-						}
-						membersRoots[member].push(rootid.toString());
-					}
-				}
-			}
-		}
-
-		/* loop minimal sub tree roots */
-		while (counter > 0) {
-			minimum = null;
-			for (famItemId in roots) {
-				if (roots.hasOwnProperty(famItemId)) {
-					if (!minimum || famCount[famItemId] < minimum) {
-						minimum = famCount[famItemId];
-						result = famItemId;
-					}
-				}
-			}
-			if (result != null) {
-				if (onItem != null) {
-					onItem.call(thisArg, result, _nodes[result]);
-				}
-				members = famMembers[result];
-
-				for (member in members) {
-					if (members.hasOwnProperty(member)) {
-						if (!processed[member]) {
-							memberRoots = membersRoots[member];
-							for (index = 0, len = memberRoots.length; index < len; index += 1) {
-								memberRoot = memberRoots[index];
-								famCount[memberRoot] -= 1;
-							}
-							processed[member] = true;
-						}
-					}
-				}
-
-				delete roots[result];
-				counter -= 1;
-			}
-		}
-	}
-
-	function findLargestRoot() {
-		var result = null,
-			maximum,
-			famMembers = {},
-			famCount = {},
-			isRoot;
-
-		maximum = null;
-
-		loopTopoReversed(this, function (famItemId, famItem, position) {
-			/* every node has at least itself in members */
-			if (!famMembers.hasOwnProperty(famItemId)) {
-				famMembers[famItemId] = {};
-				famCount[famItemId] = 0;
-			}
-			famMembers[famItemId][famItemId] = true;
-			famCount[famItemId] += 1;
-
-			isRoot = true;
-			loopParents(this, famItem.id, function (parentid, parent, levelIndex) {
-				var items, itemid;
-				isRoot = false;
-				if (!famMembers.hasOwnProperty(parentid)) {
-					famMembers[parentid] = {};
-					famCount[parentid] = 0;
-				}
-				/* push famItem members to parent members collection */
-				if (!famCount[parentid] && _parentsCount[famItemId] == 1) {
-					famMembers[parentid] = famMembers[famItemId];
-					famCount[parentid] = famCount[famItemId];
-				} else {
-					items = famMembers[famItemId];
-					for (itemid in items) {
-						if (items.hasOwnProperty(itemid)) {
-							famMembers[parentid][itemid] = true;
-							famCount[parentid] += 1;
-						}
-					}
-				}
-				return SKIP;
-			});
-			if (isRoot && (!maximum || famCount[famItemId] > maximum)) {
-				maximum = famCount[famItemId];
-				result = famItemId;
-			}
-
-		});
-
-		return result;
-	}
-
-	/* common child should belong only to the given collection of parents, */
-	/* if child's parents don't match given parents, it is not considered as common child */
-	function hasCommonChild(parents) {
-		var result = false,
-			parentsHash, childrenHash,
-			parentsCount,
-			pIndex, pLen,
-			parent, child;
-
-		/* convert parents collection to hash, remove duplicates and ignore non-existing items */
-		parentsHash = {};
-		parentsCount = 0;
-		for (pIndex = 0, pLen = parents.length; pIndex < pLen; pIndex += 1) {
-			parent = parents[pIndex];
-			if (_nodes[parent] != null && !parentsHash[parent]) {
-				parentsHash[parent] = true;
-				parentsCount += 1;
-			}
-		}
-
-		/* collect number of parents referencing each child */
-		childrenHash = {};
-		for (parent in parentsHash) {
-			if (parentsHash.hasOwnProperty(parent)) {
-				_loop(this, _children, parent, function (child) {
-					if (!childrenHash[child]) {
-						childrenHash[child] = 1;
-					} else {
-						childrenHash[child] += 1;
-					}
-				}); //ignore jslint
-			}
-		}
-
-		/* find common child having number of references equal to number of existing parents */
-		for (child in childrenHash) {
-			if (childrenHash.hasOwnProperty(child)) {
-				if (_parents[child] != null && (_parentsCount[child] || 0) == childrenHash[child] && childrenHash[child] == parentsCount) {
-					result = true;
-					break;
-				}
-			}
-		}
-
-		return result;
-	}
-
-	function _bundleNodes(fromItem, items, bundleItemId, bundleItem, backwardCol, backwardCount, forwardCol, forwardCount, checkChildren) {
-		var isValid = false,
-			index, len,
-			child;
-
-		if (_nodes[fromItem] != null && forwardCol[fromItem] != null) {
-			/* validate target items */
-			isValid = true;
-			if (checkChildren) {
-				/* if we add new bundle all items should present */
-				for (index = 0, len = items.length; index < len; index += 1) {
-					child = items[index];
-					if (_nodes[child] == null || forwardCol[fromItem][child] == null) {
-						isValid = false;
-					}
-				}
-			}
-			if (isValid) {
-				if (bundleItem != null) {
-					/* add bundle node */
-					_nodes[bundleItemId] = bundleItem;
-				}
-
-				if (_nodes[bundleItemId] != null) {
-					/* update references */
-					if (!backwardCol[bundleItemId]) {
-						backwardCol[bundleItemId] = {};
-						backwardCount[bundleItemId] = 0;
-					}
-					if (!forwardCol[bundleItemId]) {
-						forwardCol[bundleItemId] = {};
-						forwardCount[bundleItemId] = 0;
-					}
-
-					if (!backwardCol[bundleItemId][fromItem]) {
-						backwardCol[bundleItemId][fromItem] = true;
-						backwardCount[bundleItemId] += 1;
-					}
-
-					if (!forwardCol[fromItem][bundleItemId]) {
-						forwardCol[fromItem][bundleItemId] = true;
-						forwardCount[fromItem] += 1;
-					}
-
-					for (index = 0, len = items.length; index < len; index += 1) {
-						child = items[index];
-
-						if (bundleItemId != child) {
-							if (forwardCol[fromItem][child] != null) {
-								delete forwardCol[fromItem][child];
-								forwardCount[fromItem] -= 1;
-							}
-
-							if (backwardCol[child][fromItem] != null) {
-								delete backwardCol[child][fromItem];
-								backwardCount[child] -= 1;
-							}
-
-							if (!backwardCol[child][bundleItemId]) {
-								backwardCol[child][bundleItemId] = true;
-								backwardCount[child] += 1;
-							}
-
-							if (!forwardCol[bundleItemId][child]) {
-								forwardCol[bundleItemId][child] = true;
-								forwardCount[bundleItemId] += 1;
-							}
-						}
-					}
-				}
-			}
-		}
-		return isValid;
-	}
-
-	function bundleChildren(parent, children, bundleItemId, bundleItem) {
-		return _bundleNodes(parent, children, bundleItemId, bundleItem, _parents, _parentsCount, _children, _childrenCount, true);
-	}
-
-	function bundleParents(child, parents, bundleItemId, bundleItem) {
-		return _bundleNodes(child, parents, bundleItemId, bundleItem, _children, _childrenCount, _parents, _parentsCount, true);
-	}
-
-	function ReferenceItem() {
-		this.id = "";
-		this.key = "";
-		this.children = [];
-		this.childrenHash = {};
-		this.processed = false;
-	}
-
-	function ReferencesEdge(arg0) {
-		this.items = [];
-		this.weight = 0;
-		this.difference = 0;
-
-		if (arguments.length > 0) {
-			this.difference = arg0;
-		}
-	}
-
-	function _getReferencesGraph(currentItems) {
-		var result = primitives.common.graph(),
-			item, parents,
-			index1, index2, len,
-			from, to, difference,
-			processed = {};
-
-		for (item in currentItems) {
-			if (currentItems.hasOwnProperty(item)) {
-
-				_loop(this, _children, item, function (child) {
-					if (!processed.hasOwnProperty(child)) {
-						processed[child] = true;
-						/* create array of parents from hash references */
-						parents = [];
-						_loop(this, _parents, child, function (parent) {
-							parents.push(parent);
-						});
-
-						/* create all possible combinations between items */
-						for (index1 = 0, len = parents.length; index1 < len - 1; index1 += 1) {
-							from = parents[index1];
-							if (currentItems.hasOwnProperty(from)) {
-
-								for (index2 = index1 + 1; index2 < len; index2 += 1) {
-									to = parents[index2];
-									if (currentItems.hasOwnProperty(to)) {
-										difference = Math.abs(currentItems[from].children.length - currentItems[to].children.length);
-
-										var edge = result.edge(from, to);
-										if (edge == null) {
-											edge = new ReferencesEdge(difference);
-											result.addEdge(from, to, edge);
-										}
-										edge.items.push(child);
-										edge.weight += 1;
-									}
-								}
-							}
-						}
-					}
-				}); //ignore jslint
-			}
-		}
-		return result;
-	}
-
-	function optimizeReferences(onNewBundleItem) {
-		var sharedItemsByKey = {},
-			sharedItemsById = {},
-			currentItems = {},
-			nodeid, newReferenceItem,
-			nextItems, graph, node,
-			maximumTree,
-			counter = 0,
-			power = 10,
-			processed;
-
-		if (onNewBundleItem != null) {
-			for (nodeid in _nodes) {
-				counter += 1;
-				if (_nodes.hasOwnProperty(nodeid)) {
-					newReferenceItem = new ReferenceItem();
-
-					_loop(this, _children, nodeid, function (child) {
-						newReferenceItem.children.push(child);
-						newReferenceItem.childrenHash[child] = true;
-					}); //ignore jslint
-
-					newReferenceItem.children.sort();
-					newReferenceItem.id = nodeid;
-					newReferenceItem.key = newReferenceItem.children.join(",");
-
-					currentItems[newReferenceItem.id] = newReferenceItem;
-				}
-			}
-
-			power = Math.pow(10, (counter).toString().length);
-
-			while (!primitives.common.isEmptyObject(currentItems)) {
-				nextItems = {};
-				processed = {};
-
-				graph = _getReferencesGraph(currentItems);
-
-				for (nodeid in currentItems) {
-					if (currentItems.hasOwnProperty(nodeid)) {
-						node = currentItems[nodeid];
-
-						if (!node.processed) {
-
-							maximumTree = graph.getSpanningTree(nodeid, function (edge) {
-								return edge.weight * power + power - edge.difference;
-							}); //ignore jslint
-
-							maximumTree.loopLevels(this, function (treeKey, treeKeyNode, levelid) {
-								currentItems[treeKey].processed = true;
-
-								maximumTree.loopChildren(this, treeKey, function (child, childNode) {
-									var relation = graph.edge(treeKey, child),
-										nextBundleItem = null, newItem,
-										key, index, len,
-										childrenToBind, isSharedItem,
-										relationItem;
-
-									currentItems[child].processed = true;
-
-									if (relation.weight > 1) {
-										key = relation.items.join(',');
-
-										if (!sharedItemsByKey.hasOwnProperty(key)) {
-											newItem = onNewBundleItem();
-											_nodes[newItem.id] = newItem; /* add new bundle node to the family */
-
-											nextBundleItem = new ReferenceItem();
-											nextBundleItem.id = newItem.id;
-											nextBundleItem.key = key;
-											for (index = 0, len = relation.items.length; index < len; index += 1) {
-												relationItem = relation.items[index];
-												nextBundleItem.children.push(relationItem);
-												nextBundleItem.childrenHash[relationItem] = true;
-												processed[relationItem] = true;
-											}
-											nextBundleItem.children.sort();
-
-											sharedItemsByKey[nextBundleItem.key] = nextBundleItem;
-											sharedItemsById[nextBundleItem.id] = nextBundleItem;
-											nextItems[nextBundleItem.id] = nextBundleItem;
-											processed[nextBundleItem.id] = nextBundleItem;
-
-											childrenToBind = nextBundleItem.children.slice(0);
-											loopChildren(this, treeKeyNode.replacementItem || treeKey, function (childid, child, level) {
-												// if child item is bundle and it is not child of new bundle item
-												if (!nextBundleItem.childrenHash[childid] && sharedItemsById[childid] != null ) {
-													isSharedItem = true;
-													// if all children of that child are in the next bundle item we add it to that new bundle item as well
-													loopChildren(this, childid, function (childid, child, level) {
-														if (!nextBundleItem.childrenHash[childid]) {
-															isSharedItem = false;
-															return 1/*BREAK*/;
-														}
-														if (!processed.hasOwnProperty(childid)) {
-															return SKIP;
-														}
-													});
-													if (isSharedItem) {
-														childrenToBind.push(childid);
-													}
-												}
-												return 2/*SKIP*/;
-											});
-
-											_bundleNodes(treeKeyNode.replacementItem || treeKey, childrenToBind, nextBundleItem.id, newItem, _parents, _parentsCount, _children, _childrenCount, false);
-
-											if ((_childrenCount[treeKey] || 0) <= 1 && treeKeyNode.replacementItem == null) {
-												treeKeyNode.replacementItem = nextBundleItem.id;
-											}
-										} else {
-											nextBundleItem = sharedItemsByKey[key];
-										}
-
-										/* don't add shared item to itself on next items loop*/
-										if (nextBundleItem.id != child) {
-
-											childrenToBind = nextBundleItem.children.slice(0);
-											loopChildren(this, childNode.replacementItem || child, function (childid, child, level) {
-												if (sharedItemsById[childid] != null && !nextBundleItem.childrenHash[childid]) {
-
-													isSharedItem = true;
-													loopChildren(this, childid, function (childid, child, level) {
-														if (!nextBundleItem.childrenHash[childid]) {
-															isSharedItem = false;
-															return 1/*BREAK*/;
-														}
-														if (!processed.hasOwnProperty(childid)) {
-															return 2/*SKIP*/;
-														}
-														return SKIP;
-													});
-													if (isSharedItem) {
-														childrenToBind.push(childid);
-													}
-												}
-												return 2/*SKIP*/;
-											});
-
-
-											_bundleNodes(childNode.replacementItem || child, childrenToBind, nextBundleItem.id, null, _parents, _parentsCount, _children, _childrenCount, false);
-
-											/* if all items bundled then use bundle item for following transformations of references instead of original item if references graph*/
-											if ((_childrenCount[child] || 0) <= 1 && childNode.replacementItem == null) {
-												childNode.replacementItem = nextBundleItem.id;
-											}
-										}
-									}
-								});
-							}); //ignore jslint
-						}
-					}
-				}
-				currentItems = nextItems;
-			}
-		}
-	}
-
-	function eliminateManyToMany(onNewBundleItem) {
-		var parent, bundleNode;
-
-		for (parent in _children) {
-			if (_children.hasOwnProperty(parent)) {
-
-				if ((_childrenCount[parent] || 0) > 1) {
-					_loop(this, _children, parent, function (child) {
-						if ((_parentsCount[child] || 0) > 1) {
-							bundleNode = onNewBundleItem();
-							bundleChildren(parent, [child], bundleNode.id, bundleNode);
-						}
-					}); //ignore jslint
-				}
-			}
-		}
-	}
-
-	function FamilyEdge(parentid, childid) {
-		this.parentid = parentid;
-		this.childid = childid;
-		this.key = parentid + "," + childid;
-	}
-
-	function getPlanarFamily(treeLevels) {
-		var result = new primitives.common.family(),
-			familyEdgeIndex, familyEdgeLen,
-			familyEdgeKey;
-
-		treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
-			var sequence = new primitives.common.LinkedHashItems(),
-				crossings = {},
-				familyEdges = {},
-				firstBucket = [];
-
-			treeLevels.loopLevelItems(this, levelIndex, function (parentid, parentItem, position) {
-				loopChildren(this, parentid, function (childid, childItem) {
-					var childPosition = treeLevels.getItemPosition(childid);
-					var familyEdge = new FamilyEdge(parentid, childid);
-
-					familyEdges[familyEdge.key] = familyEdge;
-
-					var crossEdges = [];
-					if (sequence.isEmpty()) {
-						sequence.add(childPosition, [familyEdge]);
-					} else {
-						sequence.iterateBack(function (sequenceItem, itemPosition) {
-							if (itemPosition < childPosition) {
-								// add new sequence after itemPosition and exit
-								sequence.insertAfter(itemPosition, childPosition, [familyEdge]);
-								return true;
-							} else if (itemPosition == childPosition) {
-								// add new link to exisitng sequenceItem and exit
-								sequenceItem.push(familyEdge);
-								return true;
-							} else {
-								// merge links into output
-								for (var crossEdgesIndex = 0, crossEdgesLen = sequenceItem.length; crossEdgesIndex < crossEdgesLen; crossEdgesIndex += 1) {
-									var crossEdge = sequenceItem[crossEdgesIndex];
-									if (crossEdge.parentid != parentid) {
-										crossEdges.push(crossEdge);
-									}
-								}
-							}
-						});
-						if (sequence.startKey() > childPosition) {
-							sequence.unshift(childPosition, [familyEdge]);
-						}
-					}
-
-					crossings[familyEdge.key] = crossEdges;
-					for (var crossEdgesIndex = 0, crossEdgesLen = crossEdges.length; crossEdgesIndex < crossEdgesLen; crossEdgesIndex += 1) {
-						crossings[crossEdges[crossEdgesIndex].key].push(familyEdge);
-					}
-
-					return SKIP;
-				});
-
-				if(countChildren(parentid) == 1) {
-					var childid = firstChild(parentid);
-					if (countParents(childid) == 1) {
-						var familyEdge = new FamilyEdge(parentid, childid);
-						firstBucket.push(familyEdge.key);
-					}
-				}
-			});
-
-			// distribute edges by number of crossings into buckets
-			var buckets = [],
-				crossEdges;
-			for (var familyEdgeKey in crossings) {
-				crossEdges = crossings[familyEdgeKey];
-				var len = crossEdges.length;
-				if (buckets[len] != null) {
-					buckets[len].push(familyEdgeKey);
-				} else {
-					buckets[len] = [familyEdgeKey];
-				}
-			}
-
-			var processed = {};
-
-			// leave single parent child relations
-			buckets.unshift(firstBucket);
-
-			// break relations having 
-			for (var bucketIndex = 0, bucketsLen = buckets.length; bucketIndex < bucketsLen; bucketIndex += 1) {
-				var bucket = buckets[bucketIndex];
-				if (bucket != null) {
-					for (familyEdgeIndex = 0, familyEdgeLen = bucket.length; familyEdgeIndex < familyEdgeLen; familyEdgeIndex += 1) {
-						familyEdgeKey = bucket[familyEdgeIndex];
-						if (!processed.hasOwnProperty(familyEdgeKey)) {
-							processed[familyEdgeKey] = true;
-
-							var familyEdge = familyEdges[familyEdgeKey];
-
-							if (result.node(familyEdge.parentid) == null) {
-								result.add(null, familyEdge.parentid, {});
-							}
-							if (result.node(familyEdge.childid) == null) {
-								result.add([familyEdge.parentid], familyEdge.childid, {});
-							} else {
-								result.adopt([familyEdge.parentid], familyEdge.childid);
-							}
-
-							crossEdges = crossings[familyEdgeKey];
-							for (var crossEdgesIndex = 0, crossEdgesLen = crossEdges.length; crossEdgesIndex < crossEdgesLen; crossEdgesIndex += 1) {
-								processed[crossEdges[crossEdgesIndex].key] = true;
-							}
-						}
-					}
-				}
-			}
-		});
-
-		return result;
-	}
-
-	function Link(from, to, distance) {
-		this.from = from;
-		this.to = to;
-		this.distance = 0;
-	}
-
-	function getFamilyWithoutGrandParentsRelations() {
-		var result = new primitives.common.family();
-
-		var hash = {};
-		var links = [];
-		var level = 0;
-		for (var from in _parents) {
-			if (_parents.hasOwnProperty(from)) {
-				_loop(this, _parents, from, function (to) {
-					var fromHash = hash[from];
-					if(fromHash == null) {
-						fromHash = {};
-						hash[from] = fromHash;
-					}
-					if (!fromHash.hasOwnProperty(to)) {
-						var link = new Link(from, to, level);
-						links.push(link);
-						hash[from][to] = link;
-					}
-				}); //ignore jslint
-			}
-		}
-
-		while (links.length > 0) {
-			var newLinks = [];
-			level += 1;
-			for (var index = 0, len = links.length; index < len; index += 1) {
-				var link = links[index];
-				from = link.to;
-				if (_parents.hasOwnProperty(from)) {
-					_loop(this, _parents, from, function (to) {
-						var fromHash = hash[link.from];
-						if (fromHash == null) {
-							fromHash = {};
-							hash[link.from] = fromHash;
-						}
-						if (fromHash.hasOwnProperty(to)) {
-							fromHash[to].distance = level;
-						} else {
-							var newLink = new Link(from, to, level);
-							newLinks.push(newLink);
-							fromHash[to] = newLink;
-						}
-					});
-				}
-			}
-			links = newLinks;
-		}
-
-		// return only references to immidiate parents
-		loop(this, function(nodeid, node) {
-			var parents = [];
-			_loop(this, _parents, nodeid, function (to) {
-				if (hash[nodeid][to].distance === 0) {
-					parents.push(to);
-				}
-			});
-			result.add(parents, nodeid, node);
-		});
-
-		return result;
-	}
-	function countChildren(parent) {
-		return _childrenCount[parent] || 0;
-	}
-
-	function countParents(child) {
-		return _parentsCount[child] || 0;
-	}
-
-	function firstChild(parent) {
-		var result = null,
-			children = _children[parent] || {};
-		for (result in children) {
-			if (children.hasOwnProperty(result)) {
-				return result; //ignore jslint
-			}
-		}
-		return null;
-	}
-
-	function firstParent(child) {
-		var result = null,
-			parents = _parents[child] || {};
-		for (result in parents) {
-			if (parents.hasOwnProperty(result)) {
-				return result; //ignore jslint
-			}
-		}
-		return null;
-	}
-
-	function loopNeighbours(thisArg, itemid, onItem) {
-		var processed = {};
-
-		if (onItem != null) {
-			loopChildren(this, itemid, function (childid, child, childLevel) {
-				if (!processed.hasOwnProperty(childid)) {
-					processed[childid] = null;
-
-					if (onItem.call(thisArg, childid, child, 1)) {
-						processed[childid] = SKIP;
-
-						loopParents(this, childid, function (parentid, parent, parentLevel) {
-							if (!processed.hasOwnProperty(parentid)) {
-								processed[parentid] = null;
-
-								if (onItem.call(thisArg, parentid, parent, 2)) {
-									processed[parentid] = SKIP;
-								}
-							}
-							return processed[parentid];
-						});
-					}
-				}
-				return processed[childid];
-			});
-
-			loopParents(this, itemid, function (parentid, parent, parentLevel) {
-				if (!processed.hasOwnProperty(parentid)) {
-					processed[parentid] = null;
-
-					if (onItem.call(thisArg, parentid, parent, 1)) {
-						processed[parentid] = SKIP;
-
-						loopChildren(this, parentid, function (childid, child, childLevel) {
-							if (!processed.hasOwnProperty(childid)) {
-								processed[childid] = true;
-
-								if (onItem.call(thisArg, childid, child, 2)) {
-									processed[childid] = SKIP;
-								}
-							}
-							return processed[childid];
-						});
-					}
-				}
-				return processed[parentid];
-			});
-		}
-	}
-
-	function getGraph() {
-		var result = primitives.common.graph(),
-			from, to;
-
-		for (from in _children) {
-			if (_children.hasOwnProperty(from)) {
-				_loop(this, _children, from, function (to) {
-					var edge = result.edge(from, to);
-					if (edge == null) {
-						edge = new ReferencesEdge({});
-						result.addEdge(from, to, edge);
-					}
-				}); //ignore jslint
-			}
-		}
-
-		return result;
-	}
-
-	function GroupBy(parentid, childid) {
-		this.parentid = parentid;
-		this.childid = childid;
-		this.ids = [];
-		this.nodes = [];
-	}
-
-	function groupBy(thisArg, size, onGroup) { //function onGroup(parent, child, nodes)
-		if (onGroup != null) {
-			var groups = {};
-			for (var nodeid in _nodes) {
-				var parentsCount = _parentsCount[nodeid] || 0;
-				var childrenCount = _childrenCount[nodeid] || 0;
-				if (parentsCount <= 1 && childrenCount <= 1) {
-					var parentid = firstParent(nodeid);
-					var childid = firstChild(nodeid);
-					var key = parentid + " * " + childid;
-					if (!groups.hasOwnProperty(key)) {
-						groups[key] = new GroupBy(parentid, childid);
-					}
-					groups[key].ids.push(nodeid);
-					groups[key].nodes.push(_nodes[nodeid]);
-				}
-			}
-
-			for (key in groups) {
-				if (groups.hasOwnProperty(key)) {
-					var group = groups[key];
-					if (group.ids.length >= size) {
-						if (onGroup.call(thisArg, group.parentid, group.childid, group.ids, group.nodes)) {
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	function validate(info) {
-		var parent, child;
-
-		function _count(items) {
-			var result = 0, key;
-			if (items != null) {
-				for (key in items) {
-					if (items.hasOwnProperty(key)) {
-						result += 1;
-					}
-				}
-			}
-			return result;
-		}
-
-		loop(this, function (nodeId, node) {
-			_loop(this, _children, nodeId, function (child) {
-				if (!_parents.hasOwnProperty(child) || !_parents[child].hasOwnProperty(nodeId)) {
-					if (info != null) {
-						info.message = "Child #" + child + " does not reference parent #" + nodeId;
-					}
-					return false;
-				}
-			});
-			_loop(this, _parents, nodeId, function (parent) {
-				if (!_children.hasOwnProperty(parent) || !_children[parent].hasOwnProperty(nodeId)) {
-					if (info != null) {
-						info.message = "Parent #" + parent + " does not reference child #" + nodeId;
-					}
-					return false;
-				}
-			});
-		});
-
-		for (parent in _parents) {
-			if (_parents.hasOwnProperty(parent)) {
-				if ((_parentsCount[parent] || 0) != _count(_parents[parent])) {
-					if (info != null) {
-						info.message = "Parents count for item #" + parent + " missmatch.";
-					}
-					return false;
-				}
-				if (_parents.hasOwnProperty(parent) && !_nodes.hasOwnProperty(parent)) {
-					if (info != null) {
-						info.message = "Orphant parents for item #" + parent;
-					}
-					return false;
-				}
-			}
-		}
-
-		for (child in _children) {
-			if (_children.hasOwnProperty(child)) {
-				if ((_childrenCount[child] || 0) != _count(_children[child])) {
-					if (info != null) {
-						info.message = "Children count for item " + child + " missmatch.";
-					}
-					return false;
-				}
-				if (_children.hasOwnProperty(child) && !_nodes.hasOwnProperty(child)) {
-					if (info != null) {
-						info.message = "Orphant children of item " + child;
-					}
-					return false;
-				}
-			}
-		}
-
-		for (child in _roots) {
-			if (_roots.hasOwnProperty(child)) {
-				if ((_rootsCount[child] || 0) != _count(_roots[child])) {
-					if (info != null) {
-						info.message = "Root children count for item @" + child + " missmatch.";
-					}
-					return false;
-				}
-				_loop(this, _roots, child, function (nodeid) {
-					if (!_nodes.hasOwnProperty(nodeid)) {
-						if (info != null) {
-							info.message = "Child #" + nodeid + "of root #" + child + " does not exists.";
-						}
-						return false;
-					}
-				}); //ignore jslint
-			}
-		}
-		
-		return true;
-	}
-	
-	function hasLoops() {
-		var tempFamily = clone();
-		loopTopo(this, function (itemid, item, levelIndex) {
-			tempFamily.removeNode(itemid);
-		});
-
-		return tempFamily.hasNodes();
-	}
-
-	function clone() {
-		return primitives.common.family({
-			roots: _roots,
-			rootsCount: _rootsCount,
-			children: _children,
-			childrenCount: _childrenCount,
-			parents: _parents,
-			parentsCount: _parentsCount,
-			nodes: _nodes
-		});
-	}
-
-	/* Private objects */
-
-	return {
-		/* family structure modification */
-		add: add,
-		adopt: adopt,
-		bundleChildren: bundleChildren,
-		bundleParents: bundleParents,
-		optimizeReferences: optimizeReferences,
-		eliminateManyToMany: eliminateManyToMany,
-		groupBy: groupBy,
-		getPlanarFamily: getPlanarFamily,
-		getFamilyWithoutGrandParentsRelations: getFamilyWithoutGrandParentsRelations,
-		getGraph: getGraph,
-
-		removeNode: removeNode,
-		removeRelation: removeRelation,
-
-		/* referencing and looping */
-		node: node,
-		loop: loop,
-		loopLevels: loopLevels,
-		loopTopo: loopTopo,
-		loopTopoReversed: loopTopoReversed,
-		loopChildren: loopChildren,
-		loopParents: loopParents,
-		findLargestRoot: findLargestRoot,
-		loopRoots: loopRoots,
-		hasNodes: hasNodes,
-		hasCommonChild: hasCommonChild,
-		loopNeighbours: loopNeighbours,
-		countChildren: countChildren,
-		countParents: countParents,
-		firstParent: firstParent,
-		firstChild: firstChild,
-
-		/* force validation */
-		validate: validate,
-		hasLoops: hasLoops,
-		clone: clone,
-
-		// callback return codes
-		BREAK: BREAK, // break loop immidiatly
-		SKIP: SKIP // skip loop of current node children 
-	};
+  var _roots = {},     // children hash of orphant parent id
+    _rootsCount = {},
+    _children = {},  // children hash by node id
+    _childrenCount = {},
+    _parents = {},   // parents hash by node id
+    _parentsCount = {},
+    _nodes = {},     // nodes by node id
+    /** @constant
+      @type {number}
+      @default
+    */
+    BREAK = 1,
+    /** @constant
+      @type {number}
+      @default
+    */
+    SKIP = 2;
+
+  _init(source);
+
+  function _init(source) {
+    if (primitives.common.isObject(source)) {
+      _roots = primitives.common.cloneObject(source.roots, false);
+      _rootsCount = primitives.common.cloneObject(source.rootsCount, true);
+      _children = primitives.common.cloneObject(source.children, false);
+      _childrenCount = primitives.common.cloneObject(source.childrenCount, true);
+      _parents = primitives.common.cloneObject(source.parents, false);
+      _parentsCount = primitives.common.cloneObject(source.parentsCount, true);
+      _nodes = primitives.common.cloneObject(source.nodes, true);
+    }
+  }
+
+  function _loop(thisArg, collection, itemid, onItem) {
+    var item, items;
+    if (onItem != null) {
+      items = collection[itemid];
+      if (items != null) {
+        for (item in items) {
+          if (items.hasOwnProperty(item)) {
+            if (onItem.call(thisArg, item, items[item])) {
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Adds new family member
+   * @param {string[]} parents A collection of parents ids
+   * @param {string} nodeid An id of the new node
+   * @param {object} node A reference to the new node
+   */
+  function add(parents, nodeid, node) {
+    var index, len,
+      parentid,
+      processed = {};
+
+    if (!parents || parents.length === 0) {
+      parents = [null];
+    }
+
+    if (_nodes[nodeid] == null && node != null) {
+      _nodes[nodeid] = node;
+      for (index = 0, len = parents.length; index < len; index += 1) {
+        parentid = parents[index];
+
+
+        if (processed[parentid] == null && parentid != nodeid) {
+          processed[parentid] = true;
+          if (_nodes[parentid] != null) {
+            if (_parents[nodeid] == null) {
+              _parents[nodeid] = {};
+              _parentsCount[nodeid] = 0;
+            }
+            if (!_parents[nodeid][parentid]) {
+              _parents[nodeid][parentid] = true;
+              _parentsCount[nodeid] += 1;
+            }
+
+            if (_children[parentid] == null) {
+              _children[parentid] = {};
+              _childrenCount[parentid] = 0;
+            }
+            if (!_children[parentid][nodeid]) {
+              _children[parentid][nodeid] = true;
+              _childrenCount[parentid] += 1;
+            }
+          } else {
+            if (_roots[parentid] == null) {
+              _roots[parentid] = {};
+              _rootsCount[parentid] = 0;
+            }
+            if (!_roots[parentid][nodeid]) {
+              _roots[parentid][nodeid] = true;
+              _rootsCount[parentid] += 1;
+            }
+          }
+        }
+      }
+      if (_roots[nodeid] != null) {
+        _children[nodeid] = _roots[nodeid];
+        _childrenCount[nodeid] = _rootsCount[nodeid];
+        delete _roots[nodeid];
+        delete _rootsCount[nodeid];
+        _loop(this, _children, nodeid, function (itemid) {
+          if (_parents[itemid] == null) {
+            _parents[itemid] = {};
+            _parentsCount[itemid] = 0;
+          }
+          if (!_parents[itemid][nodeid]) {
+            _parents[itemid][nodeid] = true;
+            _parentsCount[itemid] += 1;
+          }
+        });
+      }
+    }
+  }
+
+  /**
+   * Returns family node by id
+   * @param {string} nodeid The id of the node
+   * @returns {object|undefined} A reference to the node or undefined if id does not exists
+   */
+  function node(nodeid) {
+    return _nodes[nodeid];
+  }
+
+  /**
+   * Makes node to be a child of every parent in the collection of parents
+   * @param {string[]} parents A collection of parents ids
+   * @param {string} nodeid An id of the new node
+   */
+  function adopt(parents, nodeid) {
+    var index, len,
+      parentid;
+    if (_nodes[nodeid] != null) {
+      for (index = 0, len = parents.length; index < len; index += 1) {
+        parentid = parents[index];
+
+        if (_parents[nodeid] == null) {
+          _parents[nodeid] = {};
+          _parentsCount[nodeid] = 0;
+        }
+
+        if (parentid != nodeid && _nodes[parentid] != null) {
+          if (!_parents[nodeid][parentid]) {
+            _parents[nodeid][parentid] = true;
+            _parentsCount[nodeid] += 1;
+          }
+
+          if (_children[parentid] == null) {
+            _children[parentid] = {};
+            _childrenCount[parentid] = 0;
+          }
+          if (!_children[parentid][nodeid]) {
+            _children[parentid][nodeid] = true;
+            _childrenCount[parentid] += 1;
+          }
+        } else {
+          throw "Item cannot be parent of itself and parent should exist in the structure!";
+        }
+      }
+    } else {
+      throw "Child should be in hierarchy!";
+    }
+  }
+
+  /**
+   * Removes node
+   * @param {string} nodeid The id of the node
+   */
+  function removeNode(nodeid) {
+    if (_nodes[nodeid] != null) {
+      _loop(this, _children, nodeid, function (itemid) {
+        delete _parents[itemid][nodeid];
+        _parentsCount[itemid] -= 1;
+
+        if (!_parentsCount[itemid]) {
+          delete _parents[itemid];
+          delete _parentsCount[itemid];
+
+          if (_roots[null] == null) {
+            _roots[null] = {};
+            _rootsCount[null] = 0;
+          }
+          if (!_roots[null][itemid]) {
+            _roots[null][itemid] = true;
+            _rootsCount[null] += 1;
+          }
+        }
+      });
+      _loop(this, _parents, nodeid, function (itemid) {
+        delete _children[itemid][nodeid];
+        _childrenCount[itemid] -= 1;
+        if (!_childrenCount[itemid]) {
+          delete _children[itemid];
+          delete _childrenCount[itemid];
+        }
+      });
+      if (_roots[null] != null && _roots[null][nodeid] != null) {
+        delete _roots[null][nodeid];
+        _rootsCount[null] -= 1;
+
+        if (!_rootsCount[null]) {
+          delete _roots[null];
+          delete _rootsCount[null];
+        }
+      }
+      delete _children[nodeid];
+      delete _childrenCount[nodeid];
+      delete _parents[nodeid];
+      delete _parentsCount[nodeid];
+      delete _nodes[nodeid];
+    }
+  }
+
+  function _removeChildReference(parentid, childid) {
+    var result = false;
+    if (_children[parentid] != null && _children[parentid][childid] != null) {
+      delete _children[parentid][childid];
+      _childrenCount[parentid] -= 1;
+
+      delete _parents[childid][parentid];
+      _parentsCount[childid] -= 1;
+
+      if (!_childrenCount[parentid]) {
+        delete _children[parentid];
+        delete _childrenCount[parentid];
+      }
+
+      if (!_parents[childid]) {
+        delete _parents[childid];
+        delete _parentsCount[childid];
+
+        if (_roots[null] == null) {
+          _roots[null] = {};
+          _rootsCount[null] = 0;
+        }
+        _roots[null][childid] = true;
+        _rootsCount[null] += 1;
+      }
+      result = true;
+    }
+    return result;
+  }
+
+  /**
+   * Remove parent child relation
+   * 
+   * @param {string} fromid The parent node id
+   * @param {string} toid The child node id
+   * @returns {true} If relation was broken
+   */
+  function removeRelation(fromid, toid) {
+    var result = false;
+    if (_nodes[fromid] != null && _nodes[toid] != null) {
+      result = _removeChildReference(fromid, toid) || _removeChildReference(toid, fromid);
+    }
+    return result;
+  }
+
+  /**
+   * Returns true if structure has nodes.
+   * 
+   * @returns {boolean} Returns true if family structure has nodes
+   */
+  function hasNodes() {
+    return !primitives.common.isEmptyObject(_nodes);
+  }
+
+  /**
+   * Callback for iterating family nodes
+   * 
+   * @callback onFamilyItemCallback
+   * @param {string} itemid The node id
+   * @param {object} item The node
+   * @returns {boolean} Returns true to break the loop
+   */
+
+  /**
+   * Loops through nodes of family struture
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onFamilyItemCallback} onItem A callback function to call for every family node 
+   */
+  function loop(thisArg, onItem) {
+    var item;
+    if (onItem != null) {
+      for (item in _nodes) {
+        if (_nodes.hasOwnProperty(item)) {
+          if (onItem.call(thisArg, item, _nodes[item])) {
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  function _loopItems(thisArg, collection, items, onItem) { // onItem(itemid, item, levelIndex)
+    var newItems, itemid,
+      processed = {},
+      levelIndex = 0,
+      hasItems = true;
+
+
+    while (hasItems) {
+      newItems = {};
+      hasItems = false;
+
+      for (itemid in items) {
+        if (items.hasOwnProperty(itemid)) {
+          if (!processed[itemid]) {
+            processed[itemid] = true;
+
+            switch (onItem.call(thisArg, itemid, _nodes[itemid], levelIndex)) {
+              case 1/*BREAK*/:
+                newItems = {};
+                hasItems = false;
+                break;
+              case 2/*SKIP*/:
+                break;
+              default:
+                _loop(this, collection, itemid, function (newItemId) {
+                  if (!processed[newItemId]) {
+                    newItems[newItemId] = true;
+                    hasItems = true;
+                  }
+                }); //ignore jslint
+                break;
+            }
+          }
+        }
+      }
+      items = newItems;
+      levelIndex += 1;
+    }
+  }
+
+  /**
+   * Callback for iterating family nodes level by level
+   * 
+   * @callback onFamilyItemWithLevelCallback
+   * @param {string} itemid The node id
+   * @param {object} item The node
+   * @param {number} levelIndex The node level index
+   * @returns {number} Returns BREAK to break the loop and exit. Returns SKIP to skip node's branch traversing.
+   */
+
+  /**
+   * Loops through child nodes of family struture level by level
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} nodeid The node id to start children traversing
+   * @param {onFamilyItemWithLevelCallback} onItem A callback function to call for every child node 
+   */
+  function loopChildren(thisArg, nodeid, onItem) {
+    if (onItem != null) {
+      if (nodeid != null && _nodes[nodeid] != null && _children[nodeid] != null) {
+        _loopItems(thisArg, _children, _children[nodeid], onItem);
+      }
+    }
+  }
+
+  /**
+   * Loops through parent nodes of family struture level by level
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} nodeid The node id to start parents traversing
+   * @param {onFamilyItemWithLevelCallback} onItem A callback function to call for every parent node 
+   */
+  function loopParents(thisArg, nodeid, onItem) {
+    if (onItem != null) {
+      if (nodeid != null && _nodes[nodeid] != null && _parents[nodeid] != null) {
+        _loopItems(thisArg, _parents, _parents[nodeid], onItem);
+      }
+    }
+  }
+
+  function _loopTopo(thisArg, backwardCol, backwardCount, forwardCol, forwardCount, onItem) { // onItem(itemid, item, position)
+    var index, len, nodeid, references,
+      queue, newQueue, position;
+
+    if (onItem != null) {
+      /* count parents for every node */
+      queue = [];
+      references = {};
+      for (nodeid in _nodes) {
+        if (_nodes.hasOwnProperty(nodeid)) {
+          references[nodeid] = (backwardCount[nodeid] || 0);
+
+          if (!references[nodeid]) {
+            queue.push(nodeid);
+          }
+        }
+      }
+
+      /* iterate queue and reduce reference counts via children */
+      position = 0;
+      while (queue.length > 0) {
+        newQueue = [];
+
+        for (index = 0, len = queue.length; index < len; index += 1) {
+          nodeid = queue[index];
+
+          if (onItem.call(thisArg, nodeid, _nodes[nodeid], position)) {
+            newQueue = [];
+            break;
+          }
+
+          position += 1;
+
+          _loop(this, forwardCol, nodeid, function (itemid) {
+            references[itemid] -= 1;
+            if (references[itemid] === 0) {
+              newQueue.push(itemid);
+            }
+          }); //ignore jslint
+        }
+        queue = newQueue;
+      }
+    }
+  }
+
+  /**
+   * Callback for iterating family nodes in topological sort order
+   * 
+   * @callback onFamilyTopoCallback
+   * @param {string} itemid The node id
+   * @param {object} item The node
+   * @param {number} position The node position in the sequence
+   * @returns {boolean} Returns true to break the loop and exit.
+   */
+
+  /**
+   * Loops through topologically sorted nodes of family struture
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onFamilyTopoCallback} onItem A callback function to call for every node 
+   */
+  function loopTopo(thisArg, onItem) {
+    _loopTopo(thisArg, _parents, _parentsCount, _children, _childrenCount, onItem);
+  }
+
+  /**
+   * Loops through reversed order topologically sorted nodes of family struture
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onFamilyTopoCallback} onItem A callback function to call for every node 
+   */
+  function loopTopoReversed(thisArg, onItem) {
+    _loopTopo(thisArg, _children, _childrenCount, _parents, _parentsCount, onItem);
+  }
+
+
+  /**
+   * Loops through nodes of family struture level by level. This function aligns nodes top or bottom.
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {boolean} parentAligned True if nodes should be placed at the next level after their parents level,
+   * otherwise nodes placed at levels close to their children.
+   * @param {onFamilyItemWithLevelCallback} onItem A callback function to call for every node 
+   */
+  function loopLevels(thisArg, parentAligned, onItem) {
+    var topoSorted = [],
+      topoSortedPositions = {},
+      processed = {},
+      margin = [],
+      /* result items distribution by levels */
+      levels = {}, levelIndex,
+      groups = {}, hasGroups, newGroups, groupIndex, group,
+      itemsAtLevel, itemid,
+      minimumLevel = null,
+      loopFunc = parentAligned ? loopTopo : loopTopoReversed,
+      index, len,
+      mIndex, mLen, mItem, mLevel,
+      topoSortedItem,
+      bestPosition, bestItem, bestLevel, bestIsParent,
+      newMargin, hasNeighbours;
+
+    function Group() {
+      this.items = {};
+      this.minimumLevel = null;
+    }
+
+    Group.prototype.addItemToLevel = function (itemid, level) {
+      var items = this.items[level];
+      if (!items) {
+        items = [itemid];
+        this.items[level] = items;
+      } else {
+        items.push(itemid);
+      }
+      this.minimumLevel = this.minimumLevel == null ? level : Math.min(this.minimumLevel, level);
+    };
+
+    function addItemToLevel(itemid, index, level) {
+      var group = groups[index];
+      if (!group) {
+        group = new Group();
+        groups[index] = group;
+      }
+
+      group.addItemToLevel(itemid, level);
+
+      minimumLevel = minimumLevel == null ? level : Math.min(minimumLevel, level);
+
+      levels[itemid] = level;
+      processed[itemid] = true;
+    }
+
+
+    if (onItem != null) {
+      /* sort items topologically */
+      loopFunc(this, function (itemid, item, position) {
+        topoSorted.push(itemid);
+        topoSortedPositions[itemid] = position;
+      });
+
+      /* search for the first available non processed item in topological order */
+      for (index = 0, len = topoSorted.length; index < len; index += 1) {
+        topoSortedItem = topoSorted[index];
+        if (processed[topoSortedItem] == null) {
+          margin.push(topoSortedItem);
+
+          addItemToLevel(topoSortedItem, index, 0);
+
+          /* use regular graph breadth first search */
+          while (margin.length > 0) {
+            bestPosition = null;
+            bestItem = null;
+            bestLevel = null;
+            bestIsParent = !parentAligned;
+            newMargin = [];
+            for (mIndex = 0, mLen = margin.length; mIndex < mLen; mIndex += 1) {
+              mItem = margin[mIndex];
+              mLevel = levels[mItem];
+              hasNeighbours = false;
+
+              if (parentAligned) {
+                _loop(this, _parents, mItem, function (parentid) {
+                  var topoSortedPosition;
+                  if (!processed[parentid]) {
+                    hasNeighbours = true;
+                    topoSortedPosition = topoSortedPositions[parentid];
+                    if (bestPosition == null || !bestIsParent || bestPosition < topoSortedPosition || (bestPosition == topoSortedPosition && bestLevel > mLevel - 1)) {
+                      bestPosition = topoSortedPosition;
+                      bestItem = parentid;
+                      bestLevel = mLevel - 1;
+                      bestIsParent = true;
+                    }
+                  }
+                }); //ignore jslint
+                _loop(this, _children, mItem, function (childid) {
+                  var topoSortedPosition;
+                  if (!processed[childid]) {
+                    hasNeighbours = true;
+                    topoSortedPosition = topoSortedPositions[childid];
+                    if (bestPosition == null || (!bestIsParent && (bestPosition > topoSortedPosition || (bestPosition == topoSortedPosition && bestLevel < mLevel + 1)))) {
+                      bestPosition = topoSortedPosition;
+                      bestItem = childid;
+                      bestLevel = mLevel + 1;
+                      bestIsParent = false;
+                    }
+                  }
+                }); //ignore jslint
+              } else {
+                _loop(this, _children, mItem, function (childid) {
+                  var topoSortedPosition;
+                  if (!processed[childid]) {
+                    hasNeighbours = true;
+                    topoSortedPosition = topoSortedPositions[childid];
+                    if (bestPosition == null || bestIsParent || bestPosition < topoSortedPosition || (bestPosition == topoSortedPosition && bestLevel < mLevel + 1)) {
+                      bestPosition = topoSortedPosition;
+                      bestItem = childid;
+                      bestLevel = mLevel + 1;
+                      bestIsParent = false;
+                    }
+                  }
+                }); //ignore jslint
+                _loop(this, _parents, mItem, function (parentid) {
+                  var topoSortedPosition;
+                  if (!processed[parentid]) {
+                    hasNeighbours = true;
+                    topoSortedPosition = topoSortedPositions[parentid];
+                    if (bestPosition == null || (bestIsParent && (bestPosition > topoSortedPosition || (bestPosition == topoSortedPosition && bestLevel > mLevel - 1)))) {
+                      bestPosition = topoSortedPosition;
+                      bestItem = parentid;
+                      bestLevel = mLevel - 1;
+                      bestIsParent = true;
+                    }
+                  }
+                }); //ignore jslint
+              }
+              if (hasNeighbours) {
+                newMargin.push(mItem);
+              }
+            }
+            if (bestItem != null) {
+              newMargin.push(bestItem);
+
+              addItemToLevel(bestItem, index, bestLevel);
+            }
+            margin = newMargin;
+          }
+        }
+      }
+
+      hasGroups = true;
+      levelIndex = minimumLevel;
+      while (hasGroups) {
+        newGroups = {};
+        hasGroups = false;
+        for (groupIndex in groups) {
+          if (groups.hasOwnProperty(groupIndex)) {
+            group = groups[groupIndex];
+            itemsAtLevel = group.items[(group.minimumLevel - minimumLevel) + levelIndex];
+            if (itemsAtLevel != null) {
+              newGroups[groupIndex] = group;
+              hasGroups = true;
+
+              for (index = 0, len = itemsAtLevel.length; index < len; index += 1) {
+                itemid = itemsAtLevel[index];
+                if (onItem.call(thisArg, itemid, _nodes[itemid], levelIndex - minimumLevel)) {
+                  hasGroups = false;
+                  return true;
+                }
+              }
+            }
+          }
+        }
+        groups = newGroups;
+        levelIndex += 1;
+      }
+    }
+  }
+
+  /**
+   * Loops root nodes of family structure. 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onFamilyItemCallback} onItem A callback function to call for every family root node 
+   */
+  function loopRoots(thisArg, onItem) {
+    var result = null,
+      minimum, counter = 0,
+      famMembers = {},
+      famCount = {},
+      isRoot,
+      roots = {},
+      processed = {},
+      famItemId, member, members, rootid,
+      membersRoots, memberRoots, memberRoot,
+      index, len;
+
+    loopTopoReversed(this, function (famItemId, famItem, position) {
+      /* every node has at least itself in members */
+      if (!famMembers.hasOwnProperty(famItemId)) {
+        famMembers[famItemId] = {};
+        famCount[famItemId] = 0;
+      }
+      famMembers[famItemId][famItemId] = true;
+      famCount[famItemId] += 1;
+
+      isRoot = true;
+      loopParents(this, famItem.id, function (parentid, parent, levelIndex) {
+        var items, itemid;
+        isRoot = false;
+        if (!famMembers.hasOwnProperty(parentid)) {
+          famMembers[parentid] = {};
+          famCount[parentid] = 0;
+        }
+        /* push famItem members to parent members collection */
+        if (!famCount[parentid] && _parentsCount[famItemId] == 1) {
+          famMembers[parentid] = famMembers[famItemId];
+          famCount[parentid] = famCount[famItemId];
+        } else {
+          items = famMembers[famItemId];
+          for (itemid in items) {
+            if (items.hasOwnProperty(itemid)) {
+              if (!famMembers[parentid][itemid]) {
+                famMembers[parentid][itemid] = true;
+                famCount[parentid] += 1;
+              }
+            }
+          }
+        }
+        return SKIP;
+      });
+      if (isRoot) {
+        roots[famItemId] = true;
+        counter += 1;
+
+
+      }
+    });
+
+    /* create collection of roots per member */
+    membersRoots = {};
+    for (rootid in roots) {
+      if (roots.hasOwnProperty(rootid)) {
+        members = famMembers[rootid];
+
+        for (member in members) {
+          if (members.hasOwnProperty(member)) {
+
+            if (!membersRoots[member]) {
+              membersRoots[member] = [];
+            }
+            membersRoots[member].push(rootid.toString());
+          }
+        }
+      }
+    }
+
+    /* loop minimal sub tree roots */
+    while (counter > 0) {
+      minimum = null;
+      for (famItemId in roots) {
+        if (roots.hasOwnProperty(famItemId)) {
+          if (!minimum || famCount[famItemId] < minimum) {
+            minimum = famCount[famItemId];
+            result = famItemId;
+          }
+        }
+      }
+      if (result != null) {
+        if (onItem != null) {
+          onItem.call(thisArg, result, _nodes[result]);
+        }
+        members = famMembers[result];
+
+        for (member in members) {
+          if (members.hasOwnProperty(member)) {
+            if (!processed[member]) {
+              memberRoots = membersRoots[member];
+              for (index = 0, len = memberRoots.length; index < len; index += 1) {
+                memberRoot = memberRoots[index];
+                famCount[memberRoot] -= 1;
+              }
+              processed[member] = true;
+            }
+          }
+        }
+
+        delete roots[result];
+        counter -= 1;
+      }
+    }
+  }
+
+  /**
+   * Finds root node having largest number of nodes in its hierachy
+   * 
+   * @returns {string} Returns largest sub-hierarchy root node id.  
+   */
+  function findLargestRoot() {
+    var result = null,
+      maximum,
+      famMembers = {},
+      famCount = {},
+      isRoot;
+
+    maximum = null;
+
+    loopTopoReversed(this, function (famItemId, famItem, position) {
+      /* every node has at least itself in members */
+      if (!famMembers.hasOwnProperty(famItemId)) {
+        famMembers[famItemId] = {};
+        famCount[famItemId] = 0;
+      }
+      famMembers[famItemId][famItemId] = true;
+      famCount[famItemId] += 1;
+
+      isRoot = true;
+      loopParents(this, famItem.id, function (parentid, parent, levelIndex) {
+        var items, itemid;
+        isRoot = false;
+        if (!famMembers.hasOwnProperty(parentid)) {
+          famMembers[parentid] = {};
+          famCount[parentid] = 0;
+        }
+        /* push famItem members to parent members collection */
+        if (!famCount[parentid] && _parentsCount[famItemId] == 1) {
+          famMembers[parentid] = famMembers[famItemId];
+          famCount[parentid] = famCount[famItemId];
+        } else {
+          items = famMembers[famItemId];
+          for (itemid in items) {
+            if (items.hasOwnProperty(itemid)) {
+              famMembers[parentid][itemid] = true;
+              famCount[parentid] += 1;
+            }
+          }
+        }
+        return SKIP;
+      });
+      if (isRoot && (!maximum || famCount[famItemId] > maximum)) {
+        maximum = famCount[famItemId];
+        result = famItemId;
+      }
+
+    });
+
+    return result;
+  }
+
+  /**
+   * Checks whether parents share a child node. Common child should belong only to the given collection
+   * of parents, if child's parents don't match given collection of parents, 
+   * it is not considered as common child. 
+   * @param {string[]} parents Collection of parents
+   * @returns {boolean} Returns true if common child exist. 
+   */
+  function hasCommonChild(parents) {
+    var result = false,
+      parentsHash, childrenHash,
+      parentsCount,
+      pIndex, pLen,
+      parent, child;
+
+    /* convert parents collection to hash, remove duplicates and ignore non-existing items */
+    parentsHash = {};
+    parentsCount = 0;
+    for (pIndex = 0, pLen = parents.length; pIndex < pLen; pIndex += 1) {
+      parent = parents[pIndex];
+      if (_nodes[parent] != null && !parentsHash[parent]) {
+        parentsHash[parent] = true;
+        parentsCount += 1;
+      }
+    }
+
+    /* collect number of parents referencing each child */
+    childrenHash = {};
+    for (parent in parentsHash) {
+      if (parentsHash.hasOwnProperty(parent)) {
+        _loop(this, _children, parent, function (child) {
+          if (!childrenHash[child]) {
+            childrenHash[child] = 1;
+          } else {
+            childrenHash[child] += 1;
+          }
+        }); //ignore jslint
+      }
+    }
+
+    /* find common child having number of references equal to number of existing parents */
+    for (child in childrenHash) {
+      if (childrenHash.hasOwnProperty(child)) {
+        if (_parents[child] != null && (_parentsCount[child] || 0) == childrenHash[child] && childrenHash[child] == parentsCount) {
+          result = true;
+          break;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  function _bundleNodes(fromItem, items, bundleItemId, bundleItem, backwardCol, backwardCount, forwardCol, forwardCount, checkChildren) {
+    var isValid = false,
+      index, len,
+      child;
+
+    if (_nodes[fromItem] != null && forwardCol[fromItem] != null) {
+      /* validate target items */
+      isValid = true;
+      if (checkChildren) {
+        /* if we add new bundle all items should present */
+        for (index = 0, len = items.length; index < len; index += 1) {
+          child = items[index];
+          if (_nodes[child] == null || forwardCol[fromItem][child] == null) {
+            isValid = false;
+          }
+        }
+      }
+      if (isValid) {
+        if (bundleItem != null) {
+          /* add bundle node */
+          _nodes[bundleItemId] = bundleItem;
+        }
+
+        if (_nodes[bundleItemId] != null) {
+          /* update references */
+          if (!backwardCol[bundleItemId]) {
+            backwardCol[bundleItemId] = {};
+            backwardCount[bundleItemId] = 0;
+          }
+          if (!forwardCol[bundleItemId]) {
+            forwardCol[bundleItemId] = {};
+            forwardCount[bundleItemId] = 0;
+          }
+
+          if (!backwardCol[bundleItemId][fromItem]) {
+            backwardCol[bundleItemId][fromItem] = true;
+            backwardCount[bundleItemId] += 1;
+          }
+
+          if (!forwardCol[fromItem][bundleItemId]) {
+            forwardCol[fromItem][bundleItemId] = true;
+            forwardCount[fromItem] += 1;
+          }
+
+          for (index = 0, len = items.length; index < len; index += 1) {
+            child = items[index];
+
+            if (bundleItemId != child) {
+              if (forwardCol[fromItem][child] != null) {
+                delete forwardCol[fromItem][child];
+                forwardCount[fromItem] -= 1;
+              }
+
+              if (backwardCol[child][fromItem] != null) {
+                delete backwardCol[child][fromItem];
+                backwardCount[child] -= 1;
+              }
+
+              if (!backwardCol[child][bundleItemId]) {
+                backwardCol[child][bundleItemId] = true;
+                backwardCount[child] += 1;
+              }
+
+              if (!forwardCol[bundleItemId][child]) {
+                forwardCol[bundleItemId][child] = true;
+                forwardCount[bundleItemId] += 1;
+              }
+            }
+          }
+        }
+      }
+    }
+    return isValid;
+  }
+
+  /**
+   * Adds extra budnle item in between parent and its children. The parent node becomes parent of the bundle node,
+   * and bundle becomes parent of the children. Existing parent child relations are removed.
+   * @param {string} parent The parent node id
+   * @param {string[]} children The collection of child nodes ids
+   * @param {string} bundleItemId The bundle node id
+   * @param {object} bundleItem The bundle item context object
+   * @returns {boolean} Returns true if nodes bundle is valid
+   */
+  function bundleChildren(parent, children, bundleItemId, bundleItem) {
+    return _bundleNodes(parent, children, bundleItemId, bundleItem, _parents, _parentsCount, _children, _childrenCount, true);
+  }
+
+  /**
+   * Adds extra budnle item in between child node and its parents. The child node becomes child of the bundle node,
+   * and bundle becomes child of the parents. Existing parent child relations are removed.
+   * @param {string} child The parent node id
+   * @param {string[]} parents The collection of child nodes ids
+   * @param {string} bundleItemId The bundle node id
+   * @param {object} bundleItem The bundle item context object
+   * @returns {boolean} Returns true if the bundle is valid
+   */
+  function bundleParents(child, parents, bundleItemId, bundleItem) {
+    return _bundleNodes(child, parents, bundleItemId, bundleItem, _children, _childrenCount, _parents, _parentsCount, true);
+  }
+
+  function ReferenceItem() {
+    this.id = "";
+    this.key = "";
+    this.children = [];
+    this.childrenHash = {};
+    this.processed = false;
+  }
+
+  function ReferencesEdge(arg0) {
+    this.items = [];
+    this.weight = 0;
+    this.difference = 0;
+
+    if (arguments.length > 0) {
+      this.difference = arg0;
+    }
+  }
+
+  function _getReferencesGraph(currentItems) {
+    var result = primitives.common.graph(),
+      item, parents,
+      index1, index2, len,
+      from, to, difference,
+      processed = {};
+
+    for (item in currentItems) {
+      if (currentItems.hasOwnProperty(item)) {
+
+        _loop(this, _children, item, function (child) {
+          if (!processed.hasOwnProperty(child)) {
+            processed[child] = true;
+            /* create array of parents from hash references */
+            parents = [];
+            _loop(this, _parents, child, function (parent) {
+              parents.push(parent);
+            });
+
+            /* create all possible combinations between items */
+            for (index1 = 0, len = parents.length; index1 < len - 1; index1 += 1) {
+              from = parents[index1];
+              if (currentItems.hasOwnProperty(from)) {
+
+                for (index2 = index1 + 1; index2 < len; index2 += 1) {
+                  to = parents[index2];
+                  if (currentItems.hasOwnProperty(to)) {
+                    difference = Math.abs(currentItems[from].children.length - currentItems[to].children.length);
+
+                    var edge = result.edge(from, to);
+                    if (edge == null) {
+                      edge = new ReferencesEdge(difference);
+                      result.addEdge(from, to, edge);
+                    }
+                    edge.items.push(child);
+                    edge.weight += 1;
+                  }
+                }
+              }
+            }
+          }
+        }); //ignore jslint
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Callback function for cretion of new family nodes
+   * 
+   * @callback onNewFamilyNodeCallback
+   * @returns {object} Returns new family node.
+   */
+
+  /**
+   * Optimizes references between family members.
+   * It creates bundles eliminating excessive intersecions between nodes relations.
+   * 
+   * @param {onNewFamilyNodeCallback} onNewBundleItem Callback function to create a new family node context object. 
+   */
+  function optimizeReferences(onNewBundleItem) {
+    var sharedItemsByKey = {},
+      sharedItemsById = {},
+      currentItems = {},
+      nodeid, newReferenceItem,
+      nextItems, graph, node,
+      maximumTree,
+      counter = 0,
+      power = 10,
+      processed;
+
+    if (onNewBundleItem != null) {
+      for (nodeid in _nodes) {
+        counter += 1;
+        if (_nodes.hasOwnProperty(nodeid)) {
+          newReferenceItem = new ReferenceItem();
+
+          _loop(this, _children, nodeid, function (child) {
+            newReferenceItem.children.push(child);
+            newReferenceItem.childrenHash[child] = true;
+          }); //ignore jslint
+
+          newReferenceItem.children.sort();
+          newReferenceItem.id = nodeid;
+          newReferenceItem.key = newReferenceItem.children.join(",");
+
+          currentItems[newReferenceItem.id] = newReferenceItem;
+        }
+      }
+
+      power = Math.pow(10, (counter).toString().length);
+
+      while (!primitives.common.isEmptyObject(currentItems)) {
+        nextItems = {};
+        processed = {};
+
+        graph = _getReferencesGraph(currentItems);
+
+        for (nodeid in currentItems) {
+          if (currentItems.hasOwnProperty(nodeid)) {
+            node = currentItems[nodeid];
+
+            if (!node.processed) {
+
+              maximumTree = graph.getSpanningTree(nodeid, function (edge) {
+                return edge.weight * power + power - edge.difference;
+              }); //ignore jslint
+
+              maximumTree.loopLevels(this, function (treeKey, treeKeyNode, levelid) {
+                currentItems[treeKey].processed = true;
+
+                maximumTree.loopChildren(this, treeKey, function (child, childNode) {
+                  var relation = graph.edge(treeKey, child),
+                    nextBundleItem = null, newItem,
+                    key, index, len,
+                    childrenToBind, isSharedItem,
+                    relationItem;
+
+                  currentItems[child].processed = true;
+
+                  if (relation.weight > 1) {
+                    key = relation.items.join(',');
+
+                    if (!sharedItemsByKey.hasOwnProperty(key)) {
+                      newItem = onNewBundleItem();
+                      _nodes[newItem.id] = newItem; /* add new bundle node to the family */
+
+                      nextBundleItem = new ReferenceItem();
+                      nextBundleItem.id = newItem.id;
+                      nextBundleItem.key = key;
+                      for (index = 0, len = relation.items.length; index < len; index += 1) {
+                        relationItem = relation.items[index];
+                        nextBundleItem.children.push(relationItem);
+                        nextBundleItem.childrenHash[relationItem] = true;
+                        processed[relationItem] = true;
+                      }
+                      nextBundleItem.children.sort();
+
+                      sharedItemsByKey[nextBundleItem.key] = nextBundleItem;
+                      sharedItemsById[nextBundleItem.id] = nextBundleItem;
+                      nextItems[nextBundleItem.id] = nextBundleItem;
+                      processed[nextBundleItem.id] = nextBundleItem;
+
+                      childrenToBind = nextBundleItem.children.slice(0);
+                      loopChildren(this, treeKeyNode.replacementItem || treeKey, function (childid, child, level) {
+                        // if child item is bundle and it is not child of new bundle item
+                        if (!nextBundleItem.childrenHash[childid] && sharedItemsById[childid] != null) {
+                          isSharedItem = true;
+                          // if all children of that child are in the next bundle item we add it to that new bundle item as well
+                          loopChildren(this, childid, function (childid, child, level) {
+                            if (!nextBundleItem.childrenHash[childid]) {
+                              isSharedItem = false;
+                              return 1/*BREAK*/;
+                            }
+                            if (!processed.hasOwnProperty(childid)) {
+                              return SKIP;
+                            }
+                          });
+                          if (isSharedItem) {
+                            childrenToBind.push(childid);
+                          }
+                        }
+                        return 2/*SKIP*/;
+                      });
+
+                      _bundleNodes(treeKeyNode.replacementItem || treeKey, childrenToBind, nextBundleItem.id, newItem, _parents, _parentsCount, _children, _childrenCount, false);
+
+                      if ((_childrenCount[treeKey] || 0) <= 1 && treeKeyNode.replacementItem == null) {
+                        treeKeyNode.replacementItem = nextBundleItem.id;
+                      }
+                    } else {
+                      nextBundleItem = sharedItemsByKey[key];
+                    }
+
+                    /* don't add shared item to itself on next items loop*/
+                    if (nextBundleItem.id != child) {
+
+                      childrenToBind = nextBundleItem.children.slice(0);
+                      loopChildren(this, childNode.replacementItem || child, function (childid, child, level) {
+                        if (sharedItemsById[childid] != null && !nextBundleItem.childrenHash[childid]) {
+
+                          isSharedItem = true;
+                          loopChildren(this, childid, function (childid, child, level) {
+                            if (!nextBundleItem.childrenHash[childid]) {
+                              isSharedItem = false;
+                              return 1/*BREAK*/;
+                            }
+                            if (!processed.hasOwnProperty(childid)) {
+                              return 2/*SKIP*/;
+                            }
+                            return SKIP;
+                          });
+                          if (isSharedItem) {
+                            childrenToBind.push(childid);
+                          }
+                        }
+                        return 2/*SKIP*/;
+                      });
+
+
+                      _bundleNodes(childNode.replacementItem || child, childrenToBind, nextBundleItem.id, null, _parents, _parentsCount, _children, _childrenCount, false);
+
+                      /* if all items bundled then use bundle item for following transformations of references instead of original item if references graph*/
+                      if ((_childrenCount[child] || 0) <= 1 && childNode.replacementItem == null) {
+                        childNode.replacementItem = nextBundleItem.id;
+                      }
+                    }
+                  }
+                });
+              }); //ignore jslint
+            }
+          }
+        }
+        currentItems = nextItems;
+      }
+    }
+  }
+
+  /**
+   * Eliminates many to many relations in family structure
+   * It is needed to simplify layout process of the diagram
+   * 
+   * @param {onNewFamilyNodeCallback} onNewBundleItem Callback function for creation of new bundle node  
+   */
+  function eliminateManyToMany(onNewBundleItem) {
+    var parent, bundleNode;
+
+    for (parent in _children) {
+      if (_children.hasOwnProperty(parent)) {
+
+        if ((_childrenCount[parent] || 0) > 1) {
+          _loop(this, _children, parent, function (child) {
+            if ((_parentsCount[child] || 0) > 1) {
+              bundleNode = onNewBundleItem();
+              bundleChildren(parent, [child], bundleNode.id, bundleNode);
+            }
+          }); //ignore jslint
+        }
+      }
+    }
+  }
+
+  function FamilyEdge(parentid, childid) {
+    this.parentid = parentid;
+    this.childid = childid;
+    this.key = parentid + "," + childid;
+  }
+
+  /**
+   * Eliminates crossing parent child relations between nodes based of nodes order in treeLevels structure.
+   * @param {treeLevels} treeLevels Tree levels structure keeps orders of nodes level by level.
+   * @returns {family} Returns planar family structure. 
+   */
+  function getPlanarFamily(treeLevels) {
+    var result = new primitives.common.family(),
+      familyEdgeIndex, familyEdgeLen,
+      familyEdgeKey;
+
+    treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
+      var sequence = new primitives.common.LinkedHashItems(),
+        crossings = {},
+        familyEdges = {},
+        firstBucket = [];
+
+      treeLevels.loopLevelItems(this, levelIndex, function (parentid, parentItem, position) {
+        loopChildren(this, parentid, function (childid, childItem) {
+          var childPosition = treeLevels.getItemPosition(childid);
+          var familyEdge = new FamilyEdge(parentid, childid);
+
+          familyEdges[familyEdge.key] = familyEdge;
+
+          var crossEdges = [];
+          if (sequence.isEmpty()) {
+            sequence.add(childPosition, [familyEdge]);
+          } else {
+            sequence.iterateBack(function (sequenceItem, itemPosition) {
+              if (itemPosition < childPosition) {
+                // add new sequence after itemPosition and exit
+                sequence.insertAfter(itemPosition, childPosition, [familyEdge]);
+                return true;
+              } else if (itemPosition == childPosition) {
+                // add new link to exisitng sequenceItem and exit
+                sequenceItem.push(familyEdge);
+                return true;
+              } else {
+                // merge links into output
+                for (var crossEdgesIndex = 0, crossEdgesLen = sequenceItem.length; crossEdgesIndex < crossEdgesLen; crossEdgesIndex += 1) {
+                  var crossEdge = sequenceItem[crossEdgesIndex];
+                  if (crossEdge.parentid != parentid) {
+                    crossEdges.push(crossEdge);
+                  }
+                }
+              }
+            });
+            if (sequence.startKey() > childPosition) {
+              sequence.unshift(childPosition, [familyEdge]);
+            }
+          }
+
+          crossings[familyEdge.key] = crossEdges;
+          for (var crossEdgesIndex = 0, crossEdgesLen = crossEdges.length; crossEdgesIndex < crossEdgesLen; crossEdgesIndex += 1) {
+            crossings[crossEdges[crossEdgesIndex].key].push(familyEdge);
+          }
+
+          return SKIP;
+        });
+
+        if (countChildren(parentid) == 1) {
+          var childid = firstChild(parentid);
+          if (countParents(childid) == 1) {
+            var familyEdge = new FamilyEdge(parentid, childid);
+            firstBucket.push(familyEdge.key);
+          }
+        }
+      });
+
+      // distribute edges by number of crossings into buckets
+      var buckets = [],
+        crossEdges;
+      for (var familyEdgeKey in crossings) {
+        crossEdges = crossings[familyEdgeKey];
+        var len = crossEdges.length;
+        if (buckets[len] != null) {
+          buckets[len].push(familyEdgeKey);
+        } else {
+          buckets[len] = [familyEdgeKey];
+        }
+      }
+
+      var processed = {};
+
+      // leave single parent child relations
+      buckets.unshift(firstBucket);
+
+      // break relations having 
+      for (var bucketIndex = 0, bucketsLen = buckets.length; bucketIndex < bucketsLen; bucketIndex += 1) {
+        var bucket = buckets[bucketIndex];
+        if (bucket != null) {
+          for (familyEdgeIndex = 0, familyEdgeLen = bucket.length; familyEdgeIndex < familyEdgeLen; familyEdgeIndex += 1) {
+            familyEdgeKey = bucket[familyEdgeIndex];
+            if (!processed.hasOwnProperty(familyEdgeKey)) {
+              processed[familyEdgeKey] = true;
+
+              var familyEdge = familyEdges[familyEdgeKey];
+
+              if (result.node(familyEdge.parentid) == null) {
+                result.add(null, familyEdge.parentid, {});
+              }
+              if (result.node(familyEdge.childid) == null) {
+                result.add([familyEdge.parentid], familyEdge.childid, {});
+              } else {
+                result.adopt([familyEdge.parentid], familyEdge.childid);
+              }
+
+              crossEdges = crossings[familyEdgeKey];
+              for (var crossEdgesIndex = 0, crossEdgesLen = crossEdges.length; crossEdgesIndex < crossEdgesLen; crossEdgesIndex += 1) {
+                processed[crossEdges[crossEdgesIndex].key] = true;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    return result;
+  }
+
+  function Link(from, to, distance) {
+    this.from = from;
+    this.to = to;
+    this.distance = 0;
+  }
+
+  /**
+   * Eliminates direct relations between grand parent nodes.
+   * 
+   * @returns {family} Returns family structure without direct grand parent relations. 
+   */
+  function getFamilyWithoutGrandParentsRelations() {
+    var result = new primitives.common.family();
+
+    var hash = {};
+    var links = [];
+    var level = 0;
+    for (var from in _parents) {
+      if (_parents.hasOwnProperty(from)) {
+        _loop(this, _parents, from, function (to) {
+          var fromHash = hash[from];
+          if (fromHash == null) {
+            fromHash = {};
+            hash[from] = fromHash;
+          }
+          if (!fromHash.hasOwnProperty(to)) {
+            var link = new Link(from, to, level);
+            links.push(link);
+            hash[from][to] = link;
+          }
+        }); //ignore jslint
+      }
+    }
+
+    while (links.length > 0) {
+      var newLinks = [];
+      level += 1;
+      for (var index = 0, len = links.length; index < len; index += 1) {
+        var link = links[index];
+        from = link.to;
+        if (_parents.hasOwnProperty(from)) {
+          _loop(this, _parents, from, function (to) {
+            var fromHash = hash[link.from];
+            if (fromHash == null) {
+              fromHash = {};
+              hash[link.from] = fromHash;
+            }
+            if (fromHash.hasOwnProperty(to)) {
+              fromHash[to].distance = level;
+            } else {
+              var newLink = new Link(from, to, level);
+              newLinks.push(newLink);
+              fromHash[to] = newLink;
+            }
+          });
+        }
+      }
+      links = newLinks;
+    }
+
+    // return only references to immidiate parents
+    loop(this, function (nodeid, node) {
+      var parents = [];
+      _loop(this, _parents, nodeid, function (to) {
+        if (hash[nodeid][to].distance === 0) {
+          parents.push(to);
+        }
+      });
+      result.add(parents, nodeid, node);
+    });
+
+    return result;
+  }
+
+  /**
+   * Returns number of children
+   * @param {string} parent The parent node id
+   * @returns {number} Number of children
+   */
+  function countChildren(parent) {
+    return _childrenCount[parent] || 0;
+  }
+
+  /**
+   * Returns number of parents
+   * @param {string} child The child node id
+   * @returns {number} Number of parents
+   */
+  function countParents(child) {
+    return _parentsCount[child] || 0;
+  }
+
+  /**
+   * First available child
+   * @param {string} parent The parent node id
+   * @returns {string} Returns first available child id or null.
+   */
+  function firstChild(parent) {
+    var result = null,
+      children = _children[parent] || {};
+    for (result in children) {
+      if (children.hasOwnProperty(result)) {
+        return result; //ignore jslint
+      }
+    }
+    return null;
+  }
+
+  /**
+   * First available parent
+   * @param {string} child The child node id
+   * @returns {string} Returns first available parent id or null.
+   */
+  function firstParent(child) {
+    var result = null,
+      parents = _parents[child] || {};
+    for (result in parents) {
+      if (parents.hasOwnProperty(result)) {
+        return result; //ignore jslint
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Callback for iterating family node neighbours level by level
+   * 
+   * @callback onFamilyItemNeighbourCallback
+   * @param {string} itemid The node id
+   * @param {object} item The node
+   * @param {number} levelIndex The neigbour node distance from the start node
+   * @returns {number} Returns true to skip further neighbous traversing.
+   */
+
+  /**
+   * Loops through the node neighbours of the family struture level by level
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} itemid The node id to start traversing neighbour nodes
+   * @param {onFamilyItemNeighbourCallback} onItem A callback function to call for every neighbour node 
+   */
+  function loopNeighbours(thisArg, itemid, onItem) {
+    var processed = {};
+
+    if (onItem != null) {
+      loopChildren(this, itemid, function (childid, child, childLevel) {
+        if (!processed.hasOwnProperty(childid)) {
+          processed[childid] = null;
+
+          if (onItem.call(thisArg, childid, child, 1)) {
+            processed[childid] = SKIP;
+
+            loopParents(this, childid, function (parentid, parent, parentLevel) {
+              if (!processed.hasOwnProperty(parentid)) {
+                processed[parentid] = null;
+
+                if (onItem.call(thisArg, parentid, parent, 2)) {
+                  processed[parentid] = SKIP;
+                }
+              }
+              return processed[parentid];
+            });
+          }
+        }
+        return processed[childid];
+      });
+
+      loopParents(this, itemid, function (parentid, parent, parentLevel) {
+        if (!processed.hasOwnProperty(parentid)) {
+          processed[parentid] = null;
+
+          if (onItem.call(thisArg, parentid, parent, 1)) {
+            processed[parentid] = SKIP;
+
+            loopChildren(this, parentid, function (childid, child, childLevel) {
+              if (!processed.hasOwnProperty(childid)) {
+                processed[childid] = true;
+
+                if (onItem.call(thisArg, childid, child, 2)) {
+                  processed[childid] = SKIP;
+                }
+              }
+              return processed[childid];
+            });
+          }
+        }
+        return processed[parentid];
+      });
+    }
+  }
+
+  /**
+   * Creates graph structure out of the family structure.
+   * 
+   * @returns {graph} Returns graph structure of the family.
+   */
+  function getGraph() {
+    var result = primitives.common.graph(),
+      from, to;
+
+    for (from in _children) {
+      if (_children.hasOwnProperty(from)) {
+        _loop(this, _children, from, function (to) {
+          var edge = result.edge(from, to);
+          if (edge == null) {
+            edge = new ReferencesEdge({});
+            result.addEdge(from, to, edge);
+          }
+        }); //ignore jslint
+      }
+    }
+
+    return result;
+  }
+
+  function GroupBy(parentid, childid) {
+    this.parentid = parentid;
+    this.childid = childid;
+    this.ids = [];
+    this.nodes = [];
+  }
+
+
+  function groupBy(thisArg, size, onGroup) { //function onGroup(parent, child, nodes)
+    if (onGroup != null) {
+      var groups = {};
+      for (var nodeid in _nodes) {
+        var parentsCount = _parentsCount[nodeid] || 0;
+        var childrenCount = _childrenCount[nodeid] || 0;
+        if (parentsCount <= 1 && childrenCount <= 1) {
+          var parentid = firstParent(nodeid);
+          var childid = firstChild(nodeid);
+          var key = parentid + " * " + childid;
+          if (!groups.hasOwnProperty(key)) {
+            groups[key] = new GroupBy(parentid, childid);
+          }
+          groups[key].ids.push(nodeid);
+          groups[key].nodes.push(_nodes[nodeid]);
+        }
+      }
+
+      for (key in groups) {
+        if (groups.hasOwnProperty(key)) {
+          var group = groups[key];
+          if (group.ids.length >= size) {
+            if (onGroup.call(thisArg, group.parentid, group.childid, group.ids, group.nodes)) {
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Validates internal data structure consitency of the family.
+   * @param {object} info Optional validation object. 
+   */
+  function validate(info) {
+    var parent, child;
+
+    function _count(items) {
+      var result = 0, key;
+      if (items != null) {
+        for (key in items) {
+          if (items.hasOwnProperty(key)) {
+            result += 1;
+          }
+        }
+      }
+      return result;
+    }
+
+    loop(this, function (nodeId, node) {
+      _loop(this, _children, nodeId, function (child) {
+        if (!_parents.hasOwnProperty(child) || !_parents[child].hasOwnProperty(nodeId)) {
+          if (info != null) {
+            info.message = "Child #" + child + " does not reference parent #" + nodeId;
+          }
+          return false;
+        }
+      });
+      _loop(this, _parents, nodeId, function (parent) {
+        if (!_children.hasOwnProperty(parent) || !_children[parent].hasOwnProperty(nodeId)) {
+          if (info != null) {
+            info.message = "Parent #" + parent + " does not reference child #" + nodeId;
+          }
+          return false;
+        }
+      });
+    });
+
+    for (parent in _parents) {
+      if (_parents.hasOwnProperty(parent)) {
+        if ((_parentsCount[parent] || 0) != _count(_parents[parent])) {
+          if (info != null) {
+            info.message = "Parents count for item #" + parent + " missmatch.";
+          }
+          return false;
+        }
+        if (_parents.hasOwnProperty(parent) && !_nodes.hasOwnProperty(parent)) {
+          if (info != null) {
+            info.message = "Orphant parents for item #" + parent;
+          }
+          return false;
+        }
+      }
+    }
+
+    for (child in _children) {
+      if (_children.hasOwnProperty(child)) {
+        if ((_childrenCount[child] || 0) != _count(_children[child])) {
+          if (info != null) {
+            info.message = "Children count for item " + child + " missmatch.";
+          }
+          return false;
+        }
+        if (_children.hasOwnProperty(child) && !_nodes.hasOwnProperty(child)) {
+          if (info != null) {
+            info.message = "Orphant children of item " + child;
+          }
+          return false;
+        }
+      }
+    }
+
+    for (child in _roots) {
+      if (_roots.hasOwnProperty(child)) {
+        if ((_rootsCount[child] || 0) != _count(_roots[child])) {
+          if (info != null) {
+            info.message = "Root children count for item @" + child + " missmatch.";
+          }
+          return false;
+        }
+        _loop(this, _roots, child, function (nodeid) {
+          if (!_nodes.hasOwnProperty(nodeid)) {
+            if (info != null) {
+              info.message = "Child #" + nodeid + "of root #" + child + " does not exists.";
+            }
+            return false;
+          }
+        }); //ignore jslint
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Checks if family structure has loops in references. 
+   * @returns {boolean} Returns true if family structure contains loops in references.
+   */
+  function hasLoops() {
+    var tempFamily = clone();
+    loopTopo(this, function (itemid, item, levelIndex) {
+      tempFamily.removeNode(itemid);
+    });
+
+    return tempFamily.hasNodes();
+  }
+
+  /**
+   * Clones family structure.
+   * 
+   * @returns {family} Returns copy of the family structure.
+   */
+  function clone() {
+    return primitives.common.family({
+      roots: _roots,
+      rootsCount: _rootsCount,
+      children: _children,
+      childrenCount: _childrenCount,
+      parents: _parents,
+      parentsCount: _parentsCount,
+      nodes: _nodes
+    });
+  }
+
+  return {
+    /* family structure modification */
+    add: add,
+    adopt: adopt,
+    bundleChildren: bundleChildren,
+    bundleParents: bundleParents,
+    optimizeReferences: optimizeReferences,
+    eliminateManyToMany: eliminateManyToMany,
+    groupBy: groupBy,
+    getPlanarFamily: getPlanarFamily,
+    getFamilyWithoutGrandParentsRelations: getFamilyWithoutGrandParentsRelations,
+    getGraph: getGraph,
+
+    removeNode: removeNode,
+    removeRelation: removeRelation,
+
+    /* referencing and looping */
+    node: node,
+    loop: loop,
+    loopLevels: loopLevels,
+    loopTopo: loopTopo,
+    loopTopoReversed: loopTopoReversed,
+    loopChildren: loopChildren,
+    loopParents: loopParents,
+    findLargestRoot: findLargestRoot,
+    loopRoots: loopRoots,
+    hasNodes: hasNodes,
+    hasCommonChild: hasCommonChild,
+    loopNeighbours: loopNeighbours,
+    countChildren: countChildren,
+    countParents: countParents,
+    firstParent: firstParent,
+    firstChild: firstChild,
+
+    /* force validation */
+    validate: validate,
+    hasLoops: hasLoops,
+    clone: clone,
+
+    // callback return codes
+    BREAK: BREAK, // break loop immidiatly
+    SKIP: SKIP // skip loop of current node children 
+  };
 };
 
-
 /* /algorithms/FamilyAlignment.js*/
+/**
+ * Callback function for getting family node width
+ * 
+ * @callback onFamilyAlignmentItemSizeCallback
+ * @param {string} itemid Family node id
+ * @param {object} item Family node context object
+ * @returns {number} Family node width
+ */
+
+/**
+ * Creates family alignment data structure. This structure aligns horizontaly planar family of nodes.
+ * @class FamilyAlignment
+ * 
+ * @param {Object} thisArg The callback function invocation context
+ * @param {family} family Family data structure
+ * @param {TreeLevels} treeLevels Three levels data structure
+ * @param {onFamilyAlignmentItemSizeCallback} onItemSize Callback function to measure family node width
+ * @returns {FamilyAlignment} Returns family alignment structure
+ */
 primitives.common.FamilyAlignment = function (thisArg, family, treeLevels, onItemSize) {
-	var offsets,
-		sizes = {},
-		childrenDistances;
+  var offsets,
+    sizes = {},
+    childrenDistances;
 
-	if (onItemSize != null) {
-		treeLevels.loopItems(this, function (itemid, item, position, levelIndex, level) {
-			sizes[itemid] = onItemSize.call(thisArg, itemid, item);
-		});
-	}
+  if (onItemSize != null) {
+    treeLevels.loopItems(this, function (itemid, item, position, levelIndex, level) {
+      sizes[itemid] = onItemSize.call(thisArg, itemid, item);
+    });
+  }
 
-	childrenDistances = getDistancesBetweenChildren(family, treeLevels);
-	offsets = getTreeLevelsOffsets(family, treeLevels, childrenDistances);
+  childrenDistances = getDistancesBetweenChildren(family, treeLevels);
+  offsets = getTreeLevelsOffsets(family, treeLevels, childrenDistances);
 
-	function _getNodeMargins(margins, nodeid) {
-		// create margins for node if it does not exists
-		var nodeMargins = margins[nodeid];
-		if (nodeMargins == null) {
-			nodeMargins = new primitives.common.FamilyMargins();
-			margins[nodeid] = nodeMargins;
-		}
-		return nodeMargins;
-	}
+  function _getNodeMargins(margins, nodeid) {
+    // create margins for node if it does not exists
+    var nodeMargins = margins[nodeid];
+    if (nodeMargins == null) {
+      nodeMargins = new primitives.common.FamilyMargins();
+      margins[nodeid] = nodeMargins;
+    }
+    return nodeMargins;
+  }
 
-	function getDistancesBetweenChildren(family, treeLevels) {
-		var distances = {};
-		var margins = {};
-		var levelMargins = null;
+  function getDistancesBetweenChildren(family, treeLevels) {
+    var distances = {};
+    var margins = {};
+    var levelMargins = null;
 
-		treeLevels.loopLevelsReversed(this, function (levelIndex, level) {
-			var newMargins = new primitives.common.FamilyMargins();
-			if (levelMargins != null) {
-				levelMargins.add(0, Number.MAX_VALUE);
-				newMargins.merge(levelMargins, 0);
-			}
-			levelMargins = newMargins;
+    treeLevels.loopLevelsReversed(this, function (levelIndex, level) {
+      var newMargins = new primitives.common.FamilyMargins();
+      if (levelMargins != null) {
+        levelMargins.add(0, Number.MAX_VALUE);
+        newMargins.merge(levelMargins, 0);
+      }
+      levelMargins = newMargins;
 
-			var previousParentMargins = levelMargins;
-			treeLevels.loopLevelItems(this, levelIndex, function (nodeid, node, position) {
-				var nodeMargins = _getNodeMargins(margins, nodeid);
+      var previousParentMargins = levelMargins;
+      treeLevels.loopLevelItems(this, levelIndex, function (nodeid, node, position) {
+        var nodeMargins = _getNodeMargins(margins, nodeid);
 
-				// add node size into its margin
-				nodeMargins.add(sizes[nodeid], position);
+        // add node size into its margin
+        nodeMargins.add(sizes[nodeid], position);
 
-				switch (family.countParents(nodeid)) {
-					case 0:
-						if (previousParentMargins != null) {
-							distances[nodeid] = previousParentMargins.attach(nodeMargins);
-						}
-						break;
-					case 1:
-						family.loopParents(this, nodeid, function (parentid, parent, levelIndex) {
-							var parentMargins = _getNodeMargins(margins, parentid);
-							distances[nodeid] = parentMargins.merge(nodeMargins);
+        switch (family.countParents(nodeid)) {
+          case 0:
+            if (previousParentMargins != null) {
+              distances[nodeid] = previousParentMargins.attach(nodeMargins);
+            }
+            break;
+          case 1:
+            family.loopParents(this, nodeid, function (parentid, parent, levelIndex) {
+              var parentMargins = _getNodeMargins(margins, parentid);
+              distances[nodeid] = parentMargins.merge(nodeMargins);
 
-							previousParentMargins = parentMargins;
-							return family.BREAK;
-						});
-						break;
-					default:
-						// loop parents and find total size of them
-						var totalSize = 0;
-						var fromIndex = null;
-						var toIndex = null;
-						var hash = {};
-						family.loopParents(this, nodeid, function (parentid, parent, levelIndex) {
-							if (levelIndex > 0) {
-								return family.BREAK;
-							}
-							totalSize += sizes[parentid];
+              previousParentMargins = parentMargins;
+              return family.BREAK;
+            });
+            break;
+          default:
+            // loop parents and find total size of them
+            var totalSize = 0;
+            var fromIndex = null;
+            var toIndex = null;
+            var hash = {};
+            family.loopParents(this, nodeid, function (parentid, parent, levelIndex) {
+              if (levelIndex > 0) {
+                return family.BREAK;
+              }
+              totalSize += sizes[parentid];
 
-							var position = treeLevels.getItemPosition(parentid);
-							fromIndex = fromIndex == null ? position : Math.min(fromIndex, position);
-							toIndex = toIndex == null ? position : Math.max(toIndex, position);
-							hash[position] = parentid;
-						});
+              var position = treeLevels.getItemPosition(parentid);
+              fromIndex = fromIndex == null ? position : Math.min(fromIndex, position);
+              toIndex = toIndex == null ? position : Math.max(toIndex, position);
+              hash[position] = parentid;
+            });
 
-						var offset = -totalSize / 2;
-						for (var index = fromIndex; index <= toIndex; index += 1) {
-							var parentid = hash[index];
+            var offset = -totalSize / 2;
+            for (var index = fromIndex; index <= toIndex; index += 1) {
+              var parentid = hash[index];
 
-							offset += sizes[parentid] / 2.0;
+              offset += sizes[parentid] / 2.0;
 
-							var parentMargins = _getNodeMargins(margins, parentid);
+              var parentMargins = _getNodeMargins(margins, parentid);
 
-							parentMargins.attach(nodeMargins, -offset);
+              parentMargins.attach(nodeMargins, -offset);
 
-							previousParentMargins = parentMargins;
+              previousParentMargins = parentMargins;
 
-							offset += sizes[parentid] / 2.0;
-						}
-						break;
-				}
-			});
-		});
+              offset += sizes[parentid] / 2.0;
+            }
+            break;
+        }
+      });
+    });
 
-		return distances;
-	}
+    return distances;
+  }
 
-	function getTreeLevelsOffsets(family, treeLevels, childrenDistances) {
-		var offsets = {};
+  function getTreeLevelsOffsets(family, treeLevels, childrenDistances) {
+    var offsets = {};
 
-		var familyUnitsById = primitives.common.getFamilyUnits(family);
-		var processedFamilyUnits = {};
+    var familyUnitsById = primitives.common.getFamilyUnits(family);
+    var processedFamilyUnits = {};
 
-		treeLevels.loopLevels(this, function (levelIndex, level) {
-			treeLevels.loopLevelItems(this, levelIndex, function (nodeid, node, position) {
-				if (!offsets.hasOwnProperty(nodeid)) {
-					var offset = 0;
-					if (position === 0) {
-						if (childrenDistances[nodeid] != null) {
-							offset += childrenDistances[nodeid] + sizes[nodeid] / 2;
-						}
-					} else {
-						var prevNodeId = treeLevels.getItemAtPosition(levelIndex, position - 1);
-						offset += offsets[prevNodeId] + sizes[prevNodeId] / 2 + (childrenDistances[nodeid] || 0) + sizes[nodeid] / 2;
-					}
-					offsets[nodeid] = offset;
-				}
-				var familyUnits = familyUnitsById[nodeid];
-				if (familyUnits != null) {
-					for (var index = 0; index < familyUnits.length; index += 1) {
-						var familyUnit = familyUnits[index];
-						if (!processedFamilyUnits.hasOwnProperty(familyUnit.id)) {
-							processedFamilyUnits[familyUnit.id] = true;
+    treeLevels.loopLevels(this, function (levelIndex, level) {
+      treeLevels.loopLevelItems(this, levelIndex, function (nodeid, node, position) {
+        if (!offsets.hasOwnProperty(nodeid)) {
+          var offset = 0;
+          if (position === 0) {
+            if (childrenDistances[nodeid] != null) {
+              offset += childrenDistances[nodeid] + sizes[nodeid] / 2;
+            }
+          } else {
+            var prevNodeId = treeLevels.getItemAtPosition(levelIndex, position - 1);
+            offset += offsets[prevNodeId] + sizes[prevNodeId] / 2 + (childrenDistances[nodeid] || 0) + sizes[nodeid] / 2;
+          }
+          offsets[nodeid] = offset;
+        }
+        var familyUnits = familyUnitsById[nodeid];
+        if (familyUnits != null) {
+          for (var index = 0; index < familyUnits.length; index += 1) {
+            var familyUnit = familyUnits[index];
+            if (!processedFamilyUnits.hasOwnProperty(familyUnit.id)) {
+              processedFamilyUnits[familyUnit.id] = true;
 
-							setFamilyOffsets(offsets, nodeid, familyUnit, levelIndex, levelIndex + 1, position, treeLevels, childrenDistances);
-						}
-					}
-				}
-			});
-		});
+              setFamilyOffsets(offsets, nodeid, familyUnit, levelIndex, levelIndex + 1, position, treeLevels, childrenDistances);
+            }
+          }
+        }
+      });
+    });
 
-		return offsets;
-	}
+    return offsets;
+  }
 
-	function setFamilyOffsets(offsets, itemid, familyUnit, fromLevel, toLevel, itemIndex, treeLevels, childrenDistances) {
-		var fromIndex = itemIndex;
-		var toIndex = itemIndex;
+  function setFamilyOffsets(offsets, itemid, familyUnit, fromLevel, toLevel, itemIndex, treeLevels, childrenDistances) {
+    var fromIndex = itemIndex;
+    var toIndex = itemIndex;
 
-		familyUnit.loopSiblings(this, itemid, function (siblingid) {
-			var position = treeLevels.getItemPosition(siblingid);
-			fromIndex = Math.min(fromIndex, position);
-			toIndex = Math.max(toIndex, position);
-		});
+    familyUnit.loopSiblings(this, itemid, function (siblingid) {
+      var position = treeLevels.getItemPosition(siblingid);
+      fromIndex = Math.min(fromIndex, position);
+      toIndex = Math.max(toIndex, position);
+    });
 
-		// Place nodes on the left side of start node
-		for (var index = itemIndex - 1; index >= fromIndex; index -= 1) {
-			var siblingid = treeLevels.getItemAtPosition(fromLevel, index);
+    // Place nodes on the left side of start node
+    for (var index = itemIndex - 1; index >= fromIndex; index -= 1) {
+      var siblingid = treeLevels.getItemAtPosition(fromLevel, index);
 
-			if (!offsets.hasOwnProperty(siblingid)) {
-				var nodeid = treeLevels.getItemAtPosition(fromLevel, index + 1);
-				offsets[siblingid] = offsets[nodeid] - (sizes[siblingid] / 2 + (childrenDistances[nodeid] || 0) + sizes[nodeid] / 2);
-			}
-		}
-		// Place nodes on the right side of start node
-		for (index = itemIndex + 1; index <= toIndex; index += 1) {
-			siblingid = treeLevels.getItemAtPosition(fromLevel, index);
+      if (!offsets.hasOwnProperty(siblingid)) {
+        var nodeid = treeLevels.getItemAtPosition(fromLevel, index + 1);
+        offsets[siblingid] = offsets[nodeid] - (sizes[siblingid] / 2 + (childrenDistances[nodeid] || 0) + sizes[nodeid] / 2);
+      }
+    }
+    // Place nodes on the right side of start node
+    for (index = itemIndex + 1; index <= toIndex; index += 1) {
+      siblingid = treeLevels.getItemAtPosition(fromLevel, index);
 
-			if (!offsets.hasOwnProperty(siblingid)) {
-				nodeid = treeLevels.getItemAtPosition(fromLevel, index - 1);
-				offsets[siblingid] = offsets[nodeid] + (sizes[nodeid] / 2 + (childrenDistances[siblingid] || 0) + sizes[siblingid] / 2);
-			}
-		}
-		siblingid = treeLevels.getItemAtPosition(fromLevel, fromIndex);
-		var siblingsMedian = offsets[siblingid] - sizes[siblingid] / 2;
-		siblingid = treeLevels.getItemAtPosition(fromLevel, toIndex);
-		siblingsMedian += offsets[siblingid] + sizes[siblingid] / 2;
+      if (!offsets.hasOwnProperty(siblingid)) {
+        nodeid = treeLevels.getItemAtPosition(fromLevel, index - 1);
+        offsets[siblingid] = offsets[nodeid] + (sizes[nodeid] / 2 + (childrenDistances[siblingid] || 0) + sizes[siblingid] / 2);
+      }
+    }
+    siblingid = treeLevels.getItemAtPosition(fromLevel, fromIndex);
+    var siblingsMedian = offsets[siblingid] - sizes[siblingid] / 2;
+    siblingid = treeLevels.getItemAtPosition(fromLevel, toIndex);
+    siblingsMedian += offsets[siblingid] + sizes[siblingid] / 2;
 
-		siblingsMedian /= 2;
+    siblingsMedian /= 2;
 
-		fromIndex = null;
-		toIndex = null;
-		familyUnit.loopNonSiblings(this, itemid, function (siblingid) {
-			var position = treeLevels.getItemPosition(siblingid);
-			fromIndex = fromIndex != null ? Math.min(fromIndex, position) : position;
-			toIndex = toIndex != null ? Math.max(toIndex, position) : position;
-		});
+    fromIndex = null;
+    toIndex = null;
+    familyUnit.loopNonSiblings(this, itemid, function (siblingid) {
+      var position = treeLevels.getItemPosition(siblingid);
+      fromIndex = fromIndex != null ? Math.min(fromIndex, position) : position;
+      toIndex = toIndex != null ? Math.max(toIndex, position) : position;
+    });
 
-		var nonSiblingsWidth = 0;
-		for (index = fromIndex; index <= toIndex; index += 1) {
-			var relatedItemId = treeLevels.getItemAtPosition(toLevel, index);
-			nonSiblingsWidth += sizes[relatedItemId];
-			if (index > fromIndex) {
-				nonSiblingsWidth += (childrenDistances[relatedItemId] || 0);
-			}
-		}
+    var nonSiblingsWidth = 0;
+    for (index = fromIndex; index <= toIndex; index += 1) {
+      var relatedItemId = treeLevels.getItemAtPosition(toLevel, index);
+      nonSiblingsWidth += sizes[relatedItemId];
+      if (index > fromIndex) {
+        nonSiblingsWidth += (childrenDistances[relatedItemId] || 0);
+      }
+    }
 
-		var offset = siblingsMedian - nonSiblingsWidth / 2;
-		relatedItemId = treeLevels.getItemAtPosition(toLevel, fromIndex);
-		if (!offsets.hasOwnProperty(relatedItemId)) {
-			offsets[relatedItemId] = offset + sizes[relatedItemId] / 2;
-		}
-		for (index = fromIndex + 1; index <= toIndex; index += 1) {
-			relatedItemId = treeLevels.getItemAtPosition(toLevel, index);
-			if (!offsets.hasOwnProperty(relatedItemId)) {
-				nodeid = treeLevels.getItemAtPosition(toLevel, index - 1);
-				offsets[relatedItemId] = offsets[nodeid] + (sizes[nodeid] / 2 + (childrenDistances[relatedItemId] || 0) + sizes[relatedItemId] / 2);
-			}
-		}
-	}
+    var offset = siblingsMedian - nonSiblingsWidth / 2;
+    relatedItemId = treeLevels.getItemAtPosition(toLevel, fromIndex);
+    if (!offsets.hasOwnProperty(relatedItemId)) {
+      offsets[relatedItemId] = offset + sizes[relatedItemId] / 2;
+    }
+    for (index = fromIndex + 1; index <= toIndex; index += 1) {
+      relatedItemId = treeLevels.getItemAtPosition(toLevel, index);
+      if (!offsets.hasOwnProperty(relatedItemId)) {
+        nodeid = treeLevels.getItemAtPosition(toLevel, index - 1);
+        offsets[relatedItemId] = offsets[nodeid] + (sizes[nodeid] / 2 + (childrenDistances[relatedItemId] || 0) + sizes[relatedItemId] / 2);
+      }
+    }
+  }
 
-	function getOffset(nodeid) {
-		return offsets[nodeid];
-	}
+  /**
+   * Returns horizontal node offset from left margin of the family daigram
+   * 
+   * @param {string} nodeid Family node id
+   * @returns {number} Node offset
+   */
+  function getOffset(nodeid) {
+    return offsets[nodeid];
+  }
 
-	return {
-		getOffset: getOffset
-	};
+  return {
+    getOffset: getOffset
+  };
 };
 
 /* /algorithms/FamilyMargins.js*/
@@ -25663,411 +25753,474 @@ primitives.common.FamilyMargins = function () {
 };
 
 /* /algorithms/FibonacciHeap.js*/
+/**
+ * Creates Fibonacci Heap structure
+ * @class FibonacciHeap
+ * 
+ * @param {boolean} isMaximum Is maximum heap
+ * @returns {FibonacciHeap} Returns new FibonacciHeap object
+ */
 primitives.common.FibonacciHeap = function (isMaximum) {
-	var root = null,
-		count = 0,
-		nodes = {};
+  var root = null,
+    count = 0,
+    nodes = {};
 
-	function Result(node) {
-		this.key = node.key;
-		this.priority = node.priority;
-		this.item = node.item;
-	}
+  /**
+ * @typedef {Object} HeapResult
+ * @property {string} key Key
+ * @property {number} priority Priority
+ * @property {Object} item Context object
+ */
+  function Result(node) {
+    this.key = node.key;
+    this.priority = node.priority;
+    this.item = node.item;
+  }
 
-	function Node(key, priority, item) {
-		this.key = key;
-		this.priority = priority;
-		this.item = item;
-		this.degree = 0;
-		this.marked = false;
+  function Node(key, priority, item) {
+    this.key = key;
+    this.priority = priority;
+    this.item = item;
+    this.degree = 0;
+    this.marked = false;
 
-		this.parent = null;
-		this.child = null;
-		this.left = null;
-		this.right = null;
-	}
+    this.parent = null;
+    this.child = null;
+    this.left = null;
+    this.right = null;
+  }
 
-	function validate() {
-		var totalNodes = 0;
-		for (var key in nodes) {
-			if (nodes.hasOwnProperty(key)) {
-				var node = nodes[key];
+	/**
+	 * Validates internal structure consistency.
+	 * 
+	 * @returns {boolean} Returns true if structure pass data consistency check.
+	 */
+  function validate() {
+    var totalNodes = 0;
+    for (var key in nodes) {
+      if (nodes.hasOwnProperty(key)) {
+        var node = nodes[key];
 
-				totalNodes += 1;
+        totalNodes += 1;
 
-				if (node.child != null) {
-					if (!nodes.hasOwnProperty(node.child)) {
-						throw "Child does not exists";
-					}
-					var ref = nodes[node.child];
-					if (ref.parent != node.key) {
-						throw "Child references wrong parent";
-					}
-				}
-				if (node.parent != null) {
-					if (!nodes.hasOwnProperty(node.parent)) {
-						throw "Parent does not exists";
-					}
+        if (node.child != null) {
+          if (!nodes.hasOwnProperty(node.child)) {
+            throw "Child does not exists";
+          }
+          var ref = nodes[node.child];
+          if (ref.parent != node.key) {
+            throw "Child references wrong parent";
+          }
+        }
+        if (node.parent != null) {
+          if (!nodes.hasOwnProperty(node.parent)) {
+            throw "Parent does not exists";
+          }
 
-				}
-				if (node.left != null) {
-					if (!nodes.hasOwnProperty(node.left)) {
-						throw "Left does not exists";
-					}
-					ref = nodes[node.left];
-					if (ref.right != node.key) {
-						throw "Left references wrong right";
-					}
-				}
+        }
+        if (node.left != null) {
+          if (!nodes.hasOwnProperty(node.left)) {
+            throw "Left does not exists";
+          }
+          ref = nodes[node.left];
+          if (ref.right != node.key) {
+            throw "Left references wrong right";
+          }
+        }
 
-				if (node.right != null) {
-					if (!nodes.hasOwnProperty(node.right)) {
-						throw "Right does not exists";
-					}
-					ref = nodes[node.right];
-					if (ref.left != node.key) {
-						throw "Right references wrong left";
-					}
-				}
-			}
-		}
-		if (root == null && totalNodes > 0) {
-			throw "Orphans";
-		}
+        if (node.right != null) {
+          if (!nodes.hasOwnProperty(node.right)) {
+            throw "Right does not exists";
+          }
+          ref = nodes[node.right];
+          if (ref.left != node.key) {
+            throw "Right references wrong left";
+          }
+        }
+      }
+    }
+    if (root == null && totalNodes > 0) {
+      throw "Orphans";
+    }
 
-		if (root != null) {
-			if (!nodes.hasOwnProperty(root)) {
-				throw "Root node does not exists";
-			}
+    if (root != null) {
+      if (!nodes.hasOwnProperty(root)) {
+        throw "Root node does not exists";
+      }
 
-			node = nodes[root];
-			if (node.parent != null) {
-				throw "Root node has parent reference";
-			}
+      node = nodes[root];
+      if (node.parent != null) {
+        throw "Root node has parent reference";
+      }
 
-			var children = [root];
-			var processed = {};
-			var totalChildren = 0;
-			while (children.length > 0) {
-				var newChildren = [];
-				for (var index = 0, len = children.length; index < len; index += 1) {
-					var child = nodes[children[index]];
-					while (!processed.hasOwnProperty(child.key)) {
-						processed[child.key] = true;
-						totalChildren += 1;
-						if (child.child != null) {
-							newChildren.push(child.child);
-						}
-						child = nodes[child.right];
-					}
-				}
-				children = newChildren;
-			}
+      var children = [root];
+      var processed = {};
+      var totalChildren = 0;
+      while (children.length > 0) {
+        var newChildren = [];
+        for (var index = 0, len = children.length; index < len; index += 1) {
+          var child = nodes[children[index]];
+          while (!processed.hasOwnProperty(child.key)) {
+            processed[child.key] = true;
+            totalChildren += 1;
+            if (child.child != null) {
+              newChildren.push(child.child);
+            }
+            child = nodes[child.right];
+          }
+        }
+        children = newChildren;
+      }
 
-			if (totalNodes != totalChildren) {
-				throw "Tree has loops or orpants";
-			}
-		}
-	}
+      if (totalNodes != totalChildren) {
+        throw "Tree has loops or orpants";
+      }
+    }
+  }
 
-	function add(key, priority, item) {
-		if (nodes.hasOwnProperty(key)) {
-			throw "Duplicate keys are not supported!";
-		}
+	/**
+	 * Adds a new item into the heap
+	 * @param {string} key A key of the new element 
+	 * @param {number} priority A priority of the new element
+	 * @param {object} item A context object of the new element 
+	 */
+  function add(key, priority, item) {
+    if (nodes.hasOwnProperty(key)) {
+      throw "Duplicate keys are not supported!";
+    }
 
-		var newNode = new Node(key, priority, item);
-		nodes[key] = newNode;
+    var newNode = new Node(key, priority, item);
+    nodes[key] = newNode;
 
-		if (root == null) {
-			newNode.left = key;
-			newNode.right = key;
-			root = key;
-		} else {
-			var rootNode = nodes[root];
-			_insert(rootNode, newNode);
-			if (isMaximum ? rootNode.priority < newNode.priority : rootNode.priority > newNode.priority) {
-				root = key;
-			}
-		}
-		count += 1;
-	}
+    if (root == null) {
+      newNode.left = key;
+      newNode.right = key;
+      root = key;
+    } else {
+      var rootNode = nodes[root];
+      _insert(rootNode, newNode);
+      if (isMaximum ? rootNode.priority < newNode.priority : rootNode.priority > newNode.priority) {
+        root = key;
+      }
+    }
+    count += 1;
+  }
 
-	function _insert(node, newNode) {
-		var rightNode = nodes[node.right];
-		newNode.right = node.right;
-		newNode.left = node.key;
-		node.right = newNode.key;
-		rightNode.left = newNode.key;
-	}
+  function _insert(node, newNode) {
+    var rightNode = nodes[node.right];
+    newNode.right = node.right;
+    newNode.left = node.key;
+    node.right = newNode.key;
+    rightNode.left = newNode.key;
+  }
 
-	function _exclude(node) {
-		var prevNode = nodes[node.left],
-			nextNode = nodes[node.right];
+  function _exclude(node) {
+    var prevNode = nodes[node.left],
+      nextNode = nodes[node.right];
 
-		prevNode.right = nextNode.key;
-		nextNode.left = prevNode.key;
-		node.right = node.key;
-		node.left = node.key;
-	}
+    prevNode.right = nextNode.key;
+    nextNode.left = prevNode.key;
+    node.right = node.key;
+    node.left = node.key;
+  }
 
-	function getPriority(key) {
-		var result = null;
-		if (nodes.hasOwnProperty(key)) {
-			result = nodes[key].priority;
-		}
-		return result;
-	}
+	/**
+	 * Gets priority of element by key
+	 * @param {string} key The element key
+	 * @returns {number} Returns priority of the element
+	 */
+  function getPriority(key) {
+    var result = null;
+    if (nodes.hasOwnProperty(key)) {
+      result = nodes[key].priority;
+    }
+    return result;
+  }
 
-	function heapRoot() {
-		var result = null;
-		if (root != null) {
-			result = new Result(nodes[root]);
-		}
-		return result;
-	}
+	/**
+	 * Returns heap root element
+	 * 
+	 * @returns {HeapResult} Returns root element of the heap 
+	 */
+  function heapRoot() {
+    var result = null;
+    if (root != null) {
+      result = new Result(nodes[root]);
+    }
+    return result;
+  }
 
-	function extractRoot() {
-		var result = heapRoot();
-		if (result != null) {
-			var rootNode = nodes[root],
-				nextNode = nodes[rootNode.right];
+	/**
+	 * Returns heap root element with removal
+	 * 
+	 * @returns {HeapResult} Returns root element of the heap 
+	 */
+  function extractRoot() {
+    var result = heapRoot();
+    if (result != null) {
+      var rootNode = nodes[root],
+        nextNode = nodes[rootNode.right];
 
-			if (rootNode.child != null) {
-				var childNode = nodes[rootNode.child],
-					childNodeLeft = nodes[childNode.left];
+      if (rootNode.child != null) {
+        var childNode = nodes[rootNode.child],
+          childNodeLeft = nodes[childNode.left];
 
-				rootNode.right = childNode.key;
-				nextNode.left = childNodeLeft.key;
-				childNode.left = rootNode.key;
-				childNodeLeft.right = nextNode.key;
+        rootNode.right = childNode.key;
+        nextNode.left = childNodeLeft.key;
+        childNode.left = rootNode.key;
+        childNodeLeft.right = nextNode.key;
 
-				_exclude(rootNode);
-				delete nodes[rootNode.key];
+        _exclude(rootNode);
+        delete nodes[rootNode.key];
 
-				root = null;
-				_consolidate(childNode.key);
-			} else {
-				_exclude(rootNode);
-				delete nodes[rootNode.key];
+        root = null;
+        _consolidate(childNode.key);
+      } else {
+        _exclude(rootNode);
+        delete nodes[rootNode.key];
 
-				root = null;
-				if (nextNode.key != rootNode.key) {
-					_consolidate(nextNode.key);
-				}
-			}
-			count -= 1;
-		}
-		return result;
-	}
+        root = null;
+        if (nextNode.key != rootNode.key) {
+          _consolidate(nextNode.key);
+        }
+      }
+      count -= 1;
+    }
+    return result;
+  }
 
-	function _consolidate(startKey) {
-		var pairs = [], pairedNode,
-			processed = {},
-			key = startKey;
-		while (!processed.hasOwnProperty(key)) {
-			var node = nodes[key],
-				nextKey = node.right;
+  function _consolidate(startKey) {
+    var pairs = [], pairedNode,
+      processed = {},
+      key = startKey;
+    while (!processed.hasOwnProperty(key)) {
+      var node = nodes[key],
+        nextKey = node.right;
 
-			processed[key] = true;
-			node.parent = null;
+      processed[key] = true;
+      node.parent = null;
 
-			while ((pairedNode = pairs[node.degree]) != null) {
-				if (isMaximum ? node.priority > pairedNode.priority : node.priority < pairedNode.priority) {
-					_union(node, pairedNode);
-				} else {
-					_union(pairedNode, node);
-					node = pairedNode;
-				}
-				pairs[node.degree - 1] = null;
-			}
-			pairs[node.degree] = node;
+      while ((pairedNode = pairs[node.degree]) != null) {
+        if (isMaximum ? node.priority > pairedNode.priority : node.priority < pairedNode.priority) {
+          _union(node, pairedNode);
+        } else {
+          _union(pairedNode, node);
+          node = pairedNode;
+        }
+        pairs[node.degree - 1] = null;
+      }
+      pairs[node.degree] = node;
 
-			if (root == null || nodes[root] == null || (isMaximum ? nodes[root].priority <= node.priority : nodes[root].priority >= node.priority)) {
-				root = node.key;
-			}
+      if (root == null || nodes[root] == null || (isMaximum ? nodes[root].priority <= node.priority : nodes[root].priority >= node.priority)) {
+        root = node.key;
+      }
 
-			key = nextKey;
-		}
-	}
+      key = nextKey;
+    }
+  }
 
-	function _union(node1, node2) {
-		node1.degree += 1;
-		_exclude(node2);
-		var child = nodes[node1.child];
-		if (child != null) {
-			_insert(child, node2);
-			if (isMaximum ? child.priority < node2.priority : child.priority > node2.priority) {
-				node1.child = node2.key;
-			}
-		} else {
-			node1.child = node2.key;
-		}
-		node2.parent = node1.key;
-	}
+  function _union(node1, node2) {
+    node1.degree += 1;
+    _exclude(node2);
+    var child = nodes[node1.child];
+    if (child != null) {
+      _insert(child, node2);
+      if (isMaximum ? child.priority < node2.priority : child.priority > node2.priority) {
+        node1.child = node2.key;
+      }
+    } else {
+      node1.child = node2.key;
+    }
+    node2.parent = node1.key;
+  }
 
-	function setPriority(key, priority) {
-		var node = nodes[key];
-		if (isMaximum ? node.priority > priority : node.priority < priority) {
-			throw "Priority increase is not supported";
-		}
-		node.priority = priority;
+	/**
+	 * Sets priority of an element by key
+	 * @param {string} key The key of the element 
+	 * @param {number} priority Priority
+	 */
+  function setPriority(key, priority) {
+    var node = nodes[key];
+    if (isMaximum ? node.priority > priority : node.priority < priority) {
+      throw "Priority increase is not supported";
+    }
+    node.priority = priority;
 
-		if (node.parent != null) {
-			var parentNode = nodes[node.parent];
-			if (isMaximum ? parentNode.priority < node.priority : parentNode.priority > node.priority) {
-				_cut(parentNode, node);
-				_cascadeCut(parentNode);
-			}
-		}
-		if (isMaximum ? nodes[root].priority < node.priority : nodes[root].priority > node.priority) {
-			root = node.key;
-		}
-	}
+    if (node.parent != null) {
+      var parentNode = nodes[node.parent];
+      if (isMaximum ? parentNode.priority < node.priority : parentNode.priority > node.priority) {
+        _cut(parentNode, node);
+        _cascadeCut(parentNode);
+      }
+    }
+    if (isMaximum ? nodes[root].priority < node.priority : nodes[root].priority > node.priority) {
+      root = node.key;
+    }
+  }
 
-	function _cut(parentNode, node) {
-		node.marked = false;
-		node.parent = null;
-		if (node.right == node.key) {
-			parentNode.child = null;
-		} else {
-			parentNode.child = node.right;
-			_exclude(node);
-		}
-		parentNode.degree -= 1;
-		_insert(nodes[root], node);
-	}
+  function _cut(parentNode, node) {
+    node.marked = false;
+    node.parent = null;
+    if (node.right == node.key) {
+      parentNode.child = null;
+    } else {
+      parentNode.child = node.right;
+      _exclude(node);
+    }
+    parentNode.degree -= 1;
+    _insert(nodes[root], node);
+  }
 
-	function _cascadeCut(node) {
-		if (node.parent != null) {
-			if (node.marked) {
-				var parentNode = nodes[node.parent];
-				_cut(parentNode, node);
-				_cascadeCut(parentNode);
-			} else {
-				node.marked = true;
-			}
-		}
-	}
+  function _cascadeCut(node) {
+    if (node.parent != null) {
+      if (node.marked) {
+        var parentNode = nodes[node.parent];
+        _cut(parentNode, node);
+        _cascadeCut(parentNode);
+      } else {
+        node.marked = true;
+      }
+    }
+  }
 
-	function deleteKey(key) {
-		setPriority(key, isMaximum ? Infinity : -1);
-		extractRoot();
-	}
+	/**
+	 * Deletes heap element by key
+	 * @param {string} key The Key 
+	 */
+  function deleteKey(key) {
+    setPriority(key, isMaximum ? Infinity : -1);
+    extractRoot();
+  }
 
-	return {
-		add: add,
-		getPriority: getPriority,
-		setPriority: setPriority,
-		heapRoot: heapRoot,
-		extractRoot: extractRoot,
-		deleteKey: deleteKey,
-		validate: validate
-	};
+  return {
+    add: add,
+    getPriority: getPriority,
+    setPriority: setPriority,
+    heapRoot: heapRoot,
+    extractRoot: extractRoot,
+    deleteKey: deleteKey,
+    validate: validate
+  };
 };
 
 
 
 /* /algorithms/getCrossingRectangles.js*/
-primitives.common.getCrossingRectangles = function (thisArg, rectangles, onCrossing) { // function onCrossing(rect1, rect2)
-	function Action(isStart, index, x, rect) {
-		this.isStart = isStart;
-		this.index = index;
-		this.x = x;
-		this.rect = rect;
-	}
+/**
+ * Callback function to iterate over pairs of crosssing rectangles
+ * 
+ * @callback onCrossingRectanglesItemCallback
+ * @param {Rect} rect1 First rectangle
+ * @param {Rect} rect2 Second rectangle
+ */
 
-	function Level() {
-		this.count = 0;
-		this.rectangles = {};
+/**
+ * Finds pairs of crossing rectangles.
+ * 
+ * @param {Object} thisArg The callback function invocation context
+ * @param {Rect[]} rectangles Collection of rectangles.
+ * @param {onCrossingRectanglesItemCallback} onCrossing Callback function to pass pair of crossing rectangles.
+ */
+primitives.common.getCrossingRectangles = function (thisArg, rectangles, onCrossing) {
+  function Action(isStart, index, x, rect) {
+    this.isStart = isStart;
+    this.index = index;
+    this.x = x;
+    this.rect = rect;
+  }
 
-		this.add = function (index) {
-			this.count += 1;
-			this.rectangles[index] = true;
-		};
+  function Level() {
+    this.count = 0;
+    this.rectangles = {};
 
-		this.remove = function (index) {
-			this.count -= 1;
-			delete this.rectangles[index];
-			return this.count == 0;
-		};
-	}
+    this.add = function (index) {
+      this.count += 1;
+      this.rectangles[index] = true;
+    };
 
-	function _findCrossedRectangles(buffer, from, to, rectIndex, rect) {
-		buffer.loopForward(this, from, function (value, level) {
-			if (value > to) {
-				return true;
-			}
-			for (var index in level.rectangles) {
-				if (level.rectangles.hasOwnProperty(index)) {
-					var key = rectIndex > index ? rectIndex + "-" + index : index + "-" + rectIndex;
-					if (!processed.hasOwnProperty(key)) {
-						processed[key] = true;
-						onCrossing.call(thisArg, rect, rectangles[index]);
-					}
-				}
-			}
-		});
-	}
+    this.remove = function (index) {
+      this.count -= 1;
+      delete this.rectangles[index];
+      return this.count == 0;
+    };
+  }
 
-	if (onCrossing != null) {
+  function _findCrossedRectangles(buffer, from, to, rectIndex, rect) {
+    buffer.loopForward(this, from, function (value, level) {
+      if (value > to) {
+        return true;
+      }
+      for (var index in level.rectangles) {
+        if (level.rectangles.hasOwnProperty(index)) {
+          var key = rectIndex > index ? rectIndex + "-" + index : index + "-" + rectIndex;
+          if (!processed.hasOwnProperty(key)) {
+            processed[key] = true;
+            onCrossing.call(thisArg, rect, rectangles[index]);
+          }
+        }
+      }
+    });
+  }
 
-		// Create action items out of rectangles
-		var actions = [];
-		for (var index = 0; index < rectangles.length; index += 1) {
-			var rect = rectangles[index];
+  if (onCrossing != null) {
 
-			actions.push(new Action(1, index, rect.x, rect));
-			actions.push(new Action(0, index, rect.right(), rect));
-		}
+    // Create action items out of rectangles
+    var actions = [];
+    for (var index = 0; index < rectangles.length; index += 1) {
+      var rect = rectangles[index];
 
-		actions.sort(function (a, b) {
-			if (a.x == b.x) {
-				return b.isStart - a.isStart;
-			}
-			return a.x - b.x;
-		});
+      actions.push(new Action(1, index, rect.x, rect));
+      actions.push(new Action(0, index, rect.right(), rect));
+    }
 
-		/* find intersections */
-		var buffer = primitives.common.SortedList();
-		var levels = {};
-		var processed = {};
+    actions.sort(function (a, b) {
+      if (a.x == b.x) {
+        return b.isStart - a.isStart;
+      }
+      return a.x - b.x;
+    });
 
-		for (index = 0; index < actions.length; index += 1) {
-			var action = actions[index];
-			var actionLevels = [action.rect.y, action.rect.bottom()];
+    /* find intersections */
+    var buffer = primitives.common.SortedList();
+    var levels = {};
+    var processed = {};
 
-			if (action.isStart == 1) {
-				// Search for intersections of the left side of the rectangle with existing horizontal segments
-				_findCrossedRectangles(buffer, actionLevels[0], actionLevels[1], action.index, action.rect);
+    for (index = 0; index < actions.length; index += 1) {
+      var action = actions[index];
+      var actionLevels = [action.rect.y, action.rect.bottom()];
 
-				// add rectangle's horizontal segments
-				for (var index2 = 0, len2 = actionLevels.length; index2 < len2; index2 += 1) {
-					var value = actionLevels[index2];
-					var level = levels[value];
-					if (level == null) {
-						level = new Level();
-						levels[value] = level;
+      if (action.isStart == 1) {
+        // Search for intersections of the left side of the rectangle with existing horizontal segments
+        _findCrossedRectangles(buffer, actionLevels[0], actionLevels[1], action.index, action.rect);
 
-						buffer.add(value, level);
-					}
-					level.add(action.index);
-				}
-			} else {
-				// remove rectangle's horizontal segments
-				for (index2 = 0, len2 = actionLevels.length; index2 < len2; index2 += 1) {
-					value = actionLevels[index2];
-					level = levels[value];
-					if (level.remove(action.index)) {
-						delete levels[value];
-						buffer.remove(value);
-					}
-				}
+        // add rectangle's horizontal segments
+        for (var index2 = 0, len2 = actionLevels.length; index2 < len2; index2 += 1) {
+          var value = actionLevels[index2];
+          var level = levels[value];
+          if (level == null) {
+            level = new Level();
+            levels[value] = level;
 
-				// Search for intersections of the right side of rectangle with exisitng horizontal segments
-				_findCrossedRectangles(buffer, actionLevels[0], actionLevels[1], action.index, action.rect);
-			}
-		}
-	}
+            buffer.add(value, level);
+          }
+          level.add(action.index);
+        }
+      } else {
+        // remove rectangle's horizontal segments
+        for (index2 = 0, len2 = actionLevels.length; index2 < len2; index2 += 1) {
+          value = actionLevels[index2];
+          level = levels[value];
+          if (level.remove(action.index)) {
+            delete levels[value];
+            buffer.remove(value);
+          }
+        }
+
+        // Search for intersections of the right side of rectangle with exisitng horizontal segments
+        _findCrossedRectangles(buffer, actionLevels[0], actionLevels[1], action.index, action.rect);
+      }
+    }
+  }
 };
 
 
@@ -26170,6 +26323,13 @@ primitives.common.getFamilyUnits = function (family) {
 };
 
 /* /algorithms/getLiniarBreaks.js*/
+/**
+ * Breaks collection of values into 3 intervals, so values stay close to each other within interval.
+ * 
+ * @param {number[]} values Array of values
+ * @returns {number[]} Returns array conaining 3 indexes. The first 2 break values into 3 intervals, 
+ * the last index is actuall index of the last element in the values collection. 
+ */
 primitives.common.getLiniarBreaks = function (values) {
 	var _leftTotal = [],
 		_rightTotal = [],
@@ -26244,793 +26404,905 @@ primitives.common.getLiniarBreaks = function (values) {
 
 
 /* /algorithms/getMergedRectangles.js*/
+/**
+ * Callback function to itterate over result shapes
+ * 
+ * @callback onMergedRectangleItemCallback
+ * @param {Point[]} points Collection of points tracing marging around result area formed via merge of rectangles.
+ * The outer shape margin has clock wise sequance of data ponts. Internal holes inside of the shape are formed by counterclock wise 
+ * sequence of data points.
+ */
+
+/**
+ * Merges collection of rectangles into shapes. Calls callback function to pass result sequences of data points.
+ * 
+ * @param {Object} thisArg The callback function invocation context
+ * @param {Rect[]} items Collection of rectangles.
+ * @param {onMergedRectangleItemCallback} onItem Callback function to pass result sequences of margin data points.
+ */
 primitives.common.getMergedRectangles = function (thisArg, items, onItem) {
-	var index, len,
-		index2, len2,
-		point;
+  var index, len,
+    index2, len2,
+    point;
 
-	items.sort(function (a, b) {
-		if (a.x == b.x) {
-			return a.y - b.y;
-		}
-		return a.x - b.x;
-	});
+  items.sort(function (a, b) {
+    if (a.x == b.x) {
+      return a.y - b.y;
+    }
+    return a.x - b.x;
+  });
 
-	var points = [];
-	var pointsHash = {};
+  var points = [];
+  var pointsHash = {};
 
-	for (index = 0, len = items.length; index < len; index += 1) {
-		var item = items[index];
-		var xs = [item.x, item.right()];
-		for (var k = 0; k < xs.length; k += 1) {
-			var x = xs[k];
-			point = pointsHash[x];
-			if (point == null) {
-				point = {
-					x: x,
-					add: [],
-					remove: []
-				};
-				pointsHash[x] = point;
-				points.push(point);
-			}
-			if (x == item.x) {
-				point.add.push(index);
-			} else {
-				point.remove.push(index);
-			}
-		}
-	}
+  for (index = 0, len = items.length; index < len; index += 1) {
+    var item = items[index];
+    var xs = [item.x, item.right()];
+    for (var k = 0; k < xs.length; k += 1) {
+      var x = xs[k];
+      point = pointsHash[x];
+      if (point == null) {
+        point = {
+          x: x,
+          add: [],
+          remove: []
+        };
+        pointsHash[x] = point;
+        points.push(point);
+      }
+      if (x == item.x) {
+        point.add.push(index);
+      } else {
+        point.remove.push(index);
+      }
+    }
+  }
 
-	points.sort(function (a, b) {
-		return a.x - b.x;
-	});
+  points.sort(function (a, b) {
+    return a.x - b.x;
+  });
 
-	function Range(start, end) {
-		this.start = start;
-		this.startHead = null;
+  function Range(start, end) {
+    this.start = start;
+    this.startHead = null;
 
-		this.end = end;
-		this.endHead = null;
+    this.end = end;
+    this.endHead = null;
 
-		this.overlap = function (range) {
-			return !(this.end < range.start || this.start > range.end);
-		};
-	}
+    this.overlap = function (range) {
+      return !(this.end < range.start || this.start > range.end);
+    };
+  }
 
-	function Stripe(x, ranges) {
-		this.x = x;
-		this.ranges = ranges;
-	}
+  function Stripe(x, ranges) {
+    this.x = x;
+    this.ranges = ranges;
+  }
 
-	var active = {};
-	var stripes = [];
-	stripes.push(new Stripe(null, []));
+  var active = {};
+  var stripes = [];
+  stripes.push(new Stripe(null, []));
 
-	for (index = 0, len = points.length; index < len; index += 1) {
-		point = points[index];
+  for (index = 0, len = points.length; index < len; index += 1) {
+    point = points[index];
 
-		for (index2 = 0, len2 = point.add.length; index2 < len2; index2 += 1) {
-			active[point.add[index2]] = true;
-		}
-		for (index2 = 0, len2 = point.remove.length; index2 < len2; index2 += 1) {
-			delete active[point.remove[index2]];
-		}
+    for (index2 = 0, len2 = point.add.length; index2 < len2; index2 += 1) {
+      active[point.add[index2]] = true;
+    }
+    for (index2 = 0, len2 = point.remove.length; index2 < len2; index2 += 1) {
+      delete active[point.remove[index2]];
+    }
 
-		var activeRects = [];
-		for (var key in active) {
-			if (active.hasOwnProperty(key)) {
-				activeRects.push(items[key]);
-			}
-		}
+    var activeRects = [];
+    for (var key in active) {
+      if (active.hasOwnProperty(key)) {
+        activeRects.push(items[key]);
+      }
+    }
 
-		activeRects.sort(function (a, b) {
-			return a.y - b.y;
-		});
+    activeRects.sort(function (a, b) {
+      return a.y - b.y;
+    });
 
-		var ranges = [];
+    var ranges = [];
 
-		var start = null;
-		var end = null;
+    var start = null;
+    var end = null;
 
-		for (index2 = 0, len2 = activeRects.length; index2 < len2; index2 += 1) {
-			var activeRect = activeRects[index2];
+    for (index2 = 0, len2 = activeRects.length; index2 < len2; index2 += 1) {
+      var activeRect = activeRects[index2];
 
-			if (start == null) {
-				start = activeRect.y;
-				end = activeRect.bottom();
-			} else {
-				if (end < activeRect.y) {
-					ranges.push(new Range(start, end));
-					start = activeRect.y;
-					end = activeRect.bottom();
-				} else {
-					end = Math.max(end, activeRect.bottom());
-				}
-			}
-		}
-		if (start != null) {
-			ranges.push(new Range(start, end));
-		}
+      if (start == null) {
+        start = activeRect.y;
+        end = activeRect.bottom();
+      } else {
+        if (end < activeRect.y) {
+          ranges.push(new Range(start, end));
+          start = activeRect.y;
+          end = activeRect.bottom();
+        } else {
+          end = Math.max(end, activeRect.bottom());
+        }
+      }
+    }
+    if (start != null) {
+      ranges.push(new Range(start, end));
+    }
 
-		stripes.push(new Stripe(point.x, ranges));
-	}
+    stripes.push(new Stripe(point.x, ranges));
+  }
 
-	var lists = [];
-	var heads = {};
-	var counter = 1;
+  var lists = [];
+  var heads = {};
+  var counter = 1;
 
-	function Head(isHead, list) {
-		this.isHead = isHead;
-		this.list = list;
+  function Head(isHead, list) {
+    this.isHead = isHead;
+    this.list = list;
 
-		if (!heads.hasOwnProperty(list)) {
-			heads[list] = [];
-		}
-		heads[list].push(this);
+    if (!heads.hasOwnProperty(list)) {
+      heads[list] = [];
+    }
+    heads[list].push(this);
 
-		this.add = function (segment) {
-			if (!segment.from.equalTo(segment.to)) {
-				if (this.isHead) {
-					lists[this.list].add(counter, segment);
-					counter += 1;
-				} else {
-					lists[this.list].unshift(counter, segment);
-					counter += 1;
-				}
-			}
-		};
+    this.add = function (segment) {
+      if (!segment.from.equalTo(segment.to)) {
+        if (this.isHead) {
+          lists[this.list].add(counter, segment);
+          counter += 1;
+        } else {
+          lists[this.list].unshift(counter, segment);
+          counter += 1;
+        }
+      }
+    };
 
-		this.getTail = function () {
-			return new Head(!this.isHead, this.list);
-		};
+    this.getTail = function () {
+      return new Head(!this.isHead, this.list);
+    };
 
-		this.attach = function (head) {
-			if (this.list != head.list) {
-				lists[this.list].attach(lists[head.list]);
+    this.attach = function (head) {
+      if (this.list != head.list) {
+        lists[this.list].attach(lists[head.list]);
 
-				var refs = heads[head.list];
-				delete heads[head.list];
-				if (refs != null) {
-					for (var index = 0, len = refs.length; index < len; index += 1) {
-						var ref = refs[index];
-						if (ref != head) {
-							ref.list = this.list;
-							heads[this.list].push(ref);
-						}
-					}
-				}
-			}
-		};
-	}
+        var refs = heads[head.list];
+        delete heads[head.list];
+        if (refs != null) {
+          for (var index = 0, len = refs.length; index < len; index += 1) {
+            var ref = refs[index];
+            if (ref != head) {
+              ref.list = this.list;
+              heads[this.list].push(ref);
+            }
+          }
+        }
+      }
+    };
+  }
 
-	function createHead(isHead) {
-		lists.push(new primitives.common.LinkedHashItems());
-		return new Head(isHead, lists.length - 1);
-	}
+  function createHead(isHead) {
+    lists.push(new primitives.common.LinkedHashItems());
+    return new Head(isHead, lists.length - 1);
+  }
 
-	for (index = 1, len = stripes.length; index < len; index += 1) {
-		var prev = stripes[index - 1];
-		var curr = stripes[index];
+  for (index = 1, len = stripes.length; index < len; index += 1) {
+    var prev = stripes[index - 1];
+    var curr = stripes[index];
 
-		var pi = 0, ci = 0;
-		while (pi < prev.ranges.length || ci < curr.ranges.length) {
-			var pr = pi < prev.ranges.length ? prev.ranges[pi] : null;
-			var cr = ci < curr.ranges.length ? curr.ranges[ci] : null;
+    var pi = 0, ci = 0;
+    while (pi < prev.ranges.length || ci < curr.ranges.length) {
+      var pr = pi < prev.ranges.length ? prev.ranges[pi] : null;
+      var cr = ci < curr.ranges.length ? curr.ranges[ci] : null;
 
-			if (cr == null) {
-				// close pr
-				points = [
-					new primitives.common.Point(prev.x, pr.end),
-					new primitives.common.Point(curr.x, pr.end),
-					new primitives.common.Point(curr.x, pr.start),
-					new primitives.common.Point(prev.x, pr.start)
-				];
-				for (var pindex = 1; pindex < points.length; pindex += 1) {
-					pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
-				}
-				pr.endHead.attach(pr.startHead);
-				pi += 1;
-				continue;
-			}
+      if (cr == null) {
+        // close pr
+        points = [
+          new primitives.common.Point(prev.x, pr.end),
+          new primitives.common.Point(curr.x, pr.end),
+          new primitives.common.Point(curr.x, pr.start),
+          new primitives.common.Point(prev.x, pr.start)
+        ];
+        for (var pindex = 1; pindex < points.length; pindex += 1) {
+          pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
+        }
+        pr.endHead.attach(pr.startHead);
+        pi += 1;
+        continue;
+      }
 
-			if (pr == null) {
-				// open cr
-				cr.endHead = createHead(true);
-				cr.endHead.add(new primitives.common.Vector(new primitives.common.Point(curr.x, cr.start), new primitives.common.Point(curr.x, cr.end)));
-				cr.startHead = cr.endHead.getTail();
-				ci += 1;
-				continue;
-			}
+      if (pr == null) {
+        // open cr
+        cr.endHead = createHead(true);
+        cr.endHead.add(new primitives.common.Vector(new primitives.common.Point(curr.x, cr.start), new primitives.common.Point(curr.x, cr.end)));
+        cr.startHead = cr.endHead.getTail();
+        ci += 1;
+        continue;
+      }
 
-			if (!cr.overlap(pr)) {
-				if (pr.start < cr.start) {
-					// close pr
-					points = [
-						new primitives.common.Point(prev.x, pr.end),
-						new primitives.common.Point(curr.x, pr.end),
-						new primitives.common.Point(curr.x, pr.start),
-						new primitives.common.Point(prev.x, pr.start)
-					];
-					for (pindex = 1; pindex < points.length; pindex += 1) {
-						pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
-					}
-					pr.endHead.attach(pr.startHead);
-					pi += 1;
-					continue;
-				} else {
-					// open cr
-					cr.endHead = createHead(true);
-					cr.endHead.add(new primitives.common.Vector(new primitives.common.Point(curr.x, cr.start), new primitives.common.Point(curr.x, cr.end)));
-					cr.startHead = cr.endHead.getTail();
-					ci += 1;
-					continue;
-				}
-			} else {
-				// ovelaps
-				// extend pr.start to cr.start
-				points = [
-					new primitives.common.Point(prev.x, pr.start),
-					new primitives.common.Point(curr.x, pr.start),
-					new primitives.common.Point(curr.x, cr.start)
-				];
-				for (pindex = 1; pindex < points.length; pindex += 1) {
-					pr.startHead.add(new primitives.common.Vector(points[pindex], points[pindex - 1]));
-				}
-				cr.startHead = pr.startHead;
+      if (!cr.overlap(pr)) {
+        if (pr.start < cr.start) {
+          // close pr
+          points = [
+            new primitives.common.Point(prev.x, pr.end),
+            new primitives.common.Point(curr.x, pr.end),
+            new primitives.common.Point(curr.x, pr.start),
+            new primitives.common.Point(prev.x, pr.start)
+          ];
+          for (pindex = 1; pindex < points.length; pindex += 1) {
+            pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
+          }
+          pr.endHead.attach(pr.startHead);
+          pi += 1;
+          continue;
+        } else {
+          // open cr
+          cr.endHead = createHead(true);
+          cr.endHead.add(new primitives.common.Vector(new primitives.common.Point(curr.x, cr.start), new primitives.common.Point(curr.x, cr.end)));
+          cr.startHead = cr.endHead.getTail();
+          ci += 1;
+          continue;
+        }
+      } else {
+        // ovelaps
+        // extend pr.start to cr.start
+        points = [
+          new primitives.common.Point(prev.x, pr.start),
+          new primitives.common.Point(curr.x, pr.start),
+          new primitives.common.Point(curr.x, cr.start)
+        ];
+        for (pindex = 1; pindex < points.length; pindex += 1) {
+          pr.startHead.add(new primitives.common.Vector(points[pindex], points[pindex - 1]));
+        }
+        cr.startHead = pr.startHead;
 
-				var loop = true;
-				while (loop) {
-					loop = false;
+        var loop = true;
+        while (loop) {
+          loop = false;
 
-					if (pr.end > cr.end) {
-						var nextcr = (ci + 1) < curr.ranges.length ? curr.ranges[ci + 1] : null;
-						if (nextcr != null && nextcr.overlap(pr)) {
-							// open loop cr.end to nextcr.start
-							var p1 = new primitives.common.Point(curr.x, nextcr.start);
-							var p2 = new primitives.common.Point(curr.x, cr.end);
-							cr.endHead = createHead(true);
-							cr.endHead.add(new primitives.common.Vector(p1, p2));
-							nextcr.startHead = cr.endHead.getTail();
+          if (pr.end > cr.end) {
+            var nextcr = (ci + 1) < curr.ranges.length ? curr.ranges[ci + 1] : null;
+            if (nextcr != null && nextcr.overlap(pr)) {
+              // open loop cr.end to nextcr.start
+              var p1 = new primitives.common.Point(curr.x, nextcr.start);
+              var p2 = new primitives.common.Point(curr.x, cr.end);
+              cr.endHead = createHead(true);
+              cr.endHead.add(new primitives.common.Vector(p1, p2));
+              nextcr.startHead = cr.endHead.getTail();
 
-							ci += 1;
-							cr = nextcr;
-							loop = true;
-						}
-					} else {
-						var nextpr = (pi + 1) < prev.ranges.length ? prev.ranges[pi + 1] : null;
-						if (nextpr != null && nextpr.overlap(cr)) {
-							// close loop pr.end to nextpr.start
-							points = [
-								new primitives.common.Point(prev.x, pr.end),
-								new primitives.common.Point(curr.x, pr.end),
-								new primitives.common.Point(curr.x, nextpr.start),
-								new primitives.common.Point(prev.x, nextpr.start)
-							];
-							for (pindex = 1; pindex < points.length; pindex += 1) {
-								pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
-							}
-							pr.endHead.attach(nextpr.startHead);
-							pi += 1;
-							pr = nextpr;
-							loop = true;
-						}
-					}
-				}
-				// extend pr.end to cr.end
-				points = [
-					new primitives.common.Point(prev.x, pr.end),
-					new primitives.common.Point(curr.x, pr.end),
-					new primitives.common.Point(curr.x, cr.end)
-				];
-				for (pindex = 1; pindex < points.length; pindex += 1) {
-					pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
-				}
-				cr.endHead = pr.endHead;
-				pi += 1;
-				ci += 1;
-			}
-		}
-	}
-	if (onItem != null) {
-		for (index = 0; index < lists.length; index += 1) {
-			if (heads.hasOwnProperty(index)) {
-				var list = lists[index];
-				points = [];
-				list.iterate(function (segment, key) {
-					if (points.length == 0) {
-						points.push(segment.from);
-						points.push(segment.to);
-					} else {
-						points.push(segment.to);
-					}
-				});
-				onItem.call(thisArg, points);
-			}
-		}
-	}
+              ci += 1;
+              cr = nextcr;
+              loop = true;
+            }
+          } else {
+            var nextpr = (pi + 1) < prev.ranges.length ? prev.ranges[pi + 1] : null;
+            if (nextpr != null && nextpr.overlap(cr)) {
+              // close loop pr.end to nextpr.start
+              points = [
+                new primitives.common.Point(prev.x, pr.end),
+                new primitives.common.Point(curr.x, pr.end),
+                new primitives.common.Point(curr.x, nextpr.start),
+                new primitives.common.Point(prev.x, nextpr.start)
+              ];
+              for (pindex = 1; pindex < points.length; pindex += 1) {
+                pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
+              }
+              pr.endHead.attach(nextpr.startHead);
+              pi += 1;
+              pr = nextpr;
+              loop = true;
+            }
+          }
+        }
+        // extend pr.end to cr.end
+        points = [
+          new primitives.common.Point(prev.x, pr.end),
+          new primitives.common.Point(curr.x, pr.end),
+          new primitives.common.Point(curr.x, cr.end)
+        ];
+        for (pindex = 1; pindex < points.length; pindex += 1) {
+          pr.endHead.add(new primitives.common.Vector(points[pindex - 1], points[pindex]));
+        }
+        cr.endHead = pr.endHead;
+        pi += 1;
+        ci += 1;
+      }
+    }
+  }
+  if (onItem != null) {
+    for (index = 0; index < lists.length; index += 1) {
+      if (heads.hasOwnProperty(index)) {
+        var list = lists[index];
+        points = [];
+        list.iterate(function (segment, key) {
+          if (points.length == 0) {
+            points.push(segment.from);
+            points.push(segment.to);
+          } else {
+            points.push(segment.to);
+          }
+        });
+        onItem.call(thisArg, points);
+      }
+    }
+  }
 };
 
 
 /* /algorithms/getMinimumCrossingRows.js*/
-primitives.common.getMinimumCrossingRows = function (thisArg, rectangles, onItem) { // function onItem(row)
-	var from = null;
-	var to = null;
-	if (onItem != null) {
-		rectangles.sort(function (a, b) {
-			return a.y - b.y;
-		});
+/**
+ * Callback for iterating rows
+ * 
+ * @callback onRowCallback
+ * @param {number} row The y coordinate of the horizontal line
+ */
 
-		for (var index = 0; index < rectangles.length; index += 1) {
-			var rect = rectangles[index];
-			var bottom = rect.bottom();
-			if (from === null) {
-				from = rect.y;
-				to = bottom;
-			} else {
-				if (rect.y >= to) {
-					onItem.call(this.Arg, from);
-					from = rect.y;
-					to = bottom;
-				} else {
-					if (rect.y > from) {
-						from = rect.y;
-					}
+/**
+ * Finds minimum number of horizontal lines crossing all reactngles
+ * 
+ * @param {Object} thisArg The callback function invocation context
+ * @param {React[]} rectangles Collection of rectangles
+ * @param {onRowCallback} onItem Callback function to call for every found row
+ */
+primitives.common.getMinimumCrossingRows = function (thisArg, rectangles, onItem) {
+  var from = null;
+  var to = null;
+  if (onItem != null) {
+    rectangles.sort(function (a, b) {
+      return a.y - b.y;
+    });
 
-					if (bottom < to) {
-						to = bottom;
-					}
-				}
-			}
-		}
-		if (from !== null) {
-			onItem.call(this.Arg, from);
-		}
-	}
+    for (var index = 0; index < rectangles.length; index += 1) {
+      var rect = rectangles[index];
+      var bottom = rect.bottom();
+      if (from === null) {
+        from = rect.y;
+        to = bottom;
+      } else {
+        if (rect.y >= to) {
+          onItem.call(thisArg, from);
+          from = rect.y;
+          to = bottom;
+        } else {
+          if (rect.y > from) {
+            from = rect.y;
+          }
+
+          if (bottom < to) {
+            to = bottom;
+          }
+        }
+      }
+    }
+    if (from !== null) {
+      onItem.call(thisArg, from);
+    }
+  }
 };
 
 
 
 /* /algorithms/graph.js*/
+/**
+ * Creates graph structure
+ * @class graph
+ * 
+ * @returns {graph} Returns graph object
+ */
 primitives.common.graph = function () {
-	var _edges = {},
-		MAXIMUMTOTALWEIGHT = 1,
-		MINIMUMWEIGHT = 2;
+  var _edges = {},
+    MAXIMUMTOTALWEIGHT = 1,
+    MINIMUMWEIGHT = 2;
 
-	function addEdge(from, to, edge) {
-		if ((_edges[from] == null || _edges[from][to] == null)  && edge != null) {
+	/**
+	 * Adds edge to the graph
+	 * @param {string} from The id of the start node 
+	 * @param {string} to The id of the end node
+	 * @param {object} edge The edge contextual object
+	 */
+  function addEdge(from, to, edge) {
+    if ((_edges[from] == null || _edges[from][to] == null) && edge != null) {
 
-			if(_edges[from] == null) {
-				_edges[from] = {};
-			}
-			_edges[from][to] = edge;
+      if (_edges[from] == null) {
+        _edges[from] = {};
+      }
+      _edges[from][to] = edge;
 
-			if (_edges[to] == null) {
-				_edges[to] = {};
-			}
-			_edges[to][from] = edge;
-		}
-	}
+      if (_edges[to] == null) {
+        _edges[to] = {};
+      }
+      _edges[to][from] = edge;
+    }
+  }
 
-	function edge(from, to) {
-		var result = null;
-		if (_edges[from] != null && _edges[from][to]) {
-			result = _edges[from][to];
-		}
-		return result;
-	}
+	/**
+	 * Returns edge context object
+	 * 
+	 * @param {string} from The edge's from node id
+	 * @param {string} to The edge's to node id
+	 * @returns {object} The edge's context object
+	 */
+  function edge(from, to) {
+    var result = null;
+    if (_edges[from] != null && _edges[from][to]) {
+      result = _edges[from][to];
+    }
+    return result;
+  }
 
-	function hasNode(from) {
-		return _edges.hasOwnProperty(from);
-	}
+	/**
+	 * Returns true if node exists in the graph
+	 * 
+	 * @param {string} from The node id
+	 * @returns {boolean} Returns true if node exists
+	 */
+  function hasNode(from) {
+    return _edges.hasOwnProperty(from);
+  }
 
-	function loopNodeEdges(thisArg, itemid, onEdge) { // onEdge = function(to, edge) {}
-		var neighbours, neighbourKey;
-		if (onEdge != null) {
-			neighbours = _edges[itemid];
-			if (neighbours != null) {
-				for (neighbourKey in neighbours) {
-					if (neighbours.hasOwnProperty(neighbourKey)) {
-						onEdge.call(thisArg, neighbourKey, neighbours[neighbourKey]);
-					}
-				}
-			}
-		}
-	}
+	/**
+	 * Callback for iterating edges of the graph's node
+	 * 
+	 * @callback onEdgeCallback
+	 * @param {string} to The neighbouring node id
+	 * @param {Object} edge The edge's context object
+	 */
 
-	function loopNodes(thisArg, startNode, onItem) { // onItem = function(itemid) {}
-		var processed = {};
-		if (startNode == null) {
-			for (startNode in _edges) {
-				if (_edges.hasOwnProperty(startNode)) {
-					if (!processed.hasOwnProperty[startNode]) {
-						_loopNodes(this, startNode, processed, onItem);
-					}
-				}
-			}
-		} else {
-			_loopNodes(this, startNode, processed, onItem);
-		}
-	}
+	/**
+	 * Loop edges of the node
+	 * 
+	 * @param {object} thisArg The callback function invocation context
+	 * @param {string} itemid The node id
+	 * @param {onEdgeCallback} onEdge A callback function to call for every edge of the node
+	 */
+  function loopNodeEdges(thisArg, itemid, onEdge) {
+    var neighbours, neighbourKey;
+    if (onEdge != null) {
+      neighbours = _edges[itemid];
+      if (neighbours != null) {
+        for (neighbourKey in neighbours) {
+          if (neighbours.hasOwnProperty(neighbourKey)) {
+            onEdge.call(thisArg, neighbourKey, neighbours[neighbourKey]);
+          }
+        }
+      }
+    }
+  }
 
-	function _loopNodes(thisArg, startNode, processed, onItem) { // onItem = function(itemid) {}
-		/* Graph */
-		var margin = [],
-			marginKey,
-			newMargin,
-			index, len,
-			neighbours, neighbourKey;
+	/**
+	 * Callback function for iterating graphs nodes
+	 * 
+	 * @callback onNodeCallback
+	 * @param {string} to The next neighbouring node id
+	 */
 
-		margin.push(startNode);
-		processed[startNode] = true;
-		if (onItem != null) {
-			while (margin.length > 0) {
-				newMargin = [];
+	/**
+	 * Loop nodes of the graph
+	 * 
+	 * @param {object} thisArg The callback function invocation context
+	 * @param {string} [itemid=undefined] The optional start node id. If start node is undefined, 
+	 * function loops graphs node starting from first available node
+	 * @param {onNodeCallback} onItem A callback function to be called for every neighbouring node
+	 */
+  function loopNodes(thisArg, startNode, onItem) {
+    var processed = {};
+    if (startNode == null) {
+      for (startNode in _edges) {
+        if (_edges.hasOwnProperty(startNode)) {
+          if (!processed.hasOwnProperty[startNode]) {
+            _loopNodes(this, startNode, processed, onItem);
+          }
+        }
+      }
+    } else {
+      _loopNodes(this, startNode, processed, onItem);
+    }
+  }
 
-				/* itterate neighbours of every node on margin */
-				for (index = 0, len = margin.length; index < len; index += 1) {
-					marginKey = margin[index];
+  function _loopNodes(thisArg, startNode, processed, onItem) {
+    var margin = [],
+      marginKey,
+      newMargin,
+      index, len,
+      neighbours, neighbourKey;
 
-					onItem.call(thisArg, marginKey);
+    margin.push(startNode);
+    processed[startNode] = true;
+    if (onItem != null) {
+      while (margin.length > 0) {
+        newMargin = [];
 
-					neighbours = _edges[marginKey];
-					for (neighbourKey in neighbours) {
-						if (neighbours.hasOwnProperty(neighbourKey) && !processed.hasOwnProperty(neighbourKey)) {
-							processed[neighbourKey] = true;
-							newMargin.push(neighbourKey);
-						}
-					}
-				}
-				margin = newMargin;
-			}
-		}
-	}
+        /* iterate neighbours of every node on margin */
+        for (index = 0, len = margin.length; index < len; index += 1) {
+          marginKey = margin[index];
 
-	/*
-		Function: primitives.common.graph.getSpanningTree
-			Get maximum spanning tree. Graph may have disconnected sub graphs, so start node is nessasary.
-	
-		Parameters:
-		startNode - The node to start searching for maximum spanning tree. Graph is not nessasary connected
-		getWeightFunc - Call back function to get weight of edge. function(edge)
+          onItem.call(thisArg, marginKey);
 
-		Returns: 
-			primitives.common.tree structure
-	*/
-	function getSpanningTree(startNode, getWeightFunc) {
-		var result = primitives.common.tree(),
-			margin = primitives.common.FibonacciHeap(true),
-			marginNode,
-			parents = {}, /* if parent for item is set then it was laready visited */
-			neighbours, neighbourKey, neighbourWeight, currentWeight;
+          neighbours = _edges[marginKey];
+          for (neighbourKey in neighbours) {
+            if (neighbours.hasOwnProperty(neighbourKey) && !processed.hasOwnProperty(neighbourKey)) {
+              processed[neighbourKey] = true;
+              newMargin.push(neighbourKey);
+            }
+          }
+        }
+        margin = newMargin;
+      }
+    }
+  }
 
-		/* add start node to margin */
-		margin.add(startNode, 0, null /*parent of root node is null*/);
-		parents[startNode] = null;
+	/**
+	 * Callback for finding edge weight
+	 * 
+	 * @callback getGraphEdgeWeightCallback
+	 * @param {object} edge The edge context object
+	 * @param {string} fromItem The edge's start node id
+	 * @param {string} toItem The edge's end node id
+	 * @returns {number} Returns weight of the edge
+	 */
 
-		/* search graph */
-		while ((marginNode = margin.extractRoot()) != null) {
+	/**
+	 * Get maximum spanning tree. Graph may have disconnected sub graphs, so start node is nessasary.
+	 * 
+	 * @param {string} startNode The node to start searching for maximum spanning tree. Graph is not nessasary connected
+	 * @param {getGraphEdgeWeightCallback} getWeightFunc Callback function to get weight of an edge.
+	 * @returns {tree} Returns tree structure containing maximum spanning tree of the graph
+	 */
+  function getSpanningTree(startNode, getWeightFunc) {
+    var result = primitives.common.tree(),
+      margin = primitives.common.FibonacciHeap(true),
+      marginNode,
+      parents = {}, /* if parent for item is set then it was laready visited */
+      neighbours, neighbourKey, neighbourWeight, currentWeight;
 
-			/* itterate neighbours of every node on margin */
-			neighbours = _edges[marginNode.key];
+    /* add start node to margin */
+    margin.add(startNode, 0, null /*parent of root node is null*/);
+    parents[startNode] = null;
 
-			for (neighbourKey in neighbours) {
-				if (neighbours.hasOwnProperty(neighbourKey) && !result.node(neighbourKey)) {
-					neighbourWeight = getWeightFunc != null ? getWeightFunc(neighbours[neighbourKey]) : neighbours[neighbourKey];
+    /* search graph */
+    while ((marginNode = margin.extractRoot()) != null) {
 
-					currentWeight = margin.getPriority(neighbourKey);
-					if (currentWeight == null) {
-						margin.add(neighbourKey, neighbourWeight, null);
-						parents[neighbourKey] = marginNode.key.toString();
-					} else {
-						if (currentWeight <= neighbourWeight) {
-							/* improve node distance */
-							margin.setPriority(neighbourKey, neighbourWeight);
-							parents[neighbourKey] = marginNode.key.toString();
-						}
-					}
-				}
-			}
+      /* iterate neighbours of every node on margin */
+      neighbours = _edges[marginNode.key];
 
-			/* add next margin item to resul tree */
-			result.add(parents[marginNode.key], marginNode.key.toString(), {});
-		}
+      for (neighbourKey in neighbours) {
+        if (neighbours.hasOwnProperty(neighbourKey) && !result.node(neighbourKey)) {
+          neighbourWeight = getWeightFunc != null ? getWeightFunc(neighbours[neighbourKey]) : neighbours[neighbourKey];
 
-		return result;
-	}
+          currentWeight = margin.getPriority(neighbourKey);
+          if (currentWeight == null) {
+            margin.add(neighbourKey, neighbourWeight, null);
+            parents[neighbourKey] = marginNode.key.toString();
+          } else {
+            if (currentWeight <= neighbourWeight) {
+              /* improve node distance */
+              margin.setPriority(neighbourKey, neighbourWeight);
+              parents[neighbourKey] = marginNode.key.toString();
+            }
+          }
+        }
+      }
 
-	function _findStartNode(thisArg, onEdgeWeight) {
-		var result = null,
-			fromItem, toItems, toItem,
-			weight = 0,
-			maxWeight = null;
-		
-		for (fromItem in _edges) {
-			if (_edges.hasOwnProperty(fromItem)) {
-				toItems = _edges[fromItem];
+      /* add next margin item to resul tree */
+      result.add(parents[marginNode.key], marginNode.key.toString(), {});
+    }
 
-				weight = 0;
-				for (toItem in toItems) {
-					if (toItems.hasOwnProperty(toItem)) {
-						weight += onEdgeWeight.call(thisArg, toItems[toItem], fromItem, toItem);
-					}
-				}
-				if (weight > maxWeight || maxWeight == null) {
-					result = fromItem;
-					maxWeight = weight;
-				}
-			}
-		}
-		return result;
-	}
+    return result;
+  }
 
-	/*
-		Function: primitives.common.graph.getTotalWeightGrowthSequence
-			Get graph growth sequence. The sequence of graph traversing order.
-	
-		Parameters:
-			thisArg - call back functions context
-			onEdgeWeight - Call back function to weight edge of graph. function(edge)
-			onItem - Call back function on next item found
-	*/
-	function getTotalWeightGrowthSequence(thisArg, onEdgeWeight, onItem) {
-		var startNode = _findStartNode(thisArg, onEdgeWeight);
+  function _findStartNode(thisArg, onEdgeWeight) {
+    var result = null,
+      fromItem, toItems, toItem,
+      weight = 0,
+      maxWeight = null;
 
-		_getGrowthSequence(thisArg, startNode, onEdgeWeight, onItem, MAXIMUMTOTALWEIGHT);
-	}
+    for (fromItem in _edges) {
+      if (_edges.hasOwnProperty(fromItem)) {
+        toItems = _edges[fromItem];
 
-	/*
-	Function: primitives.common.graph.getMinimumWeightGrowthSequence
-		Get graph growth sequence. The sequence of graph traversing order.
+        weight = 0;
+        for (toItem in toItems) {
+          if (toItems.hasOwnProperty(toItem)) {
+            weight += onEdgeWeight.call(thisArg, toItems[toItem], fromItem, toItem);
+          }
+        }
+        if (weight > maxWeight || maxWeight == null) {
+          result = fromItem;
+          maxWeight = weight;
+        }
+      }
+    }
+    return result;
+  }
 
-	Parameters:
-		thisArg - call back functions context
-		startNode - The node to start searching for grows sequence.
-		onEdgeWeight - Call back function to weight edge of graph. function(edge)
-		onItem - Call back function on next item found
-	*/
-	function getMinimumWeightGrowthSequence(thisArg, startNode, onEdgeWeight, onItem) {
-		_getGrowthSequence(thisArg, startNode, onEdgeWeight, onItem, MINIMUMWEIGHT);
-	}
+	/**
+	 * Get graph growth sequence. The sequence of graph traversing order.
+	 * 
+	 * @param {object} thisArg The callback function invocation context
+	 * @param {getGraphEdgeWeightCallback} getWeightFunc Callback function to get weight of an edge. 
+	 * @param {onNodeCallback} onItem A callback function to be called for every node of the growth sequence 
+	 */
+  function getTotalWeightGrowthSequence(thisArg, onEdgeWeight, onItem) {
+    var startNode = _findStartNode(thisArg, onEdgeWeight);
 
-	function _getGrowthSequence(thisArg, startNode, onEdgeWeight, onItem, growsMode) {
-		var margin = {}, marginKey,
-			itemsToRemove = [], /* if margin item has no neighbours to expand we remove it from margin*/
-			hasNeighbours,
-			processed = {}, /* if item is set then it was already visited */
-			marginLength = 0, /* curent margin length */
-			nextMarginKey,
-			nextMarginWeight,
-			bestWeight,
-			neighbours, neighbourKey, neighbourWeight,
-			index, len;
+    _getGrowthSequence(thisArg, startNode, onEdgeWeight, onItem, MAXIMUMTOTALWEIGHT);
+  }
 
-		if (onEdgeWeight != null && onItem != null) {
-			if (startNode == null) {
-				startNode = _findStartNode(thisArg, onEdgeWeight);
-			}
+	/**
+	 * Get minimum weight graph growth sequence. The sequence of the traversing order of the graph nodes.
+	 * 
+	 * @param {object} thisArg The callback function invocation context
+	 * @param {string} [startNode=undefined] The optional start node id 
+	 * @param {getGraphEdgeWeightCallback} onEdgeWeight Callback function to get weight of an edge. 
+	 * @param {onNodeCallback} onItem A callback function to be called for every node of the growth sequence
+	 */
+  function getMinimumWeightGrowthSequence(thisArg, startNode, onEdgeWeight, onItem) {
+    _getGrowthSequence(thisArg, startNode, onEdgeWeight, onItem, MINIMUMWEIGHT);
+  }
 
-			if (startNode != null) {
+  function _getGrowthSequence(thisArg, startNode, onEdgeWeight, onItem, growsMode) {
+    var margin = {}, marginKey,
+      itemsToRemove = [], /* if margin item has no neighbours to expand we remove it from margin*/
+      hasNeighbours,
+      processed = {}, /* if item is set then it was already visited */
+      marginLength = 0, /* curent margin length */
+      nextMarginKey,
+      nextMarginWeight,
+      bestWeight,
+      neighbours, neighbourKey, neighbourWeight,
+      index, len;
 
-				onItem.call(thisArg, startNode);
+    if (onEdgeWeight != null && onItem != null) {
+      if (startNode == null) {
+        startNode = _findStartNode(thisArg, onEdgeWeight);
+      }
 
-				/* add start node to margin */
-				margin[startNode] = true;
-				marginLength += 1;
+      if (startNode != null) {
 
-				/* add startNode to result tree */
-				processed[startNode] = null;
+        onItem.call(thisArg, startNode);
 
-				/* search graph */
-				while (marginLength > 0) {
-					itemsToRemove = [];
-					nextMarginKey = null;
-					nextMarginWeight = null;
-					bestWeight = {};
-					/* itterate neighbours of every node on margin */
-					for (marginKey in margin) {
-						if (margin.hasOwnProperty(marginKey)) {
-							neighbours = _edges[marginKey];
-							hasNeighbours = false;
+        /* add start node to margin */
+        margin[startNode] = true;
+        marginLength += 1;
 
-							for (neighbourKey in neighbours) {
-								if (neighbours.hasOwnProperty(neighbourKey) && !processed.hasOwnProperty(neighbourKey)) {
-									neighbourWeight = onEdgeWeight.call(thisArg, neighbours[neighbourKey], marginKey, neighbourKey);
-									hasNeighbours = true;
+        /* add startNode to result tree */
+        processed[startNode] = null;
 
-									switch (growsMode) {
-										case MAXIMUMTOTALWEIGHT:
-											if (bestWeight[neighbourKey] == null) {
-												bestWeight[neighbourKey] = 0;
-											}
-											bestWeight[neighbourKey] += neighbourWeight;
+        /* search graph */
+        while (marginLength > 0) {
+          itemsToRemove = [];
+          nextMarginKey = null;
+          nextMarginWeight = null;
+          bestWeight = {};
+          /* iterate neighbours of every node on margin */
+          for (marginKey in margin) {
+            if (margin.hasOwnProperty(marginKey)) {
+              neighbours = _edges[marginKey];
+              hasNeighbours = false;
 
-											if (!nextMarginWeight || bestWeight[neighbourKey] > nextMarginWeight) {
-												nextMarginKey = neighbourKey;
-												nextMarginWeight = bestWeight[neighbourKey];
-											}
-											break;
-										case MINIMUMWEIGHT:
-											if (bestWeight[neighbourKey] == null) {
-												bestWeight[neighbourKey] = neighbourWeight;
-											} else {
-												bestWeight[neighbourKey] = Math.min(bestWeight[neighbourKey], neighbourWeight);
-											}
+              for (neighbourKey in neighbours) {
+                if (neighbours.hasOwnProperty(neighbourKey) && !processed.hasOwnProperty(neighbourKey)) {
+                  neighbourWeight = onEdgeWeight.call(thisArg, neighbours[neighbourKey], marginKey, neighbourKey);
+                  hasNeighbours = true;
 
-											if (!nextMarginWeight || bestWeight[neighbourKey] < nextMarginWeight) {
-												nextMarginKey = neighbourKey;
-												nextMarginWeight = bestWeight[neighbourKey];
-											}
-											break;
-									}
-								}
-							}
+                  switch (growsMode) {
+                    case MAXIMUMTOTALWEIGHT:
+                      if (bestWeight[neighbourKey] == null) {
+                        bestWeight[neighbourKey] = 0;
+                      }
+                      bestWeight[neighbourKey] += neighbourWeight;
 
-							if (!hasNeighbours) {
-								itemsToRemove.push(marginKey);
-							}
-						}
-					}
+                      if (!nextMarginWeight || bestWeight[neighbourKey] > nextMarginWeight) {
+                        nextMarginKey = neighbourKey;
+                        nextMarginWeight = bestWeight[neighbourKey];
+                      }
+                      break;
+                    case MINIMUMWEIGHT:
+                      if (bestWeight[neighbourKey] == null) {
+                        bestWeight[neighbourKey] = neighbourWeight;
+                      } else {
+                        bestWeight[neighbourKey] = Math.min(bestWeight[neighbourKey], neighbourWeight);
+                      }
 
-					if (nextMarginKey == null) {
-						/* no items to expand to exit*/
-						break;
-					} else {
-						margin[nextMarginKey] = true;
-						marginLength += 1;
-						processed[nextMarginKey] = true;
+                      if (!nextMarginWeight || bestWeight[neighbourKey] < nextMarginWeight) {
+                        nextMarginKey = neighbourKey;
+                        nextMarginWeight = bestWeight[neighbourKey];
+                      }
+                      break;
+                  }
+                }
+              }
 
-						/* add next margin item to result sequence */
-						onItem.call(thisArg, nextMarginKey);
-					}
+              if (!hasNeighbours) {
+                itemsToRemove.push(marginKey);
+              }
+            }
+          }
 
-					for (index = 0, len = itemsToRemove.length; index < len; index += 1) {
-						/* delete visited node from margin */
-						delete margin[itemsToRemove[index]];
-						marginLength -= 1;
-					}
-				}
-			}
-		}
-	}
+          if (nextMarginKey == null) {
+            /* no items to expand to exit*/
+            break;
+          } else {
+            margin[nextMarginKey] = true;
+            marginLength += 1;
+            processed[nextMarginKey] = true;
 
-	/*
-		Function: primitives.common.graph.getShortestPath
-		Get shortest path between two nodes in graph. Start and end nodes supposed to have connection path. All connections have the same weight.
-	
-		Parameters:
-		startNode - The node to start.
-		endNode - The end node.
-		getWeightFunc - Call back function to weight edge of graph. function(edge, fromItem, toItem)
-	
-		Returns: 
-			Array containing nodes names of connection path.
-	*/
-	function getShortestPath(thisArg, startNode, endNodes, getWeightFunc, onPathFound) { // getWeightFunc = function(edge, fromItem, toItem), onPathFound = function(path, to)
-		var margin = primitives.common.FibonacciHeap(false),
-			distance = {},
-			breadcramps = {},
-			bestNodeOnMargin,
-			key,
-			children,
-			newDistance,
-			path,
-			currentNode,
-			endNodesHash = {},
-			index, len, 
-			endsCount = 0, endsFound = 0;
+            /* add next margin item to result sequence */
+            onItem.call(thisArg, nextMarginKey);
+          }
 
-		/* create hash table of end nodes to find */
-		for (index = 0, len = endNodes.length; index < len; index += 1) {
-			key = endNodes[index];
+          for (index = 0, len = itemsToRemove.length; index < len; index += 1) {
+            /* delete visited node from margin */
+            delete margin[itemsToRemove[index]];
+            marginLength -= 1;
+          }
+        }
+      }
+    }
+  }
 
-			if (!endNodesHash.hasOwnProperty(key)) {
-				endsCount += 1;
-				endNodesHash[key] = true;
-			}
-		}
+	/**
+	 * Callback for returning optimal connection path for every end node.
+	 * 
+	 * @callback onPathFoundCallback
+	 * @param {string[]} path An array of connection path node ids.
+	 * @param {string} to The end node id, the connection path is found for.
+	 */
 
-		/* add start node to margin */
-		margin.add(startNode, 0, null);
-		breadcramps[startNode] = null;
+	/**
+	 * Get shortest path between two nodes in graph. The start and the end nodes are supposed to have connection path.
+	 * 
+	 * @param {object} thisArg The callback function invocation context
+	 * @param {string} startNode The start node id 
+	 * @param {string[]} endNodes The array of end node ids.
+	 * @param {getGraphEdgeWeightCallback} getWeightFunc Callback function to get weight of an edge. 
+	 * @param {onNodeCallback} onItem A callback function to be called for every node of the growth sequence
+	 * @param {onPathFoundCallback} onPathFound A callback function to be called for every end node 
+	 * with the optimal connection path
+	 */
+  function getShortestPath(thisArg, startNode, endNodes, getWeightFunc, onPathFound) {
+    var margin = primitives.common.FibonacciHeap(false),
+      distance = {},
+      breadcramps = {},
+      bestNodeOnMargin,
+      key,
+      children,
+      newDistance,
+      path,
+      currentNode,
+      endNodesHash = {},
+      index, len,
+      endsCount = 0, endsFound = 0;
 
-		/* search graph */
-		while ((bestNodeOnMargin = margin.extractRoot()) != null) {
-			/* itterate neighbours of selected node on margin */
-			children = _edges[bestNodeOnMargin.key];
-			for (key in children) {
-				if (children.hasOwnProperty(key)) {
-					newDistance = bestNodeOnMargin.priority + (getWeightFunc != null ? getWeightFunc.call(thisArg, children[key], bestNodeOnMargin, key) : 1);
-					distance = margin.getPriority(key);
-					if (distance != null) {
-						if (distance > newDistance) {
-							margin.setPriority(key, newDistance);
-							breadcramps[key] = bestNodeOnMargin.key;
-						}
-					} else {
-						if (!breadcramps.hasOwnProperty(key)) {
-							margin.add(key, newDistance, null);
-							breadcramps[key] = bestNodeOnMargin.key;
-						}
-					}
-				}
-			}
+    /* create hash table of end nodes to find */
+    for (index = 0, len = endNodes.length; index < len; index += 1) {
+      key = endNodes[index];
 
-			if (endNodesHash.hasOwnProperty(bestNodeOnMargin.key)) {
-				/* trace path */
-				path = [];
-				currentNode = bestNodeOnMargin.key;
-				while (currentNode != null) {
-					path.push(currentNode);
-					currentNode = breadcramps[currentNode];
-				}
-				onPathFound.call(thisArg, path, bestNodeOnMargin.key);
+      if (!endNodesHash.hasOwnProperty(key)) {
+        endsCount += 1;
+        endNodesHash[key] = true;
+      }
+    }
 
-				endsFound += 1;
-				if (endsFound >= endsCount) {
-					break;
-				}
-			}
-		}
-	}
+    /* add start node to margin */
+    margin.add(startNode, 0, null);
+    breadcramps[startNode] = null;
 
-	return {
-		addEdge: addEdge,
-		edge: edge,
-		hasNode: hasNode,
-		loopNodes: loopNodes,
-		loopNodeEdges: loopNodeEdges,
-		getSpanningTree: getSpanningTree,
-		getTotalWeightGrowthSequence: getTotalWeightGrowthSequence,
-		getMinimumWeightGrowthSequence: getMinimumWeightGrowthSequence,
-		getShortestPath: getShortestPath
-	};
+    /* search graph */
+    while ((bestNodeOnMargin = margin.extractRoot()) != null) {
+      /* iterate neighbours of selected node on margin */
+      children = _edges[bestNodeOnMargin.key];
+      for (key in children) {
+        if (children.hasOwnProperty(key)) {
+          newDistance = bestNodeOnMargin.priority + (getWeightFunc != null ? getWeightFunc.call(thisArg, children[key], bestNodeOnMargin, key) : 1);
+          distance = margin.getPriority(key);
+          if (distance != null) {
+            if (distance > newDistance) {
+              margin.setPriority(key, newDistance);
+              breadcramps[key] = bestNodeOnMargin.key;
+            }
+          } else {
+            if (!breadcramps.hasOwnProperty(key)) {
+              margin.add(key, newDistance, null);
+              breadcramps[key] = bestNodeOnMargin.key;
+            }
+          }
+        }
+      }
+
+      if (endNodesHash.hasOwnProperty(bestNodeOnMargin.key)) {
+        /* trace path */
+        path = [];
+        currentNode = bestNodeOnMargin.key;
+        while (currentNode != null) {
+          path.push(currentNode);
+          currentNode = breadcramps[currentNode];
+        }
+        onPathFound.call(thisArg, path, bestNodeOnMargin.key);
+
+        endsFound += 1;
+        if (endsFound >= endsCount) {
+          break;
+        }
+      }
+    }
+  }
+
+  return {
+    addEdge: addEdge,
+    edge: edge,
+    hasNode: hasNode,
+    loopNodes: loopNodes,
+    loopNodeEdges: loopNodeEdges,
+    getSpanningTree: getSpanningTree,
+    getTotalWeightGrowthSequence: getTotalWeightGrowthSequence,
+    getMinimumWeightGrowthSequence: getMinimumWeightGrowthSequence,
+    getShortestPath: getShortestPath
+  };
 };
 
 /* /algorithms/LCA.js*/
+/**
+ * Creates Lowest Common Ancestor Structure for the given tree
+ * @class LCA
+ * 
+ * @param {tree} tree The tree structure
+ * @returns {LCA} Returns Lowest Common Ancestor Structure
+ */
 primitives.common.LCA = function (tree) {
-	var _eulerSequence = [];
-	var _levels = [];
-	var _fai = {};
-	var _rmq;
-	
+  var _eulerSequence = [];
+  var _levels = [];
+  var _fai = {};
+  var _rmq;
 
-	preprocess();
 
-	function preprocess() {
-		var counter = 0;
-		tree.loopEulerWalk(this, function (nodeid, node, level) {
-			_eulerSequence.push(nodeid);
-			_levels.push(level);
+  preprocess();
 
-			if (!_fai.hasOwnProperty(nodeid)) {
-				_fai[nodeid] = counter;
-			}
-			counter += 1;
-		});
-		_rmq = primitives.common.RMQ(_levels);
-	}
+  function preprocess() {
+    var counter = 0;
+    tree.loopEulerWalk(this, function (nodeid, node, level) {
+      _eulerSequence.push(nodeid);
+      _levels.push(level);
 
-	function getLowestCommonAncestor(from, to) {
-		var fromIndex = _fai[from],
-			toIndex = _fai[to],
-			index;
+      if (!_fai.hasOwnProperty(nodeid)) {
+        _fai[nodeid] = counter;
+      }
+      counter += 1;
+    });
+    _rmq = primitives.common.RMQ(_levels);
+  }
 
-		if (fromIndex < toIndex) {
-			index = _rmq.getRangeMinimumIndex(fromIndex, toIndex);
-		} else {
-			index = _rmq.getRangeMinimumIndex(toIndex, fromIndex);
-		}
+	/**
+	 * Returns lowest common ancestor for the given pair of tree nodes
+	 * @param {string} from The first tree node id
+	 * @param {string} to The second tree node id
+	 * @returns {string} Returns the lowest common ancestor tree node id
+	 */
+  function getLowestCommonAncestor(from, to) {
+    var fromIndex = _fai[from],
+      toIndex = _fai[to],
+      index;
 
-		return _eulerSequence[index];
-	}
+    if (fromIndex < toIndex) {
+      index = _rmq.getRangeMinimumIndex(fromIndex, toIndex);
+    } else {
+      index = _rmq.getRangeMinimumIndex(toIndex, fromIndex);
+    }
 
-	return {
-		getLowestCommonAncestor: getLowestCommonAncestor
-	};
+    return _eulerSequence[index];
+  }
+
+  return {
+    getLowestCommonAncestor: getLowestCommonAncestor
+  };
 };
 
 /* /algorithms/LinkedHashItems.js*/
+/**
+ * Creates linked hash list collection.
+ * @class LinkedHashItems
+ * 
+ * @returns {LinkedHashItems} Returns linked hash list structure
+ */
 primitives.common.LinkedHashItems = function () {
   var segmentsHash = {},
     nextKeys = {},
@@ -27038,6 +27310,11 @@ primitives.common.LinkedHashItems = function () {
     startSegmentKey = null,
     endSegmentKey = null;
 
+  /**
+   * Adds new item to collection
+   * @param {string} key The new item key 
+   * @param {object} item The new item context object value
+   */
   function add(key, item) {
     if (segmentsHash.hasOwnProperty(key)) {
       throw "Duplicate segments are not supported!";
@@ -27054,30 +27331,70 @@ primitives.common.LinkedHashItems = function () {
     endSegmentKey = key;
   }
 
+  /**
+   * Checks if collection is empty
+   * 
+   * @returns {boolean} Returns true if collection is empty
+   */
   function isEmpty() {
     return startSegmentKey == null;
   }
 
+  /**
+   * Item context object
+   * 
+   * @param {string} key The item's key
+   * @returns {object} Returns context object
+   */
   function item(key) {
     return segmentsHash[key];
   }
 
+  /**
+   * Gets next key
+   * 
+   * @param {string} key The item key
+   * @returns {string} Returns key of the next collection item
+   */
   function nextKey(key) {
     return nextKeys[key];
   }
 
+  /**
+   * Gets previous key
+   * 
+   * @param {string} key The item key
+   * @returns {string} Returns key of the previous collection item
+   */
   function prevKey(key) {
     return prevKeys[key];
   }
 
+  /**
+   * First collection item key
+   * 
+   * @returns {string} Returns the key of the first item in the collection
+   */
   function startKey() {
     return startSegmentKey;
   }
 
+  /**
+   * Last collection item key
+   * 
+   * @returns {string} Returns key of the last item in the collection
+   */
   function endKey() {
     return endSegmentKey;
   }
 
+  /**
+  * Adds new item to the head of the list
+  * 
+  * @param {string} key The new item key 
+  * @param {object} item The new item context object value
+  * @returns {string} Returns key of the last item in the collection
+  */
   function unshift(key, item) {
     if (segmentsHash.hasOwnProperty(key)) {
       throw "Duplicate segments are not supported!";
@@ -27094,6 +27411,13 @@ primitives.common.LinkedHashItems = function () {
     startSegmentKey = key;
   }
 
+  /**
+  * Inserts new item into the list after the given key 
+  *  
+  * @param {string} afterKey The key that the new element is placed after 
+  * @param {string} key The new item key 
+  * @param {object} item The new item context object value
+  */
   function insertAfter(afterKey, key, item) {
     if (segmentsHash.hasOwnProperty(key)) {
       throw "Duplicate segments are not supported!";
@@ -27115,6 +27439,13 @@ primitives.common.LinkedHashItems = function () {
     }
   }
 
+  /**
+   * Inserts new item into the list before the given key  
+   * 
+   * @param {string} beforeKey The key that the new element is placed before 
+   * @param {string} key The new item key 
+   * @param {object} item The new item context object value
+   */
   function insertBefore(beforeKey, key, item) {
     if (segmentsHash.hasOwnProperty(key)) {
       throw "Duplicate segments are not supported!";
@@ -27130,6 +27461,10 @@ primitives.common.LinkedHashItems = function () {
     }
   }
 
+  /**
+   * Removes item
+   * @param {string} key The key of the item 
+   */
   function remove(key) {
     var prevKey = prevKeys[key],
       nextKey = nextKeys[key];
@@ -27151,6 +27486,9 @@ primitives.common.LinkedHashItems = function () {
     delete prevKeys[key];
   }
 
+  /**
+   * Empties collection
+   */
   function empty() {
     segmentsHash = {};
     nextKeys = {};
@@ -27185,20 +27523,50 @@ primitives.common.LinkedHashItems = function () {
     }
   }
 
+  /**
+   * Appends one list to another
+   * 
+   * @param {LinkedHashItems} list A list to append to the end of the current list  
+   */
   function attach(list) {
     list.iterate(function (segment, key) {
       add(key, segment);
     });
   }
 
+  /**
+   * Callback function for iterating list items
+   * 
+   * @callback onLinkedHashItemsCallback
+   * @param {object} item  The item context object
+   * @param {string} key The item key
+   * @returns {boolean} Returns true to break the iteration process
+   */
+
+  /**
+   * Loops items of the collection
+   * @param {onLinkedHashItemsCallback} onItem  Callback function for iterating collection items
+   * @param {string} startKey The key to start iteration from 
+   * @param {string} endKey The key to end iteration at
+   */
   function iterate(onItem, startKey, endKey) {
     _iterate(true, onItem, startKey, endKey);
   }
 
+  /**
+   * Loops items of the collection backward
+   * @param {onLinkedHashItemsCallback} onItem  Callback function for iterating collection items
+   * @param {string} startKey The key to start iteration from 
+   * @param {string} endKey The key to end iteration at
+   */
   function iterateBack(onItem, startKey, endKey) {
     _iterate(false, onItem, startKey, endKey);
   }
 
+  /**
+   * Validates internal data consistensy of the structure
+   * @returns {boolean} Returns true if it pass validation
+   */
   function validate(info) {
     var key, prevKey, nextKey;
     for (key in segmentsHash) {
@@ -27254,6 +27622,11 @@ primitives.common.LinkedHashItems = function () {
     return true;
   }
 
+  /**
+   * Returns a regular javascript array of collection items
+   * 
+   * @returns {object[]} Returns array containing items of the collection
+   */
   function toArray() {
     var result = [];
 
@@ -27289,528 +27662,602 @@ primitives.common.LinkedHashItems = function () {
 
 
 /* /algorithms/mergeSort.js*/
-/*
-	Function: primitives.common.mergeSort
-		Merges array of sorted arrays into one using call back function for comparison.
-	
-	Parameters:
-		arrays - Array of sorted arrays of objects.
-		getItemWeight - Call back function used to get items weight. 
-		ignoreDuplicates - return distinct items only.
+/**
+ * Callback function to measure item weights of merged arrays.
+ * 
+ * @callback getItemWeightCallback
+ * @param {object} item The item to weight
+ * @returns {number} Returns item's weight.
+ */
 
-	Returns: 
-		Array of merged sorted items. 
-*/
+/**
+ * Merges array of sorted arrays into one using call back function for comparison.
+ * 
+ * @param {object[][]} arrays  Array of sorted arrays of objects.
+ * @param {getItemWeightCallback} getItemWeight Callback function to measure item weight. 
+ * @param {boolean} ignoreDuplicates If true returns distinct weight items only.
+ * @returns {object[]} Returns merged sorted array.
+ */
 primitives.common.mergeSort = function (arrays, getItemWeight, ignoreDuplicates) {
-	var result = null,
-		firstArray, secondArray, mergedArray, arrayIndex,
-		firstIndex, secondIndex, firstLen, secondLen, firstItem, secondItem,
-		firstItemWeight, secondItemWeight,
-		currentValue;
+  var result = null,
+    firstArray, secondArray, mergedArray, arrayIndex,
+    firstIndex, secondIndex, firstLen, secondLen, firstItem, secondItem,
+    firstItemWeight, secondItemWeight,
+    currentValue;
 
-	switch (arrays.length) {
-		case 0:
-			result = [];
-			break;
-		default:
-			firstArray = [];
-			for (arrayIndex = 0; arrayIndex < arrays.length; arrayIndex += 1) {
-				secondArray = arrays[arrayIndex];
-				mergedArray = [];
+  switch (arrays.length) {
+    case 0:
+      result = [];
+      break;
+    default:
+      firstArray = [];
+      for (arrayIndex = 0; arrayIndex < arrays.length; arrayIndex += 1) {
+        secondArray = arrays[arrayIndex];
+        mergedArray = [];
 
-				firstLen = firstArray.length;
-				secondLen = secondArray.length;
+        firstLen = firstArray.length;
+        secondLen = secondArray.length;
 
-				firstIndex = 0;
-				secondIndex = 0;
+        firstIndex = 0;
+        secondIndex = 0;
 
-				firstItem = null;
-				firstItemWeight = null;
-				secondItem = null;
-				secondItemWeight = null;
+        firstItem = null;
+        firstItemWeight = null;
+        secondItem = null;
+        secondItemWeight = null;
 
-				if (firstLen > 0) {
-					firstItem = firstArray[firstIndex];
-					firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
-				}
+        if (firstLen > 0) {
+          firstItem = firstArray[firstIndex];
+          firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
+        }
 
-				if (secondLen > 0) {
-					secondItem = secondArray[secondIndex];
-					secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
-				}
-				currentValue = null;
-				while (firstIndex < firstLen || secondIndex < secondLen) {
+        if (secondLen > 0) {
+          secondItem = secondArray[secondIndex];
+          secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
+        }
+        currentValue = null;
+        while (firstIndex < firstLen || secondIndex < secondLen) {
 
-					if (firstIndex >= firstLen) {
-						if (!ignoreDuplicates || currentValue != secondItem) {
-							mergedArray.push(secondItem);
-							currentValue = secondItem;
-						}
-						secondIndex += 1;
+          if (firstIndex >= firstLen) {
+            if (!ignoreDuplicates || currentValue != secondItem) {
+              mergedArray.push(secondItem);
+              currentValue = secondItem;
+            }
+            secondIndex += 1;
 
-						
-						if (secondIndex < secondLen) {
-							secondItem = secondArray[secondIndex];
-							secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
-						}
-					} else {
-						if (secondIndex >= secondLen) {
-							if (!ignoreDuplicates || currentValue != firstItem) {
-								mergedArray.push(firstItem);
-								currentValue = firstItem;
-							}
-							firstIndex += 1;
 
-							
-							if (firstIndex < firstLen) {
-								firstItem = firstArray[firstIndex];
-								firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
-							}
-						} else {
-							if (firstItemWeight < secondItemWeight) {
-								if (!ignoreDuplicates || currentValue != firstItem) {
-									mergedArray.push(firstItem);
-									currentValue = firstItem;
-								}
-								firstIndex += 1;
+            if (secondIndex < secondLen) {
+              secondItem = secondArray[secondIndex];
+              secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
+            }
+          } else {
+            if (secondIndex >= secondLen) {
+              if (!ignoreDuplicates || currentValue != firstItem) {
+                mergedArray.push(firstItem);
+                currentValue = firstItem;
+              }
+              firstIndex += 1;
 
-								if (firstIndex < firstLen) {
-									firstItem = firstArray[firstIndex];
-									firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
-								}
-							} else {
-								if (!ignoreDuplicates || currentValue != secondItem) {
-									mergedArray.push(secondItem);
-									currentValue = secondItem;
-								}
-								secondIndex += 1;
-								
-								if (secondIndex < secondLen) {
-									secondItem = secondArray[secondIndex];
-									secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
-								}
-							}
-						}
-					}
-				}
-				firstArray = mergedArray;
-			}
-			result = firstArray;
-			break;
-	}
-	return result;
+
+              if (firstIndex < firstLen) {
+                firstItem = firstArray[firstIndex];
+                firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
+              }
+            } else {
+              if (firstItemWeight < secondItemWeight) {
+                if (!ignoreDuplicates || currentValue != firstItem) {
+                  mergedArray.push(firstItem);
+                  currentValue = firstItem;
+                }
+                firstIndex += 1;
+
+                if (firstIndex < firstLen) {
+                  firstItem = firstArray[firstIndex];
+                  firstItemWeight = !getItemWeight ? firstItem : getItemWeight(firstItem);
+                }
+              } else {
+                if (!ignoreDuplicates || currentValue != secondItem) {
+                  mergedArray.push(secondItem);
+                  currentValue = secondItem;
+                }
+                secondIndex += 1;
+
+                if (secondIndex < secondLen) {
+                  secondItem = secondArray[secondIndex];
+                  secondItemWeight = !getItemWeight ? secondItem : getItemWeight(secondItem);
+                }
+              }
+            }
+          }
+        }
+        firstArray = mergedArray;
+      }
+      result = firstArray;
+      break;
+  }
+  return result;
 };
 
 
 /* /algorithms/pile.js*/
-/*
-	Class: primitives.common.pile
-		Sorts and stack segments on top of each other so they occupy minimum number of rows.
-*/
+/**
+ * Creates pile structure used to sort and stack segments on top of each other 
+ * so they occupy minimum number of rows.
+ * @class pile
+ * 
+ * @returns {pile} Returns pile structure
+ */
 primitives.common.pile = function () {
-	var _items = [];
+  var _items = [];
 
-	/*
-		Function: add
-			Add segment to pile object.
-	
-		Parameters:
-			from - Left margin of segment.
-			to - Right margin of segment.
-			context - Any reference to user object. It is returned as parameter in callback function of resolve method.
+	/**
+	 * Adds new segment to pile object.
+	 * 
+	 * @param {number} from Left margin of segment.
+	 * @param {number} to Right margin of segment.
+	 * @param {object} context Any reference to user object. It is returned as parameter in callback function of resolve method.
+	 */
+  function add(from, to, context) {
+    if (from < to) {
+      _items.push(new Segment(from, to, context, 1));
+    } else {
+      _items.push(new Segment(to, from, context, -1));
+    }
+  }
 
-		See Also:
-			<primitives.common.pile>
-	*/
-	function add(from, to, context) {
-		if (from < to) {
-			_items.push(new Segment(from, to, context, 1));
-		} else {
-			_items.push(new Segment(to, from, context, -1));
-		}
-	}
+	/**
+	 * Callback function or iterating result offsets of the pile items in the stack.
+	 * 
+	 * @callback onPileItemCallback
+	 * @param {number} from The left margin of the segment 
+	 * @param {number} to The right margin of the segment
+	 * @param {object} context The context of the pile item
+	 * @param {number} offset Index of the pile item in the stack
+	 */
 
-	/*
-		Function: resolve
-			Sorts and stack segments on top of each other so they occupy minimum number of rows.
-	
-		Parameters:
-			thisArg - Context of onItemStacked callback function call.
-			onItemStacked - Call back function used to set segment offset. function(from, to, context, offset) {}
+	/**
+	 * Sorts and stack segments on top of each other so they occupy minimum number of rows.
+	 * 
+	 * @param {objct} thisArg A context object of the callback function invocation.
+	 * @param {onPileItemCallback} onItem Callback function for setting segments offsets in the pile.
+	 * @returns {number} Number of stacked rows in pile.
+	 */
+  function resolve(thisArg, onItem) {
+    var hash,
+      backtraceNext,
+      backtraceTaken,
+      items, item,
+      rowItems,
+      rows,
+      rowIndex, index,
+      offset = 0;
 
-		Returns: 
-			Number of stacked rows in pile.
+    if (onItem != null) {
+      items = _items.slice(0);
+      items.sort(function (a, b) {
+        return a.from - b.from;
+      });
 
-		See Also:
-			<primitives.common.pile>
-	*/
-	function resolve(thisArg, onItem) { // function(from, to, context, offset) {}
-		var hash,
-			backtraceNext,
-			backtraceTaken,
-			items, item,
-			rowItems,
-			rows,
-			rowIndex, index,
-			offset = 0;
+      rows = [];
+      while (items.length > 0) {
+        hash = {};
+        backtraceNext = {};
+        backtraceTaken = {};
 
-		if (onItem != null) {
-			items = _items.slice(0);
-			items.sort(function (a, b) {
-				return a.from - b.from;
-			});
+        getMax(0, items, hash, backtraceNext, backtraceTaken);
 
-			rows = [];
-			while (items.length > 0) {
-				hash = {};
-				backtraceNext = {};
-				backtraceTaken = {};
+        rowItems = [];
+        rows[offset] = [];
+        index = 0;
+        while (backtraceNext.hasOwnProperty(index)) {
+          if (backtraceTaken[index]) {
+            rowItems.push(index);
 
-				getMax(0, items, hash, backtraceNext, backtraceTaken);
+            rows[offset].push(items[index]);
+          }
+          index = backtraceNext[index];
+        }
 
-				rowItems = [];
-				rows[offset] = [];
-				index = 0;
-				while (backtraceNext.hasOwnProperty(index)) {
-					if (backtraceTaken[index]) {
-						rowItems.push(index);
+        for (index = rowItems.length - 1; index >= 0; index -= 1) {
+          items.splice(rowItems[index], 1);
+        }
+        offset += 1;
+      }
 
-						rows[offset].push(items[index]);
-					}
-					index = backtraceNext[index];
-				}
+      for (rowIndex = 0; rowIndex < offset; rowIndex += 1) {
+        rowItems = rows[rowIndex];
+        for (index = 0; index < rowItems.length; index += 1) {
+          item = rowItems[index];
+          if (onItem.call(thisArg, item.from, item.to, item.context, rowIndex, offset, item.direction)) {
+            return offset;
+          }
+        }
+      }
+    }
 
-				for (index = rowItems.length - 1; index >= 0; index -= 1) {
-					items.splice(rowItems[index], 1);
-				}
-				offset += 1;
-			}
+    return offset;
+  }
 
-			for (rowIndex = 0; rowIndex < offset; rowIndex += 1) {
-				rowItems = rows[rowIndex];
-				for (index = 0; index < rowItems.length; index += 1) {
-					item = rowItems[index];
-					if (onItem.call(thisArg, item.from, item.to, item.context, rowIndex, offset, item.direction)) {
-						return offset;
-					}
-				}
-			}
-		}
+  function Segment(from, to, context, direction) {
+    this.context = context;
+    this.from = from;
+    this.to = to;
+    this.offset = null;
+    this.direction = direction;
+  }
 
-		return offset;
-	}
+  function getMax(index, items, hash, backtraceNext, backtraceTaken) {
+    var result = 0;
 
-	function Segment(from, to, context, direction) {
-		this.context = context;
-		this.from = from;
-		this.to = to;
-		this.offset = null;
-		this.direction = direction;
-	}
+    if (index >= items.length) {
+      return 0;
+    }
 
-	function getMax(index, items, hash, backtraceNext, backtraceTaken) {
-		var result = 0;
+    if (hash.hasOwnProperty(index)) {
+      return hash[index];
+    }
 
-		if (index >= items.length) {
-			return 0;
-		}
+    var item = items[index];
+    var withoutItem = getMax(index + 1, items, hash, backtraceNext, backtraceTaken);
 
-		if (hash.hasOwnProperty(index)) {
-			return hash[index];
-		}
+    var nextIndex = index + 1;
+    while (nextIndex < items.length) {
+      var nextItem = items[nextIndex];
+      if (nextItem.from >= item.to) {
+        break;
+      }
+      nextIndex += 1;
+    }
+    var withItem = 1 + getMax(nextIndex, items, hash, backtraceNext, backtraceTaken);
 
-		var item = items[index];
-		var withoutItem = getMax(index + 1, items, hash, backtraceNext, backtraceTaken);
+    if (withItem > withoutItem) {
+      hash[index] = withItem;
+      backtraceNext[index] = nextIndex;
+      backtraceTaken[index] = true;
+    } else {
+      hash[index] = withoutItem;
+      backtraceNext[index] = index + 1;
+      backtraceTaken[index] = false;
+    }
 
-		var nextIndex = index + 1;
-		while (nextIndex < items.length) {
-			var nextItem = items[nextIndex];
-			if (nextItem.from >= item.to) {
-				break;
-			}
-			nextIndex += 1;
-		}
-		var withItem = 1 + getMax(nextIndex, items, hash, backtraceNext, backtraceTaken);
+    return hash[index];
+  }
 
-		if (withItem > withoutItem) {
-			hash[index] = withItem;
-			backtraceNext[index] = nextIndex;
-			backtraceTaken[index] = true;
-		} else {
-			hash[index] = withoutItem;
-			backtraceNext[index] = index + 1;
-			backtraceTaken[index] = false;
-		}
-
-		return hash[index];
-	}
-
-	return {
-		add: add,
-		resolve: resolve
-	};
+  return {
+    add: add,
+    resolve: resolve
+  };
 };
 
 /* /algorithms/QuadTree.js*/
+/**
+ * Creates Quad Tree data structure. It distributes points into equal quadrants. 
+ * So it is equivalent to 2 dimensional binary search tree. 
+ * @class QuadTree
+ * 
+ * @param {number} minimalSize Defines minimal size of the quadrant. This protects structure against unnecessary depth.
+ * @returns {QuadTree} Returns Quad Tree data structure.
+ */
 primitives.common.QuadTree = function (minimalSize) {
-	var _minimalScale = Math.max(1, scale(minimalSize)),
-		_rootScale = 8,
-		_rootSize = 256,
-		_rootCell = null;
+  var _minimalScale = Math.max(1, scale(minimalSize)),
+    _rootScale = 8,
+    _rootSize = 256,
+    _rootCell = null;
 
-	// Create root cell
-	_rootCell = new Cell(0, 0, _rootScale, _rootSize);
+  // Create root cell
+  _rootCell = new Cell(0, 0, _rootScale, _rootSize);
 
-	function Cell(x, y, scale, size) {
-		this.x = x;
-		this.y = y;
-		this.scale = scale;
-		this.size = size;
-		this.quadrants = [];
-		this.points = [];
-	}
+  function Cell(x, y, scale, size) {
+    this.x = x;
+    this.y = y;
+    this.scale = scale;
+    this.size = size;
+    this.quadrants = [];
+    this.points = [];
+  }
 
-	Cell.prototype.notEnclosed = function (rect) {
-		if (this.x < rect.x || this.x + this.size > rect.x + rect.width || this.y < rect.y || this.y + this.size > rect.y + rect.height) {
-			return true;
-		}
-		return false;
-	};
+  Cell.prototype.notEnclosed = function (rect) {
+    if (this.x < rect.x || this.x + this.size > rect.x + rect.width || this.y < rect.y || this.y + this.size > rect.y + rect.height) {
+      return true;
+    }
+    return false;
+  };
 
-	Cell.prototype.overlaps = function (rect) {
-		if (this.x + this.size < rect.x || rect.x + rect.width < this.x || this.y + this.size < rect.y || rect.y + rect.height < this.y) {
-			return false;
-		}
-		return true;
-	};
+  Cell.prototype.overlaps = function (rect) {
+    if (this.x + this.size < rect.x || rect.x + rect.width < this.x || this.y + this.size < rect.y || rect.y + rect.height < this.y) {
+      return false;
+    }
+    return true;
+  };
 
-	Cell.prototype.getQuadrantIndex = function (x, y) {
-		var shift = this.scale - 1;
-		return ((x >> shift) & 1) | (((y >> shift) & 1) << 1);
-	};
+  Cell.prototype.getQuadrantIndex = function (x, y) {
+    var shift = this.scale - 1;
+    return ((x >> shift) & 1) | (((y >> shift) & 1) << 1);
+  };
 
-	function scale(value) {
-		return Math.floor(Math.log(value) / Math.log(2));
-	}
+  function scale(value) {
+    return Math.floor(Math.log(value) / Math.log(2));
+  }
 
-	function addPoint(point) {
-		var x = Math.floor(point.x),
-			y = Math.floor(point.y),
-			size = Math.max(x, y);
+  /**
+   * Adds point
+   * 
+   * @param {Point} point Point
+   */
+  function addPoint(point) {
+    var x = Math.floor(point.x),
+      y = Math.floor(point.y),
+      size = Math.max(x, y);
 
-		while (_rootSize <= size) {
-			_rootScale += 1;
-			_rootSize *= 2;
-			var parent = new Cell(0, 0, _rootScale, _rootSize);
-			_splitCell(parent);
-			parent.quadrants[0] = _rootCell;
-			_rootCell = parent;
-		}
-		_addPoint(point);
-	}
+    while (_rootSize <= size) {
+      _rootScale += 1;
+      _rootSize *= 2;
+      var parent = new Cell(0, 0, _rootScale, _rootSize);
+      _splitCell(parent);
+      parent.quadrants[0] = _rootCell;
+      _rootCell = parent;
+    }
+    _addPoint(point);
+  }
 
-	function _addPoint(point) {
-		var x = Math.floor(point.x),
-			y = Math.floor(point.y),
-			cell = _rootCell;
-		if (x < 0 || y < 0) {
-			throw "Negative values are not supported in the quad tree.";
-		}
-		while (cell.points == null || cell.points.length > 0) {
-			if (cell.scale == _minimalScale && cell.points != null) {
-				break;
-			}
-			if (cell.points != null && cell.points.length > 0) {
-				_splitCell(cell);
-			}
-			cell = cell.quadrants[cell.getQuadrantIndex(x, y)];
-		}
-		cell.points.push(point);
-	}
+  function _addPoint(point) {
+    var x = Math.floor(point.x),
+      y = Math.floor(point.y),
+      cell = _rootCell;
+    if (x < 0 || y < 0) {
+      throw "Negative values are not supported in the quad tree.";
+    }
+    while (cell.points == null || cell.points.length > 0) {
+      if (cell.scale == _minimalScale && cell.points != null) {
+        break;
+      }
+      if (cell.points != null && cell.points.length > 0) {
+        _splitCell(cell);
+      }
+      cell = cell.quadrants[cell.getQuadrantIndex(x, y)];
+    }
+    cell.points.push(point);
+  }
 
-	function _splitCell(parent) {
-		var size = parent.size / 2;
-		parent.quadrants = [
-			new Cell(parent.x, parent.y, parent.scale - 1, size),
-			new Cell(parent.x + size, parent.y, parent.scale - 1, size),
-			new Cell(parent.x, parent.y + size, parent.scale - 1, size),
-			new Cell(parent.x + size, parent.y + size, parent.scale - 1, size)
-		];
-		for (var index = 0, len = parent.points.length; index < len; index += 1) {
-			var point = parent.points[index],
-				x = Math.floor(point.x),
-				y = Math.floor(point.y);
+  function _splitCell(parent) {
+    var size = parent.size / 2;
+    parent.quadrants = [
+      new Cell(parent.x, parent.y, parent.scale - 1, size),
+      new Cell(parent.x + size, parent.y, parent.scale - 1, size),
+      new Cell(parent.x, parent.y + size, parent.scale - 1, size),
+      new Cell(parent.x + size, parent.y + size, parent.scale - 1, size)
+    ];
+    for (var index = 0, len = parent.points.length; index < len; index += 1) {
+      var point = parent.points[index],
+        x = Math.floor(point.x),
+        y = Math.floor(point.y);
 
-			parent.quadrants[parent.getQuadrantIndex(x, y)].points.push(point);
-		}
+      parent.quadrants[parent.getQuadrantIndex(x, y)].points.push(point);
+    }
 
-		// indicates that cell has quadrants
-		parent.points = null;
-	}
+    // indicates that cell has quadrants
+    parent.points = null;
+  }
 
-	function loopArea(thisArg, rect, onItem) { // onItem = function(itemid) {}
-		var cell,
-			index, len;
-		if (onItem != null) {
-			var check = [_rootCell],
-				nocheck = [];
-			while (check.length > 0 || nocheck.length > 0) {
-				var newCheck = [],
-					newNocheck = [];
-				for (index = 0, len = check.length; index < len; index += 1) {
-					cell = check[index];
-					if (cell.overlaps(rect)) {
-						if (cell.notEnclosed(rect)) {
-							if (cell.points == null) {
-								for (var quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
-									newCheck.push(cell.quadrants[quadrantIndex]);
-								}
-							} else {
-								for (var pointIndex = 0, pointsLen = cell.points.length; pointIndex < pointsLen; pointIndex += 1) {
-									var point = cell.points[pointIndex];
-									if (rect.contains(point)) {
-										if (onItem.call(thisArg, point)) {
-											return;
-										}
-									}
-								}
-							}
-						} else {
-							nocheck.push(cell);
-						}
-					}
-				}
-				for (index = 0, len = nocheck.length; index < len; index += 1) {
-					cell = nocheck[index];
-					if (cell.points == null) {
-						for (quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
-							newNocheck.push(cell.quadrants[quadrantIndex]);
-						}
-					} else {
-						for (pointIndex = 0, pointsLen = cell.points.length; pointIndex < pointsLen; pointIndex += 1) {
-							if (onItem.call(thisArg, cell.points[pointIndex])) {
-								return;
-							}
-						}
-					}
-				}
-				check = newCheck;
-				nocheck = newNocheck;
-			}
-		}
-	}
+  /**
+   * Callback function for iteration of points
+   * 
+   * @callback onQuadTreePointCallback
+   * @param {Point} point Rectangle
+   * @returns {boolean} Returns true to break iteration process.
+   */
 
-	function validate() {
-		var level = [_rootCell];
-		while (level.length > 0) {
-			var newLevel = [];
-			for (var index = 0, len = level.length; index < len; index += 1) {
-				var cell = level[index];
-				var rect = new primitives.common.Rect(cell.x, cell.y, cell.size, cell.size);
-				if (cell.points != null && cell.quadrants.length > 0) {
-					return false;
-				}
-				if (cell.points == null) {
-					for (var quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
-						newLevel.push(cell.quadrants[quadrantIndex]);
-					}
-				} else {
-					for (var pointIndex = 0, pointsLen = cell.points.length; pointIndex < pointsLen; pointIndex += 1) {
-						var point = cell.points[pointIndex];
-						if (!rect.contains(point)) {
-							return false;
-						}
-					}
-				}
-			}
-			level = newLevel;
-		}
-		return true;
-	}
+  /**
+   * Loops rectangular area of quad tree structure
+   * 
+	 * @param {object} thisArg The callback function invocation context
+   * @param {Rect} rect Rectangular search area
+   * @param {onQuadTreePointCallback} onItem Callback function to call for every point within the search area
+   */
+  function loopArea(thisArg, rect, onItem) {
+    var cell,
+      index, len;
+    if (onItem != null) {
+      var check = [_rootCell],
+        nocheck = [];
+      while (check.length > 0 || nocheck.length > 0) {
+        var newCheck = [],
+          newNocheck = [];
+        for (index = 0, len = check.length; index < len; index += 1) {
+          cell = check[index];
+          if (cell.overlaps(rect)) {
+            if (cell.notEnclosed(rect)) {
+              if (cell.points == null) {
+                for (var quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
+                  newCheck.push(cell.quadrants[quadrantIndex]);
+                }
+              } else {
+                for (var pointIndex = 0, pointsLen = cell.points.length; pointIndex < pointsLen; pointIndex += 1) {
+                  var point = cell.points[pointIndex];
+                  if (rect.contains(point)) {
+                    if (onItem.call(thisArg, point)) {
+                      return;
+                    }
+                  }
+                }
+              }
+            } else {
+              nocheck.push(cell);
+            }
+          }
+        }
+        for (index = 0, len = nocheck.length; index < len; index += 1) {
+          cell = nocheck[index];
+          if (cell.points == null) {
+            for (quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
+              newNocheck.push(cell.quadrants[quadrantIndex]);
+            }
+          } else {
+            for (pointIndex = 0, pointsLen = cell.points.length; pointIndex < pointsLen; pointIndex += 1) {
+              if (onItem.call(thisArg, cell.points[pointIndex])) {
+                return;
+              }
+            }
+          }
+        }
+        check = newCheck;
+        nocheck = newNocheck;
+      }
+    }
+  }
 
-	function getPositions(selection) {
-		var result = [];
-		var count = 0;
-		var level = [_rootCell];
-		while (level.length > 0) {
-			var newLevel = [];
-			for (var index = 0, len = level.length; index < len; index += 1) {
-				var cell = level[index];
-				var rect = new primitives.common.Rect(cell.x, cell.y, cell.size, cell.size);
-				rect.context = {
-					isHighlighted: false
-				};
-				count += 1;
-				if (selection != null && selection.overlaps(rect) && cell.points != null && cell.points.length > 0) {
-					rect.context.isHighlighted = true;
-				}
+  /**
+   * Validates internal data consistency of quad tree data structure
+   * 
+   * @returns {boolean} Returns true if structure pass validation
+   */
+  function validate() {
+    var level = [_rootCell];
+    while (level.length > 0) {
+      var newLevel = [];
+      for (var index = 0, len = level.length; index < len; index += 1) {
+        var cell = level[index];
+        var rect = new primitives.common.Rect(cell.x, cell.y, cell.size, cell.size);
+        if (cell.points != null && cell.quadrants.length > 0) {
+          return false;
+        }
+        if (cell.points == null) {
+          for (var quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
+            newLevel.push(cell.quadrants[quadrantIndex]);
+          }
+        } else {
+          for (var pointIndex = 0, pointsLen = cell.points.length; pointIndex < pointsLen; pointIndex += 1) {
+            var point = cell.points[pointIndex];
+            if (!rect.contains(point)) {
+              return false;
+            }
+          }
+        }
+      }
+      level = newLevel;
+    }
+    return true;
+  }
 
-				result.push(rect);
-				for (var quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
-					var quadrant = cell.quadrants[quadrantIndex];
-					if (quadrant != null) {
-						newLevel.push(quadrant);
-					}
-				}
-			}
-			level = newLevel;
-		}
-		return result;
-	}
+  /**
+   * Returns collection of quadrands created in the data structure
+   * Quadrants exists only when elements exists in them.
+   * This method is used for visual debugging of the structure.
+   * 
+   * @param {React} selection Rectangular test area to highlight quadrants
+   * @returns {Rect[]} Returns collection of available quadrants.
+   * Quadrants containing points within selection area have context.highlight property set to true.
+   */
+  function getPositions(selection) {
+    var result = [];
+    var count = 0;
+    var level = [_rootCell];
+    while (level.length > 0) {
+      var newLevel = [];
+      for (var index = 0, len = level.length; index < len; index += 1) {
+        var cell = level[index];
+        var rect = new primitives.common.Rect(cell.x, cell.y, cell.size, cell.size);
+        rect.context = {
+          isHighlighted: false
+        };
+        count += 1;
+        if (selection != null && selection.overlaps(rect) && cell.points != null && cell.points.length > 0) {
+          rect.context.isHighlighted = true;
+        }
 
-	return {
-		addPoint: addPoint,
-		loopArea: loopArea,
-		validate: validate,
-		getPositions: getPositions
-	};
+        result.push(rect);
+        for (var quadrantIndex = 0; quadrantIndex < 4; quadrantIndex += 1) {
+          var quadrant = cell.quadrants[quadrantIndex];
+          if (quadrant != null) {
+            newLevel.push(quadrant);
+          }
+        }
+      }
+      level = newLevel;
+    }
+    return result;
+  }
+
+  return {
+    addPoint: addPoint,
+    loopArea: loopArea,
+    validate: validate,
+    getPositions: getPositions
+  };
 };
 
 /* /algorithms/RMQ.js*/
+/**
+ * Creates range minimum query structure
+ * @class RMQ
+ * 
+ * @param {number[]} items Collection of numbers
+ * @returns {rmq} Returns range minimum query structure
+ */
 primitives.common.RMQ = function (items) {
-	var _lookup = [];
-	var _log2 = Math.log(2);
+  var _lookup = [];
+  var _log2 = Math.log(2);
 
-	preprocess();
+  preprocess();
 
-	function preprocess() {
-		var power;
+  function preprocess() {
+    var power;
 
-		for (var index = 0, len = items.length; index < len; index += 1) {
-			_lookup[index] = [index];
-		}
-		for (power = 1, len = items.length; (1 << power) < len; power += 1) {
-			for (index = 0; (index + (1 << power) - 1) < len; index += 1) {
-				if (items[_lookup[index][power - 1]] < items[_lookup[index + (1 << (power - 1))][power - 1]]) {
-					_lookup[index][power] = _lookup[index][power - 1];
-				} else {
-					_lookup[index][power] = _lookup[index + (1 << (power - 1))][power - 1];
-				}
-			}
-		}
-	}
+    for (var index = 0, len = items.length; index < len; index += 1) {
+      _lookup[index] = [index];
+    }
+    for (power = 1, len = items.length; (1 << power) < len; power += 1) {
+      for (index = 0; (index + (1 << power) - 1) < len; index += 1) {
+        if (items[_lookup[index][power - 1]] < items[_lookup[index + (1 << (power - 1))][power - 1]]) {
+          _lookup[index][power] = _lookup[index][power - 1];
+        } else {
+          _lookup[index][power] = _lookup[index + (1 << (power - 1))][power - 1];
+        }
+      }
+    }
+  }
 
-	function getRangeMinimumIndex(from, to) {
-		var power = Math.floor(Math.log(to - from + 1) / _log2);
+	/**
+	 * Returns index of minimum item for the given range of items
+   * 
+	 * @param {number} from The left margin index
+	 * @param {number} to The right margin index
+	 * @returns {number} Returns index of the minimum item
+	 */
+  function getRangeMinimumIndex(from, to) {
+    var power = Math.floor(Math.log(to - from + 1) / _log2);
 
-		if (items[_lookup[from][power]] <= items[_lookup[to - (1 << power) + 1][power]]) {
-			return _lookup[from][power];
-		} else {
-			return _lookup[to - (1 << power) + 1][power];
-		}
-	}
+    if (items[_lookup[from][power]] <= items[_lookup[to - (1 << power) + 1][power]]) {
+      return _lookup[from][power];
+    } else {
+      return _lookup[to - (1 << power) + 1][power];
+    }
+  }
 
-	function getRangeMinimum(from, to) {
-		return items[getRangeMinimumIndex(from, to)];
-	}
+	/**
+	 * Return minimum value for the given range
+   * 
+	 * @param {number} from The left index of the range
+	 * @param {number} to The right index of the range
+	 * @returns {number} Returns minimum value in the range
+	 */
+  function getRangeMinimum(from, to) {
+    return items[getRangeMinimumIndex(from, to)];
+  }
 
-	return {
-		getRangeMinimumIndex: getRangeMinimumIndex,
-		getRangeMinimum: getRangeMinimum
-	};
+  return {
+    getRangeMinimumIndex: getRangeMinimumIndex,
+    getRangeMinimum: getRangeMinimum
+  };
 };
 
 /* /algorithms/SortedList.js*/
+/**
+ * Creates self-balancing binary search tree structure.
+ * @class SortedList
+ * 
+ * @returns {SortedList} Returns sorted list collection. 
+ */
 primitives.common.SortedList = function () {
   var _rootNode = null;
 
@@ -27930,6 +28377,20 @@ primitives.common.SortedList = function () {
     }
   }
 
+  /**
+   * Callback function to notify about duplicate values
+   * 
+   * @callback onSortedListDuplicateCallback
+   * @param {objct} context The context object of the duplicate value
+   */
+
+  /**
+   * Adds value to sorted list collection
+   * @param {number} value The value 
+   * @param {object} context The value context object
+   * @param {object} thisArg The callback function invocation context 
+   * @param {onSortedListDuplicateCallback} onDuplicate Callback function for duplicates values notification
+   */
   function add(value, context, thisArg, onDuplicate) {
     if (_rootNode == null) {
       _rootNode = new Node(value, context);
@@ -28024,6 +28485,10 @@ primitives.common.SortedList = function () {
     toNode.context = fromNode.context;
   }
 
+  /**
+   * Removes value from the sorted list
+   * @param {number} value The removed value 
+   */
   function remove(value) {
     var trace = [];
     var node = _rootNode;
@@ -28086,6 +28551,11 @@ primitives.common.SortedList = function () {
     }
   }
 
+  /**
+   * Returns context object of the next value following the given one
+   * @param {number} fromValue The value to start search from
+   * @returns {object} Returns context object of the first value in sorted list greater than the start value.
+   */
   function nextContext(fromValue) {
     var result = null;
     loopForward(this, fromValue, function (value, context) {
@@ -28095,6 +28565,21 @@ primitives.common.SortedList = function () {
     return result;
   }
 
+  /**
+   * Callback function for iterating values of the sorted list
+   * 
+   * @callback onSortedListItemCallback
+   * @param {number} value The value
+   * @param {object} context The value context object
+   * @returns {boolean} Returns true to break loop operation  
+   */
+
+  /**
+   * Loops sorted list values
+   * @param {object} thisArg The callback function invocation context 
+   * @param {number} fromValue The start value to loop items of sorted list
+   * @param {onSortedListItemCallback} onItem Callback function to iterate over sorted list values
+   */
   function loopForward(thisArg, fromValue, onItem) { //function onItem(value, context)
     if (onItem != null) {
       var trace = [];
@@ -28130,6 +28615,11 @@ primitives.common.SortedList = function () {
     }
   }
 
+  /**
+   * Returns context object of the previous value preceding the given one
+   * @param {number} fromValue The value to start search from
+   * @returns {object} Returns context object of the first value in sorted list less than the start value.
+   */
   function previousContext(fromValue) {
     var result = null;
     loopBackward(this, fromValue, function (nextValue, context) {
@@ -28139,6 +28629,12 @@ primitives.common.SortedList = function () {
     return result;
   }
 
+  /**
+   * Loops sorted list values backward
+   * @param {object} thisArg The callback function invocation context 
+   * @param {number} fromValue The start value to loop items of sorted list
+   * @param {onSortedListItemCallback} onItem Callback function to iterate over sorted list values
+   */
   function loopBackward(thisArg, fromValue, onItem) {
     if (onItem != null) {
       var trace = [];
@@ -28201,6 +28697,11 @@ primitives.common.SortedList = function () {
     return result;
   }
 
+  /**
+   * Validate internal data consistency of the self-balancing binary search tree structure
+   * 
+   * @returns {boolean} Returns true if structure pass validation
+   */
   function validate() {
     if (_rootNode != null) {
       var level = [_rootNode];
@@ -28253,1111 +28754,1644 @@ primitives.common.SortedList = function () {
 };
 
 /* /algorithms/SpatialIndex.js*/
+/**
+ * Create spatial index structure. It uses collection of sizes to distribute 
+ * rectangles into buckets of similar size elements. Elements of the same bucket 
+ * are aproximated to points. The search of rectangles is transformed to search of points 
+ * within given range plus offset for maximum linear rectangle size.
+ * @class SpatialIndex
+ * 
+ * @returns {SpatialIndex} Returns spacial index data structure.
+ */
 primitives.common.SpatialIndex = function (sizes) {
-	var _buckets = [];
+  var _buckets = [];
 
-	sizes.sort(function (a, b) { return a - b;});
+  sizes.sort(function (a, b) { return a - b; });
 
-	switch (sizes.length) {
-		case 0:
-			_buckets.push(new Bucket(0, 1000000));
-			break;
-		case 1:
-			var size1 = sizes[0];
-			_buckets.push(new Bucket(0, size1));
-			break;
-		case 2:
-			size1 = sizes[0];
-			var size2 = sizes[1];
-			if (size2 > size1 * 2) {
-				_buckets.push(new Bucket(0, size1));
-				_buckets.push(new Bucket(size1, size2));
-			} else {
-				_buckets.push(new Bucket(0, size2));
-			}
-			break;
-		default:
-			var breaks = primitives.common.getLiniarBreaks(sizes);
-			var minimum = 0;
-			for (var index = 0; index < breaks.length; index += 1) {
-				var maximum = sizes[breaks[index]];
-				_buckets.push(new Bucket(minimum, maximum));
-				minimum = maximum;
-			}
-			break;
-	}
+  switch (sizes.length) {
+    case 0:
+      _buckets.push(new Bucket(0, 1000000));
+      break;
+    case 1:
+      var size1 = sizes[0];
+      _buckets.push(new Bucket(0, size1));
+      break;
+    case 2:
+      size1 = sizes[0];
+      var size2 = sizes[1];
+      if (size2 > size1 * 2) {
+        _buckets.push(new Bucket(0, size1));
+        _buckets.push(new Bucket(size1, size2));
+      } else {
+        _buckets.push(new Bucket(0, size2));
+      }
+      break;
+    default:
+      var breaks = primitives.common.getLiniarBreaks(sizes);
+      var minimum = 0;
+      for (var index = 0; index < breaks.length; index += 1) {
+        var maximum = sizes[breaks[index]];
+        _buckets.push(new Bucket(minimum, maximum));
+        minimum = maximum;
+      }
+      break;
+  }
 
-	function Bucket(minimum, maximum) {
-		this.minimum = minimum;
-		this.maximum = maximum;
-		this.quadTree = primitives.common.QuadTree(maximum * 2);
-	}
+  function Bucket(minimum, maximum) {
+    this.minimum = minimum;
+    this.maximum = maximum;
+    this.quadTree = primitives.common.QuadTree(maximum * 2);
+  }
 
-	function addRect(rect) {
-		var size = Math.max(rect.width, rect.height);
-		var point = rect.centerPoint();
+  /**
+   * Adds rectangle to spacial index
+   * @param {Rect} rect Rectangle
+   */
+  function addRect(rect) {
+    var size = Math.max(rect.width, rect.height);
+    var point = rect.centerPoint();
 
-		for (var index = 0, len = _buckets.length; index < len; index += 1) {
-			var bucket = _buckets[index];
+    for (var index = 0, len = _buckets.length; index < len; index += 1) {
+      var bucket = _buckets[index];
 
-			if (size <= bucket.maximum || index == len - 1) {
-				point.context = rect;
-				bucket.quadTree.addPoint(point);
-				break;
-			}
-		}
-	}
+      if (size <= bucket.maximum || index == len - 1) {
+        point.context = rect;
+        bucket.quadTree.addPoint(point);
+        break;
+      }
+    }
+  }
 
-	function loopArea(thisArg, rect, onItem) { // onItem = function(itemid) {}
-		if (onItem != null) {
-			for (var index = 0, len = _buckets.length; index < len; index += 1) {
-				var bucket = _buckets[index];
-				var bucketRect = new primitives.common.Rect(rect);
-				bucketRect.offset(bucket.maximum / 2.0);
-				bucket.quadTree.loopArea(this, bucketRect, function (point) {
-					var pointRect = point.context;
+  /**
+   * Callback function for iteration of spacial index rectangles
+   * 
+   * @callback onSpatialIndexItemCallback
+   * @param {React} rect Rectangle
+   * @returns {boolean} Returns true to break iteration process.
+   */
 
-					if (rect.overlaps(pointRect)) {
-						return onItem.call(thisArg, pointRect);
-					}
-				});
-			}
-		}
-	}
+  /**
+   * Loops rectangular area of spacial index
+   * 
+	 * @param {object} thisArg The callback function invocation context
+   * @param {Rect}} rect Rectangular search area
+   * @param {onSpatialIndexItemCallback} onItem Callback function to call for every rectangle intersecting given rectangular search area
+   */
+  function loopArea(thisArg, rect, onItem) { // onItem = function(itemid) {}
+    if (onItem != null) {
+      for (var index = 0, len = _buckets.length; index < len; index += 1) {
+        var bucket = _buckets[index];
+        var bucketRect = new primitives.common.Rect(rect);
+        bucketRect.offset(bucket.maximum / 2.0);
+        bucket.quadTree.loopArea(this, bucketRect, function (point) {
+          var pointRect = point.context;
 
-	function validate() {
-		var result = true;
-		for (var index = 0, len = _buckets.length; index < len; index += 1) {
-			var bucket = _buckets[index];
+          if (rect.overlaps(pointRect)) {
+            return onItem.call(thisArg, pointRect);
+          }
+        });
+      }
+    }
+  }
 
-			result = result && bucket.quadTree.validate();
-		}
-		return result;
-	}
+  /**
+   * Validates internal data consistency of spacial index data structure
+   * 
+   * @returns {boolean} Returns true if structure pass validation
+   */
+  function validate() {
+    var result = true;
+    for (var index = 0, len = _buckets.length; index < len; index += 1) {
+      var bucket = _buckets[index];
 
-	function getPositions(selection) {
-		var result = [];
-		for (var index = 0, len = _buckets.length; index < len; index += 1) {
-			var bucket = _buckets[index];
+      result = result && bucket.quadTree.validate();
+    }
+    return result;
+  }
 
-			result = result.concat(bucket.quadTree.getPositions(selection));
-		}
-		return result;
-	}
+  /**
+   * Returns collection of quadrands created in spacial index
+   * Quadrants exists only when elements exists in them.
+   * This method is used for visual debugging of the structure.
+   * 
+   * @param {React} selection Rectangular test area to highlight quadrants
+   * @returns {Rect[]} Returns collection of available quadrants.
+   * Quadrants containing points within selection area have context.highlight property set to true.
+   */
+  function getPositions(selection) {
+    var result = [];
+    for (var index = 0, len = _buckets.length; index < len; index += 1) {
+      var bucket = _buckets[index];
 
-	return {
-		addRect: addRect,
-		loopArea: loopArea,
-		validate: validate,
-		getPositions: getPositions
-	};
+      result = result.concat(bucket.quadTree.getPositions(selection));
+    }
+    return result;
+  }
+
+  return {
+    addRect: addRect,
+    loopArea: loopArea,
+    validate: validate,
+    getPositions: getPositions
+  };
 };
 
 /* /algorithms/tree.js*/
+/**
+ * Creates tree structure
+ * @class tree
+ * 
+ * @param {tree} source A source tree structure to clone properties from
+ * @returns {tree} Returns new tree structure
+ */
 primitives.common.tree = function (source) {
-	var _nodes = {},        // objects attached to nodes
-		_parents = {},      // parent node id for every node id. Both of them should exists in the tree.
-		_children = {},     // children node ids for every node id. All children and node itself should be in the tree.
-		_roots = {},        // id of non existing parent. If parent does not exists in the tree this hash contains its id.
-		_rootChildren = {}, // children of non existing parent. If parent id does not exists in the tree this collection contains it existing children.
-		BREAK = 1,
-		SKIP = 2;
-
-	_init(source);
-
-	function _init(source) {
-		if (primitives.common.isObject(source)) {
-			_nodes = primitives.common.cloneObject(source.nodes, true);
-			_parents = primitives.common.cloneObject(source.parents, true);
-			_children = primitives.common.cloneObject(source.children, false);
-			_roots = primitives.common.cloneObject(source.roots, false);
-			_rootChildren = primitives.common.cloneObject(source.rootChildren, true);
-		}
-	}
-
-	function loop(thisArg, onItem) {
-		var item;
-		if (onItem != null) {
-			for (item in _nodes) {
-				if (_nodes.hasOwnProperty(item)) {
-					if (onItem.call(thisArg, item, _nodes[item])) {
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	function loopLevels(thisArg, arg0, arg1) { // onItem(nodeid, node, levelid) if function returns true loop is continued on item's children 
-		var levelIndex = 0,
-			items = [],
-			itemid,
-			onItem,
-			newItems,
-			key,
-			index, len;
-
-		switch (arguments.length) {
-			case 2:
-				onItem = arg0;
-				break;
-			case 3:
-				itemid = arg0;
-				onItem = arg1;
-				break;
-		}
-
-		if (onItem != null) {
-
-			if (itemid == null) {
-				for (key in _rootChildren) {
-					if (_rootChildren.hasOwnProperty(key)) {
-						items = items.concat(_rootChildren[key]);
-					}
-				}
-			} else {
-				if (_children[itemid] != null) {
-					items = items.concat(_children[itemid]);
-				}
-			}
-
-			while (items.length > 0) {
-				newItems = [];
-
-				for (index = 0, len = items.length; index < len; index += 1) {
-					itemid = items[index];
-					switch (onItem.call(thisArg, itemid, _nodes[itemid], levelIndex)) {
-						case BREAK:
-							newItems = [];
-							break;
-						case SKIP:
-							break;
-						default:
-							if (_children[itemid] != null) {
-								newItems = newItems.concat(_children[itemid]);
-							}
-							break;
-					}
-				}
-
-				items = newItems;
-				levelIndex += 1;
-			}
-		}
-	}
-
-	/* children first - parent last */
-	function loopPostOrder(thisArg, onItem) { // onItem(nodeid, node, parentid, parent) if function returns true loop exits
-		var stack = [], nodeid,
-			key,
-			index,
-			prevParent,
-			children;
-
-		if (onItem != null) {
-
-			for (key in _rootChildren) {
-				if (_rootChildren.hasOwnProperty(key)) {
-					stack = stack.concat(_rootChildren[key]);
-				}
-			}
-
-			while (stack.length > 0) {
-				nodeid = stack[stack.length - 1];
-				if (nodeid != prevParent && (children = _children[nodeid]) != null) {
-					for (index = children.length - 1; index >= 0; index -= 1) {
-						stack.push(children[index]);
-					}
-				} else {
-					stack.pop();
-					prevParent = _parents[nodeid];
-
-					if (onItem.call(thisArg, nodeid, _nodes[nodeid], prevParent, _nodes[prevParent])) {
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	/* parent first - children next */
-	function loopPreOrder(thisArg, onItem) { // onItem(nodeid, node, parentid, parent) if function returns true loop exits
-		var stack = [], nodeid,
-			key,
-			index,
-			parentid,
-			prevParent,
-			children;
-
-		if (onItem != null) {
-
-			for (key in _rootChildren) {
-				if (_rootChildren.hasOwnProperty(key)) {
-					stack = stack.concat(_rootChildren[key]);
-				}
-			}
-
-			while (stack.length > 0) {
-				nodeid = stack[stack.length - 1];
-				if (nodeid != prevParent) {
-					parentid =  _parents[nodeid];
-					if (onItem.call(thisArg, nodeid, _nodes[nodeid], parentid, _nodes[parentid])) {
-						break;
-					}
-				}
-				if (nodeid != prevParent && (children = _children[nodeid]) != null) {
-					for (index = children.length - 1; index >= 0; index -= 1) {
-						stack.push(children[index]);
-					}
-				} else {
-					stack.pop();
-					prevParent = _parents[nodeid];
-				}
-			}
-		}
-	}
-
-	/* Euler Walk */
-	function loopEulerWalk(thisArg, onItem) { // onItem(nodeid, node, level) if function returns true loop exits
-		var stack = [],
-			nodeid,
-			levels = [],
-			level = 0,
-			key,
-			index, len,
-			prevParent,
-			children;
-
-		if (onItem != null) {
-
-			for (key in _rootChildren) {
-				if (_rootChildren.hasOwnProperty(key)) {
-					children = _rootChildren[key];
-					for (index = 0, len = children.length; index < len; index += 1) {
-						stack.push(children[index]);
-						levels.push(0);
-					}
-				}
-			}
-			while (stack.length > 0) {
-				index = stack.length - 1;
-				nodeid = stack[index];
-				level = levels[index];
-
-				if (onItem.call(thisArg, nodeid, _nodes[nodeid], level)) {
-					break;
-				}
-
-				if (nodeid != prevParent && (children = _children[nodeid]) != null) {
-					for (index = children.length - 1; index >= 0; index -= 1) {
-						stack.push(children[index]);
-						levels.push(level + 1);
-						if (index > 0) {
-							stack.push(nodeid);
-							levels.push(level);
-						}
-					}
-				} else {
-					stack.pop();
-					levels.pop();
-
-					prevParent = _parents[nodeid];
-				}
-			}
-		}
-	}
-
-	function zipUp(thisArg, firstNodeId, secondNodeid, onZip) { // onZip(firstNodeId, firstParentId, secondNodeid, secondParentId)
-		var firstParentId,
-			secondParentId;
-
-		if (onZip != null) {
-			while (firstNodeId != null && secondNodeid != null && firstNodeId != secondNodeid) {
-				firstParentId = _parents[firstNodeId];
-				secondParentId = _parents[secondNodeid];
-				if (onZip.call(thisArg, firstNodeId, firstParentId, secondNodeid, secondParentId)) {
-					break;
-				}
-				firstNodeId = firstParentId;
-				secondNodeid = secondParentId;
-			}
-		}
-	}
-
-	function loopParents(thisArg, nodeid, onItem, includingStartItem) { // onItem(nodeid, node)
-		var parentid = nodeid;
-		if (_nodes[parentid] != null) {
-			if (onItem != null) {
-				if (includingStartItem === true) {
-					if (onItem.call(thisArg, parentid, _nodes[parentid])) {
-						return;
-					}
-				}
-				while ((parentid = _parents[parentid]) != null) {
-					if (onItem.call(thisArg, parentid, _nodes[parentid])) {
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	function loopChildren(thisArg, nodeid, onItem) { // onItem(nodeid, node, index, lastIndex)
-		var items,
-			itemid,
-			index, len;
-		if (_nodes[nodeid] != null) {
-			items = _children[nodeid];
-			if (items != null) {
-				for (index = 0, len = items.length; index < len; index += 1) {
-					itemid = items[index];
-					if (onItem.call(thisArg, itemid, _nodes[itemid], index, len - 1)) {
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	function loopChildrenRange(thisArg, nodeid, fromIndex, toIndex, onItem) { // onItem(nodeid, node, index)
-		var items,
-			itemid,
-			index, len;
-		if (_nodes[nodeid] != null) {
-			items = _children[nodeid];
-			if (items != null) {
-				if (fromIndex < toIndex) {
-					fromIndex = Math.max(fromIndex, 0);
-					toIndex = Math.min(toIndex, items.length - 1);
-					for (index = fromIndex; index <= toIndex; index += 1) {
-						itemid = items[index];
-						if (onItem.call(thisArg, itemid, _nodes[itemid], index, len - 1)) {
-							break;
-						}
-					}
-				} else {
-					fromIndex = Math.min(fromIndex, items.length - 1);
-					toIndex = Math.max(0, toIndex);
-					for (index = fromIndex; index >= toIndex; index -= 1) {
-						itemid = items[index];
-						if (onItem.call(thisArg, itemid, _nodes[itemid], index, len - 1)) {
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	function loopChildrenReversed(thisArg, nodeid, onItem) { // onItem(nodeid, node, index, lastIndex)
-		var items,
-			itemid,
-			index, lastIndex;
-		if (_nodes[nodeid] != null) {
-			items = _children[nodeid];
-			lastIndex = items.length - 1;
-			if (items != null) {
-				for (index = lastIndex; index >= 0; index -= 1) {
-					itemid = items[index];
-					if (onItem.call(thisArg, itemid, _nodes[itemid], index, lastIndex)) {
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	function arrangeChildren(nodeid, children) {
-		var childid,
-			index, len;
-
-		children = children.slice(0);
-		if (_nodes[nodeid] != null) {
-			if (_children[nodeid] != null) {
-				if (_children[nodeid].length == children.length) {
-					for (index = 0, len = children.length; index < len; index += 1) {
-						childid = children[index];
-						if (_parents[childid] != nodeid) {
-							throw "Child " + childid + " does not belong to given node!";
-						}
-					}
-					_children[nodeid] = children;
-				} else {
-					throw "Collections of children don't match each other!";
-				}
-			} else {
-				if (children.length > 0) {
-					throw "Collections of children don't match each other!";
-				}
-			}
-		}
-	}
-
-	function add(parentid, nodeid, node, position) {
-		var index, len, children, childid;
-
-		if (_nodes[nodeid] != null) {
-			throw "Node already exists";
-		}
-
-		if (nodeid != null && node != null && _nodes[nodeid] == null) {
-
-			if (_nodes[parentid] != null) {
-				_parents[nodeid] = parentid;
-
-				// existing parent
-				if (_children[parentid] != null) {
-					if (position == null) {
-						_children[parentid].push(nodeid);
-					} else {
-						_children[parentid].splice(position, 0, nodeid);
-					}
-				} else {
-					_children[parentid] = [nodeid];
-				}
-			} else {
-				_roots[nodeid] = parentid;
-
-				// missing parent
-				if (_rootChildren[parentid] != null) {
-					if (position == null) {
-						_rootChildren[parentid].push(nodeid);
-					} else {
-						_rootChildren[parentid].splice(position, 0, nodeid);
-					}
-				} else {
-					_rootChildren[parentid] = [nodeid];
-				}
-			}
-
-			_nodes[nodeid] = node;
-
-			if (_rootChildren[nodeid] != null) {
-				_children[nodeid] = _rootChildren[nodeid];
-				delete _rootChildren[nodeid];
-
-				children = _children[nodeid];
-				for (index = 0, len = children.length; index < len; index += 1) {
-					childid = children[index];
-
-					delete _roots[childid];
-
-					_parents[childid] = nodeid;
-				}
-				
-			}
-
-		}
-	}
-
-	function insert(nodeid, bundleid, bundle) {
-		if (_nodes[nodeid] != null && bundleid != null && _nodes[bundleid] == null && bundle != null) {
-
-			_nodes[bundleid] = bundle;
-
-			if (_children[nodeid] != null) {
-				_children[bundleid] = _children[nodeid];
-			}
-			_children[nodeid] = [bundleid];
-
-			loopChildren(this, bundleid, function (childid, node, index) {
-				_parents[childid] = bundleid;
-			});
-			_parents[bundleid] = nodeid;
-		}
-	}
-
-	function moveChildren(fromNodeid, toNodeId) {
-		if (_nodes[fromNodeid] != null && _nodes[toNodeId] != null && fromNodeid != toNodeId) {
-
-			if (_children[fromNodeid] != null) {
-
-				loopChildren(this, fromNodeid, function (childid, node, index) {
-					_parents[childid] = toNodeId;
-				});
-
-				if (_children[toNodeId] != null) {
-					_children[toNodeId] = _children[toNodeId].concat(_children[fromNodeid]);
-				} else {
-					_children[toNodeId] = _children[fromNodeid];
-				}
-				delete _children[fromNodeid];
-			}
-		}
-	}
-
-	function hasNodes() {
-		return !primitives.common.isEmptyObject(_rootChildren);
-	}
-
-	function parentid(nodeid) {
-		var result = null;
-
-		if (_parents[nodeid] != null) {
-			result = _parents[nodeid];
-		}
-
-		return result;
-	}
-
-	function parent(nodeid) {
-		var result = null;
-
-		if (_parents[nodeid] != null) {
-			result = _nodes[_parents[nodeid]];
-		}
-
-		return result;
-	}
-
-	function hasChildren(nodeid) {
-		return _children[nodeid] != null;
-	}
-
-	function countChildren(nodeid) {
-		return _children[nodeid] != null ? _children[nodeid].length : 0;
-	}
-
-	function countSiblings(nodeid) {
-		var parent = parentid(nodeid);
-		return parent != null ? _children[parent].length : 0;
-	}
-
-	function indexOf(nodeid) {
-		var parent = parentid(nodeid);
-		return parent != null ? primitives.common.indexOf(_children[parent], nodeid) : null;
-	}
-
-	function getChild(parentid, index) {
-		var result = null,
-			children;
-		if ((children = _children[parentid]) != null) {
-			result = _nodes[children[index]];
-		}
-		return result;
-	}
-
-	function _splice(collection, nodeid) {
-		var index, len = collection.length;
-		for (index = 0; index < len; index += 1) {
-			if(collection[index] == nodeid) {
-				collection.splice(index, 1);
-				return len - 1;
-			}
-		}
-		return len;
-	}
-
-	function adopt(parentid, nodeid) {
-		if (_nodes[parentid] != null && _nodes[nodeid] != null) {
-			if (parentid != nodeid) {
-				if (_roots.hasOwnProperty(nodeid)) {
-					if (!_splice(_rootChildren[_roots[nodeid]], nodeid)) {
-						delete _rootChildren[_roots[nodeid]];
-					}
-					delete _roots[nodeid];
-				}
-
-				if (_parents.hasOwnProperty(nodeid)) {
-					if (!_splice(_children[_parents[nodeid]], nodeid)) {
-						delete _children[_parents[nodeid]];
-					}
-				}
-
-				_parents[nodeid] = parentid;
-				if (_children[parentid] != null) {
-					_children[parentid].push(nodeid);
-				} else {
-					_children[parentid] = [nodeid];
-				}
-			}
-			else {
-				throw "Item cannot be parent of itself!";
-			}
-		} else {
-			throw "Both parent and child should be in hierarchy!";
-		}
-	}
-
-	function node(nodeid) {
-		return _nodes[nodeid];
-	}
-
-	function validate() {
-		var result = true,
-			key;
-
-		for (key in _roots) {
-			if (_roots.hasOwnProperty(key)) {
-				if (_roots[key] != null) {
-					result = false;
-					break;
-				}
-			}
-		}
-
-		return result;
-	}
-
-	function clone() {
-		return primitives.common.family({
-			nodes: _nodes,
-			parents: _parents,
-			children: _children,
-			roots: _roots,
-			rootChildren: _rootChildren
-		});
-	}
-	
-	function loopNeighbours(thisArg, itemid, distance, onItem) {
-		var processed = {},
-			margin = [itemid],
-			newMargin,
-			currentDistance = 0;
-
-		if (onItem != null) {
-			if (_nodes.hasOwnProperty(itemid)) {
-				processed[itemid] = true;
-				while (margin.length > 0) {
-					newMargin = [];
-					for (var index = 0, len = margin.length; index < len; index += 1) {
-						var marginid = margin[index];
-						if (currentDistance > 0) {
-							if (onItem.call(thisArg, marginid, _nodes[marginid], currentDistance)) {
-								return;
-							}
-						}
-						if (currentDistance < distance) {
-							_loopNeighbours(this, marginid, function (neighbourid, neighbour) {
-								if (!processed.hasOwnProperty(neighbourid)) {
-									newMargin.push(neighbourid);
-									processed[neighbourid] = true;
-								}
-							});
-						}
-					}
-					margin = newMargin;
-					currentDistance += 1;
-				}
-			}
-		}
-	}
-
-	function _loopNeighbours(thisArg, itemid, onItem) {
-		if (onItem != null) {
-			if (_nodes.hasOwnProperty(itemid)) {
-				/* loop parent */
-				var parentItemId = parentid(itemid);
-				if (parentItemId != null) {
-					if (onItem.call(thisArg, parentItemId, _nodes[parentItemId])) {
-						return;
-					}
-				}
-				/* loop siblings */
-				loopChildren(thisArg, parentItemId, function (childItemId, childItem) {
-					if (childItemId != itemid) {
-						if (onItem.call(thisArg, childItemId, childItem)) {
-							return;
-						}
-					}
-				});
-				/* loop actual children */
-				loopChildren(thisArg, itemid, function (childItemId, childItem) {
-					if (onItem.call(thisArg, childItemId, childItem)) {
-						return;
-					}
-				});
-			}
-		}
-	}
-
-	return {
-		loop: loop,
-		loopLevels: loopLevels,
-		loopParents: loopParents,
-		loopChildren: loopChildren,
-		loopChildrenRange: loopChildrenRange,
-		loopChildrenReversed: loopChildrenReversed,
-		loopPostOrder: loopPostOrder, /* children first - parent last */
-		loopPreOrder: loopPreOrder, /* parent first - children next */
-		loopEulerWalk: loopEulerWalk, /* pre order loop with every parent revisited for every child */
-		loopNeighbours: loopNeighbours, /* loop items by distance. Siblings are as far as parent and children */
-		zipUp: zipUp,
-		parentid: parentid,
-		parent: parent,
-		adopt: adopt,
-		moveChildren: moveChildren,
-		node: node,
-		add: add,
-		insert: insert,
-		hasNodes: hasNodes,
-		hasChildren: hasChildren,
-		countChildren: countChildren,
-		countSiblings: countSiblings,
-		indexOf: indexOf,
-		getChild: getChild,
-		arrangeChildren: arrangeChildren,
-
-		/* force validation */
-		validate: validate,
-		clone: clone,
-
-		// callback return codes
-		BREAK: BREAK, // break loop immidiatly
-		SKIP: SKIP // skip loop of current node children 
-	};
+  var _nodes = {},        // objects attached to nodes
+    _parents = {},      // parent node id for every node id. Both of them should exists in the tree.
+    _children = {},     // children node ids for every node id. All children and node itself should be in the tree.
+    _roots = {},        // id of non existing parent. If parent does not exists in the tree this hash contains its id.
+    _rootChildren = {}, // children of non existing parent. If parent id does not exists in the tree this collection contains it existing children.
+    /** @constant
+      @type {number}
+      @default
+    */
+    BREAK = 1,
+    /** @constant
+      @type {number}
+      @default
+    */
+    SKIP = 2;
+
+  _init(source);
+
+  function _init(source) {
+    if (primitives.common.isObject(source)) {
+      _nodes = primitives.common.cloneObject(source.nodes, true);
+      _parents = primitives.common.cloneObject(source.parents, true);
+      _children = primitives.common.cloneObject(source.children, false);
+      _roots = primitives.common.cloneObject(source.roots, false);
+      _rootChildren = primitives.common.cloneObject(source.rootChildren, true);
+    }
+  }
+
+  /**
+   * Callback for iterating tree nodes
+   * 
+   * @callback onTreeItemCallback
+   * @param {string} itemid The node id
+   * @param {object} item The node
+   * @returns {boolean} Returns true to break the loop
+   */
+
+  /**
+   * Loops through nodes of tree struture
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onTreeItemCallback} onItem Callback function to call for every tree node 
+   */
+  function loop(thisArg, onItem) {
+    var item;
+    if (onItem != null) {
+      for (item in _nodes) {
+        if (_nodes.hasOwnProperty(item)) {
+          if (onItem.call(thisArg, item, _nodes[item])) {
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Callback for iterating the tree nodes level by level
+   * 
+   * @callback onTreeItemWithLevelCallback
+   * @param {string} nodeid The node id
+   * @param {object} node The node context object
+   * @param {number} levelIndex The node level index
+   * @returns {number} Returns BREAK to break the loop and exit. Returns SKIP to skip node's branch traversing.
+   */
+
+  /**
+   * Loops through child nodes of the tree struture level by level
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} arg0 The node id to start children traversing
+   * @param {onTreeItemWithLevelCallback} arg1 Callback function to call for every child node 
+   */
+  function loopLevels(thisArg, arg0, arg1) {
+    var levelIndex = 0,
+      items = [],
+      itemid,
+      onItem,
+      newItems,
+      key,
+      index, len;
+
+    switch (arguments.length) {
+      case 2:
+        onItem = arg0;
+        break;
+      case 3:
+        itemid = arg0;
+        onItem = arg1;
+        break;
+    }
+
+    if (onItem != null) {
+
+      if (itemid == null) {
+        for (key in _rootChildren) {
+          if (_rootChildren.hasOwnProperty(key)) {
+            items = items.concat(_rootChildren[key]);
+          }
+        }
+      } else {
+        if (_children[itemid] != null) {
+          items = items.concat(_children[itemid]);
+        }
+      }
+
+      while (items.length > 0) {
+        newItems = [];
+
+        for (index = 0, len = items.length; index < len; index += 1) {
+          itemid = items[index];
+          switch (onItem.call(thisArg, itemid, _nodes[itemid], levelIndex)) {
+            case BREAK:
+              newItems = [];
+              break;
+            case SKIP:
+              break;
+            default:
+              if (_children[itemid] != null) {
+                newItems = newItems.concat(_children[itemid]);
+              }
+              break;
+          }
+        }
+
+        items = newItems;
+        levelIndex += 1;
+      }
+    }
+  }
+
+  /**
+   * Callback for iterating nodes and providing parent in parameters
+   * 
+   * @callback onTreeItemWithParentCallback
+   * @param {string} nodeid The node id
+   * @param {object} node The node context object
+   * @param {string} parentid The parent node id
+   * @param {object} parent The parent node context object
+   * @returns {number} Returns BREAK to break the loop and exit. Returns SKIP to skip node's branch traversing.
+   */
+
+  /**
+   * Traverse tree structure in post order.
+   * Children first - parent last
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onTreeItemWithParentCallback} onItem Callback function to call for every node 
+   */
+  function loopPostOrder(thisArg, onItem) {
+    var stack = [], nodeid,
+      key,
+      index,
+      prevParent,
+      children;
+
+    if (onItem != null) {
+
+      for (key in _rootChildren) {
+        if (_rootChildren.hasOwnProperty(key)) {
+          stack = stack.concat(_rootChildren[key]);
+        }
+      }
+
+      while (stack.length > 0) {
+        nodeid = stack[stack.length - 1];
+        if (nodeid != prevParent && (children = _children[nodeid]) != null) {
+          for (index = children.length - 1; index >= 0; index -= 1) {
+            stack.push(children[index]);
+          }
+        } else {
+          stack.pop();
+          prevParent = _parents[nodeid];
+
+          if (onItem.call(thisArg, nodeid, _nodes[nodeid], prevParent, _nodes[prevParent])) {
+            break;
+          }
+        }
+      }
+    }
+  }
+
+
+  /**
+   * Traverse tree structure in pre order.
+   * Parent first - children next
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onTreeItemWithParentCallback} onItem A callback function to call for every node 
+   */
+  function loopPreOrder(thisArg, onItem) {
+    var stack = [], nodeid,
+      key,
+      index,
+      parentid,
+      prevParent,
+      children;
+
+    if (onItem != null) {
+
+      for (key in _rootChildren) {
+        if (_rootChildren.hasOwnProperty(key)) {
+          stack = stack.concat(_rootChildren[key]);
+        }
+      }
+
+      while (stack.length > 0) {
+        nodeid = stack[stack.length - 1];
+        if (nodeid != prevParent) {
+          parentid = _parents[nodeid];
+          if (onItem.call(thisArg, nodeid, _nodes[nodeid], parentid, _nodes[parentid])) {
+            break;
+          }
+        }
+        if (nodeid != prevParent && (children = _children[nodeid]) != null) {
+          for (index = children.length - 1; index >= 0; index -= 1) {
+            stack.push(children[index]);
+          }
+        } else {
+          stack.pop();
+          prevParent = _parents[nodeid];
+        }
+      }
+    }
+  }
+
+  /**
+   * Callback for iterating nodes in euler walk order
+   * 
+   * @callback onItemEulerWalkCallback
+   * @param {string} nodeid The node id
+   * @param {object} node Context object of the node
+   * @param {number} level The node's level
+   * @returns {boolean} Returns true to break the iteration of nodes and exit.
+   */
+
+  /**
+   * Loops tree nodes in "Euler Walk" order
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onItemEulerWalkCallback} onItem Callback function to call for every node 
+   */
+  function loopEulerWalk(thisArg, onItem) {
+    var stack = [],
+      nodeid,
+      levels = [],
+      level = 0,
+      key,
+      index, len,
+      prevParent,
+      children;
+
+    if (onItem != null) {
+
+      for (key in _rootChildren) {
+        if (_rootChildren.hasOwnProperty(key)) {
+          children = _rootChildren[key];
+          for (index = 0, len = children.length; index < len; index += 1) {
+            stack.push(children[index]);
+            levels.push(0);
+          }
+        }
+      }
+      while (stack.length > 0) {
+        index = stack.length - 1;
+        nodeid = stack[index];
+        level = levels[index];
+
+        if (onItem.call(thisArg, nodeid, _nodes[nodeid], level)) {
+          break;
+        }
+
+        if (nodeid != prevParent && (children = _children[nodeid]) != null) {
+          for (index = children.length - 1; index >= 0; index -= 1) {
+            stack.push(children[index]);
+            levels.push(level + 1);
+            if (index > 0) {
+              stack.push(nodeid);
+              levels.push(level);
+            }
+          }
+        } else {
+          stack.pop();
+          levels.pop();
+
+          prevParent = _parents[nodeid];
+        }
+      }
+    }
+  }
+
+  /**
+   * Callback function to return pairs of nodes
+   * 
+   * @callback onZipUpPairCallback
+   * @param {string} firstNodeId First node id
+   * @param {string} firstParentId Parent id of the first node
+   * @param {string} secondNodeid Second node id
+   * @param {string} secondParentId Parent id of the second node
+   * @returns {boolean} Returns true to break the iteration of nodes and exit.
+   */
+
+  /**
+   * Iterates hierarchy nodes by pairs starting with given pair of start and second nodes and up to the root of the hierarchy.
+   * Breaks iteration when callback function returns true.
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} firstNodeId The first node to start iteration
+   * @param {string} secondNodeid The second node to start iteration
+   * @param {onZipUpPairCallback} onZip Callback function to call for every pair of nodes on the way up in the tree structure
+   */
+  function zipUp(thisArg, firstNodeId, secondNodeid, onZip) {
+    var firstParentId,
+      secondParentId;
+
+    if (onZip != null) {
+      while (firstNodeId != null && secondNodeid != null && firstNodeId != secondNodeid) {
+        firstParentId = _parents[firstNodeId];
+        secondParentId = _parents[secondNodeid];
+        if (onZip.call(thisArg, firstNodeId, firstParentId, secondNodeid, secondParentId)) {
+          break;
+        }
+        firstNodeId = firstParentId;
+        secondNodeid = secondParentId;
+      }
+    }
+  }
+
+  /**
+   * Loops parents up to the root of the hierarchy starting with the given node.
+   * Breaks iteration if callback function returns true.
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} nodeid The node id to start iteration from
+   * @param {onTreeItemCallback} onItem Callback function to call for every parent node
+   * @param {boolean} includingStartItem If true the first call to callback function is made with start node id
+   */
+  function loopParents(thisArg, nodeid, onItem, includingStartItem) { // onItem(nodeid, node)
+    var parentid = nodeid;
+    if (_nodes[parentid] != null) {
+      if (onItem != null) {
+        if (includingStartItem === true) {
+          if (onItem.call(thisArg, parentid, _nodes[parentid])) {
+            return;
+          }
+        }
+        while ((parentid = _parents[parentid]) != null) {
+          if (onItem.call(thisArg, parentid, _nodes[parentid])) {
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Callback function to loop through children of the given node
+   * 
+   * @callback onTreeChildItemCallback
+   * @param {string} nodeid Child node id
+   * @param {object} node Context object of the child node
+   * @param {number} index Index of the child node
+   * @param {number} lastIndex Index of the last child
+   * @returns {boolean} Returns true to break the iteration of nodes and exit.
+   */
+
+  /**
+   * Loops immediate children of the given node.
+   * Breaks iteration if callback function returns true.
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} nodeid The parent node id to loop children of
+   * @param {onTreeChildItemCallback} onItem Callback function to call for every child node
+   */
+  function loopChildren(thisArg, nodeid, onItem) { // onItem(nodeid, node, index, lastIndex)
+    var items,
+      itemid,
+      index, len;
+    if (_nodes[nodeid] != null) {
+      items = _children[nodeid];
+      if (items != null) {
+        for (index = 0, len = items.length; index < len; index += 1) {
+          itemid = items[index];
+          if (onItem.call(thisArg, itemid, _nodes[itemid], index, len - 1)) {
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Callback function to loop theough range of children for the given node
+   * 
+   * @callback onTreeNodeWithIndexItemCallback
+   * @param {string} nodeid Child node id
+   * @param {object} node Context object of the child node
+   * @param {number} index Index of the child node
+   * @returns {boolean} Returns true to break the iteration of nodes and exit.
+   */
+
+  /**
+   * Loops range of immediate children of the given node.
+   * Breaks iteration if callback function returns true.
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} nodeid The parent node id to loop children of
+   * @param {number} fromIndex Start index of iteration
+   * @param {number} toIndex End index of iteration
+   * @param {onTreeNodeWithIndexItemCallback} onItem Callback function to call for every child node
+   */
+  function loopChildrenRange(thisArg, nodeid, fromIndex, toIndex, onItem) {
+    var items,
+      itemid,
+      index, len;
+    if (_nodes[nodeid] != null) {
+      items = _children[nodeid];
+      if (items != null) {
+        if (fromIndex < toIndex) {
+          fromIndex = Math.max(fromIndex, 0);
+          toIndex = Math.min(toIndex, items.length - 1);
+          for (index = fromIndex; index <= toIndex; index += 1) {
+            itemid = items[index];
+            if (onItem.call(thisArg, itemid, _nodes[itemid], index, len - 1)) {
+              break;
+            }
+          }
+        } else {
+          fromIndex = Math.min(fromIndex, items.length - 1);
+          toIndex = Math.max(0, toIndex);
+          for (index = fromIndex; index >= toIndex; index -= 1) {
+            itemid = items[index];
+            if (onItem.call(thisArg, itemid, _nodes[itemid], index, len - 1)) {
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Loops immediate children of the given node in reversed order.
+   * Breaks iteration if callback function returns true.
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} nodeid The parent node id to loop children of
+   * @param {onTreeChildItemCallback} onItem Callback function to call for every child node
+   */
+  function loopChildrenReversed(thisArg, nodeid, onItem) {
+    var items,
+      itemid,
+      index, lastIndex;
+    if (_nodes[nodeid] != null) {
+      items = _children[nodeid];
+      lastIndex = items.length - 1;
+      if (items != null) {
+        for (index = lastIndex; index >= 0; index -= 1) {
+          itemid = items[index];
+          if (onItem.call(thisArg, itemid, _nodes[itemid], index, lastIndex)) {
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Orders children of the given node
+   * 
+   * @param {string} nodeid The node id of the parent node which children should be ordered in the tree structure
+   * @param {string[]} children Collection of ordered children
+   */
+  function arrangeChildren(nodeid, children) {
+    var childid,
+      index, len;
+
+    children = children.slice(0);
+    if (_nodes[nodeid] != null) {
+      if (_children[nodeid] != null) {
+        if (_children[nodeid].length == children.length) {
+          for (index = 0, len = children.length; index < len; index += 1) {
+            childid = children[index];
+            if (_parents[childid] != nodeid) {
+              throw "Child " + childid + " does not belong to given node!";
+            }
+          }
+          _children[nodeid] = children;
+        } else {
+          throw "Collections of children don't match each other!";
+        }
+      } else {
+        if (children.length > 0) {
+          throw "Collections of children don't match each other!";
+        }
+      }
+    }
+  }
+
+  /**
+   * Adds new tree item
+   * @param {string} parentid Parent id
+   * @param {string} nodeid New node id
+   * @param {object} node Context object of the new node
+   * @param {number} position Position of the new node in the collection of children
+   */
+  function add(parentid, nodeid, node, position) {
+    var index, len, children, childid;
+
+    if (_nodes[nodeid] != null) {
+      throw "Node already exists";
+    }
+
+    if (nodeid != null && node != null && _nodes[nodeid] == null) {
+
+      if (_nodes[parentid] != null) {
+        _parents[nodeid] = parentid;
+
+        // existing parent
+        if (_children[parentid] != null) {
+          if (position == null) {
+            _children[parentid].push(nodeid);
+          } else {
+            _children[parentid].splice(position, 0, nodeid);
+          }
+        } else {
+          _children[parentid] = [nodeid];
+        }
+      } else {
+        _roots[nodeid] = parentid;
+
+        // missing parent
+        if (_rootChildren[parentid] != null) {
+          if (position == null) {
+            _rootChildren[parentid].push(nodeid);
+          } else {
+            _rootChildren[parentid].splice(position, 0, nodeid);
+          }
+        } else {
+          _rootChildren[parentid] = [nodeid];
+        }
+      }
+
+      _nodes[nodeid] = node;
+
+      if (_rootChildren[nodeid] != null) {
+        _children[nodeid] = _rootChildren[nodeid];
+        delete _rootChildren[nodeid];
+
+        children = _children[nodeid];
+        for (index = 0, len = children.length; index < len; index += 1) {
+          childid = children[index];
+
+          delete _roots[childid];
+
+          _parents[childid] = nodeid;
+        }
+
+      }
+
+    }
+  }
+
+  /**
+   * Inserts bundle node into the tree structure. The new budnle node becomes only child node of the parent node.
+   * All imediate children of the parent node become children of the inserted bundle node.
+   * 
+   * @param {string} nodeid Parent node id
+   * @param {string} bundleid New bundle node id
+   * @param {object} bundle Context object of the bundle node
+   */
+  function insert(nodeid, bundleid, bundle) {
+    if (_nodes[nodeid] != null && bundleid != null && _nodes[bundleid] == null && bundle != null) {
+
+      _nodes[bundleid] = bundle;
+
+      if (_children[nodeid] != null) {
+        _children[bundleid] = _children[nodeid];
+      }
+      _children[nodeid] = [bundleid];
+
+      loopChildren(this, bundleid, function (childid, node, index) {
+        _parents[childid] = bundleid;
+      });
+      _parents[bundleid] = nodeid;
+    }
+  }
+
+  /**
+   * Moves children form one node to another.
+   * 
+   * @param {string} fromNodeid Source node node id
+   * @param {string} toNodeId Destination node id
+   */
+  function moveChildren(fromNodeid, toNodeId) {
+    if (_nodes[fromNodeid] != null && _nodes[toNodeId] != null && fromNodeid != toNodeId) {
+
+      if (_children[fromNodeid] != null) {
+
+        loopChildren(this, fromNodeid, function (childid, node, index) {
+          _parents[childid] = toNodeId;
+        });
+
+        if (_children[toNodeId] != null) {
+          _children[toNodeId] = _children[toNodeId].concat(_children[fromNodeid]);
+        } else {
+          _children[toNodeId] = _children[fromNodeid];
+        }
+        delete _children[fromNodeid];
+      }
+    }
+  }
+
+  /**
+   * Return true if structure has nodes
+   * 
+   * @returns {boolean} Returns true if structure has nodes
+   */
+  function hasNodes() {
+    return !primitives.common.isEmptyObject(_rootChildren);
+  }
+
+  /**
+   * Returns parent node id
+   * 
+   * @param {string} nodeid Node id
+   * @returns {string} Returns parent node id
+   */
+  function parentid(nodeid) {
+    var result = null;
+
+    if (_parents[nodeid] != null) {
+      result = _parents[nodeid];
+    }
+
+    return result;
+  }
+
+  /**
+   * Returns context object of the parent node
+   * 
+   * @param {string} nodeid Node id
+   * @returns {object} Returns context object of the  parent node
+   */
+  function parent(nodeid) {
+    var result = null;
+
+    if (_parents[nodeid] != null) {
+      result = _nodes[_parents[nodeid]];
+    }
+
+    return result;
+  }
+
+  /**
+   * Returns true if node has children
+   * 
+   * @param {string} nodeid Node id
+   * @returns {boolean} Returns true if node has children
+   */
+  function hasChildren(nodeid) {
+    return _children[nodeid] != null;
+  }
+
+  /**
+   * Returns number of children
+   * 
+   * @param {string} nodeid Node id
+   * @returns {number} Returns number of child nodes
+   */
+  function countChildren(nodeid) {
+    return _children[nodeid] != null ? _children[nodeid].length : 0;
+  }
+
+  /**
+   * Returns number of siblings
+   * 
+   * @param {string} nodeid Node id
+   * @returns {number} Returns number of siblings
+   */
+  function countSiblings(nodeid) {
+    var parent = parentid(nodeid);
+    return parent != null ? _children[parent].length : 0;
+  }
+
+  /**
+   * Returns index of the node in the children's collection
+   * 
+   * @param {string} nodeid Node id
+   * @returns {number} Returns node index
+   */
+  function indexOf(nodeid) {
+    var parent = parentid(nodeid);
+    return parent != null ? primitives.common.indexOf(_children[parent], nodeid) : null;
+  }
+
+  /**
+   * Returns child node by index in the children's collection
+   * 
+   * @param {string} nodeid Node id
+   * @param {number} index Child index
+   * @returns {object} Returns child node
+   */
+  function getChild(parentid, index) {
+    var result = null,
+      children;
+    if ((children = _children[parentid]) != null) {
+      result = _nodes[children[index]];
+    }
+    return result;
+  }
+
+  function _splice(collection, nodeid) {
+    var index, len = collection.length;
+    for (index = 0; index < len; index += 1) {
+      if (collection[index] == nodeid) {
+        collection.splice(index, 1);
+        return len - 1;
+      }
+    }
+    return len;
+  }
+
+  /**
+   * Adds existing node to the children of the parent node
+   * 
+   * @param {string} parentid Parent Node id
+   * @param {string} nodeid Node id
+   */
+  function adopt(parentid, nodeid) {
+    if (_nodes[parentid] != null && _nodes[nodeid] != null) {
+      if (parentid != nodeid) {
+        if (_roots.hasOwnProperty(nodeid)) {
+          if (!_splice(_rootChildren[_roots[nodeid]], nodeid)) {
+            delete _rootChildren[_roots[nodeid]];
+          }
+          delete _roots[nodeid];
+        }
+
+        if (_parents.hasOwnProperty(nodeid)) {
+          if (!_splice(_children[_parents[nodeid]], nodeid)) {
+            delete _children[_parents[nodeid]];
+          }
+        }
+
+        _parents[nodeid] = parentid;
+        if (_children[parentid] != null) {
+          _children[parentid].push(nodeid);
+        } else {
+          _children[parentid] = [nodeid];
+        }
+      }
+      else {
+        throw "Item cannot be parent of itself!";
+      }
+    } else {
+      throw "Both parent and child should be in hierarchy!";
+    }
+  }
+
+  /**
+   * Returns context obect
+   * @param {string} nodeid Node id
+   * @returns {object} Context object of the node
+   */
+  function node(nodeid) {
+    return _nodes[nodeid];
+  }
+
+  /**
+   * Validates internal data integrity of the structure
+   * 
+   * @returns {boolean} Returns true if structure pass validation
+   */
+  function validate() {
+    var result = true,
+      key;
+
+    for (key in _roots) {
+      if (_roots.hasOwnProperty(key)) {
+        if (_roots[key] != null) {
+          result = false;
+          break;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Clones tree structure
+   * 
+   * @returns {tree} Returns clone of the tree
+   */
+  function clone() {
+    return primitives.common.tree({
+      nodes: _nodes,
+      parents: _parents,
+      children: _children,
+      roots: _roots,
+      rootChildren: _rootChildren
+    });
+  }
+
+
+  /**
+   * Callback for iterating tree node neighbours level by level
+   * 
+   * @callback onTreeItemNeighbourCallback
+   * @param {string} itemid The node id
+   * @param {object} item The node
+   * @param {number} distance The neigbour node distance from the start node
+   * @returns {number} Returns true to skip further neighbous traversing.
+   */
+
+  /**
+   * Loops through the node neighbours of the tree struture level by level
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} itemid The node id to start traversing neighbour nodes
+   * @param {number} distance Stop iteration of neighbours when distance exceeds the given value
+   * @param {onTreeItemNeighbourCallback} onItem A callback function to call for every neighbour node 
+   */
+  function loopNeighbours(thisArg, itemid, distance, onItem) {
+    var processed = {},
+      margin = [itemid],
+      newMargin,
+      currentDistance = 0;
+
+    if (onItem != null) {
+      if (_nodes.hasOwnProperty(itemid)) {
+        processed[itemid] = true;
+        while (margin.length > 0) {
+          newMargin = [];
+          for (var index = 0, len = margin.length; index < len; index += 1) {
+            var marginid = margin[index];
+            if (currentDistance > 0) {
+              if (onItem.call(thisArg, marginid, _nodes[marginid], currentDistance)) {
+                return;
+              }
+            }
+            if (currentDistance < distance) {
+              _loopNeighbours(this, marginid, function (neighbourid, neighbour) {
+                if (!processed.hasOwnProperty(neighbourid)) {
+                  newMargin.push(neighbourid);
+                  processed[neighbourid] = true;
+                }
+              });
+            }
+          }
+          margin = newMargin;
+          currentDistance += 1;
+        }
+      }
+    }
+  }
+
+  function _loopNeighbours(thisArg, itemid, onItem) {
+    if (onItem != null) {
+      if (_nodes.hasOwnProperty(itemid)) {
+        /* loop parent */
+        var parentItemId = parentid(itemid);
+        if (parentItemId != null) {
+          if (onItem.call(thisArg, parentItemId, _nodes[parentItemId])) {
+            return;
+          }
+        }
+        /* loop siblings */
+        loopChildren(thisArg, parentItemId, function (childItemId, childItem) {
+          if (childItemId != itemid) {
+            if (onItem.call(thisArg, childItemId, childItem)) {
+              return;
+            }
+          }
+        });
+        /* loop actual children */
+        loopChildren(thisArg, itemid, function (childItemId, childItem) {
+          if (onItem.call(thisArg, childItemId, childItem)) {
+            return;
+          }
+        });
+      }
+    }
+  }
+
+  return {
+    loop: loop,
+    loopLevels: loopLevels,
+    loopParents: loopParents,
+    loopChildren: loopChildren,
+    loopChildrenRange: loopChildrenRange,
+    loopChildrenReversed: loopChildrenReversed,
+    loopPostOrder: loopPostOrder, /* children first - parent last */
+    loopPreOrder: loopPreOrder, /* parent first - children next */
+    loopEulerWalk: loopEulerWalk, /* pre order loop with every parent revisited for every child */
+    loopNeighbours: loopNeighbours, /* loop items by distance. Siblings are as far as parent and children */
+    zipUp: zipUp,
+    parentid: parentid,
+    parent: parent,
+    adopt: adopt,
+    moveChildren: moveChildren,
+    node: node,
+    add: add,
+    insert: insert,
+    hasNodes: hasNodes,
+    hasChildren: hasChildren,
+    countChildren: countChildren,
+    countSiblings: countSiblings,
+    indexOf: indexOf,
+    getChild: getChild,
+    arrangeChildren: arrangeChildren,
+
+    /* force validation */
+    validate: validate,
+    clone: clone,
+
+    // callback return codes
+    BREAK: BREAK, // break loop immidiatly
+    SKIP: SKIP // skip loop of current node children 
+  };
 };
 
 /* /algorithms/TreeLevels.js*/
+/**
+ * Creates Tree Levels structure. It is diagraming specific auxiliary structure
+ * that keeps tree nodes order level by level.
+ * @class TreeLevels
+ * 
+ * @param {TreeLevels} [source=undefined] Optional source object to clone content from into the new instance of the structure.
+ * @returns {TreeLevels} Returns tree levels structure.
+ */
 primitives.common.TreeLevels = function (source) {
-	var _levels = [],
-		_items = {},
-		_minimum = null,
-		_maximum = null;
+  var _levels = [],
+    _items = {},
+    _minimum = null,
+    _maximum = null;
 
-	_init(source);
+  _init(source);
 
-	function _init(source) {
-		if (primitives.common.isObject(source)) {
-			_levels = primitives.common.cloneObject(source.levels, true);
-			_items = primitives.common.cloneObject(source.items, true);
-			_minimum = primitives.common.cloneObject(source.minimum, true);
-			_maximum = primitives.common.cloneObject(source.maximum, true);
-		}
-	}
+  function _init(source) {
+    if (primitives.common.isObject(source)) {
+      _levels = primitives.common.cloneObject(source.levels, true);
+      _items = primitives.common.cloneObject(source.items, true);
+      _minimum = primitives.common.cloneObject(source.minimum, true);
+      _maximum = primitives.common.cloneObject(source.maximum, true);
+    }
+  }
 
-	function LevelContext(context) {
-		this.context = context;
-		this.items = [];
-	}
+  function LevelContext(context) {
+    this.context = context;
+    this.items = [];
+  }
 
-	function ItemContext(context, position, level) {
-		this.context = context;
-		this.positions = {};
-		this.positions[level] = position;
-		this.startLevel = level;
-		this.endLevel = level;
-	}
+  function ItemContext(context, position, level) {
+    this.context = context;
+    this.positions = {};
+    this.positions[level] = position;
+    this.startLevel = level;
+    this.endLevel = level;
+  }
 
-	function isEmpty() {
-		return !_levels.length;
-	}
+  /**
+   * Chckes if structure has elements.
+   * 
+   * @returns {boolean} Returns true if structure has elements.
+   */
+  function isEmpty() {
+    return !_levels.length;
+  }
 
-	function length() {
-		return _levels.length;
-	}
+  /**
+   * Number of levels
+   * 
+   * @returns {number} Returns number of levels in structure.
+   */
+  function length() {
+    return _levels.length;
+  }
 
-	function addLevel(level, context) {
-		var treeLevel = createLevel(level);
-		treeLevel.context = context;
-	}
+  /**
+   * Adds new level. Structure keeps levels sorted by their indexes. The level index can be positive and negative as well.
+   * Structure auto expands collection of levels in both directions and keeps them ordered.
+   * @param {number} level New level index
+   * @param {object} context Context object
+   */
+  function addLevel(level, context) {
+    var treeLevel = createLevel(level);
+    treeLevel.context = context;
+  }
 
-	function getStartLevelIndex(itemid) {
-		return _items.hasOwnProperty(itemid) ? _items[itemid].startLevel : null;
-	}
+  /**
+   * Returns element's start level index in the structure. Element may occupy multiple levels of the tree levels structure.
+   * 
+   * @param {string} itemid The element id
+   * @returns {number} Returns start level index
+   */
+  function getStartLevelIndex(itemid) {
+    return _items.hasOwnProperty(itemid) ? _items[itemid].startLevel : null;
+  }
 
-	function getEndLevelIndex(itemid) {
-		return _items.hasOwnProperty(itemid) ? _items[itemid].endLevel : null;
-	}
+  /**
+   * Returns element's end level index in the structure. Element may occupy multiple levels of the tree levels structure.
+   * 
+   * @param {string} itemid Element id
+   * @returns {number} Returns end level index
+   */
+  function getEndLevelIndex(itemid) {
+    return _items.hasOwnProperty(itemid) ? _items[itemid].endLevel : null;
+  }
 
-	function getItemPosition(itemid, level) {
-		var context = _items[itemid];
-		if(context != null) {
-			if (level != null) {
-				return context.positions[level];
-			} else {
-				return context.positions[context.startLevel];
-			}
-		}
-		return null;
-	}
+  /**
+   * Gets element position at level
+   * 
+   * @param {string} itemid Element id
+   * @param {number} level Level index
+   * @returns {number} Returns position of the element 
+   */
+  function getItemPosition(itemid, level) {
+    var context = _items[itemid];
+    if (context != null) {
+      if (level != null) {
+        return context.positions[level];
+      } else {
+        return context.positions[context.startLevel];
+      }
+    }
+    return null;
+  }
 
-	function getItemAtPosition(levelIndex, position) {
-		var level = _levels[levelIndex],
-			itemid = null;
-		if (level != null) {
-			itemid = level.items[position];
-		}
-		return itemid;
-	}
+  /**
+   * Gets element at position
+   * 
+   * @param {number} levelIndex Level index
+   * @param {number} position Item position
+   * @returns {number} Returns element id
+   */
+  function getItemAtPosition(levelIndex, position) {
+    var level = _levels[levelIndex],
+      itemid = null;
+    if (level != null) {
+      itemid = level.items[position];
+    }
+    return itemid;
+  }
 
-	function getPrevItem(itemid, itemLevel) {
-		var result = null;
-		if(_items.hasOwnProperty(itemid)) {
-			var item = _items[itemid];
-			itemLevel = itemLevel || item.startLevel;
-			var level = _levels[itemLevel];
-			result = level.items[item.positions[itemLevel] - 1];
-		}
-		return result;
-	}
+  /**
+   * Gets previous element
+   * 
+   * @param {string} itemid Element id
+   * @param {number} itemLevel Level index
+   * @returns {number} Returns previous element id
+   */
+  function getPrevItem(itemid, itemLevel) {
+    var result = null;
+    if (_items.hasOwnProperty(itemid)) {
+      var item = _items[itemid];
+      itemLevel = itemLevel || item.startLevel;
+      var level = _levels[itemLevel];
+      result = level.items[item.positions[itemLevel] - 1];
+    }
+    return result;
+  }
 
-	function getNextItem(itemid, itemLevel) {
-		var result = null;
-		if (_items.hasOwnProperty(itemid)) {
-			var item = _items[itemid];
-			itemLevel = itemLevel || item.startLevel;
-			var level = _levels[itemLevel];
-			result = level.items[item.positions[itemLevel] + 1];
-		}
-		return result;
-	}
+  /**
+   * Gets next element
+   * 
+   * @param {string} itemid Element id
+   * @param {number} itemLevel Level index
+   * @returns {number} Returns next element id
+   */
+  function getNextItem(itemid, itemLevel) {
+    var result = null;
+    if (_items.hasOwnProperty(itemid)) {
+      var item = _items[itemid];
+      itemLevel = itemLevel || item.startLevel;
+      var level = _levels[itemLevel];
+      result = level.items[item.positions[itemLevel] + 1];
+    }
+    return result;
+  }
 
-	function hasItem(itemid) {
-		return _items.hasOwnProperty(itemid);
-	}
+  /**
+   * Checks if struture contains element
+   * @param {string} itemid Element id
+   * @returns {boolean} Returns true if structure contains given element id
+   */
+  function hasItem(itemid) {
+    return _items.hasOwnProperty(itemid);
+  }
 
-	function hasLevel(levelIndex) {
-		return _levels[levelIndex] != null;
-	}
+  /**
+   * Checks if struture contains level
+   * @param {number} levelIndex Level index
+   * @returns {boolean} Returns true if structure contains given level index
+   */
+  function hasLevel(levelIndex) {
+    return _levels[levelIndex] != null;
+  }
 
-	function getItemContext(itemid) {
-		var result = null;
-		if (_items.hasOwnProperty(itemid)) {
-			result = _items[itemid].context;
-		}
-		return result;
-	}
+  /**
+   * Gets element context object
+   * @param {string} itemid Element id
+   * @returns {object} Returns context object of the element
+   */
+  function getItemContext(itemid) {
+    var result = null;
+    if (_items.hasOwnProperty(itemid)) {
+      result = _items[itemid].context;
+    }
+    return result;
+  }
 
-	function createLevel(index) {
-		if (_levels[index] == null) {
-			_levels[index] = new LevelContext(null);
+  /**
+   * Creates new level
+   * @param {index} index New level index
+   * @returns {object} Returns new level empty context object
+   */
+  function createLevel(index) {
+    if (_levels[index] == null) {
+      _levels[index] = new LevelContext(null);
 
-			_minimum = _minimum === null ? index : Math.min(_minimum, index);
-			_maximum = _maximum === null ? index : Math.max(_maximum, index);
-		}
-		return _levels[index];
-	}
+      _minimum = _minimum === null ? index : Math.min(_minimum, index);
+      _maximum = _maximum === null ? index : Math.max(_maximum, index);
+    }
+    return _levels[index];
+  }
 
-	function addItem(levelIndex, itemid, context) {
-		var level, itemContext;
-		if (!_items.hasOwnProperty(itemid)) {
-			level = createLevel(levelIndex);
-			level.items.push(itemid);
-			_items[itemid] = new ItemContext(context, level.items.length - 1, levelIndex);
-		} else {
-			level = createLevel(levelIndex);
-			level.items.push(itemid);
-			itemContext = _items[itemid];
-			itemContext.positions[levelIndex] = level.items.length - 1;
-			itemContext.startLevel = Math.min(itemContext.startLevel, levelIndex);
-			itemContext.endLevel = Math.max(itemContext.endLevel, levelIndex);
-		}
-	}
+  /**
+   * Adds element
+   * @param {number} levelIndex Level index
+   * @param {string} itemid New element id
+   * @param {object} context Context object
+   */
+  function addItem(levelIndex, itemid, context) {
+    var level, itemContext;
+    if (!_items.hasOwnProperty(itemid)) {
+      level = createLevel(levelIndex);
+      level.items.push(itemid);
+      _items[itemid] = new ItemContext(context, level.items.length - 1, levelIndex);
+    } else {
+      level = createLevel(levelIndex);
+      level.items.push(itemid);
+      itemContext = _items[itemid];
+      itemContext.positions[levelIndex] = level.items.length - 1;
+      itemContext.startLevel = Math.min(itemContext.startLevel, levelIndex);
+      itemContext.endLevel = Math.max(itemContext.endLevel, levelIndex);
+    }
+  }
 
-	function loopLevels(thisArg, onItem) { // function onItem(levelIndex, level)
-		var index, 
-			level;
-		if (onItem != null) {
-			for (index = _minimum; index <= _maximum; index+=1) {
-				level = _levels[index];
-				if(level != null) {
-					if (onItem.call(thisArg, index, level.context)) {
-						break;
-					}
-				}
-			}
-		}
-	}
+  /**
+   * Callback function for iteration of levels
+   * 
+   * @callback onTreeLevelCallback
+   * @param {number} levelIndex Level index
+   * @param {object} level Context object
+   * @returns {boolean} Returns true to break iteration process.
+   */
 
-	function loopLevelsReversed(thisArg, onItem) { // function onItem(levelIndex, level)
-		var index,
-			level;
-		if (onItem != null) {
-			for (index = _maximum; index >= _minimum; index -= 1) {
-				level = _levels[index];
-				if (level != null) {
-					if (onItem.call(thisArg, index, level.context)) {
-						break;
-					}
-				}
-			}
-		}
-	}
+  /**
+   * Loops levels
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onTreeLevelCallback} onItem A callback function to call for every level
+   */
+  function loopLevels(thisArg, onItem) {
+    var index,
+      level;
+    if (onItem != null) {
+      for (index = _minimum; index <= _maximum; index += 1) {
+        level = _levels[index];
+        if (level != null) {
+          if (onItem.call(thisArg, index, level.context)) {
+            break;
+          }
+        }
+      }
+    }
+  }
 
-	function getLevelLength(levelIndex) {
-		var result = 0,
-			level = _levels[levelIndex];
-		if (level != null) {
-			result = level.items.length;
-		}
-		return result;
-	}
+  /**
+   * Loops levels in reversed order
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onTreeLevelCallback} onItem A callback function to call for every level
+   */
+  function loopLevelsReversed(thisArg, onItem) {
+    var index,
+      level;
+    if (onItem != null) {
+      for (index = _maximum; index >= _minimum; index -= 1) {
+        level = _levels[index];
+        if (level != null) {
+          if (onItem.call(thisArg, index, level.context)) {
+            break;
+          }
+        }
+      }
+    }
+  }
 
-	function loopLevelItems(thisArg, levelIndex, onItem) { // function onItem(itemid, item, position)
-		var index, len,
-			level,
-			itemid;
-		if (onItem != null) {
-			level = _levels[levelIndex];
-			if (level != null) {
-				for (index = 0, len = level.items.length; index < len; index += 1) {
-					itemid = level.items[index];
-					if (onItem.call(thisArg, itemid, _items[itemid].context, index)) {
-						break;
-					}
-				}
-			}
-		}
-	}
+  /**
+   * Gets number of elements at level
+   * 
+   * @param {number} levelIndex Level index
+   * @returns {number} Returns number of elements at the level
+   */
+  function getLevelLength(levelIndex) {
+    var result = 0,
+      level = _levels[levelIndex];
+    if (level != null) {
+      result = level.items.length;
+    }
+    return result;
+  }
 
-	function loopItems(thisArg, onItem) { // function onItem(itemid, item, position, levelIndex, level)
-		var index, len,
-			level, levelIndex,
-			items,
-			itemid,
-			processed = {};
-		if (onItem != null) {
-			for (levelIndex = _minimum; levelIndex <= _maximum; levelIndex += 1) {
-				level = _levels[levelIndex];
-				if (level != null) {
-					items = level.items;
-					for (index = 0, len = items.length; index < len; index += 1) {
-						itemid = items[index];
-						if (!processed.hasOwnProperty(itemid)) {
-							processed[itemid] = true;
-							if (onItem.call(thisArg, itemid, _items[itemid].context, index, levelIndex, level.context)) {
-								return;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+  /**
+   * Callback function for iteration of level elements
+   * 
+   * @callback onTreeLevelItemCallback
+   * @param {string} itemid Element id
+   * @param {object} item Context object of the element
+   * @param {number} position Position of the element at level
+   * @returns {boolean} Returns true to break iteration process.
+   */
 
-	function binarySearch(thisArg, levelIndex, onGetDistance) {
-		var result = null,
-			level;
-		if (onGetDistance != null) {
-			level = _levels[levelIndex];
-			if (level != null) {
-				result = primitives.common.binarySearch(level.items, function (itemid) {
-					return onGetDistance.call(thisArg, itemid, _items[itemid].context);
-				});
-			}
-		}
-		return result.item;
-	}
+  /**
+   * Loops level elements
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {number} levelIndex Level index
+   * @param {onTreeLevelItemCallback} onItem A callback function to call for every item
+   */
+  function loopLevelItems(thisArg, levelIndex, onItem) {
+    var index, len,
+      level,
+      itemid;
+    if (onItem != null) {
+      level = _levels[levelIndex];
+      if (level != null) {
+        for (index = 0, len = level.items.length; index < len; index += 1) {
+          itemid = level.items[index];
+          if (onItem.call(thisArg, itemid, _items[itemid].context, index)) {
+            break;
+          }
+        }
+      }
+    }
+  }
 
-	function loopMerged(thisArg, getItemWeight, onItem) {
-		var index, len,
-			level,
-			itemid,
-			levelsItems = [],
-			sortedItems;
+  /**
+   * Callback function for iteration of elements level by level
+   * 
+   * @callback onTreeLevelsItemCallback
+   * @param {string} itemid Element id
+   * @param {object} item Element context object
+   * @param {number} position Position of the element at level
+   * @param {number} levelIndex Level index
+   * @param {object} level Level context object
+   * @returns {boolean} Returns true to break iteration process.
+   */
 
-		for (index = 0, len = _levels.length; index < len; index += 1) {
-			level = _levels[index];
-			if (level != null) {
-				levelsItems.push(level.items);
-			}
-		}
+  /**
+   * Loops elements level by level
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onTreeLevelsItemCallback} onItem A callback function to call for every item
+   */
+  function loopItems(thisArg, onItem) { // function onItem(itemid, item, position, levelIndex, level)
+    var index, len,
+      level, levelIndex,
+      items,
+      itemid,
+      processed = {};
+    if (onItem != null) {
+      for (levelIndex = _minimum; levelIndex <= _maximum; levelIndex += 1) {
+        level = _levels[levelIndex];
+        if (level != null) {
+          items = level.items;
+          for (index = 0, len = items.length; index < len; index += 1) {
+            itemid = items[index];
+            if (!processed.hasOwnProperty(itemid)) {
+              processed[itemid] = true;
+              if (onItem.call(thisArg, itemid, _items[itemid].context, index, levelIndex, level.context)) {
+                return;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
-		sortedItems = primitives.common.mergeSort(levelsItems, getItemWeight, true);
+  /**
+   * Callback for finding distance for element
+   *
+   * @callback onTreeLevelDistanceCallback
+   * @param {number} itemid Element id
+   * @param {object} item Conext object
+   * @returns {number} Returns distance for the element
+   */
 
-		if (onItem != null) {
-			for (index = 0, len = sortedItems.length; index < len; index += 1) {
-				itemid = sortedItems[index];
-				if (onItem.call(thisArg, itemid, _items[itemid].context)) {
-					break;
-				}
-			}
-		}
-	}
+  /**
+   * Searchs element at level using binary search
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {number} levelIndex Level index to search element at
+   * @param {onTreeLevelDistanceCallback} onGetDistance A callback function to measure distance for element
+   */
+  function binarySearch(thisArg, levelIndex, onGetDistance) {
+    var result = null,
+      level;
+    if (onGetDistance != null) {
+      level = _levels[levelIndex];
+      if (level != null) {
+        result = primitives.common.binarySearch(level.items, function (itemid) {
+          return onGetDistance.call(thisArg, itemid, _items[itemid].context);
+        });
+      }
+    }
+    return result.item;
+  }
 
-	function loopFromItem(thisArg, itemid, isLeft, onItem, level) {
-		var context,
-			index, len,
-			items, nextItemId,
-			itemLevel, position;
-		if (_items.hasOwnProperty(itemid)) {
-			context = _items[itemid];
-			itemLevel = level || context.startLevel;
-			items = _levels[itemLevel].items;
-			position = context.positions[itemLevel];
-			if (onItem != null) {
-				if (isLeft) {
-					for (index = position - 1; index >= 0; index -= 1) {
-						nextItemId = items[index];
-						if (onItem.call(thisArg, nextItemId, _items[nextItemId].context)) {
-							break;
-						}
-					}
-				} else {
-					for (index = position + 1, len = items.length; index < len; index += 1) {
-						nextItemId = items[index];
-						if (onItem.call(thisArg, nextItemId, _items[nextItemId].context)) {
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
+  /**
+   * Callback for finding weight of element
+   *
+   * @callback onTreeLevelItemWeightCallback
+   * @param {number} itemid Element id
+   * @param {object} item Conext object
+   * @returns {number} Returns distance for the element
+   */
 
-	function loopLevelsFromItem(thisArg, itemid, isBelow, onItem) { // function(levelIndex, level)
-		var context,
-			index, len,
-			items, item, nextItemId,
-			nextLevels, level;
-		if (_items.hasOwnProperty(itemid)) {
-			context = _items[itemid];
-			if (onItem != null) {
-				if (isBelow) {
-					for (index = context.endLevel + 1; index <= _maximum; index += 1) {
-						level = _levels[index];
-						if (onItem.call(thisArg, index, level != null ? level.context : null)) {
-							break;
-						}
-					}
-				} else {
-					for (index = context.startLevel - 1; index >= _minimum; index -= 1) {
-						level = _levels[index];
-						if (onItem.call(thisArg, index, level != null ? level.context : null)) {
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
+  /**
+   * Callback for iterating items
+   *
+   * @callback onTreeLevelMergedItemCallback
+   * @param {number} itemid Element id
+   * @param {object} item Conext object
+   * @returns {number} Returns true to break iteration process.
+   */
 
-	function clone() {
-		return primitives.common.TreeLevels({
-			levels: _levels,
-			items: _items,
-			minimum: _minimum,
-			maximum: _maximum
-		});
-	}
+  /**
+   * Loops merged elements of tree level structure by weight
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onTreeLevelItemWeightCallback} getItemWeight Callback to measure weight of the element
+   * @param {onTreeLevelMergedItemCallback} onItem Callback to iterate merged elements
+   */
+  function loopMerged(thisArg, getItemWeight, onItem) {
+    var index, len,
+      level,
+      itemid,
+      levelsItems = [],
+      sortedItems;
 
-	return {
-		addlevel: addLevel,
-		hasLevel: hasLevel,
-		hasItem: hasItem,
-		addItem: addItem,
-		getItemContext: getItemContext,
-		getLevelIndex: getStartLevelIndex,
-		getEndLevelIndex: getEndLevelIndex,
-		getItemPosition: getItemPosition,
-		getItemAtPosition: getItemAtPosition,
-		loopLevels: loopLevels,
-		loopLevelsReversed: loopLevelsReversed,
-		loopLevelItems: loopLevelItems,
-		getLevelLength: getLevelLength,
-		loopItems: loopItems,
-		binarySearch: binarySearch,
-		loopMerged: loopMerged,
-		loopFromItem: loopFromItem,
-		loopLevelsFromItem: loopLevelsFromItem,
-		getPrevItem: getPrevItem,
-		getNextItem: getNextItem,
-		length: length,
-		isEmpty: isEmpty,
+    for (index = 0, len = _levels.length; index < len; index += 1) {
+      level = _levels[index];
+      if (level != null) {
+        levelsItems.push(level.items);
+      }
+    }
 
-		clone: clone
-	};
+    sortedItems = primitives.common.mergeSort(levelsItems, getItemWeight, true);
+
+    if (onItem != null) {
+      for (index = 0, len = sortedItems.length; index < len; index += 1) {
+        itemid = sortedItems[index];
+        if (onItem.call(thisArg, itemid, _items[itemid].context)) {
+          break;
+        }
+      }
+    }
+  }
+
+  /**
+   * Loops level elements starting with the given item
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} itemid Start element id
+   * @param {boolean} isLeft If true thenmethod loops leftward
+   * @param {onTreeLevelMergedItemCallback} onItem Callback function to call for every item
+   * @param {number} level Level index
+   */
+  function loopFromItem(thisArg, itemid, isLeft, onItem, level) {
+    var context,
+      index, len,
+      items, nextItemId,
+      itemLevel, position;
+    if (_items.hasOwnProperty(itemid)) {
+      context = _items[itemid];
+      itemLevel = level || context.startLevel;
+      items = _levels[itemLevel].items;
+      position = context.positions[itemLevel];
+      if (onItem != null) {
+        if (isLeft) {
+          for (index = position - 1; index >= 0; index -= 1) {
+            nextItemId = items[index];
+            if (onItem.call(thisArg, nextItemId, _items[nextItemId].context)) {
+              break;
+            }
+          }
+        } else {
+          for (index = position + 1, len = items.length; index < len; index += 1) {
+            nextItemId = items[index];
+            if (onItem.call(thisArg, nextItemId, _items[nextItemId].context)) {
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Loops levels starting with the given element end level. Element may occupy multiple levels, 
+   * so this method starts level iteration from next level after or before item levels.
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} itemid Element id
+   * @param {boolean} isBelow If true then method loops levels backward
+   * @param {onTreeLevelCallback} onItem Callback function to call for every level
+   */
+  function loopLevelsFromItem(thisArg, itemid, isBelow, onItem) { // function(levelIndex, level)
+    var context,
+      index, len,
+      items, item, nextItemId,
+      nextLevels, level;
+    if (_items.hasOwnProperty(itemid)) {
+      context = _items[itemid];
+      if (onItem != null) {
+        if (isBelow) {
+          for (index = context.endLevel + 1; index <= _maximum; index += 1) {
+            level = _levels[index];
+            if (onItem.call(thisArg, index, level != null ? level.context : null)) {
+              break;
+            }
+          }
+        } else {
+          for (index = context.startLevel - 1; index >= _minimum; index -= 1) {
+            level = _levels[index];
+            if (onItem.call(thisArg, index, level != null ? level.context : null)) {
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Clones tree levels structure.
+   * 
+   * @returns {TreeLevels} Returns cloned copy of the structure
+   */
+  function clone() {
+    return primitives.common.TreeLevels({
+      levels: _levels,
+      items: _items,
+      minimum: _minimum,
+      maximum: _maximum
+    });
+  }
+
+  return {
+    addlevel: addLevel,
+    hasLevel: hasLevel,
+    hasItem: hasItem,
+    addItem: addItem,
+    getItemContext: getItemContext,
+    getLevelIndex: getStartLevelIndex,
+    getEndLevelIndex: getEndLevelIndex,
+    getItemPosition: getItemPosition,
+    getItemAtPosition: getItemAtPosition,
+    loopLevels: loopLevels,
+    loopLevelsReversed: loopLevelsReversed,
+    loopLevelItems: loopLevelItems,
+    getLevelLength: getLevelLength,
+    loopItems: loopItems,
+    binarySearch: binarySearch,
+    loopMerged: loopMerged,
+    loopFromItem: loopFromItem,
+    loopLevelsFromItem: loopLevelsFromItem,
+    getPrevItem: getPrevItem,
+    getNextItem: getNextItem,
+    length: length,
+    isEmpty: isEmpty,
+
+    clone: clone
+  };
 };
 
 /* /Managers/DependencyManager.js*/
@@ -29822,6 +30856,14 @@ primitives.pdf.graphics.prototype.getPxSize = function (value, base) {
 };
 
 /* /pdf/FamDiagram/Plugin.js*/
+/**
+ * Creates PDFKit Family Diagram Plugin
+ * @class Plugin
+ * 
+ * @param {Config} options Family Diagram Configuration object
+ * 
+ * @returns {orgdiagram} Returns reference to family chart PDFKit renderer instance.
+ */
 primitives.pdf.famdiagram.Plugin = function (options) {
   var _data = {
     name: "famdiagram",
@@ -30029,6 +31071,14 @@ primitives.pdf.famdiagram.Plugin = function (options) {
     _data.options.autoSizeMaximum = new primitives.common.Size(100000, 100000);
   }
 
+  /**
+   * Calculates size of the diagram required to render all nodes without truncation.
+   * 
+   * @param {object} doc PDFKit document
+   * @param {number} positionX Diagram placement X coordinate
+   * @param {number} positionY Diagram placement Y coordinate
+   * @returns {Size} Returns size of the diagram
+   */
   function draw(doc, positionX, positionY) {
     _data.doc = doc;
 
@@ -30051,6 +31101,11 @@ primitives.pdf.famdiagram.Plugin = function (options) {
     return new primitives.common.Size(alignDiagramTask.getContentSize());
   }
 
+  /**
+   * Calculates size of the diagram required to render all nodes without truncation.
+   * 
+   * @returns {Size} Returns size of the diagram
+   */
   function getSize() {
     _data.tasks = createTaskManager(getOptions, getGraphics);
 
@@ -30288,224 +31343,245 @@ primitives.pdf.orgdiagram.DummyCombinedNormalVisibilityItemsTask = function (opt
 };
 
 /* /pdf/OrgDiagram/Plugin.js*/
+/**
+ * Creates PDFKit Organizational Chart Plugin
+ * @class Plugin
+ * 
+ * @param {Config} options Organizational Chart Configuration object
+ * 
+ * @returns {orgdiagram} Returns reference to organizational chart PDFKit renderer instance.
+ */
 primitives.pdf.orgdiagram.Plugin = function (options) {
-	var _data = {
-		name: "orgdiagram",
-		doc: null,
-		options: options,
-		tasks: null,
-		graphics: null
-	},
-	_scale,
-	_debug = false;
+  var _data = {
+    name: "orgdiagram",
+    doc: null,
+    options: options,
+    tasks: null,
+    graphics: null
+  },
+    _scale,
+    _debug = false;
 
-	function getOptions() {
-		return _data.options;
-	}
+  function getOptions() {
+    return _data.options;
+  }
 
-	function getGraphics() {
-		return _data.graphics;
-	}
+  function getGraphics() {
+    return _data.graphics;
+  }
 
-	function createTaskManager() {
-		var tasks = new primitives.common.TaskManager();
+  function createTaskManager() {
+    var tasks = new primitives.common.TaskManager();
 
-		// Dependencies
-		tasks.addDependency('options', getOptions);
-		tasks.addDependency('graphics', getGraphics);
+    // Dependencies
+    tasks.addDependency('options', getOptions);
+    tasks.addDependency('graphics', getGraphics);
 
-		tasks.addDependency('defaultConfig', new primitives.orgdiagram.Config());
-		tasks.addDependency('defaultItemConfig', new primitives.orgdiagram.ItemConfig());
-		tasks.addDependency('defaultTemplateConfig', new primitives.orgdiagram.TemplateConfig());
-		tasks.addDependency('defaultButtonConfig', new primitives.orgdiagram.ButtonConfig());
+    tasks.addDependency('defaultConfig', new primitives.orgdiagram.Config());
+    tasks.addDependency('defaultItemConfig', new primitives.orgdiagram.ItemConfig());
+    tasks.addDependency('defaultTemplateConfig', new primitives.orgdiagram.TemplateConfig());
+    tasks.addDependency('defaultButtonConfig', new primitives.orgdiagram.ButtonConfig());
 
-		tasks.addDependency('defaultBackgroundAnnotationConfig', new primitives.orgdiagram.BackgroundAnnotationConfig());
-		tasks.addDependency('defaultConnectorAnnotationConfig', new primitives.orgdiagram.ConnectorAnnotationConfig());
-		tasks.addDependency('defaultHighlightPathAnnotationConfig', new primitives.orgdiagram.HighlightPathAnnotationConfig());
-		tasks.addDependency('defaultShapeAnnotationConfig', new primitives.orgdiagram.ShapeAnnotationConfig());
+    tasks.addDependency('defaultBackgroundAnnotationConfig', new primitives.orgdiagram.BackgroundAnnotationConfig());
+    tasks.addDependency('defaultConnectorAnnotationConfig', new primitives.orgdiagram.ConnectorAnnotationConfig());
+    tasks.addDependency('defaultHighlightPathAnnotationConfig', new primitives.orgdiagram.HighlightPathAnnotationConfig());
+    tasks.addDependency('defaultShapeAnnotationConfig', new primitives.orgdiagram.ShapeAnnotationConfig());
 
-		tasks.addDependency('isFamilyChartMode', false);
-		tasks.addDependency('showElbowDots', false);
-		tasks.addDependency('null', null);
-		tasks.addDependency('foreground', 2/*primitives.common.ZOrderType.Foreground*/);
-		tasks.addDependency('background', 1/*primitives.common.ZOrderType.Background*/);
+    tasks.addDependency('isFamilyChartMode', false);
+    tasks.addDependency('showElbowDots', false);
+    tasks.addDependency('null', null);
+    tasks.addDependency('foreground', 2/*primitives.common.ZOrderType.Foreground*/);
+    tasks.addDependency('background', 1/*primitives.common.ZOrderType.Background*/);
 
-		// Options
-		tasks.addTask('OptionsTask', ['options'], primitives.orgdiagram.OptionsTask, "#000000"/*primitives.common.Colors.Black*/);
+    // Options
+    tasks.addTask('OptionsTask', ['options'], primitives.orgdiagram.OptionsTask, "#000000"/*primitives.common.Colors.Black*/);
 
-		tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.orgdiagram.ItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig', 'defaultButtonConfig'], primitives.orgdiagram.ItemsSizesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultButtonConfig', 'defaultTemplateConfig'], primitives.orgdiagram.TemplatesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.OrientationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('VisualTreeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.VisualTreeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.orgdiagram.ItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig', 'defaultButtonConfig'], primitives.orgdiagram.ItemsSizesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultButtonConfig', 'defaultTemplateConfig'], primitives.orgdiagram.TemplatesOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.OrientationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('VisualTreeOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.VisualTreeOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-		tasks.addTask('CursorItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('HighlightItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.HighlightItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('SelectedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.SelectedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('CursorItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.CursorItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('HighlightItemOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.HighlightItemOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('SelectedItemsOptionTask', ['OptionsTask'], primitives.orgdiagram.SelectedItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-		tasks.addTask('SplitAnnotationsOptionTask', ['OptionsTask'], primitives.orgdiagram.SplitAnnotationsOptionTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('SplitAnnotationsOptionTask', ['OptionsTask'], primitives.orgdiagram.SplitAnnotationsOptionTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('ForegroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'foreground'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'background'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ForegroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'foreground'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'background'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
-		tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], primitives.orgdiagram.BackgroundAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('ForegroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'foreground'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('BackgroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'background'], primitives.orgdiagram.ShapeAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('ForegroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'foreground'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('BackgroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'background'], primitives.orgdiagram.HighlightPathAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], primitives.orgdiagram.ConnectorAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], primitives.orgdiagram.BackgroundAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-		tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ScaleOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+    tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ScaleOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
-		// Transformations
-		tasks.addTask('CombinedContextsTask', ['ItemsOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('OrgTreeTask', ['ItemsOptionTask'], primitives.orgdiagram.OrgTreeTask, "#ff0000"/*primitives.common.Colors.Red*/);
+    // Transformations
+    tasks.addTask('CombinedContextsTask', ['ItemsOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('OrgTreeTask', ['ItemsOptionTask'], primitives.orgdiagram.OrgTreeTask, "#ff0000"/*primitives.common.Colors.Red*/);
 
-		// Transformations / Templates
-		tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask'], primitives.pdf.orgdiagram.ReadTemplatesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		// TODO: Add jsPDF templates
-		tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ItemTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask'], primitives.pdf.orgdiagram.GroupTitleTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask'], primitives.pdf.orgdiagram.CheckBoxTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask'], primitives.pdf.orgdiagram.ButtonsTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask'], primitives.pdf.orgdiagram.AnnotationLabelTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    // Transformations / Templates
+    tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask'], primitives.pdf.orgdiagram.ReadTemplatesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    // TODO: Add jsPDF templates
+    tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], primitives.orgdiagram.ItemTemplateParamsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask'], primitives.pdf.orgdiagram.GroupTitleTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask'], primitives.pdf.orgdiagram.CheckBoxTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask'], primitives.pdf.orgdiagram.ButtonsTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask'], primitives.pdf.orgdiagram.AnnotationLabelTemplateTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'null', 'VisualTreeOptionTask', 'isFamilyChartMode'], primitives.orgdiagram.VisualTreeTask, "#ff0000"/*primitives.common.Colors.Red*/);
-		tasks.addTask('VisualTreeLevelsTask', ['VisualTreeTask', 'ItemTemplateParamsTask'], primitives.orgdiagram.VisualTreeLevelsTask, "#ff0000"/*primitives.common.Colors.Red*/);
+    tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'null', 'VisualTreeOptionTask', 'isFamilyChartMode'], primitives.orgdiagram.VisualTreeTask, "#ff0000"/*primitives.common.Colors.Red*/);
+    tasks.addTask('VisualTreeLevelsTask', ['VisualTreeTask', 'ItemTemplateParamsTask'], primitives.orgdiagram.VisualTreeLevelsTask, "#ff0000"/*primitives.common.Colors.Red*/);
 
-		tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'VisualTreeLevelsTask', 'AlignDiagramTask'], primitives.orgdiagram.ConnectionsGraphTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'VisualTreeLevelsTask', 'AlignDiagramTask'], primitives.orgdiagram.ConnectionsGraphTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		// Transformations/Selections
-		tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'null'], primitives.orgdiagram.HighlightItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    // Transformations/Selections
+    tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'null'], primitives.orgdiagram.HighlightItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'null'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('CombinedNormalVisibilityItemsTask', ['OptionsTask'], primitives.pdf.orgdiagram.DummyCombinedNormalVisibilityItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'null'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('CombinedNormalVisibilityItemsTask', ['OptionsTask'], primitives.pdf.orgdiagram.DummyCombinedNormalVisibilityItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('CurrentControlSizeTask', ['OptionsTask'], primitives.pdf.orgdiagram.DummyCurrentControlSizeTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'VisualTreeOptionTask',
-			'VisualTreeTask', 'VisualTreeLevelsTask',
-			'ItemTemplateParamsTask',
-			'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], primitives.orgdiagram.ItemsPositionsTask, "#ff0000"/*primitives.common.Colors.Red*/);
+    tasks.addTask('CurrentControlSizeTask', ['OptionsTask'], primitives.pdf.orgdiagram.DummyCurrentControlSizeTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'VisualTreeOptionTask',
+      'VisualTreeTask', 'VisualTreeLevelsTask',
+      'ItemTemplateParamsTask',
+      'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], primitives.orgdiagram.ItemsPositionsTask, "#ff0000"/*primitives.common.Colors.Red*/);
 
-		tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'null', 'ItemsPositionsTask', 'isFamilyChartMode'], primitives.orgdiagram.AlignDiagramTask, "#ff0000"/*primitives.common.Colors.Red*/);
-		tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.CreateTransformTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'null', 'ItemsPositionsTask', 'isFamilyChartMode'], primitives.orgdiagram.AlignDiagramTask, "#ff0000"/*primitives.common.Colors.Red*/);
+    tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.CreateTransformTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		// Managers
-		tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'null'], primitives.orgdiagram.PaletteManagerTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    // Managers
+    tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'null'], primitives.orgdiagram.PaletteManagerTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		// Renders
-		tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'VisualTreeTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawBackgroundAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundAnnotationTask' /*dummy dependency enforeces drawing order */], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundShapeAnnotationTask'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+    // Renders
+    tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'VisualTreeTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawBackgroundAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundAnnotationTask' /*dummy dependency enforeces drawing order */], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundShapeAnnotationTask'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
 
-		tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'null',
-			'ItemsSizesOptionTask',
-			'CombinedContextsTask',
-			'AlignDiagramTask', 'null',
-			'ItemTemplateParamsTask',
-			'CursorItemTask', 'SelectedItemsTask',
-			'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask',
-			'DrawBackgroundConnectorAnnotationTask'
-		], primitives.orgdiagram.DrawTreeItemsTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'null',
+      'ItemsSizesOptionTask',
+      'CombinedContextsTask',
+      'AlignDiagramTask', 'null',
+      'ItemTemplateParamsTask',
+      'CursorItemTask', 'SelectedItemsTask',
+      'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask',
+      'DrawBackgroundConnectorAnnotationTask'
+    ], primitives.orgdiagram.DrawTreeItemsTask, "#008000"/*primitives.common.Colors.Green*/);
 
-		tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground', 'DrawTreeItemsTask'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-		tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask', 'DrawBackgroundHighlightPathAnnotationTask'], primitives.orgdiagram.DrawConnectorsTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background', 'DrawConnectorsTask'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground', 'DrawTreeItemsTask'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask', 'DrawBackgroundHighlightPathAnnotationTask'], primitives.orgdiagram.DrawConnectorsTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background', 'DrawConnectorsTask'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
-		tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawForegroundHighlightPathAnnotationTask'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawForegroundShapeAnnotationTask'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawForegroundHighlightPathAnnotationTask'], primitives.orgdiagram.DrawShapeAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawForegroundShapeAnnotationTask'], primitives.orgdiagram.DrawConnectorAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
 
 
-		tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawForegroundConnectorAnnotationTask'], primitives.orgdiagram.DrawCursorTask, "#008000"/*primitives.common.Colors.Green*/);
-		tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawCursorTask'], primitives.orgdiagram.DrawHighlightTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawForegroundConnectorAnnotationTask'], primitives.orgdiagram.DrawCursorTask, "#008000"/*primitives.common.Colors.Green*/);
+    tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawCursorTask'], primitives.orgdiagram.DrawHighlightTask, "#008000"/*primitives.common.Colors.Green*/);
 
-		return tasks;
-	}
+    return tasks;
+  }
 
-	function createEventArgs(data, oldTreeItemId, newTreeItemId, name) {
-		var result = new primitives.orgdiagram.EventArgs(),
-			combinedContextsTask = data.tasks.getTask("CombinedContextsTask"),
-			alignDiagramTask = data.tasks.getTask("AlignDiagramTask"),
-			oldItemConfig = combinedContextsTask.getConfig(oldTreeItemId),
-			newItemConfig = combinedContextsTask.getConfig(newTreeItemId),
-			itemPosition,
-			actualPosition;
+  function createEventArgs(data, oldTreeItemId, newTreeItemId, name) {
+    var result = new primitives.orgdiagram.EventArgs(),
+      combinedContextsTask = data.tasks.getTask("CombinedContextsTask"),
+      alignDiagramTask = data.tasks.getTask("AlignDiagramTask"),
+      oldItemConfig = combinedContextsTask.getConfig(oldTreeItemId),
+      newItemConfig = combinedContextsTask.getConfig(newTreeItemId),
+      itemPosition,
+      actualPosition;
 
-		if (oldItemConfig && oldItemConfig.id != null) {
-			result.oldContext = oldItemConfig;
-		}
+    if (oldItemConfig && oldItemConfig.id != null) {
+      result.oldContext = oldItemConfig;
+    }
 
-		if (newItemConfig && newItemConfig.id != null) {
-			result.context = newItemConfig;
+    if (newItemConfig && newItemConfig.id != null) {
+      result.context = newItemConfig;
 
-			if (newItemConfig.parent !== null) {
-				result.parentItem = combinedContextsTask.getConfig(newItemConfig.parent);
-			}
+      if (newItemConfig.parent !== null) {
+        result.parentItem = combinedContextsTask.getConfig(newItemConfig.parent);
+      }
 
-			itemPosition = alignDiagramTask.getItemPosition(newTreeItemId),
-			result.position = new primitives.common.Rect(itemPosition.actualPosition);
-		}
+      itemPosition = alignDiagramTask.getItemPosition(newTreeItemId),
+        result.position = new primitives.common.Rect(itemPosition.actualPosition);
+    }
 
-		if (name != null) {
-			result.name = name;
-		}
+    if (name != null) {
+      result.name = name;
+    }
 
-		return result;
-	}
+    return result;
+  }
 
-	function trigger(eventHandlerName, event, eventArgs) {
-		var eventHandler = _data.options[eventHandlerName];
-		if (eventHandler != null) {
-			eventHandler(event, eventArgs);
-		}
-	}
+  function trigger(eventHandlerName, event, eventArgs) {
+    var eventHandler = _data.options[eventHandlerName];
+    if (eventHandler != null) {
+      eventHandler(event, eventArgs);
+    }
+  }
 
-	function _disableNotAvailableFunctionality() {
-		/* disable functionality not available in PDF */
-		_data.options.hasButtons = 2/*primitives.common.Enabled.False*/;
-		_data.options.pageFitMode = 5/*primitives.common.PageFitMode.AutoSize*/;
-		_data.options.autoSizeMaximum = new primitives.common.Size(100000, 100000);
-	}
+  function _disableNotAvailableFunctionality() {
+    /* disable functionality not available in PDF */
+    _data.options.hasButtons = 2/*primitives.common.Enabled.False*/;
+    _data.options.pageFitMode = 5/*primitives.common.PageFitMode.AutoSize*/;
+    _data.options.autoSizeMaximum = new primitives.common.Size(100000, 100000);
+  }
 
-	function draw(doc, positionX, positionY) {
-		_data.doc = doc;
+  /**
+   * Calculates size of the diagram required to render all nodes without truncation.
+   * 
+   * @param {object} doc PDFKit document
+   * @param {number} positionX Diagram placement X coordinate
+   * @param {number} positionY Diagram placement Y coordinate
+   * @returns {Size} Returns size of the diagram
+   */
+  function draw(doc, positionX, positionY) {
+    _data.doc = doc;
 
-		_data.tasks = createTaskManager(getOptions, getGraphics);
-		_data.graphics = new primitives.pdf.graphics(_data.doc);
-		_data.graphics.debug = _debug;
+    _data.tasks = createTaskManager(getOptions, getGraphics);
+    _data.graphics = new primitives.pdf.graphics(_data.doc);
+    _data.graphics.debug = _debug;
 
-		_disableNotAvailableFunctionality();
+    _disableNotAvailableFunctionality();
 
-		_data.doc.save();
+    _data.doc.save();
 
-		_data.doc.translate(positionX, positionY);
+    _data.doc.translate(positionX, positionY);
 
-		_data.tasks.process('OptionsTask', null, _debug);
+    _data.tasks.process('OptionsTask', null, _debug);
 
-		_data.doc.restore();
+    _data.doc.restore();
 
-		var alignDiagramTask = _data.tasks.getTask("AlignDiagramTask");
+    var alignDiagramTask = _data.tasks.getTask("AlignDiagramTask");
 
-		return new primitives.common.Size(alignDiagramTask.getContentSize());
-	}
+    return new primitives.common.Size(alignDiagramTask.getContentSize());
+  }
 
-	function getSize() {
-		_data.tasks = createTaskManager(getOptions, getGraphics);
+  /**
+   * Calculates size of the diagram required to render all nodes without truncation.
+   * 
+   * @returns {Size} Returns size of the diagram
+   */
+  function getSize() {
+    _data.tasks = createTaskManager(getOptions, getGraphics);
 
-		_disableNotAvailableFunctionality();
+    _disableNotAvailableFunctionality();
 
-		_data.tasks.process('OptionsTask', 'AlignDiagramTask', _debug);
+    _data.tasks.process('OptionsTask', 'AlignDiagramTask', _debug);
 
-		var alignDiagramTask = _data.tasks.getTask("AlignDiagramTask");
+    var alignDiagramTask = _data.tasks.getTask("AlignDiagramTask");
 
-		return new primitives.common.Size(alignDiagramTask.getContentSize());
-	}
+    return new primitives.common.Size(alignDiagramTask.getContentSize());
+  }
 
-	return {
-		draw: draw,
-		getSize: getSize
-	};
+  return {
+    draw: draw,
+    getSize: getSize
+  };
 };
 
 

@@ -92,114 +92,124 @@ primitives.common.jQueryButtonsTemplate = function (options) {
 
 /* /orgdiagram/Widget.js*/
 primitives.orgdiagram.Widget = function (Config, taskManagerFactory, eventArgsFactory, templates) {
-	this.widgetEventPrefix = "orgdiagram";
+  this.widgetEventPrefix = "orgdiagram";
 
-	this.options = new Config();
+  this.options = new Config();
 
-	this.control = null;
+  this.control = null;
 
-	this.taskManagerFactory = taskManagerFactory;
-	this.eventArgsFactory = eventArgsFactory;
-	this.templates = templates;
+  this.taskManagerFactory = taskManagerFactory;
+  this.eventArgsFactory = eventArgsFactory;
+  this.templates = templates;
 };
 
 primitives.orgdiagram.Widget.prototype._create = function () {
-	this.element.addClass("ui-widget");
+  this.element.addClass("ui-widget");
 
-	this.control = primitives.orgdiagram.BaseControl(this.element[0], this._readOptions(this.options), this.taskManagerFactory, this.eventArgsFactory, this.templates);
+  this.control = primitives.orgdiagram.BaseControl(this.element[0], this._readOptions(this.options), this.taskManagerFactory, this.eventArgsFactory, this.templates);
 };
 
+/**
+ * Removes all elements control added to DOM incluidng event listeners.
+ */
 primitives.orgdiagram.Widget.prototype.destroy = function () {
-	this.control.destroy();
+  this.control.destroy();
 };
 
+/**
+ * Makes full redraw of diagram contents reevaluating all options. This method has to be called explisitly
+ * after all options are set in order to update controls contents.
+ * 
+ * @param {UpdateMode} updateMode 
+ * @param {bollean} forceCenterOnCursor 
+ */
 primitives.orgdiagram.Widget.prototype.update = function (updateMode, centerOnCursor) {
-	this.control.update(updateMode, centerOnCursor);
+  this.control.update(updateMode, centerOnCursor);
 };
 
 primitives.orgdiagram.Widget.prototype._setOption = function (key, value) {
-	jQuery.Widget.prototype._setOption.apply(this, arguments);
+  jQuery.Widget.prototype._setOption.apply(this, arguments);
 
-	switch (key) {
-		case "disabled":
-			var handles = jQuery([]);
-			if (value) {
-				handles.filter(".ui-state-focus").blur();
-				handles.removeClass("ui-state-hover");
-				handles.propAttr("disabled", true);
-				this.element.addClass("ui-disabled");
-			} else {
-				handles.propAttr("disabled", false);
-				this.element.removeClass("ui-disabled");
-			}
-			break;
-		default:
-			break;
-	}
+  switch (key) {
+    case "disabled":
+      var handles = jQuery([]);
+      if (value) {
+        handles.filter(".ui-state-focus").blur();
+        handles.removeClass("ui-state-hover");
+        handles.propAttr("disabled", true);
+        this.element.addClass("ui-disabled");
+      } else {
+        handles.propAttr("disabled", false);
+        this.element.removeClass("ui-disabled");
+      }
+      break;
+    default:
+      break;
+  }
 
-	this.control.setOptions(this._readOptions(this.options));
+  this.control.setOptions(this._readOptions(this.options));
 };
 
 primitives.orgdiagram.Widget.prototype._readOptions = function (options) {
-	var result = {},
-		self = this;
-	/* shallow copy */
-	for (var property in options) {
-		if (options.hasOwnProperty(property)) {
-			switch(property) {
-				case 'onHighlightChanged':
-				case 'onCursorChanged':
-				case 'onSelectionChanging':
-				case 'onButtonClick':
-				case 'onMouseClick':
-				case 'onMouseDblClick':
-					result[property] = function(property) { 
-						return function (event, eventArgs) {
-							self._trigger(property, event, eventArgs);
-						};
-					}(property);
-					break;
-				case 'onItemRender':
-				case 'onCursorRender':
-				case 'onHighlightRender':
-					result[property] = function (property) {
-						return function (event, eventArgs) {
-							eventArgs.element = jQuery(eventArgs.element);
-							self._trigger(property, event, eventArgs);
-						};
-					}(property);
-					break;
-				case 'onHighlightChanging':
-					result[property] = function (event, eventArgs) {
-						var options = self.control.getOptions();
-						self.options.highlightItem = options.highlightItem;
+  var result = {},
+    self = this;
+  /* shallow copy */
+  for (var property in options) {
+    if (options.hasOwnProperty(property)) {
+      switch (property) {
+        case 'onHighlightChanged':
+        case 'onCursorChanged':
+        case 'onSelectionChanging':
+        case 'onButtonClick':
+        case 'onMouseClick':
+        case 'onMouseDblClick':
+          result[property] = function (property) {
+            return function (event, eventArgs) {
+              self._trigger(property, event, eventArgs);
+            };
+          }(property);
+          break;
+        case 'onItemRender':
+        case 'onCursorRender':
+        case 'onHighlightRender':
+          result[property] = function (property) {
+            return function (event, eventArgs) {
+              eventArgs.element = jQuery(eventArgs.element);
+              self._trigger(property, event, eventArgs);
+            };
+          }(property);
+          break;
+        case 'onHighlightChanging':
+          result[property] = function (event, eventArgs) {
+            var options = self.control.getOptions();
+            self.options.highlightItem = options.highlightItem;
 
-						self._trigger("onHighlightChanging", event, eventArgs);
-					};
-					break;
-				case 'onCursorChanging':
-					result[property] = function (event, eventArgs) {
-						var options = self.control.getOptions();
-						self.options.cursorItem = options.cursorItem;
+            self._trigger("onHighlightChanging", event, eventArgs);
+          };
+          break;
+        case 'onCursorChanging':
+          result[property] = function (event, eventArgs) {
+            var options = self.control.getOptions();
+            self.options.cursorItem = options.cursorItem;
 
-						self._trigger("onCursorChanging", event, eventArgs);
-					};
-					break;
-				case 'onSelectionChanged':
-					result[property] = function (event, eventArgs) {
-						var options = self.control.getOptions();
-						self.options.selectedItems = options.selectedItems;
+            self._trigger("onCursorChanging", event, eventArgs);
+          };
+          break;
+        case 'onSelectionChanged':
+          result[property] = function (event, eventArgs) {
+            var options = self.control.getOptions();
+            self.options.selectedItems = options.selectedItems;
 
-						self._trigger("onSelectionChanged", event, eventArgs);
-					};
-					break;
-				default:
-					result[property] = options[property];
-					break;
-			}
-		}
-	}
-	return result;
+            self._trigger("onSelectionChanged", event, eventArgs);
+          };
+          break;
+        default:
+          result[property] = options[property];
+          break;
+      }
+    }
+  }
+  return result;
 };
 
 /* /orgdiagram/orgDiagram.js*/
@@ -231,111 +241,99 @@ if (typeof jQuery != "undefined") {
 }; //ignore jslint
 
 /* /callout/configs/Config.js*/
-/*
-	Class: primitives.callout.Config
-		Callout options class.
-	
-*/
+/**
+ * @class primitives.callout.Config
+ * 
+ * Callout configuration object.
+ */
 primitives.callout.Config = function () {
-	this.classPrefix = "bpcallout";
+  this.classPrefix = "bpcallout";
 
-	/*
-		Property: graphicsType
-			Preferable graphics type. If preferred graphics type is not supported widget switches to first available. 
+  /**
+   * Sets prefered rendering technology. If selected graphics type is not supported on the device,
+   * then control will auto fallback to the first available one.
+   * 
+   * @type {GraphicsType}
+   */
+  this.graphicsType = primitives.common.GraphicsType.Canvas;
 
-		Default:
-			<primitives.common.GraphicsType.SVG>
-	*/
-	this.graphicsType = primitives.common.GraphicsType.Canvas;
+  /**
+   * Sets callout pointer attachment to one of its sides or corners.
+   * 
+   * @type {PlacementType}
+   */
+  this.pointerPlacement = primitives.common.PlacementType.Auto;
 
-	/*
-		Property: pointerPlacement
-			Defines pointer connection side or corner.
+  /**
+   * Sets callout body position
+   * 
+   * 
+   * @type {Rect}
+   */
+  this.position = null;
 
-		Default:
-			<primitives.common.PlacementType.Auto>
-	*/
-	this.pointerPlacement = primitives.common.PlacementType.Auto;
+  /**
+   * Sets callout snap point.
+   * 
+   * @type {Point}
+   */
+  this.snapPoint = null;
 
-	/*
-	Property: position
-		Defines callout body position. 
-		
-	Type:
-		<primitives.common.Rect>.
-	*/
-	this.position = null;
+  /**
+   * Callout annotation corner radius.
+   * 
+   * @type {string}
+   */
+  this.cornerRadius = "10%";
 
-	/*
-	Property: snapPoint
-		Callout snap point. 
-		
-	Type:
-		<primitives.common.Point>.
-	*/
-	this.snapPoint = null;
+  /**
+   * Callout body offset
+   * 
+   * @type {number}
+   */
+  this.offset = 0;
 
-	/*
-	Property: cornerRadius
-		Body corner radius in percents or pixels. 
-	*/
-	this.cornerRadius = "10%";
+  /**
+   * Background fill opacity. 
+   * 
+   * @type {number}
+   */
+  this.opacity = 1;
 
-	/*
-	Property: offset
-		Body rectangle offset. 
-	*/
-	this.offset = 0;
+  /**
+   * Callout border line width
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 1;
 
-	/*
-	Property: opacity
-		Background color opacity. 
-	*/
-	this.opacity = 1;
+  /**
+   * Borde line pattern.
+   * 
+   * @type {string}
+   */
+  this.lineType = primitives.common.LineType.Solid;
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 1;
+  /**
+   * Pointer base width in percents or pixels. 
+   * 
+   * @type {string|number}
+   */
+  this.pointerWidth = "10%";
 
-	/*
-	Property: lineType
-		Connector's line pattern.
+  /**
+   * Border line color
+   * 
+   * @type {string}
+   */
+  this.borderColor = primitives.common.Colors.Black;
 
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = primitives.common.LineType.Solid;
-
-	/*
-	Property: pointerWidth
-		Pointer base width in percents or pixels. 
-	*/
-	this.pointerWidth = "10%";
-
-	/*
-	Property: borderColor
-		Border Color. 
-	
-	Default:
-		<primitives.common.Colors.Black>
-	*/
-	this.borderColor = primitives.common.Colors.Black;
-
-	/*
-	Property: fillColor
-		Fill Color. 
-		
-	Default:
-		<primitives.common.Colors.Gray>
-	*/
-	this.fillColor = primitives.common.Colors.LightGray;
-
-	/*
-	method: update
-		Makes full redraw of callout widget contents reevaluating all options.
-	*/
+  /**
+   * Background fill color
+   * 
+   * @type {string}
+   */
+  this.fillColor = primitives.common.Colors.LightGray;
 };
 
 /* /callout/controllers/Controller.js*/
@@ -467,132 +465,116 @@ if (typeof jQuery != "undefined") {
 }; //ignore jslint
 
 /* /connector/configs/Config.js*/
-/*
-	Class: primitives.connector.Config
-		Connector options class.
-	
-*/
+/**
+ * @class primitives.connector.Config
+ * 
+ * Connector configuration object
+ */
 primitives.connector.Config = function () {
-	this.classPrefix = "bpconnector";
+  this.classPrefix = "bpconnector";
 
-	/*
-		Property: graphicsType
-			Preferable graphics type. If preferred graphics type is not supported widget switches to first available. 
+  /**
+   * Sets prefered rendering technology. If selected graphics type is not supported on the device,
+   * then control will auto fallback to the first available one.
+   * 
+   * @type {GraphicsType}
+   */
+  this.graphicsType = primitives.common.GraphicsType.Canvas;
 
-		Default:
-			<primitives.common.GraphicsType.SVG>
-	*/
-	this.graphicsType = primitives.common.GraphicsType.Canvas;
+  /**
+   * Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction,
+   * this is needed for Arabic support and various layouts.
+   * 
+   * @type {OrientationType}
+   */
+  this.orientationType = primitives.common.OrientationType.Top;
 
-	/*
-		Property: orientationType
-			Diagram orientation. 
+  /**
+   * Connector placement type defines style of connector line drawing over diagram layout. It supports two options: 
+   * the `Straight` is classic direct line connecting two nodes, this is the most expected style of connector annotation
+   * drawing over diagram, the second style is called `Offbeat` and it is designed to dynamically adopt to nodes mutual 
+   * location and gap between them. It uses free hand line style drawing going from start to the end node. Since every diagram 
+   * is packed with various connection lines, this annotation placement style is deliberately made not straight, so it can be 
+   * noticeable on top of other lines of the diagram.
+   * 
+   * @type {ConnectorPlacementType}
+   */
+  this.connectorPlacementType = primitives.common.ConnectorPlacementType.Offbeat;
 
-		Default:
-			<primitives.common.OrientationType.Top>
-	*/
-	this.orientationType = primitives.common.OrientationType.Top;
+  /**
+   * Connector shape type defines number of lines and arrows at their ends drawn between nodes of the connector annotation.
+   * This feature combined with basic conflict resolution, which places overlapping annotations in parallel when they overlap each other,
+   * gives you full flexibility over variations of possible connector lines between two given nodes of diagram.
+   * 
+   * @type {ConnectorShapeType}
+   */
+  this.connectorShapeType = primitives.common.ConnectorShapeType.OneWay;
 
-	/*
-		Property: connectorPlacementType
-			Defines connector annotation shape placement mode between two rectangles. 
-			It uses off beat placement mode as default in order to avoid overlapping
-			of base hierarchy connector lines.
+  /**
+   * Defines connectors starting rectangle position. 
+   * 
+   * @type {Rect}
+   */
+  this.fromRectangle = null;
 
-		Default:
-			<primitives.common.ConnectorPlacementType.Offbeat>
-	*/
-	this.connectorPlacementType = primitives.common.ConnectorPlacementType.Offbeat;
-
-	/*
-		Property: connectorShapeType
-			Connector shape type. 
-
-		Default:
-			<primitives.common.ConnectorShapeType.OneWay>
-	*/
-	this.connectorShapeType = primitives.common.ConnectorShapeType.OneWay;
-
-	/*
-	Property: position
-		Defines connectors starting rectangle position. 
-		
-	Type:
-		<primitives.common.Rect>.
-	*/
-	this.fromRectangle = null;
-
-	/*
-	Property: position
-		Defines connectors ending rectangle position. 
-		
-	Type:
-		<primitives.common.Rect>.
-	*/
-	this.toRectangle = null;
+  /**
+   * Defines connectors ending rectangle position. 
+   * 
+   * @type {Rect}
+   */
+  this.toRectangle = null;
 
 
-	/*
-	Property: offset
-		Connector's from and to points offset off the rectangles side. Connectors connection points can be outside of rectangles and inside for negative offset value.
-	See also:
-		<primitives.common.Thickness>
-	*/
-	this.offset = new primitives.common.Thickness(0, 0, 0, 0);
+  /**
+   * Connector line end points offset. By default connection lines start from the margin of the node's rectangle.
+   * If offset is positive then start point goes from outside of the rectangle, if it is negative then it starts from inside of the nodes rectangle.
+   * 
+   * @type {Thickness}
+   */
+  this.offset = new primitives.common.Thickness(0, 0, 0, 0);
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 3;
+  /**
+   * Connector line width
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 3;
 
-	/*
-	Property: color
-		Connector's color.
-	
-	Default:
-		<primitives.common.Colors.Black>
-	*/
-	this.color = primitives.common.Colors.Black;
+  /**
+   * Connector line color
+   * 
+   * @type {string}
+   */
+  this.color = primitives.common.Colors.Black;
 
-	/*
-	Property: lineType
-		Connector's line pattern.
+  /**
+   * Connector line pattern
+   * 
+   * @type {string}
+   */
+  this.lineType = primitives.common.LineType.Solid;
 
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = primitives.common.LineType.Solid;
+  /**
+   * Annotation label text. Label styled with css class name "bp-connector-label".
+   * 
+   * @type {string}
+   */
+  this.label = null;
 
+  /**
+   * Label size. It is used to position label without overlapping connected items.
+   * 
+   * @type {Size}
+   */
+  this.labelSize = new primitives.common.Size(60, 30);
 
-	/*
-	Property: label
-		Annotation label text. Label styled with css class name "bp-connector-label".
-	*/
-	this.label = null;
-
-	/*
-	Property: labelSize
-		Defines label size. It is needed to preserve space for label without overlapping connected items.
-
-	Default:
-		new <primitives.common.Size>(60, 30);
-	*/
-	this.labelSize = new primitives.common.Size(60, 30);
-
-	/*
-	Property: labelPlacementType
-		Defines conector label placement. Label can be placed between rectangles along connector line or close to one of them.
-
-	Default:
-		new <primitives.common.Size>(60, 30);
-	*/
-	this.labelPlacementType = primitives.common.ConnectorLabelPlacementType.Between;
-
-	/*
-	method: update
-		Makes full redraw of connector widget contents reevaluating all options.
-	*/
+  /**
+   * Sets conector label placement relative to connection line end points. Label can be placed between
+   * rectangles along connector line or close to one of them.
+   * 
+   * @type {ConnectorLabelPlacementType}
+   */
+  this.labelPlacementType = primitives.common.ConnectorLabelPlacementType.Between;
 };
 
 /* /connector/controllers/AnnotationLabelTemplate.js*/
@@ -885,139 +867,113 @@ if (typeof jQuery != "undefined") {
 	
 */
 primitives.shape.Config = function () {
-	this.classPrefix = "bpconnector";
+  this.classPrefix = "bpconnector";
 
-	/*
-		Property: graphicsType
-			Preferable graphics type. If preferred graphics type is not supported widget switches to first available. 
+  /**
+   * Sets prefered rendering technology. If selected graphics type is not supported on the device,
+   * then control will auto fallback to the first available one.
+   * 
+   * @type {GraphicsType}
+   */
+  this.graphicsType = primitives.common.GraphicsType.Canvas;
 
-		Default:
-			<primitives.common.GraphicsType.SVG>
-	*/
-	this.graphicsType = primitives.common.GraphicsType.Canvas;
+  /**
+   * Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction,
+   * this is needed for Arabic support and various layouts.
+   * 
+   * @type {OrientationType}
+   */
+  this.orientationType = primitives.common.OrientationType.Top;
 
-	/*
-		Property: orientationType
-			Diagram orientation. 
+  /**
+   * Shape
+   * 
+   * @type {ShapeType}
+   */
+  this.shapeType = primitives.common.ShapeType.Rectangle;
 
-		Default:
-			<primitives.common.OrientationType.Top>
-	*/
-	this.orientationType = primitives.common.OrientationType.Top;
+  /**
+   * Sets shapes bounding rectangle position. 
+   * 
+   * @type {Rect}
+   */
+  this.position = null;
 
-	/*
-		Property: shapeType
-			Shape type. 
+  /**
+   * Sets bounding rectangle offset
+   * 
+   * @type {Thickness}
+   */
+  this.offset = new primitives.common.Thickness(0, 0, 0, 0);
 
-		Default:
-			<primitives.common.ShapeType.Rectangle>
-	*/
-	this.shapeType = primitives.common.ShapeType.Rectangle;
+  /**
+   * Border line width
+   * 
+   * @type {number}
+   */
+  this.lineWidth = 2;
 
-	/*
-	Property: position
-		Defines shapes rectangle position. 
-		
-	Type:
-		<primitives.common.Rect>.
-	*/
-	this.position = null;
+  /**
+   * Corner radius. Body corner radius in percents or pixels. For applicable shapes only.
+   * 
+   * @type {string|number}
+   */
+  this.cornerRadius = "10%";
 
-	/*
-	Property: offset
-		Connector's from and to points offset off the rectangles side. Connectors connection points can be outside of rectangles and inside for negative offset value.
-	See also:
-		<primitives.common.Thickness>
-	*/
-	this.offset = new primitives.common.Thickness(0, 0, 0, 0);
+  /**
+   * Background color opacity.
+   * 
+   * @type {number}
+   */
+  this.opacity = 1;
 
-	/*
-	Property: lineWidth
-		Border line width. 
-	*/
-	this.lineWidth = 2;
+  /**
+   * Shape border line color.
+   * 
+   * @type {string}
+   */
+  this.borderColor = null;
 
-	/*
-	Property: cornerRadius
-		Body corner radius in percents or pixels. 
-	*/
-	this.cornerRadius = "10%";
+  /**
+   * Shape background fill color.
+   * 
+   * @type {string}
+   */
+  this.fillColor = null;
 
-	/*
-	Property: opacity
-		Background color opacity. 
-	*/
-	this.opacity = 1;
+  /**
+   * Shape border line pattern.
+   * 
+   * @type {LineType}
+   */
+  this.lineType = primitives.common.LineType.Solid;
 
-	/*
-	Property: borderColor
-		Shape border line color.
-	
-	Default:
-		<primitives.common.Colors.Black>
-	*/
-	this.borderColor = null;
+  /**
+   * Annotation label text. Label styled with css class name "bp-connector-label".
+   * 
+   * @type {string|undefined}
+   */
+  this.label = null;
 
-	/*
-	Property: fillColor
-		Fill Color. 
-	
-	Default:
-		<primitives.common.Colors.Gray>
-	*/
-	this.fillColor = null;
+  /**
+   * Label size
+   * @type {Size}
+   */
+  this.labelSize = new primitives.common.Size(60, 30);
 
-	/*
-	Property: lineType
-		Connector's line pattern.
+  /**
+   * Label placement relative to the shape.
+   * 
+   * @type {PlacementType}
+   */
+  this.labelPlacement = primitives.common.PlacementType.Auto;
 
-	Default:
-		<primitives.common.LineType.Solid>
-	*/
-	this.lineType = primitives.common.LineType.Solid;
-
-
-	/*
-	Property: label
-		Annotation label text. Label styled with css class name "bp-connector-label".
-	*/
-	this.label = null;
-
-	/*
-	Property: labelSize
-		Defines label size. It is needed to preserve space for label without overlapping connected items.
-
-	Default:
-		new <primitives.common.Size>(60, 30);
-	*/
-	this.labelSize = new primitives.common.Size(60, 30);
-
-	/*
-	Property: labelPlacement
-		Defines label placement relative to the shape. 
-
-	See Also:
-		<primitives.orgdiagram.Config.labelPlacement>
-		<primitives.common.PlacementType>
-
-	Default:
-		<primitives.common.PlacementType.Auto>
-	*/
-	this.labelPlacement = primitives.common.PlacementType.Auto;
-
-	/*
-	Property: labelOffset
-		Defines label offset from shape in pixels.
-
-	Default:
-		4;
-	*/
-	this.labelOffset = 4;
-
-	/*
-	method: update
-		Makes full redraw of connector widget contents reevaluating all options.
-	*/
+  /**
+   * Label offset from shape in pixels.
+   * 
+   * @type {number}
+   */
+  this.labelOffset = 4;
 };
 
 /* /shape/controllers/AnnotationLabelTemplate.js*/
@@ -1187,106 +1143,85 @@ if (typeof jQuery != "undefined") {
 }; //ignore jslint
 
 /* /text/configs/Config.js*/
-/*
-	Class: primitives.text.Config
-		Text options class.
-	
-*/
+/**
+ * @class primitives.text.Config
+ * 
+ * Rotated text configuration object
+ */
 primitives.text.Config = function () {
-	this.classPrefix = "bptext";
+  this.classPrefix = "bptext";
 
-	/*
-		Property: graphicsType
-			Preferable graphics type. If preferred graphics type is not supported widget switches to first available. 
+  /**
+   * Sets prefered rendering technology. If selected graphics type is not supported on the device,
+   * then control will auto fallback to the first available one.
+   * 
+   * @type {GraphicsType}
+   */
+  this.graphicsType = primitives.common.GraphicsType.SVG;
 
-		Default:
-			<primitives.common.GraphicsType.SVG>
-	*/
-	this.graphicsType = primitives.common.GraphicsType.SVG;
+  /**
+   * Label orientation.
+   * 
+   * @type {TextOrientationType}
+   */
+  this.orientation = primitives.text.TextOrientationType.Horizontal;
 
-	/*
-		Property: textDirection
-			Direction style. 
-
-		Default:
-			<primitives.text.TextDirection.Auto>
-	*/
-	this.orientation = primitives.text.TextOrientationType.Horizontal;
-
-	/*
-		Property: text
-			Text
-	*/
-	this.text = "";
+  /**
+   * The text
+   * 
+   * @type {string}
+   */
+  this.text = "";
 
 
-	/*
-		Property: verticalAlignment
-			Vertical alignment. 
+  /**
+   * Label vertical alignment inside bounding rectangle.
+   * 
+   * @type {VerticalAlignmentType}
+   */
+  this.verticalAlignment = primitives.common.VerticalAlignmentType.Middle;
 
-		Default:
-			<primitives.common.VerticalAlignmentType.Center>
-	*/
-	this.verticalAlignment = primitives.common.VerticalAlignmentType.Middle;
+  /**
+   * Label horizontal alignment inside bounding rectangle.
+   * 
+   * @type {HorizontalAlignmentType}
+   */
+  this.horizontalAlignment = primitives.common.HorizontalAlignmentType.Center;
 
-	/*
-		Property: horizontalAlignment
-			Horizontal alignment. 
+  /**
+   * Font size
+   * 
+   * @type {string}
+   */
+  this.fontSize = "16px";
 
-		Default:
-			<primitives.common.HorizontalAlignmentType.Center>
-	*/
-	this.horizontalAlignment = primitives.common.HorizontalAlignmentType.Center;
+  /**
+   * Font family
+   * 
+   * @type {string}
+   */
+  this.fontFamily = "Arial";
 
-	/*
-		Property: fontSize
-			Font size. 
+  /**
+   * Font color
+   * 
+   * @type {string}
+   */
+  this.color = primitives.common.Colors.Black;
 
-		Default:
-			15
-	*/
-	this.fontSize = "16px";
+  /**
+   * Font weight: normal | bold
+   * 
+   * @type {string}
+   */
+  this.fontWeight = "normal";
 
-	/*
-		Property: fontFamily
-			Font family. 
-
-		Default:
-			"Arial"
-	*/
-	this.fontFamily = "Arial";
-
-	/*
-		Property: color
-			Color. 
-
-		Default:
-			<primitives.common.Colors.Black>
-	*/
-	this.color = primitives.common.Colors.Black;
-
-	/*
-		Property: fontWeight
-			Font weight: normal | bold
-
-		Default:
-			"normal"
-	*/
-	this.fontWeight = "normal";
-
-	/*
-		Property: fontStyle
-			Font style: normal | italic
-		
-		Default:
-			"normal"
-	*/
-	this.fontStyle = "normal";
-
-	/*
-	method: update
-		Makes full redraw of text widget contents reevaluating all options.
-	*/
+  /**
+   * Font style: normal | italic
+   * 
+   * @type {string}
+   */
+  this.fontStyle = "normal";
 };
 
 /* /text/controllers/Controller.js*/

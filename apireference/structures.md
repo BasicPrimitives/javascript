@@ -1,605 +1,605 @@
 # Structures
-## RenderEventArgs
+## <a name="primitives.common.RenderEventArgs">RenderEventArgs</a>
 This is object parameter of rendering callback function
 
- <code>primitives.common.RenderEventArgs</code> 
+ `primitives.common.RenderEventArgs` 
 
 ### Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>context</code> | object | <code>null</code> | Context object of the node | 
- | <code>element</code> | object | <code>null</code> | Reference to DOM element. | 
- | <code>id</code> | string | <code>null</code> | Node id | 
- | <code>isCursor</code> | boolean | <code>false</code> | The rendered item is current diagram cursor item | 
- | <code>isSelected</code> | boolean | <code>false</code> | The rendered item is selected | 
- | <code>renderingMode</code> | RenderingMode | <code>null</code> | This option indicates current template state. | 
- | <code>templateName</code> | string | <code>null</code> | Node template name | 
+ | `context` | object | `null` | Context object of the node | 
+ | `element` | object | `null` | Reference to DOM element. | 
+ | `id` | string | `null` | Node id | 
+ | `isCursor` | boolean | `false` | The rendered item is current diagram cursor item | 
+ | `isSelected` | boolean | `false` | The rendered item is selected | 
+ | `renderingMode` | RenderingMode | `null` | This option indicates current template state. | 
+ | `templateName` | string | `null` | Node template name | 
 
-## Point
+## <a name="primitives.common.Point">Point</a>
 Class represents pair of x and y coordinates that define a point in 2D plane.
 
- <code>primitives.common.Point</code> 
+ `primitives.common.Point` 
 
 ### Constructor
 
- <code>Point(arg0, arg1)</code> 
+ `Point(arg0, arg1)` 
 
 Class represents pair of x and y coordinates that define a point in 2D plane.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>arg0</code> | Size | <code></code> | Point object to clone. | 
- | <code>arg0</code> | number | <code></code> | The x coordinate. | 
- | <code>arg1</code> | number | <code></code> | The y coordinate. | 
+ | `arg0` | Size | `` | Point object to clone. | 
+ | `arg0` | number | `` | The x coordinate. | 
+ | `arg1` | number | `` | The y coordinate. | 
 
 ### Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>context</code> | object | <code>null</code> | Reference to the context object associated with this point. | 
- | <code>x</code> | number | <code>null</code> | The x coordinate | 
- | <code>y</code> | number | <code>null</code> | The y coordinate | 
+ | `context` | object | `null` | Reference to the context object associated with this point. | 
+ | `x` | number | `null` | The x coordinate | 
+ | `y` | number | `null` | The y coordinate | 
 
 ### Functions
 
- <code>clone()</code> 
+ `clone()` 
 
 Clones the point
 
- Returns: <code>Point</code> - returns copy of the point.
+ Returns: `Point` - returns copy of the point.
 
 
- <code>distanceTo(arg0,  arg1)</code> 
+ `distanceTo(arg0,  arg1)` 
 
 Calculates distance to the specified point
 
- Returns: <code>number</code> - returns distance to the specified point
+ Returns: `number` - returns distance to the specified point
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>arg0</code> | Point | <code></code> | Point | 
- | <code>arg0</code> | number | <code></code> | X coordinate | 
- | <code>arg1</code> | number | <code></code> | Y coordinate | 
+ | `arg0` | Point | `` | Point | 
+ | `arg0` | number | `` | X coordinate | 
+ | `arg1` | number | `` | Y coordinate | 
 
- <code>equalTo(point)</code> 
+ `equalTo(point)` 
 
 Checks if points are equal
 
- Returns: <code>boolean</code> - returns true if points are equal.
+ Returns: `boolean` - returns true if points are equal.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>point</code> | Point | <code></code> | Point | 
+ | `point` | Point | `` | Point | 
 
- <code>getCSS(units)</code> 
+ `getCSS(units)` 
 
 Returns size in form of CSS style object.
 
- Returns: <code>object</code> - css style object
+ Returns: `object` - css style object
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>units</code> | string | <code>"px"</code> | The string name of units. | 
+ | `units` | string | `"px"` | The string name of units. | 
 
- <code>scale(scale)</code> 
+ `scale(scale)` 
 
 Scales the point location by the specified value
 
- Returns: <code>Point</code> - returns reference to the current point.
+ Returns: `Point` - returns reference to the current point.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>scale</code> | number | <code></code> | scale | 
+ | `scale` | number | `` | scale | 
 
- <code>swap(point)</code> 
+ `swap(point)` 
 
 Swaps values of 2 points
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>point</code> | Point | <code></code> | The point to swap values with | 
+ | `point` | Point | `` | The point to swap values with | 
 
- <code>toString(units)</code> 
+ `toString(units)` 
 
 Returns point in form of CSS style string.
 
- Returns: <code>string</code> - css style string.
+ Returns: `string` - css style string.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>units</code> | string | <code>"px"</code> | The string name of units. | 
+ | `units` | string | `"px"` | The string name of units. | 
 
-## Rect
+## <a name="primitives.common.Rect">Rect</a>
 Class describes the width, height and location of rectangle.
 
- <code>primitives.common.Rect</code> 
+ `primitives.common.Rect` 
 
 ### Constructor
 
- <code>Rect(arg0, arg1, arg2, arg3)</code> 
+ `Rect(arg0, arg1, arg2, arg3)` 
 
 Class describes the width, height and location of rectangle.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>arg0</code> | Rect | <code></code> | Rectangle to clone. | 
- | <code>arg0</code> | Point | <code></code> | The top left point. | 
- | <code>arg1</code> | Point | <code></code> | The bottom right point. | 
- | <code>arg0</code> | number | <code></code> | The x coordinate of top left corner. | 
- | <code>arg1</code> | number | <code></code> | The y coordinate of top left corner. | 
- | <code>arg2</code> | number | <code></code> | Rect width. | 
- | <code>arg3</code> | number | <code></code> | Rect height. | 
+ | `arg0` | Rect | `` | Rectangle to clone. | 
+ | `arg0` | Point | `` | The top left point. | 
+ | `arg1` | Point | `` | The bottom right point. | 
+ | `arg0` | number | `` | The x coordinate of top left corner. | 
+ | `arg1` | number | `` | The y coordinate of top left corner. | 
+ | `arg2` | number | `` | Rect width. | 
+ | `arg3` | number | `` | Rect height. | 
 
 ### Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>context</code> | object | <code>null</code> | Reference to context object associated with this rectangle. | 
- | <code>height</code> | number | <code>null</code> | The height of rectangle. | 
- | <code>width</code> | number | <code>null</code> | The width of rectangle. | 
- | <code>x</code> | number | <code>null</code> | The location x coordinate | 
- | <code>y</code> | number | <code>null</code> | The location y coordinate | 
+ | `context` | object | `null` | Reference to context object associated with this rectangle. | 
+ | `height` | number | `null` | The height of rectangle. | 
+ | `width` | number | `null` | The width of rectangle. | 
+ | `x` | number | `null` | The location x coordinate | 
+ | `y` | number | `null` | The location y coordinate | 
 
 ### Functions
 
- <code>addRect(arg0,  arg1,  arg2,  arg3)</code> 
+ `addRect(arg0,  arg1,  arg2,  arg3)` 
 
 Expands the rectangle boundaries to contain the specified rectangle.
 
- Returns: <code>Rect</code> - returns reference to the current rectangle.
+ Returns: `Rect` - returns reference to the current rectangle.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>arg0</code> | Rect | <code></code> | The rectangle to contain. | 
- | <code>arg0</code> | number | <code></code> | The x coordinate of top left corner. | 
- | <code>arg1</code> | number | <code></code> | The y coordinate of top left corner. | 
- | <code>arg2</code> | number | <code>undefined</code> | Width. | 
- | <code>arg3</code> | number | <code>undefined</code> | Height. | 
+ | `arg0` | Rect | `` | The rectangle to contain. | 
+ | `arg0` | number | `` | The x coordinate of top left corner. | 
+ | `arg1` | number | `` | The y coordinate of top left corner. | 
+ | `arg2` | number | `undefined` | Width. | 
+ | `arg3` | number | `undefined` | Height. | 
 
- <code>bottom()</code> 
+ `bottom()` 
 
 Bottom
 
- Returns: <code>number</code> - returns y-axis coordinate of the bottom side of the rectangle
+ Returns: `number` - returns y-axis coordinate of the bottom side of the rectangle
 
 
- <code>centerPoint()</code> 
+ `centerPoint()` 
 
 Center point
 
- Returns: <code>Point</code> - returns center point of the rectangle.
+ Returns: `Point` - returns center point of the rectangle.
 
 
- <code>contains(arg0,  arg1)</code> 
+ `contains(arg0,  arg1)` 
 
 Checks if the rectangle contains given point
 
- Returns: <code>boolean</code> - returns true if the rectangle contains the specified point; otherwise, false.
+ Returns: `boolean` - returns true if the rectangle contains the specified point; otherwise, false.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>arg0</code> | Point | <code></code> | The point to check. | 
- | <code>arg0</code> | number | <code></code> |  The x coordinate of the point to check. | 
- | <code>arg1</code> | number | <code></code> |  The y coordinate of the point to check. | 
+ | `arg0` | Point | `` | The point to check. | 
+ | `arg0` | number | `` |  The x coordinate of the point to check. | 
+ | `arg1` | number | `` |  The y coordinate of the point to check. | 
 
- <code>cropByRect(rect)</code> 
+ `cropByRect(rect)` 
 
 Crops the rectangle by the boundaries of the specified rectangle.
 
- Returns: <code>Rect</code> - returns reference to the current rectangle.
+ Returns: `Rect` - returns reference to the current rectangle.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>rect</code> | Rect | <code></code> | The rectangle that is used to crop boundaries by | 
+ | `rect` | Rect | `` | The rectangle that is used to crop boundaries by | 
 
- <code>equalTo(rect)</code> 
+ `equalTo(rect)` 
 
 Checks if rectangles are equal
 
- Returns: <code>boolean</code> - returns true if rectangles are equal.
+ Returns: `boolean` - returns true if rectangles are equal.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>rect</code> | Rect | <code></code> | Rectangle | 
+ | `rect` | Rect | `` | Rectangle | 
 
- <code>getCSS(units)</code> 
+ `getCSS(units)` 
 
 Returns rectangle location and size in form of CSS style object.
 
- Returns: <code>object</code> - css style object
+ Returns: `object` - css style object
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>units</code> | string | <code>"px"</code> | The string name of units. | 
+ | `units` | string | `"px"` | The string name of units. | 
 
- <code>horizontalCenter()</code> 
+ `horizontalCenter()` 
 
 Horizontal center
 
- Returns: <code>number</code> - returns x-axis coordinate of the center point of the rectangle.
+ Returns: `number` - returns x-axis coordinate of the center point of the rectangle.
 
 
- <code>invert()</code> 
+ `invert()` 
 
 Inverts rectangle coordinates
 
- Returns: <code>Rect</code> - returns reference to the current rectangle.
+ Returns: `Rect` - returns reference to the current rectangle.
 
 
- <code>isEmpty()</code> 
+ `isEmpty()` 
 
 Checks if rectangle is empty. Rectangle is empty if one of its sizes is undefined or less than zero.
 
- Returns: <code>boolean</code> - returns true if rectangle is empty.
+ Returns: `boolean` - returns true if rectangle is empty.
 
 
- <code>left()</code> 
+ `left()` 
 
 Left
 
- Returns: <code>number</code> - returns x coordinate of the rectangle
+ Returns: `number` - returns x coordinate of the rectangle
 
 
- <code>loopEdges(callback)</code> 
+ `loopEdges(callback)` 
 
 Loops edges of the rectangle in the clockwise order: Top, Right, Bottom, Left
 
- Returns: <code>Rect</code> - returns reference to the current rectangle.
+ Returns: `Rect` - returns reference to the current rectangle.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>callback</code> | loopRectEdgesCallback | <code></code> | A callback function to iterate over sides of the rectangle. | 
+ | `callback` | loopRectEdgesCallback | `` | A callback function to iterate over sides of the rectangle. | 
 **Callbacks**
 
- <code>loopRectEdgesCallback(vector, placementType)</code> 
+ `loopRectEdgesCallback(vector, placementType)` 
 
 Callback for iterating rectangle's sides
 
- Returns: <code>boolean</code> - returns true to break iteration process
+ Returns: `boolean` - returns true to break iteration process
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>vector</code> | Vector | <code></code> | Vector connecting two corners of the rectangle's side | 
- | <code>placementType</code> | PlacementType | <code></code> | The current side | 
+ | `vector` | Vector | `` | Vector connecting two corners of the rectangle's side | 
+ | `placementType` | PlacementType | `` | The current side | 
 
- <code>offset(arg0,  arg1,  arg2,  arg3)</code> 
+ `offset(arg0,  arg1,  arg2,  arg3)` 
 
 Expands rectangle boundaries by using specified value in all directions. Value can be negative.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>arg0</code> | number | <code></code> | The amount by which to expand or shrink the sides of the rectangle. | 
- | <code>arg0</code> | number | <code></code> | Left side | 
- | <code>arg1</code> | number | <code></code> | Top side | 
- | <code>arg2</code> | number | <code></code> | Right side | 
- | <code>arg3</code> | number | <code></code> | Bottom side | 
+ | `arg0` | number | `` | The amount by which to expand or shrink the sides of the rectangle. | 
+ | `arg0` | number | `` | Left side | 
+ | `arg1` | number | `` | Top side | 
+ | `arg2` | number | `` | Right side | 
+ | `arg3` | number | `` | Bottom side | 
 
- <code>overlaps(rect)</code> 
+ `overlaps(rect)` 
 
 Checks if the rectangle overlaps the specified rectangle
 
- Returns: <code>boolean</code> - returns true if two rectangles overlap each other.
+ Returns: `boolean` - returns true if two rectangles overlap each other.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>rect</code> | Rect | <code></code> | The rectangle to check overlaping for. | 
+ | `rect` | Rect | `` | The rectangle to check overlaping for. | 
 
- <code>right()</code> 
+ `right()` 
 
 Right
 
- Returns: <code>number</code> - returns x-axis coordinate of the right side of the rectangle
+ Returns: `number` - returns x-axis coordinate of the right side of the rectangle
 
 
- <code>scale(scale)</code> 
+ `scale(scale)` 
 
 Scales the rectangle by the specified value
 
- Returns: <code>Rect</code> - returns reference to the current rectangle.
+ Returns: `Rect` - returns reference to the current rectangle.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>scale</code> | number | <code></code> | scale | 
+ | `scale` | number | `` | scale | 
 
- <code>toString(units)</code> 
+ `toString(units)` 
 
 Returns rectangle location and size in form of CSS style string.
 
- Returns: <code>string</code> - css style string.
+ Returns: `string` - css style string.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>units</code> | string | <code>"px"</code> | The string name of units. | 
+ | `units` | string | `"px"` | The string name of units. | 
 
- <code>top()</code> 
+ `top()` 
 
 Top
 
- Returns: <code>number</code> - returns y coordinate of the rectangle
+ Returns: `number` - returns y coordinate of the rectangle
 
 
- <code>translate(x,  y)</code> 
+ `translate(x,  y)` 
 
 Moves the rectangle by the specified horizontal and vertical offsets.
 
- Returns: <code>Rect</code> - returns reference to the current rectangle.
+ Returns: `Rect` - returns reference to the current rectangle.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>x</code> | number | <code></code> | Horizontal offset | 
- | <code>y</code> | number | <code></code> | Vertical offset | 
+ | `x` | number | `` | Horizontal offset | 
+ | `y` | number | `` | Vertical offset | 
 
- <code>validate()</code> 
+ `validate()` 
 
 Validates rectangle properties
 
- Returns: <code>boolean</code> - returns true if rectangle properties are valid.
+ Returns: `boolean` - returns true if rectangle properties are valid.
 
 
- <code>verticalCenter()</code> 
+ `verticalCenter()` 
 
 Vertical center
 
- Returns: <code>number</code> - returns y-axis coordinate of the center point of the rectangle.
+ Returns: `number` - returns y-axis coordinate of the center point of the rectangle.
 
 
-## Matrix
+## <a name="primitives.common.Matrix">Matrix</a>
 Square matrix having 2 rows and 2 columns.
 
- <code>primitives.common.Matrix</code> 
+ `primitives.common.Matrix` 
 
 ### Constructor
 
- <code>Matrix(arg0, arg1, arg2, arg3)</code> 
+ `Matrix(arg0, arg1, arg2, arg3)` 
 
 Square matrix having 2 rows and 2 columns.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>arg0</code> | Matrix | <code></code> | Matrix to clone | 
- | <code>arg0</code> | number | <code></code> | A1 - top left. | 
- | <code>arg1</code> | number | <code></code> | B1 - top right. | 
- | <code>arg2</code> | number | <code></code> | A2 - bottom left. | 
- | <code>arg3</code> | number | <code></code> | B2 - bottom right. | 
+ | `arg0` | Matrix | `` | Matrix to clone | 
+ | `arg0` | number | `` | A1 - top left. | 
+ | `arg1` | number | `` | B1 - top right. | 
+ | `arg2` | number | `` | A2 - bottom left. | 
+ | `arg3` | number | `` | B2 - bottom right. | 
 
 ### Functions
 
- <code>determinant()</code> 
+ `determinant()` 
 
 Finds matrix determinant
 
- Returns: <code>number</code> - returns matrix determinant
+ Returns: `number` - returns matrix determinant
 
 
-## Size
+## <a name="primitives.common.Size">Size</a>
 Size object defines width and height.
 
- <code>primitives.common.Size</code> 
+ `primitives.common.Size` 
 
 ### Constructor
 
- <code>Size(arg0, arg1)</code> 
+ `Size(arg0, arg1)` 
 
 Size object defines width and height.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>arg0</code> | Size | <code></code> | Size object to clone. | 
- | <code>arg0</code> | number | <code></code> | Width. | 
- | <code>arg1</code> | number | <code></code> | Height. | 
+ | `arg0` | Size | `` | Size object to clone. | 
+ | `arg0` | number | `` | Width. | 
+ | `arg1` | number | `` | Height. | 
 
 ### Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>height</code> | number | <code>0</code> | The height | 
- | <code>width</code> | number | <code>0</code> | The width | 
+ | `height` | number | `0` | The height | 
+ | `width` | number | `0` | The width | 
 
 ### Functions
 
- <code>addSize(size)</code> 
+ `addSize(size)` 
 
 Extends the current size by the other size.
 
- Returns: <code>Size</code> - returns reference to the current size object
+ Returns: `Size` - returns reference to the current size object
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>size</code> | Size | <code></code> | The size to use as extension. | 
+ | `size` | Size | `` | The size to use as extension. | 
 
- <code>cropBySize(size)</code> 
+ `cropBySize(size)` 
 
 Crops the size by the other size object.
 
- Returns: <code>Size</code> - returns reference to the current size object
+ Returns: `Size` - returns reference to the current size object
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>size</code> | Size | <code></code> | The size to use as the crop boundaries. | 
+ | `size` | Size | `` | The size to use as the crop boundaries. | 
 
- <code>getCSS(units)</code> 
+ `getCSS(units)` 
 
 Returns size in form of CSS style object.
 
- Returns: <code>object</code> - css style object
+ Returns: `object` - css style object
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>units</code> | string | <code>"px"</code> | The string name of units. | 
+ | `units` | string | `"px"` | The string name of units. | 
 
- <code>invert()</code> 
+ `invert()` 
 
 Inverts size dimensions
 
- Returns: <code>Size</code> - returns reference to the current size.
+ Returns: `Size` - returns reference to the current size.
 
 
- <code>scale(scale)</code> 
+ `scale(scale)` 
 
 Scales the size by the specified value
 
- Returns: <code>Size</code> - returns reference to the current size.
+ Returns: `Size` - returns reference to the current size.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>scale</code> | number | <code></code> | scale | 
+ | `scale` | number | `` | scale | 
 
- <code>validate()</code> 
+ `validate()` 
 
 Validates size properties
 
- Returns: <code>boolean</code> - returns true if size properties are valid.
+ Returns: `boolean` - returns true if size properties are valid.
 
 
-## Thickness
+## <a name="primitives.common.Thickness">Thickness</a>
 Class describes the thickness of a frame around rectangle.
 
- <code>primitives.common.Thickness</code> 
+ `primitives.common.Thickness` 
 
 ### Constructor
 
- <code>Thickness(left, top, right, bottom)</code> 
+ `Thickness(left, top, right, bottom)` 
 
 Class describes the thickness of a frame around rectangle.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>left</code> | number | <code></code> | Left. | 
- | <code>top</code> | number | <code></code> | Top. | 
- | <code>right</code> | number | <code></code> | Right. | 
- | <code>bottom</code> | number | <code></code> | Bottom. | 
+ | `left` | number | `` | Left. | 
+ | `top` | number | `` | Top. | 
+ | `right` | number | `` | Right. | 
+ | `bottom` | number | `` | Bottom. | 
 
 ### Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>bottom</code> |  | <code>bottom</code> | The thickness for the bottom side of the rectangle. | 
- | <code>left</code> |  | <code>left</code> | The thickness for the left side of the rectangle. | 
- | <code>right</code> |  | <code>right</code> | The thickness for the right side of the rectangle. | 
- | <code>top</code> |  | <code>top</code> | The thickness for the upper side of the rectangle. | 
+ | `bottom` |  | `bottom` | The thickness for the bottom side of the rectangle. | 
+ | `left` |  | `left` | The thickness for the left side of the rectangle. | 
+ | `right` |  | `right` | The thickness for the right side of the rectangle. | 
+ | `top` |  | `top` | The thickness for the upper side of the rectangle. | 
 
 ### Functions
 
- <code>isEmpty()</code> 
+ `isEmpty()` 
 
 Checks object is empty
 
- Returns: <code>boolean</code> - returns true if object has no thickness defined for any of its sides
+ Returns: `boolean` - returns true if object has no thickness defined for any of its sides
 
 
- <code>toString(units)</code> 
+ `toString(units)` 
 
 Returns thickness object in form of CSS style string. It is conversion to padding style string.
 
- Returns: <code>string</code> - css style string.
+ Returns: `string` - css style string.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>units</code> | string | <code>"px"</code> | The string name of units. | 
+ | `units` | string | `"px"` | The string name of units. | 
 
-## Vector
+## <a name="primitives.common.Vector">Vector</a>
 Class defines a vector in 2D plane.
 
- <code>primitives.common.Vector</code> 
+ `primitives.common.Vector` 
 
 ### Constructor
 
- <code>Vector(arg0, arg1)</code> 
+ `Vector(arg0, arg1)` 
 
 Class defines a vector in 2D plane.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>arg0</code> | Vector | <code></code> | Vector object to clone. | 
- | <code>arg0</code> | Point | <code></code> | From point. | 
- | <code>arg1</code> | Point | <code></code> | To point | 
+ | `arg0` | Vector | `` | Vector object to clone. | 
+ | `arg0` | Point | `` | From point. | 
+ | `arg1` | Point | `` | To point | 
 
 ### Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>context</code> | object | <code>null</code> | Reference to context object associated with this vector. | 
- | <code>from</code> |  | <code>null</code> | The start point | 
- | <code>to</code> |  | <code>null</code> | The end point | 
+ | `context` | object | `null` | Reference to context object associated with this vector. | 
+ | `from` |  | `null` | The start point | 
+ | `to` |  | `null` | The end point | 
 
 ### Functions
 
- <code>equalTo(vector)</code> 
+ `equalTo(vector)` 
 
 Checks if vectors are equal
 
- Returns: <code>boolean</code> - returns true if vectors are equal.
+ Returns: `boolean` - returns true if vectors are equal.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>vector</code> | Vector | <code></code> | Vector | 
+ | `vector` | Vector | `` | Vector | 
 
- <code>getIntersectionPoint(vector,  strict,  rounding)</code> 
+ `getIntersectionPoint(vector,  strict,  rounding)` 
 
 Finds intersection point of two vectors
 
- Returns: <code>Point|null</code> - returns intersection point or null if intersection does not exists
+ Returns: `Point|null` - returns intersection point or null if intersection does not exists
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>vector</code> | Vector | <code></code> | The vector to find intersection with | 
- | <code>strict</code> | boolean | <code></code> | If true then intersection point should belong to both vectors | 
- | <code>rounding</code> | number | <code></code> | The precision of calculations | 
+ | `vector` | Vector | `` | The vector to find intersection with | 
+ | `strict` | boolean | `` | If true then intersection point should belong to both vectors | 
+ | `rounding` | number | `` | The precision of calculations | 
 
- <code>getLine()</code> 
+ `getLine()` 
 
 Gets line
 
- Returns: <code>number[]</code> - returns line coefficients
+ Returns: `number[]` - returns line coefficients
 
 
- <code>getLineKey()</code> 
+ `getLineKey()` 
 
 Gets line key
 
- Returns: <code>string</code> - returns unique line key
+ Returns: `string` - returns unique line key
 
 
- <code>getMiddlePoint()</code> 
+ `getMiddlePoint()` 
 
 Returns middle point of the current vector
 
- Returns: <code>Point</code> - returns middle point
+ Returns: `Point` - returns middle point
 
 
- <code>intersect(vector)</code> 
+ `intersect(vector)` 
 
 Checks if two vectors have intersection point
 
- Returns: <code>boolean</code> - returns true if vectors intersect
+ Returns: `boolean` - returns true if vectors intersect
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>vector</code> | vector | <code></code> | The vector to check intersection with | 
+ | `vector` | vector | `` | The vector to check intersection with | 
 
- <code>isNull()</code> 
+ `isNull()` 
 
 Checks if start and end points are the same
 
- Returns: <code>boolean</code> - returns true if start and end points are the same.
+ Returns: `boolean` - returns true if start and end points are the same.
 
 
- <code>length()</code> 
+ `length()` 
 
 Vector length
 
- Returns: <code>number</code> - returns vector length
+ Returns: `number` - returns vector length
 
 
- <code>offset(offset)</code> 
+ `offset(offset)` 
 
 Offsets vector coordinates
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>offset</code> | number | <code></code> | Offset | 
+ | `offset` | number | `` | Offset | 
 
- <code>relateTo(vector)</code> 
+ `relateTo(vector)` 
 
 Finds how two vectors relate to each other
 
- Returns: <code>VectorRelationType</code> - returns how the vector relates to the specified vector
+ Returns: `VectorRelationType` - returns how the vector relates to the specified vector
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>vector</code> | Vector | <code></code> | The vector to relate with | 
+ | `vector` | Vector | `` | The vector to relate with | 

@@ -1,2055 +1,2055 @@
 # Algorithms
-## family
+## <a name="primitives.common.family">family</a>
 Creates a family object
 
- <code>primitives.common.family</code> 
+ `primitives.common.family` 
 
 ### Constructor
 
- <code>family(source)</code> 
+ `family(source)` 
 
 Creates a family object
 
- Returns: <code>family</code> - returns new instance of family structure
+ Returns: `family` - returns new instance of family structure
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>source</code> | family | <code>undefined</code> | Reference to optional family object to clone properties from | 
+ | `source` | family | `undefined` | Reference to optional family object to clone properties from | 
 
 ### Constants
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>BREAK</code> | number | <code>1</code> | B R E A K | 
- | <code>SKIP</code> | number | <code>2</code> | S K I P | 
+ | `BREAK` | number | `1` | B R E A K | 
+ | `SKIP` | number | `2` | S K I P | 
 
 ### Functions
 
- <code>add(parents, nodeid, node)</code> 
+ `add(parents, nodeid, node)` 
 
 Adds new family member
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>parents</code> | string[] | <code></code> | A collection of parents ids | 
- | <code>nodeid</code> | string | <code></code> | An id of the new node | 
- | <code>node</code> | object | <code></code> | A reference to the new node | 
+ | `parents` | string[] | `` | A collection of parents ids | 
+ | `nodeid` | string | `` | An id of the new node | 
+ | `node` | object | `` | A reference to the new node | 
 
- <code>adopt(parents, nodeid)</code> 
+ `adopt(parents, nodeid)` 
 
 Makes node to be a child of every parent in the collection of parents
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>parents</code> | string[] | <code></code> | A collection of parents ids | 
- | <code>nodeid</code> | string | <code></code> | An id of the new node | 
+ | `parents` | string[] | `` | A collection of parents ids | 
+ | `nodeid` | string | `` | An id of the new node | 
 
- <code>bundleChildren(parent, children, bundleItemId, bundleItem)</code> 
+ `bundleChildren(parent, children, bundleItemId, bundleItem)` 
 
 Adds extra budnle item in between parent and its children. The parent node becomes parent of the bundle node, and bundle becomes parent of the children. Existing parent child relations are removed.
 
- Returns: <code>boolean</code> - returns true if nodes bundle is valid
+ Returns: `boolean` - returns true if nodes bundle is valid
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>parent</code> | string | <code></code> | The parent node id | 
- | <code>children</code> | string[] | <code></code> | The collection of child nodes ids | 
- | <code>bundleItemId</code> | string | <code></code> | The bundle node id | 
- | <code>bundleItem</code> | object | <code></code> | The bundle item context object | 
+ | `parent` | string | `` | The parent node id | 
+ | `children` | string[] | `` | The collection of child nodes ids | 
+ | `bundleItemId` | string | `` | The bundle node id | 
+ | `bundleItem` | object | `` | The bundle item context object | 
 
- <code>bundleParents(child, parents, bundleItemId, bundleItem)</code> 
+ `bundleParents(child, parents, bundleItemId, bundleItem)` 
 
 Adds extra budnle item in between child node and its parents. The child node becomes child of the bundle node, and bundle becomes child of the parents. Existing parent child relations are removed.
 
- Returns: <code>boolean</code> - returns true if the bundle is valid
+ Returns: `boolean` - returns true if the bundle is valid
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>child</code> | string | <code></code> | The parent node id | 
- | <code>parents</code> | string[] | <code></code> | The collection of child nodes ids | 
- | <code>bundleItemId</code> | string | <code></code> | The bundle node id | 
- | <code>bundleItem</code> | object | <code></code> | The bundle item context object | 
+ | `child` | string | `` | The parent node id | 
+ | `parents` | string[] | `` | The collection of child nodes ids | 
+ | `bundleItemId` | string | `` | The bundle node id | 
+ | `bundleItem` | object | `` | The bundle item context object | 
 
- <code>clone()</code> 
+ `clone()` 
 
 Clones family structure.
 
- Returns: <code>family</code> - returns copy of the family structure.
+ Returns: `family` - returns copy of the family structure.
 
 
- <code>countChildren(parent)</code> 
+ `countChildren(parent)` 
 
 Returns number of children
 
- Returns: <code>number</code> - number of children
+ Returns: `number` - number of children
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>parent</code> | string | <code></code> | The parent node id | 
+ | `parent` | string | `` | The parent node id | 
 
- <code>countParents(child)</code> 
+ `countParents(child)` 
 
 Returns number of parents
 
- Returns: <code>number</code> - number of parents
+ Returns: `number` - number of parents
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>child</code> | string | <code></code> | The child node id | 
+ | `child` | string | `` | The child node id | 
 
- <code>eliminateManyToMany(onNewBundleItem)</code> 
+ `eliminateManyToMany(onNewBundleItem)` 
 
 Eliminates many to many relations in family structure It is needed to simplify layout process of the diagram
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>onNewBundleItem</code> | onNewFamilyNodeCallback | <code></code> | Callback function for creation of new bundle node | 
+ | `onNewBundleItem` | onNewFamilyNodeCallback | `` | Callback function for creation of new bundle node | 
 **Callbacks**
 
- <code>onNewFamilyNodeCallback()</code> 
+ `onNewFamilyNodeCallback()` 
 
 Callback function for cretion of new family nodes
 
- Returns: <code>object</code> - returns new family node.
+ Returns: `object` - returns new family node.
 
 
- <code>findLargestRoot()</code> 
+ `findLargestRoot()` 
 
 Finds root node having largest number of nodes in its hierachy
 
- Returns: <code>string</code> - returns largest sub-hierarchy root node id.
+ Returns: `string` - returns largest sub-hierarchy root node id.
 
 
- <code>firstChild(parent)</code> 
+ `firstChild(parent)` 
 
 First available child
 
- Returns: <code>string</code> - returns first available child id or null.
+ Returns: `string` - returns first available child id or null.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>parent</code> | string | <code></code> | The parent node id | 
+ | `parent` | string | `` | The parent node id | 
 
- <code>firstParent(child)</code> 
+ `firstParent(child)` 
 
 First available parent
 
- Returns: <code>string</code> - returns first available parent id or null.
+ Returns: `string` - returns first available parent id or null.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>child</code> | string | <code></code> | The child node id | 
+ | `child` | string | `` | The child node id | 
 
- <code>getFamilyWithoutGrandParentsRelations()</code> 
+ `getFamilyWithoutGrandParentsRelations()` 
 
 Eliminates direct relations between grand parent nodes.
 
- Returns: <code>family</code> - returns family structure without direct grand parent relations.
+ Returns: `family` - returns family structure without direct grand parent relations.
 
 
- <code>getGraph()</code> 
+ `getGraph()` 
 
 Creates graph structure out of the family structure.
 
- Returns: <code>graph</code> - returns graph structure of the family.
+ Returns: `graph` - returns graph structure of the family.
 
 
- <code>getPlanarFamily(treeLevels)</code> 
+ `getPlanarFamily(treeLevels)` 
 
 Eliminates crossing parent child relations between nodes based of nodes order in treeLevels structure.
 
- Returns: <code>family</code> - returns planar family structure.
+ Returns: `family` - returns planar family structure.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>treeLevels</code> | treeLevels | <code></code> | Tree levels structure keeps orders of nodes level by level. | 
+ | `treeLevels` | treeLevels | `` | Tree levels structure keeps orders of nodes level by level. | 
 
- <code>hasCommonChild(parents)</code> 
+ `hasCommonChild(parents)` 
 
 Checks whether parents share a child node. Common child should belong only to the given collection of parents, if child's parents don't match given collection of parents, it is not considered as common child.
 
- Returns: <code>boolean</code> - returns true if common child exist.
+ Returns: `boolean` - returns true if common child exist.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>parents</code> | string[] | <code></code> | Collection of parents | 
+ | `parents` | string[] | `` | Collection of parents | 
 
- <code>hasLoops()</code> 
+ `hasLoops()` 
 
 Checks if family structure has loops in references.
 
- Returns: <code>boolean</code> - returns true if family structure contains loops in references.
+ Returns: `boolean` - returns true if family structure contains loops in references.
 
 
- <code>hasNodes()</code> 
+ `hasNodes()` 
 
 Returns true if structure has nodes.
 
- Returns: <code>boolean</code> - returns true if family structure has nodes
+ Returns: `boolean` - returns true if family structure has nodes
 
 
- <code>loop(thisArg, onItem)</code> 
+ `loop(thisArg, onItem)` 
 
 Loops through nodes of family struture
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>onItem</code> | onFamilyItemCallback | <code></code> | A callback function to call for every family node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `onItem` | onFamilyItemCallback | `` | A callback function to call for every family node | 
 **Callbacks**
 
- <code>onFamilyItemCallback(itemid, item)</code> 
+ `onFamilyItemCallback(itemid, item)` 
 
 Callback for iterating family nodes
 
- Returns: <code>boolean</code> - returns true to break the loop
+ Returns: `boolean` - returns true to break the loop
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | The node id | 
- | <code>item</code> | object | <code></code> | The node | 
+ | `itemid` | string | `` | The node id | 
+ | `item` | object | `` | The node | 
 
- <code>loopChildren(thisArg, nodeid, onItem)</code> 
+ `loopChildren(thisArg, nodeid, onItem)` 
 
 Loops through child nodes of family struture level by level
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>nodeid</code> | string | <code></code> | The node id to start children traversing | 
- | <code>onItem</code> | onFamilyItemWithLevelCallback | <code></code> | A callback function to call for every child node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `nodeid` | string | `` | The node id to start children traversing | 
+ | `onItem` | onFamilyItemWithLevelCallback | `` | A callback function to call for every child node | 
 **Callbacks**
 
- <code>onFamilyItemWithLevelCallback(itemid, item, levelIndex)</code> 
+ `onFamilyItemWithLevelCallback(itemid, item, levelIndex)` 
 
 Callback for iterating family nodes level by level
 
- Returns: <code>number</code> - returns break to break the loop and exit. returns skip to skip node's branch traversing.
+ Returns: `number` - returns break to break the loop and exit. returns skip to skip node's branch traversing.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | The node id | 
- | <code>item</code> | object | <code></code> | The node | 
- | <code>levelIndex</code> | number | <code></code> | The node level index | 
+ | `itemid` | string | `` | The node id | 
+ | `item` | object | `` | The node | 
+ | `levelIndex` | number | `` | The node level index | 
 
- <code>loopLevels(thisArg, parentAligned, onItem)</code> 
+ `loopLevels(thisArg, parentAligned, onItem)` 
 
 Loops through nodes of family struture level by level. This function aligns nodes top or bottom.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>parentAligned</code> | boolean | <code></code> | True if nodes should be placed at the next level after their parents level, otherwise nodes placed at levels close to their children. | 
- | <code>onItem</code> | onFamilyItemWithLevelCallback | <code></code> | A callback function to call for every node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `parentAligned` | boolean | `` | True if nodes should be placed at the next level after their parents level, otherwise nodes placed at levels close to their children. | 
+ | `onItem` | onFamilyItemWithLevelCallback | `` | A callback function to call for every node | 
 **Callbacks**
 
- <code>onFamilyItemWithLevelCallback(itemid, item, levelIndex)</code> 
+ `onFamilyItemWithLevelCallback(itemid, item, levelIndex)` 
 
 Callback for iterating family nodes level by level
 
- Returns: <code>number</code> - returns break to break the loop and exit. returns skip to skip node's branch traversing.
+ Returns: `number` - returns break to break the loop and exit. returns skip to skip node's branch traversing.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | The node id | 
- | <code>item</code> | object | <code></code> | The node | 
- | <code>levelIndex</code> | number | <code></code> | The node level index | 
+ | `itemid` | string | `` | The node id | 
+ | `item` | object | `` | The node | 
+ | `levelIndex` | number | `` | The node level index | 
 
- <code>loopNeighbours(thisArg, itemid, onItem)</code> 
+ `loopNeighbours(thisArg, itemid, onItem)` 
 
 Loops through the node neighbours of the family struture level by level
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>itemid</code> | string | <code></code> | The node id to start traversing neighbour nodes | 
- | <code>onItem</code> | onFamilyItemNeighbourCallback | <code></code> | A callback function to call for every neighbour node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `itemid` | string | `` | The node id to start traversing neighbour nodes | 
+ | `onItem` | onFamilyItemNeighbourCallback | `` | A callback function to call for every neighbour node | 
 **Callbacks**
 
- <code>onFamilyItemNeighbourCallback(itemid, item, levelIndex)</code> 
+ `onFamilyItemNeighbourCallback(itemid, item, levelIndex)` 
 
 Callback for iterating family node neighbours level by level
 
- Returns: <code>number</code> - returns true to skip further neighbous traversing.
+ Returns: `number` - returns true to skip further neighbous traversing.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | The node id | 
- | <code>item</code> | object | <code></code> | The node | 
- | <code>levelIndex</code> | number | <code></code> | The neigbour node distance from the start node | 
+ | `itemid` | string | `` | The node id | 
+ | `item` | object | `` | The node | 
+ | `levelIndex` | number | `` | The neigbour node distance from the start node | 
 
- <code>loopParents(thisArg, nodeid, onItem)</code> 
+ `loopParents(thisArg, nodeid, onItem)` 
 
 Loops through parent nodes of family struture level by level
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>nodeid</code> | string | <code></code> | The node id to start parents traversing | 
- | <code>onItem</code> | onFamilyItemWithLevelCallback | <code></code> | A callback function to call for every parent node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `nodeid` | string | `` | The node id to start parents traversing | 
+ | `onItem` | onFamilyItemWithLevelCallback | `` | A callback function to call for every parent node | 
 **Callbacks**
 
- <code>onFamilyItemWithLevelCallback(itemid, item, levelIndex)</code> 
+ `onFamilyItemWithLevelCallback(itemid, item, levelIndex)` 
 
 Callback for iterating family nodes level by level
 
- Returns: <code>number</code> - returns break to break the loop and exit. returns skip to skip node's branch traversing.
+ Returns: `number` - returns break to break the loop and exit. returns skip to skip node's branch traversing.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | The node id | 
- | <code>item</code> | object | <code></code> | The node | 
- | <code>levelIndex</code> | number | <code></code> | The node level index | 
+ | `itemid` | string | `` | The node id | 
+ | `item` | object | `` | The node | 
+ | `levelIndex` | number | `` | The node level index | 
 
- <code>loopRoots(thisArg, onItem)</code> 
+ `loopRoots(thisArg, onItem)` 
 
 Loops root nodes of family structure.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>onItem</code> | onFamilyItemCallback | <code></code> | A callback function to call for every family root node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `onItem` | onFamilyItemCallback | `` | A callback function to call for every family root node | 
 **Callbacks**
 
- <code>onFamilyItemCallback(itemid, item)</code> 
+ `onFamilyItemCallback(itemid, item)` 
 
 Callback for iterating family nodes
 
- Returns: <code>boolean</code> - returns true to break the loop
+ Returns: `boolean` - returns true to break the loop
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | The node id | 
- | <code>item</code> | object | <code></code> | The node | 
+ | `itemid` | string | `` | The node id | 
+ | `item` | object | `` | The node | 
 
- <code>loopTopo(thisArg, onItem)</code> 
+ `loopTopo(thisArg, onItem)` 
 
 Loops through topologically sorted nodes of family struture
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>onItem</code> | onFamilyTopoCallback | <code></code> | A callback function to call for every node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `onItem` | onFamilyTopoCallback | `` | A callback function to call for every node | 
 **Callbacks**
 
- <code>onFamilyTopoCallback(itemid, item, position)</code> 
+ `onFamilyTopoCallback(itemid, item, position)` 
 
 Callback for iterating family nodes in topological sort order
 
- Returns: <code>boolean</code> - returns true to break the loop and exit.
+ Returns: `boolean` - returns true to break the loop and exit.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | The node id | 
- | <code>item</code> | object | <code></code> | The node | 
- | <code>position</code> | number | <code></code> | The node position in the sequence | 
+ | `itemid` | string | `` | The node id | 
+ | `item` | object | `` | The node | 
+ | `position` | number | `` | The node position in the sequence | 
 
- <code>loopTopoReversed(thisArg, onItem)</code> 
+ `loopTopoReversed(thisArg, onItem)` 
 
 Loops through reversed order topologically sorted nodes of family struture
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>onItem</code> | onFamilyTopoCallback | <code></code> | A callback function to call for every node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `onItem` | onFamilyTopoCallback | `` | A callback function to call for every node | 
 **Callbacks**
 
- <code>onFamilyTopoCallback(itemid, item, position)</code> 
+ `onFamilyTopoCallback(itemid, item, position)` 
 
 Callback for iterating family nodes in topological sort order
 
- Returns: <code>boolean</code> - returns true to break the loop and exit.
+ Returns: `boolean` - returns true to break the loop and exit.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | The node id | 
- | <code>item</code> | object | <code></code> | The node | 
- | <code>position</code> | number | <code></code> | The node position in the sequence | 
+ | `itemid` | string | `` | The node id | 
+ | `item` | object | `` | The node | 
+ | `position` | number | `` | The node position in the sequence | 
 
- <code>node(nodeid)</code> 
+ `node(nodeid)` 
 
 Returns family node by id
 
- Returns: <code>object|undefined</code> - a reference to the node or undefined if id does not exists
+ Returns: `object|undefined` - a reference to the node or undefined if id does not exists
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | The id of the node | 
+ | `nodeid` | string | `` | The id of the node | 
 
- <code>optimizeReferences(onNewBundleItem)</code> 
+ `optimizeReferences(onNewBundleItem)` 
 
 Optimizes references between family members. It creates bundles eliminating excessive intersecions between nodes relations.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>onNewBundleItem</code> | onNewFamilyNodeCallback | <code></code> | Callback function to create a new family node context object. | 
+ | `onNewBundleItem` | onNewFamilyNodeCallback | `` | Callback function to create a new family node context object. | 
 **Callbacks**
 
- <code>onNewFamilyNodeCallback()</code> 
+ `onNewFamilyNodeCallback()` 
 
 Callback function for cretion of new family nodes
 
- Returns: <code>object</code> - returns new family node.
+ Returns: `object` - returns new family node.
 
 
- <code>removeNode(nodeid)</code> 
+ `removeNode(nodeid)` 
 
 Removes node
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | The id of the node | 
+ | `nodeid` | string | `` | The id of the node | 
 
- <code>removeRelation(fromid, toid)</code> 
+ `removeRelation(fromid, toid)` 
 
 Remove parent child relation
 
- Returns: <code>true</code> - if relation was broken
+ Returns: `true` - if relation was broken
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>fromid</code> | string | <code></code> | The parent node id | 
- | <code>toid</code> | string | <code></code> | The child node id | 
+ | `fromid` | string | `` | The parent node id | 
+ | `toid` | string | `` | The child node id | 
 
- <code>validate(info)</code> 
+ `validate(info)` 
 
 Validates internal data structure consitency of the family.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>info</code> | object | <code></code> | Optional validation object. | 
+ | `info` | object | `` | Optional validation object. | 
 
-## FamilyAlignment
+## <a name="primitives.common.FamilyAlignment">FamilyAlignment</a>
 Creates family alignment data structure. This structure aligns horizontaly planar family of nodes.
 
- <code>primitives.common.FamilyAlignment</code> 
+ `primitives.common.FamilyAlignment` 
 
 ### Constructor
 
- <code>FamilyAlignment(thisArg, family, treeLevels, onItemSize)</code> 
+ `FamilyAlignment(thisArg, family, treeLevels, onItemSize)` 
 
 Creates family alignment data structure. This structure aligns horizontaly planar family of nodes.
 
- Returns: <code>FamilyAlignment</code> - returns family alignment structure
+ Returns: `FamilyAlignment` - returns family alignment structure
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>family</code> | family | <code></code> | Family data structure | 
- | <code>treeLevels</code> | TreeLevels | <code></code> | Three levels data structure | 
- | <code>onItemSize</code> | onFamilyAlignmentItemSizeCallback | <code></code> | Callback function to measure family node width | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `family` | family | `` | Family data structure | 
+ | `treeLevels` | TreeLevels | `` | Three levels data structure | 
+ | `onItemSize` | onFamilyAlignmentItemSizeCallback | `` | Callback function to measure family node width | 
 
 ### Functions
 
- <code>getOffset(nodeid)</code> 
+ `getOffset(nodeid)` 
 
 Returns horizontal node offset from left margin of the family daigram
 
- Returns: <code>number</code> - node offset
+ Returns: `number` - node offset
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | Family node id | 
+ | `nodeid` | string | `` | Family node id | 
 
-## FibonacciHeap
+## <a name="primitives.common.FibonacciHeap">FibonacciHeap</a>
 Creates Fibonacci Heap structure
 
- <code>primitives.common.FibonacciHeap</code> 
+ `primitives.common.FibonacciHeap` 
 
 ### Constructor
 
- <code>FibonacciHeap(isMaximum)</code> 
+ `FibonacciHeap(isMaximum)` 
 
 Creates Fibonacci Heap structure
 
- Returns: <code>FibonacciHeap</code> - returns new fibonacciheap object
+ Returns: `FibonacciHeap` - returns new fibonacciheap object
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>isMaximum</code> | boolean | <code></code> | Is maximum heap | 
+ | `isMaximum` | boolean | `` | Is maximum heap | 
 
 ### Functions
 
- <code>Result(node)</code> 
+ `Result(node)` 
 
 undefined
 
 
- <code>add(key, priority, item)</code> 
+ `add(key, priority, item)` 
 
 Adds a new item into the heap
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>key</code> | string | <code></code> | A key of the new element | 
- | <code>priority</code> | number | <code></code> | A priority of the new element | 
- | <code>item</code> | object | <code></code> | A context object of the new element | 
+ | `key` | string | `` | A key of the new element | 
+ | `priority` | number | `` | A priority of the new element | 
+ | `item` | object | `` | A context object of the new element | 
 
- <code>deleteKey(key)</code> 
+ `deleteKey(key)` 
 
 Deletes heap element by key
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>key</code> | string | <code></code> | The Key | 
+ | `key` | string | `` | The Key | 
 
- <code>extractRoot()</code> 
+ `extractRoot()` 
 
 Returns heap root element with removal
 
- Returns: <code>HeapResult</code> - returns root element of the heap
+ Returns: `HeapResult` - returns root element of the heap
 
 
- <code>getPriority(key)</code> 
+ `getPriority(key)` 
 
 Gets priority of element by key
 
- Returns: <code>number</code> - returns priority of the element
+ Returns: `number` - returns priority of the element
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>key</code> | string | <code></code> | The element key | 
+ | `key` | string | `` | The element key | 
 
- <code>heapRoot()</code> 
+ `heapRoot()` 
 
 Returns heap root element
 
- Returns: <code>HeapResult</code> - returns root element of the heap
+ Returns: `HeapResult` - returns root element of the heap
 
 
- <code>setPriority(key, priority)</code> 
+ `setPriority(key, priority)` 
 
 Sets priority of an element by key
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>key</code> | string | <code></code> | The key of the element | 
- | <code>priority</code> | number | <code></code> | Priority | 
+ | `key` | string | `` | The key of the element | 
+ | `priority` | number | `` | Priority | 
 
- <code>validate()</code> 
+ `validate()` 
 
 Validates internal structure consistency.
 
- Returns: <code>boolean</code> - returns true if structure pass data consistency check.
+ Returns: `boolean` - returns true if structure pass data consistency check.
 
 
-## graph
+## <a name="primitives.common.graph">graph</a>
 Creates graph structure
 
- <code>primitives.common.graph</code> 
+ `primitives.common.graph` 
 
 ### Constructor
 
- <code>graph()</code> 
+ `graph()` 
 
 Creates graph structure
 
- Returns: <code>graph</code> - returns graph object
+ Returns: `graph` - returns graph object
 
 
 ### Functions
 
- <code>addEdge(from, to, edge)</code> 
+ `addEdge(from, to, edge)` 
 
 Adds edge to the graph
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>from</code> | string | <code></code> | The id of the start node | 
- | <code>to</code> | string | <code></code> | The id of the end node | 
- | <code>edge</code> | object | <code></code> | The edge contextual object | 
+ | `from` | string | `` | The id of the start node | 
+ | `to` | string | `` | The id of the end node | 
+ | `edge` | object | `` | The edge contextual object | 
 
- <code>edge(from, to)</code> 
+ `edge(from, to)` 
 
 Returns edge context object
 
- Returns: <code>object</code> - the edge's context object
+ Returns: `object` - the edge's context object
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>from</code> | string | <code></code> | The edge's from node id | 
- | <code>to</code> | string | <code></code> | The edge's to node id | 
+ | `from` | string | `` | The edge's from node id | 
+ | `to` | string | `` | The edge's to node id | 
 
- <code>getMinimumWeightGrowthSequence(thisArg, startNode, onEdgeWeight, onItem)</code> 
+ `getMinimumWeightGrowthSequence(thisArg, startNode, onEdgeWeight, onItem)` 
 
 Get minimum weight graph growth sequence. The sequence of the traversing order of the graph nodes.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | object | <code></code> | The callback function invocation context | 
- | <code>startNode</code> | string | <code>undefined</code> | The optional start node id | 
- | <code>onEdgeWeight</code> | getGraphEdgeWeightCallback | <code></code> | Callback function to get weight of an edge. | 
- | <code>onItem</code> | onNodeCallback | <code></code> | A callback function to be called for every node of the growth sequence | 
+ | `thisArg` | object | `` | The callback function invocation context | 
+ | `startNode` | string | `undefined` | The optional start node id | 
+ | `onEdgeWeight` | getGraphEdgeWeightCallback | `` | Callback function to get weight of an edge. | 
+ | `onItem` | onNodeCallback | `` | A callback function to be called for every node of the growth sequence | 
 **Callbacks**
 
- <code>getGraphEdgeWeightCallback(edge, fromItem, toItem)</code> 
+ `getGraphEdgeWeightCallback(edge, fromItem, toItem)` 
 
 Callback for finding edge weight
 
- Returns: <code>number</code> - returns weight of the edge
+ Returns: `number` - returns weight of the edge
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>edge</code> | object | <code></code> | The edge context object | 
- | <code>fromItem</code> | string | <code></code> | The edge's start node id | 
- | <code>toItem</code> | string | <code></code> | The edge's end node id | 
+ | `edge` | object | `` | The edge context object | 
+ | `fromItem` | string | `` | The edge's start node id | 
+ | `toItem` | string | `` | The edge's end node id | 
 
- <code>onNodeCallback(to)</code> 
+ `onNodeCallback(to)` 
 
 Callback function for iterating graphs nodes
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>to</code> | string | <code></code> | The next neighbouring node id | 
+ | `to` | string | `` | The next neighbouring node id | 
 
- <code>getShortestPath(thisArg, startNode, endNodes, getWeightFunc, onPathFound)</code> 
+ `getShortestPath(thisArg, startNode, endNodes, getWeightFunc, onPathFound)` 
 
 Get shortest path between two nodes in graph. The start and the end nodes are supposed to have connection path.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | object | <code></code> | The callback function invocation context | 
- | <code>startNode</code> | string | <code></code> | The start node id | 
- | <code>endNodes</code> | string[] | <code></code> | The array of end node ids. | 
- | <code>getWeightFunc</code> | getGraphEdgeWeightCallback | <code></code> | Callback function to get weight of an edge. | 
- | <code>onItem</code> | onNodeCallback | <code></code> | A callback function to be called for every node of the growth sequence | 
- | <code>onPathFound</code> | onPathFoundCallback | <code></code> | A callback function to be called for every end node with the optimal connection path | 
+ | `thisArg` | object | `` | The callback function invocation context | 
+ | `startNode` | string | `` | The start node id | 
+ | `endNodes` | string[] | `` | The array of end node ids. | 
+ | `getWeightFunc` | getGraphEdgeWeightCallback | `` | Callback function to get weight of an edge. | 
+ | `onItem` | onNodeCallback | `` | A callback function to be called for every node of the growth sequence | 
+ | `onPathFound` | onPathFoundCallback | `` | A callback function to be called for every end node with the optimal connection path | 
 **Callbacks**
 
- <code>getGraphEdgeWeightCallback(edge, fromItem, toItem)</code> 
+ `getGraphEdgeWeightCallback(edge, fromItem, toItem)` 
 
 Callback for finding edge weight
 
- Returns: <code>number</code> - returns weight of the edge
+ Returns: `number` - returns weight of the edge
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>edge</code> | object | <code></code> | The edge context object | 
- | <code>fromItem</code> | string | <code></code> | The edge's start node id | 
- | <code>toItem</code> | string | <code></code> | The edge's end node id | 
+ | `edge` | object | `` | The edge context object | 
+ | `fromItem` | string | `` | The edge's start node id | 
+ | `toItem` | string | `` | The edge's end node id | 
 
- <code>onNodeCallback(to)</code> 
+ `onNodeCallback(to)` 
 
 Callback function for iterating graphs nodes
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>to</code> | string | <code></code> | The next neighbouring node id | 
+ | `to` | string | `` | The next neighbouring node id | 
 
- <code>onPathFoundCallback(path, to)</code> 
+ `onPathFoundCallback(path, to)` 
 
 Callback for returning optimal connection path for every end node.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>path</code> | string[] | <code></code> | An array of connection path node ids. | 
- | <code>to</code> | string | <code></code> | The end node id, the connection path is found for. | 
+ | `path` | string[] | `` | An array of connection path node ids. | 
+ | `to` | string | `` | The end node id, the connection path is found for. | 
 
- <code>getSpanningTree(startNode, getWeightFunc)</code> 
+ `getSpanningTree(startNode, getWeightFunc)` 
 
 Get maximum spanning tree. Graph may have disconnected sub graphs, so start node is nessasary.
 
- Returns: <code>tree</code> - returns tree structure containing maximum spanning tree of the graph
+ Returns: `tree` - returns tree structure containing maximum spanning tree of the graph
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>startNode</code> | string | <code></code> | The node to start searching for maximum spanning tree. Graph is not nessasary connected | 
- | <code>getWeightFunc</code> | getGraphEdgeWeightCallback | <code></code> | Callback function to get weight of an edge. | 
+ | `startNode` | string | `` | The node to start searching for maximum spanning tree. Graph is not nessasary connected | 
+ | `getWeightFunc` | getGraphEdgeWeightCallback | `` | Callback function to get weight of an edge. | 
 **Callbacks**
 
- <code>getGraphEdgeWeightCallback(edge, fromItem, toItem)</code> 
+ `getGraphEdgeWeightCallback(edge, fromItem, toItem)` 
 
 Callback for finding edge weight
 
- Returns: <code>number</code> - returns weight of the edge
+ Returns: `number` - returns weight of the edge
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>edge</code> | object | <code></code> | The edge context object | 
- | <code>fromItem</code> | string | <code></code> | The edge's start node id | 
- | <code>toItem</code> | string | <code></code> | The edge's end node id | 
+ | `edge` | object | `` | The edge context object | 
+ | `fromItem` | string | `` | The edge's start node id | 
+ | `toItem` | string | `` | The edge's end node id | 
 
- <code>getTotalWeightGrowthSequence(thisArg, onEdgeWeight, onItem)</code> 
+ `getTotalWeightGrowthSequence(thisArg, onEdgeWeight, onItem)` 
 
 Get graph growth sequence. The sequence of graph traversing order.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | object | <code></code> | The callback function invocation context | 
- | <code>getWeightFunc</code> | getGraphEdgeWeightCallback | <code></code> | Callback function to get weight of an edge. | 
- | <code>onItem</code> | onNodeCallback | <code></code> | A callback function to be called for every node of the growth sequence | 
+ | `thisArg` | object | `` | The callback function invocation context | 
+ | `getWeightFunc` | getGraphEdgeWeightCallback | `` | Callback function to get weight of an edge. | 
+ | `onItem` | onNodeCallback | `` | A callback function to be called for every node of the growth sequence | 
 **Callbacks**
 
- <code>getGraphEdgeWeightCallback(edge, fromItem, toItem)</code> 
+ `getGraphEdgeWeightCallback(edge, fromItem, toItem)` 
 
 Callback for finding edge weight
 
- Returns: <code>number</code> - returns weight of the edge
+ Returns: `number` - returns weight of the edge
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>edge</code> | object | <code></code> | The edge context object | 
- | <code>fromItem</code> | string | <code></code> | The edge's start node id | 
- | <code>toItem</code> | string | <code></code> | The edge's end node id | 
+ | `edge` | object | `` | The edge context object | 
+ | `fromItem` | string | `` | The edge's start node id | 
+ | `toItem` | string | `` | The edge's end node id | 
 
- <code>onNodeCallback(to)</code> 
+ `onNodeCallback(to)` 
 
 Callback function for iterating graphs nodes
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>to</code> | string | <code></code> | The next neighbouring node id | 
+ | `to` | string | `` | The next neighbouring node id | 
 
- <code>hasNode(from)</code> 
+ `hasNode(from)` 
 
 Returns true if node exists in the graph
 
- Returns: <code>boolean</code> - returns true if node exists
+ Returns: `boolean` - returns true if node exists
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>from</code> | string | <code></code> | The node id | 
+ | `from` | string | `` | The node id | 
 
- <code>loopNodeEdges(thisArg, itemid, onEdge)</code> 
+ `loopNodeEdges(thisArg, itemid, onEdge)` 
 
 Loop edges of the node
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | object | <code></code> | The callback function invocation context | 
- | <code>itemid</code> | string | <code></code> | The node id | 
- | <code>onEdge</code> | onEdgeCallback | <code></code> | A callback function to call for every edge of the node | 
+ | `thisArg` | object | `` | The callback function invocation context | 
+ | `itemid` | string | `` | The node id | 
+ | `onEdge` | onEdgeCallback | `` | A callback function to call for every edge of the node | 
 **Callbacks**
 
- <code>onEdgeCallback(to, edge)</code> 
+ `onEdgeCallback(to, edge)` 
 
 Callback for iterating edges of the graph's node
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>to</code> | string | <code></code> | The neighbouring node id | 
- | <code>edge</code> | Object | <code></code> | The edge's context object | 
+ | `to` | string | `` | The neighbouring node id | 
+ | `edge` | Object | `` | The edge's context object | 
 
- <code>loopNodes(thisArg, startNode, onItem)</code> 
+ `loopNodes(thisArg, startNode, onItem)` 
 
 Loop nodes of the graph
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | object | <code></code> | The callback function invocation context | 
- | <code>itemid</code> | string | <code>undefined</code> | The optional start node id. If start node is undefined, function loops graphs node starting from first available node | 
- | <code>onItem</code> | onNodeCallback | <code></code> | A callback function to be called for every neighbouring node | 
+ | `thisArg` | object | `` | The callback function invocation context | 
+ | `itemid` | string | `undefined` | The optional start node id. If start node is undefined, function loops graphs node starting from first available node | 
+ | `onItem` | onNodeCallback | `` | A callback function to be called for every neighbouring node | 
 **Callbacks**
 
- <code>onNodeCallback(to)</code> 
+ `onNodeCallback(to)` 
 
 Callback function for iterating graphs nodes
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>to</code> | string | <code></code> | The next neighbouring node id | 
+ | `to` | string | `` | The next neighbouring node id | 
 
-## LCA
+## <a name="primitives.common.LCA">LCA</a>
 Creates Lowest Common Ancestor Structure for the given tree
 
- <code>primitives.common.LCA</code> 
+ `primitives.common.LCA` 
 
 ### Constructor
 
- <code>LCA(tree)</code> 
+ `LCA(tree)` 
 
 Creates Lowest Common Ancestor Structure for the given tree
 
- Returns: <code>LCA</code> - returns lowest common ancestor structure
+ Returns: `LCA` - returns lowest common ancestor structure
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>tree</code> | tree | <code></code> | The tree structure | 
+ | `tree` | tree | `` | The tree structure | 
 
 ### Functions
 
- <code>getLowestCommonAncestor(from, to)</code> 
+ `getLowestCommonAncestor(from, to)` 
 
 Returns lowest common ancestor for the given pair of tree nodes
 
- Returns: <code>string</code> - returns the lowest common ancestor tree node id
+ Returns: `string` - returns the lowest common ancestor tree node id
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>from</code> | string | <code></code> | The first tree node id | 
- | <code>to</code> | string | <code></code> | The second tree node id | 
+ | `from` | string | `` | The first tree node id | 
+ | `to` | string | `` | The second tree node id | 
 
-## LinkedHashItems
+## <a name="primitives.common.LinkedHashItems">LinkedHashItems</a>
 Creates linked hash list collection.
 
- <code>primitives.common.LinkedHashItems</code> 
+ `primitives.common.LinkedHashItems` 
 
 ### Constructor
 
- <code>LinkedHashItems()</code> 
+ `LinkedHashItems()` 
 
 Creates linked hash list collection.
 
- Returns: <code>LinkedHashItems</code> - returns linked hash list structure
+ Returns: `LinkedHashItems` - returns linked hash list structure
 
 
 ### Functions
 
- <code>add(key, item)</code> 
+ `add(key, item)` 
 
 Adds new item to collection
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>key</code> | string | <code></code> | The new item key | 
- | <code>item</code> | object | <code></code> | The new item context object value | 
+ | `key` | string | `` | The new item key | 
+ | `item` | object | `` | The new item context object value | 
 
- <code>attach(list)</code> 
+ `attach(list)` 
 
 Appends one list to another
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>list</code> | LinkedHashItems | <code></code> | A list to append to the end of the current list | 
+ | `list` | LinkedHashItems | `` | A list to append to the end of the current list | 
 
- <code>empty()</code> 
+ `empty()` 
 
 Empties collection
 
 
- <code>endKey()</code> 
+ `endKey()` 
 
 Last collection item key
 
- Returns: <code>string</code> - returns key of the last item in the collection
+ Returns: `string` - returns key of the last item in the collection
 
 
- <code>insertAfter(afterKey, key, item)</code> 
+ `insertAfter(afterKey, key, item)` 
 
 Inserts new item into the list after the given key
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>afterKey</code> | string | <code></code> | The key that the new element is placed after | 
- | <code>key</code> | string | <code></code> | The new item key | 
- | <code>item</code> | object | <code></code> | The new item context object value | 
+ | `afterKey` | string | `` | The key that the new element is placed after | 
+ | `key` | string | `` | The new item key | 
+ | `item` | object | `` | The new item context object value | 
 
- <code>insertBefore(beforeKey, key, item)</code> 
+ `insertBefore(beforeKey, key, item)` 
 
 Inserts new item into the list before the given key
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>beforeKey</code> | string | <code></code> | The key that the new element is placed before | 
- | <code>key</code> | string | <code></code> | The new item key | 
- | <code>item</code> | object | <code></code> | The new item context object value | 
+ | `beforeKey` | string | `` | The key that the new element is placed before | 
+ | `key` | string | `` | The new item key | 
+ | `item` | object | `` | The new item context object value | 
 
- <code>isEmpty()</code> 
+ `isEmpty()` 
 
 Checks if collection is empty
 
- Returns: <code>boolean</code> - returns true if collection is empty
+ Returns: `boolean` - returns true if collection is empty
 
 
- <code>item(key)</code> 
+ `item(key)` 
 
 Item context object
 
- Returns: <code>object</code> - returns context object
+ Returns: `object` - returns context object
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>key</code> | string | <code></code> | The item's key | 
+ | `key` | string | `` | The item's key | 
 
- <code>iterate(onItem, startKey, endKey)</code> 
+ `iterate(onItem, startKey, endKey)` 
 
 Loops items of the collection
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>onItem</code> | onLinkedHashItemsCallback | <code></code> |  Callback function for iterating collection items | 
- | <code>startKey</code> | string | <code></code> | The key to start iteration from | 
- | <code>endKey</code> | string | <code></code> | The key to end iteration at | 
+ | `onItem` | onLinkedHashItemsCallback | `` |  Callback function for iterating collection items | 
+ | `startKey` | string | `` | The key to start iteration from | 
+ | `endKey` | string | `` | The key to end iteration at | 
 **Callbacks**
 
- <code>onLinkedHashItemsCallback(item, key)</code> 
+ `onLinkedHashItemsCallback(item, key)` 
 
 Callback function for iterating list items
 
- Returns: <code>boolean</code> - returns true to break the iteration process
+ Returns: `boolean` - returns true to break the iteration process
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>item</code> | object | <code></code> |  The item context object | 
- | <code>key</code> | string | <code></code> | The item key | 
+ | `item` | object | `` |  The item context object | 
+ | `key` | string | `` | The item key | 
 
- <code>iterateBack(onItem, startKey, endKey)</code> 
+ `iterateBack(onItem, startKey, endKey)` 
 
 Loops items of the collection backward
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>onItem</code> | onLinkedHashItemsCallback | <code></code> |  Callback function for iterating collection items | 
- | <code>startKey</code> | string | <code></code> | The key to start iteration from | 
- | <code>endKey</code> | string | <code></code> | The key to end iteration at | 
+ | `onItem` | onLinkedHashItemsCallback | `` |  Callback function for iterating collection items | 
+ | `startKey` | string | `` | The key to start iteration from | 
+ | `endKey` | string | `` | The key to end iteration at | 
 **Callbacks**
 
- <code>onLinkedHashItemsCallback(item, key)</code> 
+ `onLinkedHashItemsCallback(item, key)` 
 
 Callback function for iterating list items
 
- Returns: <code>boolean</code> - returns true to break the iteration process
+ Returns: `boolean` - returns true to break the iteration process
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>item</code> | object | <code></code> |  The item context object | 
- | <code>key</code> | string | <code></code> | The item key | 
+ | `item` | object | `` |  The item context object | 
+ | `key` | string | `` | The item key | 
 
- <code>nextKey(key)</code> 
+ `nextKey(key)` 
 
 Gets next key
 
- Returns: <code>string</code> - returns key of the next collection item
+ Returns: `string` - returns key of the next collection item
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>key</code> | string | <code></code> | The item key | 
+ | `key` | string | `` | The item key | 
 
- <code>prevKey(key)</code> 
+ `prevKey(key)` 
 
 Gets previous key
 
- Returns: <code>string</code> - returns key of the previous collection item
+ Returns: `string` - returns key of the previous collection item
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>key</code> | string | <code></code> | The item key | 
+ | `key` | string | `` | The item key | 
 
- <code>remove(key)</code> 
+ `remove(key)` 
 
 Removes item
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>key</code> | string | <code></code> | The key of the item | 
+ | `key` | string | `` | The key of the item | 
 
- <code>startKey()</code> 
+ `startKey()` 
 
 First collection item key
 
- Returns: <code>string</code> - returns the key of the first item in the collection
+ Returns: `string` - returns the key of the first item in the collection
 
 
- <code>toArray()</code> 
+ `toArray()` 
 
 Returns a regular javascript array of collection items
 
- Returns: <code>object[]</code> - returns array containing items of the collection
+ Returns: `object[]` - returns array containing items of the collection
 
 
- <code>unshift(key, item)</code> 
+ `unshift(key, item)` 
 
 Adds new item to the head of the list
 
- Returns: <code>string</code> - returns key of the last item in the collection
+ Returns: `string` - returns key of the last item in the collection
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>key</code> | string | <code></code> | The new item key | 
- | <code>item</code> | object | <code></code> | The new item context object value | 
+ | `key` | string | `` | The new item key | 
+ | `item` | object | `` | The new item context object value | 
 
- <code>validate(info)</code> 
+ `validate(info)` 
 
 Validates internal data consistensy of the structure
 
- Returns: <code>boolean</code> - returns true if it pass validation
+ Returns: `boolean` - returns true if it pass validation
 
 
-## pile
+## <a name="primitives.common.pile">pile</a>
 Creates pile structure used to sort and stack segments on top of each other so they occupy minimum number of rows.
 
- <code>primitives.common.pile</code> 
+ `primitives.common.pile` 
 
 ### Constructor
 
- <code>pile()</code> 
+ `pile()` 
 
 Creates pile structure used to sort and stack segments on top of each other so they occupy minimum number of rows.
 
- Returns: <code>pile</code> - returns pile structure
+ Returns: `pile` - returns pile structure
 
 
 ### Functions
 
- <code>add(from, to, context)</code> 
+ `add(from, to, context)` 
 
 Adds new segment to pile object.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>from</code> | number | <code></code> | Left margin of segment. | 
- | <code>to</code> | number | <code></code> | Right margin of segment. | 
- | <code>context</code> | object | <code></code> | Any reference to user object. It is returned as parameter in callback function of resolve method. | 
+ | `from` | number | `` | Left margin of segment. | 
+ | `to` | number | `` | Right margin of segment. | 
+ | `context` | object | `` | Any reference to user object. It is returned as parameter in callback function of resolve method. | 
 
- <code>resolve(thisArg, onItem)</code> 
+ `resolve(thisArg, onItem)` 
 
 Sorts and stack segments on top of each other so they occupy minimum number of rows.
 
- Returns: <code>number</code> - number of stacked rows in pile.
+ Returns: `number` - number of stacked rows in pile.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | objct | <code></code> | A context object of the callback function invocation. | 
- | <code>onItem</code> | onPileItemCallback | <code></code> | Callback function for setting segments offsets in the pile. | 
+ | `thisArg` | objct | `` | A context object of the callback function invocation. | 
+ | `onItem` | onPileItemCallback | `` | Callback function for setting segments offsets in the pile. | 
 **Callbacks**
 
- <code>onPileItemCallback(from, to, context, offset)</code> 
+ `onPileItemCallback(from, to, context, offset)` 
 
 Callback function or iterating result offsets of the pile items in the stack.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>from</code> | number | <code></code> | The left margin of the segment | 
- | <code>to</code> | number | <code></code> | The right margin of the segment | 
- | <code>context</code> | object | <code></code> | The context of the pile item | 
- | <code>offset</code> | number | <code></code> | Index of the pile item in the stack | 
+ | `from` | number | `` | The left margin of the segment | 
+ | `to` | number | `` | The right margin of the segment | 
+ | `context` | object | `` | The context of the pile item | 
+ | `offset` | number | `` | Index of the pile item in the stack | 
 
-## QuadTree
+## <a name="primitives.common.QuadTree">QuadTree</a>
 Creates Quad Tree data structure. It distributes points into equal quadrants. So it is equivalent to 2 dimensional binary search tree.
 
- <code>primitives.common.QuadTree</code> 
+ `primitives.common.QuadTree` 
 
 ### Constructor
 
- <code>QuadTree(minimalSize)</code> 
+ `QuadTree(minimalSize)` 
 
 Creates Quad Tree data structure. It distributes points into equal quadrants. So it is equivalent to 2 dimensional binary search tree.
 
- Returns: <code>QuadTree</code> - returns quad tree data structure.
+ Returns: `QuadTree` - returns quad tree data structure.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>minimalSize</code> | number | <code></code> | Defines minimal size of the quadrant. This protects structure against unnecessary depth. | 
+ | `minimalSize` | number | `` | Defines minimal size of the quadrant. This protects structure against unnecessary depth. | 
 
 ### Functions
 
- <code>addPoint(point)</code> 
+ `addPoint(point)` 
 
 Adds point
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>point</code> | Point | <code></code> | Point | 
+ | `point` | Point | `` | Point | 
 
- <code>getPositions(selection)</code> 
+ `getPositions(selection)` 
 
 Returns collection of quadrands created in the data structure Quadrants exists only when elements exists in them. This method is used for visual debugging of the structure.
 
- Returns: <code>Rect[]</code> - returns collection of available quadrants. quadrants containing points within selection area have context.highlight property set to true.
+ Returns: `Rect[]` - returns collection of available quadrants. quadrants containing points within selection area have context.highlight property set to true.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>selection</code> | React | <code></code> | Rectangular test area to highlight quadrants | 
+ | `selection` | React | `` | Rectangular test area to highlight quadrants | 
 
- <code>loopArea(thisArg, rect, onItem)</code> 
+ `loopArea(thisArg, rect, onItem)` 
 
 Loops rectangular area of quad tree structure
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | object | <code></code> | The callback function invocation context | 
- | <code>rect</code> | Rect | <code></code> | Rectangular search area | 
- | <code>onItem</code> | onQuadTreePointCallback | <code></code> | Callback function to call for every point within the search area | 
+ | `thisArg` | object | `` | The callback function invocation context | 
+ | `rect` | Rect | `` | Rectangular search area | 
+ | `onItem` | onQuadTreePointCallback | `` | Callback function to call for every point within the search area | 
 **Callbacks**
 
- <code>onQuadTreePointCallback(point)</code> 
+ `onQuadTreePointCallback(point)` 
 
 Callback function for iteration of points
 
- Returns: <code>boolean</code> - returns true to break iteration process.
+ Returns: `boolean` - returns true to break iteration process.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>point</code> | Point | <code></code> | Rectangle | 
+ | `point` | Point | `` | Rectangle | 
 
- <code>validate()</code> 
+ `validate()` 
 
 Validates internal data consistency of quad tree data structure
 
- Returns: <code>boolean</code> - returns true if structure pass validation
+ Returns: `boolean` - returns true if structure pass validation
 
 
-## RMQ
+## <a name="primitives.common.RMQ">RMQ</a>
 Creates range minimum query structure
 
- <code>primitives.common.RMQ</code> 
+ `primitives.common.RMQ` 
 
 ### Constructor
 
- <code>RMQ(items)</code> 
+ `RMQ(items)` 
 
 Creates range minimum query structure
 
- Returns: <code>rmq</code> - returns range minimum query structure
+ Returns: `rmq` - returns range minimum query structure
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>items</code> | number[] | <code></code> | Collection of numbers | 
+ | `items` | number[] | `` | Collection of numbers | 
 
 ### Functions
 
- <code>getRangeMinimum(from, to)</code> 
+ `getRangeMinimum(from, to)` 
 
 Return minimum value for the given range
 
- Returns: <code>number</code> - returns minimum value in the range
+ Returns: `number` - returns minimum value in the range
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>from</code> | number | <code></code> | The left index of the range | 
- | <code>to</code> | number | <code></code> | The right index of the range | 
+ | `from` | number | `` | The left index of the range | 
+ | `to` | number | `` | The right index of the range | 
 
- <code>getRangeMinimumIndex(from, to)</code> 
+ `getRangeMinimumIndex(from, to)` 
 
 Returns index of minimum item for the given range of items
 
- Returns: <code>number</code> - returns index of the minimum item
+ Returns: `number` - returns index of the minimum item
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>from</code> | number | <code></code> | The left margin index | 
- | <code>to</code> | number | <code></code> | The right margin index | 
+ | `from` | number | `` | The left margin index | 
+ | `to` | number | `` | The right margin index | 
 
-## SortedList
+## <a name="primitives.common.SortedList">SortedList</a>
 Creates self-balancing binary search tree structure.
 
- <code>primitives.common.SortedList</code> 
+ `primitives.common.SortedList` 
 
 ### Constructor
 
- <code>SortedList()</code> 
+ `SortedList()` 
 
 Creates self-balancing binary search tree structure.
 
- Returns: <code>SortedList</code> - returns sorted list collection.
+ Returns: `SortedList` - returns sorted list collection.
 
 
 ### Functions
 
- <code>add(value, context, thisArg, onDuplicate)</code> 
+ `add(value, context, thisArg, onDuplicate)` 
 
 Adds value to sorted list collection
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>value</code> | number | <code></code> | The value | 
- | <code>context</code> | object | <code></code> | The value context object | 
- | <code>thisArg</code> | object | <code></code> | The callback function invocation context | 
- | <code>onDuplicate</code> | onSortedListDuplicateCallback | <code></code> | Callback function for duplicates values notification | 
+ | `value` | number | `` | The value | 
+ | `context` | object | `` | The value context object | 
+ | `thisArg` | object | `` | The callback function invocation context | 
+ | `onDuplicate` | onSortedListDuplicateCallback | `` | Callback function for duplicates values notification | 
 **Callbacks**
 
- <code>onSortedListDuplicateCallback(context)</code> 
+ `onSortedListDuplicateCallback(context)` 
 
 Callback function to notify about duplicate values
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>context</code> | objct | <code></code> | The context object of the duplicate value | 
+ | `context` | objct | `` | The context object of the duplicate value | 
 
- <code>loopBackward(thisArg, fromValue, onItem)</code> 
+ `loopBackward(thisArg, fromValue, onItem)` 
 
 Loops sorted list values backward
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | object | <code></code> | The callback function invocation context | 
- | <code>fromValue</code> | number | <code></code> | The start value to loop items of sorted list | 
- | <code>onItem</code> | onSortedListItemCallback | <code></code> | Callback function to iterate over sorted list values | 
+ | `thisArg` | object | `` | The callback function invocation context | 
+ | `fromValue` | number | `` | The start value to loop items of sorted list | 
+ | `onItem` | onSortedListItemCallback | `` | Callback function to iterate over sorted list values | 
 **Callbacks**
 
- <code>onSortedListItemCallback(value, context)</code> 
+ `onSortedListItemCallback(value, context)` 
 
 Callback function for iterating values of the sorted list
 
- Returns: <code>boolean</code> - returns true to break loop operation
+ Returns: `boolean` - returns true to break loop operation
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>value</code> | number | <code></code> | The value | 
- | <code>context</code> | object | <code></code> | The value context object | 
+ | `value` | number | `` | The value | 
+ | `context` | object | `` | The value context object | 
 
- <code>loopForward(thisArg, fromValue, onItem)</code> 
+ `loopForward(thisArg, fromValue, onItem)` 
 
 Loops sorted list values
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | object | <code></code> | The callback function invocation context | 
- | <code>fromValue</code> | number | <code></code> | The start value to loop items of sorted list | 
- | <code>onItem</code> | onSortedListItemCallback | <code></code> | Callback function to iterate over sorted list values | 
+ | `thisArg` | object | `` | The callback function invocation context | 
+ | `fromValue` | number | `` | The start value to loop items of sorted list | 
+ | `onItem` | onSortedListItemCallback | `` | Callback function to iterate over sorted list values | 
 **Callbacks**
 
- <code>onSortedListItemCallback(value, context)</code> 
+ `onSortedListItemCallback(value, context)` 
 
 Callback function for iterating values of the sorted list
 
- Returns: <code>boolean</code> - returns true to break loop operation
+ Returns: `boolean` - returns true to break loop operation
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>value</code> | number | <code></code> | The value | 
- | <code>context</code> | object | <code></code> | The value context object | 
+ | `value` | number | `` | The value | 
+ | `context` | object | `` | The value context object | 
 
- <code>nextContext(fromValue)</code> 
+ `nextContext(fromValue)` 
 
 Returns context object of the next value following the given one
 
- Returns: <code>object</code> - returns context object of the first value in sorted list greater than the start value.
+ Returns: `object` - returns context object of the first value in sorted list greater than the start value.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>fromValue</code> | number | <code></code> | The value to start search from | 
+ | `fromValue` | number | `` | The value to start search from | 
 
- <code>previousContext(fromValue)</code> 
+ `previousContext(fromValue)` 
 
 Returns context object of the previous value preceding the given one
 
- Returns: <code>object</code> - returns context object of the first value in sorted list less than the start value.
+ Returns: `object` - returns context object of the first value in sorted list less than the start value.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>fromValue</code> | number | <code></code> | The value to start search from | 
+ | `fromValue` | number | `` | The value to start search from | 
 
- <code>remove(value)</code> 
+ `remove(value)` 
 
 Removes value from the sorted list
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>value</code> | number | <code></code> | The removed value | 
+ | `value` | number | `` | The removed value | 
 
- <code>validate()</code> 
+ `validate()` 
 
 Validate internal data consistency of the self-balancing binary search tree structure
 
- Returns: <code>boolean</code> - returns true if structure pass validation
+ Returns: `boolean` - returns true if structure pass validation
 
 
-## SpatialIndex
+## <a name="primitives.common.SpatialIndex">SpatialIndex</a>
 Create spatial index structure. It uses collection of sizes to distribute rectangles into buckets of similar size elements. Elements of the same bucket are aproximated to points. The search of rectangles is transformed to search of points within given range plus offset for maximum linear rectangle size.
 
- <code>primitives.common.SpatialIndex</code> 
+ `primitives.common.SpatialIndex` 
 
 ### Constructor
 
- <code>SpatialIndex()</code> 
+ `SpatialIndex()` 
 
 Create spatial index structure. It uses collection of sizes to distribute rectangles into buckets of similar size elements. Elements of the same bucket are aproximated to points. The search of rectangles is transformed to search of points within given range plus offset for maximum linear rectangle size.
 
- Returns: <code>SpatialIndex</code> - returns spacial index data structure.
+ Returns: `SpatialIndex` - returns spacial index data structure.
 
 
 ### Functions
 
- <code>addRect(rect)</code> 
+ `addRect(rect)` 
 
 Adds rectangle to spacial index
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>rect</code> | Rect | <code></code> | Rectangle | 
+ | `rect` | Rect | `` | Rectangle | 
 
-## tree
+## <a name="primitives.common.tree">tree</a>
 Creates tree structure
 
- <code>primitives.common.tree</code> 
+ `primitives.common.tree` 
 
 ### Constructor
 
- <code>tree(source)</code> 
+ `tree(source)` 
 
 Creates tree structure
 
- Returns: <code>tree</code> - returns new tree structure
+ Returns: `tree` - returns new tree structure
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>source</code> | tree | <code></code> | A source tree structure to clone properties from | 
+ | `source` | tree | `` | A source tree structure to clone properties from | 
 
 ### Constants
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>BREAK</code> | number | <code>1</code> | B R E A K | 
- | <code>SKIP</code> | number | <code>2</code> | S K I P | 
+ | `BREAK` | number | `1` | B R E A K | 
+ | `SKIP` | number | `2` | S K I P | 
 
 ### Functions
 
- <code>add(parentid, nodeid, node, position)</code> 
+ `add(parentid, nodeid, node, position)` 
 
 Adds new tree item
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>parentid</code> | string | <code></code> | Parent id | 
- | <code>nodeid</code> | string | <code></code> | New node id | 
- | <code>node</code> | object | <code></code> | Context object of the new node | 
- | <code>position</code> | number | <code></code> | Position of the new node in the collection of children | 
+ | `parentid` | string | `` | Parent id | 
+ | `nodeid` | string | `` | New node id | 
+ | `node` | object | `` | Context object of the new node | 
+ | `position` | number | `` | Position of the new node in the collection of children | 
 
- <code>adopt(parentid, nodeid)</code> 
+ `adopt(parentid, nodeid)` 
 
 Adds existing node to the children of the parent node
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>parentid</code> | string | <code></code> | Parent Node id | 
- | <code>nodeid</code> | string | <code></code> | Node id | 
+ | `parentid` | string | `` | Parent Node id | 
+ | `nodeid` | string | `` | Node id | 
 
- <code>arrangeChildren(nodeid, children)</code> 
+ `arrangeChildren(nodeid, children)` 
 
 Orders children of the given node
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | The node id of the parent node which children should be ordered in the tree structure | 
- | <code>children</code> | string[] | <code></code> | Collection of ordered children | 
+ | `nodeid` | string | `` | The node id of the parent node which children should be ordered in the tree structure | 
+ | `children` | string[] | `` | Collection of ordered children | 
 
- <code>clone()</code> 
+ `clone()` 
 
 Clones tree structure
 
- Returns: <code>tree</code> - returns clone of the tree
+ Returns: `tree` - returns clone of the tree
 
 
- <code>countChildren(nodeid)</code> 
+ `countChildren(nodeid)` 
 
 Returns number of children
 
- Returns: <code>number</code> - returns number of child nodes
+ Returns: `number` - returns number of child nodes
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | Node id | 
+ | `nodeid` | string | `` | Node id | 
 
- <code>countSiblings(nodeid)</code> 
+ `countSiblings(nodeid)` 
 
 Returns number of siblings
 
- Returns: <code>number</code> - returns number of siblings
+ Returns: `number` - returns number of siblings
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | Node id | 
+ | `nodeid` | string | `` | Node id | 
 
- <code>getChild(parentid, index)</code> 
+ `getChild(parentid, index)` 
 
 Returns child node by index in the children's collection
 
- Returns: <code>object</code> - returns child node
+ Returns: `object` - returns child node
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | Node id | 
- | <code>index</code> | number | <code></code> | Child index | 
+ | `nodeid` | string | `` | Node id | 
+ | `index` | number | `` | Child index | 
 
- <code>hasChildren(nodeid)</code> 
+ `hasChildren(nodeid)` 
 
 Returns true if node has children
 
- Returns: <code>boolean</code> - returns true if node has children
+ Returns: `boolean` - returns true if node has children
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | Node id | 
+ | `nodeid` | string | `` | Node id | 
 
- <code>hasNodes()</code> 
+ `hasNodes()` 
 
 Return true if structure has nodes
 
- Returns: <code>boolean</code> - returns true if structure has nodes
+ Returns: `boolean` - returns true if structure has nodes
 
 
- <code>indexOf(nodeid)</code> 
+ `indexOf(nodeid)` 
 
 Returns index of the node in the children's collection
 
- Returns: <code>number</code> - returns node index
+ Returns: `number` - returns node index
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | Node id | 
+ | `nodeid` | string | `` | Node id | 
 
- <code>insert(nodeid, bundleid, bundle)</code> 
+ `insert(nodeid, bundleid, bundle)` 
 
 Inserts bundle node into the tree structure. The new budnle node becomes only child node of the parent node. All imediate children of the parent node become children of the inserted bundle node.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | Parent node id | 
- | <code>bundleid</code> | string | <code></code> | New bundle node id | 
- | <code>bundle</code> | object | <code></code> | Context object of the bundle node | 
+ | `nodeid` | string | `` | Parent node id | 
+ | `bundleid` | string | `` | New bundle node id | 
+ | `bundle` | object | `` | Context object of the bundle node | 
 
- <code>loop(thisArg, onItem)</code> 
+ `loop(thisArg, onItem)` 
 
 Loops through nodes of tree struture
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>onItem</code> | onTreeItemCallback | <code></code> | Callback function to call for every tree node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `onItem` | onTreeItemCallback | `` | Callback function to call for every tree node | 
 **Callbacks**
 
- <code>onTreeItemCallback(itemid, item)</code> 
+ `onTreeItemCallback(itemid, item)` 
 
 Callback for iterating tree nodes
 
- Returns: <code>boolean</code> - returns true to break the loop
+ Returns: `boolean` - returns true to break the loop
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | The node id | 
- | <code>item</code> | object | <code></code> | The node | 
+ | `itemid` | string | `` | The node id | 
+ | `item` | object | `` | The node | 
 
- <code>loopChildren(thisArg, nodeid, onItem)</code> 
+ `loopChildren(thisArg, nodeid, onItem)` 
 
 Loops immediate children of the given node. Breaks iteration if callback function returns true.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>nodeid</code> | string | <code></code> | The parent node id to loop children of | 
- | <code>onItem</code> | onTreeChildItemCallback | <code></code> | Callback function to call for every child node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `nodeid` | string | `` | The parent node id to loop children of | 
+ | `onItem` | onTreeChildItemCallback | `` | Callback function to call for every child node | 
 **Callbacks**
 
- <code>onTreeChildItemCallback(nodeid, node, index, lastIndex)</code> 
+ `onTreeChildItemCallback(nodeid, node, index, lastIndex)` 
 
 Callback function to loop through children of the given node
 
- Returns: <code>boolean</code> - returns true to break the iteration of nodes and exit.
+ Returns: `boolean` - returns true to break the iteration of nodes and exit.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | Child node id | 
- | <code>node</code> | object | <code></code> | Context object of the child node | 
- | <code>index</code> | number | <code></code> | Index of the child node | 
- | <code>lastIndex</code> | number | <code></code> | Index of the last child | 
+ | `nodeid` | string | `` | Child node id | 
+ | `node` | object | `` | Context object of the child node | 
+ | `index` | number | `` | Index of the child node | 
+ | `lastIndex` | number | `` | Index of the last child | 
 
- <code>loopChildrenRange(thisArg, nodeid, fromIndex, toIndex, onItem)</code> 
+ `loopChildrenRange(thisArg, nodeid, fromIndex, toIndex, onItem)` 
 
 Loops range of immediate children of the given node. Breaks iteration if callback function returns true.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>nodeid</code> | string | <code></code> | The parent node id to loop children of | 
- | <code>fromIndex</code> | number | <code></code> | Start index of iteration | 
- | <code>toIndex</code> | number | <code></code> | End index of iteration | 
- | <code>onItem</code> | onTreeNodeWithIndexItemCallback | <code></code> | Callback function to call for every child node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `nodeid` | string | `` | The parent node id to loop children of | 
+ | `fromIndex` | number | `` | Start index of iteration | 
+ | `toIndex` | number | `` | End index of iteration | 
+ | `onItem` | onTreeNodeWithIndexItemCallback | `` | Callback function to call for every child node | 
 **Callbacks**
 
- <code>onTreeNodeWithIndexItemCallback(nodeid, node, index)</code> 
+ `onTreeNodeWithIndexItemCallback(nodeid, node, index)` 
 
 Callback function to loop theough range of children for the given node
 
- Returns: <code>boolean</code> - returns true to break the iteration of nodes and exit.
+ Returns: `boolean` - returns true to break the iteration of nodes and exit.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | Child node id | 
- | <code>node</code> | object | <code></code> | Context object of the child node | 
- | <code>index</code> | number | <code></code> | Index of the child node | 
+ | `nodeid` | string | `` | Child node id | 
+ | `node` | object | `` | Context object of the child node | 
+ | `index` | number | `` | Index of the child node | 
 
- <code>loopChildrenReversed(thisArg, nodeid, onItem)</code> 
+ `loopChildrenReversed(thisArg, nodeid, onItem)` 
 
 Loops immediate children of the given node in reversed order. Breaks iteration if callback function returns true.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>nodeid</code> | string | <code></code> | The parent node id to loop children of | 
- | <code>onItem</code> | onTreeChildItemCallback | <code></code> | Callback function to call for every child node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `nodeid` | string | `` | The parent node id to loop children of | 
+ | `onItem` | onTreeChildItemCallback | `` | Callback function to call for every child node | 
 **Callbacks**
 
- <code>onTreeChildItemCallback(nodeid, node, index, lastIndex)</code> 
+ `onTreeChildItemCallback(nodeid, node, index, lastIndex)` 
 
 Callback function to loop through children of the given node
 
- Returns: <code>boolean</code> - returns true to break the iteration of nodes and exit.
+ Returns: `boolean` - returns true to break the iteration of nodes and exit.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | Child node id | 
- | <code>node</code> | object | <code></code> | Context object of the child node | 
- | <code>index</code> | number | <code></code> | Index of the child node | 
- | <code>lastIndex</code> | number | <code></code> | Index of the last child | 
+ | `nodeid` | string | `` | Child node id | 
+ | `node` | object | `` | Context object of the child node | 
+ | `index` | number | `` | Index of the child node | 
+ | `lastIndex` | number | `` | Index of the last child | 
 
- <code>loopEulerWalk(thisArg, onItem)</code> 
+ `loopEulerWalk(thisArg, onItem)` 
 
 Loops tree nodes in "Euler Walk" order
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>onItem</code> | onItemEulerWalkCallback | <code></code> | Callback function to call for every node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `onItem` | onItemEulerWalkCallback | `` | Callback function to call for every node | 
 **Callbacks**
 
- <code>onItemEulerWalkCallback(nodeid, node, level)</code> 
+ `onItemEulerWalkCallback(nodeid, node, level)` 
 
 Callback for iterating nodes in euler walk order
 
- Returns: <code>boolean</code> - returns true to break the iteration of nodes and exit.
+ Returns: `boolean` - returns true to break the iteration of nodes and exit.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | The node id | 
- | <code>node</code> | object | <code></code> | Context object of the node | 
- | <code>level</code> | number | <code></code> | The node's level | 
+ | `nodeid` | string | `` | The node id | 
+ | `node` | object | `` | Context object of the node | 
+ | `level` | number | `` | The node's level | 
 
- <code>loopLevels(thisArg, arg0, arg1)</code> 
+ `loopLevels(thisArg, arg0, arg1)` 
 
 Loops through child nodes of the tree struture level by level
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>arg0</code> | string | <code></code> | The node id to start children traversing | 
- | <code>arg1</code> | onTreeItemWithLevelCallback | <code></code> | Callback function to call for every child node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `arg0` | string | `` | The node id to start children traversing | 
+ | `arg1` | onTreeItemWithLevelCallback | `` | Callback function to call for every child node | 
 **Callbacks**
 
- <code>onTreeItemWithLevelCallback(nodeid, node, levelIndex)</code> 
+ `onTreeItemWithLevelCallback(nodeid, node, levelIndex)` 
 
 Callback for iterating the tree nodes level by level
 
- Returns: <code>number</code> - returns break to break the loop and exit. returns skip to skip node's branch traversing.
+ Returns: `number` - returns break to break the loop and exit. returns skip to skip node's branch traversing.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | The node id | 
- | <code>node</code> | object | <code></code> | The node context object | 
- | <code>levelIndex</code> | number | <code></code> | The node level index | 
+ | `nodeid` | string | `` | The node id | 
+ | `node` | object | `` | The node context object | 
+ | `levelIndex` | number | `` | The node level index | 
 
- <code>loopNeighbours(thisArg, itemid, distance, onItem)</code> 
+ `loopNeighbours(thisArg, itemid, distance, onItem)` 
 
 Loops through the node neighbours of the tree struture level by level
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>itemid</code> | string | <code></code> | The node id to start traversing neighbour nodes | 
- | <code>distance</code> | number | <code></code> | Stop iteration of neighbours when distance exceeds the given value | 
- | <code>onItem</code> | onTreeItemNeighbourCallback | <code></code> | A callback function to call for every neighbour node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `itemid` | string | `` | The node id to start traversing neighbour nodes | 
+ | `distance` | number | `` | Stop iteration of neighbours when distance exceeds the given value | 
+ | `onItem` | onTreeItemNeighbourCallback | `` | A callback function to call for every neighbour node | 
 **Callbacks**
 
- <code>onTreeItemNeighbourCallback(itemid, item, distance)</code> 
+ `onTreeItemNeighbourCallback(itemid, item, distance)` 
 
 Callback for iterating tree node neighbours level by level
 
- Returns: <code>number</code> - returns true to skip further neighbous traversing.
+ Returns: `number` - returns true to skip further neighbous traversing.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | The node id | 
- | <code>item</code> | object | <code></code> | The node | 
- | <code>distance</code> | number | <code></code> | The neigbour node distance from the start node | 
+ | `itemid` | string | `` | The node id | 
+ | `item` | object | `` | The node | 
+ | `distance` | number | `` | The neigbour node distance from the start node | 
 
- <code>loopParents(thisArg, nodeid, onItem, includingStartItem)</code> 
+ `loopParents(thisArg, nodeid, onItem, includingStartItem)` 
 
 Loops parents up to the root of the hierarchy starting with the given node. Breaks iteration if callback function returns true.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>nodeid</code> | string | <code></code> | The node id to start iteration from | 
- | <code>onItem</code> | onTreeItemCallback | <code></code> | Callback function to call for every parent node | 
- | <code>includingStartItem</code> | boolean | <code></code> | If true the first call to callback function is made with start node id | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `nodeid` | string | `` | The node id to start iteration from | 
+ | `onItem` | onTreeItemCallback | `` | Callback function to call for every parent node | 
+ | `includingStartItem` | boolean | `` | If true the first call to callback function is made with start node id | 
 **Callbacks**
 
- <code>onTreeItemCallback(itemid, item)</code> 
+ `onTreeItemCallback(itemid, item)` 
 
 Callback for iterating tree nodes
 
- Returns: <code>boolean</code> - returns true to break the loop
+ Returns: `boolean` - returns true to break the loop
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | The node id | 
- | <code>item</code> | object | <code></code> | The node | 
+ | `itemid` | string | `` | The node id | 
+ | `item` | object | `` | The node | 
 
- <code>loopPostOrder(thisArg, onItem)</code> 
+ `loopPostOrder(thisArg, onItem)` 
 
 Traverse tree structure in post order. Children first - parent last
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>onItem</code> | onTreeItemWithParentCallback | <code></code> | Callback function to call for every node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `onItem` | onTreeItemWithParentCallback | `` | Callback function to call for every node | 
 **Callbacks**
 
- <code>onTreeItemWithParentCallback(nodeid, node, parentid, parent)</code> 
+ `onTreeItemWithParentCallback(nodeid, node, parentid, parent)` 
 
 Callback for iterating nodes and providing parent in parameters
 
- Returns: <code>number</code> - returns break to break the loop and exit. returns skip to skip node's branch traversing.
+ Returns: `number` - returns break to break the loop and exit. returns skip to skip node's branch traversing.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | The node id | 
- | <code>node</code> | object | <code></code> | The node context object | 
- | <code>parentid</code> | string | <code></code> | The parent node id | 
- | <code>parent</code> | object | <code></code> | The parent node context object | 
+ | `nodeid` | string | `` | The node id | 
+ | `node` | object | `` | The node context object | 
+ | `parentid` | string | `` | The parent node id | 
+ | `parent` | object | `` | The parent node context object | 
 
- <code>loopPreOrder(thisArg, onItem)</code> 
+ `loopPreOrder(thisArg, onItem)` 
 
 Traverse tree structure in pre order. Parent first - children next
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>onItem</code> | onTreeItemWithParentCallback | <code></code> | A callback function to call for every node | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `onItem` | onTreeItemWithParentCallback | `` | A callback function to call for every node | 
 **Callbacks**
 
- <code>onTreeItemWithParentCallback(nodeid, node, parentid, parent)</code> 
+ `onTreeItemWithParentCallback(nodeid, node, parentid, parent)` 
 
 Callback for iterating nodes and providing parent in parameters
 
- Returns: <code>number</code> - returns break to break the loop and exit. returns skip to skip node's branch traversing.
+ Returns: `number` - returns break to break the loop and exit. returns skip to skip node's branch traversing.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | The node id | 
- | <code>node</code> | object | <code></code> | The node context object | 
- | <code>parentid</code> | string | <code></code> | The parent node id | 
- | <code>parent</code> | object | <code></code> | The parent node context object | 
+ | `nodeid` | string | `` | The node id | 
+ | `node` | object | `` | The node context object | 
+ | `parentid` | string | `` | The parent node id | 
+ | `parent` | object | `` | The parent node context object | 
 
- <code>moveChildren(fromNodeid, toNodeId)</code> 
+ `moveChildren(fromNodeid, toNodeId)` 
 
 Moves children form one node to another.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>fromNodeid</code> | string | <code></code> | Source node node id | 
- | <code>toNodeId</code> | string | <code></code> | Destination node id | 
+ | `fromNodeid` | string | `` | Source node node id | 
+ | `toNodeId` | string | `` | Destination node id | 
 
- <code>node(nodeid)</code> 
+ `node(nodeid)` 
 
 Returns context obect
 
- Returns: <code>object</code> - context object of the node
+ Returns: `object` - context object of the node
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | Node id | 
+ | `nodeid` | string | `` | Node id | 
 
- <code>parent(nodeid)</code> 
+ `parent(nodeid)` 
 
 Returns context object of the parent node
 
- Returns: <code>object</code> - returns context object of the  parent node
+ Returns: `object` - returns context object of the  parent node
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | Node id | 
+ | `nodeid` | string | `` | Node id | 
 
- <code>parentid(nodeid)</code> 
+ `parentid(nodeid)` 
 
 Returns parent node id
 
- Returns: <code>string</code> - returns parent node id
+ Returns: `string` - returns parent node id
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>nodeid</code> | string | <code></code> | Node id | 
+ | `nodeid` | string | `` | Node id | 
 
- <code>validate()</code> 
+ `validate()` 
 
 Validates internal data integrity of the structure
 
- Returns: <code>boolean</code> - returns true if structure pass validation
+ Returns: `boolean` - returns true if structure pass validation
 
 
- <code>zipUp(thisArg, firstNodeId, secondNodeid, onZip)</code> 
+ `zipUp(thisArg, firstNodeId, secondNodeid, onZip)` 
 
 Iterates hierarchy nodes by pairs starting with given pair of start and second nodes and up to the root of the hierarchy. Breaks iteration when callback function returns true.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>firstNodeId</code> | string | <code></code> | The first node to start iteration | 
- | <code>secondNodeid</code> | string | <code></code> | The second node to start iteration | 
- | <code>onZip</code> | onZipUpPairCallback | <code></code> | Callback function to call for every pair of nodes on the way up in the tree structure | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `firstNodeId` | string | `` | The first node to start iteration | 
+ | `secondNodeid` | string | `` | The second node to start iteration | 
+ | `onZip` | onZipUpPairCallback | `` | Callback function to call for every pair of nodes on the way up in the tree structure | 
 **Callbacks**
 
- <code>onZipUpPairCallback(firstNodeId, firstParentId, secondNodeid, secondParentId)</code> 
+ `onZipUpPairCallback(firstNodeId, firstParentId, secondNodeid, secondParentId)` 
 
 Callback function to return pairs of nodes
 
- Returns: <code>boolean</code> - returns true to break the iteration of nodes and exit.
+ Returns: `boolean` - returns true to break the iteration of nodes and exit.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>firstNodeId</code> | string | <code></code> | First node id | 
- | <code>firstParentId</code> | string | <code></code> | Parent id of the first node | 
- | <code>secondNodeid</code> | string | <code></code> | Second node id | 
- | <code>secondParentId</code> | string | <code></code> | Parent id of the second node | 
+ | `firstNodeId` | string | `` | First node id | 
+ | `firstParentId` | string | `` | Parent id of the first node | 
+ | `secondNodeid` | string | `` | Second node id | 
+ | `secondParentId` | string | `` | Parent id of the second node | 
 
-## TreeLevels
+## <a name="primitives.common.TreeLevels">TreeLevels</a>
 Creates Tree Levels structure. It is diagraming specific auxiliary structure that keeps tree nodes order level by level.
 
- <code>primitives.common.TreeLevels</code> 
+ `primitives.common.TreeLevels` 
 
 ### Constructor
 
- <code>TreeLevels(source)</code> 
+ `TreeLevels(source)` 
 
 Creates Tree Levels structure. It is diagraming specific auxiliary structure that keeps tree nodes order level by level.
 
- Returns: <code>TreeLevels</code> - returns tree levels structure.
+ Returns: `TreeLevels` - returns tree levels structure.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>source</code> | TreeLevels | <code>undefined</code> | Optional source object to clone content from into the new instance of the structure. | 
+ | `source` | TreeLevels | `undefined` | Optional source object to clone content from into the new instance of the structure. | 
 
 ### Functions
 
- <code>addItem(levelIndex, itemid, context)</code> 
+ `addItem(levelIndex, itemid, context)` 
 
 Adds element
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>levelIndex</code> | number | <code></code> | Level index | 
- | <code>itemid</code> | string | <code></code> | New element id | 
- | <code>context</code> | object | <code></code> | Context object | 
+ | `levelIndex` | number | `` | Level index | 
+ | `itemid` | string | `` | New element id | 
+ | `context` | object | `` | Context object | 
 
- <code>addLevel(level, context)</code> 
+ `addLevel(level, context)` 
 
 Adds new level. Structure keeps levels sorted by their indexes. The level index can be positive and negative as well. Structure auto expands collection of levels in both directions and keeps them ordered.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>level</code> | number | <code></code> | New level index | 
- | <code>context</code> | object | <code></code> | Context object | 
+ | `level` | number | `` | New level index | 
+ | `context` | object | `` | Context object | 
 
- <code>binarySearch(thisArg, levelIndex, onGetDistance)</code> 
+ `binarySearch(thisArg, levelIndex, onGetDistance)` 
 
 Searchs element at level using binary search
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>levelIndex</code> | number | <code></code> | Level index to search element at | 
- | <code>onGetDistance</code> | onTreeLevelDistanceCallback | <code></code> | A callback function to measure distance for element | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `levelIndex` | number | `` | Level index to search element at | 
+ | `onGetDistance` | onTreeLevelDistanceCallback | `` | A callback function to measure distance for element | 
 **Callbacks**
 
- <code>onTreeLevelDistanceCallback(itemid, item)</code> 
+ `onTreeLevelDistanceCallback(itemid, item)` 
 
 Callback for finding distance for element
 
- Returns: <code>number</code> - returns distance for the element
+ Returns: `number` - returns distance for the element
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | number | <code></code> | Element id | 
- | <code>item</code> | object | <code></code> | Conext object | 
+ | `itemid` | number | `` | Element id | 
+ | `item` | object | `` | Conext object | 
 
- <code>clone()</code> 
+ `clone()` 
 
 Clones tree levels structure.
 
- Returns: <code>TreeLevels</code> - returns cloned copy of the structure
+ Returns: `TreeLevels` - returns cloned copy of the structure
 
 
- <code>createLevel(index)</code> 
+ `createLevel(index)` 
 
 Creates new level
 
- Returns: <code>object</code> - returns new level empty context object
+ Returns: `object` - returns new level empty context object
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>index</code> | index | <code></code> | New level index | 
+ | `index` | index | `` | New level index | 
 
- <code>getEndLevelIndex(itemid)</code> 
+ `getEndLevelIndex(itemid)` 
 
 Returns element's end level index in the structure. Element may occupy multiple levels of the tree levels structure.
 
- Returns: <code>number</code> - returns end level index
+ Returns: `number` - returns end level index
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | Element id | 
+ | `itemid` | string | `` | Element id | 
 
- <code>getItemAtPosition(levelIndex, position)</code> 
+ `getItemAtPosition(levelIndex, position)` 
 
 Gets element at position
 
- Returns: <code>number</code> - returns element id
+ Returns: `number` - returns element id
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>levelIndex</code> | number | <code></code> | Level index | 
- | <code>position</code> | number | <code></code> | Item position | 
+ | `levelIndex` | number | `` | Level index | 
+ | `position` | number | `` | Item position | 
 
- <code>getItemContext(itemid)</code> 
+ `getItemContext(itemid)` 
 
 Gets element context object
 
- Returns: <code>object</code> - returns context object of the element
+ Returns: `object` - returns context object of the element
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | Element id | 
+ | `itemid` | string | `` | Element id | 
 
- <code>getItemPosition(itemid, level)</code> 
+ `getItemPosition(itemid, level)` 
 
 Gets element position at level
 
- Returns: <code>number</code> - returns position of the element
+ Returns: `number` - returns position of the element
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | Element id | 
- | <code>level</code> | number | <code></code> | Level index | 
+ | `itemid` | string | `` | Element id | 
+ | `level` | number | `` | Level index | 
 
- <code>getLevelLength(levelIndex)</code> 
+ `getLevelLength(levelIndex)` 
 
 Gets number of elements at level
 
- Returns: <code>number</code> - returns number of elements at the level
+ Returns: `number` - returns number of elements at the level
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>levelIndex</code> | number | <code></code> | Level index | 
+ | `levelIndex` | number | `` | Level index | 
 
- <code>getNextItem(itemid, itemLevel)</code> 
+ `getNextItem(itemid, itemLevel)` 
 
 Gets next element
 
- Returns: <code>number</code> - returns next element id
+ Returns: `number` - returns next element id
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | Element id | 
- | <code>itemLevel</code> | number | <code></code> | Level index | 
+ | `itemid` | string | `` | Element id | 
+ | `itemLevel` | number | `` | Level index | 
 
- <code>getPrevItem(itemid, itemLevel)</code> 
+ `getPrevItem(itemid, itemLevel)` 
 
 Gets previous element
 
- Returns: <code>number</code> - returns previous element id
+ Returns: `number` - returns previous element id
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | Element id | 
- | <code>itemLevel</code> | number | <code></code> | Level index | 
+ | `itemid` | string | `` | Element id | 
+ | `itemLevel` | number | `` | Level index | 
 
- <code>getStartLevelIndex(itemid)</code> 
+ `getStartLevelIndex(itemid)` 
 
 Returns element's start level index in the structure. Element may occupy multiple levels of the tree levels structure.
 
- Returns: <code>number</code> - returns start level index
+ Returns: `number` - returns start level index
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | The element id | 
+ | `itemid` | string | `` | The element id | 
 
- <code>hasItem(itemid)</code> 
+ `hasItem(itemid)` 
 
 Checks if struture contains element
 
- Returns: <code>boolean</code> - returns true if structure contains given element id
+ Returns: `boolean` - returns true if structure contains given element id
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | Element id | 
+ | `itemid` | string | `` | Element id | 
 
- <code>hasLevel(levelIndex)</code> 
+ `hasLevel(levelIndex)` 
 
 Checks if struture contains level
 
- Returns: <code>boolean</code> - returns true if structure contains given level index
+ Returns: `boolean` - returns true if structure contains given level index
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>levelIndex</code> | number | <code></code> | Level index | 
+ | `levelIndex` | number | `` | Level index | 
 
- <code>isEmpty()</code> 
+ `isEmpty()` 
 
 Chckes if structure has elements.
 
- Returns: <code>boolean</code> - returns true if structure has elements.
+ Returns: `boolean` - returns true if structure has elements.
 
 
- <code>length()</code> 
+ `length()` 
 
 Number of levels
 
- Returns: <code>number</code> - returns number of levels in structure.
+ Returns: `number` - returns number of levels in structure.
 
 
- <code>loopFromItem(thisArg, itemid, isLeft, onItem, level)</code> 
+ `loopFromItem(thisArg, itemid, isLeft, onItem, level)` 
 
 Loops level elements starting with the given item
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>itemid</code> | string | <code></code> | Start element id | 
- | <code>isLeft</code> | boolean | <code></code> | If true thenmethod loops leftward | 
- | <code>onItem</code> | onTreeLevelMergedItemCallback | <code></code> | Callback function to call for every item | 
- | <code>level</code> | number | <code></code> | Level index | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `itemid` | string | `` | Start element id | 
+ | `isLeft` | boolean | `` | If true thenmethod loops leftward | 
+ | `onItem` | onTreeLevelMergedItemCallback | `` | Callback function to call for every item | 
+ | `level` | number | `` | Level index | 
 **Callbacks**
 
- <code>onTreeLevelMergedItemCallback(itemid, item)</code> 
+ `onTreeLevelMergedItemCallback(itemid, item)` 
 
 Callback for iterating items
 
- Returns: <code>number</code> - returns true to break iteration process.
+ Returns: `number` - returns true to break iteration process.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | number | <code></code> | Element id | 
- | <code>item</code> | object | <code></code> | Conext object | 
+ | `itemid` | number | `` | Element id | 
+ | `item` | object | `` | Conext object | 
 
- <code>loopItems(thisArg, onItem)</code> 
+ `loopItems(thisArg, onItem)` 
 
 Loops elements level by level
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>onItem</code> | onTreeLevelsItemCallback | <code></code> | A callback function to call for every item | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `onItem` | onTreeLevelsItemCallback | `` | A callback function to call for every item | 
 **Callbacks**
 
- <code>onTreeLevelsItemCallback(itemid, item, position, levelIndex, level)</code> 
+ `onTreeLevelsItemCallback(itemid, item, position, levelIndex, level)` 
 
 Callback function for iteration of elements level by level
 
- Returns: <code>boolean</code> - returns true to break iteration process.
+ Returns: `boolean` - returns true to break iteration process.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | Element id | 
- | <code>item</code> | object | <code></code> | Element context object | 
- | <code>position</code> | number | <code></code> | Position of the element at level | 
- | <code>levelIndex</code> | number | <code></code> | Level index | 
- | <code>level</code> | object | <code></code> | Level context object | 
+ | `itemid` | string | `` | Element id | 
+ | `item` | object | `` | Element context object | 
+ | `position` | number | `` | Position of the element at level | 
+ | `levelIndex` | number | `` | Level index | 
+ | `level` | object | `` | Level context object | 
 
- <code>loopLevelItems(thisArg, levelIndex, onItem)</code> 
+ `loopLevelItems(thisArg, levelIndex, onItem)` 
 
 Loops level elements
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>levelIndex</code> | number | <code></code> | Level index | 
- | <code>onItem</code> | onTreeLevelItemCallback | <code></code> | A callback function to call for every item | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `levelIndex` | number | `` | Level index | 
+ | `onItem` | onTreeLevelItemCallback | `` | A callback function to call for every item | 
 **Callbacks**
 
- <code>onTreeLevelItemCallback(itemid, item, position)</code> 
+ `onTreeLevelItemCallback(itemid, item, position)` 
 
 Callback function for iteration of level elements
 
- Returns: <code>boolean</code> - returns true to break iteration process.
+ Returns: `boolean` - returns true to break iteration process.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | string | <code></code> | Element id | 
- | <code>item</code> | object | <code></code> | Context object of the element | 
- | <code>position</code> | number | <code></code> | Position of the element at level | 
+ | `itemid` | string | `` | Element id | 
+ | `item` | object | `` | Context object of the element | 
+ | `position` | number | `` | Position of the element at level | 
 
- <code>loopLevels(thisArg, onItem)</code> 
+ `loopLevels(thisArg, onItem)` 
 
 Loops levels
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>onItem</code> | onTreeLevelCallback | <code></code> | A callback function to call for every level | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `onItem` | onTreeLevelCallback | `` | A callback function to call for every level | 
 **Callbacks**
 
- <code>onTreeLevelCallback(levelIndex, level)</code> 
+ `onTreeLevelCallback(levelIndex, level)` 
 
 Callback function for iteration of levels
 
- Returns: <code>boolean</code> - returns true to break iteration process.
+ Returns: `boolean` - returns true to break iteration process.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>levelIndex</code> | number | <code></code> | Level index | 
- | <code>level</code> | object | <code></code> | Context object | 
+ | `levelIndex` | number | `` | Level index | 
+ | `level` | object | `` | Context object | 
 
- <code>loopLevelsFromItem(thisArg, itemid, isBelow, onItem)</code> 
+ `loopLevelsFromItem(thisArg, itemid, isBelow, onItem)` 
 
 Loops levels starting with the given element end level. Element may occupy multiple levels, so this method starts level iteration from next level after or before item levels.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>itemid</code> | string | <code></code> | Element id | 
- | <code>isBelow</code> | boolean | <code></code> | If true then method loops levels backward | 
- | <code>onItem</code> | onTreeLevelCallback | <code></code> | Callback function to call for every level | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `itemid` | string | `` | Element id | 
+ | `isBelow` | boolean | `` | If true then method loops levels backward | 
+ | `onItem` | onTreeLevelCallback | `` | Callback function to call for every level | 
 **Callbacks**
 
- <code>onTreeLevelCallback(levelIndex, level)</code> 
+ `onTreeLevelCallback(levelIndex, level)` 
 
 Callback function for iteration of levels
 
- Returns: <code>boolean</code> - returns true to break iteration process.
+ Returns: `boolean` - returns true to break iteration process.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>levelIndex</code> | number | <code></code> | Level index | 
- | <code>level</code> | object | <code></code> | Context object | 
+ | `levelIndex` | number | `` | Level index | 
+ | `level` | object | `` | Context object | 
 
- <code>loopLevelsReversed(thisArg, onItem)</code> 
+ `loopLevelsReversed(thisArg, onItem)` 
 
 Loops levels in reversed order
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>onItem</code> | onTreeLevelCallback | <code></code> | A callback function to call for every level | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `onItem` | onTreeLevelCallback | `` | A callback function to call for every level | 
 **Callbacks**
 
- <code>onTreeLevelCallback(levelIndex, level)</code> 
+ `onTreeLevelCallback(levelIndex, level)` 
 
 Callback function for iteration of levels
 
- Returns: <code>boolean</code> - returns true to break iteration process.
+ Returns: `boolean` - returns true to break iteration process.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>levelIndex</code> | number | <code></code> | Level index | 
- | <code>level</code> | object | <code></code> | Context object | 
+ | `levelIndex` | number | `` | Level index | 
+ | `level` | object | `` | Context object | 
 
- <code>loopMerged(thisArg, getItemWeight, onItem)</code> 
+ `loopMerged(thisArg, getItemWeight, onItem)` 
 
 Loops merged elements of tree level structure by weight
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>thisArg</code> | Object | <code></code> | The callback function invocation context | 
- | <code>getItemWeight</code> | onTreeLevelItemWeightCallback | <code></code> | Callback to measure weight of the element | 
- | <code>onItem</code> | onTreeLevelMergedItemCallback | <code></code> | Callback to iterate merged elements | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `getItemWeight` | onTreeLevelItemWeightCallback | `` | Callback to measure weight of the element | 
+ | `onItem` | onTreeLevelMergedItemCallback | `` | Callback to iterate merged elements | 
 **Callbacks**
 
- <code>onTreeLevelItemWeightCallback(itemid, item)</code> 
+ `onTreeLevelItemWeightCallback(itemid, item)` 
 
 Callback for finding weight of element
 
- Returns: <code>number</code> - returns distance for the element
+ Returns: `number` - returns distance for the element
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | number | <code></code> | Element id | 
- | <code>item</code> | object | <code></code> | Conext object | 
+ | `itemid` | number | `` | Element id | 
+ | `item` | object | `` | Conext object | 
 
- <code>onTreeLevelMergedItemCallback(itemid, item)</code> 
+ `onTreeLevelMergedItemCallback(itemid, item)` 
 
 Callback for iterating items
 
- Returns: <code>number</code> - returns true to break iteration process.
+ Returns: `number` - returns true to break iteration process.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | <code>itemid</code> | number | <code></code> | Element id | 
- | <code>item</code> | object | <code></code> | Conext object | 
+ | `itemid` | number | `` | Element id | 
+ | `item` | object | `` | Conext object | 

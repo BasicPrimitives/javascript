@@ -189,7 +189,7 @@ Finds contrast between base color and two optional first and second colors and r
  | <code>firstColor</code> | string | <code></code> | First color. | 
  | <code>secondColor</code> | string | <code></code> | Second color. | 
 
- <code>indexOf(vector,  item,  compFunc)</code> 
+ <code><a name="123">indexOf(vector,  item,  compFunc)</a></code> 
 
 Searches specified item in the array
 

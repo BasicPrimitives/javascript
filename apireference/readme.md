@@ -79,7 +79,7 @@
 * getMinimumCrossingRows
 * getRed
 * highestContrast
-* indexOf
+* [indexOf](functions.md#123)
 * luminosity
 * mergeSort
 ## [Algorithms](algorithms.md)

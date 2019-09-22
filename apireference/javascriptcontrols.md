@@ -1,5 +1,5 @@
 # JavaScript Controls
-## <a name="primitives.orgdiagram.Control">Control</a>
+## <a name="primitives.orgdiagram.Control" id="primitives.orgdiagram.Control">Control</a>
 Creates JavaScript Organizational Chart Control
 
  `primitives.orgdiagram.Control` 
@@ -65,7 +65,7 @@ Makes full redraw of diagram contents reevaluating all options. This method has 
  | `updateMode` | UpdateMode | `` | update Mode | 
  | `forceCenterOnCursor` | bollean | `` | force Center On Cursor | 
 
-## <a name="primitives.famdiagram.Control">Control</a>
+## <a name="primitives.famdiagram.Control" id="primitives.famdiagram.Control">Control</a>
 Creates JavaScript Family Chart Control
 
  `primitives.famdiagram.Control` 

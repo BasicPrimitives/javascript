@@ -1,5 +1,5 @@
 # Organizational Chart Configuration Objects
-## <a name="primitives.orgdiagram.Config">Config</a>
+## <a name="primitives.orgdiagram.Config" id="primitives.orgdiagram.Config">Config</a>
 Organizational Chart configuration object. Use this object as a reference for available properties and their default values.
 
  `primitives.orgdiagram.Config` 
@@ -102,7 +102,7 @@ Organizational Chart configuration object. Use this object as a reference for av
  | `templates` | TemplateConfig[] | `[]` | Collection of named templates used to define content for nodes, cursor and highlight. By default control provides templates for all types of visual elements. | 
  | `verticalAlignment` | VerticalAlignmentType | `1` | Sets items vertical alignment relative to each other within one level of the hierarchy. It does not change anything if diagram nodes are all of the same size. | 
 
-## <a name="primitives.orgdiagram.ItemConfig">ItemConfig</a>
+## <a name="primitives.orgdiagram.ItemConfig" id="primitives.orgdiagram.ItemConfig">ItemConfig</a>
 Item Configuration Object defines properties of individual node in the organizational chart hierarchy. See `items` collection property of organizational chart control configuration object.
 
  `primitives.orgdiagram.ItemConfig` 
@@ -151,7 +151,7 @@ Item Configuration Object defines properties of individual node in the organizat
  | `templateName` | string | `null` | Template name. Templates are HTML fragments containing layout and styles used to render diagram nodes. They are defined with a named configuration objects. See `templates` property of control's configuration object. This option lets individually assign rendering template per individual node of the diagram. | 
  | `title` | string | `null` | Title | 
 
-## <a name="primitives.orgdiagram.TemplateConfig">TemplateConfig</a>
+## <a name="primitives.orgdiagram.TemplateConfig" id="primitives.orgdiagram.TemplateConfig">TemplateConfig</a>
 Template configuration object defines DOM elements for node content, cursor and highlight visual representation. They are grouped into one configuration object because if we decide to customize cursor or highlight templates most likely we are going to make them item template specific. At the same time control does not require all 3 of them to be defined. If cursor or highlight templates properties are not set in template configuration object then control uses internal default template for all of them. Generally all 3 templates can be set to null, so default templates are going to be used by control.
 
  `primitives.orgdiagram.TemplateConfig` 
@@ -179,7 +179,7 @@ Template configuration object defines DOM elements for node content, cursor and 
  | `minimizedItemSize` | Size | `{4, 4}` | Marker size. | 
  | `name` | string | `null` | Name. Every template configuration object has name property, it is being used to reference templates from items. This name is used to as an argument of call back rendering function as well. If item has not template name set it uses default template for rendering. | 
 
-## <a name="primitives.orgdiagram.ShapeAnnotationConfig">ShapeAnnotationConfig</a>
+## <a name="primitives.orgdiagram.ShapeAnnotationConfig" id="primitives.orgdiagram.ShapeAnnotationConfig">ShapeAnnotationConfig</a>
 Shape annotation configuration object. Shape annotation is a possibility to draw some geometrical shapes over nodes of the diagram.
 
  `primitives.orgdiagram.ShapeAnnotationConfig` 
@@ -214,7 +214,7 @@ Shape annotation configuration object. Shape annotation is a possibility to draw
  | `shapeType` | ShapeType | `0` | Shape | 
  | `zOrderType` | ZOrderType | `0` | Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other. If you place annotations over diagram nodes then you block mouse events of UI elements in their templates. Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top of other visual elements. The control takes this into account and renders buttons panel on top of everyhting, so they are never blocked by annotations drawn in front of diagram nodes. | 
 
-## <a name="primitives.orgdiagram.BackgroundAnnotationConfig">BackgroundAnnotationConfig</a>
+## <a name="primitives.orgdiagram.BackgroundAnnotationConfig" id="primitives.orgdiagram.BackgroundAnnotationConfig">BackgroundAnnotationConfig</a>
 Background annotation configuration object. Background annotation highlights nodes via drawing rectangular shape around nodes in the background of the diagram. If shapes overlap each other and they have the same style then they are merged into one continuous shape.
 
  `primitives.orgdiagram.BackgroundAnnotationConfig` 
@@ -244,7 +244,7 @@ Background annotation configuration object. Background annotation highlights nod
  | `selectItems` | boolean | `false` | If true then annotated nodes are shown full size regardless of controls autofit mode and available screen space. | 
  | `zOrderType` | ZOrderType | `0` | Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other. If you place annotations over diagram nodes then you block mouse events of UI elements in their templates. Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top of other visual elements. The control takes this into account and renders buttons panel on top of everyhting, so they are never blocked by annotations drawn in front of diagram nodes. | 
 
-## <a name="primitives.orgdiagram.ConnectorAnnotationConfig">ConnectorAnnotationConfig</a>
+## <a name="primitives.orgdiagram.ConnectorAnnotationConfig" id="primitives.orgdiagram.ConnectorAnnotationConfig">ConnectorAnnotationConfig</a>
 Connector annotation configuration object. Connector annotations draws lines between two nodes of the diagram. They are drawn on top of existing diagram layout and they don't affect nodes placement. So it is users responsibility to preserve space between nodes for them.
 
  `primitives.orgdiagram.ConnectorAnnotationConfig` 
@@ -277,7 +277,7 @@ Connector annotation configuration object. Connector annotations draws lines bet
  | `toItem` | string | `null` | The end node of connection line | 
  | `zOrderType` | ZOrderType | `2` | Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other. If you place annotations over diagram nodes then you block mouse events of UI elements in their templates. Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top of other visual elements. The control takes this into account and renders buttons panel on top of everyhting, so they are never blocked by annotations drawn in front of diagram nodes. | 
 
-## <a name="primitives.orgdiagram.HighlightPathAnnotationConfig">HighlightPathAnnotationConfig</a>
+## <a name="primitives.orgdiagram.HighlightPathAnnotationConfig" id="primitives.orgdiagram.HighlightPathAnnotationConfig">HighlightPathAnnotationConfig</a>
 Highlight path annotation configuration object. Highlight path annotation traces path between given sequence of nodes over existing connector lines in the diagram.
 
  `primitives.orgdiagram.HighlightPathAnnotationConfig` 
@@ -305,7 +305,7 @@ Highlight path annotation configuration object. Highlight path annotation traces
  | `showArrows` | boolean | `true` | If true then annotation has arrows along the highlight path line. | 
  | `zOrderType` | ZOrderType | `2` | Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other. If you place annotations over diagram nodes then you block mouse events of UI elements in their templates. Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top of other visual elements. The control takes this into account and renders buttons panel on top of everyhting, so they are never blocked by annotations drawn in front of diagram nodes. | 
 
-## <a name="primitives.orgdiagram.ButtonConfig">ButtonConfig</a>
+## <a name="primitives.orgdiagram.ButtonConfig" id="primitives.orgdiagram.ButtonConfig">ButtonConfig</a>
 The buttons panel on the side of the diagram nodes is one of our default easy to use features. This gives you the possibility to try and see how context buttons work being placed inside of diagram layout. This object provides configuration properties for buttons rendered using HTML buttons elements. Please, pay attention that diagram visual element are rendered in layers on top of each other, so buttons panel is rendered as the very last layer of the diagram, so its mouse events are never blocked by any other visual elements. See `onButtonClick` event handler in control's configuration object.
 
  `primitives.orgdiagram.ButtonConfig` 
@@ -332,7 +332,7 @@ The buttons panel on the side of the diagram nodes is one of our default easy to
  | `text` | boolean | `false` | If true show button text | 
  | `tooltip` | string | `tooltip` | Button tooltip content. Tooltip is rendered using jQuery UI tooltip widget, so it should be part of jQuery UI distribution in order to make this property work. | 
 
-## <a name="primitives.orgdiagram.EventArgs">EventArgs</a>
+## <a name="primitives.orgdiagram.EventArgs" id="primitives.orgdiagram.EventArgs">EventArgs</a>
 Context object
 
  `primitives.orgdiagram.EventArgs` 

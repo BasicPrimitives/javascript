@@ -89,57 +89,57 @@ function create_index_md(title, {
   controlsclasses,
   pdfkitclasses
 }) {
-  var result = "# " + title;
-  result += "\r\n## [JavaScript Controls](javascriptcontrols.md)";
+  var result = "### " + title;
+  result += "\r\n#### [JavaScript Controls](javascriptcontrols.md)";
   result = controlsclasses.reduce((agg, annotation) => {
     let { namespace, name } = annotation;
     let key = [...namespace, name].join(".");
     agg += "\r\n* [" + key + "](javascriptcontrols.md#" + key + ")";
     return agg;
   }, result);
-  result += "\r\n## [PDFKit Plugins](pdfkitplugins.md)";
+  result += "\r\n#### [PDFKit Plugins](pdfkitplugins.md)";
   result = pdfkitclasses.reduce((agg, annotation) => {
     let { namespace, name } = annotation;
     let key = [...namespace, name].join(".");
     agg += "\r\n* [" + key + "](pdfkitplugins.md#" + key + ")";
     return agg;
   }, result);
-  result += "\r\n## [Organizational Chart Configuration Objects](orgdiagram.md)";
+  result += "\r\n#### [Organizational Chart Configuration Objects](orgdiagram.md)";
   result = orgdiagramclasses.reduce((agg, annotation) => {
     let { namespace, name } = annotation;
     let key = [...namespace, name].join(".");
     agg += "\r\n* [" + annotation.name + "](orgdiagram.md#" + key + ")";
     return agg;
   }, result);
-  result += "\r\n## [Family Diagram Configuration Objects](famdiagram.md)";
+  result += "\r\n#### [Family Diagram Configuration Objects](famdiagram.md)";
   result = famdiagramclasses.reduce((agg, annotation) => {
     let { namespace, name } = annotation;
     let key = [...namespace, name].join(".");
     agg += "\r\n* [" + annotation.name + "](famdiagram.md#" + key + ")";
     return agg;
   }, result);
-  result += "\r\n## [Enumerations](enums.md)";
+  result += "\r\n#### [Enumerations](enums.md)";
   result = enums.reduce((agg, annotation) => {
     let { namespace, name } = annotation;
     let key = [...namespace, name].join(".");
     agg += "\r\n* [" + annotation.name + "](enums.md#" + key + ")";
     return agg;
   }, result);
-  result += "\r\n## [Structures](structures.md)";
+  result += "\r\n#### [Structures](structures.md)";
   result = structures.reduce((agg, annotation) => {
     let { namespace, name } = annotation;
     let key = [...namespace, name].join(".");
     agg += "\r\n* [" + annotation.name + "](structures.md#" + key + ")";
     return agg;
   }, result);
-  result += "\r\n## [Functions](functions.md)";
+  result += "\r\n#### [Functions](functions.md)";
   result = functions.reduce((agg, annotation) => {
     let { namespace, name } = annotation;
     let key = [...namespace, name].join(".");
     agg += "\r\n* [" + annotation.name + "](functions.md#" + key + ")";
     return agg;
   }, result);
-  result += "\r\n## [Algorithms](algorithms.md)";
+  result += "\r\n#### [Algorithms](algorithms.md)";
   result = algorithms.reduce((agg, annotation) => {
     let { namespace, name } = annotation;
     let key = [...namespace, name].join(".");
@@ -184,7 +184,7 @@ function create_classes_md(title, classes) {
   return classes.reduce((agg, classAnnotation) => {
     let { name, description, namespace, constants, properties, functions, returns, params } = classAnnotation;
     let key = [...namespace, name].join(".");
-    agg += '\r\n## <a name="' + key + '">' + name + '</a>';
+    agg += '\r\n## <a name="' + key + '" id="' + key + '">' + name + '</a>';
     agg += "\r\n" + description;
     agg += "\r\n";
     agg += "\r\n `" + key + "` ";
@@ -229,7 +229,7 @@ function create_function_md({ name, namespace, signature, description, params, r
   var result = "\r\n"
   if (hasBookmark) {
     let key = [...namespace, name].join(".");
-    result += '\r\n## <a name="' + key + '">' + name + '</a>';
+    result += '\r\n## <a name="' + key + '" id="' + key + '">' + name + '</a>';
   } else {
     result += "\r\n `" + name + "(" + (signature != undefined ? signature.join(", ") : "") + ")` ";
   }
@@ -261,7 +261,7 @@ function create_enums_md(title, doc) {
   var result = "# " + title;
   return doc.enums.filter(item => item.ignore == undefined).reduce((agg, { name, description, namespace, items, type }) => {
     let key = [...namespace, name].join(".");
-    agg += '\r\n## <a name="' + key + '">' + name + '</a>';
+    agg += '\r\n## <a name="' + key + '" id="' + key + '">' + name + '</a>';
     agg += "\r\n" + description;
     agg += "\r\n";
     agg += "\r\n `" + [...namespace, name].join(".") + "` ";

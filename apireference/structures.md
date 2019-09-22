@@ -1,5 +1,5 @@
 # Structures
-## <a name="primitives.common.RenderEventArgs">RenderEventArgs</a>
+## <a name="primitives.common.RenderEventArgs" id="primitives.common.RenderEventArgs">RenderEventArgs</a>
 This is object parameter of rendering callback function
 
  `primitives.common.RenderEventArgs` 
@@ -15,7 +15,7 @@ This is object parameter of rendering callback function
  | `renderingMode` | RenderingMode | `null` | This option indicates current template state. | 
  | `templateName` | string | `null` | Node template name | 
 
-## <a name="primitives.common.Point">Point</a>
+## <a name="primitives.common.Point" id="primitives.common.Point">Point</a>
 Class represents pair of x and y coordinates that define a point in 2D plane.
 
  `primitives.common.Point` 
@@ -108,7 +108,7 @@ Returns point in form of CSS style string.
 | --- | --- | --- | --- | 
  | `units` | string | `"px"` | The string name of units. | 
 
-## <a name="primitives.common.Rect">Rect</a>
+## <a name="primitives.common.Rect" id="primitives.common.Rect">Rect</a>
 Class describes the width, height and location of rectangle.
 
  `primitives.common.Rect` 
@@ -341,7 +341,7 @@ Vertical center
  Returns: `number` - returns y-axis coordinate of the center point of the rectangle.
 
 
-## <a name="primitives.common.Matrix">Matrix</a>
+## <a name="primitives.common.Matrix" id="primitives.common.Matrix">Matrix</a>
 Square matrix having 2 rows and 2 columns.
 
  `primitives.common.Matrix` 
@@ -369,7 +369,7 @@ Finds matrix determinant
  Returns: `number` - returns matrix determinant
 
 
-## <a name="primitives.common.Size">Size</a>
+## <a name="primitives.common.Size" id="primitives.common.Size">Size</a>
 Size object defines width and height.
 
  `primitives.common.Size` 
@@ -448,7 +448,7 @@ Validates size properties
  Returns: `boolean` - returns true if size properties are valid.
 
 
-## <a name="primitives.common.Thickness">Thickness</a>
+## <a name="primitives.common.Thickness" id="primitives.common.Thickness">Thickness</a>
 Class describes the thickness of a frame around rectangle.
 
  `primitives.common.Thickness` 
@@ -493,7 +493,7 @@ Returns thickness object in form of CSS style string. It is conversion to paddin
 | --- | --- | --- | --- | 
  | `units` | string | `"px"` | The string name of units. | 
 
-## <a name="primitives.common.Vector">Vector</a>
+## <a name="primitives.common.Vector" id="primitives.common.Vector">Vector</a>
 Class defines a vector in 2D plane.
 
  `primitives.common.Vector` 

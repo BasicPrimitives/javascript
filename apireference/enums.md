@@ -1,5 +1,5 @@
 # Enumerations
-## <a name="primitives.common.AdviserPlacementType">AdviserPlacementType</a>
+## <a name="primitives.common.AdviserPlacementType" id="primitives.common.AdviserPlacementType">AdviserPlacementType</a>
 Defines leftward or rightward item placement relative to the referenced item. In case of assitants and advisers the referenced item is their imediate parent. In case of family diagram the referenced item is spouse or sibling in the row.
 
  `primitives.common.AdviserPlacementType` 
@@ -10,7 +10,7 @@ Defines leftward or rightward item placement relative to the referenced item. In
  | `Left` | number | `2` | Left side | 
  | `Right` | number | `3` | Right side | 
 
-## <a name="primitives.common.AnnotationType">AnnotationType</a>
+## <a name="primitives.common.AnnotationType" id="primitives.common.AnnotationType">AnnotationType</a>
 Defines type of on-screen and in-layout annotation object. Annotations are geometrical figures drawn around or bound to existing nodes of the diagram.
 
  `primitives.common.AnnotationType` 
@@ -23,7 +23,7 @@ Defines type of on-screen and in-layout annotation object. Annotations are geome
  | `Label` | number | `3` | In-layout label annotation. Label anntations are placed in layout between nodes, they preserve space between nodes, so they don't overlap neighbouring nodes. Label annotations are designed for autoplacement and bundling of connection lines between nodes when needed. | 
  | `Shape` | number | `1` | Shape annotation is a possibility to draw some geometrical shapes over several nodes of the diagram. | 
 
-## <a name="primitives.common.ChildrenPlacementType">ChildrenPlacementType</a>
+## <a name="primitives.common.ChildrenPlacementType" id="primitives.common.ChildrenPlacementType">ChildrenPlacementType</a>
 Defines shape of children formation. By default a node's children are always placed in a horizontal line below the parent node. On a large scale this may result in the end user having to scroll screens in order to view all of the nodes. To compensate for this, we provide the option of placing all of the children of a parent node in a sqaure/matrix formation. This will reduce sideways screen scrolling by compacting the child nodes into a much smaller area on the screen.
 
  `primitives.common.ChildrenPlacementType` 
@@ -35,7 +35,7 @@ Defines shape of children formation. By default a node's children are always pla
  | `Matrix` | number | `3` | Matrix formation of the children | 
  | `Vertical` | number | `1` | Children placed in vertical column | 
 
-## <a name="primitives.common.ConnectorLabelPlacementType">ConnectorLabelPlacementType</a>
+## <a name="primitives.common.ConnectorLabelPlacementType" id="primitives.common.ConnectorLabelPlacementType">ConnectorLabelPlacementType</a>
 Label placement relative to connector annotation. Connector annotation is bound and drawn between two nodes defined by two properties: `fromItem` and `toItem`. Label can be placed close to "start", "end" nodes or in between of them along the connector line.
 
  `primitives.common.ConnectorLabelPlacementType` 
@@ -46,7 +46,7 @@ Label placement relative to connector annotation. Connector annotation is bound 
  | `From` | number | `0` | From | 
  | `To` | number | `2` | To | 
 
-## <a name="primitives.common.ConnectorPlacementType">ConnectorPlacementType</a>
+## <a name="primitives.common.ConnectorPlacementType" id="primitives.common.ConnectorPlacementType">ConnectorPlacementType</a>
 Connector placement type defines style of connector line drawing over diagram layout. It supports two options: the `Straight` is classic direct line connecting two nodes, this is the most expected style of connector annotation drawing over diagram, the second style is called `Offbeat` and it design to dynamically adopt to nodes mutual location and gap between them. It uses free hand line style drawing going from start to the end nodes. Since every diagram is packed with various connection lines, this annotation placement style is deliberately made not straight, so it can be noticeable on top of other lines of the diagram.
 
  `primitives.common.ConnectorPlacementType` 
@@ -56,7 +56,7 @@ Connector placement type defines style of connector line drawing over diagram la
  | `Offbeat` | number | `0` | Places connector annotation in the way that it does not overlap underlying diagram connector lines. If nodes are close to each other and gap between them cannot fit annotation, then it will be drawn on the side of the nodes, so it will have enough space for arrow and label. | 
  | `Straight` | number | `1` | Straight line annotation between nodes. This annotation mode provides basic conflict resolution between annotations overlapping each other. If two or more straight annotations overlap each other then layout engine will add extra offset to them, so they will be drawn in parallel to each other. | 
 
-## <a name="primitives.common.ConnectorShapeType">ConnectorShapeType</a>
+## <a name="primitives.common.ConnectorShapeType" id="primitives.common.ConnectorShapeType">ConnectorShapeType</a>
 Connector shape type defines number of lines and arrows at their ends drawn between nodes of the connector annotation. This feature combined with basic conflict resolution, which places overlapping annotations in parallel when they overlap each other, gives you full flexibility over variations of possible connector lines between two given nodes of diagram.
 
  `primitives.common.ConnectorShapeType` 
@@ -67,7 +67,7 @@ Connector shape type defines number of lines and arrows at their ends drawn betw
  | `OneWay` | number | `0` | Single line with one arrow | 
  | `TwoWay` | number | `1` | Two parallel lines with single arrows | 
 
-## <a name="primitives.common.ConnectorType">ConnectorType</a>
+## <a name="primitives.common.ConnectorType" id="primitives.common.ConnectorType">ConnectorType</a>
 Connection lines style. This option is only applicable to nodes minimized to markers or lines. Full size nodes are always connected with squared connection lines
 
  `primitives.common.ConnectorType` 
@@ -78,7 +78,7 @@ Connection lines style. This option is only applicable to nodes minimized to mar
  | `Curved` | number | `2` | Curved direct node to node connection lines | 
  | `Squared` | number | `0` | Orthogonal connection lines | 
 
-## <a name="primitives.common.ElbowType">ElbowType</a>
+## <a name="primitives.common.ElbowType" id="primitives.common.ElbowType">ElbowType</a>
 Elbow style of connection lines
 
  `primitives.common.ElbowType` 
@@ -90,7 +90,7 @@ Elbow style of connection lines
  | `None` | number | `0` | No elbow | 
  | `Round` | number | `3` | Round elbow | 
 
-## <a name="primitives.common.Enabled">Enabled</a>
+## <a name="primitives.common.Enabled" id="primitives.common.Enabled">Enabled</a>
 Defines option state.
 
  `primitives.common.Enabled` 
@@ -101,7 +101,7 @@ Defines option state.
  | `False` | number | `2` | Disabled | 
  | `True` | number | `1` | Enabled | 
 
-## <a name="primitives.common.GraphicsType">GraphicsType</a>
+## <a name="primitives.common.GraphicsType" id="primitives.common.GraphicsType">GraphicsType</a>
 Graphics primitives elements rendering mode
 
  `primitives.common.GraphicsType` 
@@ -111,7 +111,7 @@ Graphics primitives elements rendering mode
  | `Canvas` | number | `1` | HTML Canvas | 
  | `SVG` | number | `0` | Scalable Vector Graphics | 
 
-## <a name="primitives.common.GroupByType">GroupByType</a>
+## <a name="primitives.common.GroupByType" id="primitives.common.GroupByType">GroupByType</a>
 This enumeration defines objects gravity in the chart relative to parents and children. For example connection lines can be drawn with arrows, so this enumeration controls direction of arrows up towards parents or down towards children in the hierarchy. The other example is nodes placement close to their immediate parents or immediate children in case when parents and children are offset from them by multiple levels in hierarchy.
 
  `primitives.common.GroupByType` 
@@ -122,7 +122,7 @@ This enumeration defines objects gravity in the chart relative to parents and ch
  | `None` | number | `0` | None | 
  | `Parents` | number | `1` | Parents | 
 
-## <a name="primitives.common.HorizontalAlignmentType">HorizontalAlignmentType</a>
+## <a name="primitives.common.HorizontalAlignmentType" id="primitives.common.HorizontalAlignmentType">HorizontalAlignmentType</a>
 Horizontal alignment
 
  `primitives.common.HorizontalAlignmentType` 
@@ -133,7 +133,7 @@ Horizontal alignment
  | `Left` | number | `1` | Left | 
  | `Right` | number | `2` | Right | 
 
-## <a name="primitives.orgdiagram.ItemType">ItemType</a>
+## <a name="primitives.orgdiagram.ItemType" id="primitives.orgdiagram.ItemType">ItemType</a>
 This enumeration defines child node placement relative to its parent node. By default all children that belong to a parent node are of the same rank and status between each other and due to that, are always aligned below the parent and are organized in the same way. However for special cases were the end user wishes to have a child that is seperate from the rest of it's siblings, we provide custom child types that the end user can use to place diffrent ranking nodes anywhere around the parent node. These placement options give a lot of space for the creation of roles such as an Assistant, Adviser, various Partners and co-heads that may be in the organization. Additionally, by default a node's regular children are always placed in a horizontal line below the parent node. See children placement type options for regular children layout.
 
  `primitives.orgdiagram.ItemType` 
@@ -149,7 +149,7 @@ This enumeration defines child node placement relative to its parent node. By de
  | `SubAdviser` | number | `5` | Sub adviser is variation of adviser node type. It has the same placement but it is connected by the top side of the node to the connector line going to the parent node. | 
  | `SubAssistant` | number | `4` | Sub assitant is variation of assitant node type. It has the same placement but it is connected by the top side of the node to the connector line going to the parent node. | 
 
-## <a name="primitives.common.LineType">LineType</a>
+## <a name="primitives.common.LineType" id="primitives.common.LineType">LineType</a>
 Line style of connection lines.
 
  `primitives.common.LineType` 
@@ -160,7 +160,7 @@ Line style of connection lines.
  | `Dotted` | number | `1` | Dotted | 
  | `Solid` | number | `0` | Solid | 
 
-## <a name="primitives.common.NavigationMode">NavigationMode</a>
+## <a name="primitives.common.NavigationMode" id="primitives.common.NavigationMode">NavigationMode</a>
 Interactivity mode. Control implements standard behaivour of classic desktop UI controls. It supports single selected node - cursor. It supports on mouse over node visual feedback - highlight. It supports selection of group of nodes - selected items. All that functionality can be disabled depending on your application requirements.
 
  `primitives.common.NavigationMode` 
@@ -172,7 +172,7 @@ Interactivity mode. Control implements standard behaivour of classic desktop UI 
  | `HighlightOnly` | number | `3` | Mouse over feedback only | 
  | `Inactive` | number | `2` | No interactivity | 
 
-## <a name="primitives.common.NeighboursSelectionMode">NeighboursSelectionMode</a>
+## <a name="primitives.common.NeighboursSelectionMode" id="primitives.common.NeighboursSelectionMode">NeighboursSelectionMode</a>
 Neighbors selection mode. The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers. So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items of the diagram in full size and draw all other as markers. This enumeration controls visibility of neighbours of the cursor node in the auto fit mode. It allows to draw them in full size regardless of available space.
 
  `primitives.common.NeighboursSelectionMode` 
@@ -182,7 +182,7 @@ Neighbors selection mode. The control supports diagram auto fit into screen view
  | `ParentsAndChildren` | number | `0` | Selects parents and children of the cursor item | 
  | `ParentsChildrenSiblingsAndSpouses` | number | `1` | Selects parents, children, spouses and siblings of the cursor item. | 
 
-## <a name="primitives.common.OrientationType">OrientationType</a>
+## <a name="primitives.common.OrientationType" id="primitives.common.OrientationType">OrientationType</a>
 Controls diagram layout orientation. The control can be rotated in any direction, this is needed for arabic support and various layout.
 
  `primitives.common.OrientationType` 
@@ -195,7 +195,7 @@ Controls diagram layout orientation. The control can be rotated in any direction
  | `Right` | number | `3` | Right | 
  | `Top` | number | `0` | Top | 
 
-## <a name="primitives.common.PageFitMode">PageFitMode</a>
+## <a name="primitives.common.PageFitMode" id="primitives.common.PageFitMode">PageFitMode</a>
 Fits diagram into available screen space. When diagram size significantly larger that available screen space, its scrolling and navigation becomes problematic, so we support automatic diagram fit into the screen space via rendering some of its nodes in form of small markers. Control supports several page fit mode options which can match your requirements depending on diagram layout, orientation and number of nodes. Autosize - this option is opposite to auto fit. It lets you expand control size to fit all diagram nodes full size without scrollbars.
 
  `primitives.common.PageFitMode` 
@@ -209,7 +209,7 @@ Fits diagram into available screen space. When diagram size significantly larger
  | `PageWidth` | number | `1` | Fits diagram into the view width, so it has no horizontal scrollbar. | 
  | `SelectionOnly` | number | `6` | Renders all nodes as markers regardless of available screen space. Control selects and renders full size cursor, its neighbours and selected nodes only. Don't forget to disable selection path as well, so nodes from cursor up to the root are not selected. | 
 
-## <a name="primitives.common.PlacementType">PlacementType</a>
+## <a name="primitives.common.PlacementType" id="primitives.common.PlacementType">PlacementType</a>
 Defines element placement relative to rectangular area it is bound to.
 
  `primitives.common.PlacementType` 
@@ -230,7 +230,7 @@ Defines element placement relative to rectangular area it is bound to.
  | `TopLeft` | number | `8` | Top Left | 
  | `TopRight` | number | `2` | Top Right | 
 
-## <a name="primitives.common.RenderingMode">RenderingMode</a>
+## <a name="primitives.common.RenderingMode" id="primitives.common.RenderingMode">RenderingMode</a>
 This enumeration is used to tell rendering callback functions current state of the template. It is needed for proper events binding and content updates.
 
  `primitives.common.RenderingMode` 
@@ -240,7 +240,7 @@ This enumeration is used to tell rendering callback functions current state of t
  | `Create` | number | `0` | Template is just created. | 
  | `Update` | number | `1` | Template is reused and update is needed. | 
 
-## <a name="primitives.common.SelectionPathMode">SelectionPathMode</a>
+## <a name="primitives.common.SelectionPathMode" id="primitives.common.SelectionPathMode">SelectionPathMode</a>
 Selection path mode. This enumeration controls visibility of nodes between cursor and the root of the diagram in the auto fit mode. It allows to draw them in full size regardless of available space and auto fit mode. The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers. So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items of the diagram in full size and draw all other diagram nodes as markers.
 
  `primitives.common.SelectionPathMode` 
@@ -250,7 +250,7 @@ Selection path mode. This enumeration controls visibility of nodes between curso
  | `FullStack` | number | `1` | Selects cursor node parents up to the root are renders them full size regardless of available space. | 
  | `None` | number | `0` | No selection path | 
 
-## <a name="primitives.common.ShapeType">ShapeType</a>
+## <a name="primitives.common.ShapeType" id="primitives.common.ShapeType">ShapeType</a>
 Shapes
 
  `primitives.common.ShapeType` 
@@ -270,7 +270,7 @@ Shapes
  | `Triangle` | number | `2` | Triangle | 
  | `Wedge` | number | `7` | Wedge | 
 
-## <a name="primitives.text.TextOrientationType">TextOrientationType</a>
+## <a name="primitives.text.TextOrientationType" id="primitives.text.TextOrientationType">TextOrientationType</a>
 Text rotation
 
  `primitives.text.TextOrientationType` 
@@ -282,7 +282,7 @@ Text rotation
  | `RotateLeft` | number | `1` | Rotate text left for 90 degree. | 
  | `RotateRight` | number | `2` | Rotate text right for 90 degree. | 
 
-## <a name="primitives.common.UpdateMode">UpdateMode</a>
+## <a name="primitives.common.UpdateMode" id="primitives.common.UpdateMode">UpdateMode</a>
 Controls update of the diagram
 
  `primitives.common.UpdateMode` 
@@ -293,7 +293,7 @@ Controls update of the diagram
  | `Recreate` | number | `0` | Forces control to make a full chart redraw. It is equivalent to initial chart creation. It removes everything from placeholder and renders all elements again. | 
  | `Refresh` | number | `1` | Optimized refresh. It only updates visual elements which needs to be updated. | 
 
-## <a name="primitives.common.VectorRelationType">VectorRelationType</a>
+## <a name="primitives.common.VectorRelationType" id="primitives.common.VectorRelationType">VectorRelationType</a>
 Defines relation between two vectors
 
  `primitives.common.VectorRelationType` 
@@ -305,7 +305,7 @@ Defines relation between two vectors
  | `Null` | number | `1` | Null | 
  | `Opposite` | number | `3` | Opposite | 
 
-## <a name="primitives.common.VerticalAlignmentType">VerticalAlignmentType</a>
+## <a name="primitives.common.VerticalAlignmentType" id="primitives.common.VerticalAlignmentType">VerticalAlignmentType</a>
 Controls nodes vertical alignment inside row of nodes. If row of nodes contains nodes of multiple sizes then small nodes are vertically aligned relative to their large neighbours.
 
  `primitives.common.VerticalAlignmentType` 
@@ -316,7 +316,7 @@ Controls nodes vertical alignment inside row of nodes. If row of nodes contains 
  | `Middle` | number | `1` | Middle | 
  | `Top` | number | `0` | Top | 
 
-## <a name="primitives.common.Visibility">Visibility</a>
+## <a name="primitives.common.Visibility" id="primitives.common.Visibility">Visibility</a>
 Minimal nodes visibility in the diagram. If auto fit of diagram into current page size is enabled, then this option controls minimum allowed size of diagram nodes.
 
  `primitives.common.Visibility` 
@@ -329,7 +329,7 @@ Minimal nodes visibility in the diagram. If auto fit of diagram into current pag
  | `Line` | number | `3` | Diagram only draws connection lines and hides actuall nodes. | 
  | `Normal` | number | `1` | Regular template based diagram nodes | 
 
-## <a name="primitives.common.ZOrderType">ZOrderType</a>
+## <a name="primitives.common.ZOrderType" id="primitives.common.ZOrderType">ZOrderType</a>
 Option to draw annotation in the foreground or in the backgound of diagram nodes.
 
  `primitives.common.ZOrderType` 

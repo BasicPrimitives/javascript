@@ -1,5 +1,5 @@
 # Algorithms
-## <a name="primitives.common.family">family</a>
+## <a name="primitives.common.family" id="primitives.common.family">family</a>
 Creates a family object
 
  `primitives.common.family` 
@@ -418,7 +418,7 @@ Validates internal data structure consitency of the family.
 | --- | --- | --- | --- | 
  | `info` | object | `` | Optional validation object. | 
 
-## <a name="primitives.common.FamilyAlignment">FamilyAlignment</a>
+## <a name="primitives.common.FamilyAlignment" id="primitives.common.FamilyAlignment">FamilyAlignment</a>
 Creates family alignment data structure. This structure aligns horizontaly planar family of nodes.
 
  `primitives.common.FamilyAlignment` 
@@ -450,7 +450,7 @@ Returns horizontal node offset from left margin of the family daigram
 | --- | --- | --- | --- | 
  | `nodeid` | string | `` | Family node id | 
 
-## <a name="primitives.common.FibonacciHeap">FibonacciHeap</a>
+## <a name="primitives.common.FibonacciHeap" id="primitives.common.FibonacciHeap">FibonacciHeap</a>
 Creates Fibonacci Heap structure
 
  `primitives.common.FibonacciHeap` 
@@ -532,7 +532,7 @@ Validates internal structure consistency.
  Returns: `boolean` - returns true if structure pass data consistency check.
 
 
-## <a name="primitives.common.graph">graph</a>
+## <a name="primitives.common.graph" id="primitives.common.graph">graph</a>
 Creates graph structure
 
  `primitives.common.graph` 
@@ -748,7 +748,7 @@ Callback function for iterating graphs nodes
 | --- | --- | --- | --- | 
  | `to` | string | `` | The next neighbouring node id | 
 
-## <a name="primitives.common.LCA">LCA</a>
+## <a name="primitives.common.LCA" id="primitives.common.LCA">LCA</a>
 Creates Lowest Common Ancestor Structure for the given tree
 
  `primitives.common.LCA` 
@@ -778,7 +778,7 @@ Returns lowest common ancestor for the given pair of tree nodes
  | `from` | string | `` | The first tree node id | 
  | `to` | string | `` | The second tree node id | 
 
-## <a name="primitives.common.LinkedHashItems">LinkedHashItems</a>
+## <a name="primitives.common.LinkedHashItems" id="primitives.common.LinkedHashItems">LinkedHashItems</a>
 Creates linked hash list collection.
 
  `primitives.common.LinkedHashItems` 
@@ -964,7 +964,7 @@ Validates internal data consistensy of the structure
  Returns: `boolean` - returns true if it pass validation
 
 
-## <a name="primitives.common.pile">pile</a>
+## <a name="primitives.common.pile" id="primitives.common.pile">pile</a>
 Creates pile structure used to sort and stack segments on top of each other so they occupy minimum number of rows.
 
  `primitives.common.pile` 
@@ -1013,7 +1013,7 @@ Callback function or iterating result offsets of the pile items in the stack.
  | `context` | object | `` | The context of the pile item | 
  | `offset` | number | `` | Index of the pile item in the stack | 
 
-## <a name="primitives.common.QuadTree">QuadTree</a>
+## <a name="primitives.common.QuadTree" id="primitives.common.QuadTree">QuadTree</a>
 Creates Quad Tree data structure. It distributes points into equal quadrants. So it is equivalent to 2 dimensional binary search tree.
 
  `primitives.common.QuadTree` 
@@ -1078,7 +1078,7 @@ Validates internal data consistency of quad tree data structure
  Returns: `boolean` - returns true if structure pass validation
 
 
-## <a name="primitives.common.RMQ">RMQ</a>
+## <a name="primitives.common.RMQ" id="primitives.common.RMQ">RMQ</a>
 Creates range minimum query structure
 
  `primitives.common.RMQ` 
@@ -1119,7 +1119,7 @@ Returns index of minimum item for the given range of items
  | `from` | number | `` | The left margin index | 
  | `to` | number | `` | The right margin index | 
 
-## <a name="primitives.common.SortedList">SortedList</a>
+## <a name="primitives.common.SortedList" id="primitives.common.SortedList">SortedList</a>
 Creates self-balancing binary search tree structure.
 
  `primitives.common.SortedList` 
@@ -1234,7 +1234,7 @@ Validate internal data consistency of the self-balancing binary search tree stru
  Returns: `boolean` - returns true if structure pass validation
 
 
-## <a name="primitives.common.SpatialIndex">SpatialIndex</a>
+## <a name="primitives.common.SpatialIndex" id="primitives.common.SpatialIndex">SpatialIndex</a>
 Create spatial index structure. It uses collection of sizes to distribute rectangles into buckets of similar size elements. Elements of the same bucket are aproximated to points. The search of rectangles is transformed to search of points within given range plus offset for maximum linear rectangle size.
 
  `primitives.common.SpatialIndex` 
@@ -1258,7 +1258,7 @@ Adds rectangle to spacial index
 | --- | --- | --- | --- | 
  | `rect` | Rect | `` | Rectangle | 
 
-## <a name="primitives.common.tree">tree</a>
+## <a name="primitives.common.tree" id="primitives.common.tree">tree</a>
 Creates tree structure
 
  `primitives.common.tree` 
@@ -1690,7 +1690,7 @@ Callback function to return pairs of nodes
  | `secondNodeid` | string | `` | Second node id | 
  | `secondParentId` | string | `` | Parent id of the second node | 
 
-## <a name="primitives.common.TreeLevels">TreeLevels</a>
+## <a name="primitives.common.TreeLevels" id="primitives.common.TreeLevels">TreeLevels</a>
 Creates Tree Levels structure. It is diagraming specific auxiliary structure that keeps tree nodes order level by level.
 
  `primitives.common.TreeLevels` 

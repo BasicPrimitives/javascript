@@ -1,5 +1,5 @@
 # [PDFKit Plugins](https://pdfkit.org/)
-## <a name="primitives.pdf.orgdiagram.Plugin">Plugin</a>
+## <a name="primitives.pdf.orgdiagram.Plugin" id="primitives.pdf.orgdiagram.Plugin">Plugin</a>
 Creates PDFKit Organizational Chart Plugin
 
  `primitives.pdf.orgdiagram.Plugin` 
@@ -37,7 +37,7 @@ Calculates size of the diagram required to render all nodes without truncation.
  Returns: `Size` - returns size of the diagram
 
 
-## <a name="primitives.pdf.famdiagram.Plugin">Plugin</a>
+## <a name="primitives.pdf.famdiagram.Plugin" id="primitives.pdf.famdiagram.Plugin">Plugin</a>
 Creates PDFKit Family Diagram Plugin
 
  `primitives.pdf.famdiagram.Plugin` 

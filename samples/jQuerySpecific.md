@@ -6,6 +6,8 @@ Chart uses jQuery remove method to clean DOM so widgets inside templates are alw
 
 [JQuery](jquery.widgets/CaseCustomControlTemplate.html)
 
+![Screenshot](images/screenshots/CaseCustomControlTemplate.png)
+
 ## Organizational Chart inside jQuery UI Dialog
 
 This is general compatibility test on how widget works inside jQuery UI dialog. The example demonstrates how to select items in organizational chat placed inside jQuery UI Dialog and return them back to host application. 

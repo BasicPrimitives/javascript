@@ -5,3 +5,5 @@ See primitives.famdiagram.LabelAnnotationConfig for details. By default labels d
 
 [JavaScript](javascript.controls/CaseLabelsCascadesInFamilyChart.html)
 [JQuery](jquery.widgets/CaseLabelsCascadesInFamilyChart.html)
+
+![Screenshot](images/screenshots/CaseLabelsCascadesInFamilyChart.png)

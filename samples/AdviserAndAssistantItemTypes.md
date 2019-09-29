@@ -23,6 +23,8 @@ Use `ItemConfig.adviserPlacementType` option to place adviser or assistant on th
 [JavaScript](javascript.controls/CaseAdviserAndAssistantItemTypes.html)
 [JQuery](jquery.widgets/CaseAdviserAndAssistantItemTypes.html)
 
+![Screenshot](images/screenshots/CaseAdviserAndAssistantItemTypes.png)
+
 ## Sub Adviser & Sub Assistant item types
 
 Sub Adviser & Sub Assistant item types are variations of regular Adviser & Assistant types. The only difference is they are shift down one level relative to their parents, so they are connected by their top side to the hierarchy.
@@ -31,3 +33,5 @@ Use `ItemConfig.adviserPlacementType` option to place them on the left or right 
 
 [JavaScript](javascript.controls/CaseSubAdviserAndSubAssistantItemTypes.html)
 [JQuery](jquery.widgets/CaseSubAdviserAndSubAssistantItemTypes.html)
+
+![Screenshot](images/screenshots/CaseSubAdviserAndSubAssistantItemTypes.png)

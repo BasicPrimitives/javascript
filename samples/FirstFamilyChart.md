@@ -14,3 +14,5 @@ Family diagram provides some features specific to multi-parent layout, for examp
 [JavaScript](javascript.controls/CaseFirstFamilyChart.html)
 [JQuery](jquery.widgets/CaseFirstFamilyChart.html)
 [PDFKit](pdfkit.plugins/FirstFamilyChart.html)
+
+![Screenshot](images/screenshots/CaseFirstFamilyChart.png)

@@ -198,6 +198,8 @@ function onTemplateRender(doc, position, data) {
 [PDFKit](pdfkit.plugins/UserItemTemplate.html)
 [PDFKit Graphics](pdfkit.plugins/UserItemTemplateWithShapes.html)
 
+![Screenshot](images/screenshots/CaseItemTemplate.png)
+
 ## Adding link to Item Template
 In order to avoid diagram cursor positioning and layout when user clicks on reference add 'stopPropagation' to mouse click event handler of the reference's label.
 
@@ -211,8 +213,12 @@ In order to avoid diagram cursor positioning and layout when user clicks on refe
 [JavaScript](javascript.controls/CaseAddingLinkToItemTemplate.html)
 [JQuery](jquery.widgets/CaseAddingLinkToItemTemplate.html)
 
+![Screenshot](images/screenshots/CaseAddingLinkToItemTemplate.png)
+
 ## Adding selection checkbox to Item Template
 Chart supports selected items collection on its API, so checkbox element is necessary part of control's functionality. If you want to place it inside of item template instead of having it shown outside as decorator of element boundaries, you have to add `bp-selectioncheckbox` to your checkbox `class` style property.
 
 [JavaScript](javascript.controls/CaseSelectionCheckboxInItemTemplate.html)
 [JQuery](jquery.widgets/CaseSelectionCheckboxInItemTemplate.html)
+
+![Screenshot](images/screenshots/CaseSelectionCheckboxInItemTemplate.png)

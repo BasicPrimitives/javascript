@@ -7,3 +7,5 @@ Children Placement Layout can be defined individually per item or globally for a
 
 [JavaScript](javascript.controls/CaseChildrenPlacementType.html)
 [JQuery](jquery.widgets/CaseChildrenPlacementType.html)
+
+![Screenshot](images/screenshots/CaseChildrenPlacementType.png)

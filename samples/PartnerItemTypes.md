@@ -18,6 +18,8 @@ Use ItemConfig.adviserPlacementType option to place partners to the left or righ
 [JavaScript](javascript.controls/CaseGeneralPartnerItemType.html)
 [JQuery](jquery.widgets/CaseGeneralPartnerItemType.html)
 
+![Screenshot](images/screenshots/CaseGeneralPartnerItemType.png)
+
 ## Limited Partner
 
 Limited Partner is variation of GeneralPartner having no connection to its parent. It is only connected to shared with its parent children.
@@ -26,9 +28,13 @@ It can be placed on the left or right side of parent hierarchy.
 [JavaScript](javascript.controls/CaseLimitedPartnerItemType.html)
 [JQuery](jquery.widgets/CaseLimitedPartnerItemType.html)
 
+![Screenshot](images/screenshots/CaseLimitedPartnerItemType.png)
+
 ## Adviser Partner
 
 Adviser Partner item type is a combination of Partner and Adviser types. It is horizontally connected to its parent like Adviser and at the same time it shares children of its parent like Partner.
 
 [JavaScript](javascript.controls/CaseAdviserPartnerItemType.html)
 [JQuery](jquery.widgets/CaseAdviserPartnerItemType.html)
+
+![Screenshot](images/screenshots/CaseAdviserPartnerItemType.png)

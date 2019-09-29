@@ -9,3 +9,5 @@ Pay attention that org chart always shows selection path for cursor item. So in 
 
 [JavaScript](javascript.controls/CaseSelectionPathMode.html)
 [JQuery](jquery.widgets/CaseSelectionPathMode.html)
+
+![Screenshot](images/screenshots/CaseSelectionPathMode.png)

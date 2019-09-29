@@ -4,3 +4,5 @@ Connector annotation is on screen direct connection line between two nodes of di
 
 [JavaScript](javascript.controls/CaseConnectorAnnotation.html)
 [JQuery](jquery.widgets/CaseConnectorAnnotation.html)
+
+![Screenshot](images/screenshots/CaseConnectorAnnotation.png)

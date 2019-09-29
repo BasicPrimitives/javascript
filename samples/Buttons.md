@@ -6,3 +6,5 @@ Buttons can be customized per item template. See Item template example in this s
 
 [JavaScript](javascript.controls/CaseButtonsPanel.html)
 [JQuery](jquery.widgets/CaseButtonsPanel.html)
+
+![Screenshot](images/screenshots/CaseButtonsPanel.png)

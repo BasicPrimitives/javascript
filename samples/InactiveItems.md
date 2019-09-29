@@ -17,3 +17,5 @@ They have following option:
 
 [JavaScript](javascript.controls/CaseInactiveItems.html)
 [JQuery](jquery.widgets/CaseInactiveItems.html)
+
+![Screenshot](images/screenshots/CaseInactiveItems.png)

@@ -15,3 +15,5 @@ This visual is regular background area having border line and fill color. When w
 
 [JavaScript](javascript.controls/CaseShapeAnnotation.html)
 [JQuery](jquery.widgets/CaseShapeAnnotation.html)
+
+![Screenshot](images/screenshots/CaseShapeAnnotation.png)

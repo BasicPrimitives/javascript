@@ -9,3 +9,5 @@ Following example demonstrates how to programmatically select items in organizat
 
 [JavaScript](javascript.controls/CaseSelectedItems.html)
 [JQuery](jquery.widgets/CaseSelectedItems.html)
+
+![Screenshot](images/screenshots/CaseSelectedItems.png)

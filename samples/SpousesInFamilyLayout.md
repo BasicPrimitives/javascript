@@ -4,3 +4,5 @@ Following example demonstrates visualization of spouses having no common childre
 
 [JavaScript](javascript.controls/CaseSpousesInFamilyLayout.html)
 [JQuery](jquery.widgets/CaseSpousesInFamilyLayout.html)
+
+![Screenshot](images/screenshots/CaseSpousesInFamilyLayout.png)

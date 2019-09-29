@@ -4,3 +4,5 @@ Item's title background color may be used for grouping items in diagram and may 
 
 [JavaScript](javascript.controls/CaseItemAndGroupTitleColors.html)
 [JQuery](jquery.widgets/CaseItemAndGroupTitleColors.html)
+
+![Screenshot](images/screenshots/CaseItemAndGroupTitleColors.png)

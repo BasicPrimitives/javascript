@@ -4,3 +4,5 @@ Highlight element is templated as well, so it can be customized with `highlightT
 
 [JavaScript](javascript.controls/CaseHighlightTemplate.html)
 [JQuery](jquery.widgets/CaseHighlightTemplate.html)
+
+![Screenshot](images/screenshots/CaseHighlightTemplate.png)

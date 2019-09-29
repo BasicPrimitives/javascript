@@ -7,3 +7,5 @@ Following example demonstrates how to add an extra property "percent" to items a
 
 [JavaScript](javascript.controls/CaseItemTemplateLabel.html)
 [JQuery](jquery.widgets/CaseItemTemplateLabel.html)
+
+![Screenshot](images/screenshots/CaseItemTemplateLabel.png)

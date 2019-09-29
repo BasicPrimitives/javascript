@@ -190,32 +190,32 @@ async function task(url, imageName) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.setViewport({
-    width: 2980,
-    height: 6880,
-    deviceScaleFactor: 0.5
+    width: 1024,
+    height: 1024,
+    deviceScaleFactor: 1
   });
   await page.goto(url, {
     waitUntil: 'load'
   });
-  //  const placeholder = await page.$('#basicdiagram');
-  // const rect = await page.evaluate((placeholder) => {
-  //   const { y, x, bottom, right } = placeholder.getBoundingClientRect();
-  //   return {
-  //     x: x + 1,
-  //     y: y + 1,
-  //     height: bottom - y - 2,
-  //     width: right - x - 2
-  //   };
-  // }, placeholder);
+  const placeholder = await page.$('#basicdiagram');
+  const rect = await page.evaluate((placeholder) => {
+    const { y, x, bottom, right } = placeholder.getBoundingClientRect();
+    return {
+      x: x + 1,
+      y: y + 1,
+      height: bottom - y - 2,
+      width: right - x - 2
+    };
+  }, placeholder);
 
   const screenshot = await page.screenshot({
-    fullPage: true
-    // clip: {
-    //   x: rect.x,
-    //   y: rect.y,
-    //   width: rect.width,
-    //   height: rect.height
-    // }
+    //fullPage: true
+    clip: {
+      x: rect.x,
+      y: rect.y,
+      width: rect.width,
+      height: rect.height
+    }
   });
   browser.close();
   fs.writeFileSync('./samples/images/screenshots/screenshot.png', screenshot);
@@ -246,7 +246,7 @@ async function task(url, imageName) {
 
 
 async function process() {
-  for (var index = 0; index < screenshots.length && index < 1; index += 1) {
+  for (var index = 0; index < screenshots.length; index += 1) {
     screenshot = screenshots[index];
     await task(screenshot.url, screenshot.imageName);
   };

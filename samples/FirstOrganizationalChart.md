@@ -210,3 +210,5 @@ Plugins are part of the Basic Primitives distribution assembly
 [JavaScript](javascript.controls/CaseFirstOrganizationalChart.html)
 [JQuery](jquery.widgets/CaseFirstOrganizationalChart.html)
 [PDFKit](pdfkit.plugins/FirstOrganizationalChart.html)
+
+![Screenshot](images/screenshots/CaseFirstOrganizationalChart.png)

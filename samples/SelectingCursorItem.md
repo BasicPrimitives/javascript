@@ -30,3 +30,5 @@ Take into account that item template may contain HTML elements supporting keyboa
 
 [JavaScript](javascript.controls/CaseSelectingCursorItem.html)
 [JQuery](jquery.widgets/CaseSelectingCursorItem.html)
+
+![Screenshot](images/screenshots/CaseSelectingCursorItem.png)

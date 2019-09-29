@@ -22,10 +22,14 @@ In order to place diagram inside page article and make it auto expand to accommo
 
 Use following options to constrain widget auto size:
 
-* autoSizeMinimum - it limits minimal size of diagram, so if it is empty then you are going to see empty area of this size.
-* autoSizeMaximum - does not allow to grow widget beyond this size. Set maximum size to some value if you need to avoid humongous diagram on your page.
+* `autoSizeMinimum` - it limits minimal size of diagram, so if it is empty then you are going to see empty area of this size.
+* `autoSizeMaximum` - does not allow to grow widget beyond this size. Set maximum size to some value if you need to avoid humongous diagram on your page.
 
-for example in order to set widget minimal size: autoSizeMinimum = new primitives.common.Size(800, 600);
+for example following code sets widget's minimal size:
+
+``` JavaScript
+autoSizeMinimum = new primitives.common.Size(800, 600);
+```
 
 [JavaScript](javascript.controls/CaseAutoSize.html)
 [JQuery](jquery.widgets/CaseAutoSize.html)

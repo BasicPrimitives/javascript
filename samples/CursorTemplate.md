@@ -13,6 +13,8 @@ The following example demonstrates how to create Bootstrap vertical buttons grou
 
 [JavaScript](bootstrap.styles/CaseCursorTemplateAndTwitterBootstrap.html)
 
+![Screenshot](images/screenshots/CaseCursorTemplateAndTwitterBootstrap.png)
+
 ## Custom cursor template border
 This example demonstrates how to create custom cursor border color and tag element.
 
@@ -23,9 +25,13 @@ The following example demonstrates how to create custom cursor template:
 [JavaScript](javascript.controls/CaseCursorTemplate.html)
 [JQuery](jquery.widgets/CaseCursorTemplate.html)
 
+![Screenshot](images/screenshots/CaseCursorTemplate.png)
+
 ## Cursor template having item specific context buttons
 
 This example demonstrates how to create item specific context buttons using cursor template. Ideally we have to create individual template for every item type and render buttons depending on template name, for simplicity we added an extra property called buttonsType to every item and use it to render different sets of buttons in cursor. This case is really rare and means that display collection of buttons depends on large set of items options.
 
 [JavaScript](javascript.controls/CaseButtonsInCursorTemplate.html)
 [JQuery](jquery.widgets/CaseButtonsInCursorTemplate.html)
+
+![Screenshot](images/screenshots/CaseButtonsInCursorTemplate.png)

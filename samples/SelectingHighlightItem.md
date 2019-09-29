@@ -18,3 +18,5 @@ Take into account that item template may contain HTML elements supporting keyboa
 
 [JavaScript](javascript.controls/CaseSelectingHighlightItem.html)
 [JQuery](jquery.widgets/CaseSelectingHighlightItem.html)
+
+![Screenshot](images/screenshots/CaseSelectingHighlightItem.png)

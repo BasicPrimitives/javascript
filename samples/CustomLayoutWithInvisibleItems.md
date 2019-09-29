@@ -8,9 +8,13 @@ See custom item types, children layout and inactive items samples as well.
 [JavaScript](javascript.controls/CaseCustomLayoutWithInvisibleItems.html)
 [JQuery](jquery.widgets/CaseCustomLayoutWithInvisibleItems.html)
 
+![Screenshot](images/screenshots/CaseCustomLayoutWithInvisibleItems.png)
+
 ## Skipped Levels
 
 Invisible items can be used to skip levels in organizational chart. This is actually workaround, invisible items occupy space, so they can be used to shift children items down one level relative to their parents. See primitives.orgdiagram.ItemConfig.isVisible option.
 
 [JavaScript](javascript.controls/CaseSkippedLevels.html)
 [JQuery](jquery.widgets/CaseSkippedLevels.html)
+
+![Screenshot](images/screenshots/CaseSkippedLevels.png)

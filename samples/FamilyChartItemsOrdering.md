@@ -15,6 +15,10 @@ Family Items Ordering Sample
 
 [JavaScript](javascript.controls/CaseFamilyChartItemsOrdering.html)
 
+![Screenshot](images/screenshots/CaseFamilyChartItemsOrdering.png)
+
 ## Multiple Families Ordering Sample
 
 [JavaScript](javascript.controls/CaseMultipleFamiliesOrdering.html)
+
+![Screenshot](images/screenshots/CaseMultipleFamiliesOrdering.png)

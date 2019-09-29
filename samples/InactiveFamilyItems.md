@@ -14,3 +14,5 @@ They have following option:
 
 [JavaScript](javascript.controls/CaseInactiveFamilyItems.html)
 [JQuery](jquery.widgets/CaseInactiveFamilyItems.html)
+
+![Screenshot](images/screenshots/CaseInactiveFamilyItems.png)

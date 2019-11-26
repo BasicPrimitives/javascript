@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Place Assistants Children Above Parents Children</title>
+
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+    var control;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var options = new primitives.orgdiagram.Config();
+
+      var items = [
+        new primitives.orgdiagram.ItemConfig({
+          id: 0,
+          parent: null,
+          title: "Scott Aasrud",
+          description: "Parent Item",
+          image: "../images/photos/a.png"
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 5,
+          parent: 0,
+          title: "Harry Harter",
+          description: "Regular Item",
+          groupTitle: "Regular",
+          image: "../images/photos/d.png"
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 6,
+          parent: 0,
+          title: "Fritz Stuger",
+          description: "Regular Item",
+          groupTitle: "Regular",
+          image: "../images/photos/d.png"
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 8,
+          parent: 0,
+          itemType: primitives.orgdiagram.ItemType.Assistant,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+          title: "Ted Lucas",
+          description: "Assitant Item",
+          groupTitle: "Assistant",
+          image: "../images/photos/c.png"
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 10,
+          parent: 8,
+          title: "James Nunnally",
+          description: "Regular Item",
+          image: "../images/photos/d.png"
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 11,
+          parent: 8,
+          title: "Robert Canon",
+          description: "Regular Item",
+          image: "../images/photos/d.png"
+        })
+      ];
+
+      options.items = items;
+      options.cursorItem = 0;
+      options.hasSelectorCheckbox = primitives.common.Enabled.False;
+      options.pageFitMode = primitives.orgdiagram.PageFitMode.None;
+      options.arrowsDirection = primitives.common.GroupByType.Children;
+      options.placeAssistantsAboveChildren = true;
+
+      control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+    });
+
+    function Update() {
+      var placeAssistantsAboveChildren = getRadioValue("placeAssistantsAboveChildren");
+      control.setOption(
+        "placeAssistantsAboveChildren", (placeAssistantsAboveChildren == "1" ? true : false)
+      );
+      control.update(primitives.orgdiagram.UpdateMode.Refresh);
+    }
+
+    function getRadioValue(name) {
+      var radios = document.getElementsByName(name);
+      for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+          return radios[i].value;
+        }
+      }
+      return result;
+    }
+  </script>
+</head>
+
+<body>
+  <p>
+    Place assistants children above parent's regular children:
+    <label><input onclick="Update()" name="placeAssistantsAboveChildren" type="radio" value="1" checked="">Yes</label>
+    <label><input onclick="Update()" name="placeAssistantsAboveChildren" type="radio" value="0">No</label>
+  </p>
+
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+
+</html>

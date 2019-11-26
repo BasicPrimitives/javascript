@@ -1,0 +1,233 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Children and Assistants Levels</title>
+
+  <script type="text/javascript" src="../../packages/jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+  <script type="text/javascript" src="../../packages/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+  <link href="../../packages/jquery-ui-1.12.1/jquery-ui.min.css" media="screen" rel="stylesheet" type="text/css" />
+
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?2106" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type="text/javascript">
+    var timer = null;
+    jQuery(document).ready(function () {
+      var options = new primitives.orgdiagram.Config();
+
+      var items = [];
+
+      var rootItem = new primitives.orgdiagram.ItemConfig();
+      rootItem.id = 0;
+      rootItem.parent = null;
+      rootItem.title = "Title A";
+      rootItem.description = "Description A";
+      rootItem.image = "../images/photos/a.png";
+      rootItem.childrenPlacementType = primitives.common.ChildrenPlacementType.Matrix;
+      items.push(rootItem);
+
+      items.push({
+        id: 1,
+        parent: 0,
+        title: "Assistant 1",
+        description: "Assistant Description",
+        image: "../images/photos/a.png",
+        itemType: primitives.orgdiagram.ItemType.Assistant,
+        adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+        groupTitle: "Audit",
+        groupTitleColor: primitives.common.Colors.Olive,
+        levelOffset: 0
+      });
+
+      items.push({
+        id: 2,
+        parent: 0,
+        title: "Assistant 2",
+        description: "Assistant Description",
+        image: "../images/photos/b.png",
+        itemType: primitives.orgdiagram.ItemType.Assistant,
+        adviserPlacementType: primitives.common.AdviserPlacementType.Left,
+        groupTitle: "Audit",
+        groupTitleColor: primitives.common.Colors.Olive,
+        levelOffset: 0
+      });
+
+      for (var index = 3; index <= 10; index += 2) {
+        items.push({
+          id: index,
+          parent: 1,
+          title: "Sub Adviser",
+          description: "Sub Adviser Description",
+          image: "../images/photos/s.png",
+          itemType: primitives.orgdiagram.ItemType.SubAdviser,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Left,
+          groupTitle: "Sub Adviser",
+          groupTitleColor: primitives.common.Colors.Red
+        });
+        items.push({
+          id: (index + 1),
+          parent: 2,
+          title: "Sub Adviser",
+          description: "Sub Adviser Description",
+          image: "../images/photos/s.png",
+          itemType: primitives.orgdiagram.ItemType.SubAdviser,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+          groupTitle: "Sub Adviser",
+          groupTitleColor: primitives.common.Colors.Red
+        });
+      }
+
+      items.push({
+        id: 13,
+        parent: 0,
+        title: "Assistant 3",
+        description: "Assistant Description",
+        image: "../images/photos/c.png",
+        itemType: primitives.orgdiagram.ItemType.Assistant,
+        adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+        groupTitle: "Audit",
+        groupTitleColor: primitives.common.Colors.Olive,
+        levelOffset: 1
+      });
+
+
+      items.push({
+        id: 14,
+        parent: 0,
+        title: "Assistant 4",
+        description: "Assistant Description",
+        image: "../images/photos/d.png",
+        itemType: primitives.orgdiagram.ItemType.Assistant,
+        adviserPlacementType: primitives.common.AdviserPlacementType.Left,
+        groupTitle: "Audit",
+        groupTitleColor: primitives.common.Colors.Olive,
+        levelOffset: 1
+      });
+
+      for (var index = 100; index <= 107; index += 1) {
+        items.push({
+          id: index,
+          parent: 0,
+          title: index.toString() + " Contract",
+          description: index.toString() + " Description",
+          image: "../images/photos/f.png",
+          groupTitleColor: primitives.common.Colors.Red,
+          groupTitle: "Contract",
+          levelOffset: 0
+        });
+      }
+
+      for (var index = 15; index <= 20; index += 1) {
+        items.push({
+          id: index,
+          parent: 0,
+          title: index.toString() + " Full Time",
+          description: index.toString() + " Description",
+          image: "../images/photos/f.png",
+          groupTitle: "Full Time",
+          levelOffset: 1
+        });
+      }
+
+      for (var index = 21; index <= 32; index += 1) {
+        items.push({
+          id: index,
+          parent: 0,
+          title: index.toString() + " Part Time",
+          description: index.toString() + " Description",
+          image: "../images/photos/p.png",
+          groupTitle: "Part Time",
+          groupTitleColor: primitives.common.Colors.Green,
+          levelOffset: 2
+        });
+      };
+
+      items.push({
+        id: 1003,
+        parent: 103,
+        title: "Assistant",
+        description: "Assistant Description",
+        image: "../images/photos/b.png",
+        itemType: primitives.orgdiagram.ItemType.Assistant,
+        adviserPlacementType: primitives.common.AdviserPlacementType.Left,
+        groupTitle: "Audit",
+        groupTitleColor: primitives.common.Colors.Olive,
+        levelOffset: 0
+      });
+
+      items.push({
+        id: 1004,
+        parent: 17,
+        title: "Assistant",
+        description: "Assistant Description",
+        image: "../images/photos/b.png",
+        itemType: primitives.orgdiagram.ItemType.Assistant,
+        adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+        groupTitle: "Audit",
+        groupTitleColor: primitives.common.Colors.Olive,
+        levelOffset: 0
+      });
+
+      items.push({
+        id: 1005,
+        parent: 16,
+        title: "Assistant",
+        description: "Assistant Description",
+        image: "../images/photos/b.png",
+        itemType: primitives.orgdiagram.ItemType.Adviser,
+        adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+        groupTitle: "Audit",
+        groupTitleColor: primitives.common.Colors.Olive,
+        levelOffset: 0
+      });
+
+      options.items = items;
+
+      options.cursorItem = 0;
+      options.normalLevelShift = 20;
+      options.dotLevelShift = 10;
+      options.lineLevelShift = 10;
+      options.normalItemsInterval = 20;
+      options.dotItemsInterval = 10;
+      options.lineItemsInterval = 5;
+      options.buttonsPanelSize = 48;
+
+      options.itemTitleSecondFontColor = primitives.common.Colors.White;
+
+      options.pageFitMode = primitives.common.PageFitMode.Auto;
+      options.graphicsType = primitives.common.GraphicsType.Auto;
+      options.hasSelectorCheckbox = primitives.common.Enabled.True;
+      options.hasButtons = primitives.common.Enabled.True;
+      options.leavesPlacementType = primitives.common.ChildrenPlacementType.Matrix;
+
+      options.arrowsDirection = primitives.common.GroupByType.Children;
+
+      jQuery("#basicdiagram").orgDiagram(options);
+
+      jQuery(window).on('resize', function (event) {
+        onWindowResize();
+      });
+    });
+
+    function onWindowResize() {
+      if (timer == null) {
+        timer = window.setTimeout(function () {
+          jQuery("#basicdiagram").orgDiagram("update", primitives.orgdiagram.UpdateMode.Refresh);
+          window.clearTimeout(timer);
+          timer = null;
+        }, 300);
+      }
+    }
+  </script>
+</head>
+
+<body style="overflow:hidden;">
+  <div id="basicdiagram"
+    style="position: absolute; border-style: dotted; border-width: 0px; top: 0; right: 0; bottom: 0; left: 0;"></div>
+</body>
+
+</html>

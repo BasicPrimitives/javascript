@@ -1,8 +1,12 @@
+#### Version 5.6.0
+* Added `placeAssistantsAboveChildren` and `placeAdvisersAboveChildren` properties to `primitives.orgdiagram.Config` & `primitives.orgdiagram.ItemConfig`.
+* Added `levelOffset` property to `primitives.orgdiagram.ItemConfig`.
+* Added extra validation for annotations properties.
 #### Version 5.5.0
 * Added IntelliSense API annotations to code
-* Added API annotations conversion into markdown    
+* Added API annotations conversion into markdown
 #### Version 5.4.15
-* Fixed minimised items highlight alignment in React  
+* Fixed minimised items highlight alignment in React
 #### Version 5.4.14
 * Fixed objects comparison for React JSX 
 #### Version 5.4.12
@@ -33,7 +37,7 @@
 * Published React Demo & Tutorial to Github
 #### Version 5.1.0
 
-<span style="color:red">**Warning**</span>: Extracted jQuery UI Widgets into separate `file primitives.jquery.latest.js` !
+**Warning**: Extracted jQuery UI Widgets into separate `file primitives.jquery.latest.js` !
 * Added npm package header and published library to [www.npmjs.com](https://www.npmjs.com/package/basicprimitives)
 * Added pagination for nodes in page fit mode set to None.
 #### Version 5.0.4
@@ -46,7 +50,7 @@
 #### Version 5.0.1
 * Fixed fit to page mode in primitives.famdigram.Control.
 #### Version 5.0.0
-<span style="color:red">**Warning**</span>: Non-backward compatible API changes!
+**Warning**: Non-backward compatible API changes!
 * Removed dependency on jQuery.
 * Added pure JavaScript Controls `primitives.orgdiagram.Control` and `primitives.famdiagram.Control`
 * Added JSON ML support for HTML templates
@@ -245,7 +249,7 @@
 #### Version 1.1.1
 * Added extra constructors to HighlightPathAnnotationConfig, ShapeAnnotationConfig and ConnectorAnnotationConfig.
 #### Version 1.1.0
-<span style="color:red">**Warning**</span>: **Non-backward compatible API changes!**
+**Warning**: **Non-backward compatible API changes!**
 * Added Shape & Connector helper widgets: bpShape & bpConnector.
 * Added Shape, Connector & Highlight path annotations to orgDiagram. Added ConnectorAnnotationConfig, ShapeAnnotationConfig & HighlightPathAnnotationConfig classes to orgDiagram. Added annotations collection property to orgdiagram.Config.
 * Added connection lines styling options: linesType, highlightLinesColor, highlightLinesWidth, highlightLinesType to orgdiagram.Config.

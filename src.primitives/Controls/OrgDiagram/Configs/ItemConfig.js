@@ -143,6 +143,13 @@ primitives.orgdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   this.itemType = primitives.orgdiagram.ItemType.Regular;
 
   /**
+   * Sets node level offset relative to parent node. This property is ignored if it is not applicable.
+   * 
+   * @type {number}
+   */
+  this.levelOffset = null;
+
+  /**
    * Defines leftward or rightward item placement relative to the parent item.
    * By default it is `Auto` and depends on general diagram layout orientation.
    *  
@@ -160,6 +167,24 @@ primitives.orgdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
    * @type {ChildrenPlacementType}
    */
   this.childrenPlacementType = primitives.common.ChildrenPlacementType.Auto;
+
+  /**
+   * Sets default placement of assistants hierarchies relative to the regular children of the node.
+   * If assitant node has its own children then control adds extra levels, so assistants children are placed
+   * above level of the regular children.
+   * 
+   * @type {Enabled}
+   */
+  this.placeAssistantsAboveChildren = primitives.common.Enabled.Auto;
+
+  /**
+ * Sets default placement of advisers hierarchies relative to the regular children of the node.
+ * If adviser node has its own children then control adds extra levels, so advisers children are placed
+ * above level of the regular children.
+ * 
+ * @type {Enabled}
+ */
+  this.placeAdvisersAboveChildren = primitives.common.Enabled.Auto;
 
   /**
    * Template name. Templates are HTML fragments containing layout and styles used to render diagram nodes.

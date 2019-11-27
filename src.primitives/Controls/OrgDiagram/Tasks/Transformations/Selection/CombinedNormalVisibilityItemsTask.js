@@ -31,7 +31,7 @@
     },
       itemsSizesOption = itemsSizesOptionTask.getOptions();
 
-    _data.items = _dataTemplate.read(_data.items, getSelectedItems(_sourceTasks, itemsSizesOptionTask.getItemOptions), "items", context);
+    _data.items = _dataTemplate.read(_data.items, getSelectedItems(_sourceTasks), "items", context);
 
     if (itemsSizesOption.pageFitMode == primitives.common.PageFitMode.None || itemsSizesOption.minimalVisibility == primitives.common.Visibility.Normal) {
       context.isChanged = false;
@@ -55,11 +55,9 @@
       for (index = 0, len = items.length; index < len; index += 1) {
         item = items[index];
 
-        if (getItemOptions(item) != null) {
-          if (!processed.hasOwnProperty(item)) {
-            result.push(item);
-            processed[item] = true;
-          }
+        if (!processed.hasOwnProperty(item)) {
+          result.push(item);
+          processed[item] = true;
         }
       }
     }

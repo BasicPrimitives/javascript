@@ -1,646 +1,658 @@
-﻿<!DOCTYPE html> 
+﻿<!DOCTYPE html>
 <html>
+
 <head>
-	<title>JavaScript Organizational Chart Control General & Limited Partners Demo</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	
-	<!-- header -->
-	
-	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-	<script type="text/javascript" src="common/helpers.js"></script>
+  <title>JavaScript Organizational Chart Control General & Limited Partners Demo</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-	<script type="text/javascript">
-		var control;
-		var timer = null;
-		var treeItems = {};
-		var /* Layout */
-			optionsRender = primitives.helpers.controls.getOrgDiagramOptionsRender({
-			pageFitMode: primitives.common.PageFitMode.FitToPage,
-			orientationType: primitives.common.OrientationType.Top,
-			verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-			horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
-			childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
-			leavesPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
-			maximumColumnsInMatrix: 6,
-			minimalVisibility: primitives.common.Visibility.Dot,
-			selectionPathMode: primitives.common.SelectionPathMode.FullStack,
+  <!-- header -->
 
-			hasButtons: primitives.common.Enabled.Auto,
-			hasSelectorCheckbox: primitives.common.Enabled.True,
-			selectCheckBoxLabel: "Selected",
-			itemTitleFirstFontColor: primitives.common.Colors.White,
-			itemTitleSecondFontColor: primitives.common.Colors.White,
-			buttonsPanelSize: 28,
-			groupTitlePanelSize: 24,
-			checkBoxPanelSize: 24,
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <script type="text/javascript" src="common/helpers.js"></script>
 
-			/* group title options */
-			groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
-			groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
-			groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-			groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
-			groupTitleFontSize: "12px",
-			groupTitleFontFamily: "Arial",
-			groupTitleColor: primitives.common.Colors.RoyalBlue,
-			groupTitleFontWeight: "normal",
-			groupTitleFontStyle: "normal",
+  <script type="text/javascript">
+    var control;
+    var timer = null;
+    var treeItems = {};
+    var /* Layout */
+      optionsRender = primitives.helpers.controls.getOrgDiagramOptionsRender({
+        pageFitMode: primitives.common.PageFitMode.FitToPage,
+        orientationType: primitives.common.OrientationType.Top,
+        verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
+        horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+        childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+        leavesPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+        placeAdvisersAboveChildren: true,
+        placeAssistantsAboveChildren: true,
+        maximumColumnsInMatrix: 6,
+        minimalVisibility: primitives.common.Visibility.Dot,
+        selectionPathMode: primitives.common.SelectionPathMode.FullStack,
+        hasButtons: primitives.common.Enabled.Auto,
+        hasSelectorCheckbox: primitives.common.Enabled.True,
+        selectCheckBoxLabel: "Selected",
+        itemTitleFirstFontColor: primitives.common.Colors.White,
+        itemTitleSecondFontColor: primitives.common.Colors.White,
+        buttonsPanelSize: 28,
+        groupTitlePanelSize: 24,
+        checkBoxPanelSize: 24,
 
-			/* Template */
-			DefaultTemplateOptions: {
-				minimizedItemCornerRadius: 19,
-				minimizedItemSize: new primitives.common.Size(16, 16),
-				highlightPadding: 6,
-				minimizedItemShapeType: primitives.common.ShapeType.Rhombus,
-				minimizedItemLineWidth: 0,
-				minimizedItemLineType: primitives.common.LineType.Solid,
-				minimizedItemBorderColor: null,
-				minimizedItemFillColor: null,
-				minimizedItemOpacity: 1
-			},
+        /* group title options */
+        groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
+        groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
+        groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
+        groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+        groupTitleFontSize: "12px",
+        groupTitleFontFamily: "Arial",
+        groupTitleColor: primitives.common.Colors.RoyalBlue,
+        groupTitleFontWeight: "normal",
+        groupTitleFontStyle: "normal",
 
-			/* Intervals */
-			normalLevelShift: 30,
-			dotLevelShift: 24,
-			lineLevelShift: 24,
-			normalItemsInterval: 20,
-			dotItemsInterval: 10,
-			lineItemsInterval: 5,
-			cousinsIntervalMultiplier: 0,
+        /* Template */
+        DefaultTemplateOptions: {
+          minimizedItemCornerRadius: 19,
+          minimizedItemSize: new primitives.common.Size(16, 16),
+          highlightPadding: 6,
+          minimizedItemShapeType: primitives.common.ShapeType.Rhombus,
+          minimizedItemLineWidth: 0,
+          minimizedItemLineType: primitives.common.LineType.Solid,
+          minimizedItemBorderColor: null,
+          minimizedItemFillColor: null,
+          minimizedItemOpacity: 1
+        },
 
-			/* Connectors */
-			arrowsDirection: primitives.common.GroupByType.None,
-			showExtraArrows: true,
-			extraArrowsMinimumSpace: 30,
-			connectorType: primitives.common.ConnectorType.Squared,
-			elbowType: primitives.common.ElbowType.None,
-			bevelSize: 4,
-			elbowDotSize: 4,
-			linesType: primitives.common.LineType.Solid,
-			linesColor: primitives.common.Colors.Silver,
-			linesWidth: 1,
+        /* Intervals */
+        normalLevelShift: 30,
+        dotLevelShift: 24,
+        lineLevelShift: 24,
+        normalItemsInterval: 20,
+        dotItemsInterval: 10,
+        lineItemsInterval: 5,
+        cousinsIntervalMultiplier: 0,
 
-			/* Labels */
-			showLabels: primitives.common.Enabled.Auto,
-			labelSize: new primitives.common.Size(10, 14),
-			labelOrientation: primitives.text.TextOrientationType.Horizontal,
-			labelPlacement: primitives.common.PlacementType.Bottom,
-			labelOffset: 3,
-			labelFontSize: "10px",
-			labelFontFamily: "Arial",
-			labelColor: primitives.common.Colors.Black,
-			labelFontWeight: "normal",
-			labelFontStyle: "normal",
+        /* Connectors */
+        arrowsDirection: primitives.common.GroupByType.None,
+        showExtraArrows: true,
+        extraArrowsMinimumSpace: 30,
+        connectorType: primitives.common.ConnectorType.Squared,
+        elbowType: primitives.common.ElbowType.None,
+        bevelSize: 4,
+        elbowDotSize: 4,
+        linesType: primitives.common.LineType.Solid,
+        linesColor: primitives.common.Colors.Silver,
+        linesWidth: 1,
 
-			/* Callout */
-			calloutMaximumVisibility: primitives.common.Visibility.Dot,
-			showCallout: "true",
-			calloutPlacementOffset: 100,
-			calloutfillColor: "#000000",
-			calloutBorderColor: null,
-			calloutOffset: 4,
-			calloutCornerRadius: 4,
-			calloutPointerWidth: "10%",
-			calloutLineWidth: 1,
-			calloutOpacity: 0.2,
+        /* Labels */
+        showLabels: primitives.common.Enabled.Auto,
+        labelSize: new primitives.common.Size(10, 14),
+        labelOrientation: primitives.text.TextOrientationType.Horizontal,
+        labelPlacement: primitives.common.PlacementType.Bottom,
+        labelOffset: 3,
+        labelFontSize: "10px",
+        labelFontFamily: "Arial",
+        labelColor: primitives.common.Colors.Black,
+        labelFontWeight: "normal",
+        labelFontStyle: "normal",
 
-			/* Interactivity */
-			navigationMode: primitives.common.NavigationMode.Default,
-			highlightGravityRadius: 40,
-			enablePanning: true,
+        /* Callout */
+        calloutMaximumVisibility: primitives.common.Visibility.Dot,
+        showCallout: "true",
+        calloutPlacementOffset: 100,
+        calloutfillColor: "#000000",
+        calloutBorderColor: null,
+        calloutOffset: 4,
+        calloutCornerRadius: 4,
+        calloutPointerWidth: "10%",
+        calloutLineWidth: 1,
+        calloutOpacity: 0.2,
 
-			/* Graphics */
-			graphicsType: primitives.common.GraphicsType.SVG,
+        /* Interactivity */
+        navigationMode: primitives.common.NavigationMode.Default,
+        highlightGravityRadius: 40,
+        enablePanning: true,
 
-			scale: 1.0
-		},
-		/* On property change event handler */
-		function () {
-			var options = getOptions();
-			control.setOptions(options);
-			control.update(primitives.common.UpdateMode.Recreate);
-		});
+        /* Graphics */
+        graphicsType: primitives.common.GraphicsType.SVG,
 
-		document.addEventListener('DOMContentLoaded', function () {
-			optionsRender.render(document.getElementById("westpanel"));
-			control = primitives.orgdiagram.Control(document.getElementById("centerpanel"),
-				primitives.common.mergeObjects(getOptions(), getUserData())
-			);
+        scale: 1.0
+      },
+        /* On property change event handler */
+        function () {
+          var options = getOptions();
+          control.setOptions(options);
+          control.update(primitives.common.UpdateMode.Recreate);
+        });
 
-			window.addEventListener('resize', function (event) {
-				onWindowResize();
-			});
-		});
+    document.addEventListener('DOMContentLoaded', function () {
+      optionsRender.render(document.getElementById("westpanel"));
+      control = primitives.orgdiagram.Control(document.getElementById("centerpanel"),
+        primitives.common.mergeObjects(getOptions(), getUserData())
+      );
 
-		function getOptions() {
-			options = optionsRender.getValues();
+      window.addEventListener('resize', function (event) {
+        onWindowResize();
+      });
+    });
 
-			// User Event Handlers
-			primitives.common.mergeObjects(options, {
-				onCursorChanging: onCursorChanging,
-				onCursorChanged: onCursorChanged,
-				onMouseClick: onMouseClick,
-				onMouseDblClick: onMouseDblClick,
-				onHighlightChanging: onHighlightChanging,
-				onHighlightChanged: onHighlightChanged,
-				onSelectionChanged: onSelectionChanged
-			});
+    function getOptions() {
+      options = optionsRender.getValues();
 
-			// Templates, User Buttons & related Event Handlers
-			primitives.common.mergeObjects(options, {
-				onButtonClick: onButtonClick,
-				buttons: [new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"),
-					new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"),
-					new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add")
-				],
-				templates: [getDefaultTemplate(options)],
-				defaultTemplateName: "defaultTemplate",
+      // User Event Handlers
+      primitives.common.mergeObjects(options, {
+        onCursorChanging: onCursorChanging,
+        onCursorChanged: onCursorChanged,
+        onMouseClick: onMouseClick,
+        onMouseDblClick: onMouseDblClick,
+        onHighlightChanging: onHighlightChanging,
+        onHighlightChanged: onHighlightChanged,
+        onSelectionChanged: onSelectionChanged
+      });
 
-				highlightLinesColor: primitives.common.Colors.Navy,
-				highlightLinesWidth: 2,
-				highlightLinesType: primitives.common.LineType.Dashed
-			})
+      // Templates, User Buttons & related Event Handlers
+      primitives.common.mergeObjects(options, {
+        onButtonClick: onButtonClick,
+        buttons: [new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"),
+        new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"),
+        new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add")
+        ],
+        templates: [getDefaultTemplate(options)],
+        defaultTemplateName: "defaultTemplate",
 
-			return options;
-		}
+        highlightLinesColor: primitives.common.Colors.Navy,
+        highlightLinesWidth: 2,
+        highlightLinesType: primitives.common.LineType.Dashed
+      })
 
-		function getUserData() {
-			var index, len;
+      return options;
+    }
 
-			var items = [];
+    function getUserData() {
+      var index, len;
 
-			/* Create chart item as instance of ItemConfig options class and set its properties */
-			items.push(new primitives.orgdiagram.ItemConfig({
-				id: 0,
-				parent: null, /* if parent set to null, it is shown at the root of hierarchy */
-				title: "Root",
-				description: "Regular root item",
-				image: "../images/photos/r.png",
-				groupTitle: "Has Partners",
-				groupTitleColor: primitives.common.Colors.Red
-			}));
+      var items = [];
 
-			/* create chart items as instance of ItemConfig options class and pass options as regular noname JavaScript object */
-			items.push(new primitives.orgdiagram.ItemConfig({
-				id: 1,
-				parent: 0,
-				title: "GP 1",
-				description: "General Partner on right",
-				image: "../images/photos/g.png",
-				itemType: primitives.orgdiagram.ItemType.GeneralPartner,
-				adviserPlacementType: primitives.common.AdviserPlacementType.Right,
-				groupTitleColor: primitives.common.Colors.Green,
-				groupTitle: "Partner"
-			}));
+      /* Create chart item as instance of ItemConfig options class and set its properties */
+      items.push(new primitives.orgdiagram.ItemConfig({
+        id: 0,
+        parent: null, /* if parent set to null, it is shown at the root of hierarchy */
+        title: "Root",
+        description: "Regular root item",
+        image: "../images/photos/r.png",
+        groupTitle: "Has Partners",
+        groupTitleColor: primitives.common.Colors.Red
+      }));
 
-			items.push(new primitives.orgdiagram.ItemConfig({
-				id: 2,
-				parent: 0,
-				title: "LP 2",
-				description: "Limited Partner on right",
-				image: "../images/photos/l.png",
-				itemType: primitives.orgdiagram.ItemType.LimitedPartner,
-				adviserPlacementType: primitives.common.AdviserPlacementType.Right,
-				groupTitle: "Partner"
-			}));
+      /* create chart items as instance of ItemConfig options class and pass options as regular noname JavaScript object */
+      items.push(new primitives.orgdiagram.ItemConfig({
+        id: 1,
+        parent: 0,
+        title: "GP 1",
+        description: "General Partner on right",
+        image: "../images/photos/g.png",
+        itemType: primitives.orgdiagram.ItemType.GeneralPartner,
+        adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+        groupTitleColor: primitives.common.Colors.Green,
+        groupTitle: "Partner"
+      }));
 
-			items.push(new primitives.orgdiagram.ItemConfig({
-				id: 3,
-				parent: 0,
-				title: "LP 3",
-				description: "Limited Partner on left",
-				image: "../images/photos/l.png",
-				itemType: primitives.orgdiagram.ItemType.LimitedPartner,
-				adviserPlacementType: primitives.common.AdviserPlacementType.Left,
-				groupTitle: "Partner"
-			}));
+      items.push(new primitives.orgdiagram.ItemConfig({
+        id: 2,
+        parent: 0,
+        title: "LP 2",
+        description: "Limited Partner on right",
+        image: "../images/photos/l.png",
+        itemType: primitives.orgdiagram.ItemType.LimitedPartner,
+        adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+        groupTitle: "Partner"
+      }));
 
-			/* create array of ItemConfig option classes and merge them to final collections of items */
-			items = items.concat([
-				new primitives.orgdiagram.ItemConfig({
-					id: 4,
-					parent: 0,
-					title: "Regular 1",
-					description: "Regular",
-					image: "../images/photos/r.png"
-				}),
-				new primitives.orgdiagram.ItemConfig({
-					id: 5,
-					parent: 4,
-					title: "Adviser 5",
-					description: "Adviser on right",
-					image: "../images/photos/a.png",
-					itemType: primitives.orgdiagram.ItemType.Adviser,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Right,
-					groupTitleColor: primitives.common.Colors.Red,
-					groupTitle: "Has Partners"
-				}),
-				new primitives.orgdiagram.ItemConfig({
-					id: 6,
-					parent: 5,
-					title: "GP 6",
-					description: "General Partner on right",
-					image: "../images/photos/g.png",
-					itemType: primitives.orgdiagram.ItemType.GeneralPartner,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Right,
-					groupTitleColor: primitives.common.Colors.Green,
-					groupTitle: "Partner"
-				})
-			]);
+      items.push(new primitives.orgdiagram.ItemConfig({
+        id: 3,
+        parent: 0,
+        title: "LP 3",
+        description: "Limited Partner on left",
+        image: "../images/photos/l.png",
+        itemType: primitives.orgdiagram.ItemType.LimitedPartner,
+        adviserPlacementType: primitives.common.AdviserPlacementType.Left,
+        groupTitle: "Partner"
+      }));
 
-			/* create array of ItemConfig option classes and merge them to final collections of items */
-			items = items.concat([
-			{
-				id: 7,
-				parent: 0,
-				title: "Regular 7",
-				description: "Regular",
-				image: "../images/photos/r.png",
-				childrenPlacementType: primitives.common.ChildrenPlacementType.Matrix,
-				groupTitle: "Has Partners",
-				groupTitleColor: primitives.common.Colors.Red
-			}, {
-				id: 8,
-				parent: 7,
-				title: "LP 8",
-				description: "Limited Partner on the right",
-				image: "../images/photos/l.png",
-				itemType: primitives.orgdiagram.ItemType.LimitedPartner,
-				adviserPlacementType: primitives.common.AdviserPlacementType.Right,
-				groupTitle: "Partner"
-			}, {
-				id: 9,
-				parent: 8,
-				title: "Assistant 9",
-				description: "Assistant having its own partner node",
-				image: "../images/photos/r.png",
-				itemType: primitives.orgdiagram.ItemType.Assistant,
-				adviserPlacementType: primitives.common.AdviserPlacementType.Left
-			}, {
-				id: 10,
-				parent: 9,
-				title: "Adviser 10",
-				description: "Adviser on the left",
-				image: "../images/photos/a.png",
-				itemType: primitives.orgdiagram.ItemType.Adviser,
-				adviserPlacementType: primitives.common.AdviserPlacementType.Left,
-				groupTitleColor: primitives.common.Colors.Red,
-				groupTitle: "Has Partners"
-			}, {
-				id: 11,
-				parent: 10,
-				title: "GP 11",
-				description: "General Partner on right",
-				image: "../images/photos/g.png",
-				itemType: primitives.orgdiagram.ItemType.GeneralPartner,
-				adviserPlacementType: primitives.common.AdviserPlacementType.Right,
-				groupTitleColor: primitives.common.Colors.Green,
-				groupTitle: "Partner"
-			}
-			]);
+      /* create array of ItemConfig option classes and merge them to final collections of items */
+      items = items.concat([
+        new primitives.orgdiagram.ItemConfig({
+          id: 4,
+          parent: 0,
+          title: "Regular 1",
+          description: "Regular",
+          image: "../images/photos/r.png"
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 5,
+          parent: 4,
+          title: "Adviser 5",
+          description: "Adviser on right",
+          image: "../images/photos/a.png",
+          itemType: primitives.orgdiagram.ItemType.Adviser,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+          groupTitleColor: primitives.common.Colors.Red,
+          groupTitle: "Has Partners"
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 6,
+          parent: 5,
+          title: "GP 6",
+          description: "General Partner on right",
+          image: "../images/photos/g.png",
+          itemType: primitives.orgdiagram.ItemType.GeneralPartner,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+          groupTitleColor: primitives.common.Colors.Green,
+          groupTitle: "Partner"
+        })
+      ]);
+
+      /* create array of ItemConfig option classes and merge them to final collections of items */
+      items = items.concat([
+        {
+          id: 7,
+          parent: 0,
+          title: "Regular 7",
+          description: "Regular",
+          image: "../images/photos/r.png",
+          childrenPlacementType: primitives.common.ChildrenPlacementType.Matrix,
+          groupTitle: "Has Partners",
+          groupTitleColor: primitives.common.Colors.Red
+        }, {
+          id: 8,
+          parent: 7,
+          title: "LP 8",
+          description: "Limited Partner on the right",
+          image: "../images/photos/l.png",
+          itemType: primitives.orgdiagram.ItemType.LimitedPartner,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+          groupTitle: "Partner"
+        }, {
+          id: 9,
+          parent: 8,
+          title: "Assistant 9",
+          description: "Assistant having its own partner node",
+          image: "../images/photos/r.png",
+          itemType: primitives.orgdiagram.ItemType.Assistant,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Left
+        }, {
+          id: 10,
+          parent: 9,
+          title: "Adviser 10",
+          description: "Adviser on the left",
+          image: "../images/photos/a.png",
+          itemType: primitives.orgdiagram.ItemType.Adviser,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Left,
+          groupTitleColor: primitives.common.Colors.Red,
+          groupTitle: "Has Partners"
+        }, {
+          id: 11,
+          parent: 10,
+          title: "GP 11",
+          description: "General Partner on right",
+          image: "../images/photos/g.png",
+          itemType: primitives.orgdiagram.ItemType.GeneralPartner,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+          groupTitleColor: primitives.common.Colors.Green,
+          groupTitle: "Partner"
+        }
+      ]);
 
 
-			/* create array of ItemConfig option classes and merge them to final collections of items */
-			items = items.concat([
-				new primitives.orgdiagram.ItemConfig({
-					id: 12,
-					parent: 7,
-					title: "GP 12",
-					description: "General Partner on right",
-					image: "../images/photos/g.png",
-					itemType: primitives.orgdiagram.ItemType.GeneralPartner,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Right,
-					groupTitleColor: primitives.common.Colors.Green,
-					groupTitle: "Partner"
-				}),
-				new primitives.orgdiagram.ItemConfig({
-					id: 13,
-					parent: 12,
-					title: "Adviser 13",
-					description: "Adviser",
-					image: "../images/photos/a.png",
-					itemType: primitives.orgdiagram.ItemType.Adviser,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Right,
-					groupTitle: "Has Partners",
-					groupTitleColor: primitives.common.Colors.Red
-				}),
-				new primitives.orgdiagram.ItemConfig({
-					id: 14,
-					parent: 13,
-					title: "GP 14",
-					description: "General Partner on right",
-					image: "../images/photos/g.png",
-					itemType: primitives.orgdiagram.ItemType.GeneralPartner,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Right,
-					groupTitleColor: primitives.common.Colors.Green,
-					groupTitle: "Partner"
-				}),
-				new primitives.orgdiagram.ItemConfig({
-					id: 15,
-					parent: 13,
-					title: "Adviser 15",
-					description: "Adviser",
-					image: "../images/photos/a.png",
-					itemType: primitives.orgdiagram.ItemType.Adviser,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Right
-				})
-				, new primitives.orgdiagram.ItemConfig({
-					id: 16,
-					parent: 13,
-					title: "Regular 16",
-					description: "Regular",
-					image: "../images/photos/r.png",
-					childrenPlacementType: primitives.common.ChildrenPlacementType.Matrix
-				})
-				, new primitives.orgdiagram.ItemConfig({
-					id: 17,
-					parent: 16,
-					title: "Regular 17",
-					description: "Regular",
-					image: "../images/photos/r.png",
-					itemType: primitives.orgdiagram.ItemType.Regular /* We explisitly set iteType of regular item */
-				})
-				,
-				new primitives.orgdiagram.ItemConfig({
-					id: 18,
-					parent: 12,
-					title: "Assistant 18",
-					description: "Assistant item on right",
-					image: "../images/photos/s.png",
-					itemType: primitives.orgdiagram.ItemType.Assistant,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Right
-				}),
-				new primitives.orgdiagram.ItemConfig({
-					id: 19,
-					parent: 12,
-					title: "Assistant 19",
-					description: "Assistant item on right",
-					image: "../images/photos/s.png",
-					itemType: primitives.orgdiagram.ItemType.Regular,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Right
-				})
-			]);
+      /* create array of ItemConfig option classes and merge them to final collections of items */
+      items = items.concat([
+        new primitives.orgdiagram.ItemConfig({
+          id: 12,
+          parent: 7,
+          title: "GP 12",
+          description: "General Partner on right",
+          image: "../images/photos/g.png",
+          itemType: primitives.orgdiagram.ItemType.GeneralPartner,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+          groupTitleColor: primitives.common.Colors.Green,
+          groupTitle: "Partner"
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 13,
+          parent: 12,
+          title: "Adviser 13",
+          description: "Adviser",
+          image: "../images/photos/a.png",
+          itemType: primitives.orgdiagram.ItemType.Adviser,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+          groupTitle: "Has Partners",
+          groupTitleColor: primitives.common.Colors.Red
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 14,
+          parent: 13,
+          title: "GP 14",
+          description: "General Partner on right",
+          image: "../images/photos/g.png",
+          itemType: primitives.orgdiagram.ItemType.GeneralPartner,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+          groupTitleColor: primitives.common.Colors.Green,
+          groupTitle: "Partner"
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 15,
+          parent: 13,
+          title: "Adviser 15",
+          description: "Adviser",
+          image: "../images/photos/a.png",
+          itemType: primitives.orgdiagram.ItemType.Adviser,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right
+        })
+        , new primitives.orgdiagram.ItemConfig({
+          id: 16,
+          parent: 13,
+          title: "Regular 16",
+          description: "Regular",
+          image: "../images/photos/r.png",
+          childrenPlacementType: primitives.common.ChildrenPlacementType.Matrix
+        })
+        , new primitives.orgdiagram.ItemConfig({
+          id: 17,
+          parent: 16,
+          title: "Regular 17",
+          description: "Regular",
+          image: "../images/photos/r.png",
+          itemType: primitives.orgdiagram.ItemType.Regular /* We explisitly set iteType of regular item */
+        })
+        ,
+        new primitives.orgdiagram.ItemConfig({
+          id: 18,
+          parent: 12,
+          title: "Assistant 18",
+          description: "Assistant item on right",
+          image: "../images/photos/s.png",
+          itemType: primitives.orgdiagram.ItemType.Assistant,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 19,
+          parent: 12,
+          title: "Assistant 19",
+          description: "Assistant item on right",
+          image: "../images/photos/s.png",
+          itemType: primitives.orgdiagram.ItemType.Regular,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right
+        })
+      ]);
 
-			/* create array of items and merge them to final collections of items */
-			items = items.concat([
-				{
-					id: 20,
-					parent: 7,
-					title: "GP 20",
-					description: "General Partner on right",
-					image: "../images/photos/g.png",
-					itemType: primitives.orgdiagram.ItemType.GeneralPartner,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Right,
-					groupTitleColor: primitives.common.Colors.Green,
-					groupTitle: "Partner"
-				}, {
-					id: 21,
-					parent: 20,
-					title: "Assistant 21",
-					description: "Assistant item on right",
-					image: "../images/photos/s.png",
-					itemType: primitives.orgdiagram.ItemType.Assistant,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Right
-				}, {
-					id: 22,
-					parent: 20,
-					title: "Regular 22",
-					description: "Regular item assigned to Partner is shown as its Assistant.",
-					image: "../images/photos/r.png",
-					itemType: primitives.orgdiagram.ItemType.Regular
-				}, {
-					id: 23,
-					parent: 21,
-					title: "Regular 23",
-					description: "Regular item assigned to assistant.",
-					image: "../images/photos/r.png",
-					itemType: primitives.orgdiagram.ItemType.Regular
-				}, {
-					id: 24,
-					parent: 21,
-					title: "Regular 24",
-					description: "Regular item assigned to assistant.",
-					image: "../images/photos/r.png",
-					itemType: primitives.orgdiagram.ItemType.Regular
-				}, {
-					id: 25,
-					parent: 21,
-					title: "Regular 25",
-					description: "Regular item assigned to assistant.",
-					image: "../images/photos/r.png",
-					itemType: primitives.orgdiagram.ItemType.Regular
-				}
-			]);
+      /* create array of items and merge them to final collections of items */
+      items = items.concat([
+        {
+          id: 20,
+          parent: 7,
+          title: "GP 20",
+          description: "General Partner on right",
+          image: "../images/photos/g.png",
+          itemType: primitives.orgdiagram.ItemType.GeneralPartner,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+          groupTitleColor: primitives.common.Colors.Green,
+          groupTitle: "Partner"
+        }, {
+          id: 21,
+          parent: 20,
+          title: "Assistant 21",
+          description: "Assistant item on right",
+          image: "../images/photos/s.png",
+          itemType: primitives.orgdiagram.ItemType.Assistant,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right
+        }, {
+          id: 22,
+          parent: 20,
+          title: "Regular 22",
+          description: "Regular item assigned to Partner is shown as its Assistant.",
+          image: "../images/photos/r.png",
+          itemType: primitives.orgdiagram.ItemType.Regular
+        }, {
+          id: 23,
+          parent: 21,
+          title: "Regular 23",
+          description: "Regular item assigned to assistant.",
+          image: "../images/photos/r.png",
+          itemType: primitives.orgdiagram.ItemType.Regular
+        }, {
+          id: 24,
+          parent: 21,
+          title: "Regular 24",
+          description: "Regular item assigned to assistant.",
+          image: "../images/photos/r.png",
+          itemType: primitives.orgdiagram.ItemType.Regular
+        }, {
+          id: 25,
+          parent: 21,
+          title: "Regular 25",
+          description: "Regular item assigned to assistant.",
+          image: "../images/photos/r.png",
+          itemType: primitives.orgdiagram.ItemType.Regular
+        }
+      ]);
 
-			/* Add assitants and adviser to item which has Partners attached */
-			/* create array of items and merge them to final collections of items */
-			items = items.concat([
-				{
-					id: 26,
-					parent: 7,
-					title: "Adviser 26",
-					description: "Adviser on left",
-					image: "../images/photos/a.png",
-					itemType: primitives.orgdiagram.ItemType.Adviser,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Left
-				}, {
-					id: 27,
-					parent: 7,
-					title: "Adviser 27",
-					description: "Adviser on right",
-					image: "../images/photos/a.png",
-					itemType: primitives.orgdiagram.ItemType.Adviser,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Right
-				}, {
-					id: 28,
-					parent: 7,
-					title: "Assistant 28",
-					description: "Assistant on right",
-					image: "../images/photos/s.png",
-					itemType: primitives.orgdiagram.ItemType.Assistant,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Right
-				}, {
-					id: 29,
-					parent: 7,
-					title: "Assistant 29",
-					description: "Assistant on left",
-					image: "../images/photos/s.png",
-					itemType: primitives.orgdiagram.ItemType.Assistant,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Left
-				}
-			]);
+      /* Add assitants and adviser to item which has Partners attached */
+      /* create array of items and merge them to final collections of items */
+      items = items.concat([
+        {
+          id: 26,
+          parent: 7,
+          title: "Adviser 26",
+          description: "Adviser on left",
+          image: "../images/photos/a.png",
+          itemType: primitives.orgdiagram.ItemType.Adviser,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Left
+        }, {
+          id: 27,
+          parent: 7,
+          title: "Adviser 27",
+          description: "Adviser on right",
+          image: "../images/photos/a.png",
+          itemType: primitives.orgdiagram.ItemType.Adviser,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right
+        }, {
+          id: 28,
+          parent: 7,
+          title: "Assistant 28",
+          description: "Assistant on right",
+          image: "../images/photos/s.png",
+          itemType: primitives.orgdiagram.ItemType.Assistant,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right
+        }, {
+          id: 29,
+          parent: 7,
+          title: "Assistant 29",
+          description: "Assistant on left",
+          image: "../images/photos/s.png",
+          itemType: primitives.orgdiagram.ItemType.Assistant,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Left
+        }
+      ]);
 
 			/* Add some regular children to item having Partners attached 
 			   These chidlren are shared by their parent and paarents partner items. */
 
-			var commonChildren = [];
+      var commonChildren = [];
 
-			for (var index = 30; index <= 42; index += 1) {
-				commonChildren.push(index);
-				items.push({
-					id: index,
-					parent: 7,
-					title: "Regular " + index,
-					description: "Regular item assigned to regular item having partners",
-					image: "../images/photos/r.png"
-				});
-			}
+      for (var index = 30; index <= 42; index += 1) {
+        commonChildren.push(index);
+        items.push({
+          id: index,
+          parent: 7,
+          title: "Regular " + index,
+          description: "Regular item assigned to regular item having partners",
+          image: "../images/photos/r.png"
+        });
+      }
 
 
-			var annotations = [];
+      var annotations = [];
 
-			connectorAnnotation = new primitives.orgdiagram.ConnectorAnnotationConfig(31, 7);
-			connectorAnnotation.label = "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Parent";
-			connectorAnnotation.labelSize = new primitives.common.Size(70, 30);
-			connectorAnnotation.connectorShapeType = primitives.common.ConnectorShapeType.OneWay;
-			connectorAnnotation.color = primitives.common.Colors.Red;
-			connectorAnnotation.offset = 0;
-			connectorAnnotation.lineWidth = 2;
-			connectorAnnotation.lineType = primitives.common.LineType.Dashed;
-			connectorAnnotation.selectItems = false;
-			annotations.push(connectorAnnotation);
+      connectorAnnotation = new primitives.orgdiagram.ConnectorAnnotationConfig(31, 7);
+      connectorAnnotation.label = "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Parent";
+      connectorAnnotation.labelSize = new primitives.common.Size(70, 30);
+      connectorAnnotation.connectorShapeType = primitives.common.ConnectorShapeType.OneWay;
+      connectorAnnotation.color = primitives.common.Colors.Red;
+      connectorAnnotation.offset = 0;
+      connectorAnnotation.lineWidth = 2;
+      connectorAnnotation.lineType = primitives.common.LineType.Dashed;
+      connectorAnnotation.selectItems = false;
+      annotations.push(connectorAnnotation);
 
-			var backgroundAnnotation = new primitives.orgdiagram.BackgroundAnnotationConfig([30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 18, 19]);
-			backgroundAnnotation.borderColor = "#f8e5f9";
-			backgroundAnnotation.fillColor = "#e5f9f8";
-			backgroundAnnotation.lineWidth = 2;
-			backgroundAnnotation.selectItems = true;
-			backgroundAnnotation.lineType = primitives.common.LineType.Solid;
-			annotations.push(backgroundAnnotation);
+      var backgroundAnnotation = new primitives.orgdiagram.BackgroundAnnotationConfig([30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 18, 19]);
+      backgroundAnnotation.borderColor = "#f8e5f9";
+      backgroundAnnotation.fillColor = "#e5f9f8";
+      backgroundAnnotation.lineWidth = 2;
+      backgroundAnnotation.selectItems = true;
+      backgroundAnnotation.lineType = primitives.common.LineType.Solid;
+      annotations.push(backgroundAnnotation);
 
-			backgroundAnnotation = new primitives.orgdiagram.BackgroundAnnotationConfig([21, 22, 23, 24, 25]);
-			backgroundAnnotation.borderColor = "#ccffb3";
-			backgroundAnnotation.fillColor = "#effda4";
-			backgroundAnnotation.lineWidth = 2;
-			backgroundAnnotation.selectItems = false;
-			backgroundAnnotation.lineType = primitives.common.LineType.Solid;
-			annotations.push(backgroundAnnotation);
+      backgroundAnnotation = new primitives.orgdiagram.BackgroundAnnotationConfig([21, 22, 23, 24, 25]);
+      backgroundAnnotation.borderColor = "#ccffb3";
+      backgroundAnnotation.fillColor = "#effda4";
+      backgroundAnnotation.lineWidth = 2;
+      backgroundAnnotation.selectItems = false;
+      backgroundAnnotation.lineType = primitives.common.LineType.Solid;
+      annotations.push(backgroundAnnotation);
 
-			backgroundAnnotation = new primitives.orgdiagram.BackgroundAnnotationConfig([13, 14]);
-			backgroundAnnotation.borderColor = "#e3c5ad";
-			backgroundAnnotation.fillColor = "#f6eeeb";
-			backgroundAnnotation.lineWidth = 2;
-			backgroundAnnotation.selectItems = true;
-			backgroundAnnotation.includeChildren = true;
-			backgroundAnnotation.lineType = primitives.common.LineType.Solid;
-			annotations.push(backgroundAnnotation);
+      backgroundAnnotation = new primitives.orgdiagram.BackgroundAnnotationConfig([13, 14]);
+      backgroundAnnotation.borderColor = "#e3c5ad";
+      backgroundAnnotation.fillColor = "#f6eeeb";
+      backgroundAnnotation.lineWidth = 2;
+      backgroundAnnotation.selectItems = true;
+      backgroundAnnotation.includeChildren = true;
+      backgroundAnnotation.lineType = primitives.common.LineType.Solid;
+      annotations.push(backgroundAnnotation);
 
-			pathAnnotation2 = new primitives.orgdiagram.HighlightPathAnnotationConfig([41, 3]);
-			pathAnnotation2.selectItems = true;
-			pathAnnotation2.color = primitives.common.Colors.Black;
-			pathAnnotation2.lineWidth = 2;
-			pathAnnotation2.lineType = primitives.common.LineType.Solid;
-			annotations.push(pathAnnotation2);
+      pathAnnotation2 = new primitives.orgdiagram.HighlightPathAnnotationConfig([41, 3]);
+      pathAnnotation2.selectItems = true;
+      pathAnnotation2.color = primitives.common.Colors.Black;
+      pathAnnotation2.lineWidth = 2;
+      pathAnnotation2.lineType = primitives.common.LineType.Solid;
+      annotations.push(pathAnnotation2);
 
-			pathAnnotation = new primitives.orgdiagram.HighlightPathAnnotationConfig([35, 1]);
-			pathAnnotation.selectItems = true;
-			pathAnnotation.color = primitives.common.Colors.Red;
-			pathAnnotation.lineWidth = 2;
-			pathAnnotation.lineType = primitives.common.LineType.Solid;
-			annotations.push(pathAnnotation);
+      pathAnnotation = new primitives.orgdiagram.HighlightPathAnnotationConfig([35, 1]);
+      pathAnnotation.selectItems = true;
+      pathAnnotation.color = primitives.common.Colors.Red;
+      pathAnnotation.lineWidth = 2;
+      pathAnnotation.lineType = primitives.common.LineType.Solid;
+      annotations.push(pathAnnotation);
 
-			/* create hash of items */
-			var index, len;
-			for (index = 0, len = items.length; index < len; index += 1) {
-				treeItems[items[index].id] = items[index];
-			}
+      /* create hash of items */
+      var index, len;
+      for (index = 0, len = items.length; index < len; index += 1) {
+        treeItems[items[index].id] = items[index];
+      }
 
-			return {
-				items: items,
-				cursorItem: 0,
-				annotations: annotations
-			};
-		}
+      return {
+        items: items,
+        cursorItem: 0,
+        annotations: annotations
+      };
+    }
 
-		function getDefaultTemplate(options) {
-			var result = new primitives.orgdiagram.TemplateConfig();
-			result.name = "defaultTemplate";
+    function getDefaultTemplate(options) {
+      var result = new primitives.orgdiagram.TemplateConfig();
+      result.name = "defaultTemplate";
 
-			// If we don't change anything in template then all its properties stays default
-			// So we change only minimized item properties
-			primitives.common.mergeObjects(result, options.DefaultTemplateOptions);
+      // If we don't change anything in template then all its properties stays default
+      // So we change only minimized item properties
+      primitives.common.mergeObjects(result, options.DefaultTemplateOptions);
 
-			return result;
-		}
+      return result;
+    }
 
-		function onSelectionChanged(e, data) {
-			var selectedItems = control.getOption("selectedItems");
-			var message = "";
-			for (var index = 0; index < selectedItems.length; index += 1) {
-				var itemConfig = selectedItems[index];
-				if (message != "") {
-					message += ", ";
-				}
-				message += "<b>'" + itemConfig.title + "'</b>";
-			}
-			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
-			document.getElementById("southpanel").innerHTML = "User selected following items: " + message;
-		}
+    function onSelectionChanged(e, data) {
+      var selectedItems = control.getOption("selectedItems");
+      var message = "";
+      for (var index = 0; index < selectedItems.length; index += 1) {
+        var itemConfig = selectedItems[index];
+        if (message != "") {
+          message += ", ";
+        }
+        message += "<b>'" + itemConfig.title + "'</b>";
+      }
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = "User selected following items: " + message;
+    }
 
-		function onHighlightChanging(e, data) {
-			var message = (data.context != null) ? "User is hovering mouse over item <b>'" + data.context.title + "'</b>." : "";
-			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
-			document.getElementById("southpanel").innerHTML = message;
-		}
+    function onHighlightChanging(e, data) {
+      var message = (data.context != null) ? "User is hovering mouse over item <b>'" + data.context.title + "'</b>." : "";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-		function onHighlightChanged(e, data) {
-			var message = (data.context != null) ? "User hovers mouse over item <b>'" + data.context.title + "'</b>." : "";
-			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
-			document.getElementById("southpanel").innerHTML = message;
-		}
+    function onHighlightChanged(e, data) {
+      var message = (data.context != null) ? "User hovers mouse over item <b>'" + data.context.title + "'</b>." : "";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-		function onCursorChanging(e, data) {
-			var message = "User is clicking on item '" + data.context.title + "'.";
-			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
-			document.getElementById("southpanel").innerHTML = message;
-		}
+    function onCursorChanging(e, data) {
+      var message = "User is clicking on item '" + data.context.title + "'.";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-		function onCursorChanged(e, data) {
-			var message = "User clicked on item '" + data.context.title + "'.";
-			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
-			document.getElementById("southpanel").innerHTML = message;
-		}
+    function onCursorChanged(e, data) {
+      var message = "User clicked on item '" + data.context.title + "'.";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-		function onButtonClick(e, data) {
-			var message = "User clicked <b>'" + data.name + "'</b> button for item <b>'" + data.context.title + "'</b>.";
-			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
-			document.getElementById("southpanel").innerHTML = message;
-		}
+    function onButtonClick(e, data) {
+      var message = "User clicked <b>'" + data.name + "'</b> button for item <b>'" + data.context.title + "'</b>.";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-		function onMouseClick(e, data) {
-			var message = "User clicked item <b>'" + data.context.title + "'</b>.";
-			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
-			document.getElementById("southpanel").innerHTML = message;
-		}
+    function onMouseClick(e, data) {
+      var message = "User clicked item <b>'" + data.context.title + "'</b>.";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-		function onMouseDblClick(e, data) {
-			var message = "User double clicked item <b>'" + data.context.title + "'</b>.";
-			message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
-			document.getElementById("southpanel").innerHTML = message;
-		}
+    function onMouseDblClick(e, data) {
+      var message = "User double clicked item <b>'" + data.context.title + "'</b>.";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = message;
+    }
 
-		function onWindowResize() {
-			if (timer == null) {
-				timer = window.setTimeout(function () {
-					control.update(primitives.orgdiagram.UpdateMode.Refresh);
-					window.clearTimeout(timer);
-					timer = null;
-				}, 300);
-			}
-		}
+    function onWindowResize() {
+      if (timer == null) {
+        timer = window.setTimeout(function () {
+          control.update(primitives.orgdiagram.UpdateMode.Refresh);
+          window.clearTimeout(timer);
+          timer = null;
+        }, 300);
+      }
+    }
 
-	</script>
-	<!-- /header -->
+  </script>
+  <!-- /header -->
 </head>
+
 <body>
-	<div style="position: absolute; width: 400px; left: 0px; top: 0px; bottom: 50px; padding: 0px; margin: 0px; border-style: none; font-size: 14px; overflow: scroll; -webkit-overflow-scrolling: touch;">
-		<div id="westpanel" style="padding: 5px; margin: 5px; font: normal 12px verdana, areal;">
-			<h2>General & Limited Partner item types demo</h2>
-			<p>Organizational chart provides simplified support for multiple parents, multiple managers or multiple co-heads in hierarchy. Child item defined as General partner added to the same level as its parent item and logically shares children. General & Limited item types cannot have their own children, but may have Advisers & Assistants. Limited partner has no connection to parent but it shares children in hierarchy.</p>
-		</div>
-	</div>
-	<div id="centerpanel" style="position: absolute; border-style: dotted; border-width: 0px; top: 0; right: 0; bottom: 50px; left: 400px;"></div>
-	<div id="southpanel" style="position: absolute; border-style: dotted; border-width: 0px; height: 50px; right: 0; bottom: 0; left: 0;"></div>
+  <div
+    style="position: absolute; width: 400px; left: 0px; top: 0px; bottom: 50px; padding: 0px; margin: 0px; border-style: none; font-size: 14px; overflow: scroll; -webkit-overflow-scrolling: touch;">
+    <div id="westpanel" style="padding: 5px; margin: 5px; font: normal 12px verdana, areal;">
+      <h2>General & Limited Partner item types demo</h2>
+      <p>Organizational chart provides simplified support for multiple parents, multiple managers or multiple co-heads
+        in hierarchy. Child item defined as General partner added to the same level as its parent item and logically
+        shares children. General & Limited item types cannot have their own children, but may have Advisers &
+        Assistants. Limited partner has no connection to parent but it shares children in hierarchy.</p>
+    </div>
+  </div>
+  <div id="centerpanel"
+    style="position: absolute; border-style: dotted; border-width: 0px; top: 0; right: 0; bottom: 50px; left: 400px;">
+  </div>
+  <div id="southpanel"
+    style="position: absolute; border-style: dotted; border-width: 0px; height: 50px; right: 0; bottom: 0; left: 0;">
+  </div>
 </body>
+
 </html>

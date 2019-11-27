@@ -1,7 +1,6 @@
 #### Version 5.6.0
 * Added `placeAssistantsAboveChildren` and `placeAdvisersAboveChildren` properties to `primitives.orgdiagram.Config` & `primitives.orgdiagram.ItemConfig`.
 * Added `levelOffset` property to `primitives.orgdiagram.ItemConfig`.
-* Added extra validation for annotations properties.
 #### Version 5.5.0
 * Added IntelliSense API annotations to code
 * Added API annotations conversion into markdown

@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Place Advisers Children Above Parents Children</title>
+
+  <link rel="stylesheet" href="../../packages/jquery-ui-1.12.1/jquery-ui.min.css" />
+  <script type="text/javascript" src="../../packages/jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+  <script type="text/javascript" src="../../packages/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+    $(document).ready(function () {
+      var options = new primitives.orgdiagram.Config();
+
+      var items = [
+        new primitives.orgdiagram.ItemConfig({
+          id: 0,
+          parent: null,
+          title: "Scott Aasrud",
+          description: "Parent Item",
+          image: "../images/photos/a.png"
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 1,
+          parent: 0,
+          itemType: primitives.orgdiagram.ItemType.Adviser,
+          adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+          title: "Robert Canon",
+          description: "Adviser item",
+          groupTitle: "Adviser",
+          image: "../images/photos/b.png"
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 3,
+          parent: 1,
+          title: "Fritz Stuger",
+          description: "Regular Item",
+          image: "../images/photos/d.png"
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 4,
+          parent: 1,
+          title: "Ted Lucas",
+          description: "Regular Item",
+          image: "../images/photos/d.png"
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 5,
+          parent: 0,
+          title: "James Nunnally",
+          description: "Regular Item",
+          groupTitle: "Regular",
+          image: "../images/photos/d.png"
+        }),
+        new primitives.orgdiagram.ItemConfig({
+          id: 6,
+          parent: 0,
+          title: "Harry Harter",
+          description: "Regular Item",
+          groupTitle: "Regular",
+          image: "../images/photos/d.png"
+        })
+      ];
+
+      options.items = items;
+      options.cursorItem = 0;
+      options.hasSelectorCheckbox = primitives.common.Enabled.False;
+      options.pageFitMode = primitives.common.PageFitMode.None;
+      options.placeAdvisersAboveChildren = true;
+
+      jQuery("#basicdiagram").orgDiagram(options);
+
+      jQuery("input:radio[name=placeAdvisersAboveChildren]").change(function () {
+        jQuery("#basicdiagram").orgDiagram("option",
+          {
+            "placeAdvisersAboveChildren": (parseInt(jQuery("input:radio[name=placeAdvisersAboveChildren]:checked").val()) == 1)
+          });
+        jQuery("#basicdiagram").orgDiagram("update", primitives.orgdiagram.UpdateMode.Refresh);
+      });
+    });
+
+  </script>
+</head>
+
+<body>
+  Place advisers children above parent's regular children: &nbsp;
+  <label><input name='placeAdvisersAboveChildren' type='radio' value="1" checked />Yes</label>
+  <label><input name='placeAdvisersAboveChildren' type='radio' value="0" />No</label>
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+
+</html>

@@ -630,6 +630,24 @@ primitives.orgdiagram.Config = function (name) {
   this.leavesPlacementType = primitives.common.ChildrenPlacementType.Horizontal;
 
   /**
+   * Sets default placement of assistants hierarchies relative to the regular children of the parent node.
+   * If assitant node has its own children then control adds extra levels, so assistants children are placed
+   * above level of the parent node children.
+   * 
+   * @type {boolean}
+   */
+  this.placeAssistantsAboveChildren = true;
+
+  /**
+ * Sets default placement of advisers hierarchies relative to the regular children of the parent node.
+ * If adviser node has its own children then control adds extra levels, so advisers children are placed
+ * above level of the parent node children.
+ * 
+ * @type {boolean}
+ */
+  this.placeAdvisersAboveChildren = true;
+
+  /**
    * Maximum number of columns for matrix layout of children.
    * 
    * @type {number}

@@ -44,6 +44,7 @@ primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, v
       leftSiblingIndex,
       rightSiblingIndex,
       index, len,
+      item,
       childIndex,
       childrenLen,
       depth,
@@ -181,7 +182,7 @@ primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, v
               visualTree.add(shiftParent.id, treeItem.id, treeItem);
               treeItem = shiftParent;//ignore jslint
             case primitives.orgdiagram.ItemType.Assistant://ignore jslint
-              var parent = createNewVisualAggregatorWithGivenDepth(visualTree, logicalParentItem, false, false, orgItem.levelOffset || 0)
+              var parent = createNewVisualAggregatorWithGivenDepth(visualTree, logicalParentItem, false, false, orgItem.levelOffset || 0);
               switch (orgItem.adviserPlacementType) {
                 case primitives.common.AdviserPlacementType.Left:
                   visualTree.add(parent.id, treeItem.id, treeItem, 0);
@@ -284,12 +285,12 @@ primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, v
 
       var aggregators = [];
       if (regularChildrenLevels.length > 0) {
-        var visualParent = getLastVisualAggregator(visualTree, logicalParentItem);
+        visualParent = getLastVisualAggregator(visualTree, logicalParentItem);
         for (var indexLevel = 0; indexLevel < regularChildrenLevels.length - 1; indexLevel += 1) {
           var regularChildrenLevel = regularChildrenLevels[indexLevel];
           if (regularChildrenLevel != null) {
             var hideChildConnector = (logicalParentItem.visibility == primitives.common.Visibility.Invisible) && (logicalParentItem.connectorPlacement === 0);
-            nextVisualParent = createNewVisualAggregator(visualTree, visualParent, hideChildConnector);
+            var nextVisualParent = createNewVisualAggregator(visualTree, visualParent, hideChildConnector);
 
             aggregators.push([nextVisualParent]);
 
@@ -308,14 +309,14 @@ primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, v
             }
 
             for (index = medianIndex; index >= 0; index -= 1) {
-              var item = regularChildrenLevel[index];
+              item = regularChildrenLevel[index];
               visualTree.add(visualParent.id, item.id, item, 0);
               item.connectorPlacement = primitives.common.SideFlag.Top | primitives.common.SideFlag.Bottom;
               item.gravity = primitives.common.HorizontalAlignmentType.Right;
             }
 
             for (index = medianIndex + 1; index < regularChildrenLevel.length; index += 1) {
-              var item = regularChildrenLevel[index];
+              item = regularChildrenLevel[index];
               visualTree.add(visualParent.id, item.id, item);
               item.connectorPlacement = primitives.common.SideFlag.Top | primitives.common.SideFlag.Bottom;
               item.gravity = primitives.common.HorizontalAlignmentType.Left;
@@ -356,7 +357,7 @@ primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, v
               }
               break;
             case primitives.common.Enabled.True:
-              extendChildren = true
+              extendChildren = true;
               break;
           }
 
@@ -384,7 +385,7 @@ primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, v
               }
               break;
             case primitives.common.Enabled.True:
-              extendChildren = true
+              extendChildren = true;
               break;
           }
           if (extendChildren) {
@@ -845,8 +846,8 @@ primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, v
 
   function createNewVisualAggregatorWithGivenDepth(visualTree, treeItem, hideParentConnector, hideChildrenConnector, depth) {
     var result = null,
-      newAggregatorItem,
-      hideParentConnector = hideParentConnector || hideChildrenConnector;
+        newAggregatorItem;
+    hideParentConnector = hideParentConnector || hideChildrenConnector;
 
     var index = 0;
     while (index <= depth) {

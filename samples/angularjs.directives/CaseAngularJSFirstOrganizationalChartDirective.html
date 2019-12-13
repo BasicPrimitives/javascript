@@ -277,6 +277,10 @@
                 /* Update widgets here */
                 var itemScope = angular.element(data.element).scope();
                 itemScope.itemConfig = itemConfig;
+                $compile(data.element)(itemScope);
+                if (!scope.$parent.$$phase) {
+                  itemScope.$apply();
+                }
                 break;
             }
           }

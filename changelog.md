@@ -1,3 +1,5 @@
+#### Version 5.6.2
+* Fixed performance bug in the value reader.
 #### Version 5.6.0
 * Added `placeAssistantsAboveChildren` and `placeAdvisersAboveChildren` properties to `primitives.orgdiagram.Config` & `primitives.orgdiagram.ItemConfig`.
 * Added `levelOffset` property to `primitives.orgdiagram.ItemConfig`.

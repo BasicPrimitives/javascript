@@ -13,21 +13,24 @@
 };
 
 primitives.common.ValueReader.prototype.stringify = function (target) {
-  var processed = [];
-  var result = JSON.stringify(target, function (key, value) {
-    if(key[0] === '_') {
-      return null;
-    }
-    if (value !== null && typeof value == "object") {
-      if (processed.indexOf(value) == -1) {
-        processed.push(value);
-        return value;
+  if (this.hash["object"] == true) {
+    var processed = [];
+    var result = JSON.stringify(target, function (key, value) {
+      if (key[0] === '_') {
+        return null;
       }
-      return null;
-    }
-    return value;
-  });
-  return result;
+      if (value !== null && typeof value == "object") {
+        if (processed.indexOf(value) == -1) {
+          processed.push(value);
+          return value;
+        }
+        return null;
+      }
+      return value;
+    });
+    return result;
+  }
+  return target;
 }
 
 primitives.common.ValueReader.prototype.read = function (target, source, path, context) {

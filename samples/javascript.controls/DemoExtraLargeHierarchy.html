@@ -1,0 +1,436 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <title>JavaScript Control Organizational Chart Navigation Demo</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  <!-- header -->
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <script type="text/javascript" src="common/helpers.js"></script>
+  <script type="text/javascript" src="../data/xldataset.js"></script>
+
+  <script type="text/javascript">
+    var control;
+    var timer = null;
+    var treeItems = {};
+    var optionsRender = primitives.helpers.controls.getOrgDiagramOptionsRender({
+      /* Layout */
+      pageFitMode: primitives.common.PageFitMode.FitToPage,
+      orientationType: primitives.common.OrientationType.Top,
+      verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
+      horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+      childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+      leavesPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+      placeAdvisersAboveChildren: true,
+      placeAssistantsAboveChildren: true,
+      maximumColumnsInMatrix: 6,
+      minimalVisibility: primitives.common.Visibility.Dot,
+      selectionPathMode: primitives.common.SelectionPathMode.FullStack,
+
+      hasButtons: primitives.common.Enabled.Auto,
+      hasSelectorCheckbox: primitives.common.Enabled.True,
+      selectCheckBoxLabel: "Selected",
+      itemTitleFirstFontColor: primitives.common.Colors.White,
+      itemTitleSecondFontColor: primitives.common.Colors.White,
+      buttonsPanelSize: 28,
+      checkBoxPanelSize: 24,
+
+      /* group title options */
+      groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
+      groupTitlePanelSize: 24,
+      groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
+      groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
+      groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+      groupTitleFontSize: "12px",
+      groupTitleFontFamily: "Arial",
+      groupTitleColor: primitives.common.Colors.RoyalBlue,
+      groupTitleFontWeight: "normal",
+      groupTitleFontStyle: "normal",
+
+      /* Template */
+      DefaultTemplateOptions: {
+        minimizedItemCornerRadius: null,
+        minimizedItemSize: new primitives.common.Size(4, 4),
+        highlightPadding: 3,
+        minimizedItemShapeType: primitives.common.ShapeType.None,
+        minimizedItemLineWidth: 1,
+        minimizedItemLineType: primitives.common.LineType.Solid,
+        minimizedItemBorderColor: null,
+        minimizedItemFillColor: null,
+        minimizedItemOpacity: 1.0,
+        cursorPadding: 2
+      },
+
+      /* Intervals */
+      normalLevelShift: 20,
+      dotLevelShift: 20,
+      lineLevelShift: 10,
+      normalItemsInterval: 10,
+      dotItemsInterval: 2,
+      lineItemsInterval: 2,
+      cousinsIntervalMultiplier: 5,
+
+      /* Connectors */
+      arrowsDirection: primitives.common.GroupByType.None,
+      showExtraArrows: false,
+      extraArrowsMinimumSpace: 30,
+      connectorType: primitives.common.ConnectorType.Squared,
+      elbowType: primitives.common.ElbowType.None,
+      bevelSize: 4,
+      elbowDotSize: 4,
+      linesType: primitives.common.LineType.Solid,
+      linesColor: primitives.common.Colors.Silver,
+      linesWidth: 1,
+
+      /* Labels */
+      showLabels: primitives.common.Enabled.Auto,
+      labelSize: new primitives.common.Size(80, 8),
+      labelOrientation: primitives.text.TextOrientationType.Horizontal,
+      labelPlacement: primitives.common.PlacementType.Top,
+      labelOffset: 1,
+      labelFontSize: "10px",
+      labelFontFamily: "Arial",
+      labelColor: primitives.common.Colors.Black,
+      labelFontWeight: "normal",
+      labelFontStyle: "normal",
+
+      /* Callout */
+      calloutMaximumVisibility: primitives.common.Visibility.Dot,
+      showCallout: "true",
+      calloutPlacementOffset: 100,
+      calloutfillColor: "#000000",
+      calloutBorderColor: null,
+      calloutOffset: 4,
+      calloutCornerRadius: 4,
+      calloutPointerWidth: "10%",
+      calloutLineWidth: 1,
+      calloutOpacity: 0.2,
+
+      /* Interactivity */
+      navigationMode: primitives.common.NavigationMode.Default,
+      highlightGravityRadius: 40,
+      enablePanning: true,
+
+      /* Graphics */
+      graphicsType: primitives.common.GraphicsType.SVG,
+
+      scale: 1.0
+    },
+      /* On property change event handler */
+      function () {
+        var options = getOptions();
+        control.setOptions(options);
+        control.update(primitives.common.UpdateMode.Recreate);
+      });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      optionsRender.render(document.getElementById("westpanel"));
+      control = primitives.orgdiagram.Control(document.getElementById("centerpanel"),
+        primitives.common.mergeObjects(getOptions(), getUserData(data, options))
+      );
+
+      window.addEventListener('resize', function (event) {
+        onWindowResize();
+      });
+    });
+
+    function getOptions() {
+      options = optionsRender.getValues();
+
+      // User Event Handlers
+      primitives.common.mergeObjects(options,
+        {
+          onCursorChanging: onCursorChanging,
+          onCursorChanged: onCursorChanged,
+          onMouseClick: onMouseClick,
+          onMouseDblClick: onMouseDblClick,
+          onHighlightChanging: onHighlightChanging,
+          onHighlightChanged: onHighlightChanged,
+          onSelectionChanged: onSelectionChanged
+        });
+
+      // Templates, User Buttons & related Event Handlers
+      primitives.common.mergeObjects(options, {
+        onButtonClick: onButtonClick,
+        buttons: [
+          new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"),
+          new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"),
+          new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add")
+        ],
+
+        onItemRender: onTemplateRender,
+        templates: [getContactTemplate(options), getDefaultTemplate(options)],
+        defaultTemplateName: "defaultTemplate"
+      })
+
+      return options;
+    }
+
+    function getUserData(data, options) {
+      var index, len;
+      for (index = 0, len = data.length; index < len; index += 1) {
+        treeItems[data[index].id] = data[index];
+      }
+
+      /* set template for cursor item */
+      data[0].templateName = "contactTemplate";
+
+      return {
+        items: data,
+        cursorItem: 0
+      };
+    }
+
+    function getDefaultTemplate(options) {
+      var result = new primitives.orgdiagram.TemplateConfig();
+      result.name = "defaultTemplate";
+
+      // If we don't change anything in template then all its properties stays default
+      // So we change only minimized item properties
+      primitives.common.mergeObjects(result, options.DefaultTemplateOptions);
+
+      return result;
+    }
+
+    function getContactTemplate(options) {
+      var result = new primitives.orgdiagram.TemplateConfig();
+      result.name = "contactTemplate";
+
+      result.itemSize = new primitives.common.Size(220, 120);
+
+      primitives.common.mergeObjects(result, options.DefaultTemplateOptions);
+
+      /* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
+      result.itemTemplate = ["div",
+        {
+          "style": {
+            width: result.itemSize.width + "px",
+            height: result.itemSize.height + "px"
+          },
+          "class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+        },
+        ["div",
+          {
+            "name": "titleBackground",
+            "class": ["bp-item", "bp-corner-all", "bt-title-frame"],
+            "style": {
+              top: "2px",
+              left: "2px",
+              width: "216px",
+              height: "20px"
+            }
+          },
+          ["div",
+            {
+              "name": "title",
+              "class": ["bp-item", "bp-title"],
+              "style": {
+                top: "3px",
+                left: "6px",
+                width: "208px",
+                height: "18px"
+              }
+            }
+          ]
+        ],
+        ["div",
+          {
+            "class": ["bp-item", "bp-photo-frame"],
+            "style": {
+              top: "26px",
+              left: "2px",
+              width: "50px",
+              height: "60px"
+            }
+          },
+          ["img",
+            {
+              "name": "photo",
+              "class": ["bp-item", "bp-title"],
+              "style": {
+                width: "50px",
+                height: "60px"
+              }
+            }
+          ]
+        ],
+        ["div",
+          {
+            "name": "phone",
+            "class": "bp-item",
+            "style": {
+              top: "26px",
+              left: "56px",
+              width: "162px",
+              height: "18px",
+              fontSize: "12px"
+            }
+          }
+        ],
+        ["a",
+          {
+            "name": "email",
+            "class": "bp-item",
+            "style": {
+              top: "44px",
+              left: "56px",
+              width: "162px",
+              height: "18px",
+              fontSize: "12px"
+            }
+          }
+        ],
+        ["div",
+          {
+            "name": "description",
+            "class": "bp-item",
+            "style": {
+              top: "62px",
+              left: "56px",
+              width: "162px",
+              height: "36px",
+              fontSize: "12px"
+            }
+          }
+        ]
+      ];
+
+      return result;
+    }
+
+    function onTemplateRender(event, data) {
+      var itemConfig = data.context;
+      var element = data.element;
+
+      if (data.templateName == "contactTemplate") {
+        var photo = data.element.childNodes[1].firstChild;
+        photo.src = itemConfig.image;
+        photo.alt = itemConfig.title;
+
+        var titleBackground = element.firstChild;
+        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+
+        var title = element.firstChild.firstChild;
+        title.textContent = itemConfig.title;
+
+        var phone = element.childNodes[2];
+        phone.textContent = itemConfig.phone;
+
+        var email = element.childNodes[3];
+        email.textContent = itemConfig.email;
+        email.href = ("mailto:" + itemConfig.email + "?Subject=Hello%20again");
+
+        var description = element.childNodes[4];
+        description.textContent = itemConfig.description;
+
+        switch (data.renderingMode) {
+          case primitives.common.RenderingMode.Create:
+            /* Initialize widgets here */
+            email.addEventListener("click", function (e) {
+              /* Block mouse click propagation in order to avoid layout updates before server postback*/
+              primitives.common.stopPropagation(e);
+            });
+            break;
+          case primitives.common.RenderingMode.Update:
+            /* Update widgets here */
+            break;
+        }
+      }
+    }
+
+    function onButtonClick(e, data) {
+      var message = "User clicked <b>'" + data.name + "'</b> button for item <b>'" + data.context.title + "'</b>.";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = message;
+    }
+
+    function onSelectionChanged(e, data) {
+      var selectedItems = control.getOption("selectedItems");
+      var message = "";
+      for (var index = 0; index < selectedItems.length; index += 1) {
+        var itemConfig = treeItems[selectedItems[index]];
+        if (message != "") {
+          message += ", ";
+        }
+        message += "<b>'" + itemConfig.title + "'</b>";
+      }
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = "User selected following items: " + message;
+    }
+
+    function onHighlightChanging(e, data) {
+      var message = (data.context != null) ? "User is hovering mouse over item <b>'" + data.context.title + "'</b>." : "";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+
+      document.getElementById("southpanel").innerHTML = message;
+    }
+
+    function onHighlightChanged(e, data) {
+      var message = (data.context != null) ? "User hovers mouse over item <b>'" + data.context.title + "'</b>." : "";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = message;
+    }
+
+    function onCursorChanging(e, data) {
+      var message = "User is clicking on item '" + data.context.title + "'.";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = message;
+      data.oldContext.templateName = null;
+      data.context.templateName = "contactTemplate";
+
+      /* the following code disables callout for cursor item and enables it back when item is not cursor anymore*/
+      data.oldContext.showCallout = primitives.common.Enabled.Auto;
+      data.context.showCallout = primitives.common.Enabled.True;
+    }
+
+    function onCursorChanged(e, data) {
+      var message = "User clicked on item '" + data.context.title + "'.";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = message;
+    }
+
+    function onMouseClick(e, data) {
+      var message = "User clicked item <b>'" + data.context.title + "'</b>.";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = message;
+    }
+
+    function onMouseDblClick(e, data) {
+      var message = "User double clicked item <b>'" + data.context.title + "'</b>.";
+      message += (data.parentItem != null ? " Parent item <b>'" + data.parentItem.title + "'" : "");
+      document.getElementById("southpanel").innerHTML = message;
+    }
+
+    function onWindowResize() {
+      if (timer == null) {
+        timer = window.setTimeout(function () {
+          control.update(primitives.orgdiagram.UpdateMode.Refresh);
+          window.clearTimeout(timer);
+          timer = null;
+        }, 300);
+      }
+    }
+  </script>
+  <!-- /header -->
+</head>
+
+<body>
+  <div
+    style="position: absolute; width: 400px; left: 0px; top: 0px; bottom: 50px; padding: 0px; margin: 0px; border-style: none; font-size: 14px; overflow: scroll; -webkit-overflow-scrolling: touch;">
+    <div id="westpanel" style="padding: 5px; margin: 5px; font: normal 12px verdana, areal;">
+      <h2>Extra Large Hierarchy Navigation Demo</h2>
+      <p>This sample renders hierarchy having 7700 nodes.</p>
+    </div>
+  </div>
+  <div id="centerpanel"
+    style="position: absolute; border-style: dotted; border-width: 0px; top: 0; right: 0; bottom: 50px; left: 400px;">
+  </div>
+  <div id="southpanel"
+    style="position: absolute; border-style: dotted; border-width: 0px; height: 50px; right: 0; bottom: 0; left: 0;">
+  </div>
+</body>
+
+</html>

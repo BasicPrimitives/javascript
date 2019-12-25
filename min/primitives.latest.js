@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagrams v5.6.0
+ * @preserve Basic Primitives Diagrams v5.6.2
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -35,7 +35,7 @@
 
 var primitives = {
   common: {
-    version: "5.6.0"
+    version: "5.6.2"
   },
   orgdiagram: {},
   famdiagram: {},
@@ -7017,38 +7017,39 @@ primitives.common.FunctionReader.prototype.read = function (target, source, path
 
 /* /OptionsReaders/ObjectReader.js*/
 primitives.common.ObjectReader = function (dataTemplate, isNullable, defaultValue) {
-	this.dataTemplate = dataTemplate;
-	this.isNullable = isNullable;
-	this.defaultValue = defaultValue;
+  this.dataTemplate = dataTemplate;
+  this.isNullable = isNullable;
+  this.defaultValue = defaultValue;
 };
 
 primitives.common.ObjectReader.prototype.read = function (target, source, path, context) {
-	var result = null,
-		property,
-		propertyDataTemplate;
+  var result = null,
+    isTargetObject = primitives.common.isObject(target),
+    property,
+    propertyDataTemplate;
 
-	if(!source) {
-		source = this.isNullable ? null : this.defaultValue;
-	} 
+  if (!source) {
+    source = this.isNullable ? null : this.defaultValue;
+  }
 
-	if(primitives.common.isObject(source)) {
-		result = {};
+  if (primitives.common.isObject(source)) {
+    result = {};
 
-		for (property in this.dataTemplate) {
-			if (this.dataTemplate.hasOwnProperty(property)) {
-				propertyDataTemplate = this.dataTemplate[property];
+    for (property in this.dataTemplate) {
+      if (this.dataTemplate.hasOwnProperty(property)) {
+        propertyDataTemplate = this.dataTemplate[property];
 
-				result[property] = propertyDataTemplate.read(primitives.common.isObject(target) ? target[property] : null, source[property], path + "-" + property, context);
-			}
-		}
-	} else {
-		result = source;
+        result[property] = propertyDataTemplate.read(isTargetObject ? target[property] : null, source[property], path + "-" + property, context);
+      }
+    }
+  } else {
+    result = source;
 
-		if (target !== source) {
-			context.isChanged = true;
-		}
-	}
-	return result;
+    if (target !== source) {
+      context.isChanged = true;
+    }
+  }
+  return result;
 };
 
 /* /OptionsReaders/ValueReader.js*/
@@ -7067,21 +7068,24 @@ primitives.common.ValueReader = function (acceptedTypes, isNullable, defaultValu
 };
 
 primitives.common.ValueReader.prototype.stringify = function (target) {
-  var processed = [];
-  var result = JSON.stringify(target, function (key, value) {
-    if(key[0] === '_') {
-      return null;
-    }
-    if (value !== null && typeof value == "object") {
-      if (processed.indexOf(value) == -1) {
-        processed.push(value);
-        return value;
+  if (this.hash["object"] == true) {
+    var processed = [];
+    var result = JSON.stringify(target, function (key, value) {
+      if (key[0] === '_') {
+        return null;
       }
-      return null;
-    }
-    return value;
-  });
-  return result;
+      if (value !== null && typeof value == "object") {
+        if (processed.indexOf(value) == -1) {
+          processed.push(value);
+          return value;
+        }
+        return null;
+      }
+      return value;
+    });
+    return result;
+  }
+  return target;
 }
 
 primitives.common.ValueReader.prototype.read = function (target, source, path, context) {

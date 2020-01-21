@@ -1,0 +1,213 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Inactive items in family chart layout</title>
+
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+    var control;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var options = new primitives.famdiagram.Config();
+      var items = [
+        new primitives.famdiagram.ItemConfig({
+          id: 2000,
+          parents: null,
+          title: "Scott Aasrud",
+          description: "Co-CEO",
+          image: "../images/photos/a.png"
+        }),
+        new primitives.famdiagram.ItemConfig({
+          id: 2100,
+          parents: null,
+          title: "Scott Aasrud 2",
+          description: "Co-CEO",
+          image: "../images/photos/a.png"
+        }),
+        new primitives.famdiagram.ItemConfig({ id: 2001, parents: [2000, 2100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Finance", itemTitleColor: "Green" }),
+
+        new primitives.famdiagram.ItemConfig({
+          id: 1000,
+          parents: null,
+          title: "Scott Aasrud",
+          description: "Co-CEO",
+          image: "../images/photos/a.png"
+        }),
+        new primitives.famdiagram.ItemConfig({
+          id: 1100,
+          parents: null,
+          title: "Scott Aasrud 2",
+          description: "Co-CEO",
+          image: "../images/photos/a.png"
+        }),
+        new primitives.famdiagram.ItemConfig({ id: 1001, parents: [1000, 1100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Finance", itemTitleColor: "Green" }),
+
+        new primitives.famdiagram.ItemConfig({
+          id: 0,
+          parents: null,
+          title: "Scott Aasrud",
+          description: "Co-CEO",
+          image: "../images/photos/a.png"
+        }),
+        new primitives.famdiagram.ItemConfig({
+          id: 100,
+          parents: null,
+          title: "Scott Aasrud 2",
+          description: "Co-CEO",
+          image: "../images/photos/a.png"
+        }),
+        new primitives.famdiagram.ItemConfig({ id: 1, parents: [0, 100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Finance", itemTitleColor: "Green" }),
+        new primitives.famdiagram.ItemConfig({
+          id: 2,
+          parents: [1],
+          title: "Ted Lucas",
+          description: "VP, Human Resources",
+          image: "../images/photos/b.png"
+        }),
+        new primitives.famdiagram.ItemConfig({ id: 3, parents: [0, 100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Sales", itemTitleColor: "Navy" }),
+        new primitives.famdiagram.ItemConfig({
+          id: 4,
+          parents: [3],
+          title: "Fritz Stuger",
+          description: "VP, Human Resources",
+          image: "../images/photos/b.png"
+        }),
+        new primitives.famdiagram.ItemConfig({ id: 5, parents: [0, 100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Operations", itemTitleColor: "Magenta" }),
+        new primitives.famdiagram.ItemConfig({
+          id: 6,
+          parents: [5],
+          title: "Brad Whitt",
+          description: "VP, Human Resources",
+          image: "../images/photos/b.png"
+        }),
+        new primitives.famdiagram.ItemConfig({ id: 7, parents: [0, 100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "IT", itemTitleColor: "Orange" }),
+        new primitives.famdiagram.ItemConfig({
+          id: 8,
+          parents: [7],
+          title: "Ted Whitt",
+          description: "VP, Human Resources",
+          image: "../images/photos/b.png"
+        }),
+        new primitives.famdiagram.ItemConfig({
+          id: 18,
+          parents: [7],
+          title: "Ted Whitt 2",
+          description: "VP, Human Resources",
+          image: "../images/photos/b.png"
+        }),
+        { id: 19, parents: [2], isVisible: true, description: "VP, Security Technology Unit (STU)", email: "robemorg@name.com", groupTitleColor: "#4169e1", image: "../images/photos/y.png", itemTitleColor: "#4b0082", phone: "308-532-6548", title: "Robert Morgan" },
+        { id: 20, parents: [2], isVisible: true, description: "GM, Software Serviceability", email: "idabene@name.com", groupTitleColor: "#4169e1", image: "../images/photos/a.png", itemTitleColor: "#4b0082", phone: "765-723-1327", title: "Ida Benefield" },
+        { id: 21, parents: [4], isVisible: true, description: "GM, Core Operating System Test", email: "vadaduho@name.com", groupTitleColor: "#4169e1", image: "../images/photos/d.png", itemTitleColor: "#4b0082", phone: "303-333-9215", title: "Vada Duhon" },
+        { id: 22, parents: [4], isVisible: true, description: "GM, Global Platform Technologies and Services", email: "willloyd@name.com", groupTitleColor: "#4169e1", image: "../images/photos/f.png", itemTitleColor: "#4b0082", phone: "585-309-6253", title: "William Loyd" },
+        { id: 23, parents: [6], isVisible: true, description: "Sr. VP, NAME & Personal Services Division", email: "craiblue@name.com", groupTitleColor: "#4169e1", image: "../images/photos/g.png", itemTitleColor: "#4b0082", phone: "915-355-4705", title: "Craig Blue" },
+        { id: 24, parents: [6], isVisible: true, description: "VP, NAME Communications Services and Member Platform", email: "joelcraw@name.com", groupTitleColor: "#4169e1", image: "../images/photos/h.png", itemTitleColor: "#4b0082", phone: "650-623-3302", title: "Joel Crawford" },
+        { id: 25, parents: [8], isVisible: true, description: "VP & CFO, NAME", email: "barblang@name.com", groupTitleColor: "#4169e1", image: "../images/photos/o.png", itemTitleColor: "#4b0082", phone: "618-822-7345", title: "Barbara Lang" },
+        { id: 26, parents: [8], isVisible: true, description: "VP, NAME Operations", email: "barbfaul@name.com", groupTitleColor: "#4169e1", image: "../images/photos/d.png", itemTitleColor: "#4b0082", phone: "641-678-7646", title: "Barbara Faulk" },
+        { id: 27, parents: [18], isVisible: true, description: "VP, NAME Global Sales & Marketing", email: "stewwill@name.com", groupTitleColor: "#4169e1", image: "../images/photos/z.png", itemTitleColor: "#4b0082", phone: "803-746-8733", title: "Stewart Williams" },
+        { id: 28, parents: [18], isVisible: true, description: "Sr. VP, NAME Information Services & Merchant Platform", email: "robelemi@name.com", groupTitleColor: "#4169e1", image: "../images/photos/y.png", itemTitleColor: "#4b0082", phone: "425-590-4308", title: "Robert Lemieux" }
+      ];
+
+      options.items = items;
+      options.cursorItem = 0;
+      options.selectionPathMode = primitives.common.SelectionPathMode.FullStack;
+      options.neighboursSelectionMode = primitives.common.NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses;
+      options.templates = [getDepartmentTitleTemplate()];
+      options.onItemRender = onTemplateRender;
+      options.hasSelectorCheckbox = primitives.common.Enabled.True;
+      options.normalLevelShift = 20;
+      options.dotLevelShift = 20;
+      options.lineLevelShift = 10;
+      options.normalItemsInterval = 10;
+      options.dotItemsInterval = 10;
+      options.lineItemsInterval = 4;
+
+
+      control = primitives.famdiagram.Control(document.getElementById("basicdiagram"), options);
+    });
+
+
+    function onTemplateRender(event, data) {
+      switch (data.renderingMode) {
+        case primitives.common.RenderingMode.Create:
+          /* Initialize widgets here */
+          break;
+        case primitives.common.RenderingMode.Update:
+          /* Update widgets here */
+          break;
+      }
+
+      var itemConfig = data.context;
+      var element = data.element;
+
+      if (data.templateName == "DepartmentTitleTemplate") {
+        element.firstChild.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+        element.firstChild.firstChild.textContent = itemConfig.title;
+      }
+    }
+
+    function getDepartmentTitleTemplate() {
+      var result = new primitives.famdiagram.TemplateConfig();
+      result.name = "DepartmentTitleTemplate";
+      result.isActive = false;
+
+      var buttons = [];
+      buttons.push(new primitives.famdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"));
+      buttons.push(new primitives.famdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"));
+      buttons.push(new primitives.famdiagram.ButtonConfig("add", "ui-icon-person", "Add"));
+      buttons.push(new primitives.famdiagram.ButtonConfig("notice", "ui-icon-notice", "Notice"));
+      result.buttons = buttons;
+
+      result.itemSize = new primitives.common.Size(200, 30);
+      result.minimizedItemSize = new primitives.common.Size(3, 3);
+
+      /* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
+      result.itemTemplate = ["div",
+        {
+          "style": {
+            width: result.itemSize.width + "px",
+            height: result.itemSize.height + "px"
+          },
+          "class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+        },
+        ["div",
+          {
+            "name": "titleBackground",
+            "style": {
+              top: "2px",
+              left: "2px",
+              width: "196px",
+              height: "25px"
+            },
+            "class": ["bp-item", "bp-corner-all", "bt-title-frame"]
+          },
+          ["div",
+            {
+              name: "title",
+              "class": ["bp-item", "bp-title"],
+              style: {
+                top: "3px",
+                left: "6px",
+                width: "188px",
+                height: "23px",
+                textAlign: "center"
+              }
+            }
+          ]
+        ]
+      ];
+
+      return result;
+    }
+  </script>
+</head>
+
+<body>
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+
+</html>

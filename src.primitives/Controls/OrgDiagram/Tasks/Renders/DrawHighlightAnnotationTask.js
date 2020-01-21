@@ -93,10 +93,9 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
                 uiHash.isCursor = (cursorItemTask.getCursorTreeItem() == treeItemId);
                 uiHash.isSelected = selectedItemsTask.isSelected(treeItemId);
                 uiHash.templateName = calloutTemplate.templateConfig.name;
-
-                _graphics.position("calloutplaceholder", calloutPanelPosition.x, calloutPanelPosition.y, calloutPanelPosition.width, calloutPanelPosition.height);
                 _graphics.show("calloutplaceholder");
                 panel = _graphics.activate("calloutplaceholder", primitives.common.Layers.Annotation);
+                _graphics.position("calloutplaceholder", calloutPanelPosition.x, calloutPanelPosition.y, calloutPanelPosition.width, calloutPanelPosition.height);
                 element = _graphics.template(
                   position.x
                   , position.y

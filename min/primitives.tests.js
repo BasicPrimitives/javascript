@@ -3131,159 +3131,166 @@ QUnit.test("primitives.common.getLiniarBreaks", function (assert) {
 QUnit.module('Algorithms - Get merged rectangles. This method merges multiple rectangles into a single polyline object.');
 
 QUnit.test("primitives.common.getMergedRectangles", function (assert) {
-	function ShowLayout(fixture, polyline, width, height, title) {
-		var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
-		titlePlaceholder.append(title);
-		fixture.append(titlePlaceholder);
+  function ShowLayout(fixture, polyline, width, height, title) {
+    var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
+    titlePlaceholder.append(title);
+    fixture.append(titlePlaceholder);
 
-		var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'><div class='placeholder'></div></div>");
-		placeholder.css({
-			width: width,
-			height: height
-		});
+    var graphicsDiv = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'></div>");
+    graphicsDiv.css({
+      width: width,
+      height: height
+    });
 
-		fixture.append(placeholder);
+    var placeholder = jQuery("<div class='placeholder'></div>");
+    placeholder.css({
+      width: width,
+      height: height
+    });
+    graphicsDiv.append(placeholder);
 
-		var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder[0]);
-		graphics.begin();
-		graphics.resize("placeholder", width, height);
-		graphics.activate("placeholder");
-		graphics.polyline(polyline);
-		graphics.end();
-	}
+    fixture.append(graphicsDiv);
 
-	function getSize(rects) {
-		var result = new primitives.common.Rect(0, 0, 0, 0);
-		for (var index = 0; index < rects.length; index += 1) {
-			var rect = rects[index];
-			result.addRect(rect);
-		}
-		return result;
-	}
+    var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder[0]);
+    graphics.begin();
+    graphics.resize("placeholder", width, height);
+    graphics.activate("placeholder");
+    graphics.polyline(polyline);
+    graphics.end();
+  }
 
-	function getRectangles(items) {
-		var result = [];
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			var rect = new primitives.common.Rect(item[0], item[1], item[2], item[3]);
-			rect.context = index;
-			result.push(rect);
-		}
-		return result;
-	}
+  function getSize(rects) {
+    var result = new primitives.common.Rect(0, 0, 0, 0);
+    for (var index = 0; index < rects.length; index += 1) {
+      var rect = rects[index];
+      result.addRect(rect);
+    }
+    return result;
+  }
 
-	function TestLayout(title, items) {
-		var rects = getRectangles(items);
-		var paletteItem = new primitives.common.PaletteItem({
-			lineColor: "#000000",
-			lineWidth: "2",
-			fillColor: "#faebd7",
-			lineType: primitives.common.LineType.Solid,
-			opacity: 1
-		});
+  function getRectangles(items) {
+    var result = [];
+    for (var index = 0; index < items.length; index += 1) {
+      var item = items[index];
+      var rect = new primitives.common.Rect(item[0], item[1], item[2], item[3]);
+      rect.context = index;
+      result.push(rect);
+    }
+    return result;
+  }
 
-		var polyline = new primitives.common.Polyline(paletteItem);
-		primitives.common.getMergedRectangles(this, rects, function (points) {
-			for (var index = 0, len = points.length; index < len; index += 1) {
-				var point = points[index];
-				if (index == 0) {
-					polyline.addSegment(new primitives.common.MoveSegment(point.x, point.y));
-				} else {
-					polyline.addSegment(new primitives.common.LineSegment(point.x, point.y));
-				}
-			}
-		});
+  function TestLayout(title, items) {
+    var rects = getRectangles(items);
+    var paletteItem = new primitives.common.PaletteItem({
+      lineColor: "#000000",
+      lineWidth: "2",
+      fillColor: "#faebd7",
+      lineType: primitives.common.LineType.Solid,
+      opacity: 1
+    });
 
-		var size = getSize(rects);
+    var polyline = new primitives.common.Polyline(paletteItem);
+    primitives.common.getMergedRectangles(this, rects, function (points) {
+      for (var index = 0, len = points.length; index < len; index += 1) {
+        var point = points[index];
+        if (index == 0) {
+          polyline.addSegment(new primitives.common.MoveSegment(point.x, point.y));
+        } else {
+          polyline.addSegment(new primitives.common.LineSegment(point.x, point.y));
+        }
+      }
+    });
 
-		ShowLayout(jQuery("#qunit-fixture"), polyline, size.width, size.height, title);
+    var size = getSize(rects);
 
-		jQuery("#qunit-fixture").css({
-			position: "relative",
-			left: "0px",
-			top: "0px",
-			height: "Auto"
-		});
+    ShowLayout(jQuery("#qunit-fixture"), polyline, size.width, size.height, title);
 
-		assert.ok(true, title);
-	};
+    jQuery("#qunit-fixture").css({
+      position: "relative",
+      left: "0px",
+      top: "0px",
+      height: "Auto"
+    });
 
-	TestLayout("Merge single rectangle", [
-		[0, 0, 100, 100]
-	]);
+    assert.ok(true, title);
+  };
 
-	TestLayout("Merge two disconnected rectangles", [
-		[0, 0, 80, 80],
-		[100, 0, 80, 80]
-	]);
+  TestLayout("Merge single rectangle", [
+    [0, 0, 100, 100]
+  ]);
 
-	TestLayout("Merge two aligned disconnected rectangles", [
-		[0, 0, 80, 80],
-		[80, 100, 80, 80]
-	]);
+  TestLayout("Merge two disconnected rectangles", [
+    [0, 0, 80, 80],
+    [100, 0, 80, 80]
+  ]);
 
-	TestLayout("Merge two aligned disconnected rectangles", [
-		[0, 100, 80, 80],
-		[80, 0, 80, 80]
-	]);
+  TestLayout("Merge two aligned disconnected rectangles", [
+    [0, 0, 80, 80],
+    [80, 100, 80, 80]
+  ]);
 
-	TestLayout("Merge two overlapping rectangles", [
-	[0, 0, 100, 100],
-	[50, 50, 100, 100]
-	]);
+  TestLayout("Merge two aligned disconnected rectangles", [
+    [0, 100, 80, 80],
+    [80, 0, 80, 80]
+  ]);
 
-	TestLayout("Merge two overlapping rectangles", [
-		[0, 50, 100, 100],
-		[50, 0, 100, 100]
-	]);
+  TestLayout("Merge two overlapping rectangles", [
+    [0, 0, 100, 100],
+    [50, 50, 100, 100]
+  ]);
 
-	TestLayout("Merge E shape rectangles", [
-		[0, 0, 50, 350],
-		[50, 0, 50, 50],
-		[50, 100, 50, 50],
-		[50, 200, 50, 50],
-		[50, 300, 50, 50]
-	]);
+  TestLayout("Merge two overlapping rectangles", [
+    [0, 50, 100, 100],
+    [50, 0, 100, 100]
+  ]);
 
-	TestLayout("Merge E shape rectangles", [
-		[50, 0, 50, 350],
-		[0, 0, 50, 50],
-		[0, 100, 50, 50],
-		[0, 200, 50, 50],
-		[0, 300, 50, 50]
-	]);
+  TestLayout("Merge E shape rectangles", [
+    [0, 0, 50, 350],
+    [50, 0, 50, 50],
+    [50, 100, 50, 50],
+    [50, 200, 50, 50],
+    [50, 300, 50, 50]
+  ]);
+
+  TestLayout("Merge E shape rectangles", [
+    [50, 0, 50, 350],
+    [0, 0, 50, 50],
+    [0, 100, 50, 50],
+    [0, 200, 50, 50],
+    [0, 300, 50, 50]
+  ]);
 
 
-	TestLayout("Merge 5 rectangles", [
-		[0, 0, 100, 100],
-		[150, 0, 100, 100],
-		[0, 150, 100, 100],
-		[150, 150, 100, 100],
-		[50, 50, 150, 150]
-	]);
+  TestLayout("Merge 5 rectangles 2", [
+    [0, 0, 100, 100],
+    [150, 0, 100, 100],
+    [0, 150, 100, 100],
+    [150, 150, 100, 100],
+    [50, 50, 150, 150]
+  ]);
 
-	TestLayout("Window", [
-		[100, 0, 150, 150],
-		[100, 200, 150, 150],
-		[0, 100, 150, 150],
-		[200, 100, 150, 150]
-	]);
+  TestLayout("Window", [
+    [100, 0, 150, 150],
+    [100, 200, 150, 150],
+    [0, 100, 150, 150],
+    [200, 100, 150, 150]
+  ]);
 
-	TestLayout("Window 2", [
-		[0, 0, 150, 50],
-		[0, 50, 50, 50],
-		[100, 50, 50, 50],
-		[0, 100, 150, 50],
-		[0, 150, 50, 50],
-		[100, 150, 50, 50],
-		[0, 200, 150, 50]
-	]);
+  TestLayout("Window 2", [
+    [0, 0, 150, 50],
+    [0, 50, 50, 50],
+    [100, 50, 50, 50],
+    [0, 100, 150, 50],
+    [0, 150, 50, 50],
+    [100, 150, 50, 50],
+    [0, 200, 150, 50]
+  ]);
 
-	TestLayout("Dumbbell", [
-		[0, 0, 60, 60],
-		[80, 0, 60, 60],
-		[50, 20, 40, 20]
-	]);
+  TestLayout("Dumbbell", [
+    [0, 0, 60, 60],
+    [80, 0, 60, 60],
+    [50, 20, 40, 20]
+  ]);
 });
 
 /* /Algorithms/getMinimumCrossingRows.Tests.js*/
@@ -6579,101 +6586,110 @@ QUnit.test("primitives.famdiagram.UserDefinedNodesOrder -  Transforms nodes rela
 QUnit.module('Graphics.Shapes.MergedRectangles - Render Merged rectangles.');
 
 QUnit.test("primitives.common.MergedRectangles", function (assert) {
-	function ShowLayout(fixture, rects, size, title) {
-		var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
-		titlePlaceholder.append(title);
-		fixture.append(titlePlaceholder);
+  function ShowLayout(fixture, rects, size, title) {
+    jQuery(document).ready(function () {
+      var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
+      titlePlaceholder.append(title);
+      fixture.append(titlePlaceholder);
 
-		var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'><div class='placeholder'></div></div>");
-		placeholder.css({
-			width: size.width,
-			height: size.height
-		});
+      var graphicsDiv = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'></div>");
+      graphicsDiv.css({
+        width: size.width,
+        height: size.height
+      });
 
-		fixture.append(placeholder);
+      var placeholder = jQuery("<div class='placeholder'></div>");
+      placeholder.css({
+        width: size.width,
+        height: size.height
+      });
+      graphicsDiv.append(placeholder);
 
-		var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder[0]);
-		graphics.begin();
-		graphics.resize("placeholder", size.width, size.height);
-		graphics.activate("placeholder");
+      fixture.append(graphicsDiv);
 
-		var transform = new primitives.common.Transform();
-		transform.setOrientation(primitives.common.OrientationType.Top);
-		transform.size = new primitives.common.Size(size);
+      var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder[0]);
+      graphics.begin();
+      graphics.resize("placeholder", size.width, size.height);
+      graphics.activate("placeholder");
+
+      var transform = new primitives.common.Transform();
+      transform.setOrientation(primitives.common.OrientationType.Top);
+      transform.size = new primitives.common.Size(size);
 
 
-		var mergedRectangles = new primitives.common.MergedRectangles(graphics);
-		mergedRectangles.lineWidth = 2;
-		mergedRectangles.opacity = 1;
-		mergedRectangles.fillColor = "#faebd7";
-		mergedRectangles.lineType = primitives.common.LineType.Solid;
-		mergedRectangles.borderColor = "#000000";
-		mergedRectangles.transform = transform;
-		mergedRectangles.draw(rects);
+      var mergedRectangles = new primitives.common.MergedRectangles(graphics);
+      mergedRectangles.lineWidth = 2;
+      mergedRectangles.opacity = 1;
+      mergedRectangles.fillColor = "#faebd7";
+      mergedRectangles.lineType = primitives.common.LineType.Solid;
+      mergedRectangles.borderColor = "#000000";
+      mergedRectangles.transform = transform;
+      mergedRectangles.draw(rects);
 
-		graphics.end();
-	}
+      graphics.end();
+    });
+  }
 
-	function getSize(rects) {
-		var result = new primitives.common.Rect(0, 0, 0, 0);
-		for (var index = 0; index < rects.length; index += 1) {
-			var rect = rects[index];
-			result.addRect(rect);
-		}
-		return result;
-	}
+  function getSize(rects) {
+    var result = new primitives.common.Rect(0, 0, 0, 0);
+    for (var index = 0; index < rects.length; index += 1) {
+      var rect = rects[index];
+      result.addRect(rect);
+    }
+    return result;
+  }
 
-	function getRectangles(items) {
-		var result = [];
-		for (var index = 0; index < items.length; index += 1) {
-			var item = items[index];
-			var rect = new primitives.common.Rect(item[0], item[1], item[2], item[3]);
-			rect.context = index;
-			result.push(rect);
-		}
-		return result;
-	}
+  function getRectangles(items) {
+    var result = [];
+    for (var index = 0; index < items.length; index += 1) {
+      var item = items[index];
+      var rect = new primitives.common.Rect(item[0], item[1], item[2], item[3]);
+      rect.context = index;
+      result.push(rect);
+    }
+    return result;
+  }
 
-	function TestLayout(title, items) {
-		var rects = getRectangles(items);
-		var size = getSize(rects);
+  function TestLayout(title, items) {
+    var rects = getRectangles(items);
+    var size = getSize(rects);
 
-		ShowLayout(jQuery("#qunit-fixture"), rects, size, title);
+    ShowLayout(jQuery("#qunit-fixture"), rects, size, title);
 
-		jQuery("#qunit-fixture").css({
-			position: "relative",
-			left: "0px",
-			top: "0px",
-			height: "Auto"
-		});
+    jQuery("#qunit-fixture").css({
+      position: "relative",
+      left: "0px",
+      top: "0px",
+      height: "Auto"
+    });
 
-		assert.ok(true, title);
-	};
+    assert.ok(true, title);
+  };
 
-	TestLayout("Merge 5 rectangles", [
-		[0, 0, 100, 100],
-		[150, 0, 100, 100],
-		[0, 150, 100, 100],
-		[150, 150, 100, 100],
-		[50, 50, 150, 150]
-	]);
+  TestLayout("Merge 5 rectangles", [
+    [0, 0, 100, 100],
+    [150, 0, 100, 100],
+    [0, 150, 100, 100],
+    [150, 150, 100, 100],
+    [50, 50, 150, 150]
+  ]);
 
-	TestLayout("Window", [
-		[100, 0, 150, 150],
-		[100, 200, 150, 150],
-		[0, 100, 150, 150],
-		[200, 100, 150, 150]
-	]);
+  TestLayout("Window", [
+    [100, 0, 150, 150],
+    [100, 200, 150, 150],
+    [0, 100, 150, 150],
+    [200, 100, 150, 150]
+  ]);
 
-	TestLayout("Window 2", [
-		[0, 0, 150, 50],
-		[0, 50, 50, 50],
-		[100, 50, 50, 50],
-		[0, 100, 150, 50],
-		[0, 150, 50, 50],
-		[100, 150, 50, 50],
-		[0, 200, 150, 50]
-	]);
+  TestLayout("Window 2", [
+    [0, 0, 150, 50],
+    [0, 50, 50, 50],
+    [100, 50, 50, 50],
+    [0, 100, 150, 50],
+    [0, 150, 50, 50],
+    [100, 150, 50, 50],
+    [0, 200, 150, 50]
+  ]);
 });
 
 /* /Graphics/Structs/Matrix.Tests.js*/
@@ -7094,97 +7110,242 @@ QUnit.test("primitives.common.Vector - 2D vector defined with 2 2D points", func
 });
 
 
-/* /Graphics/Graphics.Tests.js*/
-QUnit.module('Graphics - draw polyline.');
+/* /Graphics/Graphics.Polyline.Tests.js*/
+QUnit.module('Graphics - offset polyline.');
 
 QUnit.test("primitives.common.Graphics.polyline", function (assert) {
-	function ShowLayout(fixture, polyline, width, height, title) {
-		var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
-		titlePlaceholder.append(title);
-		fixture.append(titlePlaceholder);
+  function ShowLayout(fixture, width, height, title, onDraw) {
+    var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
+    titlePlaceholder.append(title);
+    fixture.append(titlePlaceholder);
 
-		var placeholder = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'><div class='placeholder'></div></div>");
-		placeholder.css({
-			width: width,
-			height: height
-		});
+    var graphicsDiv = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'></div>");
+    graphicsDiv.css({
+      width: width,
+      height: height
+    });
 
-		fixture.append(placeholder);
+    var placeholder = jQuery("<div class='placeholder'></div>");
+    placeholder.css({
+      width: width,
+      height: height
+    });
+    graphicsDiv.append(placeholder);
 
-		var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder[0]);
-		graphics.begin();
-		graphics.resize("placeholder", width, height);
-		graphics.activate("placeholder");
-		graphics.polyline(polyline);
-		graphics.end();
-	}
+    fixture.append(graphicsDiv);
 
-	function getPolyline(points) {
-		var paletteItem = new primitives.common.PaletteItem({
-			lineColor: "#000000",
-			lineWidth: "2",
-			fillColor: "#faebd7",
-			lineType: primitives.common.LineType.Solid,
-			opacity: 1
-		});
+    var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder[0]);
+    graphics.begin();
+    graphics.resize("placeholder", width, height);
+    graphics.activate("placeholder");
+    onDraw(graphics);
+    graphics.end();
+  }
 
-		var polyline = new primitives.common.Polyline(paletteItem);
-		for (var index = 0; index < points.length; index += 1) {
-			var point = points[index];
-			var segmentType = point[0];
-			var x = point[1];
-			var y = point[2];
-			switch (segmentType) {
-				case "M":
-					polyline.addSegment(new primitives.common.MoveSegment(x, y));
-					break;
-				case "L":
-					polyline.addSegment(new primitives.common.LineSegment(x, y));
-					break;
-			}
-		}
-		return polyline;
-	}
+  function getPolyline(points, color) {
+    var paletteItem = new primitives.common.PaletteItem({
+      lineColor: color,
+      lineWidth: "2",
+      lineType: primitives.common.LineType.Solid,
+      opacity: 1
+    });
 
-	function getSize(points) {
-		var result = new primitives.common.Size(0, 0);
-		for (var index = 0; index < points.length; index += 1) {
-			var point = points[index];
-			var x = point[1];
-			var y = point[2];
-			result.width = Math.max(result.width, x);
-			result.height = Math.max(result.height, y);
-		}
-		return result;
-	}
+    var polyline = new primitives.common.Polyline(paletteItem);
+    for (var index = 0; index < points.length; index += 1) {
+      var point = points[index];
+      var segmentType = point[0];
+      switch (segmentType) {
+        case "M": {
+          var x = point[1];
+          var y = point[2];
+          polyline.addSegment(new primitives.common.MoveSegment(x, y));
+        }
+          break;
+        case "L": {
+          var x = point[1];
+          var y = point[2];
+          polyline.addSegment(new primitives.common.LineSegment(x, y));
+        }
+          break;
+        case "Q": {
+          var cpX = point[1];
+          var cpY = point[2];
+          var x = point[3];
+          var y = point[4];
+          polyline.addSegment(new primitives.common.QuadraticArcSegment(cpX, cpY, x, y));
+        }
+          break;
+        case "C": {
+          var cpX = point[1];
+          var cpY = point[2];
+          var cpX2 = point[3];
+          var cpY2 = point[4];
+          var x = point[5];
+          var y = point[6];
+          polyline.addSegment(new primitives.common.CubicArcSegment(cpX, cpY, cpX2, cpY2, x, y));
+        }
+          break;
+      }
+    }
+    return polyline;
+  }
 
-	function TestLayout(title, points) {
-		var polyline = getPolyline(points);
-		var size = getSize(points);
-		ShowLayout(jQuery("#qunit-fixture"), polyline, size.width, size.height, title);
+  function TestLayout(title, points) {
+    var polyline = getPolyline(points, "#000000");
+    var offsetPolylinePlus = polyline.getOffsetPolyine(20);
+    var offsetPolylineMinus = polyline.getOffsetPolyine(-20);
+    ShowLayout(jQuery("#qunit-fixture"), 800, 200, title, function (graphics) {
+      graphics.polyline(polyline);
+      offsetPolylinePlus.paletteItem.lineColor = "red";
+      graphics.polyline(offsetPolylinePlus);
+      offsetPolylineMinus.paletteItem.lineColor = "green";
+      graphics.polyline(offsetPolylineMinus);
+    });
 
-		jQuery("#qunit-fixture").css({
-			position: "relative",
-			left: "0px",
-			top: "0px",
-			height: "Auto"
-		});
+    jQuery("#qunit-fixture").css({
+      position: "relative",
+      left: "0px",
+      top: "0px",
+      height: "Auto"
+    });
 
-		assert.ok(true, title);
-	};
+    assert.ok(true, title);
+  };
 
-	TestLayout("Draw polyline", [
-		["M", 0, 0], ["L", 200, 100]
-	]);
+  TestLayout("Offset cubic segment", [
+    ["M", 50, 100], ["C", 50, 50, 150, 50, 150, 150]
+  ]);
 
-	TestLayout("Draw shape", [
-		["M", 0, 0], ["L", 200, 0], ["L", 200, 100], ["L", 0, 100], ["L", 0, 0]
-	]);
+  TestLayout("Offset quadratic segment", [
+    ["M", 50, 150], ["Q", 500, 125, 350, 200]
+  ]);
 
-	TestLayout("Draw shape having island", [
-		["M", 0, 0], ["L", 200, 0], ["L", 200, 200], ["L", 0, 200], ["L", 0, 0],
-		["M", 50, 50], ["L", 50, 150], ["L", 150, 150], ["L", 150, 50], ["L", 50, 50]
-	]);
+  TestLayout("Offset quadratic segments", [
+    ["M", 100, 50], ["Q", 150, 50, 150, 100], ["Q", 150, 150, 100, 150], ["Q", 50, 150, 50, 100], ["L", 100, 50]
+  ]);
+
+  TestLayout("Simple vertical segment", [
+    ["M", 100, 50], ["L", 100, 150]
+  ]);
+
+  TestLayout("Offset square angle", [
+    ["M", 100, 50], ["L", 150, 100], ["L", 100, 150]
+  ]);
+
+  TestLayout("Offset square", [
+    ["M", 50, 50], ["L", 150, 50], ["L", 150, 150], ["L", 50, 150], ["L", 50, 50]
+  ]);
+
+  TestLayout("Offset rhombus", [
+    ["M", 100, 50], ["L", 150, 100], ["L", 100, 150], ["L", 50, 100], ["L", 100, 50]
+  ]);
+
+});
+
+/* /Graphics/Graphics.Tests.js*/
+QUnit.module('Graphics - test basic graphics.');
+
+QUnit.test("primitives.common.Graphics", function (assert) {
+  function ShowLayout(fixture, polyline, width, height, title) {
+    var titlePlaceholder = jQuery("<div style='visibility:visible; position: relative; line-height: 40px; text-align: left; font: Areal; font-size: 14px; width: 640px; height:40px;'></div>");
+    titlePlaceholder.append(title);
+    fixture.append(titlePlaceholder);
+
+    var graphicsDiv = jQuery("<div style='visibility:visible; position: relative; font: Areal; font-size: 12px;'></div>");
+    graphicsDiv.css({
+      width: width,
+      height: height
+    });
+
+    var placeholder = jQuery("<div class='placeholder'></div>");
+    placeholder.css({
+      width: width,
+      height: height
+    });
+    graphicsDiv.append(placeholder);
+
+    fixture.append(graphicsDiv);
+
+    var graphics = primitives.common.createGraphics(primitives.common.GraphicsType.SVG, placeholder[0]);
+    graphics.begin();
+    graphics.resize("placeholder", width, height);
+    graphics.activate("placeholder");
+    graphics.polyline(polyline);
+    graphics.end();
+  }
+
+  function getPolyline(points) {
+    var paletteItem = new primitives.common.PaletteItem({
+      lineColor: "#000000",
+      lineWidth: "2",
+      fillColor: "#faebd7",
+      lineType: primitives.common.LineType.Solid,
+      opacity: 1
+    });
+
+    var polyline = new primitives.common.Polyline(paletteItem);
+    for (var index = 0; index < points.length; index += 1) {
+      var point = points[index];
+      var segmentType = point[0];
+      var x = point[1];
+      var y = point[2];
+      var cpX = point[3];
+      var cpY = point[4];
+      switch (segmentType) {
+        case "M":
+          polyline.addSegment(new primitives.common.MoveSegment(x, y));
+          break;
+        case "L":
+          polyline.addSegment(new primitives.common.LineSegment(x, y));
+          break;
+        case "Q":
+          polyline.addSegment(new primitives.common.QuadraticArcSegment(x, y, cpX, cpY));
+          break;
+
+      }
+    }
+    return polyline;
+  }
+
+  function getSize(points) {
+    var result = new primitives.common.Size(0, 0);
+    for (var index = 0; index < points.length; index += 1) {
+      var point = points[index];
+      var x = point[1];
+      var y = point[2];
+      result.width = Math.max(result.width, x);
+      result.height = Math.max(result.height, y);
+    }
+    return result;
+  }
+
+  function TestLayout(title, points) {
+    var polyline = getPolyline(points);
+    var size = getSize(points);
+    ShowLayout(jQuery("#qunit-fixture"), polyline, size.width, size.height, title);
+
+    jQuery("#qunit-fixture").css({
+      position: "relative",
+      left: "0px",
+      top: "0px",
+      height: "Auto"
+    });
+
+    assert.ok(true, title);
+  };
+
+  TestLayout("Draw polyline", [
+    ["M", 0, 0], ["L", 200, 100]
+  ]);
+
+  TestLayout("Draw shape", [
+    ["M", 0, 0], ["L", 200, 0], ["L", 200, 100], ["L", 0, 100], ["L", 0, 0]
+  ]);
+
+  TestLayout("Draw shape having island", [
+    ["M", 0, 0], ["L", 200, 0], ["L", 200, 200], ["L", 0, 200], ["L", 0, 0],
+    ["M", 50, 50], ["L", 50, 150], ["L", 150, 150], ["L", 150, 50], ["L", 50, 50]
+  ]);
 });
 
 /* /Managers/KeyboardNavigationManager.Tests.js*/

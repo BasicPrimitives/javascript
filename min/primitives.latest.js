@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagrams v5.6.2
+ * @preserve Basic Primitives Diagrams v5.6.3
  * Copyright (c) 2013 - 2019 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -35,7 +35,7 @@
 
 var primitives = {
   common: {
-    version: "5.6.2"
+    version: "5.6.3"
   },
   orgdiagram: {},
   famdiagram: {},
@@ -18177,10 +18177,9 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
                 uiHash.isCursor = (cursorItemTask.getCursorTreeItem() == treeItemId);
                 uiHash.isSelected = selectedItemsTask.isSelected(treeItemId);
                 uiHash.templateName = calloutTemplate.templateConfig.name;
-
-                _graphics.position("calloutplaceholder", calloutPanelPosition.x, calloutPanelPosition.y, calloutPanelPosition.width, calloutPanelPosition.height);
                 _graphics.show("calloutplaceholder");
                 panel = _graphics.activate("calloutplaceholder", 15/*primitives.common.Layers.Annotation*/);
+                _graphics.position("calloutplaceholder", calloutPanelPosition.x, calloutPanelPosition.y, calloutPanelPosition.width, calloutPanelPosition.height);
                 element = _graphics.template(
                   position.x
                   , position.y
@@ -25272,18 +25271,18 @@ primitives.common.family = function (source) {
 
           if (onItem.call(thisArg, childid, child, 1)) {
             processed[childid] = SKIP;
-
-            loopParents(this, childid, function (parentid, parent, parentLevel) {
-              if (!processed.hasOwnProperty(parentid)) {
-                processed[parentid] = null;
-
-                if (onItem.call(thisArg, parentid, parent, 2)) {
-                  processed[parentid] = SKIP;
-                }
-              }
-              return processed[parentid];
-            });
           }
+
+          loopParents(this, childid, function (parentid, parent, parentLevel) {
+            if (!processed.hasOwnProperty(parentid)) {
+              processed[parentid] = null;
+
+              if (onItem.call(thisArg, parentid, parent, 2)) {
+                processed[parentid] = SKIP;
+              }
+            }
+            return processed[parentid];
+          });
         }
         return processed[childid];
       });
@@ -25294,18 +25293,19 @@ primitives.common.family = function (source) {
 
           if (onItem.call(thisArg, parentid, parent, 1)) {
             processed[parentid] = SKIP;
-
-            loopChildren(this, parentid, function (childid, child, childLevel) {
-              if (!processed.hasOwnProperty(childid)) {
-                processed[childid] = true;
-
-                if (onItem.call(thisArg, childid, child, 2)) {
-                  processed[childid] = SKIP;
-                }
-              }
-              return processed[childid];
-            });
           }
+
+          loopChildren(this, parentid, function (childid, child, childLevel) {
+            if (!processed.hasOwnProperty(childid)) {
+              processed[childid] = true;
+
+              if (onItem.call(thisArg, childid, child, 2)) {
+                processed[childid] = SKIP;
+              }
+            }
+            return processed[childid];
+          });
+
         }
         return processed[parentid];
       });

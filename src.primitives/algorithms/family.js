@@ -1505,18 +1505,18 @@ primitives.common.family = function (source) {
 
           if (onItem.call(thisArg, childid, child, 1)) {
             processed[childid] = SKIP;
-
-            loopParents(this, childid, function (parentid, parent, parentLevel) {
-              if (!processed.hasOwnProperty(parentid)) {
-                processed[parentid] = null;
-
-                if (onItem.call(thisArg, parentid, parent, 2)) {
-                  processed[parentid] = SKIP;
-                }
-              }
-              return processed[parentid];
-            });
           }
+
+          loopParents(this, childid, function (parentid, parent, parentLevel) {
+            if (!processed.hasOwnProperty(parentid)) {
+              processed[parentid] = null;
+
+              if (onItem.call(thisArg, parentid, parent, 2)) {
+                processed[parentid] = SKIP;
+              }
+            }
+            return processed[parentid];
+          });
         }
         return processed[childid];
       });
@@ -1527,18 +1527,19 @@ primitives.common.family = function (source) {
 
           if (onItem.call(thisArg, parentid, parent, 1)) {
             processed[parentid] = SKIP;
-
-            loopChildren(this, parentid, function (childid, child, childLevel) {
-              if (!processed.hasOwnProperty(childid)) {
-                processed[childid] = true;
-
-                if (onItem.call(thisArg, childid, child, 2)) {
-                  processed[childid] = SKIP;
-                }
-              }
-              return processed[childid];
-            });
           }
+
+          loopChildren(this, parentid, function (childid, child, childLevel) {
+            if (!processed.hasOwnProperty(childid)) {
+              processed[childid] = true;
+
+              if (onItem.call(thisArg, childid, child, 2)) {
+                processed[childid] = SKIP;
+              }
+            }
+            return processed[childid];
+          });
+
         }
         return processed[parentid];
       });

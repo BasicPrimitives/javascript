@@ -103,6 +103,6 @@ Do you want to use a Basic Primitives diagram for a personal website, a school s
 ## Performance:
 Through a full API you can add, remove and modify individual items and their properties. The component will only update visual elements affected by the API changes. We put in a lot of effort in order to make it happen!
 
-Copyright (c) 2013 - 2019 Basic Primitives Inc
+Copyright (c) 2013 - 2020 Basic Primitives Inc
 * [Non-commercial - Free](http://creativecommons.org/licenses/by-nc/3.0/)
 * [Commercial and government licenses](license.pdf)

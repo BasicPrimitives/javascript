@@ -1,3 +1,6 @@
+#### Version 5.6.3
+* Fixed initial callout placement
+* Fixed neighbours selection in family diagram having inactive nodes
 #### Version 5.6.2
 * Fixed performance bug in the value reader.
 #### Version 5.6.0

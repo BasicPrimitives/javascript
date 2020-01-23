@@ -182,7 +182,7 @@ function create_functions_md(title, annotations) {
 function create_classes_md(title, classes) {
   var result = "# " + title;
   return classes.reduce((agg, classAnnotation) => {
-    let { name, description, namespace, constants, properties, functions, returns, params } = classAnnotation;
+    let { name, description, namespace, constants, properties, functions, returns, params, callbackproperties } = classAnnotation;
     let key = [...namespace, name].join(".");
     agg += '\r\n## <a name="' + key + '" id="' + key + '">' + name + '</a>';
     agg += "\r\n" + description;
@@ -205,14 +205,44 @@ function create_classes_md(title, classes) {
       agg += "\r\n";
     }
     if (properties.length > 0) {
-      agg += "\r\n### Properties";
-      agg += "\r\n| Name | Type | Default | Description | ";
-      agg += "\r\n| --- | --- | --- | --- | ";
-      properties.filter(item => item.ignore == undefined).forEach(({ name, value, type, description }) => {
-        type = replaceAll(type, "|", ", ");
-        agg += "\r\n | `" + name + "` | " + type + " | `" + value + "` | " + (description || spaceCamelCaseName(name)) + " | ";
+      let groups = properties.reduce((agg, annotation) => {
+        let { group } = annotation;
+        agg[group] = agg[group] || [];
+        agg[group].push(annotation);
+        return agg;
+      }, {});
+
+      Object.keys(groups).sort(function (a, b) {
+        if (a == "undefined") {
+          a = "0";
+        }
+        if (b == "undefined") {
+          b = "0";
+        }
+        if (a < b) { return -1; }
+        if (a > b) { return 1; }
+        return 0;
+      }).forEach((group) => {
+        if (group == "undefined") {
+          agg += "\r\n### Properties";
+        } else {
+          agg += "\r\n### " + group + " Properties";
+        }
+        agg += "\r\n| Name | Type | Default | Description | ";
+        agg += "\r\n| --- | --- | --- | --- | ";
+        groups[group].filter(item => item.ignore == undefined).forEach(({ name, value, type, description }) => {
+          type = replaceAll(type, "|", ", ");
+          agg += "\r\n | `" + name + "` | " + type + " | `" + value + "` | " + (description || spaceCamelCaseName(name)) + " | ";
+        });
+        agg += "\r\n";
       });
-      agg += "\r\n";
+    }
+
+    if (callbackproperties != undefined && callbackproperties.length > 0) {
+      agg += "\r\n**Events**";
+      callbackproperties.filter(item => item.ignore == undefined).forEach(callback => {
+        agg += create_function_md(callback);
+      });
     }
     if (functions.length > 0) {
       agg += "\r\n### Functions";
@@ -297,6 +327,7 @@ function getDoc(annotations) {
     annotation.constants = annotation.items.filter(item => item.tag == "property" && item.constant == true).sort(sortAnnotationsCallback);
     annotation.properties = annotation.items.filter(item => item.tag == "property" && item.constant == undefined).sort(sortAnnotationsCallback);
     annotation.functions = annotation.items.filter(item => item.tag == "function");
+    annotation.callbackproperties = annotation.items.filter(item => item.tag == "event");
     annotation.callbacks = annotation.items.filter(item => item.tag == "callback");
     return annotation;
   });
@@ -438,6 +469,14 @@ function read_annotations(lines, parentTag) {
                   annotation.value = options.value;
                   annotation.signature = options.signature;
                 }
+              } else {
+                var classItemLine = lines.shift();
+                if (classItemLine != undefined && classItemLine.length > 0) {
+                  var options = get_class_item(classItemLine);
+                  annotation.tag = "event";
+                  annotation.name = options.name;
+                  annotation.signature = get_signature(annotation.params);
+                }
               }
             }
             break;
@@ -568,9 +607,12 @@ function read_annotation(lines) {
         annotation.name = options2.name;
         annotation.items = read_annotations(blockOfLines, tagName);
         break;
+      case "group":
+        annotation.tag = tagName;
+        annotation.group = get_tag_description(annotationLine);
       case "classdesc":
         if (annotationLine != "") {
-          var description = get_tag_description(annotationLine);;
+          var description = get_tag_description(annotationLine);
           if (descriptionTag.description == undefined) {
             descriptionTag.description = description;
           } else {

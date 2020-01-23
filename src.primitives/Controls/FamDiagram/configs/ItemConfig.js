@@ -29,6 +29,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   /**
    * Spouses items ids. The nodes of this collection create fake invisible child node, 
    * so all of them are being connected with common child connection line.
+   * 
    * @type {string[]}
    */
   this.spouses = [];
@@ -41,6 +42,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
    * If this property set to null, family layout algorithm will try to choose elements order via placing connected 
    * nodes as close to each other as posible.
    * 
+   * @group Order
    * @type {string}
    */
   this.relativeItem = null;
@@ -48,6 +50,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   /**
    * Relative placement type defines Left ot Right side placement of the node relative to the `relativeItem`.
    * 
+   * @group Order
    * @type {AdviserPlacementType}
    */
   this.placementType = primitives.common.AdviserPlacementType.Right;
@@ -55,6 +58,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   /**
    * Relative position defines order of elements placed relative to the same relative item on the same side.
    * 
+   * @group Order
    * @type {number}
    */
   this.position = null;
@@ -62,6 +66,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   /**
    * Title
    * 
+   * @group Template
    * @type {string}
    */
   this.title = null;
@@ -69,6 +74,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   /**
    * Description
    * 
+   * @group Template
    * @type {string}
    */
   this.description = null;
@@ -76,6 +82,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   /**
    * Image
    * 
+   * @group Template
    * @type {string}
    */
   this.image = null;
@@ -83,6 +90,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   /**
    * Context object
    * 
+   * @group Template
    * @type {object}
    */
   this.context = null;
@@ -90,6 +98,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   /**
    * Title background color. The same color is used for node marker when control has enabled auto fit mode.
    * 
+   * @group Template
    * @type {string}
    */
   this.itemTitleColor = primitives.common.Colors.RoyalBlue;
@@ -100,6 +109,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
    * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
    * So this option sets marker shape for individual node.
    * 
+   * @group Template
    * @type {ShapeType}
    */
   this.minimizedItemShapeType = null;
@@ -108,6 +118,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
    * Group Title. The group title on the side of the diagram node is one of controls default easy to use features.
    * It gives extra dimension for nodes visual grouping in the diagram.
    * 
+   * @group Group Title
    * @type {string}
    */
   this.groupTitle = null;
@@ -115,6 +126,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   /**
    * The group title background color.
    * 
+   * @group Group Title
    * @type {string}
    */
   this.groupTitleColor = primitives.common.Colors.RoyalBlue;
@@ -150,6 +162,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
    * True - shown
    * False - hidden
    * 
+   * @group Template
    * @type {Enabled}
    */
   this.hasButtons = primitives.common.Enabled.Auto;
@@ -159,6 +172,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
    * They are defined with a named configuration objects. See `templates` property of control's configuration object.
    * This option lets individually assign rendering template per individual node of the diagram.
    * 
+   * @group Template
    * @type {string}
    */
   this.templateName = null;
@@ -175,6 +189,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
    * True - shown regardless of node's visibility
    * False - hidden
    * 
+   * @group Callout
    * @type {Enabled}
    */
   this.showCallout = primitives.common.Enabled.Auto;
@@ -186,6 +201,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
    * Templates are HTML fragments containing layout and styles used to render diagram nodes.
    * They are defined with a named configuration objects. See `templates` property of control's configuration object.
    * 
+   * @group Callout
    * @type {string}
    */
   this.calloutTemplateName = null;
@@ -193,6 +209,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   /**
    * Marker label.
    * 
+   * @group Label
    * @type {string}
    */
   this.label = null;
@@ -211,6 +228,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
    * True - shows label regardless, even if it overlaps other labels and nodes.
    * False - hidden.
    * 
+   * @group Label
    * @type {Enabled}
    */
   this.showLabel = primitives.common.Enabled.Auto;
@@ -219,6 +237,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
    * Label size. Sets label's placeholder `div` size and controls conflict resolution if labels overlap each other.
    * If `null` then it is set to `labelSize` property of the control configuration.
    * 
+   * @group Label
    * @type {Size}
    */
   this.labelSize = null;
@@ -227,6 +246,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
    * Label orientation.
    * If `Auto` then it is set to `labelOrientation` property of the control configuration.
    * 
+   * @group Label
    * @type {TextOrientationType}
    */
   this.labelOrientation = primitives.text.TextOrientationType.Auto;
@@ -235,6 +255,7 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
    * Label placement. Sets label placement relative to the marker bounding rectangle.
    * If `Auto` then it is set to `labelPlacement` of the control configuration.
    * 
+   * @group Label
    * @type {PlacementType}
    */
   this.labelPlacement = primitives.common.PlacementType.Auto;

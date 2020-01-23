@@ -41,6 +41,7 @@ primitives.famdiagram.Config = function (name) {
    * on a single screen. But in that case, the items become small and unreadable as there is no scaling priority and the items
    * are just too small to be readable.
    * 
+   * @group Auto Layout
    * @type {PageFitMode}
    */
   this.pageFitMode = primitives.common.PageFitMode.FitToPage;
@@ -49,6 +50,7 @@ primitives.famdiagram.Config = function (name) {
    * Minimal nodes visibility in the diagram. If auto fit of the diagram into current page size is enabled, then
    * this option controls minimum allowed size of the diagram nodes.
    * 
+   * @group Auto Layout
    * @type {Visibility}
    */
   this.minimalVisibility = primitives.common.Visibility.Dot;
@@ -57,6 +59,7 @@ primitives.famdiagram.Config = function (name) {
    * Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction,
    * this is needed for Arabic support and various layouts.
    * 
+   * @group Auto Layout
    * @type {OrientationType}
    */
   this.orientationType = primitives.common.OrientationType.Top;
@@ -65,6 +68,7 @@ primitives.famdiagram.Config = function (name) {
    * Sets items vertical alignment relative to each other within one level of the hierarchy. 
    * It does not change anything if diagram nodes are all of the same size.
    * 
+   * @group Auto Layout
    * @type {VerticalAlignmentType}
    */
   this.verticalAlignment = primitives.common.VerticalAlignmentType.Middle;
@@ -73,6 +77,7 @@ primitives.famdiagram.Config = function (name) {
    * Sets arrows direction for connector lines. If this property set to `Parents` then arrows are drawn
    * from logical children towards logical parents. By default diagram has no arrows.
    * 
+   * @group Relation Lines
    * @type {GroupByType}
    */
   this.arrowsDirection = primitives.common.GroupByType.None;
@@ -81,6 +86,7 @@ primitives.famdiagram.Config = function (name) {
    * Show extra horizontal arrows on top of long horizontal connection lines for the easy visual tracing 
    * of relations between parents and children. By default it is off.
    * 
+   * @group Relation Lines
    * @type {boolean}
    */
   this.showExtraArrows = true;
@@ -88,6 +94,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Set minimum space for placement of extra arrows on horizontal connection lines. See `showExtraArrows` property.
    * 
+   * @group Relation Lines
    * @type {number}
    */
   this.extraArrowsMinimumSpace = 30;
@@ -95,6 +102,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * This property sets loose nodes alignment between rows. Nodes can be placed close towards parents or children.
    * 
+   * @group Auto Layout
    * @type {GroupByType}
    */
   this.groupByType = primitives.common.GroupByType.Children;
@@ -102,6 +110,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * This option keeps items at the same levels after connections bundling.
    * 
+   * @group Auto Layout
    * @type {boolean}
    */
   this.alignBylevels = true;
@@ -109,6 +118,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * This option enables automatic layout of nodes sharing the same set of parents and children in form of matrix.
    * 
+   * @group Auto Layout
    * @type {boolean}
    */
   this.enableMatrixLayout = false;
@@ -117,6 +127,7 @@ primitives.famdiagram.Config = function (name) {
    * Sets Minimum number of nodes needed to be shaped into matrix formtion. In order to shape nodes in 
    * form of matrix they should share the same set of parents and children. See `enableMatrixLayout` property.
    * 
+   * @group Auto Layout
    * @type {number}
    */
   this.minimumMatrixSize = 4;
@@ -126,6 +137,7 @@ primitives.famdiagram.Config = function (name) {
    * of columns does not exceed this property value. In order to shape nodes into matrix formation they should
    * share the same set of parents and children. See `enableMatrixLayout` property.
    * 
+   * @group Auto Layout
    * @type {number}
    */
   this.maximumColumnsInMatrix = 6;
@@ -133,6 +145,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Set this property to enable hiding of direct connectors to grand parents. It helps to reduce diagrams connectors layout complexity.
    * 
+   * @group Auto Layout
    * @type {boolean}
    */
   this.hideGrandParentsConnectors = false;
@@ -140,6 +153,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Set style of squared connectors with custom elbows.
    * 
+   * @group Relation Lines
    * @type {ElbowType}
    */
   this.elbowType = primitives.common.ElbowType.Round;
@@ -147,6 +161,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * The bevel size of squared connector lines.
    * 
+   * @group Relation Lines
    * @type {number}
    */
   this.bevelSize = 4;
@@ -154,6 +169,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * The size of dot markers placed in the elbows of connector lines.
    * 
+   * @group Relation Lines
    * @type {number}
    */
   this.elbowDotSize = 4;
@@ -257,6 +273,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Selection check box label. See `hasSelectorCheckbox` and `selectedItems` properties.
    * 
+   * @group Templates
    * @type {string}
    */
   this.selectCheckBoxLabel = "Selected";
@@ -269,6 +286,7 @@ primitives.famdiagram.Config = function (name) {
    * So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items
    * of the diagram in full size and draw all other diagram nodes as markers.
    *
+   * @group Auto Layout
    * @type {SelectionPathMode}
    */
   this.selectionPathMode = primitives.common.SelectionPathMode.None;
@@ -284,6 +302,7 @@ primitives.famdiagram.Config = function (name) {
    * Collection of named templates used to define content for nodes, cursor and highlight.
    * By default control provides templates for all types of visual elements.
    * 
+   * @group Templates
    * @type {TemplateConfig[]}
    */
   this.templates = [];
@@ -292,6 +311,7 @@ primitives.famdiagram.Config = function (name) {
    * Name of the template used to render nodes in the diagram. See `templates` property. Template name
    * can be set individually for every node see `templateName` property of `ItemConfig`.
    * 
+   * @group Templates
    * @type {string}
    */
   this.defaultTemplateName = null;
@@ -299,6 +319,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Sets the name of template used to render label annotations. Label annotations are labels placed in layout of the diagram. 
    * 
+   * @group Templates
    * @type {string}
    */
   this.defaultLabelAnnotationTemplate = null;
@@ -310,6 +331,7 @@ primitives.famdiagram.Config = function (name) {
    * `True` - visible
    * `False` - hidden
    * 
+   * @group Templates
    * @type {Enabled}
    */
   this.hasButtons = primitives.common.Enabled.Auto;
@@ -319,6 +341,7 @@ primitives.famdiagram.Config = function (name) {
    * This gives you the possibility to try and see how context buttons work being placed inside of diagram layout.
    * This collection of buttons provides configuration properties for buttons rendered using HTML buttons elements.
    * 
+   * @group Templates
    * @type {ButtonConfig[]}
    */
   this.buttons = [];
@@ -454,6 +477,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Sets the spacing between rows.
    * 
+   * @group Intervals
    * @type {number}
    */
   this.normalLevelShift = 20;
@@ -461,6 +485,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Sets the spacing after the row containing nodes minimized down to markers.
    * 
+   * @group Intervals
    * @type {number}
    */
   this.dotLevelShift = 20;
@@ -468,6 +493,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Sets the spacing after the row containing nodes minimized down to lines.
    * 
+   * @group Intervals
    * @type {number}
    */
   this.lineLevelShift = 10;
@@ -475,6 +501,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Sets interval between nodes of the same row.
    * 
+   * @group Intervals
    * @type {number}
    */
   this.normalItemsInterval = 10;
@@ -482,6 +509,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Sets interval between nodes of the same row, minimized down to markers.
    * 
+   * @group Intervals
    * @type {number}
    */
   this.dotItemsInterval = 1;
@@ -489,6 +517,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Sets interval between nodes of the same row, minimized down to lines.
    * 
+   * @group Intervals
    * @type {number}
    */
   this.lineItemsInterval = 2;
@@ -497,6 +526,7 @@ primitives.famdiagram.Config = function (name) {
    * Set cousins interval multiplier. This values adds extra space between branches of the hierarchy.
    * For example nodes of the same parent have interval 20 and nodes of two different parents are going to have interval 100.
    * 
+   * @group Intervals
    * @type {number}
    */
   this.cousinsIntervalMultiplier = 5;
@@ -508,6 +538,7 @@ primitives.famdiagram.Config = function (name) {
    * so title can be unreadable if its color matches its background color. This property is created to auto resolve this issue
    * via automatic switch between two available font title colors.
    * 
+   * @group Templates
    * @type {string}
    */
   this.itemTitleFirstFontColor = primitives.common.Colors.White;
@@ -515,6 +546,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * The second font color of the title.
    * 
+   * @group Templates
    * @type {string}
    */
   this.itemTitleSecondFontColor = primitives.common.Colors.Navy;
@@ -527,6 +559,7 @@ primitives.famdiagram.Config = function (name) {
    * 
    * The default color of shape is the same as `itemTitleColor` property set for individual items.
    * 
+   * @group Templates
    * @type {ShapeType}
    */
   this.minimizedItemShapeType = primitives.common.ShapeType.None;
@@ -534,6 +567,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * The relations lines color. The control uses this lines color to render basic relations between nodes.
    * 
+   * @group Relation Lines
    * @type {string}
    */
   this.linesColor = primitives.common.Colors.Silver;
@@ -541,6 +575,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * The relations lines width
    * 
+   * @group Relation Lines
    * @type {number}
    */
   this.linesWidth = 1;
@@ -548,6 +583,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * The relations lines pattern
    * 
+   * @group Relation Lines
    * @type {LineType}
    */
   this.linesType = primitives.common.LineType.Solid;
@@ -559,6 +595,7 @@ primitives.famdiagram.Config = function (name) {
    * Set following properties: `highlightLinesColor`, `highlightLinesWidth` and `highlightLinesType` to
    * style highlighted lines.
    * 
+   * @group Relation Lines
    * @type {boolean}
    */
   this.showNeigboursConnectorsHighlighted = false;
@@ -567,6 +604,7 @@ primitives.famdiagram.Config = function (name) {
    * Sets highlight lines color. The diagram uses highlight lines to render highlighted relation lines between nodes.
    * See `showNeigboursConnectorsHighlighted` property.
    * 
+   * @group Relation Lines
    * @type {string}
    */
   this.highlightLinesColor = primitives.common.Colors.Red;
@@ -574,6 +612,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Sets highlight lines width. See `showNeigboursConnectorsHighlighted` property.
    * 
+   * @group Relation Lines
    * @type {number}
    */
   this.highlightLinesWidth = 1;
@@ -581,6 +620,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Sets highlight lines pattern. See `showNeigboursConnectorsHighlighted` property.
    * 
+   * @group Relation Lines
    * @type {LineType}
    */
   this.highlightLinesType = primitives.common.LineType.Solid;
@@ -590,6 +630,7 @@ primitives.famdiagram.Config = function (name) {
    * The purpose of this collection is to draw long horizontal parallel lines drawn between family branches in different styles.
    * If this collection is empty then default `linesColor`, `linesWidth` and `linesType` are used for all connector lines.
    * 
+   * @group Relation Lines
    * @type {PaletteItemConfig[]}
    */
   this.linesPalette = [];
@@ -597,6 +638,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Sets callout visibility.
    * 
+   * @group Callout
    * @type {boolean}
    */
   this.showCallout = true;
@@ -604,6 +646,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Sets visibility of the callout annotation depending on size of a node it is shown for. See `pageFitMode` property.
    * 
+   * @group Callout
    * @type {Visibility}
    */
   this.calloutMaximumVisibility = primitives.common.Visibility.Dot;
@@ -611,6 +654,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Callout annotation placement offset. Sets how far callout content is offset from the marker it is displayed for.
    * 
+   * @group Callout
    * @type {number}
    */
   this.calloutPlacementOffset = 100;
@@ -621,6 +665,7 @@ primitives.famdiagram.Config = function (name) {
    * Templates are HTML fragments containing layout and styles used to render diagram nodes.
    * They are defined with a named configuration objects. See `templates` property of control's configuration object.
    * 
+   * @group Callout
    * @type {string}
    */
   this.defaultCalloutTemplateName = null;
@@ -628,6 +673,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Callout annotation fill color.
    * 
+   * @group Callout
    * @type {string}
    */
   this.calloutfillColor = "#000000";
@@ -635,6 +681,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Callout annotation border color.
    * 
+   * @group Callout
    * @type {string}
    */
   this.calloutBorderColor = null;
@@ -642,6 +689,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Callout annotation border line offset.
    * 
+   * @group Callout
    * @type {number}
    */
   this.calloutOffset = 4;
@@ -649,6 +697,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Callout annotation corner radius.
    * 
+   * @group Callout
    * @type {number}
    */
   this.calloutCornerRadius = 4;
@@ -656,6 +705,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Callout annotation pointer width.
    * 
+   * @group Callout
    * @type {string}
    */
   this.calloutPointerWidth = "10%";
@@ -663,6 +713,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Callout annotation border line width.
    * 
+   * @group Callout
    * @type {number}
    */
   this.calloutLineWidth = 1;
@@ -670,6 +721,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Callout annotation opacity
    * 
+   * @group Callout
    * @type {number}
    */
   this.calloutOpacity = 0.2;
@@ -677,6 +729,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * The size of the panel containing context buttons.
    * 
+   * @group Templates
    * @type {number}
    */
   this.buttonsPanelSize = 28;
@@ -684,6 +737,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * The size of the panel containing group title.
    * 
+   * @group Group Titles
    * @type {number}
    */
   this.groupTitlePanelSize = 24;
@@ -691,6 +745,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * The size of the panel containing selection checkbox.
    * 
+   * @group Templates
    * @type {number}
    */
   this.checkBoxPanelSize = 24;
@@ -700,6 +755,7 @@ primitives.famdiagram.Config = function (name) {
    * The group title on the side of the diagram node is one of controls default easy to use features. It gives extra dimension 
    * for nodes visual grouping in the diagram.
    * 
+   * @group Group Titles
    * @type {AdviserPlacementType}
    */
   this.groupTitlePlacementType = primitives.common.AdviserPlacementType.Left;
@@ -707,6 +763,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Group titles orientation.
    * 
+   * @group Group Titles
    * @type {TextOrientationType}
    */
   this.groupTitleOrientation = primitives.text.TextOrientationType.RotateRight;
@@ -714,6 +771,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Group titles vertical alignment.
    * 
+   * @group Group Titles
    * @type {VerticalAlignmentType}
    */
   this.groupTitleVerticalAlignment = primitives.common.VerticalAlignmentType.Middle;
@@ -721,6 +779,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Group titles horizontal alignment.
    * 
+   * @group Group Titles
    * @type {HorizontalAlignmentType}
    */
   this.groupTitleHorizontalAlignment = primitives.common.HorizontalAlignmentType.Center;
@@ -728,6 +787,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * 	Group titles font size.
    * 
+   * @group Group Titles
    * @type {number}
    */
   this.groupTitleFontSize = "12px";
@@ -735,6 +795,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Group titles font family.
    * 
+   * @group Group Titles
    * @type {string}
    */
   this.groupTitleFontFamily = "Arial";
@@ -742,6 +803,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Group titles color. 
    * 
+   * @group Group Titles
    * @type {string}
    */
   this.groupTitleColor = primitives.common.Colors.RoyalBlue;
@@ -749,6 +811,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Group titles font weight: normal, bold
    * 
+   * @group Group Titles
    * @type {string}
    */
   this.groupTitleFontWeight = "normal";
@@ -756,6 +819,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Group titles font style: normal, italic
    * 
+   * @group Group Titles
    * @type {string}
    */
   this.groupTitleFontStyle = "normal";
@@ -803,6 +867,7 @@ primitives.famdiagram.Config = function (name) {
    * True - shows label regardless, even if it overlaps other labels and nodes.
    * False - hidden.
    * 
+   * @group Labels
    * @type {Enabled}
    */
   this.showLabels = primitives.common.Enabled.Auto;
@@ -811,6 +876,7 @@ primitives.famdiagram.Config = function (name) {
    * Label size. Sets labels placeholders `div`s size. It is needed to resolve labels overlapping.
    * If one label overlaps another label the or item it will be hidden.
    * 
+   * @group Labels
    * @type {Size}
    */
   this.labelSize = new primitives.common.Size(80, 24);
@@ -818,6 +884,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Sets labels offset from the merkers bounding rectangles.
    * 
+   * @group Labels
    * @type {number}
    */
   this.labelOffset = 1;
@@ -825,6 +892,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Labels orientation.
    * 
+   * @group Labels
    * @type {TextOrientationType}
    */
   this.labelOrientation = primitives.text.TextOrientationType.Horizontal;
@@ -832,6 +900,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Labels placement. Sets labels placement relative to the markers bounding rectangles.
    * 
+   * @group Labels
    * @type {PlacementType}
    */
   this.labelPlacement = primitives.common.PlacementType.Top;
@@ -839,6 +908,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Labels font size.
    * 
+   * @group Labels
    * @type {string}
    */
   this.labelFontSize = "10px";
@@ -846,6 +916,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Labels font family.
    * 
+   * @group Labels
    * @type {string}
    */
   this.labelFontFamily = "Arial";
@@ -853,6 +924,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Labels color
    * 
+   * @group Labels
    * @type {string}
    */
   this.labelColor = primitives.common.Colors.Black;
@@ -861,6 +933,7 @@ primitives.famdiagram.Config = function (name) {
    * Labels font weight
    * Font weight: normal, bold
    * 
+   * @group Labels
    * @type {string}
    */
   this.labelFontWeight = "normal";
@@ -868,6 +941,7 @@ primitives.famdiagram.Config = function (name) {
   /**
    * Labels font style. Font style: normal, italic
    * 
+   * @group Labels
    * @type {string}
    */
   this.labelFontStyle = "normal";
@@ -885,6 +959,7 @@ primitives.famdiagram.Config = function (name) {
    * In the auto size mode diagram controls its placeholder size itself,
    * it sets its size to accomodate all nodes and render them normally.
    * 
+   * @group Auto Layout
    * @type {Size}
    */
   this.autoSizeMinimum = new primitives.common.Size(800, 600);
@@ -894,6 +969,7 @@ primitives.famdiagram.Config = function (name) {
    * In the auto size mode diagram controls its placeholder size itself,
    * it sets its size to accomodate all nodes and render them normally.
    * 
+   * @group Auto Layout
    * @type {Size}
    */
   this.autoSizeMaximum = new primitives.common.Size(1024, 768);

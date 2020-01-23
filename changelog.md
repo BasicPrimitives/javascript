@@ -1,3 +1,5 @@
+#### Version 5.6.4
+* Updated IntelliSense API annotations
 #### Version 5.6.3
 * Fixed initial callout placement
 * Fixed neighbours selection in family diagram having inactive nodes

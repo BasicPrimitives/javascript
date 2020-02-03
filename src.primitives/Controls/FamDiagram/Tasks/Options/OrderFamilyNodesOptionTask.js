@@ -11,7 +11,8 @@ primitives.famdiagram.OrderFamilyNodesOptionTask = function (optionsTask, defaul
         id: new primitives.common.ValueReader(["string", "number"], true),
         position: new primitives.common.ValueReader(["number"], true),
         relativeItem: new primitives.common.ValueReader(["string", "number"], true),
-        placementType: new primitives.common.EnumerationReader(primitives.common.AdviserPlacementType, false, defaultItemConfig.placementType)
+        placementType: new primitives.common.EnumerationReader(primitives.common.AdviserPlacementType, false, defaultItemConfig.placementType),
+        primaryParent: new primitives.common.ValueReader(["string", "number"], true),
       }),
       true,
       "id"

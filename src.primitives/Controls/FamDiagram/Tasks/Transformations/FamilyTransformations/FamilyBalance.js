@@ -92,14 +92,12 @@ primitives.famdiagram.FamilyBalance.prototype.FamLink = function (fromItem, toIt
 
 primitives.famdiagram.FamilyBalance.prototype.createOrgTree = function (params, data) {
   var index, len, index2, len2,
-    famItem,
     familiesGraph, /* primitives.common.graph */
     link, links,
     fromFamily,
     toFamily,
     sortedFamilies = [], sortedFamiliesHash,
     attachedFamilies,
-    userItem,
     familyId,
     family,
     familyRootItem,
@@ -108,8 +106,6 @@ primitives.famdiagram.FamilyBalance.prototype.createOrgTree = function (params, 
     rootItem, rootItems, bestRootItem, bestReference,
     spanningTree,
     extraGravities, grandChildren,
-    parsedId,
-    itemsHavingSpouses, spouses,
     orgItemRoot,
     famItemsExtracted,
     families = [],
@@ -127,7 +123,7 @@ primitives.famdiagram.FamilyBalance.prototype.createOrgTree = function (params, 
 			/* extractOrgChart method extracts hiearchy of family members starting from grandParent and takes only non extracted family items 
 			 * For every extracted item it assigns its familyId, it is used for building families relations graph and finding cross family links
 			*/
-      this.extractOrgChart(grandParentId, params.logicalFamily, params.defaultItemConfig, data.orgTree, data.orgPartners, data.itemByChildrenKey, famItemsExtracted, family);
+      this.extractOrgChart(grandParentId, params.logicalFamily, params.primaryParents, params.defaultItemConfig, data.orgTree, data.orgPartners, data.itemByChildrenKey, famItemsExtracted, family);
       families.push(family);
       families2.push(family);
       familyId += 1;
@@ -745,7 +741,7 @@ primitives.famdiagram.FamilyBalance.prototype.attachFamilyToOrgChart = function 
   data.orgTree.adopt(rootItem.id, familyRoot.id, familyRoot);
 };
 
-primitives.famdiagram.FamilyBalance.prototype.extractOrgChart = function (grandParentId, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family) {
+primitives.famdiagram.FamilyBalance.prototype.extractOrgChart = function (grandParentId, logicalFamily, primaryParentsPath, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family) {
   var index, len,
     children = [], tempChildren,
     childItem,
@@ -762,24 +758,24 @@ primitives.famdiagram.FamilyBalance.prototype.extractOrgChart = function (grandP
   newOrgItem.hideChildrenConnection = grandParent.hideChildrenConnection;
   family.items.push(newOrgItem);
 
-  famItemsExtracted[grandParent.id] = true;
+  famItemsExtracted[grandParent.id] = grandParent;
   grandParent.familyId = family.id;
 
   /* extract its children */
-  children = this.extractChildren(grandParent, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family);
+  children = this.extractChildren(grandParent, logicalFamily, primaryParentsPath, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family);
 
   while (children.length > 0) {
     tempChildren = [];
     for (index = 0, len = children.length; index < len; index += 1) {
       childItem = children[index];
-      tempChildren = tempChildren.concat(this.extractChildren(childItem, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family));
+      tempChildren = tempChildren.concat(this.extractChildren(childItem, logicalFamily, primaryParentsPath, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family));
     }
 
     children = tempChildren;
   }
 };
 
-primitives.famdiagram.FamilyBalance.prototype.extractChildren = function (parentItem, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family) {
+primitives.famdiagram.FamilyBalance.prototype.extractChildren = function (parentItem, logicalFamily, primaryParentsPath, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family) {
   var result = [],
     firstChild = null,
     partnerItem = null,
@@ -801,6 +797,17 @@ primitives.famdiagram.FamilyBalance.prototype.extractChildren = function (parent
     family.links.push(new this.FamLink(parentItem.id, firstChild));
   } else {
     if (firstChild != null) {
+      if (primaryParentsPath.hasOwnProperty(firstChild)) {
+        var realParent = primaryParentsPath[firstChild];
+        if (realParent != parentItem.id) {
+          if (orgPartners[realParent] == null) {
+            orgPartners[realParent] = [];
+          }
+          orgPartners[realParent].push(parentItem.id);
+          family.links.push(new this.FamLink(parentItem.id, firstChild));
+          return result;
+        }
+      }
       itemByChildrenKey[firstChild] = parentItem;
     }
 

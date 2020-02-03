@@ -610,6 +610,7 @@ function read_annotation(lines) {
       case "group":
         annotation.tag = tagName;
         annotation.group = get_tag_description(annotationLine);
+        break;
       case "classdesc":
         if (annotationLine != "") {
           var description = get_tag_description(annotationLine);

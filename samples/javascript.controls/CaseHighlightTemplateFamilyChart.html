@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Highlight Template Family Chart</title>
+
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+  <style type="text/css">
+    .bp-item2 {
+      position: absolute;
+      overflow: visible;
+      /* redefine this atttribute in bp-item class in order to place items outside of boudaries*/
+      font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      box-sizing: content-box;
+    }
+
+    .bp-badge2 {
+      -moz-border-radius: 16px;
+      -webkit-border-radius: 16px;
+      -khtml-border-radius: 16px;
+      border-radius: 16px;
+      font-size: 18px;
+      line-height: 18px;
+      text-align: center;
+      text-decoration: none;
+      vertical-align: middle;
+      font-weight: bold;
+      font-family: Arial;
+      padding: 4px;
+      float: left;
+      width: 16px;
+      height: 16px;
+    }
+  </style>
+
+  <script type='text/javascript'>
+    var control;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var options = new primitives.famdiagram.Config();
+
+      var items = [
+        new primitives.famdiagram.ItemConfig({
+          id: 1,
+          title: "Scott Aasrud",
+          description: "VP, Public Sector",
+          image: "../images/photos/a.png",
+          highlightColor: "red",
+          badge: '1'
+        }),
+        new primitives.famdiagram.ItemConfig({
+          id: 2,
+          title: "Bruce Clift",
+          description: "VP, Private Sector",
+          image: "../images/photos/b.png",
+          highlightColor: "blue",
+          badge: '2'
+        }),
+        new primitives.famdiagram.ItemConfig({
+          id: 3,
+          parents: [1, 2],
+          title: "Ted Lucas",
+          description: "VP, Human Resources",
+          image: "../images/photos/c.png",
+          highlightColor: "green",
+          badge: '3'
+        }),
+        new primitives.famdiagram.ItemConfig({
+          id: 4,
+          parents: [1, 2],
+          title: "Fritz Stuger",
+          description: "Business Solutions, US",
+          image: "../images/photos/d.png",
+          highlightColor: "magenta",
+          badge: '4'
+        })
+      ];
+
+      options.items = items;
+      options.cursorItem = 1;
+      options.highlightItem = 1;
+      options.templates = [getNoteTemplate()];
+      options.onHighlightRender = onHighlightRender;
+      options.defaultTemplateName = "BadgeTemplate";
+      options.normalItemsInterval = 20; /*add space for badge */
+
+      control = primitives.famdiagram.Control(document.getElementById('basicdiagram'), options);
+
+
+      function onHighlightRender(event, data) {
+        switch (data.renderingMode) {
+          case primitives.common.RenderingMode.Create:
+            /* Initialize widgets here */
+            break;
+          case primitives.common.RenderingMode.Update:
+            /* Update widgets here */
+            break;
+        }
+        if (data.templateName == "BadgeTemplate") {
+          var itemConfig = data.context;
+          data.element.style.borderColor = itemConfig.highlightColor;
+
+
+          var badge = data.element.firstChild;
+          badge.textContent = itemConfig['badge'];
+          badge.style.backgroundColor = itemConfig.highlightColor;
+
+          var size = primitives.common.getInnerSize(data.element);
+          badge.style.left = (size.width - 10) + "px";
+        }
+      }
+
+      function getNoteTemplate() {
+        var result = new primitives.famdiagram.TemplateConfig();
+        result.name = "BadgeTemplate";
+
+        result.highlightPadding = new primitives.common.Thickness(4, 4, 2, 2);
+        result.highlightBorderWidth = 2;
+        result.highlightTemplate = ["div",
+          {
+            "style": {
+              position: "absolute",
+              overflow: "visible",
+              width: (result.itemSize.width + result.highlightPadding.left + result.highlightPadding.right) + "px",
+              height: (result.itemSize.height + result.highlightPadding.top + result.highlightPadding.bottom) + "px",
+              "borderColor": "red",
+              "borderStyle": "solid",
+              "borderWidth": "2px",
+              "MozBorderRadius": "4px",
+              "WebkitBorderRadius": "4px",
+              "borderRadius": "4px"
+            },
+            "class": ["bp-item2", "bp-corner-all", "bp-cursor-frame"]
+          },
+          ["div",
+            {
+              name: 'badge',
+              style: {
+                top: "45px",
+                left: "114px",
+                zIndex: 1000,
+                backgroundColor: "green",
+                color: "white"
+              },
+              "class": ["bp-badge2", "bp-item"]
+            }
+          ]
+        ];
+
+        return result;
+      }
+    });
+
+  </script>
+</head>
+
+<body>
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+
+</html>

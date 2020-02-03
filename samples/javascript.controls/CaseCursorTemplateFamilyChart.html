@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Cursor Template Family Chart</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+  <style type="text/css">
+    .bp-item2 {
+      position: absolute;
+      overflow: visible;
+      /* redefine this atttribute in bp-item class in order to place items outside of boudaries*/
+      font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      box-sizing: content-box;
+    }
+
+    .bp-badge2 {
+      -moz-border-radius: 16px;
+      -webkit-border-radius: 16px;
+      -khtml-border-radius: 16px;
+      border-radius: 16px;
+      font-size: 18px;
+      line-height: 18px;
+      text-align: center;
+      text-decoration: none;
+      vertical-align: middle;
+      font-weight: bold;
+      font-family: Arial;
+      padding: 4px;
+      float: left;
+      width: 16px;
+      height: 16px;
+    }
+  </style>
+
+  <script type="text/javascript">
+    var control;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var options = new primitives.famdiagram.Config();
+      options.hasSelectorCheckbox = primitives.common.Enabled.False;
+      options.hasButtons = primitives.common.Enabled.False;
+      options.templates = [getCursorTemplate()];
+      options.onCursorRender = onCursorRender;
+      options.defaultTemplateName = "CursorTemplate";
+      options.normalItemsInterval = 20; /*add space for badge */
+
+      var items = [
+        new primitives.famdiagram.ItemConfig({
+          id: 1,
+          title: "Scott Aasrud",
+          description: "VP, Public Sector",
+          image: "../images/photos/a.png",
+          badge: '1'
+        }),
+        new primitives.famdiagram.ItemConfig({
+          id: 2,
+          title: "Bruce Clift",
+          description: "VP, Private Sector",
+          image: "../images/photos/b.png",
+          badge: '2'
+        }),
+        new primitives.famdiagram.ItemConfig({
+          id: 3,
+          parents: [1, 2],
+          title: "Ted Lucas",
+          description: "VP, Human Resources",
+          image: "../images/photos/c.png",
+          badge: '3'
+        }),
+        new primitives.famdiagram.ItemConfig({
+          id: 4,
+          parents: [1, 2],
+          title: "Fritz Stuger",
+          description: "Business Solutions, US",
+          image: "../images/photos/d.png",
+          badge: '4'
+        })
+      ];
+
+      options.items = items;
+      options.cursorItem = 1;
+
+      control = primitives.famdiagram.Control(document.getElementById("basicdiagram"), options);
+    });
+
+
+
+    function getCursorTemplate() {
+      var result = new primitives.famdiagram.TemplateConfig();
+      result.name = "CursorTemplate";
+
+      result.cursorTemplate = ["div",
+        {
+          name: 'cursorBorder',
+          width: (result.itemSize.width + result.cursorPadding.left + result.cursorPadding.right) + "px",
+          height: (result.itemSize.height + result.cursorPadding.top + result.cursorPadding.bottom) + "px",
+          "border-width": result.cursorBorderWidth + "px",
+          "class": ["bp-item2", "bp-corner-all", "bp-cursor-frame"]
+        },
+        ["div",
+          {
+            name: 'badge',
+            style: {
+              top: "45px",
+              left: "114px",
+              zIndex: 1000,
+              backgroundColor: "green",
+              color: "white"
+            },
+            "class": ["bp-badge2", "bp-item"]
+          }
+        ]
+      ];
+
+      return result;
+    }
+
+    function onCursorRender(event, data) {
+      switch (data.renderingMode) {
+        case primitives.common.RenderingMode.Create:
+          break;
+        case primitives.common.RenderingMode.Update:
+          /* Update widgets here */
+          break;
+      }
+
+      var itemConfig = data.context;
+      var element = data.element;
+
+      if (data.templateName == "CursorTemplate") {
+        var itemConfig = data.context;
+
+        element.firstChild.textContent = itemConfig.badge;
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+
+</html>

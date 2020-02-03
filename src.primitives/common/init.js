@@ -8,7 +8,7 @@
 
 var primitives = {
   common: {
-    version: "5.6.4"
+    version: "5.7.0"
   },
   orgdiagram: {},
   famdiagram: {},

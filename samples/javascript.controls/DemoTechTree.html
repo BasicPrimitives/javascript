@@ -10,18 +10,16 @@
   <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
   <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
   <script type="text/javascript" src="common/helpers.js"></script>
-  <script type="text/javascript" src="../data/dependencies.js"></script>
+  <script type="text/javascript" src="../data/techtree.js"></script>
 
   <script type="text/javascript">
     var control = null;
     var timer;
-    var fromItem = 0;
-    var toItem = 0;
 
     var optionsRender = primitives.helpers.controls.getFamDiagramOptionsRender([], {
       /* Family Diagram Specific Options */
       neighboursSelectionMode: primitives.common.NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses,
-      groupByType: primitives.common.GroupByType.Children,
+      groupByType: primitives.common.GroupByType.Parents,
       alignBylevels: "true",
       hideGrandParentsConnectors: "false",
 
@@ -37,7 +35,7 @@
         zOrderType: primitives.common.ZOrderType.Auto
       },
       /* Layout */
-      pageFitMode: primitives.common.PageFitMode.FitToPage,
+      pageFitMode: primitives.common.PageFitMode.None,
       orientationType: primitives.common.OrientationType.Left,
       verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
       horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
@@ -48,8 +46,8 @@
       selectionPathMode: primitives.common.SelectionPathMode.FullStack,
 
       hasButtons: primitives.common.Enabled.True,
-      hasSelectorCheckbox: primitives.common.Enabled.True,
-      selectCheckBoxLabel: "Selected",
+      hasSelectorCheckbox: primitives.common.Enabled.False,
+      selectCheckBoxLabel: "Pinned",
       itemTitleFirstFontColor: primitives.common.Colors.White,
       itemTitleSecondFontColor: primitives.common.Colors.White,
       buttonsPanelSize: 28,
@@ -85,8 +83,8 @@
       dotLevelShift: 12,
       lineLevelShift: 12,
       normalItemsInterval: 12,
-      dotItemsInterval: 6,
-      lineItemsInterval: 6,
+      dotItemsInterval: 12,
+      lineItemsInterval: 20,
       cousinsIntervalMultiplier: 1,
 
       /* Connectors */
@@ -156,23 +154,14 @@
       var options = optionsRender.getValues();
 
       primitives.common.mergeObjects(options, {
-        templates: [getDefaultTemplate(options)],
-        defaultTemplateName: "defaultTemplate",
-        buttons: [
-          new primitives.famdiagram.ButtonConfig("to", "ui-icon-circle-triangle-w", "to"),
-          new primitives.famdiagram.ButtonConfig("from", "ui-icon-circle-triangle-e", "from")
-        ],
-        linesPalette: [
-          new primitives.famdiagram.PaletteItemConfig({ lineColor: "#C6C6C6", lineWidth: 1, lineType: primitives.common.LineType.Solid }), //1
-          new primitives.famdiagram.PaletteItemConfig({ lineColor: "#A5A5A5", lineWidth: 1, lineType: primitives.common.LineType.Dashed }), //4
-          new primitives.famdiagram.PaletteItemConfig({ lineColor: "#848484", lineWidth: 1, lineType: primitives.common.LineType.Solid }), //7
-          new primitives.famdiagram.PaletteItemConfig({ lineColor: "#646464", lineWidth: 1, lineType: primitives.common.LineType.Dashed }), //10
-          new primitives.famdiagram.PaletteItemConfig({ lineColor: "#454545", lineWidth: 1, lineType: primitives.common.LineType.Solid }) //13
-        ]
+        templates: [getUnitTemplate(), getCalloutUnitTemplate(), getDotTemplate()],
+        defaultTemplateName: "UnitTemplate",
+        defaultCalloutTemplateName: "CalloutUnitTemplate",
+        onItemRender: onTemplateRender,
+        arrowsDirection: primitives.common.GroupByType.Children,
       })
 
       primitives.common.mergeObjects(options, {
-        onButtonClick: onButtonClick,
         onCursorChanging: onCursorChanging,
         onCursorChanged: onCursorChanged,
         onHighlightChanging: onHighlightChanging,
@@ -180,23 +169,46 @@
         onSelectionChanged: onSelectionChanged
       });
 
-      connectorAnnotation = {
-        annotationType: primitives.common.AnnotationType.Connector,
-        fromItem: 5,
-        toItem: 8,
-        label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
-        labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
-        connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-        color: primitives.common.Colors.Red,
-        offset: 5,
-        lineWidth: 2,
-        lineType: primitives.common.LineType.Dashed
-      };
+      var annotations = [];
+      // Populate annotations to visualize family ordering references
+      for (var index = 0; index < famdata.length; index += 1) {
+        var item = famdata[index];
+        if (item.relativeItem != null) {
+          annotations.push({
+            annotationType: primitives.common.AnnotationType.Connector,
+            fromItem: item.id,
+            toItem: item.relativeItem,
+            label: null,
+            connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
+            color: primitives.common.Colors.Blue,
+            offset: -5,
+            lineWidth: 3,
+            lineType: primitives.common.LineType.Dotted,
+            connectorPlacementType: primitives.common.ConnectorPlacementType.Straight,
+            selectItems: false
+          });
+        }
+        if (item.primaryParent != null) {
+          annotations.push({
+            annotationType: primitives.common.AnnotationType.Connector,
+            fromItem: item.id,
+            toItem: item.primaryParent,
+            label: null,
+            connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
+            color: primitives.common.Colors.Red,
+            offset: -5,
+            lineWidth: 3,
+            lineType: primitives.common.LineType.Dotted,
+            connectorPlacementType: primitives.common.ConnectorPlacementType.Offbeat,
+            selectItems: false
+          });
+        }
+      }
 
       primitives.common.mergeObjects(options, {
         items: famdata,
-        cursorItem: 72,
-        annotations: [connectorAnnotation]
+        cursorItem: 1,
+        annotations: annotations
       }); // See dependencies.js
 
       return options;
@@ -270,35 +282,8 @@
       document.getElementById("southpanel").innerHTML = message;
     }
 
-    function onButtonClick(e, data) {
-      switch (data.name) {
-        case "from":
-          fromItem = data.context.id;
-          break;
-        case "to":
-          toItem = data.context.id;
-          break;
-      }
-
-      var options = optionsRender.getValues();
-
-      updateAnnotation(fromItem, toItem, options);
-
-      control.update(primitives.common.UpdateMode.Refresh);
-    }
-
-    function updateAnnotation(fromItem, toItem, options) {
-      if (connectorAnnotation != null) {
-        // this is hack, we update annotation definition inside of the control bypassing API
-        // Control makes shallow copy of config object, so we can preserve reference to objects and collections inside of it
-        if (fromItem != null && toItem != null) {
-          connectorAnnotation.fromItem = fromItem;
-          connectorAnnotation.toItem = toItem;
-        }
-
-        primitives.common.mergeObjects(connectorAnnotation, options.AnnotationOptions);
-      }
-    }
+    var options = optionsRender.getValues();
+    control.update(primitives.common.UpdateMode.Refresh);
 
     function updateHighlightPathAnnotations(data) {
       var annotations = control.getOption("annotations");
@@ -339,6 +324,179 @@
         }, 300);
       }
     }
+
+    function onTemplateRender(event, data) {
+      var itemConfig = data.context,
+        element = data.element;
+
+      if (data.templateName == "dot") {
+        var titleBackground = element;
+        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+      }
+
+      if (data.templateName == "UnitTemplate") {
+        var titleBackground = element.firstChild;
+        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+
+        var title = titleBackground.firstChild;
+        title.textContent = itemConfig.title;
+      }
+
+      if (data.templateName == "CalloutUnitTemplate") {
+        var titleBackground = element.firstChild;
+        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+
+        var title = element.childNodes[1];
+        title.textContent = itemConfig.title;
+
+        var description = element.childNodes[2];
+        description.textContent = itemConfig.description;
+      }
+    }
+
+    function getDotTemplate() {
+      var result = new primitives.famdiagram.TemplateConfig();
+      result.name = "dot";
+
+      result.isActive = false;
+      result.itemSize = new primitives.common.Size(8, 8);
+      result.minimizedItemSize = new primitives.common.Size(8, 8);
+      result.minimizedItemCornerRadius = 4;
+      result.minimizedItemLineWidth = 1;
+      result.minimizedItemLineType = primitives.common.LineType.Solid;
+      result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
+      result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
+      result.minimizedItemOpacity = 0.7; // Shape background opacity
+
+      result.itemTemplate = ["div", {
+        "style": {
+          top: "2px",
+          left: "2px",
+          width: result.itemSize.width + "px",
+          height: result.itemSize.height + "px"
+        },
+        "class": ["bp-corner-all"]
+      }];
+
+      return result;
+    }
+
+    function getUnitTemplate() {
+      var result = new primitives.famdiagram.TemplateConfig();
+      result.name = "UnitTemplate";
+
+      result.itemSize = new primitives.common.Size(164, 34);
+      result.minimizedItemSize = new primitives.common.Size(8, 8);
+      result.minimizedItemCornerRadius = 4;
+      result.minimizedItemLineWidth = 1;
+      result.minimizedItemLineType = primitives.common.LineType.Solid;
+      result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
+      result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
+      result.minimizedItemOpacity = 0.7; // Shape background opacity
+
+      result.itemTemplate = ["div",
+        {
+          "style": {
+            width: result.itemSize.width + "px",
+            height: result.itemSize.height + "px"
+          },
+          "class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+        },
+        ["div",
+          {
+            "name": "titleBackground",
+            "class": ["bp-item", "bp-corner-all", "bp-title-frame"],
+            "style": {
+              top: "2px",
+              left: "2px",
+              width: "160px",
+              height: "30px"
+            }
+          },
+          ["div",
+            {
+              "name": "title",
+              "class": "bp-item",
+              "style": {
+                top: "2px",
+                left: "2px",
+                width: "160px",
+                height: "34px",
+                fontSize: "12px"
+              }
+            }
+          ]
+        ]
+      ];
+
+      return result;
+    }
+
+    function getCalloutUnitTemplate() {
+      var result = new primitives.famdiagram.TemplateConfig();
+      result.name = "CalloutUnitTemplate";
+
+      result.itemSize = new primitives.common.Size(320, 60);
+      result.minimizedItemSize = new primitives.common.Size(8, 8);
+      result.minimizedItemCornerRadius = 4;
+      result.minimizedItemLineWidth = 1;
+      result.minimizedItemLineType = primitives.common.LineType.Solid;
+      result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
+      result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
+      result.minimizedItemOpacity = 0.7; // Shape background opacity
+
+      result.itemTemplate = ["div",
+        {
+          "style": {
+            top: "2px",
+            left: "2px",
+            width: result.itemSize.width + "px",
+            height: result.itemSize.height + "px"
+          },
+          "class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+        },
+        ["div",
+          {
+            "name": "titleBackground",
+            "style": {
+              top: "2px",
+              left: "2px",
+              width: "316px",
+              height: "4px"
+            },
+            "class": ["bp-item", "bp-corner-all", "bp-title-frame"]
+          }
+        ],
+        ["div",
+          {
+            name: "title",
+            "class": "bp-item",
+            "style": {
+              top: "8px",
+              left: "2px",
+              width: "312px",
+              height: "24px",
+              fontSize: "12px"
+            }
+          }
+        ],
+        ["div",
+          {
+            name: "description",
+            "class": "bp-item",
+            "style": {
+              top: "36px",
+              left: "4px",
+              width: "312px",
+              height: "36px",
+              fontSize: "10px"
+            }
+          }
+        ]
+      ];
+
+      return result;
+    }
   </script>
   <!-- /header -->
 </head>
@@ -347,9 +505,31 @@
   <div
     style="position: absolute; width: 400px; left: 0px; top: 0px; bottom: 50px; padding: 0px; margin: 0px; border-style: none; font-size: 14px; overflow: scroll; -webkit-overflow-scrolling: touch;">
     <div id="westpanel" style="padding: 5px; margin: 5px; font: normal 12px verdana, areal;">
-      <h2>Dependency Diagram Demo</h2>
-      <p>DAG visualization, Bayesian Networks Visualization in form of multi-parent hierarchical chart. This demo has
-        over 400 nodes.</p>
+      <h2>Dependency Graph Visualization Demo</h2>
+      <p>On the right you may see a demo of a dependency graph. It contains around 170 nodes with some of the nodes
+        being arranged into multiple
+        explicit
+        sequences that show the evolution and order of dependency of said nodes.
+        We need to display all of the node sequences together in one hierarchy meanwhile allowing the user to see the
+        seperate individual sequences and their nodes.
+        In order to accomplish this, we can set priority for how nodes should align under their parents. In a family
+        diagram every node may have multiple parents and by default
+        aligns itself to be equally distanced from all of them. In this case however, we are intrested in having nodes
+        be closer or farther away from a specific parent.
+        This is done by giving higher priority to one of its parents. Our family diagram provides the property
+        <b>primaryParent</b>
+        which can be applied to a node. Automatically indicating that the child node or nodes should be alligned closer
+        to said parent within the hierarchy. This property is optional and doesn't
+        change any node relations,
+        so if it is applied to a non-exsisting parent then it will simply be ignored.</p>
+      <p>This alignment priority can then be used to create a full sequence, branch or chain of nodes within a grander
+        herarchy. This can be seen if you take a look at the sequence of flight related technologies starting from
+        "Subsonic flight" and ending with
+        "Cutting-Edge Aeronautics".</p>
+      <p>In the diagram red connection annotations display "primaryParent" references to enforce the hierarchy and
+        blue annotations display references enforcing the sorting of nodes within one group.</p>
+
+
     </div>
   </div>
   <div id="centerpanel"

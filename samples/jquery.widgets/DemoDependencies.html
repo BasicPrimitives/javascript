@@ -294,7 +294,7 @@
     function onHighlightChanging(e, data) {
       var message = (data.context != null) ? "User is hovering mouse over item <b>'" + data.context.title + "'</b>." : "";
       message += getParentsList(data);
-      updateHighlightPathAnnotations(data);
+
       jQuery("#southpanel").empty().append(message);
     }
 
@@ -307,6 +307,7 @@
     function onCursorChanging(e, data) {
       var message = "User is clicking on item '" + data.context.title + "'.";
       message += getParentsList(data);
+      updateHighlightPathAnnotations(data);
       jQuery("#southpanel").empty().append(message);
     }
 

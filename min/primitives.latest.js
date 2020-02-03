@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagrams v5.6.4
+ * @preserve Basic Primitives Diagrams v5.7.0
  * Copyright (c) 2013 - 2020 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -35,7 +35,7 @@
 
 var primitives = {
   common: {
-    version: "5.6.4"
+    version: "5.7.0"
   },
   orgdiagram: {},
   famdiagram: {},
@@ -8798,6 +8798,15 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   this.position = null;
 
   /**
+   * Primary parents id. Set this property to place item close to the selected primary parent in `parents` collection.
+   * If property set to null or referenced parent does not exists then this property is ignored.
+   * 
+   * @group Order
+   * @type {string}
+   */
+  this.primaryParent = null;
+
+  /**
    * Title
    * 
    * @group Template
@@ -9741,7 +9750,8 @@ primitives.famdiagram.OrderFamilyNodesOptionTask = function (optionsTask, defaul
         id: new primitives.common.ValueReader(["string", "number"], true),
         position: new primitives.common.ValueReader(["number"], true),
         relativeItem: new primitives.common.ValueReader(["string", "number"], true),
-        placementType: new primitives.common.EnumerationReader(primitives.common.AdviserPlacementType, false, defaultItemConfig.placementType)
+        placementType: new primitives.common.EnumerationReader(primitives.common.AdviserPlacementType, false, defaultItemConfig.placementType),
+        primaryParent: new primitives.common.ValueReader(["string", "number"], true),
       }),
       true,
       "id"
@@ -10002,14 +10012,12 @@ primitives.famdiagram.FamilyBalance.prototype.FamLink = function (fromItem, toIt
 
 primitives.famdiagram.FamilyBalance.prototype.createOrgTree = function (params, data) {
   var index, len, index2, len2,
-    famItem,
     familiesGraph, /* primitives.common.graph */
     link, links,
     fromFamily,
     toFamily,
     sortedFamilies = [], sortedFamiliesHash,
     attachedFamilies,
-    userItem,
     familyId,
     family,
     familyRootItem,
@@ -10018,8 +10026,6 @@ primitives.famdiagram.FamilyBalance.prototype.createOrgTree = function (params, 
     rootItem, rootItems, bestRootItem, bestReference,
     spanningTree,
     extraGravities, grandChildren,
-    parsedId,
-    itemsHavingSpouses, spouses,
     orgItemRoot,
     famItemsExtracted,
     families = [],
@@ -10037,7 +10043,7 @@ primitives.famdiagram.FamilyBalance.prototype.createOrgTree = function (params, 
 			/* extractOrgChart method extracts hiearchy of family members starting from grandParent and takes only non extracted family items 
 			 * For every extracted item it assigns its familyId, it is used for building families relations graph and finding cross family links
 			*/
-      this.extractOrgChart(grandParentId, params.logicalFamily, params.defaultItemConfig, data.orgTree, data.orgPartners, data.itemByChildrenKey, famItemsExtracted, family);
+      this.extractOrgChart(grandParentId, params.logicalFamily, params.primaryParents, params.defaultItemConfig, data.orgTree, data.orgPartners, data.itemByChildrenKey, famItemsExtracted, family);
       families.push(family);
       families2.push(family);
       familyId += 1;
@@ -10655,7 +10661,7 @@ primitives.famdiagram.FamilyBalance.prototype.attachFamilyToOrgChart = function 
   data.orgTree.adopt(rootItem.id, familyRoot.id, familyRoot);
 };
 
-primitives.famdiagram.FamilyBalance.prototype.extractOrgChart = function (grandParentId, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family) {
+primitives.famdiagram.FamilyBalance.prototype.extractOrgChart = function (grandParentId, logicalFamily, primaryParentsPath, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family) {
   var index, len,
     children = [], tempChildren,
     childItem,
@@ -10672,24 +10678,24 @@ primitives.famdiagram.FamilyBalance.prototype.extractOrgChart = function (grandP
   newOrgItem.hideChildrenConnection = grandParent.hideChildrenConnection;
   family.items.push(newOrgItem);
 
-  famItemsExtracted[grandParent.id] = true;
+  famItemsExtracted[grandParent.id] = grandParent;
   grandParent.familyId = family.id;
 
   /* extract its children */
-  children = this.extractChildren(grandParent, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family);
+  children = this.extractChildren(grandParent, logicalFamily, primaryParentsPath, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family);
 
   while (children.length > 0) {
     tempChildren = [];
     for (index = 0, len = children.length; index < len; index += 1) {
       childItem = children[index];
-      tempChildren = tempChildren.concat(this.extractChildren(childItem, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family));
+      tempChildren = tempChildren.concat(this.extractChildren(childItem, logicalFamily, primaryParentsPath, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family));
     }
 
     children = tempChildren;
   }
 };
 
-primitives.famdiagram.FamilyBalance.prototype.extractChildren = function (parentItem, logicalFamily, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family) {
+primitives.famdiagram.FamilyBalance.prototype.extractChildren = function (parentItem, logicalFamily, primaryParentsPath, defaultItemConfig, orgTree, orgPartners, itemByChildrenKey, famItemsExtracted, family) {
   var result = [],
     firstChild = null,
     partnerItem = null,
@@ -10711,6 +10717,17 @@ primitives.famdiagram.FamilyBalance.prototype.extractChildren = function (parent
     family.links.push(new this.FamLink(parentItem.id, firstChild));
   } else {
     if (firstChild != null) {
+      if (primaryParentsPath.hasOwnProperty(firstChild)) {
+        var realParent = primaryParentsPath[firstChild];
+        if (realParent != parentItem.id) {
+          if (orgPartners[realParent] == null) {
+            orgPartners[realParent] = [];
+          }
+          orgPartners[realParent].push(parentItem.id);
+          family.links.push(new this.FamLink(parentItem.id, firstChild));
+          return result;
+        }
+      }
       itemByChildrenKey[firstChild] = parentItem;
     }
 
@@ -11335,6 +11352,54 @@ primitives.famdiagram.UserDefinedNodesOrder.prototype.getUserDefinedPositions = 
     group: group
   };
 }
+
+/* /Controls/FamDiagram/Tasks/Transformations/FamilyTransformations/UserDefinedPrimaryNodes.js*/
+primitives.famdiagram.UserDefinedPrimaryParents = function () {
+
+};
+
+primitives.famdiagram.UserDefinedPrimaryParents.prototype.getUserDefinedPrimaryParents = function (items, family) {
+  var result = {};
+
+  var primaryParents = {};
+  for (var index = 0; index < items.length; index += 1) {
+    var item = items[index];
+    if (item.primaryParent != null) {
+      primaryParents[item.id] = item.primaryParent;
+    }
+  }
+
+  for (var nodeid in primaryParents) {
+    var primaryParent = primaryParents[nodeid];
+    var trace = {}
+
+    var nodes = [nodeid];
+    while (nodes.length > 0) {
+      var tempNodes = [];
+      for (var index = 0; index < nodes.length; index += 1) {
+        nodeid = nodes[index];
+        family.loopParents(this, nodeid, function (parentid, parent) {
+          trace[parentid] = nodeid;
+          if (parentid == primaryParent) {
+            while (trace[parentid] != null) {
+              result[trace[parentid]] = parentid;
+              parentid = trace[parentid];
+            }
+            tempNodes = [];
+            return family.BREAK;
+          }
+          if (parent.isVisible == false) {
+            tempNodes.push(parentid);
+          }
+          return family.SKIP;
+        })
+      }
+      nodes = tempNodes;
+    }
+  }
+  return result;
+}
+
 
 /* /Controls/FamDiagram/Tasks/Transformations/Layouts/BaseLayout.js*/
 primitives.common.BaseLayout = function (params, options) {
@@ -12746,6 +12811,7 @@ primitives.famdiagram.OrderFamilyNodesTask = function (orderFamilyNodesOptionTas
   },
     _familyBalance = new primitives.famdiagram.FamilyBalance(),
     _familyMatrixesExtractor = new primitives.famdiagram.FamilyMatrixesExtractor(false),
+    _userDefinedPrimaryParents = new primitives.famdiagram.UserDefinedPrimaryParents(),
     _nullTreeLevelConnectorStackSize = new primitives.orgdiagram.TreeLevelConnectorStackSize();
 
   function process(debug) {
@@ -12756,6 +12822,7 @@ primitives.famdiagram.OrderFamilyNodesTask = function (orderFamilyNodesOptionTas
       bundles = [];
 
     var orderFamilyNodesOptions = orderFamilyNodesOptionTask.getOptions();
+
     var options = {
       enableMatrixLayout: orderFamilyNodesOptions.enableMatrixLayout,
       minimumMatrixSize: orderFamilyNodesOptions.minimumMatrixSize,
@@ -12775,7 +12842,8 @@ primitives.famdiagram.OrderFamilyNodesTask = function (orderFamilyNodesOptionTas
       maximumId: maximumId,
       defaultItemConfig: defaultItemConfig,
       itemsPositions: userDefinedNodesOrderTask.getPositions(),
-      itemsGroups: userDefinedNodesOrderTask.getGroups()
+      itemsGroups: userDefinedNodesOrderTask.getGroups(),
+      primaryParents: _userDefinedPrimaryParents.getUserDefinedPrimaryParents(orderFamilyNodesOptions.items, logicalFamily)
     };
 
     var balanceResult = _familyBalance.balance(balanceParams);

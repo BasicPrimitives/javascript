@@ -5,8 +5,12 @@ const exec = util.promisify(require('child_process').exec);
 
 var screenshots = [
   {
-    url: "http://localhost:3000/familychartitemsordering",
-    imageName: "FamilyNodesOrdering.png"
+    url: "http://localhost/primitives/samples/javascript.controls/CaseFamilyChartItemsOrdering.html",
+    imageName: "CaseFamilyChartItemsOrdering.png"
+  },
+  {
+    url: "http://localhost/primitives/samples/javascript.controls/CaseFamilyChartPrimaryParent.html",
+    imageName: "CaseFamilyChartPrimaryParent.png"
   },
   {
     url: "http://localhost/primitives/samples/javascript.controls/CaseAdviserAndAssistantItemTypes.html",

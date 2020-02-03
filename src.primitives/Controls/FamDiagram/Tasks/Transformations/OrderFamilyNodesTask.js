@@ -13,6 +13,7 @@ primitives.famdiagram.OrderFamilyNodesTask = function (orderFamilyNodesOptionTas
   },
     _familyBalance = new primitives.famdiagram.FamilyBalance(),
     _familyMatrixesExtractor = new primitives.famdiagram.FamilyMatrixesExtractor(false),
+    _userDefinedPrimaryParents = new primitives.famdiagram.UserDefinedPrimaryParents(),
     _nullTreeLevelConnectorStackSize = new primitives.orgdiagram.TreeLevelConnectorStackSize();
 
   function process(debug) {
@@ -23,6 +24,7 @@ primitives.famdiagram.OrderFamilyNodesTask = function (orderFamilyNodesOptionTas
       bundles = [];
 
     var orderFamilyNodesOptions = orderFamilyNodesOptionTask.getOptions();
+
     var options = {
       enableMatrixLayout: orderFamilyNodesOptions.enableMatrixLayout,
       minimumMatrixSize: orderFamilyNodesOptions.minimumMatrixSize,
@@ -42,7 +44,8 @@ primitives.famdiagram.OrderFamilyNodesTask = function (orderFamilyNodesOptionTas
       maximumId: maximumId,
       defaultItemConfig: defaultItemConfig,
       itemsPositions: userDefinedNodesOrderTask.getPositions(),
-      itemsGroups: userDefinedNodesOrderTask.getGroups()
+      itemsGroups: userDefinedNodesOrderTask.getGroups(),
+      primaryParents: _userDefinedPrimaryParents.getUserDefinedPrimaryParents(orderFamilyNodesOptions.items, logicalFamily)
     };
 
     var balanceResult = _familyBalance.balance(balanceParams);

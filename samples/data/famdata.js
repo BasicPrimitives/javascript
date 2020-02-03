@@ -956,4 +956,4 @@ var dataSetNames = {
   "Matrix Family Layout": "matrixLayout"
 };
 
-var defaultDataSetName = dataSetNames["2 Cross Relations"];
+var defaultDataSetName = dataSetNames["Side By Side"];

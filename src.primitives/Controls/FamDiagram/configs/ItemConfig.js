@@ -64,6 +64,15 @@ primitives.famdiagram.ItemConfig = function (arg0, arg1, arg2, arg3, arg4) {
   this.position = null;
 
   /**
+   * Primary parents id. Set this property to place item close to the selected primary parent in `parents` collection.
+   * If property set to null or referenced parent does not exists then this property is ignored.
+   * 
+   * @group Order
+   * @type {string}
+   */
+  this.primaryParent = null;
+
+  /**
    * Title
    * 
    * @group Template

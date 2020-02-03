@@ -34,106 +34,106 @@ Family Chart configuration object. Use this object as a reference for available 
 ### Auto Layout Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `alignBylevels` | boolean | `true` | This option keeps items at the same levels after connections bundling. Auto Layout | 
- | `autoSizeMaximum` | Size | `{1024, 768}` | Sets maximum size the diagram can expand itself in autosize mode. See `pageFitMode` property. In the auto size mode diagram controls its placeholder size itself, it sets its size to accomodate all nodes and render them normally. Auto Layout | 
- | `autoSizeMinimum` | Size | `{800, 600}` | Sets minimum size the diagram can shrink itself in autosize mode. See `pageFitMode` property. In the auto size mode diagram controls its placeholder size itself, it sets its size to accomodate all nodes and render them normally. Auto Layout | 
- | `enableMatrixLayout` | boolean | `false` | This option enables automatic layout of nodes sharing the same set of parents and children in form of matrix. Auto Layout | 
- | `groupByType` | GroupByType | `2` | This property sets loose nodes alignment between rows. Nodes can be placed close towards parents or children. Auto Layout | 
- | `hideGrandParentsConnectors` | boolean | `false` | Set this property to enable hiding of direct connectors to grand parents. It helps to reduce diagrams connectors layout complexity. Auto Layout | 
- | `maximumColumnsInMatrix` | number | `6` | Sets maximum number of columns in the matrix formation. The matrix formation stays squared as long as total number of columns does not exceed this property value. In order to shape nodes into matrix formation they should share the same set of parents and children. See `enableMatrixLayout` property. Auto Layout | 
- | `minimalVisibility` | Visibility | `2` | Minimal nodes visibility in the diagram. If auto fit of the diagram into current page size is enabled, then this option controls minimum allowed size of the diagram nodes. Auto Layout | 
- | `minimumMatrixSize` | number | `4` | Sets Minimum number of nodes needed to be shaped into matrix formtion. In order to shape nodes in form of matrix they should share the same set of parents and children. See `enableMatrixLayout` property. Auto Layout | 
- | `orientationType` | OrientationType | `0` | Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction, this is needed for Arabic support and various layouts. Auto Layout | 
- | `pageFitMode` | PageFitMode | `3` | Page fit mode. Minimizing nodes into markers and labels. This option provides a special mode that renders the diagram nodes in the form of markers. This is a highly scalable form that is capable of rendering large numbers of nodes while not affecting the rendering performance. With this, huge diagrams can be fit into avaialable screen space. When using a graphics editor to manually draw your diagrams, it is common place to have large gaps between the nodes. This can make the diagram/chart unreadable, hard to edit and navigate. On top of that, on a large scale the diagram could have screen size intervals between items. Admittedly the computer UI does allow the user to scale and fit the diagram in order to visualize it on a single screen. But in that case, the items become small and unreadable as there is no scaling priority and the items are just too small to be readable. Auto Layout | 
- | `selectionPathMode` | SelectionPathMode | `0` | Selection path mode. This property controls visibility of nodes between cursor and the root of the diagram in the auto fit mode. It allows to draw them in full size regardless of available space and auto fit mode. The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers. So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items of the diagram in full size and draw all other diagram nodes as markers. Auto Layout | 
- | `verticalAlignment` | VerticalAlignmentType | `1` | Sets items vertical alignment relative to each other within one level of the hierarchy. It does not change anything if diagram nodes are all of the same size. Auto Layout | 
+ | `alignBylevels` | boolean | `true` | This option keeps items at the same levels after connections bundling. | 
+ | `autoSizeMaximum` | Size | `{1024, 768}` | Sets maximum size the diagram can expand itself in autosize mode. See `pageFitMode` property. In the auto size mode diagram controls its placeholder size itself, it sets its size to accomodate all nodes and render them normally. | 
+ | `autoSizeMinimum` | Size | `{800, 600}` | Sets minimum size the diagram can shrink itself in autosize mode. See `pageFitMode` property. In the auto size mode diagram controls its placeholder size itself, it sets its size to accomodate all nodes and render them normally. | 
+ | `enableMatrixLayout` | boolean | `false` | This option enables automatic layout of nodes sharing the same set of parents and children in form of matrix. | 
+ | `groupByType` | GroupByType | `2` | This property sets loose nodes alignment between rows. Nodes can be placed close towards parents or children. | 
+ | `hideGrandParentsConnectors` | boolean | `false` | Set this property to enable hiding of direct connectors to grand parents. It helps to reduce diagrams connectors layout complexity. | 
+ | `maximumColumnsInMatrix` | number | `6` | Sets maximum number of columns in the matrix formation. The matrix formation stays squared as long as total number of columns does not exceed this property value. In order to shape nodes into matrix formation they should share the same set of parents and children. See `enableMatrixLayout` property. | 
+ | `minimalVisibility` | Visibility | `2` | Minimal nodes visibility in the diagram. If auto fit of the diagram into current page size is enabled, then this option controls minimum allowed size of the diagram nodes. | 
+ | `minimumMatrixSize` | number | `4` | Sets Minimum number of nodes needed to be shaped into matrix formtion. In order to shape nodes in form of matrix they should share the same set of parents and children. See `enableMatrixLayout` property. | 
+ | `orientationType` | OrientationType | `0` | Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction, this is needed for Arabic support and various layouts. | 
+ | `pageFitMode` | PageFitMode | `3` | Page fit mode. Minimizing nodes into markers and labels. This option provides a special mode that renders the diagram nodes in the form of markers. This is a highly scalable form that is capable of rendering large numbers of nodes while not affecting the rendering performance. With this, huge diagrams can be fit into avaialable screen space. When using a graphics editor to manually draw your diagrams, it is common place to have large gaps between the nodes. This can make the diagram/chart unreadable, hard to edit and navigate. On top of that, on a large scale the diagram could have screen size intervals between items. Admittedly the computer UI does allow the user to scale and fit the diagram in order to visualize it on a single screen. But in that case, the items become small and unreadable as there is no scaling priority and the items are just too small to be readable. | 
+ | `selectionPathMode` | SelectionPathMode | `0` | Selection path mode. This property controls visibility of nodes between cursor and the root of the diagram in the auto fit mode. It allows to draw them in full size regardless of available space and auto fit mode. The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers. So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items of the diagram in full size and draw all other diagram nodes as markers. | 
+ | `verticalAlignment` | VerticalAlignmentType | `1` | Sets items vertical alignment relative to each other within one level of the hierarchy. It does not change anything if diagram nodes are all of the same size. | 
 
 ### Callout Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `calloutBorderColor` | string | `null` | Callout annotation border color. Callout | 
- | `calloutCornerRadius` | number | `4` | Callout annotation corner radius. Callout | 
- | `calloutLineWidth` | number | `1` | Callout annotation border line width. Callout | 
- | `calloutMaximumVisibility` | Visibility | `2` | Sets visibility of the callout annotation depending on size of a node it is shown for. See `pageFitMode` property. Callout | 
- | `calloutOffset` | number | `4` | Callout annotation border line offset. Callout | 
- | `calloutOpacity` | number | `0.2` | Callout annotation opacity Callout | 
- | `calloutPlacementOffset` | number | `100` | Callout annotation placement offset. Sets how far callout content is offset from the marker it is displayed for. Callout | 
- | `calloutPointerWidth` | string | `"10%"` | Callout annotation pointer width. Callout | 
- | `calloutfillColor` | string | `"#000000"` | Callout annotation fill color. Callout | 
- | `defaultCalloutTemplateName` | string | `null` | Callout annotation default template name. Templates are HTML fragments containing layout and styles used to render diagram nodes. They are defined with a named configuration objects. See `templates` property of control's configuration object. Callout | 
- | `showCallout` | boolean | `true` | Sets callout visibility. Callout | 
+ | `calloutBorderColor` | string | `null` | Callout annotation border color. | 
+ | `calloutCornerRadius` | number | `4` | Callout annotation corner radius. | 
+ | `calloutLineWidth` | number | `1` | Callout annotation border line width. | 
+ | `calloutMaximumVisibility` | Visibility | `2` | Sets visibility of the callout annotation depending on size of a node it is shown for. See `pageFitMode` property. | 
+ | `calloutOffset` | number | `4` | Callout annotation border line offset. | 
+ | `calloutOpacity` | number | `0.2` | Callout annotation opacity | 
+ | `calloutPlacementOffset` | number | `100` | Callout annotation placement offset. Sets how far callout content is offset from the marker it is displayed for. | 
+ | `calloutPointerWidth` | string | `"10%"` | Callout annotation pointer width. | 
+ | `calloutfillColor` | string | `"#000000"` | Callout annotation fill color. | 
+ | `defaultCalloutTemplateName` | string | `null` | Callout annotation default template name. Templates are HTML fragments containing layout and styles used to render diagram nodes. They are defined with a named configuration objects. See `templates` property of control's configuration object. | 
+ | `showCallout` | boolean | `true` | Sets callout visibility. | 
 
 ### Group Titles Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `groupTitleColor` | string | `"#4169e1"` | Group titles color. Group Titles | 
- | `groupTitleFontFamily` | string | `"Arial"` | Group titles font family. Group Titles | 
- | `groupTitleFontSize` | number | `"12px"` | Group titles font size. Group Titles | 
- | `groupTitleFontStyle` | string | `"normal"` | Group titles font style: normal, italic Group Titles | 
- | `groupTitleFontWeight` | string | `"normal"` | Group titles font weight: normal, bold Group Titles | 
- | `groupTitleHorizontalAlignment` | HorizontalAlignmentType | `0` | Group titles horizontal alignment. Group Titles | 
- | `groupTitleOrientation` | TextOrientationType | `2` | Group titles orientation. Group Titles | 
- | `groupTitlePanelSize` | number | `24` | The size of the panel containing group title. Group Titles | 
- | `groupTitlePlacementType` | AdviserPlacementType | `2` | Group titles placement. Defines group title and buttons panel position relative to the node. By default it is on the left. The group title on the side of the diagram node is one of controls default easy to use features. It gives extra dimension for nodes visual grouping in the diagram. Group Titles | 
- | `groupTitleVerticalAlignment` | VerticalAlignmentType | `1` | Group titles vertical alignment. Group Titles | 
+ | `groupTitleColor` | string | `"#4169e1"` | Group titles color. | 
+ | `groupTitleFontFamily` | string | `"Arial"` | Group titles font family. | 
+ | `groupTitleFontSize` | number | `"12px"` | Group titles font size. | 
+ | `groupTitleFontStyle` | string | `"normal"` | Group titles font style: normal, italic | 
+ | `groupTitleFontWeight` | string | `"normal"` | Group titles font weight: normal, bold | 
+ | `groupTitleHorizontalAlignment` | HorizontalAlignmentType | `0` | Group titles horizontal alignment. | 
+ | `groupTitleOrientation` | TextOrientationType | `2` | Group titles orientation. | 
+ | `groupTitlePanelSize` | number | `24` | The size of the panel containing group title. | 
+ | `groupTitlePlacementType` | AdviserPlacementType | `2` | Group titles placement. Defines group title and buttons panel position relative to the node. By default it is on the left. The group title on the side of the diagram node is one of controls default easy to use features. It gives extra dimension for nodes visual grouping in the diagram. | 
+ | `groupTitleVerticalAlignment` | VerticalAlignmentType | `1` | Group titles vertical alignment. | 
 
 ### Intervals Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `cousinsIntervalMultiplier` | number | `5` | Set cousins interval multiplier. This values adds extra space between branches of the hierarchy. For example nodes of the same parent have interval 20 and nodes of two different parents are going to have interval 100. Intervals | 
- | `dotItemsInterval` | number | `1` | Sets interval between nodes of the same row, minimized down to markers. Intervals | 
- | `dotLevelShift` | number | `20` | Sets the spacing after the row containing nodes minimized down to markers. Intervals | 
- | `lineItemsInterval` | number | `2` | Sets interval between nodes of the same row, minimized down to lines. Intervals | 
- | `lineLevelShift` | number | `10` | Sets the spacing after the row containing nodes minimized down to lines. Intervals | 
- | `normalItemsInterval` | number | `10` | Sets interval between nodes of the same row. Intervals | 
- | `normalLevelShift` | number | `20` | Sets the spacing between rows. Intervals | 
+ | `cousinsIntervalMultiplier` | number | `5` | Set cousins interval multiplier. This values adds extra space between branches of the hierarchy. For example nodes of the same parent have interval 20 and nodes of two different parents are going to have interval 100. | 
+ | `dotItemsInterval` | number | `1` | Sets interval between nodes of the same row, minimized down to markers. | 
+ | `dotLevelShift` | number | `20` | Sets the spacing after the row containing nodes minimized down to markers. | 
+ | `lineItemsInterval` | number | `2` | Sets interval between nodes of the same row, minimized down to lines. | 
+ | `lineLevelShift` | number | `10` | Sets the spacing after the row containing nodes minimized down to lines. | 
+ | `normalItemsInterval` | number | `10` | Sets interval between nodes of the same row. | 
+ | `normalLevelShift` | number | `20` | Sets the spacing between rows. | 
 
 ### Labels Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `labelColor` | string | `"#000000"` | Labels color Labels | 
- | `labelFontFamily` | string | `"Arial"` | Labels font family. Labels | 
- | `labelFontSize` | string | `"10px"` | Labels font size. Labels | 
- | `labelFontStyle` | string | `"normal"` | Labels font style. Font style: normal, italic Labels | 
- | `labelFontWeight` | string | `"normal"` | Labels font weight Font weight: normal, bold Labels | 
- | `labelOffset` | number | `1` | Sets labels offset from the merkers bounding rectangles. Labels | 
- | `labelOrientation` | TextOrientationType | `0` | Labels orientation. Labels | 
- | `labelPlacement` | PlacementType | `1` | Labels placement. Sets labels placement relative to the markers bounding rectangles. Labels | 
- | `labelSize` | Size | `{80, 24}` | Label size. Sets labels placeholders `div`s size. It is needed to resolve labels overlapping. If one label overlaps another label the or item it will be hidden. Labels | 
- | `showLabels` | Enabled | `0` | Sets labels visibility for nodes when they are minimized into markers by page auto fit. See `pageFitMode` property. The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels. Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict resoltion to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them is going to stay visible. Auto - displays label only when it has space to be rendered. True - shows label regardless, even if it overlaps other labels and nodes. False - hidden. Labels | 
+ | `labelColor` | string | `"#000000"` | Labels color | 
+ | `labelFontFamily` | string | `"Arial"` | Labels font family. | 
+ | `labelFontSize` | string | `"10px"` | Labels font size. | 
+ | `labelFontStyle` | string | `"normal"` | Labels font style. Font style: normal, italic | 
+ | `labelFontWeight` | string | `"normal"` | Labels font weight Font weight: normal, bold | 
+ | `labelOffset` | number | `1` | Sets labels offset from the merkers bounding rectangles. | 
+ | `labelOrientation` | TextOrientationType | `0` | Labels orientation. | 
+ | `labelPlacement` | PlacementType | `1` | Labels placement. Sets labels placement relative to the markers bounding rectangles. | 
+ | `labelSize` | Size | `{80, 24}` | Label size. Sets labels placeholders `div`s size. It is needed to resolve labels overlapping. If one label overlaps another label the or item it will be hidden. | 
+ | `showLabels` | Enabled | `0` | Sets labels visibility for nodes when they are minimized into markers by page auto fit. See `pageFitMode` property. The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels. Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict resoltion to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them is going to stay visible. Auto - displays label only when it has space to be rendered. True - shows label regardless, even if it overlaps other labels and nodes. False - hidden. | 
 
 ### Relation Lines Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `arrowsDirection` | GroupByType | `0` | Sets arrows direction for connector lines. If this property set to `Parents` then arrows are drawn from logical children towards logical parents. By default diagram has no arrows. Relation Lines | 
- | `bevelSize` | number | `4` | The bevel size of squared connector lines. Relation Lines | 
- | `elbowDotSize` | number | `4` | The size of dot markers placed in the elbows of connector lines. Relation Lines | 
- | `elbowType` | ElbowType | `3` | Set style of squared connectors with custom elbows. Relation Lines | 
- | `extraArrowsMinimumSpace` | number | `30` | Set minimum space for placement of extra arrows on horizontal connection lines. See `showExtraArrows` property. Relation Lines | 
- | `highlightLinesColor` | string | `"#ff0000"` | Sets highlight lines color. The diagram uses highlight lines to render highlighted relation lines between nodes. See `showNeigboursConnectorsHighlighted` property. Relation Lines | 
- | `highlightLinesType` | LineType | `0` | Sets highlight lines pattern. See `showNeigboursConnectorsHighlighted` property. Relation Lines | 
- | `highlightLinesWidth` | number | `1` | Sets highlight lines width. See `showNeigboursConnectorsHighlighted` property. Relation Lines | 
- | `linesColor` | string | `"#c0c0c0"` | The relations lines color. The control uses this lines color to render basic relations between nodes. Relation Lines | 
- | `linesPalette` | PaletteItemConfig[] | `[]` | This collection contains lines styles for rendering relations going across family hierarchy. The purpose of this collection is to draw long horizontal parallel lines drawn between family branches in different styles. If this collection is empty then default `linesColor`, `linesWidth` and `linesType` are used for all connector lines. Relation Lines | 
- | `linesType` | LineType | `0` | The relations lines pattern Relation Lines | 
- | `linesWidth` | number | `1` | The relations lines width Relation Lines | 
- | `showExtraArrows` | boolean | `true` | Show extra horizontal arrows on top of long horizontal connection lines for the easy visual tracing of relations between parents and children. By default it is off. Relation Lines | 
- | `showNeigboursConnectorsHighlighted` | boolean | `false` | Shows connection lines between current cursor item and its neighbours highlighted. Neighbours selection mode is set by `neighboursSelectionMode` property. Set following properties: `highlightLinesColor`, `highlightLinesWidth` and `highlightLinesType` to style highlighted lines. Relation Lines | 
+ | `arrowsDirection` | GroupByType | `0` | Sets arrows direction for connector lines. If this property set to `Parents` then arrows are drawn from logical children towards logical parents. By default diagram has no arrows. | 
+ | `bevelSize` | number | `4` | The bevel size of squared connector lines. | 
+ | `elbowDotSize` | number | `4` | The size of dot markers placed in the elbows of connector lines. | 
+ | `elbowType` | ElbowType | `3` | Set style of squared connectors with custom elbows. | 
+ | `extraArrowsMinimumSpace` | number | `30` | Set minimum space for placement of extra arrows on horizontal connection lines. See `showExtraArrows` property. | 
+ | `highlightLinesColor` | string | `"#ff0000"` | Sets highlight lines color. The diagram uses highlight lines to render highlighted relation lines between nodes. See `showNeigboursConnectorsHighlighted` property. | 
+ | `highlightLinesType` | LineType | `0` | Sets highlight lines pattern. See `showNeigboursConnectorsHighlighted` property. | 
+ | `highlightLinesWidth` | number | `1` | Sets highlight lines width. See `showNeigboursConnectorsHighlighted` property. | 
+ | `linesColor` | string | `"#c0c0c0"` | The relations lines color. The control uses this lines color to render basic relations between nodes. | 
+ | `linesPalette` | PaletteItemConfig[] | `[]` | This collection contains lines styles for rendering relations going across family hierarchy. The purpose of this collection is to draw long horizontal parallel lines drawn between family branches in different styles. If this collection is empty then default `linesColor`, `linesWidth` and `linesType` are used for all connector lines. | 
+ | `linesType` | LineType | `0` | The relations lines pattern | 
+ | `linesWidth` | number | `1` | The relations lines width | 
+ | `showExtraArrows` | boolean | `true` | Show extra horizontal arrows on top of long horizontal connection lines for the easy visual tracing of relations between parents and children. By default it is off. | 
+ | `showNeigboursConnectorsHighlighted` | boolean | `false` | Shows connection lines between current cursor item and its neighbours highlighted. Neighbours selection mode is set by `neighboursSelectionMode` property. Set following properties: `highlightLinesColor`, `highlightLinesWidth` and `highlightLinesType` to style highlighted lines. | 
 
 ### Templates Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `buttons` | ButtonConfig[] | `[]` | Buttons configuration objects collection. The buttons panel on the side of the diagram nodes is one of our default easy to use features. This gives you the possibility to try and see how context buttons work being placed inside of diagram layout. This collection of buttons provides configuration properties for buttons rendered using HTML buttons elements. Templates | 
- | `buttonsPanelSize` | number | `28` | The size of the panel containing context buttons. Templates | 
- | `checkBoxPanelSize` | number | `24` | The size of the panel containing selection checkbox. Templates | 
- | `defaultLabelAnnotationTemplate` | string | `null` | Sets the name of template used to render label annotations. Label annotations are labels placed in layout of the diagram. Templates | 
- | `defaultTemplateName` | string | `null` | Name of the template used to render nodes in the diagram. See `templates` property. Template name can be set individually for every node see `templateName` property of `ItemConfig`. Templates | 
- | `hasButtons` | Enabled | `0` | Sets buttons visibility. `Auto` - cursor item only. `True` - visible `False` - hidden Templates | 
- | `itemTitleFirstFontColor` | string | `"#ffffff"` | The first font color of the title. The title background color is designed to be one of the avalaible dimensitions to group nodes in the diagram, so title can be unreadable if its color matches its background color. This property is created to auto resolve this issue via automatic switch between two available font title colors. Templates | 
- | `itemTitleSecondFontColor` | string | `"#000080"` | The second font color of the title. Templates | 
- | `minimizedItemShapeType` | ShapeType | `6` | Markers. The shape of the markers when nodes are minimized by autofit. The control supports auto fit of the diagram into available screen space. When the diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic, so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers. So this option sets default marker shape for nodes. It can be set individually per node in items configurations. The default color of shape is the same as `itemTitleColor` property set for individual items. Templates | 
- | `selectCheckBoxLabel` | string | `"Selected"` | Selection check box label. See `hasSelectorCheckbox` and `selectedItems` properties. Templates | 
- | `templates` | TemplateConfig[] | `[]` | Collection of named templates used to define content for nodes, cursor and highlight. By default control provides templates for all types of visual elements. Templates | 
+ | `buttons` | ButtonConfig[] | `[]` | Buttons configuration objects collection. The buttons panel on the side of the diagram nodes is one of our default easy to use features. This gives you the possibility to try and see how context buttons work being placed inside of diagram layout. This collection of buttons provides configuration properties for buttons rendered using HTML buttons elements. | 
+ | `buttonsPanelSize` | number | `28` | The size of the panel containing context buttons. | 
+ | `checkBoxPanelSize` | number | `24` | The size of the panel containing selection checkbox. | 
+ | `defaultLabelAnnotationTemplate` | string | `null` | Sets the name of template used to render label annotations. Label annotations are labels placed in layout of the diagram. | 
+ | `defaultTemplateName` | string | `null` | Name of the template used to render nodes in the diagram. See `templates` property. Template name can be set individually for every node see `templateName` property of `ItemConfig`. | 
+ | `hasButtons` | Enabled | `0` | Sets buttons visibility. `Auto` - cursor item only. `True` - visible `False` - hidden | 
+ | `itemTitleFirstFontColor` | string | `"#ffffff"` | The first font color of the title. The title background color is designed to be one of the avalaible dimensitions to group nodes in the diagram, so title can be unreadable if its color matches its background color. This property is created to auto resolve this issue via automatic switch between two available font title colors. | 
+ | `itemTitleSecondFontColor` | string | `"#000080"` | The second font color of the title. | 
+ | `minimizedItemShapeType` | ShapeType | `6` | Markers. The shape of the markers when nodes are minimized by autofit. The control supports auto fit of the diagram into available screen space. When the diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic, so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers. So this option sets default marker shape for nodes. It can be set individually per node in items configurations. The default color of shape is the same as `itemTitleColor` property set for individual items. | 
+ | `selectCheckBoxLabel` | string | `"Selected"` | Selection check box label. See `hasSelectorCheckbox` and `selectedItems` properties. | 
+ | `templates` | TemplateConfig[] | `[]` | Collection of named templates used to define content for nodes, cursor and highlight. By default control provides templates for all types of visual elements. | 
 
 **Events**
 
@@ -276,42 +276,43 @@ Item Configuration Object defines properties of individual node in the family ch
 ### Callout Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `calloutTemplateName` | string | `null` | Callout annotation template name. This option lets individually assign rendering callout annotation template per individual node of the diagram. Templates are HTML fragments containing layout and styles used to render diagram nodes. They are defined with a named configuration objects. See `templates` property of control's configuration object. Callout | 
- | `showCallout` | Enabled | `0` | Sets callout annotation visibility for individual node. The callout annotation is one of easy to use features of the control. By default it is displayed for markers in order to preview their node's content. The content is displayed using current template of the node it is rendered for. The callout can be forced to be displayed for regular nodes as well. In that case use `calloutTemplateName` property to change their template. Auto - depends on `showCallout` property of the control True - shown regardless of node's visibility False - hidden Callout | 
+ | `calloutTemplateName` | string | `null` | Callout annotation template name. This option lets individually assign rendering callout annotation template per individual node of the diagram. Templates are HTML fragments containing layout and styles used to render diagram nodes. They are defined with a named configuration objects. See `templates` property of control's configuration object. | 
+ | `showCallout` | Enabled | `0` | Sets callout annotation visibility for individual node. The callout annotation is one of easy to use features of the control. By default it is displayed for markers in order to preview their node's content. The content is displayed using current template of the node it is rendered for. The callout can be forced to be displayed for regular nodes as well. In that case use `calloutTemplateName` property to change their template. Auto - depends on `showCallout` property of the control True - shown regardless of node's visibility False - hidden | 
 
 ### Group Title Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `groupTitle` | string | `null` | Group Title. The group title on the side of the diagram node is one of controls default easy to use features. It gives extra dimension for nodes visual grouping in the diagram. Group Title | 
- | `groupTitleColor` | string | `"#4169e1"` | The group title background color. Group Title | 
+ | `groupTitle` | string | `null` | Group Title. The group title on the side of the diagram node is one of controls default easy to use features. It gives extra dimension for nodes visual grouping in the diagram. | 
+ | `groupTitleColor` | string | `"#4169e1"` | The group title background color. | 
 
 ### Label Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `label` | string | `null` | Marker label. Label | 
- | `labelOrientation` | TextOrientationType | `3` | Label orientation. If `Auto` then it is set to `labelOrientation` property of the control configuration. Label | 
- | `labelPlacement` | PlacementType | `0` | Label placement. Sets label placement relative to the marker bounding rectangle. If `Auto` then it is set to `labelPlacement` of the control configuration. Label | 
- | `labelSize` | Size | `null` | Label size. Sets label's placeholder `div` size and controls conflict resolution if labels overlap each other. If `null` then it is set to `labelSize` property of the control configuration. Label | 
- | `showLabel` | Enabled | `0` | Sets label visibility for individual nodes. Labels are only rendered for a node's markers. The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels. Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict resoltion to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them is going to stay visible. Auto - displays label only when it has space to be rendered. True - shows label regardless, even if it overlaps other labels and nodes. False - hidden. Label | 
+ | `label` | string | `null` | Marker label. | 
+ | `labelOrientation` | TextOrientationType | `3` | Label orientation. If `Auto` then it is set to `labelOrientation` property of the control configuration. | 
+ | `labelPlacement` | PlacementType | `0` | Label placement. Sets label placement relative to the marker bounding rectangle. If `Auto` then it is set to `labelPlacement` of the control configuration. | 
+ | `labelSize` | Size | `null` | Label size. Sets label's placeholder `div` size and controls conflict resolution if labels overlap each other. If `null` then it is set to `labelSize` property of the control configuration. | 
+ | `showLabel` | Enabled | `0` | Sets label visibility for individual nodes. Labels are only rendered for a node's markers. The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels. Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict resoltion to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them is going to stay visible. Auto - displays label only when it has space to be rendered. True - shows label regardless, even if it overlaps other labels and nodes. False - hidden. | 
 
 ### Order Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `placementType` | AdviserPlacementType | `3` | Relative placement type defines Left ot Right side placement of the node relative to the `relativeItem`. Order | 
- | `position` | number | `null` | Relative position defines order of elements placed relative to the same relative item on the same side. Order | 
- | `relativeItem` | string | `null` | Relative item id. This property is used to control items mutual placement in order to keep consistent ordering within levels. Relative item is used for placing given item in diagram. We can place item on left or right side of relative item via setting placementType type property. In case when multiple items use the same relative item then their order can be customized with position property. If this property set to null, family layout algorithm will try to choose elements order via placing connected nodes as close to each other as posible. Order | 
+ | `placementType` | AdviserPlacementType | `3` | Relative placement type defines Left ot Right side placement of the node relative to the `relativeItem`. | 
+ | `position` | number | `null` | Relative position defines order of elements placed relative to the same relative item on the same side. | 
+ | `primaryParent` | string | `null` | Primary parents id. Set this property to place item close to the selected primary parent in `parents` collection. If property set to null or referenced parent does not exists then this property is ignored. | 
+ | `relativeItem` | string | `null` | Relative item id. This property is used to control items mutual placement in order to keep consistent ordering within levels. Relative item is used for placing given item in diagram. We can place item on left or right side of relative item via setting placementType type property. In case when multiple items use the same relative item then their order can be customized with position property. If this property set to null, family layout algorithm will try to choose elements order via placing connected nodes as close to each other as posible. | 
 
 ### Template Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `context` | object | `null` | Context object Template | 
- | `description` | string | `null` | Description Template | 
- | `hasButtons` | Enabled | `0` | Shows context buttons panel for the node. If Auto then context buttons panel visibility depends on control's configuration. Auto - depends on `hasButtons` property of the control True - shown False - hidden Template | 
- | `image` | string | `null` | Image Template | 
- | `itemTitleColor` | string | `"#4169e1"` | Title background color. The same color is used for node marker when control has enabled auto fit mode. Template | 
- | `minimizedItemShapeType` | ShapeType | `null` | Marker type. The shape of the marker when node is minimized by autofit. The control supports auto fit of diagram into available screen space. When diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic, so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers. So this option sets marker shape for individual node. Template | 
- | `templateName` | string | `null` | Template name. Templates are HTML fragments containing layout and styles used to render diagram nodes. They are defined with a named configuration objects. See `templates` property of control's configuration object. This option lets individually assign rendering template per individual node of the diagram. Template | 
- | `title` | string | `null` | Title Template | 
+ | `context` | object | `null` | Context object | 
+ | `description` | string | `null` | Description | 
+ | `hasButtons` | Enabled | `0` | Shows context buttons panel for the node. If Auto then context buttons panel visibility depends on control's configuration. Auto - depends on `hasButtons` property of the control True - shown False - hidden | 
+ | `image` | string | `null` | Image | 
+ | `itemTitleColor` | string | `"#4169e1"` | Title background color. The same color is used for node marker when control has enabled auto fit mode. | 
+ | `minimizedItemShapeType` | ShapeType | `null` | Marker type. The shape of the marker when node is minimized by autofit. The control supports auto fit of diagram into available screen space. When diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic, so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers. So this option sets marker shape for individual node. | 
+ | `templateName` | string | `null` | Template name. Templates are HTML fragments containing layout and styles used to render diagram nodes. They are defined with a named configuration objects. See `templates` property of control's configuration object. This option lets individually assign rendering template per individual node of the diagram. | 
+ | `title` | string | `null` | Title | 
 
 ## <a name="primitives.famdiagram.TemplateConfig" id="primitives.famdiagram.TemplateConfig">TemplateConfig</a>
 Template configuration object defines DOM elements for node content, cursor and highlight visual representation. They are grouped into one configuration object because if we decide to customize cursor or highlight templates most likely we are going to make them item template specific. At the same time control does not require all 3 of them to be defined. If cursor or highlight templates properties are not set in template configuration object then control uses internal default template for all of them. Generally all 3 templates can be set to null, so default templates are going to be used by control.

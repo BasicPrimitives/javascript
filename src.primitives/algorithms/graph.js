@@ -371,7 +371,6 @@ primitives.common.graph = function () {
 	 * @param {string} startNode The start node id 
 	 * @param {string[]} endNodes The array of end node ids.
 	 * @param {getGraphEdgeWeightCallback} getWeightFunc Callback function to get weight of an edge. 
-	 * @param {onNodeCallback} onItem A callback function to be called for every node of the growth sequence
 	 * @param {onPathFoundCallback} onPathFound A callback function to be called for every end node 
 	 * with the optimal connection path
 	 */
@@ -383,6 +382,7 @@ primitives.common.graph = function () {
       key,
       children,
       newDistance,
+      weight,
       path,
       currentNode,
       endNodesHash = {},
@@ -409,17 +409,25 @@ primitives.common.graph = function () {
       children = _edges[bestNodeOnMargin.key];
       for (key in children) {
         if (children.hasOwnProperty(key)) {
-          newDistance = bestNodeOnMargin.priority + (getWeightFunc != null ? getWeightFunc.call(thisArg, children[key], bestNodeOnMargin, key) : 1);
-          distance = margin.getPriority(key);
-          if (distance != null) {
-            if (distance > newDistance) {
-              margin.setPriority(key, newDistance);
-              breadcramps[key] = bestNodeOnMargin.key;
-            }
+          weight = 1;
+          if(getWeightFunc != null) {
+            weight = getWeightFunc.call(thisArg, children[key], bestNodeOnMargin, key);
+            newDistance = bestNodeOnMargin.priority + weight;
           } else {
-            if (!breadcramps.hasOwnProperty(key)) {
-              margin.add(key, newDistance, null);
-              breadcramps[key] = bestNodeOnMargin.key;
+            newDistance = bestNodeOnMargin.priority + 1;
+          }
+          if(weight >= 0) { 
+            distance = margin.getPriority(key);
+            if (distance != null) {
+              if (distance > newDistance) {
+                margin.setPriority(key, newDistance);
+                breadcramps[key] = bestNodeOnMargin.key;
+              }
+            } else {
+              if (!breadcramps.hasOwnProperty(key)) {
+                margin.add(key, newDistance, null);
+                breadcramps[key] = bestNodeOnMargin.key;
+              }
             }
           }
         }
@@ -443,6 +451,46 @@ primitives.common.graph = function () {
     }
   }
 
+ 	/**
+	 * Depth first search
+   * 
+	 * @param {object} thisArg The callback function invocation context
+	 * @param {string} startNode The start node id 
+	 * @param {string} endNode The end node id.
+	 * @param {getGraphEdgeWeightCallback} getWeightFunc Callback function to get capacity of an edge. 
+	 * with the optimal connection path
+	 */
+  function dfs(thisArg, startNode, endNode, getWeightFunc) {
+    // var path = [],
+    //   visited = {},
+    //   key,
+    //   children,
+    //   weight,
+    //   path,
+    //   currentNode,
+    //   index, len;
+
+    // path.push(startNode);
+
+    // /* search graph */
+    // while (path.length > 0) {
+    //   var currentNode = path[path.length-1];
+    //   if(currentNode == endNode) {
+    //     break;
+    //   }
+
+    //   children = _edges[currentNode];
+    //   for (key in children) {
+    //     if (children.hasOwnProperty(key)) {
+    //       weight = getWeightFunc.call(thisArg, children[key], currentNode, key);
+    //       if(weight > 0) { 
+    //           path.push(children[key]);
+    //       }
+    //     }
+    //   }
+    // }
+  } 
+
   return {
     addEdge: addEdge,
     edge: edge,
@@ -452,6 +500,7 @@ primitives.common.graph = function () {
     getSpanningTree: getSpanningTree,
     getTotalWeightGrowthSequence: getTotalWeightGrowthSequence,
     getMinimumWeightGrowthSequence: getMinimumWeightGrowthSequence,
-    getShortestPath: getShortestPath
+    getShortestPath: getShortestPath,
+    dfs: dfs
   };
 };

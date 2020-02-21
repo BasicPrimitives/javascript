@@ -1545,13 +1545,23 @@ primitives.common.family = function (source) {
       });
     }
   }
+  /**
+   * Callback for getting default edge value
+   * 
+   * @callback onFamilyEdgeCallback
+   * @param {string} from From node id
+   * @param {string} to The node
+   * @returns {object} Returns new edge object.
+   */
 
   /**
    * Creates graph structure out of the family structure.
    * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onFamilyEdgeCallback} onEdge A callback function to call for every new edge added to the final graph
    * @returns {graph} Returns graph structure of the family.
    */
-  function getGraph() {
+  function getGraph(thisArg, onEdge) {
     var result = primitives.common.graph(),
       from, to;
 
@@ -1560,7 +1570,11 @@ primitives.common.family = function (source) {
         _loop(this, _children, from, function (to) {
           var edge = result.edge(from, to);
           if (edge == null) {
-            edge = new ReferencesEdge({});
+            if(onEdge == null) {
+              edge = new ReferencesEdge({});
+            } else {
+              edge = onEdge.call(thisArg, from, to);
+            }
             result.addEdge(from, to, edge);
           }
         }); //ignore jslint

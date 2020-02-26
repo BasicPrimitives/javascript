@@ -6,9 +6,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
   <!-- header -->
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <!-- #include file="../../src.primitives/src.primitives.html"-->
   <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <!-- <script type="text/javascript" src="../../min/primitives.min.js?5100"></script> -->
   <script type="text/javascript" src="common/helpers.js"></script>
   <script type="text/javascript" src="../data/famdata.js"></script>
 
@@ -25,130 +25,130 @@
         new primitives.helpers.controls.RadioBoxConfig("dataSet", defaultDataSetName, "Select Data Set", dataSetNames, primitives.helpers.controls.ValueType.String, onUpdate)
       ])
     ], {
-        /* Data Sets */
-        dataSet: defaultDataSetName,
+      /* Data Sets */
+      dataSet: defaultDataSetName,
 
-        /* Family Diagram Specific Options */
-        neighboursSelectionMode: primitives.common.NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses,
-        groupByType: primitives.common.GroupByType.Children,
-        alignBylevels: "true",
-        hideGrandParentsConnectors: "false",
-        enableMatrixLayout: "false",
-        minimumMatrixSize: 2,
-        maximumColumnsInMatrix: 6,
+      /* Family Diagram Specific Options */
+      neighboursSelectionMode: primitives.common.NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses,
+      groupByType: primitives.common.GroupByType.Children,
+      alignBylevels: "true",
+      hideGrandParentsConnectors: "false",
+      enableMatrixLayout: "false",
+      minimumMatrixSize: 2,
+      maximumColumnsInMatrix: 6,
 
-        /* On-screen annotations specific options */
-        AnnotationOptions: {
-          connectorPlacementType: primitives.common.ConnectorPlacementType.Offbeat,
-          connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-          labelPlacementType: primitives.common.ConnectorLabelPlacementType.Between,
-          lineWidth: 2,
-          lineType: primitives.common.LineType.Dashed,
-          color: primitives.common.Colors.Red,
-          offset: 5,
-          zOrderType: primitives.common.ZOrderType.Auto
-        },
-        /* Layout */
-        pageFitMode: primitives.common.PageFitMode.FitToPage,
-        orientationType: primitives.common.OrientationType.Top,
-        verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-        horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
-        childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
-        leavesPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
-        maximumColumnsInMatrix: 6,
-        minimalVisibility: primitives.common.Visibility.Dot,
-        selectionPathMode: primitives.common.SelectionPathMode.None,
-
-        hasButtons: primitives.common.Enabled.Auto,
-        hasSelectorCheckbox: primitives.common.Enabled.True,
-        selectCheckBoxLabel: "Selected",
-        itemTitleFirstFontColor: primitives.common.Colors.White,
-        itemTitleSecondFontColor: primitives.common.Colors.White,
-        buttonsPanelSize: 28,
-        groupTitlePanelSize: 24,
-        checkBoxPanelSize: 24,
-
-        /* group title options */
-        groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
-        groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
-        groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-        groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
-        groupTitleFontSize: "12px",
-        groupTitleFontFamily: "Arial",
-        groupTitleColor: primitives.common.Colors.RoyalBlue,
-        groupTitleFontWeight: "normal",
-        groupTitleFontStyle: "normal",
-
-        /* Template */
-        DefaultTemplateOptions: {
-          minimizedItemCornerRadius: 12,
-          minimizedItemSize: new primitives.common.Size(16, 16),
-          highlightPadding: 4,
-          minimizedItemShapeType: primitives.common.ShapeType.None,
-          minimizedItemLineWidth: 1,
-          minimizedItemLineType: primitives.common.LineType.Solid,
-          minimizedItemBorderColor: null,
-          minimizedItemFillColor: null,
-          minimizedItemOpacity: 1.0
-        },
-
-        /* Intervals */
-        normalLevelShift: 20,
-        dotLevelShift: 20,
-        lineLevelShift: 20,
-
-        normalItemsInterval: 20,
-        dotItemsInterval: 10,
-        lineItemsInterval: 10,
-
-        cousinsIntervalMultiplier: 0,
-
-        /* Connectors */
-        arrowsDirection: primitives.common.GroupByType.Parents,
-        showExtraArrows: true,
-        extraArrowsMinimumSpace: 30,
-        connectorType: primitives.common.ConnectorType.Squared,
-        elbowType: primitives.common.ElbowType.Round,
-        bevelSize: 4,
-        elbowDotSize: 4,
-        linesType: primitives.common.LineType.Solid,
-        linesColor: primitives.common.Colors.Black,
-        linesWidth: 1,
-
-        /* Labels */
-        showLabels: primitives.common.Enabled.Auto,
-        labelSize: new primitives.common.Size(60, 40),
-        labelOrientation: primitives.text.TextOrientationType.Horizontal,
-        labelPlacement: primitives.common.PlacementType.Top,
-        labelOffset: 1,
-        labelFontSize: "10px",
-        labelFontFamily: "Arial",
-        labelColor: primitives.common.Colors.Black,
-        labelFontWeight: "normal",
-        labelFontStyle: "normal",
-
-        /* Callout */
-        calloutMaximumVisibility: primitives.common.Visibility.Dot,
-        showCallout: "true",
-        calloutPlacementOffset: 100,
-        calloutfillColor: "#000000",
-        calloutBorderColor: null,
-        calloutOffset: 4,
-        calloutCornerRadius: 4,
-        calloutPointerWidth: "10%",
-        calloutLineWidth: 1,
-        calloutOpacity: 0.2,
-
-        /* Interactivity */
-        navigationMode: primitives.common.NavigationMode.Default,
-        highlightGravityRadius: 40,
-        enablePanning: true,
-
-        /* Graphics */
-        graphicsType: primitives.common.GraphicsType.SVG,
-
-        scale: 1.0
+      /* On-screen annotations specific options */
+      AnnotationOptions: {
+        connectorPlacementType: primitives.common.ConnectorPlacementType.Offbeat,
+        connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
+        labelPlacementType: primitives.common.ConnectorLabelPlacementType.Between,
+        lineWidth: 2,
+        lineType: primitives.common.LineType.Dashed,
+        color: primitives.common.Colors.Red,
+        offset: 5,
+        zOrderType: primitives.common.ZOrderType.Auto
       },
+      /* Layout */
+      pageFitMode: primitives.common.PageFitMode.FitToPage,
+      orientationType: primitives.common.OrientationType.Top,
+      verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
+      horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+      childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+      leavesPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+      maximumColumnsInMatrix: 6,
+      minimalVisibility: primitives.common.Visibility.Dot,
+      selectionPathMode: primitives.common.SelectionPathMode.None,
+
+      hasButtons: primitives.common.Enabled.Auto,
+      hasSelectorCheckbox: primitives.common.Enabled.True,
+      selectCheckBoxLabel: "Selected",
+      itemTitleFirstFontColor: primitives.common.Colors.White,
+      itemTitleSecondFontColor: primitives.common.Colors.White,
+      buttonsPanelSize: 28,
+      groupTitlePanelSize: 24,
+      checkBoxPanelSize: 24,
+
+      /* group title options */
+      groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
+      groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
+      groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
+      groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+      groupTitleFontSize: "12px",
+      groupTitleFontFamily: "Arial",
+      groupTitleColor: primitives.common.Colors.RoyalBlue,
+      groupTitleFontWeight: "normal",
+      groupTitleFontStyle: "normal",
+
+      /* Template */
+      DefaultTemplateOptions: {
+        minimizedItemCornerRadius: 12,
+        minimizedItemSize: new primitives.common.Size(16, 16),
+        highlightPadding: 4,
+        minimizedItemShapeType: primitives.common.ShapeType.None,
+        minimizedItemLineWidth: 1,
+        minimizedItemLineType: primitives.common.LineType.Solid,
+        minimizedItemBorderColor: null,
+        minimizedItemFillColor: null,
+        minimizedItemOpacity: 1.0
+      },
+
+      /* Intervals */
+      normalLevelShift: 20,
+      dotLevelShift: 20,
+      lineLevelShift: 20,
+
+      normalItemsInterval: 20,
+      dotItemsInterval: 10,
+      lineItemsInterval: 10,
+
+      cousinsIntervalMultiplier: 0,
+
+      /* Connectors */
+      arrowsDirection: primitives.common.GroupByType.Parents,
+      showExtraArrows: true,
+      extraArrowsMinimumSpace: 30,
+      connectorType: primitives.common.ConnectorType.Squared,
+      elbowType: primitives.common.ElbowType.Round,
+      bevelSize: 4,
+      elbowDotSize: 4,
+      linesType: primitives.common.LineType.Solid,
+      linesColor: primitives.common.Colors.Black,
+      linesWidth: 1,
+
+      /* Labels */
+      showLabels: primitives.common.Enabled.Auto,
+      labelSize: new primitives.common.Size(60, 40),
+      labelOrientation: primitives.text.TextOrientationType.Horizontal,
+      labelPlacement: primitives.common.PlacementType.Top,
+      labelOffset: 1,
+      labelFontSize: "10px",
+      labelFontFamily: "Arial",
+      labelColor: primitives.common.Colors.Black,
+      labelFontWeight: "normal",
+      labelFontStyle: "normal",
+
+      /* Callout */
+      calloutMaximumVisibility: primitives.common.Visibility.Dot,
+      showCallout: "true",
+      calloutPlacementOffset: 100,
+      calloutfillColor: "#000000",
+      calloutBorderColor: null,
+      calloutOffset: 4,
+      calloutCornerRadius: 4,
+      calloutPointerWidth: "10%",
+      calloutLineWidth: 1,
+      calloutOpacity: 0.2,
+
+      /* Interactivity */
+      navigationMode: primitives.common.NavigationMode.Default,
+      highlightGravityRadius: 40,
+      enablePanning: true,
+
+      /* Graphics */
+      graphicsType: primitives.common.GraphicsType.SVG,
+
+      scale: 1.0
+    },
       /* On property change event handler */
       onUpdate
     );
@@ -322,7 +322,7 @@
     }
 
     function updateHighlightPathAnnotations(data) {
-      var annotations = control.getOption("annotations");
+      var annotations = control.getOption("annotations") || [];
 
       var newAnnotations = [];
       for (var index = 0, len = annotations.length; index < len; index += 1) {

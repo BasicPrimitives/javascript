@@ -1,4 +1,17 @@
 ﻿/**
+* Heap result object
+* @class HeapResult
+* @property {string} key Key
+* @property {number} priority Priority
+* @property {Object} item Context object
+*/
+primitives.common.HeapResult = function (node) {
+  this.key = node.key;
+  this.priority = node.priority;
+  this.item = node.item;
+}
+
+/**
  * Creates Fibonacci Heap structure
  * @class FibonacciHeap
  * 
@@ -9,18 +22,6 @@ primitives.common.FibonacciHeap = function (isMaximum) {
   var root = null,
     count = 0,
     nodes = {};
-
-  /**
- * @typedef {Object} HeapResult
- * @property {string} key Key
- * @property {number} priority Priority
- * @property {Object} item Context object
- */
-  function Result(node) {
-    this.key = node.key;
-    this.priority = node.priority;
-    this.item = node.item;
-  }
 
   function Node(key, priority, item) {
     this.key = key;
@@ -190,7 +191,7 @@ primitives.common.FibonacciHeap = function (isMaximum) {
   function heapRoot() {
     var result = null;
     if (root != null) {
-      result = new Result(nodes[root]);
+      result = new primitives.common.HeapResult(nodes[root]);
     }
     return result;
   }

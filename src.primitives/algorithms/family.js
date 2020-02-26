@@ -258,10 +258,10 @@ primitives.common.family = function (source) {
   }
 
   /**
-   * Remove parent child relation
+   * Removes first available parent child or child parent relation
    * 
-   * @param {string} fromid The parent node id
-   * @param {string} toid The child node id
+   * @param {string} fromid From node id
+   * @param {string} toid To node id
    * @returns {true} If relation was broken
    */
   function removeRelation(fromid, toid) {
@@ -271,6 +271,22 @@ primitives.common.family = function (source) {
     }
     return result;
   }
+
+  /**
+   * Removes child relation
+   * 
+   * @param {string} parentid The parent node id
+   * @param {string} childid The child node id
+   * @returns {true} If relation was broken
+   */
+  function removeChildRelation(parentid, childid) {
+    var result = false;
+    if (_nodes[parentid] != null && _nodes[childid] != null) {
+      result = _removeChildReference(parentid, childid);
+    }
+    return result;
+  }
+
 
   /**
    * Returns true if structure has nodes.
@@ -291,7 +307,7 @@ primitives.common.family = function (source) {
    */
 
   /**
-   * Loops through nodes of family struture
+   * Loops through nodes of family structure
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {onFamilyItemCallback} onItem A callback function to call for every family node 
@@ -360,7 +376,7 @@ primitives.common.family = function (source) {
    */
 
   /**
-   * Loops through child nodes of family struture level by level
+   * Loops through child nodes of family structure level by level
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {string} nodeid The node id to start children traversing
@@ -375,7 +391,7 @@ primitives.common.family = function (source) {
   }
 
   /**
-   * Loops through parent nodes of family struture level by level
+   * Loops through parent nodes of family structure level by level
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {string} nodeid The node id to start parents traversing
@@ -445,7 +461,7 @@ primitives.common.family = function (source) {
    */
 
   /**
-   * Loops through topologically sorted nodes of family struture
+   * Loops through topologically sorted nodes of family structure
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {onFamilyTopoCallback} onItem A callback function to call for every node 
@@ -455,7 +471,7 @@ primitives.common.family = function (source) {
   }
 
   /**
-   * Loops through reversed order topologically sorted nodes of family struture
+   * Loops through reversed order topologically sorted nodes of family structure
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {onFamilyTopoCallback} onItem A callback function to call for every node 
@@ -466,7 +482,7 @@ primitives.common.family = function (source) {
 
 
   /**
-   * Loops through nodes of family struture level by level. This function aligns nodes top or bottom.
+   * Loops through nodes of family structure level by level. This function aligns nodes top or bottom.
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {boolean} parentAligned True if nodes should be placed at the next level after their parents level,
@@ -1489,7 +1505,7 @@ primitives.common.family = function (source) {
    */
 
   /**
-   * Loops through the node neighbours of the family struture level by level
+   * Loops through the node neighbours of the family structure level by level
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {string} itemid The node id to start traversing neighbour nodes
@@ -1570,7 +1586,7 @@ primitives.common.family = function (source) {
         _loop(this, _children, from, function (to) {
           var edge = result.edge(from, to);
           if (edge == null) {
-            if(onEdge == null) {
+            if (onEdge == null) {
               edge = new ReferencesEdge({});
             } else {
               edge = onEdge.call(thisArg, from, to);
@@ -1762,6 +1778,7 @@ primitives.common.family = function (source) {
 
     removeNode: removeNode,
     removeRelation: removeRelation,
+    removeChildRelation: removeChildRelation,
 
     /* referencing and looping */
     node: node,

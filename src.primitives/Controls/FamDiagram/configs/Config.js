@@ -74,6 +74,17 @@ primitives.famdiagram.Config = function (name) {
   this.verticalAlignment = primitives.common.VerticalAlignmentType.Middle;
 
   /**
+   * Loops layout mode. Configuration may contain loop references between items, so control tries to find layout minimizing number of loops between levels, 
+   * so majority of references ideally should go in one direction. This option allows to disable optimization and 
+   * force items level order to match their order in `items` collection. For example if you have two nodes `A` and `B` and each node references the other one as parent, 
+   * then it is undetermenistic which node is going to be on the top. If this option is set to `KeepItemsOrder` then node be is going to be at the top level in the diagram.
+   * 
+   * @group Auto Layout
+   * @type {LoopsLayoutMode}
+   */
+  this.loopsLayoutMode = primitives.common.LoopsLayoutMode.Optimized;
+
+  /**
    * Sets arrows direction for connector lines. If this property set to `Parents` then arrows are drawn
    * from logical children towards logical parents. By default diagram has no arrows.
    * 

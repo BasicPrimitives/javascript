@@ -44,7 +44,7 @@ primitives.common.tree = function (source) {
    */
 
   /**
-   * Loops through nodes of tree struture
+   * Loops through nodes of tree structure
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {onTreeItemCallback} onItem Callback function to call for every tree node 
@@ -73,7 +73,7 @@ primitives.common.tree = function (source) {
    */
 
   /**
-   * Loops through child nodes of the tree struture level by level
+   * Loops through child nodes of the tree structure level by level
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {string} arg0 The node id to start children traversing
@@ -821,7 +821,7 @@ primitives.common.tree = function (source) {
    */
 
   /**
-   * Loops through the node neighbours of the tree struture level by level
+   * Loops through the node neighbours of the tree structure level by level
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {string} itemid The node id to start traversing neighbour nodes

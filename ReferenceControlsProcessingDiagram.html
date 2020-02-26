@@ -84,9 +84,11 @@
         default:
           controlOptions = primitives.famdiagram.getProcessDiagramConfig();
           primitives.common.mergeObjects(viewOptions, {
-            'AddLabelAnnotationsTask': { primaryParent: 'LogicalFamilyTask' },
-            'RemoveLoopsTask': { primaryParent: 'AddLabelAnnotationsTask' },
-            'AddSpousesTask': { primaryParent: 'RemoveLoopsTask' },
+            'RemoveLoopsOptionTask': { relativeItem: 'ItemsOptionTask', placementType: primitives.common.AdviserPlacementType.Right, position: 1 },
+
+            'RemoveLoopsTask': { primaryParent: 'LogicalFamilyTask' },
+            'AddLabelAnnotationsTask': { primaryParent: 'RemoveLoopsTask' },
+            'AddSpousesTask': { primaryParent: 'AddLabelAnnotationsTask' },
             'HideGrandParentsConnectorsTask': { primaryParent: 'AddSpousesTask' },
             'NormalizeLogicalFamilyTask': { primaryParent: 'HideGrandParentsConnectorsTask' },
             'OrderFamilyNodesTask': { primaryParent: 'NormalizeLogicalFamilyTask' },

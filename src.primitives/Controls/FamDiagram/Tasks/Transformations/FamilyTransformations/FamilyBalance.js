@@ -60,11 +60,18 @@ primitives.famdiagram.FamilyBalance.prototype.balance = function (params) {
 
   this.createOrgTree(params, data);
 
+  var currentLevelIndex, index = -1;
   data.orgTree.loopLevels(this, function (treeItemId, treeItem, levelIndex) {
-    result.treeLevels.addItem(levelIndex, treeItemId, treeItem);
+    if (params.logicalFamily.node(treeItemId) != null) {
+      if (currentLevelIndex !== levelIndex) {
+        currentLevelIndex = levelIndex;
+        index += 1;
+      }
+      result.treeLevels.addItem(index, treeItemId, treeItem);
+    }
   });
 
-  this.recalcLevelsDepth(result.bundles, result.connectorStacks, result.treeLevels, data.orgTree, data.orgPartners);
+  this.recalcLevelsDepth(result.bundles, result.connectorStacks, result.treeLevels, params.logicalFamily);
 
   result.maximumId = data.maximumId;
 
@@ -853,9 +860,8 @@ primitives.famdiagram.FamilyBalance.prototype.createOrgItem = function (orgTree,
   return orgItem;
 };
 
-primitives.famdiagram.FamilyBalance.prototype.recalcLevelsDepth = function (bundles, connectorStacks, treeLevels, orgTree, orgPartners) {
-  var index, len,
-    index2, len2,
+primitives.famdiagram.FamilyBalance.prototype.recalcLevelsDepth = function (bundles, connectorStacks, treeLevels, logicalFamily) {
+  var index2, len2,
     index3, len3,
     itemPosition,
     bundle, bundlesToStack,
@@ -871,29 +877,30 @@ primitives.famdiagram.FamilyBalance.prototype.recalcLevelsDepth = function (bund
 
     treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
       var fromItems = [],
-        toItems = [],
-        partners;
+        toItems = [];
       if (!processed.hasOwnProperty(itemid)) {
-
-
         processed[itemid] = true;
-        if (!treeItem.hideChildrenConnection) {
+        var familyItem = logicalFamily.node(itemid);
+
+        if (!familyItem.hideChildrenConnection) {
           fromItems.push(itemid);
         }
 
-        partners = orgPartners[itemid];
-        if (partners != null) {
-          for (index = 0, len = partners.length; index < len; index += 1) {
-            var partner = partners[index];
-            processed[partner] = true;
-            fromItems.push(partner);
-          }
-        }
+        logicalFamily.loopChildren(this, itemid, function (childid, child, index) {
+          logicalFamily.loopParents(this, childid, function (parentid, parentItem) {
+            if (!processed.hasOwnProperty(parentid)) {
+              processed[parentid] = true;
+              if (!parentItem.hideChildrenConnection) {
+                fromItems.push(parentid);
+              }
+            }
+            return logicalFamily.SKIP;
+          });
 
-        orgTree.loopChildren(this, itemid, function (childid, child, index) {
           if (!child.hideParentConnection) {
             toItems.push(childid);
           }
+          return logicalFamily.SKIP;
         }); //ignore jslint
 
         if (fromItems.length > 1 || toItems.length > 0) {

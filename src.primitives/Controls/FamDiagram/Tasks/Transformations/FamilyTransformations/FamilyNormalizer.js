@@ -106,13 +106,6 @@ primitives.famdiagram.FamilyNormalizer.prototype.normalize = function (options, 
           itemConfig: { title: "extension #" + maximumId, description: "This is item used to fill gaps in levels." }
         });
 
-        if (famItem.isFakeParent) {
-          result.isFakeParent = true;
-        }
-        if (famItem.isFakeChild) {
-          result.isFakeChild = true;
-        }
-
         return result;
       } //ignore jslint
     );

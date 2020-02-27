@@ -831,13 +831,11 @@ primitives.famdiagram.FamilyBalance.prototype.recalcLevelsDepth = function (bund
 
     bundlesToStack = [];
 
-    treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
+    treeLevels.loopLevelItems(this, levelIndex, function (itemid, familyItem, position) {
       var fromItems = [],
         toItems = [];
       if (!processed.hasOwnProperty(itemid)) {
         processed[itemid] = true;
-        var familyItem = logicalFamily.node(itemid);
-
         if (!familyItem.hideChildrenConnection) {
           fromItems.push(itemid);
         }

@@ -1,5 +1,10 @@
+#### Version 5.8.0
+* Added `loopsLayoutMode` property to `primitives.famdiagram.Config`. Property defines layout optimization mode for diagrams having loops between items.
+* Fixed loops visualization in family diagram
+* Fixed spouses selection in family diagram
+* Fixed background annotation `includeChildren` property in family diagram having loops between items.
 #### Version 5.7.0
-* Added `primaryParent` property to `primitives.famdiagram.ItemConfig`. Property define user preference for item placement relative to its multiple parents in Family Diagram. See Technological Tree Demo.
+* Added `primaryParent` property to `primitives.famdiagram.ItemConfig`. Property defines user preference for item placement relative to its multiple parents in Family Diagram. See Technological Tree Demo.
 #### Version 5.6.4
 * Updated IntelliSense API annotations
 #### Version 5.6.3

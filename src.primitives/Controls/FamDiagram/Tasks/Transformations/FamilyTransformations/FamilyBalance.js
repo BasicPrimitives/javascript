@@ -833,11 +833,14 @@ primitives.famdiagram.FamilyBalance.prototype.recalcLevelsDepth = function (bund
 
     treeLevels.loopLevelItems(this, levelIndex, function (itemid, familyItem, position) {
       var fromItems = [],
-        toItems = [];
+        toItems = [],
+        dotId = null;
       if (!processed.hasOwnProperty(itemid)) {
         processed[itemid] = true;
         if (!familyItem.hideChildrenConnection) {
           fromItems.push(itemid);
+        } else {
+          dotId = itemid;
         }
 
         logicalFamily.loopChildren(this, itemid, function (childid, child, index) {
@@ -846,6 +849,8 @@ primitives.famdiagram.FamilyBalance.prototype.recalcLevelsDepth = function (bund
               processed[parentid] = true;
               if (!parentItem.hideChildrenConnection) {
                 fromItems.push(parentid);
+              } else {
+                dotId = parentid;
               }
             }
             return logicalFamily.SKIP;
@@ -853,6 +858,8 @@ primitives.famdiagram.FamilyBalance.prototype.recalcLevelsDepth = function (bund
 
           if (!child.hideParentConnection) {
             toItems.push(childid);
+          } else {
+            dotId = childid;
           }
           return logicalFamily.SKIP;
         }); //ignore jslint
@@ -860,7 +867,7 @@ primitives.famdiagram.FamilyBalance.prototype.recalcLevelsDepth = function (bund
         if (fromItems.length > 1 || toItems.length > 0) {
           /* if bundle has more than one parent without children we draw connection line between parents */
           /* if bundles has no parents, but has children we draw connectors between children, top loop */
-          bundle = new primitives.common.VerticalConnectorBundle(fromItems, toItems);
+          bundle = new primitives.common.VerticalConnectorBundle(fromItems, toItems, dotId);
 
           bundles.push(bundle);
 

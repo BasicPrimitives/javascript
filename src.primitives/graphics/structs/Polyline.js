@@ -212,7 +212,6 @@ primitives.common.Polyline = function (newPaletteItem) {
     }
   }
 
-
   function addArrow(lineWidth, onAddArrowSegments) {
     var prevEndPoint,
       currentEndPoint,
@@ -243,10 +242,12 @@ primitives.common.Polyline = function (newPaletteItem) {
       currentSegment = segments[len - 1];
       if (currentSegment.trim != null) {
         currentEndPoint = new primitives.common.Point(currentSegment.getEndPoint());
-        newEndPoint = currentSegment.trim(prevEndPoint, arrowTipWidth);
+        if (currentEndPoint.distanceTo(prevEndPoint) > arrowTipLength) {
+          newEndPoint = currentSegment.trim(prevEndPoint, arrowTipLength);
 
-        polyline = _getArrow(newEndPoint.x, newEndPoint.y, currentEndPoint.x, currentEndPoint.y, arrowTipLength, arrowTipWidth);
-        onAddArrowSegments(polyline, newEndPoint);
+          polyline = _getArrow(newEndPoint.x, newEndPoint.y, currentEndPoint.x, currentEndPoint.y, arrowTipLength, arrowTipWidth);
+          onAddArrowSegments(polyline, newEndPoint);
+        }
       }
     }
   }

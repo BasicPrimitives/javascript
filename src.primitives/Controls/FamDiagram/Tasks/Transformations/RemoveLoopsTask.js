@@ -1,7 +1,8 @@
 ﻿primitives.famdiagram.RemoveLoopsTask = function (itemsOptionTask, removeLoopsOptionTask, logicalFamilyTask) {
   var _data = {
     logicalFamily: null,
-    maximumId: null
+    maximumId: null,
+    loops: [] // populate collection of pairs between fake parents and fake children
   };
 
   function process(debug) {
@@ -15,6 +16,7 @@
 
     _data.logicalFamily = result.logicalFamily;
     _data.maximumId = result.maximumId;
+    _data.loops = result.loops;
 
     if (debug && !logicalFamily.validate()) {
       throw "References are broken in family structure!";
@@ -27,7 +29,8 @@
     var fakeChild, fakeParent,
       index, len,
       index2, len2,
-      edgesToReverse = getInOrderLoops(items, logicalFamily);
+      edgesToReverse = getInOrderLoops(items, logicalFamily),
+      fakePairs = [];
 
     if (edgesToReverse.length > 1 && loopsLayoutMode == primitives.common.LoopsLayoutMode.Optimized) {
       edgesToReverse = primitives.common.getFamilyLoops(logicalFamily, debug);
@@ -108,6 +111,8 @@
           }
 
           logicalFamily.adopt([fakeParent.id], fakeChild.id);
+          fakePairs.push({ from: fakeParent.id, to: fakeChild.id });
+
         }
 
         // assign remaining parents of our item to the fake parent
@@ -124,7 +129,8 @@
     }
     return {
       maximumId: maximumId,
-      logicalFamily: logicalFamily
+      logicalFamily: logicalFamily,
+      loops: fakePairs
     }
   }
 
@@ -183,9 +189,14 @@
     return _data.maximumId;
   }
 
+  function getLoops() {
+    return _data.loops;
+  }
+
   return {
     process: process,
     getLogicalFamily: getLogicalFamily,
-    getMaximumId: getMaximumId
+    getMaximumId: getMaximumId,
+    getLoops: getLoops
   };
 };

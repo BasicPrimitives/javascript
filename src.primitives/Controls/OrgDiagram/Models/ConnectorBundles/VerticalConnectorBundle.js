@@ -1,8 +1,8 @@
-﻿primitives.common.VerticalConnectorBundle = function (fromItems, toItems, oppositeFlowItems) {
+﻿primitives.common.VerticalConnectorBundle = function (fromItems, toItems, dotId) {
   this.fromItems = fromItems;
   this.toItems = toItems;
 
-  this.oppositeFlowItems = oppositeFlowItems || [];
+  this.dotId = dotId || null;
 
   this.fromOffset = 0;
   this.fromStackSize = 0;
@@ -101,24 +101,24 @@ primitives.common.VerticalConnectorBundle.prototype.trace = function (data, para
   var topCenterPoint = null;
   if (parents.length > 0) {
     topCenterPoint = new this.ConnectorDestination({
-      id: this.getId(data),
+      id: (children.length == 0 ? this.dotId : this.getId(data)),
       x: parentHorizontalCenter,
       y: parentsConnectorOffset
     });
-    this.traceFork(data, params, options, topCenterPoint, parents, true, true, this.fromOffset, options.showExtraArrows && (children.length > 0));
+    this.traceFork(data, params, options, topCenterPoint, parents, true, true, this.fromOffset, options.showExtraArrows);
   }
 
   var bottomCenterPoint = null;
   if (children.length > 0) {
     bottomCenterPoint = new this.ConnectorDestination({
-      id: this.getId(data),
+      id: (parents.length == 0 ? this.dotId : this.getId(data)),
       x: parentHorizontalCenter,
       y: childrenConnectorOffset
     });
     if (topCenterPoint != null && bottomCenterPoint.y == topCenterPoint.y) {
       bottomCenterPoint = topCenterPoint;
     }
-    this.traceFork(data, params, options, bottomCenterPoint, children, hasSquared, false, 0, options.showExtraArrows && (parents.length > 0));
+    this.traceFork(data, params, options, bottomCenterPoint, children, hasSquared, false, 0, options.showExtraArrows);
   }
 
   /* draw connector line between children and parents */
@@ -129,7 +129,10 @@ primitives.common.VerticalConnectorBundle.prototype.trace = function (data, para
         polyline.addSegment(new primitives.common.MoveSegment(fromX, fromY));
         polyline.addSegment(new primitives.common.LineSegment(toX, toY));
 
-        data.graph.addEdge(topCenterPoint.id, bottomCenterPoint.id, new this.ConnectorEdge(topCenterPoint.id, bottomCenterPoint.id, polyline, null, null, null, 0/* weight */));
+        data.graph.addEdge(topCenterPoint.id, bottomCenterPoint.id, new this.ConnectorEdge(topCenterPoint.id, bottomCenterPoint.id, polyline,
+          null,
+          null,
+          null, 0/* weight */));
       });
   }
 };

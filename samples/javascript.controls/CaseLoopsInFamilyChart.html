@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Selection Path Mode</title>
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+    var control;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var options = new primitives.famdiagram.Config();
+
+      options.annotations = [
+        { annotationType: primitives.common.AnnotationType.Label, fromItem: 1, toItems: [3], title: "10%" },
+        { annotationType: primitives.common.AnnotationType.Label, fromItem: 1, toItems: [5], title: "30%" },
+        { annotationType: primitives.common.AnnotationType.Label, fromItem: 1, toItems: [6], title: "50%" },
+        { annotationType: primitives.common.AnnotationType.Label, fromItem: 1, toItems: [7], title: "10%" },
+        { annotationType: primitives.common.AnnotationType.Label, fromItem: 1, toItems: [3, 5], title: "40%" },
+        { annotationType: primitives.common.AnnotationType.Label, fromItem: 1, toItems: [3, 5, 6, 7], title: "100%" },
+        { annotationType: primitives.common.AnnotationType.Label, fromItem: 2, toItems: [1], title: "100%" }
+      ];
+      options.items = [
+        { id: 1, parents: [3, 5, 6, 7], title: "James", label: "James", description: "James is First and he is child of Brad, Sara & Lynette", image: "../images/photos/j.png" },
+        { id: 2, parents: [1], title: "Brad", label: "Brad", description: "", image: "../images/photos/b.png" },
+        { id: 3, parents: [2], title: "Thomas", label: "Thomas", description: "", image: "../images/photos/t.png" },
+        { id: 4, parents: [3], title: "David", label: "David", description: "", image: "../images/photos/d.png" },
+        { id: 5, parents: [4], title: "Lynette", label: "Lynette", description: "", image: "../images/photos/l.png" },
+        { id: 6, parents: [4], title: "Sara", label: "Sara", description: "", image: "../images/photos/s.png" },
+        { id: 7, title: "Parent", label: "Parent", description: "Parent node of James", image: "../images/photos/j.png" }
+      ]
+
+      /* Connectors */
+      options.arrowsDirection = primitives.common.GroupByType.Parents;
+      options.showExtraArrows = true;
+      options.extraArrowsMinimumSpace = 30;
+      options.connectorType = primitives.common.ConnectorType.Squared;
+      options.elbowType = primitives.common.ElbowType.Round;
+      options.bevelSize = 4;
+      options.elbowDotSize = 4;
+      options.linesType = primitives.common.LineType.Solid;
+      options.linesColor = primitives.common.Colors.Black;
+      options.linesWidth = 1;
+
+      /* Intervals */
+      options.normalLevelShift = 20;
+      options.dotLevelShift = 20;
+      options.lineLevelShift = 20;
+
+      options.normalItemsInterval = 20;
+      options.dotItemsInterval = 10;
+      options.lineItemsInterval = 10;
+
+      options.cursorItem = 1;
+      options.pageFitMode = primitives.common.PageFitMode.None;
+      options.hasSelectorCheckbox = primitives.common.Enabled.True;
+
+      control = primitives.famdiagram.Control(document.getElementById("basicdiagram"), options);
+
+    });
+
+    function Update() {
+      var loopsLayoutMode = parseInt(getRadioValue("loopsLayoutMode"));
+      control.setOptions({
+        "loopsLayoutMode": loopsLayoutMode
+      });
+      control.update(primitives.common.UpdateMode.Refresh);
+    }
+
+    function getRadioValue(name) {
+      var radios = document.getElementsByName(name);
+      for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+          return radios[i].value;
+        }
+      }
+      return result;
+    }
+  </script>
+
+
+</head>
+
+<body>
+  <div>
+    <p>
+      Loops Layout Mode:
+      <br><label><input onclick="Update()" name="loopsLayoutMode" type="radio" value="0" checked="">Optimized - 1 looped
+        relation</label>
+      <br><label><input onclick="Update()" name="loopsLayoutMode" type="radio" value="1">Keep Items Order - 3 looped
+        relations</label>
+    </p>
+    <div id="basicdiagram" style="width: 640px; height: 400px; border-style: dotted; border-width: 1px;" />
+  </div>
+</body>
+
+</html>

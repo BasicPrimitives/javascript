@@ -3,10 +3,11 @@ primitives.famdiagram.UserDefinedPrimaryParents = function () {
 };
 
 primitives.famdiagram.UserDefinedPrimaryParents.prototype.getUserDefinedPrimaryParents = function (items, family) {
-  var result = {};
+  var result = {},
+    index, len;
 
   var primaryParents = {};
-  for (var index = 0; index < items.length; index += 1) {
+  for (index = 0, len = items.length; index < len; index += 1) {
     var item = items[index];
     if (item.primaryParent != null) {
       primaryParents[item.id] = item.primaryParent;
@@ -20,7 +21,7 @@ primitives.famdiagram.UserDefinedPrimaryParents.prototype.getUserDefinedPrimaryP
     var nodes = [nodeid];
     while (nodes.length > 0) {
       var tempNodes = [];
-      for (var index = 0; index < nodes.length; index += 1) {
+      for (index = 0, len = nodes.length; index < len; index += 1) {
         nodeid = nodes[index];
         family.loopParents(this, nodeid, function (parentid, parent) {
           trace[parentid] = nodeid;

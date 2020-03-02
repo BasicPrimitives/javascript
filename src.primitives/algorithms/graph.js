@@ -474,8 +474,7 @@ primitives.common.graph = function () {
    */
   function dfsPath(thisArg, startNode, endNode, onEdge) {
     var margin = [],
-      backtrace = {},
-      currentNode;
+      backtrace = {};
 
     margin.push(startNode);
     backtrace[startNode] = null;
@@ -489,7 +488,7 @@ primitives.common.graph = function () {
 
         // search its neighbours and add them to margin
         var neighbours = _edges[currentNode];
-        for (neighbour in neighbours) {
+        for (var neighbour in neighbours) {
           if (neighbours.hasOwnProperty(neighbour)) {
             if (!backtrace.hasOwnProperty(neighbour)) {
               // node is not passed yet, check edge capacity and add new neighbour to the margin
@@ -530,7 +529,9 @@ primitives.common.graph = function () {
   function getLevelGraph(thisArg, startNode, onEdge) {
     var level = {},
       margin = [],
-      currentNode;
+      currentNode,
+      currentLevel,
+      neighbours;
 
     margin.push(startNode);
     level[startNode] = 1;
@@ -539,10 +540,10 @@ primitives.common.graph = function () {
     while (margin.length > 0) {
       var newMargin = [];
       for (var index = 0, len = margin.length; index < len; index += 1) {
-        var currentNode = margin[index];
-        var currentLevel = level[currentNode];
-        var neighbours = _edges[currentNode];
-        for (neighbour in neighbours) {
+        currentNode = margin[index];
+        currentLevel = level[currentNode];
+        neighbours = _edges[currentNode];
+        for (var neighbour in neighbours) {
           if (neighbours.hasOwnProperty(neighbour)) {
             if (!level.hasOwnProperty(neighbour)) {
               if (onEdge.call(thisArg, currentNode, neighbour, neighbours[neighbour])) {
@@ -558,10 +559,10 @@ primitives.common.graph = function () {
 
     // Create level graph, copy exisitng edges to the new graph
     var levelGraph = primitives.common.graph();
-    for (var currentNode in _edges) {
+    for (currentNode in _edges) {
       if (level.hasOwnProperty(currentNode)) {
-        var currentLevel = level[currentNode];
-        var neighbours = _edges[currentNode];
+        currentLevel = level[currentNode];
+        neighbours = _edges[currentNode];
         for (neighbour in neighbours) {
           if (level.hasOwnProperty(neighbour)) {
             var neighbourLevel = level[neighbour];
@@ -595,12 +596,12 @@ primitives.common.graph = function () {
     /* search graph */
     while (margin.length > 0) {
       // Remove last node out of margin
-      var currentNode = margin[margin.length - 1];
+      currentNode = margin[margin.length - 1];
       margin.length -= 1;
 
       // search its neighbours and add them to margin
       var neighbours = _edges[currentNode];
-      for (neighbour in neighbours) {
+      for (var neighbour in neighbours) {
         if (neighbours.hasOwnProperty(neighbour)) {
           if (!visited.hasOwnProperty(neighbour)) {
             // node is not passed yet, check edge capacity and add new neighbour to the margin

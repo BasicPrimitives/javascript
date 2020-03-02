@@ -17,9 +17,10 @@ primitives.common.Edge = function (from, to) {
  * @returns {Edge[]} Returns optimal collection of feedback loops 
  */
 primitives.common.getFamilyLoops = function (family, debug) {
-  var loops = [],
-    index,
-    len;
+  var loops = [], loop,
+    index, len,
+    index2, len2,
+    fromNode, toNode, edge;
 
   var tempFamily = family.clone();
 
@@ -47,14 +48,13 @@ primitives.common.getFamilyLoops = function (family, debug) {
       itemsToRemove.push(itemid);
     });
     for (var index = 0; index < itemsToRemove.length; index += 1) {
-      var itemid = itemsToRemove[index];
-      tempFamily.removeNode(itemid);
+      tempFamily.removeNode(itemsToRemove[index]);
     }
   });
 
   /* Invert loops */
-  for (var index = 0; index < loops.length; index += 1) {
-    var loop = loops[index];
+  for (index = 0, len = loops.length; index < len; index += 1) {
+    loop = loops[index];
     if (!cleanFamily.removeChildRelation(loop.from, loop.to)) {
       throw "Relation does not exists";
     }
@@ -71,9 +71,9 @@ primitives.common.getFamilyLoops = function (family, debug) {
   var from = "__1000__";
   var to = "__2000__";
   var defaultMinimalFlow = loops.length;
-  for (var index = 0; index < loops.length; index += 1) {
-    var loop = loops[index];
-    var edge = graph.edge(loop.from, to);
+  for (index = 0, len = loops.length; index < len; index += 1) {
+    loop = loops[index];
+    edge = graph.edge(loop.from, to);
     if (edge == null) {
       graph.addEdge(loop.from, to, { from: loop.from, to: to, capacity: 1, flow: 0, tos: [loop.to] });
     } else {
@@ -119,10 +119,10 @@ primitives.common.getFamilyLoops = function (family, debug) {
 
       // Find maximum flow for given path
       var flow = Infinity;
-      for (var index = 0, len = connectionPath.length; index < len - 1; index += 1) {
-        var fromNode = connectionPath[index];
-        var toNode = connectionPath[index + 1];
-        var edge = graph.edge(fromNode, toNode);
+      for (index = 0, len = connectionPath.length; index < len - 1; index += 1) {
+        fromNode = connectionPath[index];
+        toNode = connectionPath[index + 1];
+        edge = graph.edge(fromNode, toNode);
         var edgeFlow = 0;
         if (edge.from == fromNode) {
           edgeFlow = edge.capacity - edge.flow;
@@ -136,10 +136,10 @@ primitives.common.getFamilyLoops = function (family, debug) {
       }
 
       // Update graph
-      for (var index = 0, len = connectionPath.length; index < len - 1; index += 1) {
-        var fromNode = connectionPath[index];
-        var toNode = connectionPath[index + 1];
-        var edge = graph.edge(fromNode, toNode);
+      for (index = 0, len = connectionPath.length; index < len - 1; index += 1) {
+        fromNode = connectionPath[index];
+        toNode = connectionPath[index + 1];
+        edge = graph.edge(fromNode, toNode);
         if (edge.from == fromNode) {
           edge.flow += flow;
         } else {
@@ -204,18 +204,18 @@ primitives.common.getFamilyLoops = function (family, debug) {
     // collect loops to break
     var optimizedLoops = [];
     var validatedFlow = 0;
-    for (var index = 0, len = edgesToBreak.length; index < len; index += 1) {
+    for (index = 0, len = edgesToBreak.length; index < len; index += 1) {
       var edgeToBreak = edgesToBreak[index];
 
       if (edgeToBreak.from == from) {
-        var edge = graph.edge(edgeToBreak.from, edgeToBreak.to);
-        for (var index2 = 0, len2 = edge.froms.length; index2 < len2; index2 += 1) {
+        edge = graph.edge(edgeToBreak.from, edgeToBreak.to);
+        for (index2 = 0, len2 = edge.froms.length; index2 < len2; index2 += 1) {
           optimizedLoops.push(new primitives.common.Edge(edge.froms[index2], edgeToBreak.to));
           validatedFlow += 1;
         }
       } else if (edgeToBreak.to == to) {
-        var edge = graph.edge(edgeToBreak.from, edgeToBreak.to);
-        for (var index2 = 0, len2 = edge.tos.length; index2 < len2; index2 += 1) {
+        edge = graph.edge(edgeToBreak.from, edgeToBreak.to);
+        for (index2 = 0, len2 = edge.tos.length; index2 < len2; index2 += 1) {
           optimizedLoops.push(new primitives.common.Edge(edgeToBreak.from, edge.tos[index2]));
           validatedFlow += 1;
         }

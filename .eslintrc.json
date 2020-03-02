@@ -18,6 +18,7 @@
     "no-unused-vars": 0,
     "no-fallthrough": 0,
     "no-control-regex": 0,
-    "no-empty": 0
+    "no-empty": 0,
+    "no-constant-condition": 0
   }
 }

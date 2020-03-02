@@ -39,7 +39,7 @@ primitives.common.Polyline = function (newPaletteItem) {
 
   function addSegments(newSegments) {
     var index, len;
-    for (var index = 0, len = newSegments.length; index < len; index += 1) {
+    for (index = 0, len = newSegments.length; index < len; index += 1) {
       segments.push(newSegments[index]);
     }
   }

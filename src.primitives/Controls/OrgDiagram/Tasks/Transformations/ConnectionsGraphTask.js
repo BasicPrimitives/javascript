@@ -52,7 +52,7 @@
       graph.getShortestPath(this, loop.from, [loop.to], function (connectorEdge, fromItem, toItem) {
         return connectorEdge.weight;
       }, function (path, to) {
-        for (var index2 = 0, len2 = path.length - 2; index2 < len2; index2 += 1) {
+        for (var index2 = 0, len2 = path.length - 1; index2 < len2; index2 += 1) {
           var fromItem = path[index2], toItem = path[index2 + 1];
           var edge = graph.edge(fromItem, toItem);
           edge.isOppositeFlow = true;

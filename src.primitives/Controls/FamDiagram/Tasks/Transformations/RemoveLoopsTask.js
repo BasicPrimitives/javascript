@@ -39,7 +39,7 @@
     // group edges by child node
     var loops = [];
     var loopsHash = {};
-    for (var index = 0, len = edgesToReverse.length; index < len; index += 1) {
+    for (index = 0, len = edgesToReverse.length; index < len; index += 1) {
       var edge = edgesToReverse[index];
 
       if (!loopsHash.hasOwnProperty(edge.to)) {
@@ -53,7 +53,7 @@
     var fakeChildren = {}; // reuse fake children across removed edges
     if (loops.length > 0) {
       logicalFamily = logicalFamily.clone();
-      for (var index = 0, len = loops.length; index < len; index += 1) {
+      for (index = 0, len = loops.length; index < len; index += 1) {
         var loop = loops[index];
         var parents = loop.parents;
 

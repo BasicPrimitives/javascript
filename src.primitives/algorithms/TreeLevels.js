@@ -157,7 +157,7 @@ primitives.common.TreeLevels = function (source) {
   }
 
   /**
-   * Checks if struture contains element
+   * Checks if structure contains element
    * @param {string} itemid Element id
    * @returns {boolean} Returns true if structure contains given element id
    */
@@ -166,7 +166,7 @@ primitives.common.TreeLevels = function (source) {
   }
 
   /**
-   * Checks if struture contains level
+   * Checks if structure contains level
    * @param {number} levelIndex Level index
    * @returns {boolean} Returns true if structure contains given level index
    */

@@ -160,6 +160,16 @@ Line style of connection lines.
  | `Dotted` | number | `1` | Dotted | 
  | `Solid` | number | `0` | Solid | 
 
+## <a name="primitives.common.LoopsLayoutMode" id="primitives.common.LoopsLayoutMode">LoopsLayoutMode</a>
+Loops layout mode. Configuration may contain loop references between items, so control tries to find layout minimizing number of loops between levels, so majority of references ideally should go in one direction. This option disables optimization and forces items levels order to match their order in `items` collection. For example if you have two nodes `A` and `B` referencing each other as a parent, then it is not defined which one is going to be on the top of the diagram. Set this option to `KeepItemsOrder`, if you need the first item in your collection to be on the top, otherwise control will optimize loops layout in order to minimize number of loops in diagram.
+
+ `primitives.common.LoopsLayoutMode` 
+
+| Name | Type | Value | Description | 
+| --- | --- | --- | --- | 
+ | `KeepItemsOrder` | number | `1` | Keeps order of items on levels, the same as in `items` collection property. | 
+ | `Optimized` | number | `0` | Optimized. Control searches for layout producing minimal number of feedback loops in the diagram. | 
+
 ## <a name="primitives.common.NavigationMode" id="primitives.common.NavigationMode">NavigationMode</a>
 Interactivity mode. Control implements standard behaivour of classic desktop UI controls. It supports single selected node - cursor. It supports on mouse over node visual feedback - highlight. It supports selection of group of nodes - selected items. All that functionality can be disabled depending on your application requirements.
 

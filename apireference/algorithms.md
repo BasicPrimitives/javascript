@@ -146,12 +146,28 @@ Eliminates direct relations between grand parent nodes.
  Returns: `family` - returns family structure without direct grand parent relations.
 
 
- `getGraph()` 
+ `getGraph(thisArg, onEdge)` 
 
 Creates graph structure out of the family structure.
 
  Returns: `graph` - returns graph structure of the family.
 
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `onEdge` | onFamilyEdgeCallback | `` | A callback function to call for every new edge added to the final graph | 
+**Callbacks**
+
+ `onFamilyEdgeCallback(from, to)` 
+
+Callback for getting default edge value
+
+ Returns: `object` - returns new edge object.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `from` | string | `` | From node id | 
+ | `to` | string | `` | The node | 
 
  `getPlanarFamily(treeLevels)` 
 
@@ -189,7 +205,7 @@ Returns true if structure has nodes.
 
  `loop(thisArg, onItem)` 
 
-Loops through nodes of family struture
+Loops through nodes of family structure
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -210,7 +226,7 @@ Callback for iterating family nodes
 
  `loopChildren(thisArg, nodeid, onItem)` 
 
-Loops through child nodes of family struture level by level
+Loops through child nodes of family structure level by level
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -233,7 +249,7 @@ Callback for iterating family nodes level by level
 
  `loopLevels(thisArg, parentAligned, onItem)` 
 
-Loops through nodes of family struture level by level. This function aligns nodes top or bottom.
+Loops through nodes of family structure level by level. This function aligns nodes top or bottom.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -256,7 +272,7 @@ Callback for iterating family nodes level by level
 
  `loopNeighbours(thisArg, itemid, onItem)` 
 
-Loops through the node neighbours of the family struture level by level
+Loops through the node neighbours of the family structure level by level
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -279,7 +295,7 @@ Callback for iterating family node neighbours level by level
 
  `loopParents(thisArg, nodeid, onItem)` 
 
-Loops through parent nodes of family struture level by level
+Loops through parent nodes of family structure level by level
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -323,7 +339,7 @@ Callback for iterating family nodes
 
  `loopTopo(thisArg, onItem)` 
 
-Loops through topologically sorted nodes of family struture
+Loops through topologically sorted nodes of family structure
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -345,7 +361,7 @@ Callback for iterating family nodes in topological sort order
 
  `loopTopoReversed(thisArg, onItem)` 
 
-Loops through reversed order topologically sorted nodes of family struture
+Loops through reversed order topologically sorted nodes of family structure
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -391,6 +407,17 @@ Callback function for cretion of new family nodes
  Returns: `object` - returns new family node.
 
 
+ `removeChildRelation(parentid, childid)` 
+
+Removes child relation
+
+ Returns: `true` - if relation was broken
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `parentid` | string | `` | The parent node id | 
+ | `childid` | string | `` | The child node id | 
+
  `removeNode(nodeid)` 
 
 Removes node
@@ -401,14 +428,14 @@ Removes node
 
  `removeRelation(fromid, toid)` 
 
-Remove parent child relation
+Removes first available parent child or child parent relation
 
  Returns: `true` - if relation was broken
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `fromid` | string | `` | The parent node id | 
- | `toid` | string | `` | The child node id | 
+ | `fromid` | string | `` | From node id | 
+ | `toid` | string | `` | To node id | 
 
  `validate(info)` 
 
@@ -468,11 +495,6 @@ Creates Fibonacci Heap structure
  | `isMaximum` | boolean | `` | Is maximum heap | 
 
 ### Functions
-
- `Result(node)` 
-
-undefined
-
 
  `add(key, priority, item)` 
 
@@ -558,6 +580,64 @@ Adds edge to the graph
  | `to` | string | `` | The id of the end node | 
  | `edge` | object | `` | The edge contextual object | 
 
+ `dfsLoop(thisArg, startNode, onEdge, onNode)` 
+
+Depth first search loop
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `thisArg` | object | `` | The callback function invocation context | 
+ | `startNode` | string | `` | The start node id | 
+ | `onEdge` | onPathEdgeCallback | `` | A callback function to call for every edge of the graph | 
+ | `onNode` | onNodeCallback | `` | A callback function to be called for every neighbouring node | 
+**Callbacks**
+
+ `onPathEdgeCallback(from, to, edge)` 
+
+Callback for iterating path edges
+
+ Returns: `boolean` - returns true if edge is usable
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `from` | string | `` | The from node id | 
+ | `to` | string | `` | The to node id | 
+ | `edge` | Object | `` | The edge's context object | 
+
+ `onNodeCallback(to)` 
+
+Callback function for iterating graphs nodes
+
+ Returns: `boolean` - returns true to break loop
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `to` | string | `` | The next neighbouring node id | 
+
+ `dfsPath(thisArg, startNode, endNode, onEdge)` 
+
+Search any path from node to node using depth first search
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `thisArg` | object | `` | The callback function invocation context | 
+ | `startNode` | string | `` | The start node id | 
+ | `endNode` | string | `` | The end node id. | 
+ | `onEdge` | onPathEdgeCallback | `` | A callback function to call for every edge of the node | 
+**Callbacks**
+
+ `onPathEdgeCallback(from, to, edge)` 
+
+Callback for iterating path edges
+
+ Returns: `boolean` - returns true if edge is usable
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `from` | string | `` | The from node id | 
+ | `to` | string | `` | The to node id | 
+ | `edge` | Object | `` | The edge's context object | 
+
  `edge(from, to)` 
 
 Returns edge context object
@@ -568,6 +648,29 @@ Returns edge context object
 | --- | --- | --- | --- | 
  | `from` | string | `` | The edge's from node id | 
  | `to` | string | `` | The edge's to node id | 
+
+ `getLevelGraph(thisArg, startNode, onEdge)` 
+
+Get Level Graph starting with `startNode`
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `thisArg` | object | `` | The callback function invocation context | 
+ | `startNode` | string | `` | The start node id | 
+ | `onEdge` | onPathEdgeCallback | `` | A callback function to call for every edge of the graph | 
+**Callbacks**
+
+ `onPathEdgeCallback(from, to, edge)` 
+
+Callback for iterating path edges
+
+ Returns: `boolean` - returns true if edge is usable
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `from` | string | `` | The from node id | 
+ | `to` | string | `` | The to node id | 
+ | `edge` | Object | `` | The edge's context object | 
 
  `getMinimumWeightGrowthSequence(thisArg, startNode, onEdgeWeight, onItem)` 
 
@@ -597,6 +700,8 @@ Callback for finding edge weight
 
 Callback function for iterating graphs nodes
 
+ Returns: `boolean` - returns true to break loop
+
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `to` | string | `` | The next neighbouring node id | 
@@ -611,7 +716,6 @@ Get shortest path between two nodes in graph. The start and the end nodes are su
  | `startNode` | string | `` | The start node id | 
  | `endNodes` | string[] | `` | The array of end node ids. | 
  | `getWeightFunc` | getGraphEdgeWeightCallback | `` | Callback function to get weight of an edge. | 
- | `onItem` | onNodeCallback | `` | A callback function to be called for every node of the growth sequence | 
  | `onPathFound` | onPathFoundCallback | `` | A callback function to be called for every end node with the optimal connection path | 
 **Callbacks**
 
@@ -626,14 +730,6 @@ Callback for finding edge weight
  | `edge` | object | `` | The edge context object | 
  | `fromItem` | string | `` | The edge's start node id | 
  | `toItem` | string | `` | The edge's end node id | 
-
- `onNodeCallback(to)` 
-
-Callback function for iterating graphs nodes
-
-| Param | Type | Default | Description | 
-| --- | --- | --- | --- | 
- | `to` | string | `` | The next neighbouring node id | 
 
  `onPathFoundCallback(path, to)` 
 
@@ -695,6 +791,8 @@ Callback for finding edge weight
 
 Callback function for iterating graphs nodes
 
+ Returns: `boolean` - returns true to break loop
+
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `to` | string | `` | The next neighbouring node id | 
@@ -743,6 +841,8 @@ Loop nodes of the graph
  `onNodeCallback(to)` 
 
 Callback function for iterating graphs nodes
+
+ Returns: `boolean` - returns true to break loop
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -1389,7 +1489,7 @@ Inserts bundle node into the tree structure. The new budnle node becomes only ch
 
  `loop(thisArg, onItem)` 
 
-Loops through nodes of tree struture
+Loops through nodes of tree structure
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -1505,7 +1605,7 @@ Callback for iterating nodes in euler walk order
 
  `loopLevels(thisArg, arg0, arg1)` 
 
-Loops through child nodes of the tree struture level by level
+Loops through child nodes of the tree structure level by level
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -1528,7 +1628,7 @@ Callback for iterating the tree nodes level by level
 
  `loopNeighbours(thisArg, itemid, distance, onItem)` 
 
-Loops through the node neighbours of the tree struture level by level
+Loops through the node neighbours of the tree structure level by level
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -1853,7 +1953,7 @@ Returns element's start level index in the structure. Element may occupy multipl
 
  `hasItem(itemid)` 
 
-Checks if struture contains element
+Checks if structure contains element
 
  Returns: `boolean` - returns true if structure contains given element id
 
@@ -1863,7 +1963,7 @@ Checks if struture contains element
 
  `hasLevel(levelIndex)` 
 
-Checks if struture contains level
+Checks if structure contains level
 
  Returns: `boolean` - returns true if structure contains given level index
 

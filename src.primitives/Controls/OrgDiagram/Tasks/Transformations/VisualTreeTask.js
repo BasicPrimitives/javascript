@@ -846,7 +846,7 @@ primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, v
 
   function createNewVisualAggregatorWithGivenDepth(visualTree, treeItem, hideParentConnector, hideChildrenConnector, depth) {
     var result = null,
-        newAggregatorItem;
+      newAggregatorItem;
     hideParentConnector = hideParentConnector || hideChildrenConnector;
 
     var index = 0;
@@ -972,7 +972,7 @@ primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, v
     return _data.visualTree;
   }
 
-  function getNavigationFamily() {
+  function getLogicalFamily() {
     return _data.navigationFamily;
   }
 
@@ -991,7 +991,7 @@ primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, v
   return {
     process: process,
     getVisualTree: getVisualTree,
-    getNavigationFamily: getNavigationFamily,
+    getLogicalFamily: getLogicalFamily,
     getConnectionsFamily: getConnectionsFamily,
     getLeftMargins: getLeftMargins,
     getRightMargins: getRightMargins

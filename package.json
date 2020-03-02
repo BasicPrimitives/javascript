@@ -10,10 +10,10 @@
     "src.tests.merge": "node merge.js src.tests\\src.tests.json",
     "merge": "yarn src.primitives.merge && yarn src.primitives.compile && yarn src.primitives.jquery.merge && yarn src.primitives.jquery.compile && yarn src.tests.merge",
     "apireference": "node apireference.js apireference.json",
-    "screenshots": "node screenshots.js"
+    "screenshots": "node screenshots.js",
+    "eslint": "./node_modules/.bin/eslint ./min/primitives.latest.js"
   },
   "dependencies": {
-    "eslint": "^5.15.1",
     "google-closure-compiler": "^20200112.0.0",
     "puppeteer": "^1.20.0"
   },
@@ -21,5 +21,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/BasicPrimitives/javascript"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0"
   }
 }

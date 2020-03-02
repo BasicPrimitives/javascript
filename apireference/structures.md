@@ -603,3 +603,13 @@ Finds how two vectors relate to each other
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `vector` | Vector | `` | The vector to relate with | 
+
+## <a name="primitives.common.HeapResult" id="primitives.common.HeapResult">HeapResult</a>
+Heap result object
+
+ `primitives.common.HeapResult` 
+
+## <a name="primitives.common.Edge" id="primitives.common.Edge">Edge</a>
+Graph edge structure
+
+ `primitives.common.Edge` 

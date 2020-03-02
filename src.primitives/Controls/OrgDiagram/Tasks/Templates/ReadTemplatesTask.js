@@ -14,7 +14,7 @@
 
     _data.templates = {};
 
-    var templateConfig = new primitives.orgdiagram.TemplateConfig();
+    templateConfig = new primitives.orgdiagram.TemplateConfig();
 
     _data.templates[_defaultWidgetTemplateName] = new primitives.orgdiagram.Template(
       templateConfig,

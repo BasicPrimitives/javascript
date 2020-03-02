@@ -1,7 +1,7 @@
 ﻿/*	Balance family tree so parents sharing the most children stay close to each other 
     Account for users position and primnaryParent options
 */
-primitives.famdiagram.OrderFamilyNodesTask = function (orderFamilyNodesOptionTask, userDefinedNodesOrderTask, normalizeLogicalFamilyTask, defaultItemConfig) {
+primitives.famdiagram.OrderFamilyNodesTask = function (orderFamilyNodesOptionTask, userDefinedNodesOrderTask, normalizeLogicalFamilyTask) {
   var _data = {
     maximumId: null, /* maximum of OrgItem.id */
     logicalFamily: null,
@@ -42,7 +42,6 @@ primitives.famdiagram.OrderFamilyNodesTask = function (orderFamilyNodesOptionTas
     var balanceParams = {
       logicalFamily: logicalFamily,
       maximumId: maximumId,
-      defaultItemConfig: defaultItemConfig,
       itemsPositions: userDefinedNodesOrderTask.getPositions(),
       itemsGroups: userDefinedNodesOrderTask.getGroups(),
       primaryParents: _userDefinedPrimaryParents.getUserDefinedPrimaryParents(orderFamilyNodesOptions.items, logicalFamily)

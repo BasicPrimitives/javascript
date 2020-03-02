@@ -75,9 +75,10 @@ primitives.famdiagram.Config = function (name) {
 
   /**
    * Loops layout mode. Configuration may contain loop references between items, so control tries to find layout minimizing number of loops between levels, 
-   * so majority of references ideally should go in one direction. This option allows to disable optimization and 
-   * force items level order to match their order in `items` collection. For example if you have two nodes `A` and `B` and each node references the other one as parent, 
-   * then it is undetermenistic which node is going to be on the top. If this option is set to `KeepItemsOrder` then node be is going to be at the top level in the diagram.
+   * so majority of references ideally should go in one direction. This option disables optimization and 
+   * forces items levels order to match their order in `items` collection. For example if you have two nodes `A` and `B` referencing each other as a parent, 
+   * then it is not defined which one is going to be on the top of the diagram. Set this option to `KeepItemsOrder`, if you need the first item in your collection to be
+   * on the top, otherwise control will optimize loops layout in order to minimize number of loops in diagram.
    * 
    * @group Auto Layout
    * @type {LoopsLayoutMode}

@@ -1,6 +1,6 @@
 #### Version 5.8.0
-* Added `loopsLayoutMode` property to `primitives.famdiagram.Config`. Property defines layout optimization mode for diagrams having loops between items.
-* Fixed loops visualization in family diagram
+* Added `loopsLayoutMode` property to `primitives.famdiagram.Config`. Property sets loops layout optimization mode in Family Diagram. See `Loops Layout Optimization` use case.
+* Added extra arrows to vertical segments of loops in family diagram
 * Fixed spouses selection in family diagram
 * Fixed background annotation `includeChildren` property in family diagram having loops between items.
 #### Version 5.7.0

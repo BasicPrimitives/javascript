@@ -109,6 +109,16 @@ Callback function to iterate over pairs of crosssing rectangles
  | `rect1` | Rect | `` | First rectangle | 
  | `rect2` | Rect | `` | Second rectangle | 
 
+## <a name="primitives.common.getFamilyLoops" id="primitives.common.getFamilyLoops">getFamilyLoops</a>
+
+This function finds [optimal collection of feedback edges](https://en.wikipedia.org/wiki/Feedback_arc_set) needed to be cut in order to eliminate loops in family structure.
+
+ Returns: `Edge[]` - returns optimal collection of feedback loops
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `family` | Family | `` | Family structure | 
+
 ## <a name="primitives.common.getGreen" id="primitives.common.getGreen">getGreen</a>
 
 Gets green value of HEX color string.

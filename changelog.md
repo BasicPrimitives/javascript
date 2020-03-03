@@ -1,3 +1,5 @@
+#### Version 5.8.1
+* Fixed perfromance bug in loops layout optimization
 #### Version 5.8.0
 * Added `loopsLayoutMode` property to `primitives.famdiagram.Config`. Property sets loops layout optimization mode in Family Diagram. See `Loops Layout Optimization` use case.
 * Added extra arrows to vertical segments of loops in family diagram

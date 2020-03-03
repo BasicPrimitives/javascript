@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagrams v5.8.0
+ * @preserve Basic Primitives Diagrams v5.8.1
  * Copyright (c) 2013 - 2020 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -35,7 +35,7 @@
 
 var primitives = {
   common: {
-    version: "5.8.0"
+    version: "5.8.1"
   },
   orgdiagram: {},
   famdiagram: {},
@@ -26919,16 +26919,16 @@ primitives.common.getFamilyLoops = function (family, debug) {
         tempFamily.removeChildRelation(parentid, itemid);
         return cleanFamily.SKIP;
       })
-    }
-    var itemsToRemove = [];
-    tempFamily.loopTopo(this, function (itemid) {
-      itemsToRemove.push(itemid);
-    });
-    tempFamily.loopTopoReversed(this, function (itemid) {
-      itemsToRemove.push(itemid);
-    });
-    for (var index = 0; index < itemsToRemove.length; index += 1) {
-      tempFamily.removeNode(itemsToRemove[index]);
+      var itemsToRemove = [];
+      tempFamily.loopTopo(this, function (itemid) {
+        itemsToRemove.push(itemid);
+      });
+      tempFamily.loopTopoReversed(this, function (itemid) {
+        itemsToRemove.push(itemid);
+      });
+      for (var index = 0; index < itemsToRemove.length; index += 1) {
+        tempFamily.removeNode(itemsToRemove[index]);
+      }
     }
   });
 

@@ -39,16 +39,16 @@ primitives.common.getFamilyLoops = function (family, debug) {
         tempFamily.removeChildRelation(parentid, itemid);
         return cleanFamily.SKIP;
       })
-    }
-    var itemsToRemove = [];
-    tempFamily.loopTopo(this, function (itemid) {
-      itemsToRemove.push(itemid);
-    });
-    tempFamily.loopTopoReversed(this, function (itemid) {
-      itemsToRemove.push(itemid);
-    });
-    for (var index = 0; index < itemsToRemove.length; index += 1) {
-      tempFamily.removeNode(itemsToRemove[index]);
+      var itemsToRemove = [];
+      tempFamily.loopTopo(this, function (itemid) {
+        itemsToRemove.push(itemid);
+      });
+      tempFamily.loopTopoReversed(this, function (itemid) {
+        itemsToRemove.push(itemid);
+      });
+      for (var index = 0; index < itemsToRemove.length; index += 1) {
+        tempFamily.removeNode(itemsToRemove[index]);
+      }
     }
   });
 

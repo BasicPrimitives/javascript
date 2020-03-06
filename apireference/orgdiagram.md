@@ -256,7 +256,7 @@ Item Configuration Object defines properties of individual node in the organizat
 | --- | --- | --- | --- | 
  | `arg0` | ItemConfig | `` | Item config properties | 
  | `arg0` | string | `` | Item id | 
- | `arg1` | string[] | `` | Parent id | 
+ | `arg1` | string | `` | Parent id | 
  | `arg2` | string | `` | Title | 
  | `arg3` | string | `` | Description | 
  | `arg4` | string | `` | Image | 

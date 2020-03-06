@@ -7630,7 +7630,7 @@ primitives.famdiagram.Config = function (name) {
    * @group Auto Layout
    * @type {LoopsLayoutMode}
    */
-  this.loopsLayoutMode = primitives.common.LoopsLayoutMode.Optimized;
+  this.loopsLayoutMode = 0/*primitives.common.LoopsLayoutMode.Optimized*/;
 
   /**
    * Sets arrows direction for connector lines. If this property set to `Parents` then arrows are drawn
@@ -12972,7 +12972,7 @@ primitives.famdiagram.RemoveLoopsTask = function (itemsOptionTask, removeLoopsOp
       edgesToReverse = getInOrderLoops(items, logicalFamily),
       fakePairs = [];
 
-    if (edgesToReverse.length > 1 && loopsLayoutMode == primitives.common.LoopsLayoutMode.Optimized) {
+    if (edgesToReverse.length > 1 && loopsLayoutMode == 0/*primitives.common.LoopsLayoutMode.Optimized*/) {
       edgesToReverse = primitives.common.getFamilyLoops(logicalFamily, debug);
     }
 
@@ -15001,7 +15001,7 @@ primitives.orgdiagram.HighlightPathAnnotationConfig = function (arg0) {
  * @param {ItemConfig} arg0 Item config properties
  * 
  * @param {string} arg0 Item id
- * @param {string[]} arg1 Parent id
+ * @param {string} arg1 Parent id
  * @param {string} arg2 Title
  * @param {string} arg3 Description 
  * @param {string} arg4 Image

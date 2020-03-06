@@ -62,6 +62,7 @@
     "ZOrderType.js",
     "VectorRelationType.js",
     "NavigationMode.js",
-    "QuadrantType.js"
+    "QuadrantType.js",
+    "LoopsLayoutMode.js"
   ]
 }

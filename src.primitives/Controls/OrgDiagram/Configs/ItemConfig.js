@@ -6,7 +6,7 @@
  * @param {ItemConfig} arg0 Item config properties
  * 
  * @param {string} arg0 Item id
- * @param {string[]} arg1 Parent id
+ * @param {string} arg1 Parent id
  * @param {string} arg2 Title
  * @param {string} arg3 Description 
  * @param {string} arg4 Image

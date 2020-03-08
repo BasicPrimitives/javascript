@@ -1,6 +1,6 @@
 {
   "name": "basicprimitives",
-  "version": "5.8.1",
+  "version": "5.8.2",
   "description": "Basic Primitives Diagrams for JavaScript - data visualization components library that implements organizational chart and multi-parent dependency diagrams, contains implementations of JavaScript Controls and PDF rendering plugins.",
   "main": "primitives.latest.js",
   "scripts": {

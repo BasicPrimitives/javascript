@@ -1,3 +1,5 @@
+#### Version 5.8.2
+* Fixed `selectionPathMode` in Family Diagram.
 #### Version 5.8.1
 * Fixed perfromance bug in loops layout optimization
 #### Version 5.8.0

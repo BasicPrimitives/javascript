@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Selection Path Mode In Family Chart</title>
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+    var control;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var options = new primitives.famdiagram.Config();
+
+      var items = [
+        new primitives.famdiagram.ItemConfig({
+          id: 0,
+          parents: null,
+          title: "Scott Aasrud",
+          description: "VP, Public Sector",
+          image: "../images/photos/a.png"
+        }),
+        new primitives.famdiagram.ItemConfig({
+          id: 1,
+          parents: [0],
+          title: "Ted Lucas",
+          description: "VP, Human Resources",
+          image: "../images/photos/b.png"
+        }),
+        new primitives.famdiagram.ItemConfig({
+          id: 2,
+          parents: [1],
+          title: "Fritz Stuger",
+          description: "Business Solutions, US",
+          image: "../images/photos/c.png"
+        }),
+        new primitives.famdiagram.ItemConfig({
+          id: 3,
+          parents: [2],
+          title: "Robert Canon",
+          description: "Business Solutions, Canada",
+          image: "../images/photos/z.png"
+        })
+      ];
+
+      options.items = items;
+      options.cursorItem = null;
+      options.pageFitMode = primitives.common.PageFitMode.FitToPage;
+      options.selectionPathMode = primitives.common.SelectionPathMode.None;
+      options.hasSelectorCheckbox = primitives.common.Enabled.True;
+      options.selectedItems = [3];
+
+
+      control = primitives.famdiagram.Control(document.getElementById("basicdiagram"), options);
+
+    });
+
+    function Update() {
+      var selectionPathMode = parseInt(getRadioValue("selectionPathMode"));
+      control.setOptions({
+        "selectionPathMode": selectionPathMode,
+        "cursorItem": null
+      });
+      control.update(primitives.common.UpdateMode.Refresh);
+    }
+
+    function getRadioValue(name) {
+      var radios = document.getElementsByName(name);
+      for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+          return radios[i].value;
+        }
+      }
+      return result;
+    }
+  </script>
+
+
+</head>
+
+<body>
+  <div>
+    <p>
+      Selection Path Mode:
+      <br><label><input onclick="Update()" name="selectionPathMode" type="radio" value="0" checked="">None</label>
+      <br><label><input onclick="Update()" name="selectionPathMode" type="radio" value="1">Full Stack</label>
+    </p>
+    <div id="basicdiagram" style="width: 640px; height: 400px; border-style: dotted; border-width: 1px;" />
+  </div>
+</body>
+
+</html>

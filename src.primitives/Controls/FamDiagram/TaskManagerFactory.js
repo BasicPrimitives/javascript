@@ -109,7 +109,7 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
   tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.CursorItemTask, primitives.common.Colors.Cyan);
   tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'NeighboursSelectionModeOptionTask', 'AddSpousesTask', 'ActiveItemsTask'], primitives.famdiagram.CursorNeighboursTask, primitives.common.Colors.Cyan);
   tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, primitives.common.Colors.Cyan);
-  tasks.addTask('SelectionPathItemsTask', ['AddSpousesTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], primitives.orgdiagram.SelectionPathItemsTask, primitives.common.Colors.Cyan);
+  tasks.addTask('SelectionPathItemsTask', ['AddSpousesTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], primitives.famdiagram.SelectionPathItemsTask, primitives.common.Colors.Cyan);
 
   tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, primitives.common.Colors.Cyan);
   tasks.addTask('NormalVisibilityItemsByBackgroundShapeAnnotationTask', ['BackgroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, primitives.common.Colors.Cyan);

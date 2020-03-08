@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagrams v5.8.1
+ * @preserve Basic Primitives Diagrams v5.8.2
  * Copyright (c) 2013 - 2020 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -35,7 +35,7 @@
 
 var primitives = {
   common: {
-    version: "5.8.1"
+    version: "5.8.2"
   },
   orgdiagram: {},
   famdiagram: {},
@@ -12357,6 +12357,64 @@ primitives.famdiagram.CursorNeighboursTask = function (cursorItemTask, neighbour
   };
 };
 
+/* /Controls/FamDiagram/Tasks/Transformations/Selection/SelectionPathItemsTask.js*/
+primitives.famdiagram.SelectionPathItemsTask = function (navigationFamilyTask, cursorItemTask, selectedItemsTask, cursorSelectionPathModeOptionTask) {
+  var _data = {
+    items: []
+  };
+
+  function process() {
+    var selectionPathMode = cursorSelectionPathModeOptionTask.getSelectionPathMode(),
+      navigationFamily = navigationFamilyTask.getLogicalFamily(),
+      cursorTreeItemId = cursorItemTask.getCursorTreeItem(),
+      selectedItems = selectedItemsTask.getItems().slice(0);
+
+    selectedItems.push(cursorTreeItemId);
+
+    _data.items = getSelectionPathItems(selectedItems, navigationFamily, selectionPathMode);
+
+    return true;
+  }
+
+  function getSelectionPathItems(selectedItems, navigationFamily, selectionPathMode) {
+    var result = [],
+      processed = {},
+      selectedItem,
+      index, len;
+
+    for (index = 0, len = selectedItems.length; index < len; index += 1) {
+      selectedItem = selectedItems[index];
+      /* show cursor full stack */
+      switch (selectionPathMode) {
+        case 0/*primitives.common.SelectionPathMode.None*/:
+          break;
+        case 1/*primitives.common.SelectionPathMode.FullStack*/:
+          /* select all parents up to the root */
+          navigationFamily.loopParents(this, selectedItem, function (parentItemId, parentItem) {
+            if (processed[parentItemId] != null) {
+              return navigationFamily.SKIP;
+            }
+            if (parentItem.isVisible) {
+              result.push(parentItemId);
+            }
+            processed[parentItemId] = true;
+          });
+          break;
+      }
+    }
+    return result;
+  }
+
+  function getItems() {
+    return _data.items;
+  }
+
+  return {
+    process: process,
+    getItems: getItems
+  };
+};
+
 /* /Controls/FamDiagram/Tasks/Transformations/AddLabelAnnotationsTask.js*/
 primitives.famdiagram.AddLabelAnnotationsTask = function (labelAnnotationPlacementOptionTask, removeLoopsTask) {
   var _data = {
@@ -13370,7 +13428,7 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
   tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
   tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'NeighboursSelectionModeOptionTask', 'AddSpousesTask', 'ActiveItemsTask'], primitives.famdiagram.CursorNeighboursTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
   tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-  tasks.addTask('SelectionPathItemsTask', ['AddSpousesTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], primitives.orgdiagram.SelectionPathItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('SelectionPathItemsTask', ['AddSpousesTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], primitives.famdiagram.SelectionPathItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
   tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
   tasks.addTask('NormalVisibilityItemsByBackgroundShapeAnnotationTask', ['BackgroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);

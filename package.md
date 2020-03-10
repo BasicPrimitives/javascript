@@ -7,3 +7,7 @@ Run "yarn merge"
 Run "yarn apireference"
 
 * generates markdown files in `apireference` folder out of min/primitives.latest.js`
+
+Run "yarn screenshots"
+
+* generates sample screenshots in `samples/imagesscreenshots` folder from samples deployed to `http://localhost/primitives`

@@ -36,11 +36,11 @@ primitives.common.FibonacciHeap = function (isMaximum) {
     this.right = null;
   }
 
-	/**
-	 * Validates internal structure consistency.
-	 * 
-	 * @returns {boolean} Returns true if structure pass data consistency check.
-	 */
+  /**
+   * Validates internal structure consistency.
+   * 
+   * @returns {boolean} Returns true if structure pass data consistency check.
+   */
   function validate() {
     var totalNodes = 0;
     for (var key in nodes) {
@@ -124,12 +124,12 @@ primitives.common.FibonacciHeap = function (isMaximum) {
     }
   }
 
-	/**
-	 * Adds a new item into the heap
-	 * @param {string} key A key of the new element 
-	 * @param {number} priority A priority of the new element
-	 * @param {object} item A context object of the new element 
-	 */
+  /**
+   * Adds a new item into the heap
+   * @param {string} key A key of the new element 
+   * @param {number} priority A priority of the new element
+   * @param {object} item A context object of the new element 
+   */
   function add(key, priority, item) {
     if (nodes.hasOwnProperty(key)) {
       throw "Duplicate keys are not supported!";
@@ -170,11 +170,11 @@ primitives.common.FibonacciHeap = function (isMaximum) {
     node.left = node.key;
   }
 
-	/**
-	 * Gets priority of element by key
-	 * @param {string} key The element key
-	 * @returns {number} Returns priority of the element
-	 */
+  /**
+   * Gets priority of element by key
+   * @param {string} key The element key
+   * @returns {number} Returns priority of the element
+   */
   function getPriority(key) {
     var result = null;
     if (nodes.hasOwnProperty(key)) {
@@ -183,11 +183,11 @@ primitives.common.FibonacciHeap = function (isMaximum) {
     return result;
   }
 
-	/**
-	 * Returns heap root element
-	 * 
-	 * @returns {HeapResult} Returns root element of the heap 
-	 */
+  /**
+   * Returns heap root element
+   * 
+   * @returns {HeapResult} Returns root element of the heap 
+   */
   function heapRoot() {
     var result = null;
     if (root != null) {
@@ -196,11 +196,11 @@ primitives.common.FibonacciHeap = function (isMaximum) {
     return result;
   }
 
-	/**
-	 * Returns heap root element with removal
-	 * 
-	 * @returns {HeapResult} Returns root element of the heap 
-	 */
+  /**
+   * Returns heap root element with removal
+   * 
+   * @returns {HeapResult} Returns root element of the heap 
+   */
   function extractRoot() {
     var result = heapRoot();
     if (result != null) {
@@ -280,11 +280,11 @@ primitives.common.FibonacciHeap = function (isMaximum) {
     node2.parent = node1.key;
   }
 
-	/**
-	 * Sets priority of an element by key
-	 * @param {string} key The key of the element 
-	 * @param {number} priority Priority
-	 */
+  /**
+   * Sets priority of an element by key
+   * @param {string} key The key of the element 
+   * @param {number} priority Priority
+   */
   function setPriority(key, priority) {
     var node = nodes[key];
     if (isMaximum ? node.priority > priority : node.priority < priority) {
@@ -329,10 +329,10 @@ primitives.common.FibonacciHeap = function (isMaximum) {
     }
   }
 
-	/**
-	 * Deletes heap element by key
-	 * @param {string} key The Key 
-	 */
+  /**
+   * Deletes heap element by key
+   * @param {string} key The Key 
+   */
   function deleteKey(key) {
     setPriority(key, isMaximum ? Infinity : -1);
     extractRoot();

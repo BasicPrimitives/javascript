@@ -39,7 +39,7 @@ primitives.common.RenderEventArgs = function () {
    */
   this.isCursor = false;
 
-	/**
+  /**
    * The rendered item is selected
    * @type {boolean}
    */

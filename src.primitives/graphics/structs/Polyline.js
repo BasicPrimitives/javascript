@@ -343,9 +343,9 @@ primitives.common.Polyline = function (newPaletteItem) {
       current.offset(offset2);
     } else {
       if (relationType == primitives.common.VectorRelationType.Opposite && current.from.context.pointIndex === 0) {
-				/* Vectors are opposite vectors which belong to 2 different segments
-					so we add an extra line segment in between of them
-				*/
+        /* Vectors are opposite vectors which belong to 2 different segments
+          so we add an extra line segment in between of them
+        */
         joinSegment = new primitives.common.LineSegment(current.from);
         polyline.addSegment(joinSegment);
 

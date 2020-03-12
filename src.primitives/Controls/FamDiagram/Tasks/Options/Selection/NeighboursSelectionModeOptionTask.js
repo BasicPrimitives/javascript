@@ -1,26 +1,26 @@
 primitives.famdiagram.NeighboursSelectionModeOptionTask = function (optionsTask, defaultConfig) {
-	var _data = {};
+  var _data = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-			neighboursSelectionMode: new primitives.common.EnumerationReader(primitives.common.NeighboursSelectionMode, false, defaultConfig.neighboursSelectionMode)
-		});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    neighboursSelectionMode: new primitives.common.EnumerationReader(primitives.common.NeighboursSelectionMode, false, defaultConfig.neighboursSelectionMode)
+  });
 
-	function process() {
-		var context = {
-			isChanged: false
-		};
+  function process() {
+    var context = {
+      isChanged: false
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getNeighboursSelectionMode() {
-		return _data.neighboursSelectionMode;
-	}
+  function getNeighboursSelectionMode() {
+    return _data.neighboursSelectionMode;
+  }
 
-	return {
-		process: process,
-		getNeighboursSelectionMode: getNeighboursSelectionMode
-	};
+  return {
+    process: process,
+    getNeighboursSelectionMode: getNeighboursSelectionMode
+  };
 };

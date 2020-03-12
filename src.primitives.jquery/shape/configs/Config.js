@@ -1,7 +1,7 @@
 /*
-	Class: primitives.connector.Config
-		Connector options class.
-	
+  Class: primitives.connector.Config
+    Connector options class.
+  
 */
 primitives.shape.Config = function () {
   this.classPrefix = "bpconnector";

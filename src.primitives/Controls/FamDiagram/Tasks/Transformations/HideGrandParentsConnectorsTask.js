@@ -1,4 +1,4 @@
-﻿/*	This task optionally eliminates direct connections to grand parents */
+﻿/*  This task optionally eliminates direct connections to grand parents */
 primitives.famdiagram.HideGrandParentsConnectorsTask = function (hideGrandParentsConnectorsOptionTask, addSpousesTask) {
   var _data = {
     maximumId: null, /* maximum of OrgItem.id */

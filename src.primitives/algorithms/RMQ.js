@@ -28,13 +28,13 @@ primitives.common.RMQ = function (items) {
     }
   }
 
-	/**
-	 * Returns index of minimum item for the given range of items
+  /**
+   * Returns index of minimum item for the given range of items
    * 
-	 * @param {number} from The left margin index
-	 * @param {number} to The right margin index
-	 * @returns {number} Returns index of the minimum item
-	 */
+   * @param {number} from The left margin index
+   * @param {number} to The right margin index
+   * @returns {number} Returns index of the minimum item
+   */
   function getRangeMinimumIndex(from, to) {
     var power = Math.floor(Math.log(to - from + 1) / _log2);
 
@@ -45,13 +45,13 @@ primitives.common.RMQ = function (items) {
     }
   }
 
-	/**
-	 * Return minimum value for the given range
+  /**
+   * Return minimum value for the given range
    * 
-	 * @param {number} from The left index of the range
-	 * @param {number} to The right index of the range
-	 * @returns {number} Returns minimum value in the range
-	 */
+   * @param {number} from The left index of the range
+   * @param {number} to The right index of the range
+   * @returns {number} Returns minimum value in the range
+   */
   function getRangeMinimum(from, to) {
     return items[getRangeMinimumIndex(from, to)];
   }

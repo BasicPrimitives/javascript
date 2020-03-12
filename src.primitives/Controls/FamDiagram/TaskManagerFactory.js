@@ -21,9 +21,9 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
   tasks.addDependency('defaultLabelAnnotationConfig', new primitives.famdiagram.LabelAnnotationConfig());
 
   tasks.addDependency('isFamilyChartMode', true);/* in regular org diagram we hide branch if it contains only invisible nodes, 
-		in the family chart we use invisible items to draw connectors across multiple levels */
+    in the family chart we use invisible items to draw connectors across multiple levels */
   tasks.addDependency('showElbowDots', true);/* in regular org chart we don;t have situations when connector lines cross, but we have such situations in 
-		family tree so we need extra visual attribute to distinguish intersections betwen connectors */
+    family tree so we need extra visual attribute to distinguish intersections betwen connectors */
   tasks.addDependency('null', null);
   tasks.addDependency('foreground', primitives.common.ZOrderType.Foreground);
   tasks.addDependency('background', primitives.common.ZOrderType.Background);

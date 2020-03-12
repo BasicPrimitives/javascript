@@ -1,14 +1,14 @@
 primitives.orgdiagram.CombinedContextsTask = function (task1, task2) {
-	function process() {
-		return true;
-	}
+  function process() {
+    return true;
+  }
 
-	function getConfig(itemId) {
-		return task1.getConfig(itemId) || (task2 != null && task2.getConfig(itemId));
-	}
+  function getConfig(itemId) {
+    return task1.getConfig(itemId) || (task2 != null && task2.getConfig(itemId));
+  }
 
-	return {
-		process: process,
-		getConfig: getConfig
-	};
+  return {
+    process: process,
+    getConfig: getConfig
+  };
 };

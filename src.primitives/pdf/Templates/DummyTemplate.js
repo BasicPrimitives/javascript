@@ -1,17 +1,17 @@
 primitives.pdf.DummyTemplate = function () {
-	function template() {
-		return {};
-	}
+  function template() {
+    return {};
+  }
 
-	function getHashCode() {
-		return 0;
-	}
+  function getHashCode() {
+    return 0;
+  }
 
-	function render() {}
+  function render() { }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };

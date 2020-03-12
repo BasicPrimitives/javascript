@@ -77,7 +77,7 @@ primitives.common.SpatialIndex = function (sizes) {
   /**
    * Loops rectangular area of spacial index
    * 
-	 * @param {object} thisArg The callback function invocation context
+   * @param {object} thisArg The callback function invocation context
    * @param {Rect}} rect Rectangular search area
    * @param {onSpatialIndexItemCallback} onItem Callback function to call for every rectangle intersecting given rectangular search area
    */

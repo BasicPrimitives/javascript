@@ -8,13 +8,13 @@
 primitives.common.pile = function () {
   var _items = [];
 
-	/**
-	 * Adds new segment to pile object.
-	 * 
-	 * @param {number} from Left margin of segment.
-	 * @param {number} to Right margin of segment.
-	 * @param {object} context Any reference to user object. It is returned as parameter in callback function of resolve method.
-	 */
+  /**
+   * Adds new segment to pile object.
+   * 
+   * @param {number} from Left margin of segment.
+   * @param {number} to Right margin of segment.
+   * @param {object} context Any reference to user object. It is returned as parameter in callback function of resolve method.
+   */
   function add(from, to, context) {
     if (from < to) {
       _items.push(new Segment(from, to, context, 1));
@@ -23,23 +23,23 @@ primitives.common.pile = function () {
     }
   }
 
-	/**
-	 * Callback function or iterating result offsets of the pile items in the stack.
-	 * 
-	 * @callback onPileItemCallback
-	 * @param {number} from The left margin of the segment 
-	 * @param {number} to The right margin of the segment
-	 * @param {object} context The context of the pile item
-	 * @param {number} offset Index of the pile item in the stack
-	 */
+  /**
+   * Callback function or iterating result offsets of the pile items in the stack.
+   * 
+   * @callback onPileItemCallback
+   * @param {number} from The left margin of the segment 
+   * @param {number} to The right margin of the segment
+   * @param {object} context The context of the pile item
+   * @param {number} offset Index of the pile item in the stack
+   */
 
-	/**
-	 * Sorts and stack segments on top of each other so they occupy minimum number of rows.
-	 * 
-	 * @param {objct} thisArg A context object of the callback function invocation.
-	 * @param {onPileItemCallback} onItem Callback function for setting segments offsets in the pile.
-	 * @returns {number} Number of stacked rows in pile.
-	 */
+  /**
+   * Sorts and stack segments on top of each other so they occupy minimum number of rows.
+   * 
+   * @param {objct} thisArg A context object of the callback function invocation.
+   * @param {onPileItemCallback} onItem Callback function for setting segments offsets in the pile.
+   * @returns {number} Number of stacked rows in pile.
+   */
   function resolve(thisArg, onItem) {
     var hash,
       backtraceNext,

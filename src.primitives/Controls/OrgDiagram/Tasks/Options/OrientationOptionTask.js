@@ -1,29 +1,29 @@
 primitives.orgdiagram.OrientationOptionTask = function (optionsTask, defaultConfig) {
-	var _data = {},
-		_hash = {};
+  var _data = {},
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-			orientationType: new primitives.common.EnumerationReader(primitives.common.OrientationType, false, defaultConfig.orientationType)
-		});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    orientationType: new primitives.common.EnumerationReader(primitives.common.OrientationType, false, defaultConfig.orientationType)
+  });
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getOptions() {
-		return _data;
-	}
+  function getOptions() {
+    return _data;
+  }
 
-	return {
-		process: process,
-		getOptions: getOptions,
-		description: "Checks diagram orientation options."
-	};
+  return {
+    process: process,
+    getOptions: getOptions,
+    description: "Checks diagram orientation options."
+  };
 };

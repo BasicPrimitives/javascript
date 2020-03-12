@@ -1,32 +1,32 @@
 primitives.common.HighlightTemplate = function (options, itemTemplateConfig) {
-	var _template = create(itemTemplateConfig);
+  var _template = create(itemTemplateConfig);
 
-	function create(config) {
-		return ["div",
-		{
-			"style": {
-				"borderWidth": config.highlightBorderWidth + "px"
-			},
-			"class": ["bp-item", "bp-corner-all", "bp-highlight-frame"]
-		}
-		];
-	}
+  function create(config) {
+    return ["div",
+      {
+        "style": {
+          "borderWidth": config.highlightBorderWidth + "px"
+        },
+        "class": ["bp-item", "bp-corner-all", "bp-highlight-frame"]
+      }
+    ];
+  }
 
-	function template() {
-		return _template;
-	}
+  function template() {
+    return _template;
+  }
 
-	function getHashCode() {
-		return "defaultHighlightTemplate";
-	}
+  function getHashCode() {
+    return "defaultHighlightTemplate";
+  }
 
-	function render(event, data) {
+  function render(event, data) {
 
-	}
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };

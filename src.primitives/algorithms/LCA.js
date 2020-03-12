@@ -28,12 +28,12 @@ primitives.common.LCA = function (tree) {
     _rmq = primitives.common.RMQ(_levels);
   }
 
-	/**
-	 * Returns lowest common ancestor for the given pair of tree nodes
-	 * @param {string} from The first tree node id
-	 * @param {string} to The second tree node id
-	 * @returns {string} Returns the lowest common ancestor tree node id
-	 */
+  /**
+   * Returns lowest common ancestor for the given pair of tree nodes
+   * @param {string} from The first tree node id
+   * @param {string} to The second tree node id
+   * @returns {string} Returns the lowest common ancestor tree node id
+   */
   function getLowestCommonAncestor(from, to) {
     var fromIndex = _fai[from],
       toIndex = _fai[to],

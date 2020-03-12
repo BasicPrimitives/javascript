@@ -1,5 +1,5 @@
 /*
-	This method should try to keep cursor item as close as possible to its previous position
+  This method should try to keep cursor item as close as possible to its previous position
 */
 primitives.orgdiagram.CenterOnCursorTask = function (layoutOptionsTask, currentControlSizeTask, currentScrollPositionTask, cursorItemTask, alignDiagramTask, createTransformTask, scaleOptionTask) {
   var _data = {

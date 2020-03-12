@@ -38,10 +38,10 @@ primitives.famdiagram.LabelAnnotationOptionTask = function (splitAnnotationsOpti
     _data.annotations = _dataTemplate.read(_data.annotations, splitAnnotationsOptionTask.getAnnotations(primitives.common.AnnotationType.Label), "annotations", context);
     _data.configs = {};
 
-		/* here we assign unique id to every annotation used in layout
-			and populate configs hash mapping id to source annotation
-			these source items used as context objects in rendering cycle
-		*/
+    /* here we assign unique id to every annotation used in layout
+      and populate configs hash mapping id to source annotation
+      these source items used as context objects in rendering cycle
+    */
     var sourceItems = context.sourceHash.annotations;
     for (index = 0, len = _data.annotations.length; index < len; index += 1) {
       annotation = _data.annotations[index];

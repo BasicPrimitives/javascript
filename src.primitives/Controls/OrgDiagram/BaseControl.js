@@ -80,8 +80,8 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
       placeholderOffset;
 
     //_data.layout.scrollPanel.css({
-    //	"display": "none",
-    //	"-webkit-overflow-scrolling": "auto"
+    //  "display": "none",
+    //  "-webkit-overflow-scrolling": "auto"
     //});
 
     //this.graphics.begin();
@@ -92,7 +92,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     _data.graphics.end();
 
     //_data.layout.scrollPanel.css({
-    //	"display": "block"
+    //  "display": "block"
     //});
 
     if (forceCenterOnCursor) {
@@ -103,7 +103,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
       _data.layout.scrollPanel.scrollTop = placeholderOffset.y;
     }
     //_data.layout.scrollPanel.css({
-    //	"-webkit-overflow-scrolling": "touch"
+    //  "-webkit-overflow-scrolling": "touch"
     //});
 
     /* fix pixel alignment */

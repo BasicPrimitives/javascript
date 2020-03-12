@@ -8,12 +8,12 @@
  * @param {number} arg1 The y coordinate.
  */
 primitives.common.Point = function (arg0, arg1) {
-	/**
+  /**
    * The x coordinate
    * @type {number}
    */
   this.x = null;
-	/**
+  /**
    * The y coordinate
    * @type {number}
    */

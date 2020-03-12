@@ -1,123 +1,123 @@
 ﻿primitives.orgdiagram.OrgTreeTask = function (itemsOptionTask) {
-	var _data = {
-		orgTree: null, /*tree primitives.orgdiagram.OrgItem */
-		maximumId: null /* maximum of OrgItem.id */
-	};
+  var _data = {
+    orgTree: null, /*tree primitives.orgdiagram.OrgItem */
+    maximumId: null /* maximum of OrgItem.id */
+  };
 
-	function process() {
-		createOrgTree(itemsOptionTask.getItems());
+  function process() {
+    createOrgTree(itemsOptionTask.getItems());
 
-		return true;
-	}
+    return true;
+  }
 
-	function createOrgTree(items) {
-		var orgItem,
-			orgItemRoot,
-			userItem,
-			index, len,
-			index2, len2,
-			property,
-			maximumId = 0,
-			parsedId,
-			// Organizational chart definition 
-			orgTree = primitives.common.tree(),
-			rootItemConfig;
+  function createOrgTree(items) {
+    var orgItem,
+      orgItemRoot,
+      userItem,
+      index, len,
+      index2, len2,
+      property,
+      maximumId = 0,
+      parsedId,
+      // Organizational chart definition 
+      orgTree = primitives.common.tree(),
+      rootItemConfig;
 
-		/* convert items to hash table */
-		for (index = 0, len = items.length; index < len; index += 1) {
-			userItem = items[index];
-			/* user should define unique id for every ItemConfig otherwise we ignore it
-				if parent does not exists in the tree then item is considered as root item
-			*/
-			if (userItem.id != null) {
-				/* Organizational chart ItemConfig is almost the same as OrgItem 
-					except options used to draw connectors in multi parent chart
-				*/
-				orgItem = new primitives.orgdiagram.OrgItem(userItem);
+    /* convert items to hash table */
+    for (index = 0, len = items.length; index < len; index += 1) {
+      userItem = items[index];
+      /* user should define unique id for every ItemConfig otherwise we ignore it
+        if parent does not exists in the tree then item is considered as root item
+      */
+      if (userItem.id != null) {
+        /* Organizational chart ItemConfig is almost the same as OrgItem 
+          except options used to draw connectors in multi parent chart
+        */
+        orgItem = new primitives.orgdiagram.OrgItem(userItem);
 
-				// OrgItem id coinsides with ItemConfig id since we don't add any new org items to user's org chart definition
-				parsedId = parseInt(userItem.id, 10);
-				maximumId = Math.max(isNaN(parsedId) ? 0 : parsedId, maximumId);
+        // OrgItem id coinsides with ItemConfig id since we don't add any new org items to user's org chart definition
+        parsedId = parseInt(userItem.id, 10);
+        maximumId = Math.max(isNaN(parsedId) ? 0 : parsedId, maximumId);
 
-				// Collect org items
-				orgTree.add(userItem.parent, orgItem.id, orgItem);
+        // Collect org items
+        orgTree.add(userItem.parent, orgItem.id, orgItem);
 
-				/* We ignore looped items, it is applications responsibility to control data consistency */
-			}
-		}
-		/* create chart root item config */
-		maximumId += 1;
+        /* We ignore looped items, it is applications responsibility to control data consistency */
+      }
+    }
+    /* create chart root item config */
+    maximumId += 1;
 
-		rootItemConfig = new primitives.orgdiagram.ItemConfig();
-		rootItemConfig.id = maximumId;
-		rootItemConfig.title = "internal root";
-		rootItemConfig.isVisible = false;
-		rootItemConfig.isActive = false;
-		
-		/* create chart org root item */
-		orgItemRoot = new primitives.orgdiagram.OrgItem(rootItemConfig);
-		orgItemRoot.hideParentConnection = true;
-		orgItemRoot.hideChildrenConnection = true;
+    rootItemConfig = new primitives.orgdiagram.ItemConfig();
+    rootItemConfig.id = maximumId;
+    rootItemConfig.title = "internal root";
+    rootItemConfig.isVisible = false;
+    rootItemConfig.isActive = false;
 
-		orgTree.add(null, orgItemRoot.id, orgItemRoot);
+    /* create chart org root item */
+    orgItemRoot = new primitives.orgdiagram.OrgItem(rootItemConfig);
+    orgItemRoot.hideParentConnection = true;
+    orgItemRoot.hideChildrenConnection = true;
 
-		orgTree.loopLevels(this, function (nodeid, node, levelid) {
-			if (levelid > 0) {
-				return orgTree.BREAK;
-			}
-			if (orgItemRoot.id != nodeid) {
-				orgTree.adopt(orgItemRoot.id, nodeid);
+    orgTree.add(null, orgItemRoot.id, orgItemRoot);
 
-				/* root item must be regular */
-				node.itemType = primitives.orgdiagram.ItemType.Regular;
-			}
-		});
+    orgTree.loopLevels(this, function (nodeid, node, levelid) {
+      if (levelid > 0) {
+        return orgTree.BREAK;
+      }
+      if (orgItemRoot.id != nodeid) {
+        orgTree.adopt(orgItemRoot.id, nodeid);
 
-		hideRootConnectors(orgTree);
+        /* root item must be regular */
+        node.itemType = primitives.orgdiagram.ItemType.Regular;
+      }
+    });
 
-		_data.orgTree = orgTree;
-		_data.maximumId = maximumId;
+    hideRootConnectors(orgTree);
 
-		return true;
-	}
+    _data.orgTree = orgTree;
+    _data.maximumId = maximumId;
 
-	function hideRootConnectors(orgTree) {
-		orgTree.loopLevels(this, function (nodeid, node, levelid) {
-			var allRegular = true;
-			if (!node.isVisible) {
-				orgTree.loopChildren(this, nodeid, function (childid, child, index) {
-					if (child.itemType != primitives.orgdiagram.ItemType.Regular) {
-						allRegular = false;
-						return true; // break
-					}
-				}); //ignore jslint
+    return true;
+  }
 
-				if (allRegular) {
-					node.hideChildrenConnection = true;
+  function hideRootConnectors(orgTree) {
+    orgTree.loopLevels(this, function (nodeid, node, levelid) {
+      var allRegular = true;
+      if (!node.isVisible) {
+        orgTree.loopChildren(this, nodeid, function (childid, child, index) {
+          if (child.itemType != primitives.orgdiagram.ItemType.Regular) {
+            allRegular = false;
+            return true; // break
+          }
+        }); //ignore jslint
 
-					orgTree.loopChildren(this, nodeid, function (childid, child, index) {
-						child.hideParentConnection = true;
-					});
-				} else {
-					return orgTree.SKIP; // skip children
-				}
-			} else {
-				return orgTree.SKIP;
-			}
-		});
-	}
+        if (allRegular) {
+          node.hideChildrenConnection = true;
 
-	function getOrgTree() {
-		return _data.orgTree;
-	}
+          orgTree.loopChildren(this, nodeid, function (childid, child, index) {
+            child.hideParentConnection = true;
+          });
+        } else {
+          return orgTree.SKIP; // skip children
+        }
+      } else {
+        return orgTree.SKIP;
+      }
+    });
+  }
 
-	function getMaximumId() {
-		return _data.maximumId;
-	}
+  function getOrgTree() {
+    return _data.orgTree;
+  }
 
-	return {
-		process: process,
-		getOrgTree: getOrgTree,
-		getMaximumId: getMaximumId
-	};
+  function getMaximumId() {
+    return _data.maximumId;
+  }
+
+  return {
+    process: process,
+    getOrgTree: getOrgTree,
+    getMaximumId: getMaximumId
+  };
 };

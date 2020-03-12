@@ -35,7 +35,7 @@ primitives.orgdiagram.ShapeAnnotationConfig = function (arg0) {
    */
   this.items = [];
 
-	/**
+  /**
    * Shape
    * 
    * @type {ShapeType}

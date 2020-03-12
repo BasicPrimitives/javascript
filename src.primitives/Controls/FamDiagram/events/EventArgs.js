@@ -4,7 +4,7 @@
  * Context object
  */
 primitives.famdiagram.EventArgs = function () {
-	/**
+  /**
    * Current item
    * 
    * @type {string}
@@ -26,14 +26,14 @@ primitives.famdiagram.EventArgs = function () {
    */
   this.parentItems = [];
 
-    /**
-   * Child items
-   * 
-   * @type {string[]}
-   * @ignore
-   */
+  /**
+ * Child items
+ * 
+ * @type {string[]}
+ * @ignore
+ */
   this.childrenItems = [];
-   
+
 
   /**
    * Node position on the diagram.

@@ -4,8 +4,8 @@
  * Basic Primitives organization diagram.
  *
  * Depends:
- *	jquery.ui.core.js
- *	jquery.ui.widget.js
+ *  jquery.ui.core.js
+ *  jquery.ui.widget.js
  */
 if (typeof jQuery != "undefined") {
   (function ($) {

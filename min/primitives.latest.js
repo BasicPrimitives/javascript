@@ -691,758 +691,758 @@ primitives.common.compareArrays = function (array1, array2, getKeyFunc) {
 
 /* /common/jsonml-html.js*/
 /*
-	jsonml-html.js
-	JsonML to HTML utility
+  jsonml-html.js
+  JsonML to HTML utility
 
-	Created: 2006-11-09-0116
-	Modified: 2012-11-24-1051
+  Created: 2006-11-09-0116
+  Modified: 2012-11-24-1051
 
-	Copyright (c)2006-2012 Stephen M. McKamey
-	Distributed under The MIT License: http://jsonml.org/license
+  Copyright (c)2006-2012 Stephen M. McKamey
+  Distributed under The MIT License: http://jsonml.org/license
 
-	This file ensures a global JsonML object adding these methods:
+  This file ensures a global JsonML object adding these methods:
 
-		JsonML.toHTML(JsonML, filter)
+    JsonML.toHTML(JsonML, filter)
 
-			This method produces a tree of DOM elements from a JsonML tree. The
-			array must not contain any cyclical references.
+      This method produces a tree of DOM elements from a JsonML tree. The
+      array must not contain any cyclical references.
 
-			The optional filter parameter is a function which can filter and
-			transform the results. It receives each of the DOM nodes, and
-			its return value is used instead of the original value. If it
-			returns what it received, then structure is not modified. If it
-			returns undefined then the member is deleted.
+      The optional filter parameter is a function which can filter and
+      transform the results. It receives each of the DOM nodes, and
+      its return value is used instead of the original value. If it
+      returns what it received, then structure is not modified. If it
+      returns undefined then the member is deleted.
 
-			This is useful for binding unobtrusive JavaScript to the generated
-			DOM elements.
+      This is useful for binding unobtrusive JavaScript to the generated
+      DOM elements.
 
-			Example:
+      Example:
 
-			// Parses the structure. If an element has a specific CSS value then
-			// takes appropriate action: Remove from results, add special event
-			// handlers, or bind to a custom component.
+      // Parses the structure. If an element has a specific CSS value then
+      // takes appropriate action: Remove from results, add special event
+      // handlers, or bind to a custom component.
 
-			var myUI = JsonML.toHTML(myUITemplate, function (elem) {
-				if (elem.className.indexOf('Remove-Me') >= 0) {
-					// this will remove from resulting DOM tree
-					return null;
-				}
+      var myUI = JsonML.toHTML(myUITemplate, function (elem) {
+        if (elem.className.indexOf('Remove-Me') >= 0) {
+          // this will remove from resulting DOM tree
+          return null;
+        }
 
-				if (elem.tagName && elem.tagName.toLowerCase() === 'a' &&
-					elem.className.indexOf('External-Link') >= 0) {
-					// this is the equivalent of target='_blank'
-					elem.onclick = function(evt) {
-						window.open(elem.href); return false;
-					};
+        if (elem.tagName && elem.tagName.toLowerCase() === 'a' &&
+          elem.className.indexOf('External-Link') >= 0) {
+          // this is the equivalent of target='_blank'
+          elem.onclick = function(evt) {
+            window.open(elem.href); return false;
+          };
 
-				} else if (elem.className.indexOf('Fancy-Widgit') >= 0) {
-					// bind to a custom component
-					FancyWidgit.bindDOM(elem);
-				}
-				return elem;
-			});
+        } else if (elem.className.indexOf('Fancy-Widgit') >= 0) {
+          // bind to a custom component
+          FancyWidgit.bindDOM(elem);
+        }
+        return elem;
+      });
 
-		JsonML.toHTMLText(JsonML)
-			Converts JsonML to HTML text
+    JsonML.toHTMLText(JsonML)
+      Converts JsonML to HTML text
 
-		// Implement onerror to handle any runtime errors while binding:
-		JsonML.onerror = function (ex, jml, filter) {
-			// display inline error message
-			return document.createTextNode('['+ex+']');
-		};
+    // Implement onerror to handle any runtime errors while binding:
+    JsonML.onerror = function (ex, jml, filter) {
+      // display inline error message
+      return document.createTextNode('['+ex+']');
+    };
 */
 
 primitives.common.JsonML = {};
 
 if (typeof document !== 'undefined') {
 
-	(function (JsonML, document) {
-		'use strict';
-
-		/**
-		 * Attribute name map
-		 * 
-		 * @private
-		 * @constant
-		 * @type {Object.<string>}
-		 */
-		var ATTR_MAP = {
-			'accesskey': 'accessKey',
-			'bgcolor': 'bgColor',
-			'cellpadding': 'cellPadding',
-			'cellspacing': 'cellSpacing',
-			'checked': 'defaultChecked',
-			'class': 'className',
-			'colspan': 'colSpan',
-			'contenteditable': 'contentEditable',
-			'defaultchecked': 'defaultChecked',
-			'for': 'htmlFor',
-			'formnovalidate': 'formNoValidate',
-			'hidefocus': 'hideFocus',
-			'ismap': 'isMap',
-			'maxlength': 'maxLength',
-			'novalidate': 'noValidate',
-			'readonly': 'readOnly',
-			'rowspan': 'rowSpan',
-			'spellcheck': 'spellCheck',
-			'tabindex': 'tabIndex',
-			'usemap': 'useMap',
-			'willvalidate': 'willValidate'
-			// can add more attributes here as needed
-		};
-
-		/**
-		 * Attribute duplicates map
-		 * 
-		 * @private
-		 * @constant
-		 * @type {Object.<string>}
-		 */
-		var ATTR_DUP = {
-			'enctype': 'encoding',
-			'onscroll': 'DOMMouseScroll'
-			// can add more attributes here as needed
-		};
-
-		/**
-		 * Attributes to be set via DOM
-		 * 
-		 * @private
-		 * @constant
-		 * @type {Object.<number>}
-		 */
-		var ATTR_DOM = {
-			'autocapitalize': 1,
-			'autocomplete': 1,
-			'autocorrect': 1
-			// can add more attributes here as needed
-		};
-
-		/**
-		 * Boolean attribute map
-		 * 
-		 * @private
-		 * @constant
-		 * @type {Object.<number>}
-		 */
-		var ATTR_BOOL = {
-			'async': 1,
-			'autofocus': 1,
-			'checked': 1,
-			'defaultchecked': 1,
-			'defer': 1,
-			'disabled': 1,
-			'formnovalidate': 1,
-			'hidden': 1,
-			'indeterminate': 1,
-			'ismap': 1,
-			'multiple': 1,
-			'novalidate': 1,
-			'readonly': 1,
-			'required': 1,
-			'spellcheck': 1,
-			'willvalidate': 1
-			// can add more attributes here as needed
-		};
-
-		/**
-		 * Leading SGML line ending pattern
-		 * 
-		 * @private
-		 * @constant
-		 * @type {RegExp}
-		 */
-		var LEADING = /^[\r\n]+/;
-
-		/**
-		 * Trailing SGML line ending pattern
-		 * 
-		 * @private
-		 * @constant
-		 * @type {RegExp}
-		 */
-		var TRAILING = /[\r\n]+$/;
-
-		/**
-		 * @private
-		 * @const
-		 * @type {number}
-		 */
-		var NUL = 0;
-
-		/**
-		 * @private
-		 * @const
-		 * @type {number}
-		 */
-		var FUN = 1;
-
-		/**
-		 * @private
-		 * @const
-		 * @type {number}
-		 */
-		var ARY = 2;
-
-		/**
-		 * @private
-		 * @const
-		 * @type {number}
-		 */
-		var OBJ = 3;
-
-		/**
-		 * @private
-		 * @const
-		 * @type {number}
-		 */
-		var VAL = 4;
-
-		/**
-		 * @private
-		 * @const
-		 * @type {number}
-		 */
-		var RAW = 5;
-
-		/**
-		 * Wraps a data value to maintain as raw markup in output
-		 * 
-		 * @private
-		 * @this {Markup}
-		 * @param {string} value The value
-		 * @constructor
-		 */
-		function Markup(value) {
-			/**
-			 * @type {string}
-			 * @const
-			 * @protected
-			 */
-			this.value = value;
-		}
-
-		/**
-		 * Renders the value
-		 * 
-		 * @public
-		 * @override
-		 * @this {Markup}
-		 * @return {string} value
-		 */
-		Markup.prototype.toString = function () {
-			return this.value;
-		};
-
-		/**
-		 * @param {string} value
-		 * @return {Markup}
-		 */
-		JsonML.raw = function (value) {
-			return new Markup(value);
-		};
-
-		/**
-		 * @param {*} value
-		 * @return {boolean}
-		 */
-		var isMarkup = JsonML.isRaw = function (value) {
-			return (value instanceof Markup);
-		};
-
-		/**
-		 * Determines if the value is an Array
-		 * 
-		 * @private
-		 * @param {*} val the object being tested
-		 * @return {boolean}
-		 */
-		var isArray = Array.isArray || function (val) {
-			return (val instanceof Array);
-		};
-
-		/**
-		 * Determines if the value is a function
-		 * 
-		 * @private
-		 * @param {*} val the object being tested
-		 * @return {boolean}
-		 */
-		function isFunction(val) {
-			return (typeof val === 'function');
-		}
-
-		/**
-		 * Determines the type of the value
-		 * 
-		 * @private
-		 * @param {*} val the object being tested
-		 * @return {number}
-		 */
-		function getType(val) {
-			switch (typeof val) {
-				case 'object':
-					return !val ? NUL : (isArray(val) ? ARY : (isMarkup(val) ? RAW : ((val instanceof Date) ? VAL : OBJ)));
-				case 'function':
-					return FUN;
-				case 'undefined':
-					return NUL;
-				default:
-					return VAL;
-			}
-		}
-
-		/**
-		 * Creates a DOM element 
-		 * 
-		 * @private
-		 * @param {string} tag The element's tag name
-		 * @return {Node}
-		 */
-		var createElement = function (tag) {
-			if (!tag) {
-				// create a document fragment to hold multiple-root elements
-				if (document.createDocumentFragment) {
-					return document.createDocumentFragment();
-				}
-
-				tag = '';
-
-			} else if (tag.charAt(0) === '!') {
-				return document.createComment(tag === '!' ? '' : tag.substr(1) + ' ');
-			}
-
-			if (tag.toLowerCase() === 'style' && document.createStyleSheet) {
-				// IE requires this interface for styles
-				return document.createStyleSheet();
-			}
-
-			return document.createElement(tag);
-		};
-
-		/**
-		 * Adds an event handler to an element
-		 * 
-		 * @private
-		 * @param {Node} elem The element
-		 * @param {string} name The event name
-		 * @param {function(Event)} handler The event handler
-		 */
-		var addHandler = function (elem, name, handler) {
-			if (name.substr(0, 2) === 'on') {
-				name = name.substr(2);
-			}
-
-			switch (typeof handler) {
-				case 'function':
-					if (elem.addEventListener) {
-						// DOM Level 2
-						elem.addEventListener(name, handler, false);
-
-					} else if (elem.attachEvent && getType(elem[name]) !== NUL) {
-						// IE legacy events
-						elem.attachEvent('on' + name, handler);
-
-					} else {
-						// DOM Level 0
-						var old = elem['on' + name] || elem[name];
-						elem['on' + name] = elem[name] = !isFunction(old) ? handler :
-							function (e) {
-								return (old.call(this, e) !== false) && (handler.call(this, e) !== false);
-							};
-					}
-					break;
-
-				case 'string':
-					// inline functions are DOM Level 0
-					/*jslint evil:true */
-					elem['on' + name] = new Function('event', handler);
-					/*jslint evil:false */
-					break;
-			}
-		};
-
-		/**
-		 * Apply styles to element
-		 * 
-		 * @public
-		 * @param {Node} elem The element
-		 * @param {Object} css styles object
-		 * @return {Node}
-		 */
-		var applyStyles = JsonML.applyStyles = function (elem, css) {
-			for (var key in css) {
-				if (css.hasOwnProperty(key)) {
-					elem.style[key] = css[key];
-				}
-			}
-			return elem;
-		};
-
-		/**
-		 * Appends an attribute to an element
-		 * 
-		 * @private
-		 * @param {Node} elem The element
-		 * @param {Object} attr Attributes object
-		 * @return {Node}
-		 */
-		var addAttributes = function (elem, attr) {
-			if (attr.name && document.attachEvent && !elem.parentNode) {
-				try {
-					// IE fix for not being able to programatically change the name attribute
-					var alt = createElement('<' + elem.tagName + ' name="' + attr.name + '">');
-					// fix for Opera 8.5 and Netscape 7.1 creating malformed elements
-					if (elem.tagName === alt.tagName) {
-						elem = alt;
-					}
-				} catch (ex) { }
-			}
-
-			// for each attributeName
-			for (var name in attr) {
-				if (attr.hasOwnProperty(name)) {
-					// attributeValue
-					var value = attr[name],
-						type = getType(value);
-
-					if (name) {
-						if (type === NUL) {
-							value = '';
-							type = VAL;
-						}
-
-						name = ATTR_MAP[name.toLowerCase()] || name;
-
-						if (name === '$') {
-							value(elem);
-						}
-						else if (name == 'className') {
-							if (isArray(value)) {
-								for (var index = 0; index < value.length; index += 1) {
-									elem.className += " " + value[index];
-								}
-							} else {
-								elem.className += " " + value;
-							}
-						}
-						else if (name === 'style') {
-							if (getType(elem.style.cssText) !== NUL) {
-								if (typeof value == "string") {
-									elem.style.cssText = value;
-								} else {
-									applyStyles(elem, value);
-								}
-							} else {
-								elem.style = value;
-							}
-
-						} else if (name.substr(0, 2) === 'on') {
-							addHandler(elem, name, value);
-
-							// also set duplicated events
-							name = ATTR_DUP[name];
-							if (name) {
-								addHandler(elem, name, value);
-							}
-
-						} else if (!ATTR_DOM[name.toLowerCase()] && (type !== VAL || name.charAt(0) === '$' || getType(elem[name]) !== NUL || getType(elem[ATTR_DUP[name]]) !== NUL)) {
-							// direct setting of existing properties
-							elem[name] = value;
-
-							// also set duplicated properties
-							name = ATTR_DUP[name];
-							if (name) {
-								elem[name] = value;
-							}
-
-						} else if (ATTR_BOOL[name.toLowerCase()]) {
-							if (value) {
-								// boolean attributes
-								elem.setAttribute(name, name);
-
-								// also set duplicated attributes
-								name = ATTR_DUP[name];
-								if (name) {
-									elem.setAttribute(name, name);
-								}
-							}
-
-						} else {
-							// http://www.quirksmode.org/dom/w3c_core.html#attributes
-
-							// custom and 'data-*' attributes
-							elem.setAttribute(name, value);
-
-							// also set duplicated attributes
-							name = ATTR_DUP[name];
-							if (name) {
-								elem.setAttribute(name, value);
-							}
-						}
-					}
-				}
-			}
-			return elem;
-		};
-
-		/**
-		 * Appends a child to an element
-		 * 
-		 * @private
-		 * @param {Node} elem The parent element
-		 * @param {Node} child The child
-		 */
-		var appendDOM = JsonML.appendDOM = function (elem, child) {
-			if (child) {
-				var tag = (elem.tagName || '').toLowerCase();
-				if (elem.nodeType === 8) { // comment
-					if (child.nodeType === 3) { // text node
-						elem.nodeValue += child.nodeValue;
-					}
-				} else if (tag === 'table' && elem.tBodies) {
-					if (!child.tagName) {
-						// must unwrap documentFragment for tables
-						if (child.nodeType === 11) {
-							while (child.firstChild) {
-								appendDOM(elem, child.removeChild(child.firstChild));
-							}
-						}
-						return;
-					}
-
-					// in IE must explicitly nest TRs in TBODY
-					var childTag = child.tagName.toLowerCase();// child tagName
-					if (childTag && childTag !== 'tbody' && childTag !== 'thead') {
-						// insert in last tbody
-						var tBody = elem.tBodies.length > 0 ? elem.tBodies[elem.tBodies.length - 1] : null;
-						if (!tBody) {
-							tBody = createElement(childTag === 'th' ? 'thead' : 'tbody');
-							elem.appendChild(tBody);
-						}
-						tBody.appendChild(child);
-					} else if (elem.canHaveChildren !== false) {
-						elem.appendChild(child);
-					}
-
-				} else if (tag === 'style' && document.createStyleSheet) {
-					// IE requires this interface for styles
-					elem.cssText = child;
-
-				} else if (elem.canHaveChildren !== false) {
-					elem.appendChild(child);
-
-				} else if (tag === 'object' &&
-					child.tagName && child.tagName.toLowerCase() === 'param') {
-					// IE-only path
-					try {
-						elem.appendChild(child);
-					} catch (ex1) { }
-					try {
-						if (elem.object) {
-							elem.object[child.name] = child.value;
-						}
-					} catch (ex2) { }
-				}
-			}
-		};
-
-		/**
-		 * Tests a node for whitespace
-		 * 
-		 * @private
-		 * @param {Node} node The node
-		 * @return {boolean}
-		 */
-		var isWhitespace = function (node) {
-			return !!node && (node.nodeType === 3) && (!node.nodeValue || !/\S/.exec(node.nodeValue));
-		};
-
-		/**
-		 * Trims whitespace pattern from the text node
-		 * 
-		 * @private
-		 * @param {Node} node The node
-		 */
-		var trimPattern = function (node, pattern) {
-			if (!!node && (node.nodeType === 3) && pattern.exec(node.nodeValue)) {
-				node.nodeValue = node.nodeValue.replace(pattern, '');
-			}
-		};
-
-		/**
-		 * Removes leading and trailing whitespace nodes
-		 * 
-		 * @private
-		 * @param {Node} elem The node
-		 */
-		var trimWhitespace = function (elem) {
-			if (elem) {
-				while (isWhitespace(elem.firstChild)) {
-					// trim leading whitespace text nodes
-					elem.removeChild(elem.firstChild);
-				}
-				// trim leading whitespace text
-				trimPattern(elem.firstChild, LEADING);
-				while (isWhitespace(elem.lastChild)) {
-					// trim trailing whitespace text nodes
-					elem.removeChild(elem.lastChild);
-				}
-				// trim trailing whitespace text
-				trimPattern(elem.lastChild, TRAILING);
-			}
-		};
-
-		/**
-		 * Converts the markup to DOM nodes
-		 * 
-		 * @private
-		 * @param {string|Markup} value The node
-		 * @return {Node}
-		 */
-		var toDOM = function (value) {
-			var wrapper = createElement('div');
-			wrapper.innerHTML = '' + value;
-
-			// trim extraneous whitespace
-			trimWhitespace(wrapper);
-
-			// eliminate wrapper for single nodes
-			if (wrapper.childNodes.length === 1) {
-				return wrapper.firstChild;
-			}
-
-			// create a document fragment to hold elements
-			var frag = createElement('');
-			while (wrapper.firstChild) {
-				frag.appendChild(wrapper.firstChild);
-			}
-			return frag;
-		};
-
-		/**
-		 * Default error handler
-		 * @param {Error} ex
-		 * @return {Node}
-		 */
-		var onError = function (ex) {
-			return document.createTextNode('[' + ex + ']');
-		};
-
-		/* override this to perform custom error handling during binding */
-		JsonML.onerror = null;
-
-		/**
-		 * also used by JsonML.BST
-		 * @param {Node} elem
-		 * @param {*} jml
-		 * @param {function} filter
-		 * @return {Node}
-		 */
-		var patch = JsonML.patch = function (elem, jml, filter) {
-
-			for (var i = 1; i < jml.length; i += 1) {
-				if (isArray(jml[i]) || 'string' === typeof jml[i]) {
-					// append children
-					appendDOM(elem, toHTML(jml[i], filter));
-
-				} else if (isMarkup(jml[i])) {
-					appendDOM(elem, toDOM(jml[i].value));
-
-				} else if ('object' === typeof jml[i] && jml[i] !== null && elem.nodeType === 1) {
-					// add attributes
-					elem = addAttributes(elem, jml[i]);
-				}
-			}
-
-			return elem;
-		};
-
-		/**
-		 * Main builder entry point
-		 * @param {string|array} jml
-		 * @param {function} filter
-		 * @return {Node}
-		 */
-		var toHTML = JsonML.toHTML = function (jml, filter) {
-			try {
-				if (!jml) {
-					return null;
-				}
-				if ('string' === typeof jml) {
-					return document.createTextNode(jml);
-				}
-				if (isMarkup(jml)) {
-					return toDOM(jml.value);
-				}
-				if (!isArray(jml) || ('string' !== typeof jml[0])) {
-					throw new SyntaxError('invalid JsonML');
-				}
-
-				var tagName = jml[0]; // tagName
-				if (!tagName) {
-					// correctly handle a list of JsonML trees
-					// create a document fragment to hold elements
-					var frag = createElement('');
-					for (var i = 1; i < jml.length; i += 1) {
-						appendDOM(frag, toHTML(jml[i], filter));
-					}
-
-					// trim extraneous whitespace
-					trimWhitespace(frag);
-
-					// eliminate wrapper for single nodes
-					if (frag.childNodes.length === 1) {
-						return frag.firstChild;
-					}
-					return frag;
-				}
-
-				if (tagName.toLowerCase() === 'style' && document.createStyleSheet) {
-					// IE requires this interface for styles
-					patch(document.createStyleSheet(), jml, filter);
-					// in IE styles are effective immediately
-					return null;
-				}
-
-				var elem = patch(createElement(tagName), jml, filter);
-
-				// trim extraneous whitespace
-				trimWhitespace(elem);
-				return (elem && isFunction(filter)) ? filter(elem) : elem;
-			} catch (ex) {
-				try {
-					// handle error with complete context
-					var err = isFunction(JsonML.onerror) ? JsonML.onerror : onError;
-					return err(ex, jml, filter);
-				} catch (ex2) {
-					return document.createTextNode('[' + ex2 + ']');
-				}
-			}
-		};
-
-		/**
-		 * Not super efficient.
-		 * TODO: port render.js from DUEL
-		 * @param {string|array} jml JsonML structure
-		 * @return {string} HTML text
-		 */
-		JsonML.toHTMLText = function (jml, filter) {
-			var elem = toHTML(jml, filter);
-			if (elem.outerHTML) {
-				return elem.outerHTML;
-			}
-
-			var parent = createElement('div');
-			parent.appendChild(elem);
-
-			var html = parent.innerHTML;
-			parent.removeChild(elem);
-
-			return html;
-		};
-
-	})(primitives.common.JsonML, document);
+  (function (JsonML, document) {
+    'use strict';
+
+    /**
+     * Attribute name map
+     * 
+     * @private
+     * @constant
+     * @type {Object.<string>}
+     */
+    var ATTR_MAP = {
+      'accesskey': 'accessKey',
+      'bgcolor': 'bgColor',
+      'cellpadding': 'cellPadding',
+      'cellspacing': 'cellSpacing',
+      'checked': 'defaultChecked',
+      'class': 'className',
+      'colspan': 'colSpan',
+      'contenteditable': 'contentEditable',
+      'defaultchecked': 'defaultChecked',
+      'for': 'htmlFor',
+      'formnovalidate': 'formNoValidate',
+      'hidefocus': 'hideFocus',
+      'ismap': 'isMap',
+      'maxlength': 'maxLength',
+      'novalidate': 'noValidate',
+      'readonly': 'readOnly',
+      'rowspan': 'rowSpan',
+      'spellcheck': 'spellCheck',
+      'tabindex': 'tabIndex',
+      'usemap': 'useMap',
+      'willvalidate': 'willValidate'
+      // can add more attributes here as needed
+    };
+
+    /**
+     * Attribute duplicates map
+     * 
+     * @private
+     * @constant
+     * @type {Object.<string>}
+     */
+    var ATTR_DUP = {
+      'enctype': 'encoding',
+      'onscroll': 'DOMMouseScroll'
+      // can add more attributes here as needed
+    };
+
+    /**
+     * Attributes to be set via DOM
+     * 
+     * @private
+     * @constant
+     * @type {Object.<number>}
+     */
+    var ATTR_DOM = {
+      'autocapitalize': 1,
+      'autocomplete': 1,
+      'autocorrect': 1
+      // can add more attributes here as needed
+    };
+
+    /**
+     * Boolean attribute map
+     * 
+     * @private
+     * @constant
+     * @type {Object.<number>}
+     */
+    var ATTR_BOOL = {
+      'async': 1,
+      'autofocus': 1,
+      'checked': 1,
+      'defaultchecked': 1,
+      'defer': 1,
+      'disabled': 1,
+      'formnovalidate': 1,
+      'hidden': 1,
+      'indeterminate': 1,
+      'ismap': 1,
+      'multiple': 1,
+      'novalidate': 1,
+      'readonly': 1,
+      'required': 1,
+      'spellcheck': 1,
+      'willvalidate': 1
+      // can add more attributes here as needed
+    };
+
+    /**
+     * Leading SGML line ending pattern
+     * 
+     * @private
+     * @constant
+     * @type {RegExp}
+     */
+    var LEADING = /^[\r\n]+/;
+
+    /**
+     * Trailing SGML line ending pattern
+     * 
+     * @private
+     * @constant
+     * @type {RegExp}
+     */
+    var TRAILING = /[\r\n]+$/;
+
+    /**
+     * @private
+     * @const
+     * @type {number}
+     */
+    var NUL = 0;
+
+    /**
+     * @private
+     * @const
+     * @type {number}
+     */
+    var FUN = 1;
+
+    /**
+     * @private
+     * @const
+     * @type {number}
+     */
+    var ARY = 2;
+
+    /**
+     * @private
+     * @const
+     * @type {number}
+     */
+    var OBJ = 3;
+
+    /**
+     * @private
+     * @const
+     * @type {number}
+     */
+    var VAL = 4;
+
+    /**
+     * @private
+     * @const
+     * @type {number}
+     */
+    var RAW = 5;
+
+    /**
+     * Wraps a data value to maintain as raw markup in output
+     * 
+     * @private
+     * @this {Markup}
+     * @param {string} value The value
+     * @constructor
+     */
+    function Markup(value) {
+      /**
+       * @type {string}
+       * @const
+       * @protected
+       */
+      this.value = value;
+    }
+
+    /**
+     * Renders the value
+     * 
+     * @public
+     * @override
+     * @this {Markup}
+     * @return {string} value
+     */
+    Markup.prototype.toString = function () {
+      return this.value;
+    };
+
+    /**
+     * @param {string} value
+     * @return {Markup}
+     */
+    JsonML.raw = function (value) {
+      return new Markup(value);
+    };
+
+    /**
+     * @param {*} value
+     * @return {boolean}
+     */
+    var isMarkup = JsonML.isRaw = function (value) {
+      return (value instanceof Markup);
+    };
+
+    /**
+     * Determines if the value is an Array
+     * 
+     * @private
+     * @param {*} val the object being tested
+     * @return {boolean}
+     */
+    var isArray = Array.isArray || function (val) {
+      return (val instanceof Array);
+    };
+
+    /**
+     * Determines if the value is a function
+     * 
+     * @private
+     * @param {*} val the object being tested
+     * @return {boolean}
+     */
+    function isFunction(val) {
+      return (typeof val === 'function');
+    }
+
+    /**
+     * Determines the type of the value
+     * 
+     * @private
+     * @param {*} val the object being tested
+     * @return {number}
+     */
+    function getType(val) {
+      switch (typeof val) {
+        case 'object':
+          return !val ? NUL : (isArray(val) ? ARY : (isMarkup(val) ? RAW : ((val instanceof Date) ? VAL : OBJ)));
+        case 'function':
+          return FUN;
+        case 'undefined':
+          return NUL;
+        default:
+          return VAL;
+      }
+    }
+
+    /**
+     * Creates a DOM element 
+     * 
+     * @private
+     * @param {string} tag The element's tag name
+     * @return {Node}
+     */
+    var createElement = function (tag) {
+      if (!tag) {
+        // create a document fragment to hold multiple-root elements
+        if (document.createDocumentFragment) {
+          return document.createDocumentFragment();
+        }
+
+        tag = '';
+
+      } else if (tag.charAt(0) === '!') {
+        return document.createComment(tag === '!' ? '' : tag.substr(1) + ' ');
+      }
+
+      if (tag.toLowerCase() === 'style' && document.createStyleSheet) {
+        // IE requires this interface for styles
+        return document.createStyleSheet();
+      }
+
+      return document.createElement(tag);
+    };
+
+    /**
+     * Adds an event handler to an element
+     * 
+     * @private
+     * @param {Node} elem The element
+     * @param {string} name The event name
+     * @param {function(Event)} handler The event handler
+     */
+    var addHandler = function (elem, name, handler) {
+      if (name.substr(0, 2) === 'on') {
+        name = name.substr(2);
+      }
+
+      switch (typeof handler) {
+        case 'function':
+          if (elem.addEventListener) {
+            // DOM Level 2
+            elem.addEventListener(name, handler, false);
+
+          } else if (elem.attachEvent && getType(elem[name]) !== NUL) {
+            // IE legacy events
+            elem.attachEvent('on' + name, handler);
+
+          } else {
+            // DOM Level 0
+            var old = elem['on' + name] || elem[name];
+            elem['on' + name] = elem[name] = !isFunction(old) ? handler :
+              function (e) {
+                return (old.call(this, e) !== false) && (handler.call(this, e) !== false);
+              };
+          }
+          break;
+
+        case 'string':
+          // inline functions are DOM Level 0
+          /*jslint evil:true */
+          elem['on' + name] = new Function('event', handler);
+          /*jslint evil:false */
+          break;
+      }
+    };
+
+    /**
+     * Apply styles to element
+     * 
+     * @public
+     * @param {Node} elem The element
+     * @param {Object} css styles object
+     * @return {Node}
+     */
+    var applyStyles = JsonML.applyStyles = function (elem, css) {
+      for (var key in css) {
+        if (css.hasOwnProperty(key)) {
+          elem.style[key] = css[key];
+        }
+      }
+      return elem;
+    };
+
+    /**
+     * Appends an attribute to an element
+     * 
+     * @private
+     * @param {Node} elem The element
+     * @param {Object} attr Attributes object
+     * @return {Node}
+     */
+    var addAttributes = function (elem, attr) {
+      if (attr.name && document.attachEvent && !elem.parentNode) {
+        try {
+          // IE fix for not being able to programatically change the name attribute
+          var alt = createElement('<' + elem.tagName + ' name="' + attr.name + '">');
+          // fix for Opera 8.5 and Netscape 7.1 creating malformed elements
+          if (elem.tagName === alt.tagName) {
+            elem = alt;
+          }
+        } catch (ex) { }
+      }
+
+      // for each attributeName
+      for (var name in attr) {
+        if (attr.hasOwnProperty(name)) {
+          // attributeValue
+          var value = attr[name],
+            type = getType(value);
+
+          if (name) {
+            if (type === NUL) {
+              value = '';
+              type = VAL;
+            }
+
+            name = ATTR_MAP[name.toLowerCase()] || name;
+
+            if (name === '$') {
+              value(elem);
+            }
+            else if (name == 'className') {
+              if (isArray(value)) {
+                for (var index = 0; index < value.length; index += 1) {
+                  elem.className += " " + value[index];
+                }
+              } else {
+                elem.className += " " + value;
+              }
+            }
+            else if (name === 'style') {
+              if (getType(elem.style.cssText) !== NUL) {
+                if (typeof value == "string") {
+                  elem.style.cssText = value;
+                } else {
+                  applyStyles(elem, value);
+                }
+              } else {
+                elem.style = value;
+              }
+
+            } else if (name.substr(0, 2) === 'on') {
+              addHandler(elem, name, value);
+
+              // also set duplicated events
+              name = ATTR_DUP[name];
+              if (name) {
+                addHandler(elem, name, value);
+              }
+
+            } else if (!ATTR_DOM[name.toLowerCase()] && (type !== VAL || name.charAt(0) === '$' || getType(elem[name]) !== NUL || getType(elem[ATTR_DUP[name]]) !== NUL)) {
+              // direct setting of existing properties
+              elem[name] = value;
+
+              // also set duplicated properties
+              name = ATTR_DUP[name];
+              if (name) {
+                elem[name] = value;
+              }
+
+            } else if (ATTR_BOOL[name.toLowerCase()]) {
+              if (value) {
+                // boolean attributes
+                elem.setAttribute(name, name);
+
+                // also set duplicated attributes
+                name = ATTR_DUP[name];
+                if (name) {
+                  elem.setAttribute(name, name);
+                }
+              }
+
+            } else {
+              // http://www.quirksmode.org/dom/w3c_core.html#attributes
+
+              // custom and 'data-*' attributes
+              elem.setAttribute(name, value);
+
+              // also set duplicated attributes
+              name = ATTR_DUP[name];
+              if (name) {
+                elem.setAttribute(name, value);
+              }
+            }
+          }
+        }
+      }
+      return elem;
+    };
+
+    /**
+     * Appends a child to an element
+     * 
+     * @private
+     * @param {Node} elem The parent element
+     * @param {Node} child The child
+     */
+    var appendDOM = JsonML.appendDOM = function (elem, child) {
+      if (child) {
+        var tag = (elem.tagName || '').toLowerCase();
+        if (elem.nodeType === 8) { // comment
+          if (child.nodeType === 3) { // text node
+            elem.nodeValue += child.nodeValue;
+          }
+        } else if (tag === 'table' && elem.tBodies) {
+          if (!child.tagName) {
+            // must unwrap documentFragment for tables
+            if (child.nodeType === 11) {
+              while (child.firstChild) {
+                appendDOM(elem, child.removeChild(child.firstChild));
+              }
+            }
+            return;
+          }
+
+          // in IE must explicitly nest TRs in TBODY
+          var childTag = child.tagName.toLowerCase();// child tagName
+          if (childTag && childTag !== 'tbody' && childTag !== 'thead') {
+            // insert in last tbody
+            var tBody = elem.tBodies.length > 0 ? elem.tBodies[elem.tBodies.length - 1] : null;
+            if (!tBody) {
+              tBody = createElement(childTag === 'th' ? 'thead' : 'tbody');
+              elem.appendChild(tBody);
+            }
+            tBody.appendChild(child);
+          } else if (elem.canHaveChildren !== false) {
+            elem.appendChild(child);
+          }
+
+        } else if (tag === 'style' && document.createStyleSheet) {
+          // IE requires this interface for styles
+          elem.cssText = child;
+
+        } else if (elem.canHaveChildren !== false) {
+          elem.appendChild(child);
+
+        } else if (tag === 'object' &&
+          child.tagName && child.tagName.toLowerCase() === 'param') {
+          // IE-only path
+          try {
+            elem.appendChild(child);
+          } catch (ex1) { }
+          try {
+            if (elem.object) {
+              elem.object[child.name] = child.value;
+            }
+          } catch (ex2) { }
+        }
+      }
+    };
+
+    /**
+     * Tests a node for whitespace
+     * 
+     * @private
+     * @param {Node} node The node
+     * @return {boolean}
+     */
+    var isWhitespace = function (node) {
+      return !!node && (node.nodeType === 3) && (!node.nodeValue || !/\S/.exec(node.nodeValue));
+    };
+
+    /**
+     * Trims whitespace pattern from the text node
+     * 
+     * @private
+     * @param {Node} node The node
+     */
+    var trimPattern = function (node, pattern) {
+      if (!!node && (node.nodeType === 3) && pattern.exec(node.nodeValue)) {
+        node.nodeValue = node.nodeValue.replace(pattern, '');
+      }
+    };
+
+    /**
+     * Removes leading and trailing whitespace nodes
+     * 
+     * @private
+     * @param {Node} elem The node
+     */
+    var trimWhitespace = function (elem) {
+      if (elem) {
+        while (isWhitespace(elem.firstChild)) {
+          // trim leading whitespace text nodes
+          elem.removeChild(elem.firstChild);
+        }
+        // trim leading whitespace text
+        trimPattern(elem.firstChild, LEADING);
+        while (isWhitespace(elem.lastChild)) {
+          // trim trailing whitespace text nodes
+          elem.removeChild(elem.lastChild);
+        }
+        // trim trailing whitespace text
+        trimPattern(elem.lastChild, TRAILING);
+      }
+    };
+
+    /**
+     * Converts the markup to DOM nodes
+     * 
+     * @private
+     * @param {string|Markup} value The node
+     * @return {Node}
+     */
+    var toDOM = function (value) {
+      var wrapper = createElement('div');
+      wrapper.innerHTML = '' + value;
+
+      // trim extraneous whitespace
+      trimWhitespace(wrapper);
+
+      // eliminate wrapper for single nodes
+      if (wrapper.childNodes.length === 1) {
+        return wrapper.firstChild;
+      }
+
+      // create a document fragment to hold elements
+      var frag = createElement('');
+      while (wrapper.firstChild) {
+        frag.appendChild(wrapper.firstChild);
+      }
+      return frag;
+    };
+
+    /**
+     * Default error handler
+     * @param {Error} ex
+     * @return {Node}
+     */
+    var onError = function (ex) {
+      return document.createTextNode('[' + ex + ']');
+    };
+
+    /* override this to perform custom error handling during binding */
+    JsonML.onerror = null;
+
+    /**
+     * also used by JsonML.BST
+     * @param {Node} elem
+     * @param {*} jml
+     * @param {function} filter
+     * @return {Node}
+     */
+    var patch = JsonML.patch = function (elem, jml, filter) {
+
+      for (var i = 1; i < jml.length; i += 1) {
+        if (isArray(jml[i]) || 'string' === typeof jml[i]) {
+          // append children
+          appendDOM(elem, toHTML(jml[i], filter));
+
+        } else if (isMarkup(jml[i])) {
+          appendDOM(elem, toDOM(jml[i].value));
+
+        } else if ('object' === typeof jml[i] && jml[i] !== null && elem.nodeType === 1) {
+          // add attributes
+          elem = addAttributes(elem, jml[i]);
+        }
+      }
+
+      return elem;
+    };
+
+    /**
+     * Main builder entry point
+     * @param {string|array} jml
+     * @param {function} filter
+     * @return {Node}
+     */
+    var toHTML = JsonML.toHTML = function (jml, filter) {
+      try {
+        if (!jml) {
+          return null;
+        }
+        if ('string' === typeof jml) {
+          return document.createTextNode(jml);
+        }
+        if (isMarkup(jml)) {
+          return toDOM(jml.value);
+        }
+        if (!isArray(jml) || ('string' !== typeof jml[0])) {
+          throw new SyntaxError('invalid JsonML');
+        }
+
+        var tagName = jml[0]; // tagName
+        if (!tagName) {
+          // correctly handle a list of JsonML trees
+          // create a document fragment to hold elements
+          var frag = createElement('');
+          for (var i = 1; i < jml.length; i += 1) {
+            appendDOM(frag, toHTML(jml[i], filter));
+          }
+
+          // trim extraneous whitespace
+          trimWhitespace(frag);
+
+          // eliminate wrapper for single nodes
+          if (frag.childNodes.length === 1) {
+            return frag.firstChild;
+          }
+          return frag;
+        }
+
+        if (tagName.toLowerCase() === 'style' && document.createStyleSheet) {
+          // IE requires this interface for styles
+          patch(document.createStyleSheet(), jml, filter);
+          // in IE styles are effective immediately
+          return null;
+        }
+
+        var elem = patch(createElement(tagName), jml, filter);
+
+        // trim extraneous whitespace
+        trimWhitespace(elem);
+        return (elem && isFunction(filter)) ? filter(elem) : elem;
+      } catch (ex) {
+        try {
+          // handle error with complete context
+          var err = isFunction(JsonML.onerror) ? JsonML.onerror : onError;
+          return err(ex, jml, filter);
+        } catch (ex2) {
+          return document.createTextNode('[' + ex2 + ']');
+        }
+      }
+    };
+
+    /**
+     * Not super efficient.
+     * TODO: port render.js from DUEL
+     * @param {string|array} jml JsonML structure
+     * @return {string} HTML text
+     */
+    JsonML.toHTMLText = function (jml, filter) {
+      var elem = toHTML(jml, filter);
+      if (elem.outerHTML) {
+        return elem.outerHTML;
+      }
+
+      var parent = createElement('div');
+      parent.appendChild(elem);
+
+      var html = parent.innerHTML;
+      parent.removeChild(elem);
+
+      return html;
+    };
+
+  })(primitives.common.JsonML, document);
 }
 
 
@@ -1460,17 +1460,17 @@ if (typeof document !== 'undefined') {
  * @enum {AdviserPlacementType}
  */
 primitives.common.AdviserPlacementType = {
-	/**
-	 * Auto select by layout manager
-	 */
+  /**
+   * Auto select by layout manager
+   */
   Auto: 0,
-	/**
-	 * Left side
-	 */
+  /**
+   * Left side
+   */
   Left: 2,
-	/**
-	 * Right side
-	 */
+  /**
+   * Right side
+   */
   Right: 3
 };
 
@@ -1483,39 +1483,39 @@ primitives.orgdiagram.AdviserPlacementType = primitives.common.AdviserPlacementT
 
 
 /**
-	Defines type of on-screen and in-layout annotation object. Annotations are geometrical 
-	figures drawn around or bound to existing nodes of the diagram.
-*  
+ * Defines type of on-screen and in-layout annotation object. Annotations are geometrical 
+ * figures drawn around or bound to existing nodes of the diagram.
+ *
  * @enum {AnnotationType}
  */
 primitives.common.AnnotationType = {
-	/**
-	 * Connector lines between two nodes of the diagram. They are drawn on top of existing
-	 * diagram layout and they don't affect nodes placement. So it is users responsibility to
-	 * prserve space between nodes for them.
-	 */
+  /**
+   * Connector lines between two nodes of the diagram. They are drawn on top of existing
+   * diagram layout and they don't affect nodes placement. So it is users responsibility to
+   * prserve space between nodes for them.
+   */
   Connector: 0,
-	/**
-	 * Shape annotation is a possibility to draw some geometrical
-	 * shapes over several nodes of the diagram. 
-	 */
+  /**
+   * Shape annotation is a possibility to draw some geometrical
+   * shapes over several nodes of the diagram. 
+   */
   Shape: 1,
-	/**
-	 * Highlight path annotation traces path between given sequence of nodes 
-	 * over existing connector lines in the diagram.
-	 */
+  /**
+   * Highlight path annotation traces path between given sequence of nodes 
+   * over existing connector lines in the diagram.
+   */
   HighlightPath: 2,
-	/**
-	 * In-layout label annotation. Label anntations are placed in layout between nodes,
-	 * they preserve space between nodes, so they don't overlap neighbouring nodes.
-	 * Label annotations are designed for autoplacement and bundling of connection lines between 
-	 * nodes when needed.
-	 */
+  /**
+   * In-layout label annotation. Label anntations are placed in layout between nodes,
+   * they preserve space between nodes, so they don't overlap neighbouring nodes.
+   * Label annotations are designed for autoplacement and bundling of connection lines between 
+   * nodes when needed.
+   */
   Label: 3,
-	/**
-	 * Background annotation highlights nodes via drawing rectangular shape in background.
-	 * If shapes overlap the same style neighbouring shapes they are merged into one continuous shape. 
-	 */
+  /**
+   * Background annotation highlights nodes via drawing rectangular shape in background.
+   * If shapes overlap the same style neighbouring shapes they are merged into one continuous shape. 
+   */
   Background: 4
 };
 
@@ -2017,30 +2017,30 @@ primitives.orgdiagram.ItemType = {
 /* /enums/LabelType.js*/
 primitives.common.LabelType =
 {
-	Regular: 0,
-	Dummy: 1,
-	Fixed: 2,
-	None: 3
+  Regular: 0,
+  Dummy: 1,
+  Fixed: 2,
+  None: 3
 };
 
 /* /enums/Layers.js*/
-primitives.common.Layers = 
+primitives.common.Layers =
 {
-	BackgroundAnnotation: 2,
-	BackgroundAnnotations: 3,
-	BackgroundConnectorAnnotation: 4,
-	BackgroundHighlightPathAnnotations: 5,
-	Connector: 6,
-	ForegroundHighlightPathAnnotations: 7,
-	Highlight: 8,
-	Marker: 9,
-	Label : 10,
-	Cursor: 11,
-	Item: 12,
-	ForegroundAnnotations: 13,
-	ForegroundConnectorAnnotation: 14,
-	Annotation: 15,
-	Controls: 16
+  BackgroundAnnotation: 2,
+  BackgroundAnnotations: 3,
+  BackgroundConnectorAnnotation: 4,
+  BackgroundHighlightPathAnnotations: 5,
+  Connector: 6,
+  ForegroundHighlightPathAnnotations: 7,
+  Highlight: 8,
+  Marker: 9,
+  Label: 10,
+  Cursor: 11,
+  Item: 12,
+  ForegroundAnnotations: 13,
+  ForegroundConnectorAnnotation: 14,
+  Annotation: 15,
+  Controls: 16
 };
 
 /* /enums/LineType.js*/
@@ -2263,11 +2263,11 @@ primitives.common.RenderingMode = {
 /* /enums/SegmentType.js*/
 primitives.common.SegmentType =
 {
-	Line: 0,
-	Move: 1,
-	QuadraticArc: 2,
-	CubicArc: 3,
-	Dot: 4
+  Line: 0,
+  Move: 1,
+  QuadraticArc: 2,
+  CubicArc: 3,
+  Dot: 4
 };
 
 /* /enums/SelectionPathMode.js*/
@@ -2326,10 +2326,10 @@ primitives.common.ShapeType = {
 /* /enums/SideFlag.js*/
 primitives.common.SideFlag =
 {
-	Top: 1,
-	Right: 2,
-	Bottom: 4,
-	Left: 8
+  Top: 1,
+  Right: 2,
+  Bottom: 4,
+  Left: 8
 };
 
 /* /enums/TextOrientationType.js*/
@@ -2522,7 +2522,7 @@ primitives.common.RenderEventArgs = function () {
    */
   this.isCursor = false;
 
-	/**
+  /**
    * The rendered item is selected
    * @type {boolean}
    */
@@ -2536,195 +2536,195 @@ primitives.common.BaseShape = function () {
 
 
 primitives.common.BaseShape.prototype._getLabelPosition = function (x, y, width, height, labelWidth, labelHeight, labelOffset, labelPlacement) {
-	var result = null;
-	switch (labelPlacement) {
-		case 1/*primitives.common.PlacementType.Top*/:
-			result = new primitives.common.Rect(x + width / 2.0 - labelWidth / 2.0, y - labelOffset - labelHeight, labelWidth, labelHeight);
-			break;
-		case 2/*primitives.common.PlacementType.TopRight*/:
-			result = new primitives.common.Rect(x + width - labelWidth, y - labelOffset - labelHeight, labelWidth, labelHeight);
-			break;
-		case 8/*primitives.common.PlacementType.TopLeft*/:
-			result = new primitives.common.Rect(x, y - labelOffset - labelHeight, labelWidth, labelHeight);
-			break;
-		case 3/*primitives.common.PlacementType.Right*/:
-			result = new primitives.common.Rect(x + width + labelOffset, y + height / 2.0 - labelHeight / 2.0, labelWidth, labelHeight);
-			break;
-		case 11/*primitives.common.PlacementType.RightTop*/:
-			result = new primitives.common.Rect(x + width + labelOffset, y, labelWidth, labelHeight);
-			break;
-		case 12/*primitives.common.PlacementType.RightBottom*/:
-			result = new primitives.common.Rect(x + width + labelOffset, y + height - labelHeight, labelWidth, labelHeight);
-			break;
-		case 4/*primitives.common.PlacementType.BottomRight*/:
-			result = new primitives.common.Rect(x + width - labelWidth, y + height + labelOffset, labelWidth, labelHeight);
-			break;
-		case 6/*primitives.common.PlacementType.BottomLeft*/:
-			result = new primitives.common.Rect(x, y + height + labelOffset, labelWidth, labelHeight);
-			break;
-		case 7/*primitives.common.PlacementType.Left*/:
-			result = new primitives.common.Rect(x - labelWidth - labelOffset, y + height / 2.0 - labelHeight / 2.0, labelWidth, labelHeight);
-			break;
-		case 9/*primitives.common.PlacementType.LeftTop*/:
-			result = new primitives.common.Rect(x - labelWidth - labelOffset, y, labelWidth, labelHeight);
-			break;
-		case 10/*primitives.common.PlacementType.LeftBottom*/:
-			result = new primitives.common.Rect(x - labelWidth - labelOffset, y + height - labelHeight, labelWidth, labelHeight);
-			break;
-		case 0/*primitives.common.PlacementType.Auto*/: //ignore jslint
-		case 5/*primitives.common.PlacementType.Bottom*/: //ignore jslint
-		default: //ignore jslint
-			result = new primitives.common.Rect(x + width / 2.0 - labelWidth / 2.0, y + height + labelOffset, labelWidth, labelHeight);
-			break;
-	}
-	return result;
+  var result = null;
+  switch (labelPlacement) {
+    case 1/*primitives.common.PlacementType.Top*/:
+      result = new primitives.common.Rect(x + width / 2.0 - labelWidth / 2.0, y - labelOffset - labelHeight, labelWidth, labelHeight);
+      break;
+    case 2/*primitives.common.PlacementType.TopRight*/:
+      result = new primitives.common.Rect(x + width - labelWidth, y - labelOffset - labelHeight, labelWidth, labelHeight);
+      break;
+    case 8/*primitives.common.PlacementType.TopLeft*/:
+      result = new primitives.common.Rect(x, y - labelOffset - labelHeight, labelWidth, labelHeight);
+      break;
+    case 3/*primitives.common.PlacementType.Right*/:
+      result = new primitives.common.Rect(x + width + labelOffset, y + height / 2.0 - labelHeight / 2.0, labelWidth, labelHeight);
+      break;
+    case 11/*primitives.common.PlacementType.RightTop*/:
+      result = new primitives.common.Rect(x + width + labelOffset, y, labelWidth, labelHeight);
+      break;
+    case 12/*primitives.common.PlacementType.RightBottom*/:
+      result = new primitives.common.Rect(x + width + labelOffset, y + height - labelHeight, labelWidth, labelHeight);
+      break;
+    case 4/*primitives.common.PlacementType.BottomRight*/:
+      result = new primitives.common.Rect(x + width - labelWidth, y + height + labelOffset, labelWidth, labelHeight);
+      break;
+    case 6/*primitives.common.PlacementType.BottomLeft*/:
+      result = new primitives.common.Rect(x, y + height + labelOffset, labelWidth, labelHeight);
+      break;
+    case 7/*primitives.common.PlacementType.Left*/:
+      result = new primitives.common.Rect(x - labelWidth - labelOffset, y + height / 2.0 - labelHeight / 2.0, labelWidth, labelHeight);
+      break;
+    case 9/*primitives.common.PlacementType.LeftTop*/:
+      result = new primitives.common.Rect(x - labelWidth - labelOffset, y, labelWidth, labelHeight);
+      break;
+    case 10/*primitives.common.PlacementType.LeftBottom*/:
+      result = new primitives.common.Rect(x - labelWidth - labelOffset, y + height - labelHeight, labelWidth, labelHeight);
+      break;
+    case 0/*primitives.common.PlacementType.Auto*/: //ignore jslint
+    case 5/*primitives.common.PlacementType.Bottom*/: //ignore jslint
+    default: //ignore jslint
+      result = new primitives.common.Rect(x + width / 2.0 - labelWidth / 2.0, y + height + labelOffset, labelWidth, labelHeight);
+      break;
+  }
+  return result;
 };
 
 primitives.common.BaseShape.prototype._betweenPoint = function (first, second) {
-	return new primitives.common.Point((first.x + second.x) / 2, (first.y + second.y) / 2);
+  return new primitives.common.Point((first.x + second.x) / 2, (first.y + second.y) / 2);
 };
 
 primitives.common.BaseShape.prototype._offsetPoint = function (first, second, offset) {
-	var result = null,
-		distance = first.distanceTo(second);
+  var result = null,
+    distance = first.distanceTo(second);
 
-	if (distance === 0 || offset === 0) {
-		result = new primitives.common.Point(first);
-	} else {
-		result = new primitives.common.Point(first.x + (second.x - first.x) / distance * offset, first.y + (second.y - first.y) / distance * offset);
-	}
-	return result;
+  if (distance === 0 || offset === 0) {
+    result = new primitives.common.Point(first);
+  } else {
+    result = new primitives.common.Point(first.x + (second.x - first.x) / distance * offset, first.y + (second.y - first.y) / distance * offset);
+  }
+  return result;
 };
 
 /* /graphics/shapes/Callout.js*/
 primitives.common.Callout = function (graphics) {
-	this.m_graphics = graphics;
+  this.m_graphics = graphics;
 
-	this.pointerPlacement = 0/*primitives.common.PlacementType.Auto*/;
-	this.cornerRadius = "10%";
-	this.offset = 0;
-	this.opacity = 1;
-	this.lineWidth = 1;
-	this.pointerWidth = "10%";
-	this.borderColor = "#000000"/*primitives.common.Colors.Black*/;
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-	this.fillColor = "#d3d3d3"/*primitives.common.Colors.LightGray*/;
+  this.pointerPlacement = 0/*primitives.common.PlacementType.Auto*/;
+  this.cornerRadius = "10%";
+  this.offset = 0;
+  this.opacity = 1;
+  this.lineWidth = 1;
+  this.pointerWidth = "10%";
+  this.borderColor = "#000000"/*primitives.common.Colors.Black*/;
+  this.lineType = 0/*primitives.common.LineType.Solid*/;
+  this.fillColor = "#d3d3d3"/*primitives.common.Colors.LightGray*/;
 
-	this.m_map = [[8/*primitives.common.PlacementType.TopLeft*/, 7/*primitives.common.PlacementType.Left*/, 6/*primitives.common.PlacementType.BottomLeft*/],
-				[1/*primitives.common.PlacementType.Top*/, null, 5/*primitives.common.PlacementType.Bottom*/],
-				[2/*primitives.common.PlacementType.TopRight*/, 3/*primitives.common.PlacementType.Right*/, 4/*primitives.common.PlacementType.BottomRight*/]
-	];
+  this.m_map = [[8/*primitives.common.PlacementType.TopLeft*/, 7/*primitives.common.PlacementType.Left*/, 6/*primitives.common.PlacementType.BottomLeft*/],
+  [1/*primitives.common.PlacementType.Top*/, null, 5/*primitives.common.PlacementType.Bottom*/],
+  [2/*primitives.common.PlacementType.TopRight*/, 3/*primitives.common.PlacementType.Right*/, 4/*primitives.common.PlacementType.BottomRight*/]
+  ];
 };
 
 primitives.common.Callout.prototype = new primitives.common.BaseShape();
 
 primitives.common.Callout.prototype.draw = function (snapPoint, position) {
-	position = new primitives.common.Rect(position).offset(this.offset);
+  position = new primitives.common.Rect(position).offset(this.offset);
 
-	var pointA = new primitives.common.Point(position.x, position.y),
-	pointB = new primitives.common.Point(position.right(), position.y),
-	pointC = new primitives.common.Point(position.right(), position.bottom()),
-	pointD = new primitives.common.Point(position.left(), position.bottom()),
-	snapPoints = [null, null, null, null, null, null, null, null],
-	points = [pointA, pointB, pointC, pointD],
-	radius = this.m_graphics.getPxSize(this.cornerRadius, Math.min(pointA.distanceTo(pointB), pointB.distanceTo(pointC))),
-	placementType,
-	point,
-	index,
-	attr,
-	linePaletteItem,
-	buffer,
-	polyline;
+  var pointA = new primitives.common.Point(position.x, position.y),
+    pointB = new primitives.common.Point(position.right(), position.y),
+    pointC = new primitives.common.Point(position.right(), position.bottom()),
+    pointD = new primitives.common.Point(position.left(), position.bottom()),
+    snapPoints = [null, null, null, null, null, null, null, null],
+    points = [pointA, pointB, pointC, pointD],
+    radius = this.m_graphics.getPxSize(this.cornerRadius, Math.min(pointA.distanceTo(pointB), pointB.distanceTo(pointC))),
+    placementType,
+    point,
+    index,
+    attr,
+    linePaletteItem,
+    buffer,
+    polyline;
 
-	attr = {};
-	if (this.fillColor !== null) {
-		attr.fillColor = this.fillColor;
-		attr.opacity = this.opacity;
-	}
-	if (this.lineColor !== null) {
-		attr.lineColor = this.borderColor;
-	}
-	attr.lineWidth = this.lineWidth;
-	attr.lineType = this.lineType;
+  attr = {};
+  if (this.fillColor !== null) {
+    attr.fillColor = this.fillColor;
+    attr.opacity = this.opacity;
+  }
+  if (this.lineColor !== null) {
+    attr.lineColor = this.borderColor;
+  }
+  attr.lineWidth = this.lineWidth;
+  attr.lineType = this.lineType;
 
-	linePaletteItem = new primitives.common.PaletteItem(attr);
-	buffer = new primitives.common.PolylinesBuffer();
-	polyline = buffer.getPolyline(linePaletteItem);
+  linePaletteItem = new primitives.common.PaletteItem(attr);
+  buffer = new primitives.common.PolylinesBuffer();
+  polyline = buffer.getPolyline(linePaletteItem);
 
-	if (snapPoint !== null) {
-		placementType = (this.pointerPlacement === 0/*primitives.common.PlacementType.Auto*/) ? this._getPlacement(snapPoint, pointA, pointC) : this.pointerPlacement;
-		if (placementType !== null) {
-			snapPoints[placementType] = snapPoint;
-		}
-	}
+  if (snapPoint !== null) {
+    placementType = (this.pointerPlacement === 0/*primitives.common.PlacementType.Auto*/) ? this._getPlacement(snapPoint, pointA, pointC) : this.pointerPlacement;
+    if (placementType !== null) {
+      snapPoints[placementType] = snapPoint;
+    }
+  }
 
-	for (index = 0; index < points.length; index += 1) {
-		this._drawSegment(polyline, points[0], points[1], points[2], this.pointerWidth, radius, snapPoints[1], snapPoints[2]);
-		point = points.shift();
-		points.push(point);
-		point = snapPoints.shift();
-		snapPoints.push(point);
-		point = snapPoints.shift();
-		snapPoints.push(point);
-	}
+  for (index = 0; index < points.length; index += 1) {
+    this._drawSegment(polyline, points[0], points[1], points[2], this.pointerWidth, radius, snapPoints[1], snapPoints[2]);
+    point = points.shift();
+    points.push(point);
+    point = snapPoints.shift();
+    snapPoints.push(point);
+    point = snapPoints.shift();
+    snapPoints.push(point);
+  }
 
-	this.m_graphics.polylinesBuffer(buffer);
+  this.m_graphics.polylinesBuffer(buffer);
 };
 
 primitives.common.Callout.prototype._getPlacement = function (point, point1, point2) {
-	var row = null,
-		column = null;
-	if (point.x < point1.x) {
-		row = 0;
-	}
-	else if (point.x > point2.x) {
-		row = 2;
-	}
-	else {
-		row = 1;
-	}
-	if (point.y < point1.y) {
-		column = 0;
-	}
-	else if (point.y > point2.y) {
-		column = 2;
-	}
-	else {
-		column = 1;
-	}
-	return this.m_map[row][column];
+  var row = null,
+    column = null;
+  if (point.x < point1.x) {
+    row = 0;
+  }
+  else if (point.x > point2.x) {
+    row = 2;
+  }
+  else {
+    row = 1;
+  }
+  if (point.y < point1.y) {
+    column = 0;
+  }
+  else if (point.y > point2.y) {
+    column = 2;
+  }
+  else {
+    column = 1;
+  }
+  return this.m_map[row][column];
 };
 
 primitives.common.Callout.prototype._drawSegment = function (polyline, pointA, pointB, pointC, base, radius, sideSnapPoint, cornerSnapPoint) {
-	var pointA1 = this._offsetPoint(pointA, pointB, radius),
-		pointB1 = this._offsetPoint(pointB, pointA, radius),
-		pointB2 = this._offsetPoint(pointB, pointC, radius),
-		pointS,
-		pointS1,
-		pointS2;
+  var pointA1 = this._offsetPoint(pointA, pointB, radius),
+    pointB1 = this._offsetPoint(pointB, pointA, radius),
+    pointB2 = this._offsetPoint(pointB, pointC, radius),
+    pointS,
+    pointS1,
+    pointS2;
 
-	base = this.m_graphics.getPxSize(base, pointA.distanceTo(pointB) / 2.0);
+  base = this.m_graphics.getPxSize(base, pointA.distanceTo(pointB) / 2.0);
 
-	if (polyline.length() === 0) {
-		polyline.addSegment(new primitives.common.MoveSegment(pointA1));
-	}
-	if (sideSnapPoint !== null) {
-		pointS = this._betweenPoint(pointA, pointB);
-		pointS1 = this._offsetPoint(pointS, pointA, base);
-		pointS2 = this._offsetPoint(pointS, pointB, base);
-		polyline.addSegment(new primitives.common.LineSegment(pointS1));
-		polyline.addSegment(new primitives.common.LineSegment(sideSnapPoint));
-		polyline.addSegment(new primitives.common.LineSegment(pointS2));
-	}
+  if (polyline.length() === 0) {
+    polyline.addSegment(new primitives.common.MoveSegment(pointA1));
+  }
+  if (sideSnapPoint !== null) {
+    pointS = this._betweenPoint(pointA, pointB);
+    pointS1 = this._offsetPoint(pointS, pointA, base);
+    pointS2 = this._offsetPoint(pointS, pointB, base);
+    polyline.addSegment(new primitives.common.LineSegment(pointS1));
+    polyline.addSegment(new primitives.common.LineSegment(sideSnapPoint));
+    polyline.addSegment(new primitives.common.LineSegment(pointS2));
+  }
 
-	polyline.addSegment(new primitives.common.LineSegment(pointB1));
-	if (cornerSnapPoint !== null) {
-		polyline.addSegment(new primitives.common.LineSegment(cornerSnapPoint));
-		polyline.addSegment(new primitives.common.LineSegment(pointB2));
-	}
-	else {
-		polyline.addSegment(new primitives.common.QuadraticArcSegment(pointB, pointB2));
-	}
+  polyline.addSegment(new primitives.common.LineSegment(pointB1));
+  if (cornerSnapPoint !== null) {
+    polyline.addSegment(new primitives.common.LineSegment(cornerSnapPoint));
+    polyline.addSegment(new primitives.common.LineSegment(pointB2));
+  }
+  else {
+    polyline.addSegment(new primitives.common.QuadraticArcSegment(pointB, pointB2));
+  }
 };
 
 
@@ -3076,83 +3076,83 @@ primitives.common.Marker = function () {
 primitives.common.Marker.Markers = {};
 
 primitives.common.Marker.DrawCircle = function (polyline, position) {
-	var quarter = Math.min(position.width / 2.0, position.height / 2.0);
-	position = new primitives.common.Rect(position.horizontalCenter() - quarter, position.verticalCenter() - quarter, quarter * 2.0, quarter * 2.0);
-	primitives.common.Marker.DrawOval(polyline, position);
+  var quarter = Math.min(position.width / 2.0, position.height / 2.0);
+  position = new primitives.common.Rect(position.horizontalCenter() - quarter, position.verticalCenter() - quarter, quarter * 2.0, quarter * 2.0);
+  primitives.common.Marker.DrawOval(polyline, position);
 };
 
 primitives.common.Marker.DrawRectangle = function (polyline, position) {
-	polyline.addSegment(new primitives.common.MoveSegment(position.x, position.verticalCenter()));
-	polyline.addSegment(new primitives.common.LineSegment(position.x, position.y));
-	polyline.addSegment(new primitives.common.LineSegment(position.right(), position.y));
-	polyline.addSegment(new primitives.common.LineSegment(position.right(), position.bottom()));
-	polyline.addSegment(new primitives.common.LineSegment(position.x, position.bottom()));
-	polyline.addSegment(new primitives.common.LineSegment(position.x, position.verticalCenter()));
+  polyline.addSegment(new primitives.common.MoveSegment(position.x, position.verticalCenter()));
+  polyline.addSegment(new primitives.common.LineSegment(position.x, position.y));
+  polyline.addSegment(new primitives.common.LineSegment(position.right(), position.y));
+  polyline.addSegment(new primitives.common.LineSegment(position.right(), position.bottom()));
+  polyline.addSegment(new primitives.common.LineSegment(position.x, position.bottom()));
+  polyline.addSegment(new primitives.common.LineSegment(position.x, position.verticalCenter()));
 };
 
 primitives.common.Marker.DrawOval = function (polyline, position) {
-	var cpX, cpY;
-	cpX = (position.width / 2) * 0.5522848;
-	cpY = (position.height / 2) * 0.5522848;
-	polyline.addSegment(new primitives.common.MoveSegment(position.x, position.verticalCenter()));
-	polyline.addSegment(new primitives.common.CubicArcSegment(position.x, position.verticalCenter() - cpY, position.horizontalCenter() - cpX, position.y, position.horizontalCenter(), position.y));
-	polyline.addSegment(new primitives.common.CubicArcSegment(position.horizontalCenter() + cpX, position.y, position.right(), position.verticalCenter() - cpY, position.right(), position.verticalCenter()));
-	polyline.addSegment(new primitives.common.CubicArcSegment(position.right(), position.verticalCenter() + cpY, position.horizontalCenter() + cpX, position.bottom(), position.horizontalCenter(), position.bottom()));
-	polyline.addSegment(new primitives.common.CubicArcSegment(position.horizontalCenter() - cpX, position.bottom(), position.x, position.verticalCenter() + cpY, position.x, position.verticalCenter()));
+  var cpX, cpY;
+  cpX = (position.width / 2) * 0.5522848;
+  cpY = (position.height / 2) * 0.5522848;
+  polyline.addSegment(new primitives.common.MoveSegment(position.x, position.verticalCenter()));
+  polyline.addSegment(new primitives.common.CubicArcSegment(position.x, position.verticalCenter() - cpY, position.horizontalCenter() - cpX, position.y, position.horizontalCenter(), position.y));
+  polyline.addSegment(new primitives.common.CubicArcSegment(position.horizontalCenter() + cpX, position.y, position.right(), position.verticalCenter() - cpY, position.right(), position.verticalCenter()));
+  polyline.addSegment(new primitives.common.CubicArcSegment(position.right(), position.verticalCenter() + cpY, position.horizontalCenter() + cpX, position.bottom(), position.horizontalCenter(), position.bottom()));
+  polyline.addSegment(new primitives.common.CubicArcSegment(position.horizontalCenter() - cpX, position.bottom(), position.x, position.verticalCenter() + cpY, position.x, position.verticalCenter()));
 };
 
 primitives.common.Marker.DrawTriangle = function (polyline, position) {
-	polyline.addSegment(new primitives.common.MoveSegment(position.left(), position.bottom()));
-	polyline.addSegment(new primitives.common.LineSegment(position.horizontalCenter(), position.y));
-	polyline.addSegment(new primitives.common.LineSegment(position.right(), position.bottom()));
-	polyline.addSegment(new primitives.common.LineSegment(position.left(), position.bottom()));
+  polyline.addSegment(new primitives.common.MoveSegment(position.left(), position.bottom()));
+  polyline.addSegment(new primitives.common.LineSegment(position.horizontalCenter(), position.y));
+  polyline.addSegment(new primitives.common.LineSegment(position.right(), position.bottom()));
+  polyline.addSegment(new primitives.common.LineSegment(position.left(), position.bottom()));
 };
 
 primitives.common.Marker.DrawCrossOut = function (polyline, position) {
-	polyline.addSegment(new primitives.common.MoveSegment(position.horizontalCenter(), position.verticalCenter()));
-	polyline.addSegment(new primitives.common.LineSegment(position.x, position.y));
-	polyline.addSegment(new primitives.common.MoveSegment(position.horizontalCenter(), position.verticalCenter()));
-	polyline.addSegment(new primitives.common.LineSegment(position.right(), position.bottom()));
-	polyline.addSegment(new primitives.common.MoveSegment(position.horizontalCenter(), position.verticalCenter()));
-	polyline.addSegment(new primitives.common.LineSegment(position.right(), position.y));
-	polyline.addSegment(new primitives.common.MoveSegment(position.horizontalCenter(), position.verticalCenter()));
-	polyline.addSegment(new primitives.common.LineSegment(position.left(), position.bottom()));
+  polyline.addSegment(new primitives.common.MoveSegment(position.horizontalCenter(), position.verticalCenter()));
+  polyline.addSegment(new primitives.common.LineSegment(position.x, position.y));
+  polyline.addSegment(new primitives.common.MoveSegment(position.horizontalCenter(), position.verticalCenter()));
+  polyline.addSegment(new primitives.common.LineSegment(position.right(), position.bottom()));
+  polyline.addSegment(new primitives.common.MoveSegment(position.horizontalCenter(), position.verticalCenter()));
+  polyline.addSegment(new primitives.common.LineSegment(position.right(), position.y));
+  polyline.addSegment(new primitives.common.MoveSegment(position.horizontalCenter(), position.verticalCenter()));
+  polyline.addSegment(new primitives.common.LineSegment(position.left(), position.bottom()));
 };
 
 primitives.common.Marker.DrawRhombus = function (polyline, position) {
-	polyline.addSegment(new primitives.common.MoveSegment(position.horizontalCenter(), position.bottom()));
-	polyline.addSegment(new primitives.common.LineSegment(position.left(), position.verticalCenter()));
-	polyline.addSegment(new primitives.common.LineSegment(position.horizontalCenter(), position.y));
-	polyline.addSegment(new primitives.common.LineSegment(position.right(), position.verticalCenter()));
-	polyline.addSegment(new primitives.common.LineSegment(position.horizontalCenter(), position.bottom()));
+  polyline.addSegment(new primitives.common.MoveSegment(position.horizontalCenter(), position.bottom()));
+  polyline.addSegment(new primitives.common.LineSegment(position.left(), position.verticalCenter()));
+  polyline.addSegment(new primitives.common.LineSegment(position.horizontalCenter(), position.y));
+  polyline.addSegment(new primitives.common.LineSegment(position.right(), position.verticalCenter()));
+  polyline.addSegment(new primitives.common.LineSegment(position.horizontalCenter(), position.bottom()));
 };
 
 primitives.common.Marker.DrawWedge = function (polyline, position) {
-	polyline.addSegment(new primitives.common.MoveSegment(position.horizontalCenter(), position.y));
-	polyline.addSegment(new primitives.common.LineSegment(position.right(), position.y));
-	polyline.addSegment(new primitives.common.LineSegment(position.horizontalCenter(), position.bottom()));
-	polyline.addSegment(new primitives.common.LineSegment(position.left(), position.y));
-	polyline.addSegment(new primitives.common.LineSegment(position.horizontalCenter(), position.y));
+  polyline.addSegment(new primitives.common.MoveSegment(position.horizontalCenter(), position.y));
+  polyline.addSegment(new primitives.common.LineSegment(position.right(), position.y));
+  polyline.addSegment(new primitives.common.LineSegment(position.horizontalCenter(), position.bottom()));
+  polyline.addSegment(new primitives.common.LineSegment(position.left(), position.y));
+  polyline.addSegment(new primitives.common.LineSegment(position.horizontalCenter(), position.y));
 };
 
 primitives.common.Marker.DrawFramedOval = function (polyline, position) {
-	primitives.common.Marker.DrawRectangle(polyline, position);
-	primitives.common.Marker.DrawOval(polyline, position);
+  primitives.common.Marker.DrawRectangle(polyline, position);
+  primitives.common.Marker.DrawOval(polyline, position);
 };
 
 primitives.common.Marker.DrawFramedTriangle = function (polyline, position) {
-	primitives.common.Marker.DrawRectangle(polyline, position);
-	primitives.common.Marker.DrawTriangle(polyline, position);
+  primitives.common.Marker.DrawRectangle(polyline, position);
+  primitives.common.Marker.DrawTriangle(polyline, position);
 };
 
 primitives.common.Marker.DrawFramedWedge = function (polyline, position) {
-	primitives.common.Marker.DrawRectangle(polyline, position);
-	primitives.common.Marker.DrawWedge(polyline, position);
+  primitives.common.Marker.DrawRectangle(polyline, position);
+  primitives.common.Marker.DrawWedge(polyline, position);
 };
 
 primitives.common.Marker.DrawFramedRhombus = function (polyline, position) {
-	primitives.common.Marker.DrawRectangle(polyline, position);
-	primitives.common.Marker.DrawRhombus(polyline, position);
+  primitives.common.Marker.DrawRectangle(polyline, position);
+  primitives.common.Marker.DrawRhombus(polyline, position);
 };
 
 primitives.common.Marker.DrawNone = function (polyline, position) {
@@ -3173,155 +3173,155 @@ primitives.common.Marker.Markers[11/*primitives.common.ShapeType.FramedRhombus*/
 primitives.common.Marker.Markers[6/*primitives.common.ShapeType.None*/] = primitives.common.Marker.DrawNone;
 
 primitives.common.Marker.prototype.draw = function (polylinesBuffer, shapeType, position, paletteItem) {
-	var polyline;
+  var polyline;
 
-	// If you need to create custom multi-color marker type
-	// create color palette object for every fragment 
-	// than request polyline of that that palette style 
-	// add fragment into received polyline
-	polyline = polylinesBuffer.getPolyline(paletteItem);
-	primitives.common.Marker.Markers[shapeType](polyline, position);
+  // If you need to create custom multi-color marker type
+  // create color palette object for every fragment 
+  // than request polyline of that that palette style 
+  // add fragment into received polyline
+  polyline = polylinesBuffer.getPolyline(paletteItem);
+  primitives.common.Marker.Markers[shapeType](polyline, position);
 };
 
 
 
 /* /graphics/shapes/MergedRectangles.js*/
 primitives.common.MergedRectangles = function (graphics) {
-	this.graphics = graphics;
-	this.transform = null;
+  this.graphics = graphics;
+  this.transform = null;
 
-	this.lineWidth = 1;
-	this.opacity = 1;
-	this.fillColor = null;
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-	this.borderColor = null;
+  this.lineWidth = 1;
+  this.opacity = 1;
+  this.fillColor = null;
+  this.lineType = 0/*primitives.common.LineType.Solid*/;
+  this.borderColor = null;
 };
 
 primitives.common.MergedRectangles.prototype = new primitives.common.BaseShape();
 
 primitives.common.MergedRectangles.prototype.draw = function (rects) {
-	var paletteItem = new primitives.common.PaletteItem({
-		lineColor: this.borderColor,
-		lineWidth: this.lineWidth,
-		fillColor: this.fillColor,
-		lineType: this.lineType,
-		opacity: this.opacity
-	}),
-	polyline = new primitives.common.Polyline(paletteItem),
-	offset = this.lineWidth / 2;
+  var paletteItem = new primitives.common.PaletteItem({
+    lineColor: this.borderColor,
+    lineWidth: this.lineWidth,
+    fillColor: this.fillColor,
+    lineType: this.lineType,
+    opacity: this.opacity
+  }),
+    polyline = new primitives.common.Polyline(paletteItem),
+    offset = this.lineWidth / 2;
 
-	primitives.common.getMergedRectangles(this, rects, function (points) {
-		for (var index = 0, len = points.length; index < len; index += 1) {
-			var point = points[index];
-			if (index == 0) {
-				polyline.addSegment(new primitives.common.MoveSegment(point.x, point.y));
-			} else {
-				polyline.addSegment(new primitives.common.LineSegment(point.x, point.y));
-			}
-		}
-	});
+  primitives.common.getMergedRectangles(this, rects, function (points) {
+    for (var index = 0, len = points.length; index < len; index += 1) {
+      var point = points[index];
+      if (index == 0) {
+        polyline.addSegment(new primitives.common.MoveSegment(point.x, point.y));
+      } else {
+        polyline.addSegment(new primitives.common.LineSegment(point.x, point.y));
+      }
+    }
+  });
 
-	polyline.transform(this.transform, true);
+  polyline.transform(this.transform, true);
 
-	this.graphics.polyline(polyline);
+  this.graphics.polyline(polyline);
 };
 
 /* /graphics/shapes/Shape.js*/
 primitives.common.Shape = function (graphics) {
-	this.m_graphics = graphics;
-	this.transform = null;
+  this.m_graphics = graphics;
+  this.transform = null;
 
-	this.orientationType = 0/*primitives.common.OrientationType.Top*/;
-	this.panelSize = null;
-	this.shapeType = 0/*primitives.common.ShapeType.Rectangle*/;
-	this.offset = new primitives.common.Thickness(0, 0, 0, 0);
-	this.lineWidth = 1;
-	this.labelOffset = 4;
-	this.cornerRadius = "10%";
-	this.opacity = 1;
-	this.fillColor = null;
-	this.labelSize = new primitives.common.Size(60, 30);
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-	this.borderColor = null;
-	this.hasLabel = false;
-	this.labelTemplate = null;
-	this.labelPlacement = 0/*primitives.common.PlacementType.Auto*/;
+  this.orientationType = 0/*primitives.common.OrientationType.Top*/;
+  this.panelSize = null;
+  this.shapeType = 0/*primitives.common.ShapeType.Rectangle*/;
+  this.offset = new primitives.common.Thickness(0, 0, 0, 0);
+  this.lineWidth = 1;
+  this.labelOffset = 4;
+  this.cornerRadius = "10%";
+  this.opacity = 1;
+  this.fillColor = null;
+  this.labelSize = new primitives.common.Size(60, 30);
+  this.lineType = 0/*primitives.common.LineType.Solid*/;
+  this.borderColor = null;
+  this.hasLabel = false;
+  this.labelTemplate = null;
+  this.labelPlacement = 0/*primitives.common.PlacementType.Auto*/;
 };
 
 primitives.common.Shape.prototype = new primitives.common.BaseShape();
 
 primitives.common.Shape.prototype.draw = function (position, uiHash) {
-	var labelPlacement,
-		calloutShape,
-		linePaletteItem,
-		buffer,
-		marker;
+  var labelPlacement,
+    calloutShape,
+    linePaletteItem,
+    buffer,
+    marker;
 
-	position = new primitives.common.Rect(position).offset(this.offset);
+  position = new primitives.common.Rect(position).offset(this.offset);
 
-	this.transform = new primitives.common.Transform();
-	this.transform.size = this.panelSize;
-	this.transform.setOrientation(this.orientationType);
+  this.transform = new primitives.common.Transform();
+  this.transform.size = this.panelSize;
+  this.transform.setOrientation(this.orientationType);
 
-	/* label size */
-	if (this.hasLabel) {
-		labelPlacement = this._getLabelPosition(position.x, position.y, position.width, position.height, this.labelSize.width, this.labelSize.height, this.labelOffset, this.labelPlacement);
-	}
+  /* label size */
+  if (this.hasLabel) {
+    labelPlacement = this._getLabelPosition(position.x, position.y, position.width, position.height, this.labelSize.width, this.labelSize.height, this.labelOffset, this.labelPlacement);
+  }
 
 
-	switch (this.shapeType) {
-		case 0/*primitives.common.ShapeType.Rectangle*/:
-			calloutShape = new primitives.common.Callout(this.m_graphics);
-			calloutShape.cornerRadius = this.cornerRadius;
-			calloutShape.opacity = this.opacity;
-			calloutShape.lineWidth = this.lineWidth;
-			calloutShape.lineType = this.lineType;
-			calloutShape.borderColor = this.borderColor;
-			calloutShape.fillColor = this.fillColor;
-			calloutShape.draw(null, position);
-			break;
-		default:
-			linePaletteItem = new primitives.common.PaletteItem({
-				lineColor: this.borderColor,
-				lineWidth: this.lineWidth,
-				lineType: this.lineType,
-				fillColor: this.fillColor,
-				opacity: this.opacity
-			});
+  switch (this.shapeType) {
+    case 0/*primitives.common.ShapeType.Rectangle*/:
+      calloutShape = new primitives.common.Callout(this.m_graphics);
+      calloutShape.cornerRadius = this.cornerRadius;
+      calloutShape.opacity = this.opacity;
+      calloutShape.lineWidth = this.lineWidth;
+      calloutShape.lineType = this.lineType;
+      calloutShape.borderColor = this.borderColor;
+      calloutShape.fillColor = this.fillColor;
+      calloutShape.draw(null, position);
+      break;
+    default:
+      linePaletteItem = new primitives.common.PaletteItem({
+        lineColor: this.borderColor,
+        lineWidth: this.lineWidth,
+        lineType: this.lineType,
+        fillColor: this.fillColor,
+        opacity: this.opacity
+      });
 
-			/* from rectangle */
-			this.transform.transformRect(position.x, position.y, position.width, position.height, false,
-				this, function (x, y, width, height) {
-					position = new primitives.common.Rect(x, y, width, height);
-				});
+      /* from rectangle */
+      this.transform.transformRect(position.x, position.y, position.width, position.height, false,
+        this, function (x, y, width, height) {
+          position = new primitives.common.Rect(x, y, width, height);
+        });
 
-			
-			marker = new primitives.common.Marker();
-			buffer = new primitives.common.PolylinesBuffer();
-			marker.draw(buffer, this.shapeType, position, linePaletteItem);
-			buffer.transform(this.transform, true);
 
-			this.m_graphics.polylinesBuffer(buffer);
-			break;
-	}
+      marker = new primitives.common.Marker();
+      buffer = new primitives.common.PolylinesBuffer();
+      marker.draw(buffer, this.shapeType, position, linePaletteItem);
+      buffer.transform(this.transform, true);
 
-	if (this.hasLabel) {
-		this.m_graphics.template(
-			labelPlacement.x,
-			labelPlacement.y,
-			0,
-			0,
-			0,
-			0,
-			labelPlacement.width,
-			labelPlacement.height,
-			this.labelTemplate.template(),
-			this.labelTemplate.getHashCode(),
-			this.labelTemplate.render,
-			uiHash,
-			null
-		);
-	}
+      this.m_graphics.polylinesBuffer(buffer);
+      break;
+  }
+
+  if (this.hasLabel) {
+    this.m_graphics.template(
+      labelPlacement.x,
+      labelPlacement.y,
+      0,
+      0,
+      0,
+      0,
+      labelPlacement.width,
+      labelPlacement.height,
+      this.labelTemplate.template(),
+      this.labelTemplate.getHashCode(),
+      this.labelTemplate.render,
+      uiHash,
+      null
+    );
+  }
 };
 
 
@@ -3336,12 +3336,12 @@ primitives.common.Shape.prototype.draw = function (position, uiHash) {
  * @param {number} arg1 The y coordinate.
  */
 primitives.common.Point = function (arg0, arg1) {
-	/**
+  /**
    * The x coordinate
    * @type {number}
    */
   this.x = null;
-	/**
+  /**
    * The y coordinate
    * @type {number}
    */
@@ -3501,7 +3501,7 @@ primitives.common.Rect = function (arg0, arg1, arg2, arg3) {
    * @type {number}
    */
   this.x = null;
-	/**
+  /**
    * The location y coordinate
    * @type {number}
    */
@@ -3945,188 +3945,188 @@ primitives.common.Rect.prototype.equalTo = function (rect) {
 
 /* /graphics/structs/MoveSegment.js*/
 primitives.common.MoveSegment = function () {
-	this.parent = primitives.common.Point.prototype;
-	this.parent.constructor.apply(this, arguments);
-	this.segmentType = 1/*primitives.common.SegmentType.Move*/;
+  this.parent = primitives.common.Point.prototype;
+  this.parent.constructor.apply(this, arguments);
+  this.segmentType = 1/*primitives.common.SegmentType.Move*/;
 };
 
 primitives.common.MoveSegment.prototype = new primitives.common.Point();
 
 primitives.common.MoveSegment.prototype.clone = function () {
-	return new primitives.common.MoveSegment(this);
+  return new primitives.common.MoveSegment(this);
 };
 
 primitives.common.MoveSegment.prototype.loop = function (thisArg, onItem) {
-	if (onItem != null) {
-		onItem.call(thisArg, this.x, this.y, 0);
-	}
+  if (onItem != null) {
+    onItem.call(thisArg, this.x, this.y, 0);
+  }
 };
 
 primitives.common.MoveSegment.prototype.setPoint = function (point, index) {
-	this.x = point.x;
-	this.y = point.y;
+  this.x = point.x;
+  this.y = point.y;
 };
 
 primitives.common.MoveSegment.prototype.getEndPoint = function () {
-	return this;
+  return this;
 };
 
 primitives.common.MoveSegment.prototype.invert = function (endPoint) {
-	this.x = endPoint.x;
-	this.y = endPoint.y;
+  this.x = endPoint.x;
+  this.y = endPoint.y;
 };
 
 primitives.common.MoveSegment.prototype.transform = function (transform, forward) {
-	var self = this;
-	transform.transformPoint(self.x, self.y, forward, self, function (x, y) {
-		self.x = x;
-		self.y = y;
-	});//ignore jslint
+  var self = this;
+  transform.transformPoint(self.x, self.y, forward, self, function (x, y) {
+    self.x = x;
+    self.y = y;
+  });//ignore jslint
 };
 
 
 /* /graphics/structs/CubicArcSegment.js*/
 primitives.common.CubicArcSegment = function (arg0, arg1, arg2, arg3, arg4, arg5) {
-	this.parent = primitives.common.Point.prototype;
+  this.parent = primitives.common.Point.prototype;
 
-	this.x = null;
-	this.y = null;
+  this.x = null;
+  this.y = null;
 
-	this.cpX1 = null;
-	this.cpY1 = null;
+  this.cpX1 = null;
+  this.cpY1 = null;
 
-	this.cpX2 = null;
-	this.cpY2 = null;
+  this.cpX2 = null;
+  this.cpY2 = null;
 
-	switch (arguments.length) {
-		case 3:
-			this.parent.constructor.apply(this, [arg2.x, arg2.y]);
-			this.cpX1 = arg0.x;
-			this.cpY1 = arg0.y;
-			this.cpX2 = arg1.x;
-			this.cpY2 = arg1.y;
-			break;
-		case 6:
-			this.parent.constructor.apply(this, [arg4, arg5]);
-			this.cpX1 = arg0;
-			this.cpY1 = arg1;
-			this.cpX2 = arg2;
-			this.cpY2 = arg3;
-			break;
-		default:
-			break;
-	}
+  switch (arguments.length) {
+    case 3:
+      this.parent.constructor.apply(this, [arg2.x, arg2.y]);
+      this.cpX1 = arg0.x;
+      this.cpY1 = arg0.y;
+      this.cpX2 = arg1.x;
+      this.cpY2 = arg1.y;
+      break;
+    case 6:
+      this.parent.constructor.apply(this, [arg4, arg5]);
+      this.cpX1 = arg0;
+      this.cpY1 = arg1;
+      this.cpX2 = arg2;
+      this.cpY2 = arg3;
+      break;
+    default:
+      break;
+  }
 
-	this.segmentType = 3/*primitives.common.SegmentType.CubicArc*/;
+  this.segmentType = 3/*primitives.common.SegmentType.CubicArc*/;
 };
 
 primitives.common.CubicArcSegment.prototype = new primitives.common.Point();
 
 primitives.common.CubicArcSegment.prototype.clone = function () {
-	return new primitives.common.CubicArcSegment(this.cpX1, this.cpY1, this.cpX2, this.cpY2, this.x, this.y);
+  return new primitives.common.CubicArcSegment(this.cpX1, this.cpY1, this.cpX2, this.cpY2, this.x, this.y);
 };
 
 primitives.common.CubicArcSegment.prototype.loop = function (thisArg, onItem) {
-	if (onItem != null) {
-		onItem.call(thisArg, this.cpX1, this.cpY1, 0);
-		onItem.call(thisArg, this.cpX2, this.cpY2, 1);
-		onItem.call(thisArg, this.x, this.y, 2);
-	}
+  if (onItem != null) {
+    onItem.call(thisArg, this.cpX1, this.cpY1, 0);
+    onItem.call(thisArg, this.cpX2, this.cpY2, 1);
+    onItem.call(thisArg, this.x, this.y, 2);
+  }
 };
 
 primitives.common.CubicArcSegment.prototype.setPoint = function (point, index) {
-	switch (index) {
-		case 0:
-			this.cpX1 = point.x;
-			this.cpY1 = point.y;
-			break;
-		case 1:
-			this.cpX2 = point.x;
-			this.cpY2 = point.y;
-			break;
-		case 2:
-			this.x = point.x;
-			this.y = point.y;
-			break;
-	}
+  switch (index) {
+    case 0:
+      this.cpX1 = point.x;
+      this.cpY1 = point.y;
+      break;
+    case 1:
+      this.cpX2 = point.x;
+      this.cpY2 = point.y;
+      break;
+    case 2:
+      this.x = point.x;
+      this.y = point.y;
+      break;
+  }
 };
 
 primitives.common.CubicArcSegment.prototype.getEndPoint = function () {
-	return this;
+  return this;
 };
 
 primitives.common.CubicArcSegment.prototype.invert = function (endPoint) {
-	var tempX = this.cpX1, 
-		tempY = this.cpY1;
-	this.x = endPoint.x;
-	this.y = endPoint.y;
-	this.cpX1 = this.cpX2;
-	this.cpY1 = this.cpY2;
-	this.cpX2 = tempX;
-	this.cpY2 = tempY;
+  var tempX = this.cpX1,
+    tempY = this.cpY1;
+  this.x = endPoint.x;
+  this.y = endPoint.y;
+  this.cpX1 = this.cpX2;
+  this.cpY1 = this.cpY2;
+  this.cpX2 = tempX;
+  this.cpY2 = tempY;
 };
 
 primitives.common.CubicArcSegment.prototype.transform = function (transform, forward) {
-	var self = this;
-	transform.transform3Points(self.x, self.y, self.cpX1, self.cpY1, self.cpX2, self.cpY2, forward, self, function (x, y, cpX1, cpY1, cpX2, cpY2) {
-		self.x = x;
-		self.y = y;
-		self.cpX1 = cpX1;
-		self.cpY1 = cpY1;
-		self.cpX2 = cpX2;
-		self.cpY2 = cpY2;
-	});//ignore jslint
+  var self = this;
+  transform.transform3Points(self.x, self.y, self.cpX1, self.cpY1, self.cpX2, self.cpY2, forward, self, function (x, y, cpX1, cpY1, cpX2, cpY2) {
+    self.x = x;
+    self.y = y;
+    self.cpX1 = cpX1;
+    self.cpY1 = cpY1;
+    self.cpX2 = cpX2;
+    self.cpY2 = cpY2;
+  });//ignore jslint
 };
 
 primitives.common.CubicArcSegment.prototype.trim = function (prevEndPoint, offset) {
-	var time = 0.5,
-		endPoint = this.offsetPoint(this.x, this.y, this.cpX2, this.cpY2, this.cpX1, this.cpY1, prevEndPoint.x, prevEndPoint.y, time),
-		time2 = 0.1,
-		endPoint2 = this.offsetPoint(this.x, this.y, this.cpX2, this.cpY2, this.cpX1, this.cpY1, prevEndPoint.x, prevEndPoint.y, time2);
+  var time = 0.5,
+    endPoint = this.offsetPoint(this.x, this.y, this.cpX2, this.cpY2, this.cpX1, this.cpY1, prevEndPoint.x, prevEndPoint.y, time),
+    time2 = 0.1,
+    endPoint2 = this.offsetPoint(this.x, this.y, this.cpX2, this.cpY2, this.cpX1, this.cpY1, prevEndPoint.x, prevEndPoint.y, time2);
 
-	time = offset * (time / endPoint.distanceTo(this.x, this.y) + time2 / endPoint2.distanceTo(this.x, this.y)) / 2.0;
-	endPoint = this.offsetPoint(this.x, this.y, this.cpX2, this.cpY2, this.cpX1, this.cpY1, prevEndPoint.x, prevEndPoint.y, time);
+  time = offset * (time / endPoint.distanceTo(this.x, this.y) + time2 / endPoint2.distanceTo(this.x, this.y)) / 2.0;
+  endPoint = this.offsetPoint(this.x, this.y, this.cpX2, this.cpY2, this.cpX1, this.cpY1, prevEndPoint.x, prevEndPoint.y, time);
 
-	this.x = endPoint.x;
-	this.y = endPoint.y;
+  this.x = endPoint.x;
+  this.y = endPoint.y;
 
-	return this;
+  return this;
 };
 
 primitives.common.CubicArcSegment.prototype.offsetPoint = function (x, y, cpX1, cpY1, cpX2, cpY2, x2, y2, time) {
-	return new primitives.common.Point(
-		(1 - time) * (1 - time) * (1 - time) * x + 3 * (1 - time) * (1 - time) * time * cpX1 + 3 * (1 - time) * time * time * cpX2 + time * time * time * x2,
-		(1 - time) * (1 - time) * (1 - time) * y + 3 * (1 - time) * (1 - time) * time * cpY1 + 3 * (1 - time) * time * time * cpY2 + time * time * time * y2
-		);
+  return new primitives.common.Point(
+    (1 - time) * (1 - time) * (1 - time) * x + 3 * (1 - time) * (1 - time) * time * cpX1 + 3 * (1 - time) * time * time * cpX2 + time * time * time * x2,
+    (1 - time) * (1 - time) * (1 - time) * y + 3 * (1 - time) * (1 - time) * time * cpY1 + 3 * (1 - time) * time * time * cpY2 + time * time * time * y2
+  );
 };
 
 /* /graphics/structs/DotSegment.js*/
 primitives.common.DotSegment = function (x, y, width, height, cornerRadius) {
-	this.segmentType = 4/*primitives.common.SegmentType.Dot*/;
+  this.segmentType = 4/*primitives.common.SegmentType.Dot*/;
 
-	this.x = x;
-	this.y = y;
-	this.width = width;
-	this.height = height;
-	this.cornerRadius = cornerRadius;
+  this.x = x;
+  this.y = y;
+  this.width = width;
+  this.height = height;
+  this.cornerRadius = cornerRadius;
 };
 
 
 /* /graphics/structs/Label.js*/
 primitives.common.Label = function () {
-	this.text = null;
-	this.position = null; // primitives.common.Rect
-	this.weight = 0;
+  this.text = null;
+  this.position = null; // primitives.common.Rect
+  this.weight = 0;
 
-	this.isActive = true;
-	this.labelType = 0/*primitives.common.LabelType.Regular*/;
+  this.isActive = true;
+  this.labelType = 0/*primitives.common.LabelType.Regular*/;
 
-	this.labelOrientation = 0/*primitives.text.TextOrientationType.Horizontal*/;
-	this.horizontalAlignmentType = 0/*primitives.common.HorizontalAlignmentType.Center*/;
-	this.verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
+  this.labelOrientation = 0/*primitives.text.TextOrientationType.Horizontal*/;
+  this.horizontalAlignmentType = 0/*primitives.common.HorizontalAlignmentType.Center*/;
+  this.verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
 
-	this.parent = primitives.common.Rect.prototype;
-	this.parent.constructor.apply(this, arguments);
+  this.parent = primitives.common.Rect.prototype;
+  this.parent.constructor.apply(this, arguments);
 };
 
 primitives.common.Label.prototype = new primitives.common.Rect();
@@ -4134,36 +4134,36 @@ primitives.common.Label.prototype = new primitives.common.Rect();
 
 /* /graphics/structs/LineSegment.js*/
 primitives.common.LineSegment = function () {
-	this.parent = primitives.common.MoveSegment.prototype;
-	this.parent.constructor.apply(this, arguments);
+  this.parent = primitives.common.MoveSegment.prototype;
+  this.parent.constructor.apply(this, arguments);
 
-	this.segmentType = 0/*primitives.common.SegmentType.Line*/;
+  this.segmentType = 0/*primitives.common.SegmentType.Line*/;
 };
 
 primitives.common.LineSegment.prototype = new primitives.common.MoveSegment();
 
 primitives.common.LineSegment.prototype.clone = function () {
-	return new primitives.common.LineSegment(this);
+  return new primitives.common.LineSegment(this);
 };
 
 primitives.common.LineSegment.prototype.trim = function (prevEndPoint, offset) {
-	var endPoint = this.offsetPoint(this, prevEndPoint, offset);
-	this.x = endPoint.x;
-	this.y = endPoint.y;
+  var endPoint = this.offsetPoint(this, prevEndPoint, offset);
+  this.x = endPoint.x;
+  this.y = endPoint.y;
 
-	return this;
+  return this;
 };
 
 primitives.common.LineSegment.prototype.offsetPoint = function (first, second, offset) {
-	var result = null,
-		distance = first.distanceTo(second);
+  var result = null,
+    distance = first.distanceTo(second);
 
-	if (distance === 0 || offset === 0) {
-		result = new primitives.common.Point(first);
-	} else {
-		result = new primitives.common.Point(first.x + (second.x - first.x) / distance * offset, first.y + (second.y - first.y) / distance * offset);
-	}
-	return result;
+  if (distance === 0 || offset === 0) {
+    result = new primitives.common.Point(first);
+  } else {
+    result = new primitives.common.Point(first.x + (second.x - first.x) / distance * offset, first.y + (second.y - first.y) / distance * offset);
+  }
+  return result;
 };
 
 /* /graphics/structs/Matrix.js*/
@@ -4214,110 +4214,110 @@ primitives.common.Matrix.prototype.determinant = function () {
 
 /* /graphics/structs/PaletteItem.js*/
 primitives.common.PaletteItem = function (options) {
-	this.lineColor = "#c0c0c0"/*primitives.common.Colors.Silver*/;
-	this.lineWidth = 1;
-	this.lineType = 0/*primitives.common.LineType.Solid*/;
-	this.fillColor = null;
-	this.opacity = null;
+  this.lineColor = "#c0c0c0"/*primitives.common.Colors.Silver*/;
+  this.lineWidth = 1;
+  this.lineType = 0/*primitives.common.LineType.Solid*/;
+  this.fillColor = null;
+  this.opacity = null;
 
-	this._key = "";
+  this._key = "";
 
-	var property, properties,
-		index, len;
+  var property, properties,
+    index, len;
 
-	properties = ['lineColor', 'lineWidth', 'lineType', 'fillColor', 'opacity'];
+  properties = ['lineColor', 'lineWidth', 'lineType', 'fillColor', 'opacity'];
 
-	for (index = 0, len = properties.length; index < len; index += 1) {
-		property = properties[index];
+  for (index = 0, len = properties.length; index < len; index += 1) {
+    property = properties[index];
 
-		if(options != null && options.hasOwnProperty(property)) {
-			this[property] = options[property];
-		}
-		this._key += (!primitives.common.isNullOrEmpty(this._key) ? ", " : "") + property + ":" + this[property];
-	}
+    if (options != null && options.hasOwnProperty(property)) {
+      this[property] = options[property];
+    }
+    this._key += (!primitives.common.isNullOrEmpty(this._key) ? ", " : "") + property + ":" + this[property];
+  }
 };
 
 primitives.common.PaletteItem.prototype.toAttr = function () {
-	var attr = {
-		"lineWidth": this.lineWidth,
-		"lineType": this.lineType
-	};
-	if (this.fillColor !== null) {
-		attr.fillColor = this.fillColor;
-	}
-	if (this.opacity !== null) {
-		attr.opacity = this.opacity;
-	}
-	if (this.lineColor !== null) {
-		attr.borderColor = this.lineColor;
-	}
-	return attr;
+  var attr = {
+    "lineWidth": this.lineWidth,
+    "lineType": this.lineType
+  };
+  if (this.fillColor !== null) {
+    attr.fillColor = this.fillColor;
+  }
+  if (this.opacity !== null) {
+    attr.opacity = this.opacity;
+  }
+  if (this.lineColor !== null) {
+    attr.borderColor = this.lineColor;
+  }
+  return attr;
 };
 
 primitives.common.PaletteItem.prototype.toString = function () {
-	return this._key;
+  return this._key;
 };
 
 /* /graphics/structs/PaletteManager.js*/
 primitives.common.PaletteManager = function (options, linesPalette) {
-	this.palette = [];
-	this.cursor = 0;
+  this.palette = [];
+  this.cursor = 0;
 
-	var index, len;
+  var index, len;
 
-	/* pallete based connectors */
-	if(linesPalette.length === 0) {
-		/* draw all extra as regular */
-		this.palette = [new primitives.common.PaletteItem({
-			lineColor: options.linesColor,
-			lineWidth: options.linesWidth,
-			lineType: options.linesType
-		})];
-		this.paletteLength = this.palette.length;
+  /* pallete based connectors */
+  if (linesPalette.length === 0) {
+    /* draw all extra as regular */
+    this.palette = [new primitives.common.PaletteItem({
+      lineColor: options.linesColor,
+      lineWidth: options.linesWidth,
+      lineType: options.linesType
+    })];
+    this.paletteLength = this.palette.length;
 
-		this.regularIndex = 0;
-	} else {
-		for (index = 0, len = linesPalette.length; index < len; index += 1) {
-			this.palette.push(new primitives.common.PaletteItem(linesPalette[index]));
-		}
-		this.paletteLength = this.palette.length;
+    this.regularIndex = 0;
+  } else {
+    for (index = 0, len = linesPalette.length; index < len; index += 1) {
+      this.palette.push(new primitives.common.PaletteItem(linesPalette[index]));
+    }
+    this.paletteLength = this.palette.length;
 
-		/* regular */
-		this.palette.push(new primitives.common.PaletteItem({
-			lineColor: options.linesColor,
-			lineWidth: options.linesWidth,
-			lineType: options.linesType
-		}));
-		this.regularIndex = this.palette.length - 1;
-	}
-	
-	/* highlight */
-	this.palette.push(new primitives.common.PaletteItem({
-		lineColor: options.highlightLinesColor,
-		lineWidth: options.highlightLinesWidth,
-		lineType: options.highlightLinesType
-	}));
-	this.highlightIndex = this.palette.length - 1;
+    /* regular */
+    this.palette.push(new primitives.common.PaletteItem({
+      lineColor: options.linesColor,
+      lineWidth: options.linesWidth,
+      lineType: options.linesType
+    }));
+    this.regularIndex = this.palette.length - 1;
+  }
+
+  /* highlight */
+  this.palette.push(new primitives.common.PaletteItem({
+    lineColor: options.highlightLinesColor,
+    lineWidth: options.highlightLinesWidth,
+    lineType: options.highlightLinesType
+  }));
+  this.highlightIndex = this.palette.length - 1;
 };
 
 primitives.common.PaletteManager.prototype.selectPalette = function (index) {
-	this.cursor = index % this.paletteLength;
+  this.cursor = index % this.paletteLength;
 };
 
 primitives.common.PaletteManager.prototype.getPalette = function (connectorStyleType) {
-	var index = null;
-	switch (connectorStyleType) {
-		case 1/*primitives.common.ConnectorStyleType.Regular*/:
-			index = this.regularIndex;
-			break;
-		case 2/*primitives.common.ConnectorStyleType.Highlight*/:
-			index = this.highlightIndex;
-			break;
-		case 0/*primitives.common.ConnectorStyleType.Extra*/:
-			index = this.cursor;
-			break;
-	}
-	return this.palette[index];
+  var index = null;
+  switch (connectorStyleType) {
+    case 1/*primitives.common.ConnectorStyleType.Regular*/:
+      index = this.regularIndex;
+      break;
+    case 2/*primitives.common.ConnectorStyleType.Highlight*/:
+      index = this.highlightIndex;
+      break;
+    case 0/*primitives.common.ConnectorStyleType.Extra*/:
+      index = this.cursor;
+      break;
+  }
+  return this.palette[index];
 };
 
 /* /graphics/structs/Polyline.js*/
@@ -4666,9 +4666,9 @@ primitives.common.Polyline = function (newPaletteItem) {
       current.offset(offset2);
     } else {
       if (relationType == 3/*primitives.common.VectorRelationType.Opposite*/ && current.from.context.pointIndex === 0) {
-				/* Vectors are opposite vectors which belong to 2 different segments
-					so we add an extra line segment in between of them
-				*/
+        /* Vectors are opposite vectors which belong to 2 different segments
+          so we add an extra line segment in between of them
+        */
         joinSegment = new primitives.common.LineSegment(current.from);
         polyline.addSegment(joinSegment);
 
@@ -4808,167 +4808,167 @@ primitives.common.Polyline = function (newPaletteItem) {
 
 /* /graphics/structs/PolylinesBuffer.js*/
 primitives.common.PolylinesBuffer = function () {
-	var polylines = {};
+  var polylines = {};
 
-	function _getPolyline(polylines, paletteItem) {
-		if (!polylines[paletteItem.toString()]) {
-			polylines[paletteItem.toString()] = new primitives.common.Polyline(paletteItem);
-		}
-		return polylines[paletteItem.toString()];
-	}
+  function _getPolyline(polylines, paletteItem) {
+    if (!polylines[paletteItem.toString()]) {
+      polylines[paletteItem.toString()] = new primitives.common.Polyline(paletteItem);
+    }
+    return polylines[paletteItem.toString()];
+  }
 
-	function getPolyline(paletteItem) {
-		return _getPolyline(polylines, paletteItem);
-	}
+  function getPolyline(paletteItem) {
+    return _getPolyline(polylines, paletteItem);
+  }
 
-	function loop(thisArg, onItem) {
-		var key,
-			polyline;
-		if (onItem != null) {
-			for (key in polylines) {
-				if (polylines.hasOwnProperty(key)) {
-					polyline = polylines[key];
-					if (polyline) {
-						polyline.optimizeMoveSegments();
+  function loop(thisArg, onItem) {
+    var key,
+      polyline;
+    if (onItem != null) {
+      for (key in polylines) {
+        if (polylines.hasOwnProperty(key)) {
+          polyline = polylines[key];
+          if (polyline) {
+            polyline.optimizeMoveSegments();
 
-						if (onItem.call(thisArg, polyline)) {
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
+            if (onItem.call(thisArg, polyline)) {
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
 
-	function addInverted(callbackFun, copyOnly) {
-		var backupPolylines, backupPolyline;
+  function addInverted(callbackFun, copyOnly) {
+    var backupPolylines, backupPolyline;
 
-		/* backup polylines */
-		backupPolylines = polylines;
-		polylines = {};
+    /* backup polylines */
+    backupPolylines = polylines;
+    polylines = {};
 
-		if (callbackFun != null) {
-			callbackFun(this);
-		}
+    if (callbackFun != null) {
+      callbackFun(this);
+    }
 
-		/* add inverted polylines to backup collection */
-		loop(this, function (polyline) {
-			backupPolyline = _getPolyline(backupPolylines, polyline.paletteItem);
+    /* add inverted polylines to backup collection */
+    loop(this, function (polyline) {
+      backupPolyline = _getPolyline(backupPolylines, polyline.paletteItem);
 
-			if (!copyOnly) {
-				backupPolyline.addInverted(polyline);
-			} else {
-				polyline.mergeTo(backupPolyline);
-			}
-		});
+      if (!copyOnly) {
+        backupPolyline.addInverted(polyline);
+      } else {
+        polyline.mergeTo(backupPolyline);
+      }
+    });
 
-		/* restore polylines */
-		polylines = backupPolylines;
-	}
+    /* restore polylines */
+    polylines = backupPolylines;
+  }
 
-	function transform(transformArg, forward) {
-		loop(this, function (polyline) {
-			polyline.transform(transformArg, forward);
-		});
-	}
+  function transform(transformArg, forward) {
+    loop(this, function (polyline) {
+      polyline.transform(transformArg, forward);
+    });
+  }
 
-	return {
-		getPolyline: getPolyline,
-		loop: loop,
-		addInverted: addInverted,
-		transform: transform
-	};
+  return {
+    getPolyline: getPolyline,
+    loop: loop,
+    addInverted: addInverted,
+    transform: transform
+  };
 };
 
 /* /graphics/structs/QuadraticArcSegment.js*/
 primitives.common.QuadraticArcSegment = function (arg0, arg1, arg2, arg3) {
-	this.x = null;
-	this.y = null;
+  this.x = null;
+  this.y = null;
 
-	this.cpX = null;
-	this.cpY = null;
+  this.cpX = null;
+  this.cpY = null;
 
-	switch (arguments.length) {
-		case 2:
-			this.x = arg1.x;
-			this.y = arg1.y;
-			this.cpX = arg0.x;
-			this.cpY = arg0.y;
-			break;
-		case 4:
-			this.cpX = arg0;
-			this.cpY = arg1;
-			this.x = arg2;
-			this.y = arg3;
-			break;
-		default:
-			break;
-	}
+  switch (arguments.length) {
+    case 2:
+      this.x = arg1.x;
+      this.y = arg1.y;
+      this.cpX = arg0.x;
+      this.cpY = arg0.y;
+      break;
+    case 4:
+      this.cpX = arg0;
+      this.cpY = arg1;
+      this.x = arg2;
+      this.y = arg3;
+      break;
+    default:
+      break;
+  }
 
-	this.segmentType = 2/*primitives.common.SegmentType.QuadraticArc*/;
+  this.segmentType = 2/*primitives.common.SegmentType.QuadraticArc*/;
 };
 
 primitives.common.QuadraticArcSegment.prototype.clone = function () {
-	return new primitives.common.QuadraticArcSegment(this.cpX, this.cpY, this.x, this.y);
+  return new primitives.common.QuadraticArcSegment(this.cpX, this.cpY, this.x, this.y);
 };
 
 primitives.common.QuadraticArcSegment.prototype.loop = function (thisArg, onItem) {
-	if (onItem != null) {
-		onItem.call(thisArg, this.cpX, this.cpY, 0);
-		onItem.call(thisArg, this.x, this.y, 1);
-	}
+  if (onItem != null) {
+    onItem.call(thisArg, this.cpX, this.cpY, 0);
+    onItem.call(thisArg, this.x, this.y, 1);
+  }
 };
 
 primitives.common.QuadraticArcSegment.prototype.setPoint = function (point, index) {
-	switch (index) {
-		case 0:
-			this.cpX = point.x;
-			this.cpY = point.y;
-			break;
-		case 1:
-			this.x = point.x;
-			this.y = point.y;
-			break;
-	}
+  switch (index) {
+    case 0:
+      this.cpX = point.x;
+      this.cpY = point.y;
+      break;
+    case 1:
+      this.x = point.x;
+      this.y = point.y;
+      break;
+  }
 };
 
 primitives.common.QuadraticArcSegment.prototype.getEndPoint = function () {
-	return this;
+  return this;
 };
 
 primitives.common.QuadraticArcSegment.prototype.invert = function (endPoint) {
-	this.x = endPoint.x;
-	this.y = endPoint.y;
+  this.x = endPoint.x;
+  this.y = endPoint.y;
 };
 
 primitives.common.QuadraticArcSegment.prototype.transform = function (transform, forward) {
-	var self = this;
-	transform.transformPoints(self.x, self.y, self.cpX, self.cpY, forward, self, function (x, y, cpX, cpY) {
-		self.x = x;
-		self.y = y;
-		self.cpX = cpX;
-		self.cpY = cpY;
-	});//ignore jslint
+  var self = this;
+  transform.transformPoints(self.x, self.y, self.cpX, self.cpY, forward, self, function (x, y, cpX, cpY) {
+    self.x = x;
+    self.y = y;
+    self.cpX = cpX;
+    self.cpY = cpY;
+  });//ignore jslint
 };
 
 primitives.common.QuadraticArcSegment.prototype.trim = function (prevEndPoint, offset) {
-	var time = 0.5,
-	endPoint = this.offsetPoint(this.x, this.y, this.cpX, this.cpY, prevEndPoint.x, prevEndPoint.y, time),
-	time2 = 0.1,
-	endPoint2 = this.offsetPoint(this.x, this.y, this.cpX, this.cpY, prevEndPoint.x, prevEndPoint.y, time2);
+  var time = 0.5,
+    endPoint = this.offsetPoint(this.x, this.y, this.cpX, this.cpY, prevEndPoint.x, prevEndPoint.y, time),
+    time2 = 0.1,
+    endPoint2 = this.offsetPoint(this.x, this.y, this.cpX, this.cpY, prevEndPoint.x, prevEndPoint.y, time2);
 
-	time = offset * (time / endPoint.distanceTo(this.x, this.y) + time2 / endPoint2.distanceTo(this.x, this.y)) / 2.0;
-	endPoint = this.offsetPoint(this.x, this.y, this.cpX, this.cpY, prevEndPoint.x, prevEndPoint.y, time);
+  time = offset * (time / endPoint.distanceTo(this.x, this.y) + time2 / endPoint2.distanceTo(this.x, this.y)) / 2.0;
+  endPoint = this.offsetPoint(this.x, this.y, this.cpX, this.cpY, prevEndPoint.x, prevEndPoint.y, time);
 
-	this.x = endPoint.x;
-	this.y = endPoint.y;
+  this.x = endPoint.x;
+  this.y = endPoint.y;
 
-	return this;
+  return this;
 };
 
 primitives.common.QuadraticArcSegment.prototype.offsetPoint = function (firstX, firstY, controlX, controlY, secondX, secondY, time) {
-	return new primitives.common.Point((1 - time) * (1 - time) * firstX + 2 * (1 - time) * time * controlX + time * time * secondX,
-		(1 - time) * (1 - time) * firstY + 2 * (1 - time) * time * controlY + time * time * secondY);
+  return new primitives.common.Point((1 - time) * (1 - time) * firstX + 2 * (1 - time) * time * controlX + time * time * secondX,
+    (1 - time) * (1 - time) * firstY + 2 * (1 - time) * time * controlY + time * time * secondY);
 };
 
 /* /graphics/structs/Size.js*/
@@ -6006,114 +6006,114 @@ primitives.common.Graphics.prototype.getPxSize = function (value, base) {
 
 /* /graphics/Cache.js*/
 primitives.common.Cache = function () {
-	this.threshold = 20;
+  this.threshold = 20;
 
-	this.m_visible = {};
-	this.m_invisible = {};
+  this.m_visible = {};
+  this.m_invisible = {};
 };
 
 primitives.common.Cache.prototype.begin = function () {
-	var placeholder,
-		type,
-		index,
-		control;
+  var placeholder,
+    type,
+    index,
+    control;
 
-	for (placeholder in this.m_visible) {
-		if (this.m_visible.hasOwnProperty(placeholder)) {
-			for (type in this.m_visible[placeholder]) {
-				if (this.m_visible[placeholder].hasOwnProperty(type)) {
-					for (index = this.m_visible[placeholder][type].length - 1; index >= 0; index -= 1) {
-						control = this.m_visible[placeholder][type][index];
-						control.style.visibility = "hidden";
-						this.m_invisible[placeholder][type].push(control);
-					}
-					this.m_visible[placeholder][type].length = 0;
-				}
-			}
-		}
-	}
+  for (placeholder in this.m_visible) {
+    if (this.m_visible.hasOwnProperty(placeholder)) {
+      for (type in this.m_visible[placeholder]) {
+        if (this.m_visible[placeholder].hasOwnProperty(type)) {
+          for (index = this.m_visible[placeholder][type].length - 1; index >= 0; index -= 1) {
+            control = this.m_visible[placeholder][type][index];
+            control.style.visibility = "hidden";
+            this.m_invisible[placeholder][type].push(control);
+          }
+          this.m_visible[placeholder][type].length = 0;
+        }
+      }
+    }
+  }
 };
 
 primitives.common.Cache.prototype.end = function () {
-	var placeholder,
-		type,
-		control;
-	for (placeholder in this.m_visible) {
-		if (this.m_visible.hasOwnProperty(placeholder)) {
-			for (type in this.m_visible[placeholder]) {
-				if (this.m_visible[placeholder].hasOwnProperty(type)) {
-					control = null;
-					if (this.m_invisible[placeholder][type].length > this.threshold) {
-						while ((control = this.m_invisible[placeholder][type].pop()) !== undefined) {
-							control.parentNode.removeChild(control);
-						}
-					}
-				}
-			}
-		}
-	}
+  var placeholder,
+    type,
+    control;
+  for (placeholder in this.m_visible) {
+    if (this.m_visible.hasOwnProperty(placeholder)) {
+      for (type in this.m_visible[placeholder]) {
+        if (this.m_visible[placeholder].hasOwnProperty(type)) {
+          control = null;
+          if (this.m_invisible[placeholder][type].length > this.threshold) {
+            while ((control = this.m_invisible[placeholder][type].pop()) !== undefined) {
+              control.parentNode.removeChild(control);
+            }
+          }
+        }
+      }
+    }
+  }
 };
 
 primitives.common.Cache.prototype.reset = function (placeholder, layer) {
-	placeholder = placeholder + "-" + layer;
-	var control = null,
-		type,
-		index;
-	for (type in this.m_visible[placeholder]) {
-		if (this.m_visible[placeholder].hasOwnProperty(type)) {
-			for (index = this.m_visible[placeholder][type].length - 1; index >= 0; index -= 1) {
-				control = this.m_visible[placeholder][type][index];
-				this.m_invisible[placeholder][type].push(control);
-				control.style.visibility = "hidden";
-			}
-			this.m_visible[placeholder][type].length = 0;
-		}
-	}
+  placeholder = placeholder + "-" + layer;
+  var control = null,
+    type,
+    index;
+  for (type in this.m_visible[placeholder]) {
+    if (this.m_visible[placeholder].hasOwnProperty(type)) {
+      for (index = this.m_visible[placeholder][type].length - 1; index >= 0; index -= 1) {
+        control = this.m_visible[placeholder][type][index];
+        this.m_invisible[placeholder][type].push(control);
+        control.style.visibility = "hidden";
+      }
+      this.m_visible[placeholder][type].length = 0;
+    }
+  }
 };
 
 primitives.common.Cache.prototype.clear = function () {
-	var placeholder,
-		type,
-		control;
-	for (placeholder in this.m_visible) {
-		if (this.m_visible.hasOwnProperty(placeholder)) {
-			for (type in this.m_visible[placeholder]) {
-				if (this.m_visible[placeholder].hasOwnProperty(type)) {
-					control = null;
-					while ((control = this.m_visible[placeholder][type].pop()) !== undefined) {
-						control.parentNode.removeChild(control);
-					}
-					while ((control = this.m_invisible[placeholder][type].pop()) !== undefined) {
-						control.parentNode.removeChild(control);
-					}
-				}
-			}
-		}
-	}
+  var placeholder,
+    type,
+    control;
+  for (placeholder in this.m_visible) {
+    if (this.m_visible.hasOwnProperty(placeholder)) {
+      for (type in this.m_visible[placeholder]) {
+        if (this.m_visible[placeholder].hasOwnProperty(type)) {
+          control = null;
+          while ((control = this.m_visible[placeholder][type].pop()) !== undefined) {
+            control.parentNode.removeChild(control);
+          }
+          while ((control = this.m_invisible[placeholder][type].pop()) !== undefined) {
+            control.parentNode.removeChild(control);
+          }
+        }
+      }
+    }
+  }
 };
 
 primitives.common.Cache.prototype.get = function (placeholder, layer, type) {
-	placeholder = placeholder + "-" + layer;
-	var result = null;
-	if (this.m_visible[placeholder] === undefined) {
-		this.m_visible[placeholder] = {};
-		this.m_invisible[placeholder] = {};
-	}
-	if (this.m_visible[placeholder][type] === undefined) {
-		this.m_visible[placeholder][type] = [];
-		this.m_invisible[placeholder][type] = [];
-	}
-	result = this.m_invisible[placeholder][type].pop() || null;
-	if (result !== null) {
-		this.m_visible[placeholder][type].push(result);
-		result.style.visibility = "inherit";
-	}
-	return result;
+  placeholder = placeholder + "-" + layer;
+  var result = null;
+  if (this.m_visible[placeholder] === undefined) {
+    this.m_visible[placeholder] = {};
+    this.m_invisible[placeholder] = {};
+  }
+  if (this.m_visible[placeholder][type] === undefined) {
+    this.m_visible[placeholder][type] = [];
+    this.m_invisible[placeholder][type] = [];
+  }
+  result = this.m_invisible[placeholder][type].pop() || null;
+  if (result !== null) {
+    this.m_visible[placeholder][type].push(result);
+    result.style.visibility = "inherit";
+  }
+  return result;
 };
 
 primitives.common.Cache.prototype.put = function (placeholder, layer, type, control) {
-	placeholder = placeholder + "-" + layer;
-	this.m_visible[placeholder][type].push(control);
+  placeholder = placeholder + "-" + layer;
+  this.m_visible[placeholder][type].push(control);
 };
 
 /* /graphics/CanvasGraphics.js*/
@@ -6379,142 +6379,142 @@ primitives.common.CanvasGraphics.prototype.polyline = function (polylineData) {
 
 /* /graphics/Element.js*/
 primitives.common.Element = function (arg0, arg1) {
-	this.ns = null;
-	this.name = null;
-	this.attr = {};
-	this.style = {};
+  this.ns = null;
+  this.name = null;
+  this.attr = {};
+  this.style = {};
 
-	this.children = [];
+  this.children = [];
 
-	switch (arguments.length) {
-		case 1:
-			this.name = arg0;
-			break;
-		case 2:
-			this.ns = arg0;
-			this.name = arg1;
-			break;
-		default:
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      this.name = arg0;
+      break;
+    case 2:
+      this.ns = arg0;
+      this.name = arg1;
+      break;
+    default:
+      break;
+  }
 };
 
 primitives.common.Element.prototype.setAttribute = function (key, value) {
-	this.attr[key] = value;
+  this.attr[key] = value;
 };
 
 primitives.common.Element.prototype.appendChild = function (child) {
-	this.children[this.children.length] = child;
+  this.children[this.children.length] = child;
 };
 
 primitives.common.Element.prototype.create = function (ie8mode) {
-	var result = null,
-		name,
-		child,
-		index;
-	if (this.ns !== null) {
-		result = document.createElementNS(this.ns, this.name);
-	}
-	else {
-		result = document.createElement(this.name);
-	}
-	for (name in this.attr) {
-		if (this.attr.hasOwnProperty(name)) {
-			if (ie8mode !== undefined) {
-				result[name] = this.attr[name];
-			}
-			else {
-				result.setAttribute(name, this.attr[name]);
-			}
-		}
-	}
-	for (name in this.style) {
-		if (this.style.hasOwnProperty(name)) {
-			result.style[name] = this.style[name];
-		}
-	}
-	for (index = 0; index < this.children.length; index += 1) {
-		child = this.children[index];
-		if (typeof child === "string") {
-			result.appendChild(document.createTextNode(child));
-		}
-		else {
-			result.appendChild(child.create(ie8mode));
-		}
-	}
-	return result;
+  var result = null,
+    name,
+    child,
+    index;
+  if (this.ns !== null) {
+    result = document.createElementNS(this.ns, this.name);
+  }
+  else {
+    result = document.createElement(this.name);
+  }
+  for (name in this.attr) {
+    if (this.attr.hasOwnProperty(name)) {
+      if (ie8mode !== undefined) {
+        result[name] = this.attr[name];
+      }
+      else {
+        result.setAttribute(name, this.attr[name]);
+      }
+    }
+  }
+  for (name in this.style) {
+    if (this.style.hasOwnProperty(name)) {
+      result.style[name] = this.style[name];
+    }
+  }
+  for (index = 0; index < this.children.length; index += 1) {
+    child = this.children[index];
+    if (typeof child === "string") {
+      result.appendChild(document.createTextNode(child));
+    }
+    else {
+      result.appendChild(child.create(ie8mode));
+    }
+  }
+  return result;
 };
 
 primitives.common.Element.prototype.update = function (target, ie8mode) {
-	var name,
-		length,
-		index,
-		child,
-		value;
-	for (name in this.style) {
-		if (this.style.hasOwnProperty(name)) {
-			value = this.style[name];
-			if (target.style[name] !== value) {
-				target.style[name] = value;
-			}
-		}
-	}
-	for (name in this.attr) {
-		if (this.attr.hasOwnProperty(name)) {
-			value = this.attr[name];
-			if (ie8mode !== undefined) {
-				/* if you see exception here, it may be result of following situation: 
-					You made changes in Polyline graphics primitive and added extra sub nodes to it, so number and type of children for shape 
-					have been changed, so sub nodes mismatch is a reason for this exception.
-				*/
-				if (target[name] !== value) {
-					target[name] = value;
-				}
-			}
-			else {
-				if (target.getAttribute(name) !== value) {
-					target.setAttribute(name, value);
-				}
-			}
-		}
-	}
-	length = this.children.length;
-	for (index = 0; index < length; index += 1) {
-		child = this.children[index];
-		if (typeof child === "string") {
-			if (target.innerHtml !== child) {
-				target.innerHtml = child;
-			}
-		}
-		else {
-			this.children[index].update(target.children[index], ie8mode);
-		}
-	}
+  var name,
+    length,
+    index,
+    child,
+    value;
+  for (name in this.style) {
+    if (this.style.hasOwnProperty(name)) {
+      value = this.style[name];
+      if (target.style[name] !== value) {
+        target.style[name] = value;
+      }
+    }
+  }
+  for (name in this.attr) {
+    if (this.attr.hasOwnProperty(name)) {
+      value = this.attr[name];
+      if (ie8mode !== undefined) {
+        /* if you see exception here, it may be result of following situation: 
+          You made changes in Polyline graphics primitive and added extra sub nodes to it, so number and type of children for shape 
+          have been changed, so sub nodes mismatch is a reason for this exception.
+        */
+        if (target[name] !== value) {
+          target[name] = value;
+        }
+      }
+      else {
+        if (target.getAttribute(name) !== value) {
+          target.setAttribute(name, value);
+        }
+      }
+    }
+  }
+  length = this.children.length;
+  for (index = 0; index < length; index += 1) {
+    child = this.children[index];
+    if (typeof child === "string") {
+      if (target.innerHtml !== child) {
+        target.innerHtml = child;
+      }
+    }
+    else {
+      this.children[index].update(target.children[index], ie8mode);
+    }
+  }
 };
 
 /* /graphics/Layer.js*/
 primitives.common.Layer = function (name) {
-	this.name = name;
+  this.name = name;
 
-	this.canvas = null;
+  this.canvas = null;
 
-	this.canvascanvas = null;
-	this.svgcanvas = null;
+  this.canvascanvas = null;
+  this.svgcanvas = null;
 };
 
 /* /graphics/Placeholder.js*/
 primitives.common.Placeholder = function (name) {
-	this.name = name;
+  this.name = name;
 
-	this.layers = {};
-	this.activeLayer = null;
+  this.layers = {};
+  this.activeLayer = null;
 
-	this.size = null;
-	this.rect = null;
+  this.size = null;
+  this.rect = null;
 
-	this.div = null;
+  this.div = null;
 
-	this.hasGraphics = true;
+  this.hasGraphics = true;
 };
 
 /* /graphics/SvgGraphics.js*/
@@ -6707,323 +6707,323 @@ primitives.common.SvgGraphics.prototype.polyline = function (polylineData) {
 
 /* /graphics/Transform.js*/
 primitives.common.Transform = function () {
-	this.invertArea = false;
-	this.invertHorizontally = false;
-	this.invertVertically = false;
+  this.invertArea = false;
+  this.invertHorizontally = false;
+  this.invertVertically = false;
 
-	this.size = null;
+  this.size = null;
 };
 
 primitives.common.Transform.prototype.setOrientation = function (orientationType) {
-	switch (orientationType) {
-		case 0/*primitives.common.OrientationType.Top*/:
-			this.invertArea = false;
-			this.invertHorizontally = false;
-			this.invertVertically = false;
-			break;
-		case 1/*primitives.common.OrientationType.Bottom*/:
-			this.invertArea = false;
-			this.invertHorizontally = false;
-			this.invertVertically = true;
-			break;
-		case 2/*primitives.common.OrientationType.Left*/:
-			this.invertArea = true;
-			this.invertHorizontally = false;
-			this.invertVertically = false;
-			break;
-		case 3/*primitives.common.OrientationType.Right*/:
-			this.invertArea = true;
-			this.invertHorizontally = true;
-			this.invertVertically = false;
-			break;
-	}
+  switch (orientationType) {
+    case 0/*primitives.common.OrientationType.Top*/:
+      this.invertArea = false;
+      this.invertHorizontally = false;
+      this.invertVertically = false;
+      break;
+    case 1/*primitives.common.OrientationType.Bottom*/:
+      this.invertArea = false;
+      this.invertHorizontally = false;
+      this.invertVertically = true;
+      break;
+    case 2/*primitives.common.OrientationType.Left*/:
+      this.invertArea = true;
+      this.invertHorizontally = false;
+      this.invertVertically = false;
+      break;
+    case 3/*primitives.common.OrientationType.Right*/:
+      this.invertArea = true;
+      this.invertHorizontally = true;
+      this.invertVertically = false;
+      break;
+  }
 };
 
 primitives.common.Transform.prototype.getOrientation = function (orientationType) {
-	var result = orientationType;
-	if (this.invertHorizontally) {
-		switch (orientationType) {
-			case 2/*primitives.common.OrientationType.Left*/:
-				result = 3/*primitives.common.OrientationType.Right*/;
-				break;
-			case 3/*primitives.common.OrientationType.Right*/:
-				result = 2/*primitives.common.OrientationType.Left*/;
-				break;
-		}
-	}
+  var result = orientationType;
+  if (this.invertHorizontally) {
+    switch (orientationType) {
+      case 2/*primitives.common.OrientationType.Left*/:
+        result = 3/*primitives.common.OrientationType.Right*/;
+        break;
+      case 3/*primitives.common.OrientationType.Right*/:
+        result = 2/*primitives.common.OrientationType.Left*/;
+        break;
+    }
+  }
 
-	if (this.invertVertically) {
-		switch (orientationType) {
-			case 0/*primitives.common.OrientationType.Top*/:
-				result = 1/*primitives.common.OrientationType.Bottom*/;
-				break;
-			case 1/*primitives.common.OrientationType.Bottom*/:
-				result = 0/*primitives.common.OrientationType.Top*/;
-				break;
-		}
-	}
+  if (this.invertVertically) {
+    switch (orientationType) {
+      case 0/*primitives.common.OrientationType.Top*/:
+        result = 1/*primitives.common.OrientationType.Bottom*/;
+        break;
+      case 1/*primitives.common.OrientationType.Bottom*/:
+        result = 0/*primitives.common.OrientationType.Top*/;
+        break;
+    }
+  }
 
 
-	if (this.invertArea) {
-		switch (result) {
-			case 0/*primitives.common.OrientationType.Top*/:
-				result = 2/*primitives.common.OrientationType.Left*/;
-				break;
-			case 1/*primitives.common.OrientationType.Bottom*/:
-				result = 3/*primitives.common.OrientationType.Right*/;
-				break;
-			case 2/*primitives.common.OrientationType.Left*/:
-				result = 0/*primitives.common.OrientationType.Top*/;
-				break;
-			case 3/*primitives.common.OrientationType.Right*/:
-				result = 1/*primitives.common.OrientationType.Bottom*/;
-				break;
-		}
-	}
+  if (this.invertArea) {
+    switch (result) {
+      case 0/*primitives.common.OrientationType.Top*/:
+        result = 2/*primitives.common.OrientationType.Left*/;
+        break;
+      case 1/*primitives.common.OrientationType.Bottom*/:
+        result = 3/*primitives.common.OrientationType.Right*/;
+        break;
+      case 2/*primitives.common.OrientationType.Left*/:
+        result = 0/*primitives.common.OrientationType.Top*/;
+        break;
+      case 3/*primitives.common.OrientationType.Right*/:
+        result = 1/*primitives.common.OrientationType.Bottom*/;
+        break;
+    }
+  }
 
-	return result;
+  return result;
 };
 
 primitives.common.Transform.prototype.transformPoint = function (x, y, forward, self, func) {
-	var value;
+  var value;
 
-	if (forward) {
-		if (this.invertArea) {
-			value = x;
-			x = y;
-			y = value;
-		}
-	}
+  if (forward) {
+    if (this.invertArea) {
+      value = x;
+      x = y;
+      y = value;
+    }
+  }
 
-	if (this.invertHorizontally) {
-		x = this.size.width - x;
-	}
-	if (this.invertVertically) {
-		y = this.size.height - y;
-	}
+  if (this.invertHorizontally) {
+    x = this.size.width - x;
+  }
+  if (this.invertVertically) {
+    y = this.size.height - y;
+  }
 
-	if (!forward) {
-		if (this.invertArea) {
-			value = x;
-			x = y;
-			y = value;
-		}
-	}
+  if (!forward) {
+    if (this.invertArea) {
+      value = x;
+      x = y;
+      y = value;
+    }
+  }
 
-	func.call(self, x, y);
+  func.call(self, x, y);
 };
 
 primitives.common.Transform.prototype.transformPoints = function (x, y, x2, y2, forward, self, func) {
-	var value;
+  var value;
 
-	if (forward) {
-		if (this.invertArea) {
-			value = x;
-			x = y;
-			y = value;
-			value = x2;
-			x2 = y2;
-			y2 = value;
-		}
-	}
+  if (forward) {
+    if (this.invertArea) {
+      value = x;
+      x = y;
+      y = value;
+      value = x2;
+      x2 = y2;
+      y2 = value;
+    }
+  }
 
-	if (this.invertHorizontally) {
-		x = this.size.width - x;
-		x2 = this.size.width - x2;
-	}
+  if (this.invertHorizontally) {
+    x = this.size.width - x;
+    x2 = this.size.width - x2;
+  }
 
-	if (this.invertVertically) {
-		y = this.size.height - y;
-		y2 = this.size.height - y2;
-	}
+  if (this.invertVertically) {
+    y = this.size.height - y;
+    y2 = this.size.height - y2;
+  }
 
-	if (!forward) {
-		if (this.invertArea) {
-			value = x;
-			x = y;
-			y = value;
-			value = x2;
-			x2 = y2;
-			y2 = value;
-		}
-	}
+  if (!forward) {
+    if (this.invertArea) {
+      value = x;
+      x = y;
+      y = value;
+      value = x2;
+      x2 = y2;
+      y2 = value;
+    }
+  }
 
-	func.call(self, x, y, x2, y2);
+  func.call(self, x, y, x2, y2);
 };
 
 primitives.common.Transform.prototype.transform3Points = function (x, y, x2, y2, x3, y3, forward, self, func) {
-	var value;
+  var value;
 
-	if (forward) {
-		if (this.invertArea) {
-			value = x;
-			x = y;
-			y = value;
-			value = x2;
-			x2 = y2;
-			y2 = value;
-			value = x3;
-			x3 = y3;
-			y3 = value;
-		}
-	}
+  if (forward) {
+    if (this.invertArea) {
+      value = x;
+      x = y;
+      y = value;
+      value = x2;
+      x2 = y2;
+      y2 = value;
+      value = x3;
+      x3 = y3;
+      y3 = value;
+    }
+  }
 
-	if (this.invertHorizontally) {
-		x = this.size.width - x;
-		x2 = this.size.width - x2;
-		x3 = this.size.width - x3;
-	}
-	if (this.invertVertically) {
-		y = this.size.height - y;
-		y2 = this.size.height - y2;
-		y3 = this.size.height - y3;
-	}
+  if (this.invertHorizontally) {
+    x = this.size.width - x;
+    x2 = this.size.width - x2;
+    x3 = this.size.width - x3;
+  }
+  if (this.invertVertically) {
+    y = this.size.height - y;
+    y2 = this.size.height - y2;
+    y3 = this.size.height - y3;
+  }
 
-	if (!forward) {
-		if (this.invertArea) {
-			value = x;
-			x = y;
-			y = value;
-			value = x2;
-			x2 = y2;
-			y2 = value;
-			value = x3;
-			x3 = y3;
-			y3 = value;
-		}
-	}
+  if (!forward) {
+    if (this.invertArea) {
+      value = x;
+      x = y;
+      y = value;
+      value = x2;
+      x2 = y2;
+      y2 = value;
+      value = x3;
+      x3 = y3;
+      y3 = value;
+    }
+  }
 
-	func.call(self, x, y, x2, y2, x3, y3);
+  func.call(self, x, y, x2, y2, x3, y3);
 };
 
 primitives.common.Transform.prototype.transformRect = function (x, y, width, height, forward, self, func) {
-	var value;
+  var value;
 
-	if (forward) {
-		if (this.invertArea) {
-			value = x;
-			x = y;
-			y = value;
-			value = width;
-			width = height;
-			height = value;
-		}
-	}
+  if (forward) {
+    if (this.invertArea) {
+      value = x;
+      x = y;
+      y = value;
+      value = width;
+      width = height;
+      height = value;
+    }
+  }
 
-	if (this.invertHorizontally) {
-		x = this.size.width - x - width;
-	}
-	if (this.invertVertically) {
-		y = this.size.height - y - height;
-	}
+  if (this.invertHorizontally) {
+    x = this.size.width - x - width;
+  }
+  if (this.invertVertically) {
+    y = this.size.height - y - height;
+  }
 
-	if (!forward) {
-		if (this.invertArea) {
-			value = x;
-			x = y;
-			y = value;
-			value = width;
-			width = height;
-			height = value;
-		}
-	}
+  if (!forward) {
+    if (this.invertArea) {
+      value = x;
+      x = y;
+      y = value;
+      value = width;
+      width = height;
+      height = value;
+    }
+  }
 
-	func.call(self, x, y, width, height);
+  func.call(self, x, y, width, height);
 };
 
 
 /* /OptionsReaders/ArrayReader.js*/
 primitives.common.ArrayReader = function (itemTemplate, containsUniqueItems, uniquePropertyKey, createSourceHash, isOrdered) {
-	this.itemTemplate = itemTemplate;
-	this.containsUniqueItems = containsUniqueItems;
-	this.uniquePropertyKey = uniquePropertyKey;
-	this.containsPrimitiveValues = primitives.common.isNullOrEmpty(uniquePropertyKey);
-	this.createSourceHash = createSourceHash;
-	this.isOrdered = isOrdered;
+  this.itemTemplate = itemTemplate;
+  this.containsUniqueItems = containsUniqueItems;
+  this.uniquePropertyKey = uniquePropertyKey;
+  this.containsPrimitiveValues = primitives.common.isNullOrEmpty(uniquePropertyKey);
+  this.createSourceHash = createSourceHash;
+  this.isOrdered = isOrdered;
 };
 
 primitives.common.ArrayReader.prototype.read = function (target, source, path, context) {
-	var result = [], resultHash = {}, 
-		hash, sequence, resultSequence = {},
-		sourceHash = {},
-		item, itemid,
-		index, len,
-		newHashObject,
-		sequencePath = path + "-seq";
+  var result = [], resultHash = {},
+    hash, sequence, resultSequence = {},
+    sourceHash = {},
+    item, itemid,
+    index, len,
+    newHashObject,
+    sequencePath = path + "-seq";
 
-	/* validate source array */
-	if (!source || !primitives.common.isArray(source)) {
-		source = [];
-	}
+  /* validate source array */
+  if (!source || !primitives.common.isArray(source)) {
+    source = [];
+  }
 
-	/* hash values for tracking changes */
-	hash = context.hash.hasOwnProperty(path) ? context.hash[path] : {};
-	sequence = context.hash.hasOwnProperty(sequencePath) ? context.hash[sequencePath] : {};
+  /* hash values for tracking changes */
+  hash = context.hash.hasOwnProperty(path) ? context.hash[path] : {};
+  sequence = context.hash.hasOwnProperty(sequencePath) ? context.hash[sequencePath] : {};
 
-	for (index = 0, len = source.length; index < len; index += 1) {
-		item = source[index];
+  for (index = 0, len = source.length; index < len; index += 1) {
+    item = source[index];
 
-		itemid = this.containsUniqueItems ? (this.containsPrimitiveValues ? item : item[this.uniquePropertyKey]) : index;
+    itemid = this.containsUniqueItems ? (this.containsPrimitiveValues ? item : item[this.uniquePropertyKey]) : index;
 
-		if (!resultHash.hasOwnProperty(itemid)) {
-			newHashObject = this.itemTemplate.read(hash.hasOwnProperty(itemid) ? hash[itemid] : {}, item, path + "-" + index, context);
+    if (!resultHash.hasOwnProperty(itemid)) {
+      newHashObject = this.itemTemplate.read(hash.hasOwnProperty(itemid) ? hash[itemid] : {}, item, path + "-" + index, context);
 
-			result.push(newHashObject);
-			resultHash[itemid] = newHashObject;
-			resultSequence[index] = itemid;
-			if (this.createSourceHash) {
-				sourceHash[itemid] = item;
-			}
+      result.push(newHashObject);
+      resultHash[itemid] = newHashObject;
+      resultSequence[index] = itemid;
+      if (this.createSourceHash) {
+        sourceHash[itemid] = item;
+      }
 
-			if (this.isOrdered) {
-				if (sequence[index] != resultSequence[index]) {
-					context.isChanged = true;
-				}
-			}
-		}
-	}
+      if (this.isOrdered) {
+        if (sequence[index] != resultSequence[index]) {
+          context.isChanged = true;
+        }
+      }
+    }
+  }
 
-	context.hash[path] = resultHash;
-	context.hash[sequencePath] = resultSequence;
-	if (this.createSourceHash) {
-		context.sourceHash[path] = sourceHash;
-	}
+  context.hash[path] = resultHash;
+  context.hash[sequencePath] = resultSequence;
+  if (this.createSourceHash) {
+    context.sourceHash[path] = sourceHash;
+  }
 
-	if (target == null || target.length != result.length) {
-		context.isChanged = true;
-	}
+  if (target == null || target.length != result.length) {
+    context.isChanged = true;
+  }
 
-	return result;
+  return result;
 };
 
 /* /OptionsReaders/EnumerationReader.js*/
 primitives.common.EnumerationReader = function (enumeration, isNullable, defaultValue) {
-	this.enumeration = enumeration;
-	this.isNullable = isNullable;
-	this.defaultValue = defaultValue;
+  this.enumeration = enumeration;
+  this.isNullable = isNullable;
+  this.defaultValue = defaultValue;
 
-	this.hash = {};
+  this.hash = {};
 
-	/* collect valid enumeration values */
-	for (var key in enumeration) {
-		this.hash[enumeration[key]] = key;
-	}
+  /* collect valid enumeration values */
+  for (var key in enumeration) {
+    this.hash[enumeration[key]] = key;
+  }
 };
 
 primitives.common.EnumerationReader.prototype.read = function (target, source, path, context) {
-	var result = null;
+  var result = null;
 
-	if (source === null || typeof source == "undefined" || !this.hash.hasOwnProperty(source)) {
-		source = this.isNullable ? null : this.defaultValue;
-	}
+  if (source === null || typeof source == "undefined" || !this.hash.hasOwnProperty(source)) {
+    source = this.isNullable ? null : this.defaultValue;
+  }
 
-	result = source;
+  result = source;
 
-	if (target !== source) {
-		context.isChanged = true;
-	}
+  if (target !== source) {
+    context.isChanged = true;
+  }
 
-	return result;
+  return result;
 };
 
 
@@ -7033,11 +7033,11 @@ primitives.common.FunctionReader = function () {
 };
 
 primitives.common.FunctionReader.prototype.read = function (target, source, path, context) {
-	var result = null;
+  var result = null;
 
-	result = (typeof source == "function") ? source : null;
+  result = (typeof source == "function") ? source : null;
 
-	return result;
+  return result;
 };
 
 
@@ -7137,7 +7137,7 @@ primitives.common.ValueReader.prototype.read = function (target, source, path, c
  * Context object
  */
 primitives.famdiagram.EventArgs = function () {
-	/**
+  /**
    * Current item
    * 
    * @type {string}
@@ -7159,14 +7159,14 @@ primitives.famdiagram.EventArgs = function () {
    */
   this.parentItems = [];
 
-    /**
-   * Child items
-   * 
-   * @type {string[]}
-   * @ignore
-   */
+  /**
+ * Child items
+ * 
+ * @type {string[]}
+ * @ignore
+ */
   this.childrenItems = [];
-   
+
 
   /**
    * Node position on the diagram.
@@ -8344,7 +8344,7 @@ primitives.famdiagram.Config = function (name) {
   this.groupTitleHorizontalAlignment = 0/*primitives.common.HorizontalAlignmentType.Center*/;
 
   /**
-   * 	Group titles font size.
+   * Group titles font size.
    * 
    * @group Group Titles
    * @type {number}
@@ -9224,7 +9224,7 @@ primitives.famdiagram.ShapeAnnotationConfig = function (arg0) {
    */
   this.items = [];
 
-	/**
+  /**
    * Shape
    * 
    * @type {ShapeType}
@@ -9331,57 +9331,57 @@ primitives.famdiagram.ShapeAnnotationConfig = function (arg0) {
 
 /* /Controls/FamDiagram/models/EdgeItem.js*/
 primitives.famdiagram.EdgeItem = function (key0, val0, key1, val1) {
-	this.values = [val0, val1];
-	this[key0] = 0;
-	this[key1] = 1;
+  this.values = [val0, val1];
+  this[key0] = 0;
+  this[key1] = 1;
 };
 
 primitives.famdiagram.EdgeItem.prototype.getNear = function (key) {
-	return this.values[this[key]];
+  return this.values[this[key]];
 };
 
 primitives.famdiagram.EdgeItem.prototype.getFar = function (key) {
-	return this.values[Math.abs(this[key] - 1)];
+  return this.values[Math.abs(this[key] - 1)];
 };
 
 primitives.famdiagram.EdgeItem.prototype.setNear = function (key, value) {
-	this.values[this[key]] = value;
+  this.values[this[key]] = value;
 };
 
 primitives.famdiagram.EdgeItem.prototype.setFar = function (key, value) {
-	this.values[Math.abs(this[key] - 1)] = value;
+  this.values[Math.abs(this[key] - 1)] = value;
 };
 
 primitives.famdiagram.EdgeItem.prototype.toString = function () {
-	return this.parent + ',' + this.child;
+  return this.parent + ',' + this.child;
 };
 
 /* /Controls/FamDiagram/models/FamilyItem.js*/
 primitives.famdiagram.FamilyItem = function (arg0) {
-	var property;
+  var property;
 
-	this.id = null;
-	this.familyId = null;
-	this.itemConfig = null;
+  this.id = null;
+  this.familyId = null;
+  this.itemConfig = null;
 
-	this.isVisible = true;
-	this.isActive = true; // item is clickable
-	this.isLevelNeutral = false; // This option allows to place fake item in between of original item levels
+  this.isVisible = true;
+  this.isActive = true; // item is clickable
+  this.isLevelNeutral = false; // This option allows to place fake item in between of original item levels
 
-	this.level = null;
-	this.levelGravity = 0/*primitives.common.GroupByType.None*/; // If item can be moved between its parent and children levels in diagram, this option defines preference
-	this.hideParentConnection = false;
-	this.hideChildrenConnection = false;
+  this.level = null;
+  this.levelGravity = 0/*primitives.common.GroupByType.None*/; // If item can be moved between its parent and children levels in diagram, this option defines preference
+  this.hideParentConnection = false;
+  this.hideChildrenConnection = false;
 
-	switch (arguments.length) {
-		case 1:
-			for (property in arg0) {
-				if (arg0.hasOwnProperty(property)) {
-					this[property] = arg0[property];
-				}
-			}
-			break;
-	}
+  switch (arguments.length) {
+    case 1:
+      for (property in arg0) {
+        if (arg0.hasOwnProperty(property)) {
+          this[property] = arg0[property];
+        }
+      }
+      break;
+  }
 };
 
 /* /Controls/FamDiagram/models/Slot.js*/
@@ -9460,10 +9460,10 @@ primitives.famdiagram.LabelAnnotationOptionTask = function (splitAnnotationsOpti
     _data.annotations = _dataTemplate.read(_data.annotations, splitAnnotationsOptionTask.getAnnotations(3/*primitives.common.AnnotationType.Label*/), "annotations", context);
     _data.configs = {};
 
-		/* here we assign unique id to every annotation used in layout
-			and populate configs hash mapping id to source annotation
-			these source items used as context objects in rendering cycle
-		*/
+    /* here we assign unique id to every annotation used in layout
+      and populate configs hash mapping id to source annotation
+      these source items used as context objects in rendering cycle
+    */
     var sourceItems = context.sourceHash.annotations;
     for (index = 0, len = _data.annotations.length; index < len; index += 1) {
       annotation = _data.annotations[index];
@@ -9500,116 +9500,116 @@ primitives.famdiagram.LabelAnnotationOptionTask = function (splitAnnotationsOpti
 
 /* /Controls/FamDiagram/Tasks/Options/Annotations/LabelAnnotationPlacementOptionTask.js*/
 primitives.famdiagram.LabelAnnotationPlacementOptionTask = function (labelAnnotationOptionTask, defaultLabelAnnotationConfig) {
-	var _data = {
-		annotations: []
-	},
-	_hash = {};
+  var _data = {
+    annotations: []
+  },
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ArrayReader(
-			new primitives.common.ObjectReader({
-				id: new primitives.common.ValueReader(["number"], true),
-				fromItem: new primitives.common.ValueReader(["string", "number"], true),
-				toItems: new primitives.common.ArrayReader(
-					new primitives.common.ValueReader(["string", "number"], true),
-					true
-				)
-			}),
-			true,
-			"id"
-			);
+  var _dataTemplate = new primitives.common.ArrayReader(
+    new primitives.common.ObjectReader({
+      id: new primitives.common.ValueReader(["number"], true),
+      fromItem: new primitives.common.ValueReader(["string", "number"], true),
+      toItems: new primitives.common.ArrayReader(
+        new primitives.common.ValueReader(["string", "number"], true),
+        true
+      )
+    }),
+    true,
+    "id"
+  );
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_data.annotations = _dataTemplate.read(_data.annotations, labelAnnotationOptionTask.getAnnotations(), "annotations", context);
+    _data.annotations = _dataTemplate.read(_data.annotations, labelAnnotationOptionTask.getAnnotations(), "annotations", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getAnnotations() {
-		return _data.annotations;
-	}
+  function getAnnotations() {
+    return _data.annotations;
+  }
 
-	function getMaximumId() {
-		return labelAnnotationOptionTask.getMaximumId();
-	}
+  function getMaximumId() {
+    return labelAnnotationOptionTask.getMaximumId();
+  }
 
-	return {
-		process: process,
-		getAnnotations: getAnnotations,
-		getMaximumId: getMaximumId
-	};
+  return {
+    process: process,
+    getAnnotations: getAnnotations,
+    getMaximumId: getMaximumId
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Options/Annotations/LabelAnnotationTemplateOptionTask.js*/
 primitives.famdiagram.LabelAnnotationTemplateOptionTask = function (labelAnnotationOptionTask, defaultLabelAnnotationConfig) {
-	var _data = {
-		annotations: []
-	},
-	_hash = {};
+  var _data = {
+    annotations: []
+  },
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ArrayReader(
-			new primitives.common.ObjectReader({
-				id: new primitives.common.ValueReader(["number"], true),
-				title: new primitives.common.ValueReader(["string"], true),
-				itemTitleColor: new primitives.common.ValueReader(["string"], false, defaultLabelAnnotationConfig.itemTitleColor),
-				templateName: new primitives.common.ValueReader(["string"], true)
-			}),
-			true,
-			"id"
-		);
+  var _dataTemplate = new primitives.common.ArrayReader(
+    new primitives.common.ObjectReader({
+      id: new primitives.common.ValueReader(["number"], true),
+      title: new primitives.common.ValueReader(["string"], true),
+      itemTitleColor: new primitives.common.ValueReader(["string"], false, defaultLabelAnnotationConfig.itemTitleColor),
+      templateName: new primitives.common.ValueReader(["string"], true)
+    }),
+    true,
+    "id"
+  );
 
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_data.annotations = _dataTemplate.read(_data.annotations, labelAnnotationOptionTask.getAnnotations(), "annotations", context);
+    _data.annotations = _dataTemplate.read(_data.annotations, labelAnnotationOptionTask.getAnnotations(), "annotations", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getAnnotations() {
-		return _data.annotations;
-	}
+  function getAnnotations() {
+    return _data.annotations;
+  }
 
-	return {
-		process: process,
-		getAnnotations: getAnnotations
-	};
+  return {
+    process: process,
+    getAnnotations: getAnnotations
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Options/Selection/NeighboursSelectionModeOptionTask.js*/
 primitives.famdiagram.NeighboursSelectionModeOptionTask = function (optionsTask, defaultConfig) {
-	var _data = {};
+  var _data = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-			neighboursSelectionMode: new primitives.common.EnumerationReader(primitives.common.NeighboursSelectionMode, false, defaultConfig.neighboursSelectionMode)
-		});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    neighboursSelectionMode: new primitives.common.EnumerationReader(primitives.common.NeighboursSelectionMode, false, defaultConfig.neighboursSelectionMode)
+  });
 
-	function process() {
-		var context = {
-			isChanged: false
-		};
+  function process() {
+    var context = {
+      isChanged: false
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getNeighboursSelectionMode() {
-		return _data.neighboursSelectionMode;
-	}
+  function getNeighboursSelectionMode() {
+    return _data.neighboursSelectionMode;
+  }
 
-	return {
-		process: process,
-		getNeighboursSelectionMode: getNeighboursSelectionMode
-	};
+  return {
+    process: process,
+    getNeighboursSelectionMode: getNeighboursSelectionMode
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Options/HideGrandParentsConnectorsOptionTask.js*/
@@ -9644,88 +9644,88 @@ primitives.famdiagram.HideGrandParentsConnectorsOptionTask = function (optionsTa
 
 /* /Controls/FamDiagram/Tasks/Options/ItemsOptionTask.js*/
 primitives.famdiagram.ItemsOptionTask = function (optionsTask, defaultItemConfig) {
-	var _data = {},
-		_hash = {},
-		_sourceHash = {};
+  var _data = {},
+    _hash = {},
+    _sourceHash = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-			items: new primitives.common.ArrayReader(
-				new primitives.common.ObjectReader({
-					id: new primitives.common.ValueReader(["string", "number"], true),
-					parents: new primitives.common.ArrayReader(
-						new primitives.common.ValueReader(["string", "number"], true),
-						true
-					),
-					isActive: new primitives.common.ValueReader(["boolean"], false, defaultItemConfig.isActive)
-				}),
-				true,
-				"id",
-				true
-				)
-		});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    items: new primitives.common.ArrayReader(
+      new primitives.common.ObjectReader({
+        id: new primitives.common.ValueReader(["string", "number"], true),
+        parents: new primitives.common.ArrayReader(
+          new primitives.common.ValueReader(["string", "number"], true),
+          true
+        ),
+        isActive: new primitives.common.ValueReader(["boolean"], false, defaultItemConfig.isActive)
+      }),
+      true,
+      "id",
+      true
+    )
+  });
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash,
-			sourceHash: _sourceHash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash,
+      sourceHash: _sourceHash
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getItems() {
-		return _data.items;
-	}
+  function getItems() {
+    return _data.items;
+  }
 
-	function getConfig(itemId) {
-		return _sourceHash["options-items"][itemId];
-	}
+  function getConfig(itemId) {
+    return _sourceHash["options-items"][itemId];
+  }
 
-	return {
-		process: process,
-		getItems: getItems,
-		getConfig: getConfig
-	};
+  return {
+    process: process,
+    getItems: getItems,
+    getConfig: getConfig
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Options/LinePaletteOptionTask.js*/
 primitives.famdiagram.LinePaletteOptionTask = function (optionsTask, defaultPaletteItemConfig) {
-	var _data = {},
-		_hash = {};
+  var _data = {},
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-		linesPalette: new primitives.common.ArrayReader(
-				new primitives.common.ObjectReader({
-					lineColor: new primitives.common.ValueReader(["string"], false, defaultPaletteItemConfig.lineColor),
-					lineWidth: new primitives.common.ValueReader(["number"], false, defaultPaletteItemConfig.lineWidth),
-					lineType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultPaletteItemConfig.lineType)
-				}),
-				false
-				)
-		});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    linesPalette: new primitives.common.ArrayReader(
+      new primitives.common.ObjectReader({
+        lineColor: new primitives.common.ValueReader(["string"], false, defaultPaletteItemConfig.lineColor),
+        lineWidth: new primitives.common.ValueReader(["number"], false, defaultPaletteItemConfig.lineWidth),
+        lineType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultPaletteItemConfig.lineType)
+      }),
+      false
+    )
+  });
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getOptions() {
-		return _data;
-	}
+  function getOptions() {
+    return _data;
+  }
 
-	return {
-		process: process,
-		getOptions: getOptions
-	};
+  return {
+    process: process,
+    getOptions: getOptions
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Options/NormalizeOptionTask.js*/
@@ -9763,15 +9763,15 @@ primitives.famdiagram.NormalizeOptionTask = function (optionsTask, defaultConfig
 /* eliminate invisible items */
 primitives.famdiagram.OptionsTask = function (getOptions) {
 
-	function process() {
-		return true;
-	}
+  function process() {
+    return true;
+  }
 
-	return {
-		process: process,
-		getOptions: getOptions,
-		description: "Raw options."
-	};
+  return {
+    process: process,
+    getOptions: getOptions,
+    description: "Raw options."
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Options/OrderFamilyNodesOptionTask.js*/
@@ -9849,176 +9849,176 @@ primitives.famdiagram.RemoveLoopsOptionTask = function (optionsTask, defaultConf
 
 /* /Controls/FamDiagram/Tasks/Options/SpousesOptionTask.js*/
 primitives.famdiagram.SpousesOptionTask = function (optionsTask, defaultItemConfig) {
-	var _data = {},
-		_hash = {};
+  var _data = {},
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-			items: new primitives.common.ArrayReader(
-				new primitives.common.ObjectReader({
-					id: new primitives.common.ValueReader(["string", "number"], true),
-					spouses: new primitives.common.ArrayReader(
-						new primitives.common.ValueReader(["string", "number"], true),
-						true
-					)
-				}),
-				true,
-				"id"
-				)
-		});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    items: new primitives.common.ArrayReader(
+      new primitives.common.ObjectReader({
+        id: new primitives.common.ValueReader(["string", "number"], true),
+        spouses: new primitives.common.ArrayReader(
+          new primitives.common.ValueReader(["string", "number"], true),
+          true
+        )
+      }),
+      true,
+      "id"
+    )
+  });
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getItems() {
-		return _data.items;
-	}
+  function getItems() {
+    return _data.items;
+  }
 
-	return {
-		process: process,
-		getItems: getItems
-	};
+  return {
+    process: process,
+    getItems: getItems
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Options/VisualTreeOptionTask.js*/
 primitives.famdiagram.VisualTreeOptionTask = function (optionsTask) {
-	var _data = {
-		leavesPlacementType: 2/*primitives.common.ChildrenPlacementType.Horizontal*/,
-		childrenPlacementType: 2/*primitives.common.ChildrenPlacementType.Horizontal*/,
-		maximumColumnsInMatrix: 6,
-		horizontalAlignment: 0/*primitives.common.HorizontalAlignmentType.Center*/
-	};
+  var _data = {
+    leavesPlacementType: 2/*primitives.common.ChildrenPlacementType.Horizontal*/,
+    childrenPlacementType: 2/*primitives.common.ChildrenPlacementType.Horizontal*/,
+    maximumColumnsInMatrix: 6,
+    horizontalAlignment: 0/*primitives.common.HorizontalAlignmentType.Center*/
+  };
 
-	function process() {
-		return false;
-	}
+  function process() {
+    return false;
+  }
 
-	function getOptions() {
-		return _data;
-	}
+  function getOptions() {
+    return _data;
+  }
 
-	return {
-		process: process,
-		getOptions: getOptions
-	};
+  return {
+    process: process,
+    getOptions: getOptions
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Templates/CombinedTemplateParamsTask.js*/
 primitives.famdiagram.CombinedTemplateParamsTask = function (itemTemplateParamsTask, labelAnnotationTemplateParamsTask) {
-	function process() {
-		return true;
-	}
+  function process() {
+    return true;
+  }
 
-	function getTemplateParams(itemId) {
-		return itemTemplateParamsTask.getTemplateParams(itemId) || labelAnnotationTemplateParamsTask.getTemplateParams(itemId);
-	}
+  function getTemplateParams(itemId) {
+    return itemTemplateParamsTask.getTemplateParams(itemId) || labelAnnotationTemplateParamsTask.getTemplateParams(itemId);
+  }
 
-	return {
-		process: process,
-		getTemplateParams: getTemplateParams
-	};
+  return {
+    process: process,
+    getTemplateParams: getTemplateParams
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Templates/LabelAnnotationTemplateParamsTask.js*/
 primitives.famdiagram.LabelAnnotationTemplateParamsTask = function (itemsSizesOptionTask, labelAnnotationTemplateOptionTask, readTemplatesTask) {
-	var _data = {
-		items: {} // TemplateParams
-	};
+  var _data = {
+    items: {} // TemplateParams
+  };
 
-	function process() {
-		var itemsSizesOptions = itemsSizesOptionTask.getOptions(),
-			items = labelAnnotationTemplateOptionTask.getAnnotations(),
-			index, len;
+  function process() {
+    var itemsSizesOptions = itemsSizesOptionTask.getOptions(),
+      items = labelAnnotationTemplateOptionTask.getAnnotations(),
+      index, len;
 
-		_data.items = {};
+    _data.items = {};
 
-		for (index = 0, len = items.length; index < len; index += 1) {
-			var annotation = items[index],
-				templateParams = new primitives.orgdiagram.TemplateParams(),
-				template = readTemplatesTask.getTemplate(annotation.templateName, itemsSizesOptions.defaultLabelAnnotationTemplate, readTemplatesTask.DefaultWidgetLabelAnnotationTemplateName);
+    for (index = 0, len = items.length; index < len; index += 1) {
+      var annotation = items[index],
+        templateParams = new primitives.orgdiagram.TemplateParams(),
+        template = readTemplatesTask.getTemplate(annotation.templateName, itemsSizesOptions.defaultLabelAnnotationTemplate, readTemplatesTask.DefaultWidgetLabelAnnotationTemplateName);
 
-			templateParams.template = template;
+      templateParams.template = template;
 
-			_data.items[annotation.id] = templateParams;
-		}
+      _data.items[annotation.id] = templateParams;
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	function getTemplateParams(itemId) {
-		return _data.items[itemId];
-	}
+  function getTemplateParams(itemId) {
+    return _data.items[itemId];
+  }
 
-	return {
-		process: process,
-		getTemplateParams: getTemplateParams
-	};
+  return {
+    process: process,
+    getTemplateParams: getTemplateParams
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Transformations/FamilyTransformations/BaseTransformer.js*/
 primitives.famdiagram.BaseTransformer = function (debug) {
-	this.debug = debug;
+  this.debug = debug;
 };
 
 primitives.famdiagram.BaseTransformer.prototype.validate = function (logicalFamily, strongValidate) {
-	/* test consistency of references in family tree */
-	if (!logicalFamily.validate()) {
-		throw "Family structure failed to pass validation!";
-	}
+  /* test consistency of references in family tree */
+  if (!logicalFamily.validate()) {
+    throw "Family structure failed to pass validation!";
+  }
 
-	logicalFamily.loop(this, function (famItemId, famItem) {
+  logicalFamily.loop(this, function (famItemId, famItem) {
 
-		logicalFamily.loopChildren(this, famItemId, function (childid, child, level) {
-			if (child.level === null || famItem.level === null || (strongValidate ? child.level != famItem.level + 1 : child.level <= famItem.level)) {
-				throw "Family tree is broken. Children/Parents or levels mismatch!";
-			}
-			return logicalFamily.SKIP;
-		});
-	});
+    logicalFamily.loopChildren(this, famItemId, function (childid, child, level) {
+      if (child.level === null || famItem.level === null || (strongValidate ? child.level != famItem.level + 1 : child.level <= famItem.level)) {
+        throw "Family tree is broken. Children/Parents or levels mismatch!";
+      }
+      return logicalFamily.SKIP;
+    });
+  });
 };
 
 
 /* /Controls/FamDiagram/Tasks/Transformations/FamilyTransformations/FamilyBalance.js*/
 /*  This class transforms normalized logical family into levels of nodes.
-	The current approach to optimize items placement is to transform family into hierarchy of nodes and order 
-	children of every node in the way minimizing number of intersections between connection lines.
-	1. Extract families into _families array of type FamilyItem. Family is sub tree of items logicalFamily. 
-		In order to extract families out of logicalFamily we count from bottom to roots total number of descendants for eevry item and then extract 
-		sub hierarchy having minimum number of members. This process is repeated till all nodes are extracted into separate families.
-			orgPartners - When we extract families we store links to parents in other branches having the same children of 
-			some already extracted item as partner in orgPartners hash
-		This hash table is used to create links collections between families
-		The orgTree collection is used to define final org hierarchy used to balance nodes in levels.
-	2. Use links in families to build family graph
-	3. Find maximum spanning tree of family graph
-	4. Since spanning tree is the tree we calculate number of descendants in every branch. So when we join families into one 
-		org chart we sort them taking first child family having maximum number of links to its parent family
-		sortedFamilies collection
-	5. Using sortedFamilies collection we merge roots of families back to primary org chart. The rule of that backword merging is 
-		to find ancestor in target tree having level less then root item of merged family.
-		this is done without extra collection creation via making changes in orgTree
-		If family has no links it is added to root of orgTree
-	6. Balance organizational chart in order to place items having extra connections close to each other. 
-		Assign every extra link to every pair of parent nodes up to the root.
-	7. Scan orgTree hierarchy from root to bottom and balance children using extra links collected from children
-		So at the top most level we know number of links between children, so we sort them, then number of overlappings between branches should be minimal
-		Balancing algorithms finds maximum spanning tree in connections between children and groups them from bottom of that tree up to the root
-		In the way when groups having maximum mutual links placed close to each other.
+  The current approach to optimize items placement is to transform family into hierarchy of nodes and order 
+  children of every node in the way minimizing number of intersections between connection lines.
+  1. Extract families into _families array of type FamilyItem. Family is sub tree of items logicalFamily. 
+    In order to extract families out of logicalFamily we count from bottom to roots total number of descendants for eevry item and then extract 
+    sub hierarchy having minimum number of members. This process is repeated till all nodes are extracted into separate families.
+      orgPartners - When we extract families we store links to parents in other branches having the same children of 
+      some already extracted item as partner in orgPartners hash
+    This hash table is used to create links collections between families
+    The orgTree collection is used to define final org hierarchy used to balance nodes in levels.
+  2. Use links in families to build family graph
+  3. Find maximum spanning tree of family graph
+  4. Since spanning tree is the tree we calculate number of descendants in every branch. So when we join families into one 
+    org chart we sort them taking first child family having maximum number of links to its parent family
+    sortedFamilies collection
+  5. Using sortedFamilies collection we merge roots of families back to primary org chart. The rule of that backword merging is 
+    to find ancestor in target tree having level less then root item of merged family.
+    this is done without extra collection creation via making changes in orgTree
+    If family has no links it is added to root of orgTree
+  6. Balance organizational chart in order to place items having extra connections close to each other. 
+    Assign every extra link to every pair of parent nodes up to the root.
+  7. Scan orgTree hierarchy from root to bottom and balance children using extra links collected from children
+    So at the top most level we know number of links between children, so we sort them, then number of overlappings between branches should be minimal
+    Balancing algorithms finds maximum spanning tree in connections between children and groups them from bottom of that tree up to the root
+    In the way when groups having maximum mutual links placed close to each other.
 */
 primitives.famdiagram.FamilyBalance = function () {
 
 };
 
 //var params = {
-//	logicalFamily,
-//	maximumId,
+//  logicalFamily,
+//  maximumId,
 //  items
 //};
 primitives.famdiagram.FamilyBalance.prototype.balance = function (params) {
@@ -10108,9 +10108,9 @@ primitives.famdiagram.FamilyBalance.prototype.createOrgTree = function (params, 
     params.logicalFamily.loopRoots(this, function (grandParentId, grandParent) {
       //ignore jslint
       family = new this.Family(familyId);
-			/* extractOrgChart method extracts hiearchy of family members starting from grandParent and takes only non extracted family items 
-			 * For every extracted item it assigns its familyId, it is used for building families relations graph and finding cross family links
-			*/
+      /* extractOrgChart method extracts hiearchy of family members starting from grandParent and takes only non extracted family items 
+       * For every extracted item it assigns its familyId, it is used for building families relations graph and finding cross family links
+      */
       this.extractOrgChart(grandParentId, params.logicalFamily, params.primaryParents, data.orgTree, data.orgPartners, data.itemByChildrenKey, famItemsExtracted, family);
       families.push(family);
       families2.push(family);
@@ -10363,9 +10363,9 @@ primitives.famdiagram.FamilyBalance.prototype.balanceOrgTree = function (orgTree
           }
         }
       }
-			/* add extra zero connection to graph when child org item has no connections
-				it is connected to the first item in the graph with zero link
-			*/
+      /* add extra zero connection to graph when child org item has no connections
+        it is connected to the first item in the graph with zero link
+      */
       if (index > 0) {
         graph.addEdge(childOrgItem.id, firstOrgItem.id, { weight: 0 });
       }
@@ -10901,88 +10901,66 @@ primitives.famdiagram.FamilyBalanceItem = function (id, familyId, level) {
 
 /* /Controls/FamDiagram/Tasks/Transformations/FamilyTransformations/FamilyMatrixesExtractor.js*/
 primitives.famdiagram.FamilyMatrixesExtractor = function (debug) {
-	this.parent = primitives.famdiagram.BaseTransformer.prototype;
-	this.parent.constructor.apply(this, arguments);
+  this.parent = primitives.famdiagram.BaseTransformer.prototype;
+  this.parent.constructor.apply(this, arguments);
 };
 
 primitives.famdiagram.FamilyMatrixesExtractor.prototype = new primitives.famdiagram.BaseTransformer();
 
 primitives.famdiagram.FamilyMatrixesExtractor.prototype.extract = function (options, logicalFamily, matrixes, matrixBottomConnectorsIds, bundles, maximumId) {
-	var index, len, index2, len2,
-		famItem,
-		familiesGraph, /* primitives.common.graph */
-		link, links,
-		fromFamily,
-		toFamily,
-		sortedFamilies = [], sortedFamiliesHash,
-		attachedFamilies,
-		userItem,
-		familyId,
-		family,
-		familyRootItem,
-		fromItem,
-		toItem,
-		rootItem, rootItems, bestRootItem, bestReference,
-		spanningTree,
-		extraGravities, grandChildren,
-		parsedId,
-		itemsHavingSpouses, spouses,
-		orgItemRoot,
-		famItemsExtracted;
+  if (logicalFamily.hasNodes() > 0) {
+    /* find nodes having the same parent and child nodes and replace them with matrix placeholder node */
+    if (options.enableMatrixLayout) {
+      logicalFamily.groupBy(this, Math.max(2, options.minimumMatrixSize), function (parentid, childid, ids, nodes) {
+        maximumId += 1;
+        var id = maximumId;
+        maximumId += 1;
+        var id2 = maximumId;
 
-	if (logicalFamily.hasNodes() > 0) {
-		/* find nodes having the same parent and child nodes and replace them with matrix placeholder node */
-		if (options.enableMatrixLayout) {
-			logicalFamily.groupBy(this, Math.max(2, options.minimumMatrixSize), function (parentid, childid, ids, nodes) {
-				maximumId +=1;
-				var id = maximumId;
-				maximumId += 1;
-				var id2 = maximumId;
+        var firstNode = logicalFamily.node(ids[0]);
 
-				var firstNode = logicalFamily.node(ids[0]);
+        var matrixNode = new primitives.famdiagram.FamilyItem({
+          id: id,
+          level: firstNode.level,
+          isVisible: false,
+          isActive: false,
+          itemConfig: { title: "dummy #" + id, description: "This is item used as aggregator of matrixed nodes." },
+          levelGravity: 1/*primitives.common.GroupByType.Parents*/,
+          hideParentConnection: true,
+          hideChildrenConnection: true
+        });
 
-				var matrixNode = new primitives.famdiagram.FamilyItem({
-					id: id,
-					level: firstNode.level,
-					isVisible: false,
-					isActive: false,
-					itemConfig: { title: "dummy #" + id, description: "This is item used as aggregator of matrixed nodes." },
-					levelGravity: 1/*primitives.common.GroupByType.Parents*/,
-					hideParentConnection: true,
-					hideChildrenConnection: true
-				});
+        matrixBottomConnectorsIds[id] = id2; /* id2 is needed for connectors graph */
 
-				matrixBottomConnectorsIds[id] = id2; /* id2 is needed for connectors graph */
+        for (var index = 0, len = ids.length; index < len; index += 1) {
+          var nodeid = ids[index];
+          logicalFamily.removeNode(nodeid);
+        }
 
-				for (var index = 0, len = ids.length; index < len; index += 1) {
-					var nodeid = ids[index];
-					logicalFamily.removeNode(nodeid);
-				}
+        if (parentid != null) {
+          logicalFamily.add([parentid], id, matrixNode);
+          matrixNode.hideParentConnection = false;
+          bundles.push(new primitives.common.MatrixConnectorBundle(true, ids, id, id, this.getMatrixWidth(options.maximumColumnsInMatrix, ids.length)));
+        } else {
+          logicalFamily.add(null, id, matrixNode);
+        }
 
-				if (parentid != null) {
-					logicalFamily.add([parentid], id, matrixNode);
-					matrixNode.hideParentConnection = false;
-					bundles.push(new primitives.common.MatrixConnectorBundle(true, ids, id, id, this.getMatrixWidth(options.maximumColumnsInMatrix, ids.length)));
-				} else {
-					logicalFamily.add(null, id, matrixNode);
-				}
+        if (childid != null) {
+          logicalFamily.adopt([id], childid);
+          matrixNode.hideChildrenConnection = false;
+          bundles.push(new primitives.common.MatrixConnectorBundle(false, ids, id, id2, this.getMatrixWidth(options.maximumColumnsInMatrix, ids.length)));
+        }
 
-				if (childid != null) {
-					logicalFamily.adopt([id], childid);
-					matrixNode.hideChildrenConnection = false;
-					bundles.push(new primitives.common.MatrixConnectorBundle(false, ids, id, id2, this.getMatrixWidth(options.maximumColumnsInMatrix, ids.length)));
-				}
-
-				matrixes[id] = nodes;
-			} //ignore jslint
-			);
-		}
-	}
-	return maximumId;
+        matrixes[id] = nodes;
+      } //ignore jslint
+      );
+    }
+  }
+  return maximumId;
 };
 
 primitives.famdiagram.FamilyMatrixesExtractor.prototype.getMatrixWidth = function (maximumColumnsInMatrix, len) {
-	return Math.min(maximumColumnsInMatrix, Math.ceil(Math.sqrt(len)));
+  return Math.min(maximumColumnsInMatrix, Math.ceil(Math.sqrt(len)));
 };
 
 /* /Controls/FamDiagram/Tasks/Transformations/FamilyTransformations/FamilyNormalizer.js*/
@@ -10994,29 +10972,6 @@ primitives.famdiagram.FamilyNormalizer = function (debug) {
 primitives.famdiagram.FamilyNormalizer.prototype = new primitives.famdiagram.BaseTransformer();
 
 primitives.famdiagram.FamilyNormalizer.prototype.normalize = function (options, logicalFamily, maximumId) {
-  var index, len, index2, len2,
-    famItem,
-    familiesGraph, /* primitives.common.graph */
-    link, links,
-    fromFamily,
-    toFamily,
-    sortedFamilies = [], sortedFamiliesHash,
-    attachedFamilies,
-    userItem,
-    familyId,
-    family,
-    familyRootItem,
-    fromItem,
-    toItem,
-    rootItem, rootItems, bestRootItem, bestReference,
-    spanningTree,
-    extraGravities, grandChildren,
-    parsedId,
-    itemsHavingSpouses, spouses,
-    orgItemRoot,
-    famItemsExtracted,
-    families2;
-
   if (logicalFamily.hasNodes() > 0) {
 
     /* Distribute FamilyItem-s by levels. Item levels aligned to bottom. */
@@ -11109,7 +11064,7 @@ primitives.famdiagram.FamilyNormalizer.prototype.resortItemsBylevels = function 
   var itemsAtLevels = [],
     minimumLevel = null,
     maximumLevel = null,
-    currentLevel, index, itemsAtLevel;
+    index, itemsAtLevel;
 
   logicalFamily.loop(this, function (famItemId, famItem) {
     famItem.originalLevel = famItem.level;
@@ -11448,835 +11403,835 @@ primitives.famdiagram.UserDefinedPrimaryParents.prototype.getUserDefinedPrimaryP
 
 /* /Controls/FamDiagram/Tasks/Transformations/Layouts/BaseLayout.js*/
 primitives.common.BaseLayout = function (params, options) {
-	this._children = {};
+  this._children = {};
 
-	if (this.params != null) {
-		for (var key in this.params) {
-			if (this.params.hasOwnProperty(key) && params.hasOwnProperty(key)) {
-				this.params[key] = params[key];
-			}
-		}
-	}
+  if (this.params != null) {
+    for (var key in this.params) {
+      if (this.params.hasOwnProperty(key) && params.hasOwnProperty(key)) {
+        this.params[key] = params[key];
+      }
+    }
+  }
 
-	if (this.options != null) {
-		for (key in this.options) {
-			if (this.options.hasOwnProperty(key) && options.hasOwnProperty(key)) {
-				this.options[key] = options[key];
-			}
-		}
+  if (this.options != null) {
+    for (key in this.options) {
+      if (this.options.hasOwnProperty(key) && options.hasOwnProperty(key)) {
+        this.options[key] = options[key];
+      }
+    }
 
-		this.options.shifts = this.getShifts(this.options);
-		this.options.intervals = this.getIntervals(this.options);
-	}
+    this.options.shifts = this.getShifts(this.options);
+    this.options.intervals = this.getIntervals(this.options);
+  }
 };
 
 primitives.common.BaseLayout.prototype.add = function (treeItemId, layout) {
-	this._children[treeItemId] = layout;
+  this._children[treeItemId] = layout;
 };
 
 primitives.common.BaseLayout.prototype.getLayout = function (treeItemId) {
-	return this._children[treeItemId] || null;
+  return this._children[treeItemId] || null;
 };
 
 primitives.common.BaseLayout.prototype.getShifts = function (options) {
-	var result = [];
-	result[1/*primitives.common.Visibility.Normal*/] = options.normalLevelShift;
-	result[2/*primitives.common.Visibility.Dot*/] = options.dotLevelShift;
-	result[3/*primitives.common.Visibility.Line*/] = options.lineLevelShift;
-	result[4/*primitives.common.Visibility.Invisible*/] = options.lineLevelShift;
-	return result;
+  var result = [];
+  result[1/*primitives.common.Visibility.Normal*/] = options.normalLevelShift;
+  result[2/*primitives.common.Visibility.Dot*/] = options.dotLevelShift;
+  result[3/*primitives.common.Visibility.Line*/] = options.lineLevelShift;
+  result[4/*primitives.common.Visibility.Invisible*/] = options.lineLevelShift;
+  return result;
 };
 
 primitives.common.BaseLayout.prototype.getIntervals = function (options) {
-	var result = [];
-	result[1/*primitives.common.Visibility.Normal*/] = options.normalItemsInterval;
-	result[2/*primitives.common.Visibility.Dot*/] = options.dotItemsInterval;
-	result[3/*primitives.common.Visibility.Line*/] = options.lineItemsInterval;
-	result[4/*primitives.common.Visibility.Invisible*/] = options.lineItemsInterval;
-	return result;
+  var result = [];
+  result[1/*primitives.common.Visibility.Normal*/] = options.normalItemsInterval;
+  result[2/*primitives.common.Visibility.Dot*/] = options.dotItemsInterval;
+  result[3/*primitives.common.Visibility.Line*/] = options.lineItemsInterval;
+  result[4/*primitives.common.Visibility.Invisible*/] = options.lineItemsInterval;
+  return result;
 };
 
 primitives.common.BaseLayout.prototype.getItemSize = function (visibility, isCursor, treeItemTemplate, options) {
-	var templateConfig,
-		size,
-		contentPosition;
+  var templateConfig,
+    size,
+    contentPosition;
 
-	switch (visibility) {
-		case 1/*primitives.common.Visibility.Normal*/:
-			templateConfig = treeItemTemplate.template.templateConfig;
-			size = new primitives.common.Size(templateConfig.itemSize);
-			contentPosition = new primitives.common.Rect(0, 0, size.width, size.height);
-			if (isCursor) {
-				size.height += templateConfig.cursorPadding.top + templateConfig.cursorPadding.bottom;
-				size.width += templateConfig.cursorPadding.left + templateConfig.cursorPadding.right;
-				contentPosition.x = templateConfig.cursorPadding.left;
-				contentPosition.y = templateConfig.cursorPadding.top;
-			}
-			if (treeItemTemplate.hasSelectorCheckbox) {
-				size.height += options.checkBoxPanelSize;
-			}
-			if (treeItemTemplate.hasButtons) {
-				size.width += options.buttonsPanelSize;
-				switch (options.groupTitlePlacementType) {
-					case 3/*primitives.common.AdviserPlacementType.Right*/:
-						contentPosition.x += options.buttonsPanelSize;
-						break;
-				}
-			}
-			if (treeItemTemplate.hasGroupTitle) {
-				size.width += options.groupTitlePanelSize;
-				switch (options.groupTitlePlacementType) {
-					case 3/*primitives.common.AdviserPlacementType.Right*/:
-						break;
-					default:
-						contentPosition.x += options.groupTitlePanelSize;
-						break;
-				}
-			}
-			break;
-		case 2/*primitives.common.Visibility.Dot*/:
-			templateConfig = treeItemTemplate.template.templateConfig;
-			size = new primitives.common.Size(templateConfig.minimizedItemSize);
-			break;
-		case 3/*primitives.common.Visibility.Line*/:
-		case 4/*primitives.common.Visibility.Invisible*/:
-			size = new primitives.common.Size();
-			break;
-	}
+  switch (visibility) {
+    case 1/*primitives.common.Visibility.Normal*/:
+      templateConfig = treeItemTemplate.template.templateConfig;
+      size = new primitives.common.Size(templateConfig.itemSize);
+      contentPosition = new primitives.common.Rect(0, 0, size.width, size.height);
+      if (isCursor) {
+        size.height += templateConfig.cursorPadding.top + templateConfig.cursorPadding.bottom;
+        size.width += templateConfig.cursorPadding.left + templateConfig.cursorPadding.right;
+        contentPosition.x = templateConfig.cursorPadding.left;
+        contentPosition.y = templateConfig.cursorPadding.top;
+      }
+      if (treeItemTemplate.hasSelectorCheckbox) {
+        size.height += options.checkBoxPanelSize;
+      }
+      if (treeItemTemplate.hasButtons) {
+        size.width += options.buttonsPanelSize;
+        switch (options.groupTitlePlacementType) {
+          case 3/*primitives.common.AdviserPlacementType.Right*/:
+            contentPosition.x += options.buttonsPanelSize;
+            break;
+        }
+      }
+      if (treeItemTemplate.hasGroupTitle) {
+        size.width += options.groupTitlePanelSize;
+        switch (options.groupTitlePlacementType) {
+          case 3/*primitives.common.AdviserPlacementType.Right*/:
+            break;
+          default:
+            contentPosition.x += options.groupTitlePanelSize;
+            break;
+        }
+      }
+      break;
+    case 2/*primitives.common.Visibility.Dot*/:
+      templateConfig = treeItemTemplate.template.templateConfig;
+      size = new primitives.common.Size(templateConfig.minimizedItemSize);
+      break;
+    case 3/*primitives.common.Visibility.Line*/:
+    case 4/*primitives.common.Visibility.Invisible*/:
+      size = new primitives.common.Size();
+      break;
+  }
 
-	switch (options.orientationType) {
-		case 2/*primitives.common.OrientationType.Left*/:
-		case 3/*primitives.common.OrientationType.Right*/:
-			size.invert();
-			break;
-	}
+  switch (options.orientationType) {
+    case 2/*primitives.common.OrientationType.Left*/:
+    case 3/*primitives.common.OrientationType.Right*/:
+      size.invert();
+      break;
+  }
 
-	return {
-		actualSize: size,
-		contentPosition: contentPosition
-	};
+  return {
+    actualSize: size,
+    contentPosition: contentPosition
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Transformations/Layouts/FamilyLayout.js*/
 primitives.famdiagram.FamilyLayout = function (params, options) {
-	this.params = {
-		logicalFamily: null, // primitives.common.family of primitives.famdiagram.FamilyItem
-		treeLevels: null, // primitives.common.TreeLevels of primitives.orgdiagram.OrgItem used properties: isVisible
-		getConnectorsStacksSizes: null, // primitives.orgdiagram.TreeLevelConnectorStackSize
-		isItemSelected: null,
-		cursorItemId: null,
-		getTemplateParams: null //primitives.orgdiagram.TemplateParams
-	};
+  this.params = {
+    logicalFamily: null, // primitives.common.family of primitives.famdiagram.FamilyItem
+    treeLevels: null, // primitives.common.TreeLevels of primitives.orgdiagram.OrgItem used properties: isVisible
+    getConnectorsStacksSizes: null, // primitives.orgdiagram.TreeLevelConnectorStackSize
+    isItemSelected: null,
+    cursorItemId: null,
+    getTemplateParams: null //primitives.orgdiagram.TemplateParams
+  };
 
-	this.options = {
-		verticalAlignment: 1/*primitives.common.VerticalAlignmentType.Middle*/,
-		pageFitMode: 0/*primitives.common.PageFitMode.None*/,
-		minimalVisibility: 2/*primitives.common.Visibility.Dot*/,
-		orientationType: 0/*primitives.common.OrientationType.Top*/,
-		arrowsDirection: 0/*primitives.common.GroupByType.None*/,
-		linesWidth: 1,
-		checkBoxPanelSize: 24,
-		buttonsPanelSize: 28,
-		groupTitlePanelSize: 24,
-		groupTitlePlacementType: 2/*primitives.common.AdviserPlacementType.Left*/,
-		normalLevelShift: 20,
-		dotLevelShift: 20,
-		lineLevelShift: 20,
-		normalItemsInterval: 10,
-		dotItemsInterval: 1, 
-		lineItemsInterval: 2
-	};
+  this.options = {
+    verticalAlignment: 1/*primitives.common.VerticalAlignmentType.Middle*/,
+    pageFitMode: 0/*primitives.common.PageFitMode.None*/,
+    minimalVisibility: 2/*primitives.common.Visibility.Dot*/,
+    orientationType: 0/*primitives.common.OrientationType.Top*/,
+    arrowsDirection: 0/*primitives.common.GroupByType.None*/,
+    linesWidth: 1,
+    checkBoxPanelSize: 24,
+    buttonsPanelSize: 28,
+    groupTitlePanelSize: 24,
+    groupTitlePlacementType: 2/*primitives.common.AdviserPlacementType.Left*/,
+    normalLevelShift: 20,
+    dotLevelShift: 20,
+    lineLevelShift: 20,
+    normalItemsInterval: 10,
+    dotItemsInterval: 1,
+    lineItemsInterval: 2
+  };
 
-	this.data = {
-		treeItemsPositions: {},
-		treeLevelsPositions: []
-	};
+  this.data = {
+    treeItemsPositions: {},
+    treeLevelsPositions: []
+  };
 
-	this.parent = primitives.common.BaseLayout.prototype;
-	this.parent.constructor.apply(this, arguments);
+  this.parent = primitives.common.BaseLayout.prototype;
+  this.parent.constructor.apply(this, arguments);
 };
 
 primitives.famdiagram.FamilyLayout.prototype = new primitives.common.BaseLayout();
 
 primitives.famdiagram.FamilyLayout.prototype.measure = function (panelSize) {
-	var placeholderSize = new primitives.common.Rect(0, 0, 0, 0),
-		levelVisibilities,
-		minimalPlaceholderSize;
+  var placeholderSize = new primitives.common.Rect(0, 0, 0, 0),
+    levelVisibilities,
+    minimalPlaceholderSize;
 
-	var data = {
-		treeItemsPositions: {},
-		treeLevelsPositions: []
-	};
+  var data = {
+    treeItemsPositions: {},
+    treeLevelsPositions: []
+  };
 
-	switch (this.options.orientationType) {
-		case 2/*primitives.common.OrientationType.Left*/:
-		case 3/*primitives.common.OrientationType.Right*/:
-			panelSize.invert();
-			break;
-	}
+  switch (this.options.orientationType) {
+    case 2/*primitives.common.OrientationType.Left*/:
+    case 3/*primitives.common.OrientationType.Right*/:
+      panelSize.invert();
+      break;
+  }
 
-	if (!this.params.treeLevels.isEmpty()) {
-		switch (this.options.pageFitMode) {
-			case 0/*primitives.common.PageFitMode.None*/:
-			case primitives.common.PageFitMode.PrintPreview:
-			case 5/*primitives.common.PageFitMode.AutoSize*/:
-				levelVisibilities = [new primitives.orgdiagram.LevelVisibility(0, 1/*primitives.common.Visibility.Normal*/)];
-				placeholderSize = this.setTreeLevelsVisibilityAndPositionTreeItems(data, this.params, this.options, levelVisibilities, 0);
-				break;
-			default:
-				levelVisibilities = this.getLevelVisibilities(this.params.treeLevels, this.options.minimalVisibility);
+  if (!this.params.treeLevels.isEmpty()) {
+    switch (this.options.pageFitMode) {
+      case 0/*primitives.common.PageFitMode.None*/:
+      case primitives.common.PageFitMode.PrintPreview:
+      case 5/*primitives.common.PageFitMode.AutoSize*/:
+        levelVisibilities = [new primitives.orgdiagram.LevelVisibility(0, 1/*primitives.common.Visibility.Normal*/)];
+        placeholderSize = this.setTreeLevelsVisibilityAndPositionTreeItems(data, this.params, this.options, levelVisibilities, 0);
+        break;
+      default:
+        levelVisibilities = this.getLevelVisibilities(this.params.treeLevels, this.options.minimalVisibility);
 
-				// Find minimal placeholder size to hold completly folded diagram
-				minimalPlaceholderSize = this.setTreeLevelsVisibilityAndPositionTreeItems(data, this.params, this.options, levelVisibilities, levelVisibilities.length - 1);
-				if (!this.checkDiagramSize(minimalPlaceholderSize, panelSize, this.options.pageFitMode)) {
-					placeholderSize = minimalPlaceholderSize;
-				}
-				else {
-					// Find optimal diagram size
-					minimalPlaceholderSize.addRect(panelSize);
-					minimalPlaceholderSize.offset(0, 0, 5, 5);
-					this.findOptimalSize(this, levelVisibilities.length - 1, function (index) {
-						placeholderSize = this.setTreeLevelsVisibilityAndPositionTreeItems(data, this.params, this.options, levelVisibilities, index);
-						return this.checkDiagramSize(placeholderSize, minimalPlaceholderSize, this.options.pageFitMode);
-					});
-				}
-				break;
-		}
-	}
+        // Find minimal placeholder size to hold completly folded diagram
+        minimalPlaceholderSize = this.setTreeLevelsVisibilityAndPositionTreeItems(data, this.params, this.options, levelVisibilities, levelVisibilities.length - 1);
+        if (!this.checkDiagramSize(minimalPlaceholderSize, panelSize, this.options.pageFitMode)) {
+          placeholderSize = minimalPlaceholderSize;
+        }
+        else {
+          // Find optimal diagram size
+          minimalPlaceholderSize.addRect(panelSize);
+          minimalPlaceholderSize.offset(0, 0, 5, 5);
+          this.findOptimalSize(this, levelVisibilities.length - 1, function (index) {
+            placeholderSize = this.setTreeLevelsVisibilityAndPositionTreeItems(data, this.params, this.options, levelVisibilities, index);
+            return this.checkDiagramSize(placeholderSize, minimalPlaceholderSize, this.options.pageFitMode);
+          });
+        }
+        break;
+    }
+  }
 
-	this.data = data;
+  this.data = data;
 
-	return placeholderSize;
+  return placeholderSize;
 };
 
 primitives.famdiagram.FamilyLayout.prototype.getLevelVisibilities = function (treeLevels, minimalVisibility) {
-	var levelVisibilities = [new primitives.orgdiagram.LevelVisibility(0, 1/*primitives.common.Visibility.Normal*/)];
+  var levelVisibilities = [new primitives.orgdiagram.LevelVisibility(0, 1/*primitives.common.Visibility.Normal*/)];
 
-	var visibilities = [];
-	switch (minimalVisibility) {
-		case 1/*primitives.common.Visibility.Normal*/:
-			break;
-		case 2/*primitives.common.Visibility.Dot*/:
-			visibilities.push(2/*primitives.common.Visibility.Dot*/);
-			break;
-		case 0/*primitives.common.Visibility.Auto*/:
-		case 3/*primitives.common.Visibility.Line*/:
-		case 4/*primitives.common.Visibility.Invisible*/:
-			visibilities.push(2/*primitives.common.Visibility.Dot*/);
-			visibilities.push(3/*primitives.common.Visibility.Line*/);
-			break;
-	}
+  var visibilities = [];
+  switch (minimalVisibility) {
+    case 1/*primitives.common.Visibility.Normal*/:
+      break;
+    case 2/*primitives.common.Visibility.Dot*/:
+      visibilities.push(2/*primitives.common.Visibility.Dot*/);
+      break;
+    case 0/*primitives.common.Visibility.Auto*/:
+    case 3/*primitives.common.Visibility.Line*/:
+    case 4/*primitives.common.Visibility.Invisible*/:
+      visibilities.push(2/*primitives.common.Visibility.Dot*/);
+      visibilities.push(3/*primitives.common.Visibility.Line*/);
+      break;
+  }
 
-	treeLevels.loopLevelsReversed(this, function (level, levelContext) {
-		for (var index = 0; index < visibilities.length; index += 1) {
-			levelVisibilities.push(new primitives.orgdiagram.LevelVisibility(level, visibilities[index]));
-		}
-	});
+  treeLevels.loopLevelsReversed(this, function (level, levelContext) {
+    for (var index = 0; index < visibilities.length; index += 1) {
+      levelVisibilities.push(new primitives.orgdiagram.LevelVisibility(level, visibilities[index]));
+    }
+  });
 
-	return levelVisibilities;
+  return levelVisibilities;
 };
 
 primitives.famdiagram.FamilyLayout.prototype.findOptimalSize = function (thisArg, maximum, funcCheckSize) {
-    var minimum = 0,
-        cursorIndex;
-	// maximum condension is fit to page
-	if (!funcCheckSize.call(thisArg, minimum)) {
-		// minimum condension does not fit to page
-		cursorIndex = maximum;
-		while (maximum - minimum > 1) {
-			cursorIndex = Math.floor((maximum + minimum) / 2.0);
-			if (funcCheckSize.call(thisArg, cursorIndex)) {
-				// middle point size fit to page
-				maximum = cursorIndex;
-			}
-			else {
-				minimum = cursorIndex;
-			}
-		}
-		if (maximum !== cursorIndex) {
-			funcCheckSize.call(thisArg, maximum);
-		}
-	}
+  var minimum = 0,
+    cursorIndex;
+  // maximum condension is fit to page
+  if (!funcCheckSize.call(thisArg, minimum)) {
+    // minimum condension does not fit to page
+    cursorIndex = maximum;
+    while (maximum - minimum > 1) {
+      cursorIndex = Math.floor((maximum + minimum) / 2.0);
+      if (funcCheckSize.call(thisArg, cursorIndex)) {
+        // middle point size fit to page
+        maximum = cursorIndex;
+      }
+      else {
+        minimum = cursorIndex;
+      }
+    }
+    if (maximum !== cursorIndex) {
+      funcCheckSize.call(thisArg, maximum);
+    }
+  }
 };
 
 primitives.famdiagram.FamilyLayout.prototype.setTreeLevelsVisibilityAndPositionTreeItems = function (data, params, options, levelVisibilities, cursorIndex) {
-	var index,
-		levelVisibility;
+  var index,
+    levelVisibility;
 
-	data.treeLevelsPositions = [];
+  data.treeLevelsPositions = [];
 
-	params.treeLevels.loopLevels(this, function (index, levelContext) {
-		var treeLevelPosition = new primitives.orgdiagram.TreeLevelPosition();
-		treeLevelPosition.currentvisibility = 1/*primitives.common.Visibility.Normal*/;
+  params.treeLevels.loopLevels(this, function (index, levelContext) {
+    var treeLevelPosition = new primitives.orgdiagram.TreeLevelPosition();
+    treeLevelPosition.currentvisibility = 1/*primitives.common.Visibility.Normal*/;
 
-		data.treeLevelsPositions.push(treeLevelPosition);
-	});
+    data.treeLevelsPositions.push(treeLevelPosition);
+  });
 
-	for (index = 0; index <= cursorIndex; index += 1) {
-		levelVisibility = levelVisibilities[index];
-		data.treeLevelsPositions[levelVisibility.level].currentvisibility = levelVisibility.currentvisibility;
-	}
+  for (index = 0; index <= cursorIndex; index += 1) {
+    levelVisibility = levelVisibilities[index];
+    data.treeLevelsPositions[levelVisibility.level].currentvisibility = levelVisibility.currentvisibility;
+  }
 
-	data.treeItemsPositions = {};
+  data.treeItemsPositions = {};
 
-	this.recalcItemsSize(params.treeLevels, data.treeItemsPositions, data.treeLevelsPositions, params.isItemSelected, params.cursorItemId, params.getTemplateParams, options);
+  this.recalcItemsSize(params.treeLevels, data.treeItemsPositions, data.treeLevelsPositions, params.isItemSelected, params.cursorItemId, params.getTemplateParams, options);
 
-	this.setOffsets(params.treeLevels, data.treeItemsPositions, data.treeLevelsPositions, params.logicalFamily, options.intervals);
-	this.recalcLevelsDepth(params.treeLevels, data.treeItemsPositions, data.treeLevelsPositions, options.verticalAlignment);
-	this.shiftLevels(data.treeLevelsPositions, options.shifts[3/*primitives.common.Visibility.Line*/], options.shifts, options.arrowsDirection, options.linesWidth, params.getConnectorsStacksSizes);
+  this.setOffsets(params.treeLevels, data.treeItemsPositions, data.treeLevelsPositions, params.logicalFamily, options.intervals);
+  this.recalcLevelsDepth(params.treeLevels, data.treeItemsPositions, data.treeLevelsPositions, options.verticalAlignment);
+  this.shiftLevels(data.treeLevelsPositions, options.shifts[3/*primitives.common.Visibility.Line*/], options.shifts, options.arrowsDirection, options.linesWidth, params.getConnectorsStacksSizes);
 
-	return this.getLayoutSize(params.treeLevels, data.treeItemsPositions, data.treeLevelsPositions);
+  return this.getLayoutSize(params.treeLevels, data.treeItemsPositions, data.treeLevelsPositions);
 };
 
 primitives.famdiagram.FamilyLayout.prototype.checkDiagramSize = function (diagramSize, panelSize, pageFitMode) {
-	var result = false;
-	switch (pageFitMode) {
-		case 1/*primitives.common.PageFitMode.PageWidth*/:
-			if (panelSize.width >= diagramSize.width) {
-				result = true;
-			}
-			break;
-		case 2/*primitives.common.PageFitMode.PageHeight*/:
-			if (panelSize.height >= diagramSize.height) {
-				result = true;
-			}
-			break;
-		case 3/*primitives.common.PageFitMode.FitToPage*/:
-			if (panelSize.height >= diagramSize.height && panelSize.width >= diagramSize.width) {
-				result = true;
-			}
-			break;
-	}
-	return result;
+  var result = false;
+  switch (pageFitMode) {
+    case 1/*primitives.common.PageFitMode.PageWidth*/:
+      if (panelSize.width >= diagramSize.width) {
+        result = true;
+      }
+      break;
+    case 2/*primitives.common.PageFitMode.PageHeight*/:
+      if (panelSize.height >= diagramSize.height) {
+        result = true;
+      }
+      break;
+    case 3/*primitives.common.PageFitMode.FitToPage*/:
+      if (panelSize.height >= diagramSize.height && panelSize.width >= diagramSize.width) {
+        result = true;
+      }
+      break;
+  }
+  return result;
 };
 
 primitives.famdiagram.FamilyLayout.prototype.getLayoutSize = function (treeLevels, treeItemsPositions, treeLevelsPositions) {
-	return new primitives.common.Rect(0, 0, Math.round(this.getLayoutWidth(treeLevels, treeItemsPositions)), Math.round(this.getLayoutHeight(treeLevelsPositions)));
+  return new primitives.common.Rect(0, 0, Math.round(this.getLayoutWidth(treeLevels, treeItemsPositions)), Math.round(this.getLayoutHeight(treeLevelsPositions)));
 };
 
 primitives.famdiagram.FamilyLayout.prototype.getLayoutWidth = function (treeLevels, treeItemsPositions) {
-	var result = 0;
-	treeLevels.loopLevels(this, function (levelIndex, level) {
-		var levelLength = treeLevels.getLevelLength(levelIndex);
+  var result = 0;
+  treeLevels.loopLevels(this, function (levelIndex, level) {
+    var levelLength = treeLevels.getLevelLength(levelIndex);
 
-		if (levelLength > 0) {
-			var itemid = treeLevels.getItemAtPosition(levelIndex, levelLength - 1),
-				treeItemPosition = treeItemsPositions[itemid];
-			result = Math.max(result, treeItemPosition.offset + treeItemPosition.actualSize.width + treeItemPosition.rightPadding);
-		}
-	});
-	return result;
+    if (levelLength > 0) {
+      var itemid = treeLevels.getItemAtPosition(levelIndex, levelLength - 1),
+        treeItemPosition = treeItemsPositions[itemid];
+      result = Math.max(result, treeItemPosition.offset + treeItemPosition.actualSize.width + treeItemPosition.rightPadding);
+    }
+  });
+  return result;
 };
 
 primitives.famdiagram.FamilyLayout.prototype.getLayoutHeight = function (treeLevelsPositions) {
-	var len = treeLevelsPositions.length,
-		treeLevel = treeLevelsPositions[len - 1];
-	return treeLevel.shift + treeLevel.nextLevelShift;
+  var len = treeLevelsPositions.length,
+    treeLevel = treeLevelsPositions[len - 1];
+  return treeLevel.shift + treeLevel.nextLevelShift;
 };
 
 primitives.famdiagram.FamilyLayout.prototype.recalcItemsSize = function (treeLevels, treeItemsPositions, treeLevelsPositions, isItemSelected, cursorItemId, getTemplateParams, options) {
-	treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
-		var treeLevelPosition = treeLevelsPositions[levelIndex];
+  treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
+    var treeLevelPosition = treeLevelsPositions[levelIndex];
 
-		treeLevels.loopLevelItems(this, levelIndex, function (treeItemId, treeItem, position) {
-			var treeItemPosition = new primitives.orgdiagram.TreeItemPosition();
-			var childLayout = this.getLayout(treeItemId);
-			if (childLayout == null) {
-				var treeItemVisibility = isItemSelected(treeItemId) ? 1/*primitives.common.Visibility.Normal*/ : (!treeItem.isVisible ? 4/*primitives.common.Visibility.Invisible*/ : 0/*primitives.common.Visibility.Auto*/),
-					treeItemtemplate = getTemplateParams(treeItemId);
+    treeLevels.loopLevelItems(this, levelIndex, function (treeItemId, treeItem, position) {
+      var treeItemPosition = new primitives.orgdiagram.TreeItemPosition();
+      var childLayout = this.getLayout(treeItemId);
+      if (childLayout == null) {
+        var treeItemVisibility = isItemSelected(treeItemId) ? 1/*primitives.common.Visibility.Normal*/ : (!treeItem.isVisible ? 4/*primitives.common.Visibility.Invisible*/ : 0/*primitives.common.Visibility.Auto*/),
+          treeItemtemplate = getTemplateParams(treeItemId);
 
-				var actualVisibility = (treeItemVisibility === 0/*primitives.common.Visibility.Auto*/) ? treeLevelPosition.currentvisibility : treeItemVisibility;
-				var size = this.getItemSize(actualVisibility, cursorItemId == treeItemId, treeItemtemplate, options);
+        var actualVisibility = (treeItemVisibility === 0/*primitives.common.Visibility.Auto*/) ? treeLevelPosition.currentvisibility : treeItemVisibility;
+        var size = this.getItemSize(actualVisibility, cursorItemId == treeItemId, treeItemtemplate, options);
 
-				treeItemPosition.actualVisibility = actualVisibility;
-				treeItemPosition.actualSize = size.actualSize;
-				treeItemPosition.contentPosition = size.contentPosition;
-			} else {
-				size = childLayout.measure(treeLevelPosition.currentvisibility);
-				treeItemPosition.actualVisibility = 4/*primitives.common.Visibility.Invisible*/;
-				treeItemPosition.actualSize = size;
-			}
-			treeItemsPositions[treeItemId] = treeItemPosition;
-		});
-	});
+        treeItemPosition.actualVisibility = actualVisibility;
+        treeItemPosition.actualSize = size.actualSize;
+        treeItemPosition.contentPosition = size.contentPosition;
+      } else {
+        size = childLayout.measure(treeLevelPosition.currentvisibility);
+        treeItemPosition.actualVisibility = 4/*primitives.common.Visibility.Invisible*/;
+        treeItemPosition.actualSize = size;
+      }
+      treeItemsPositions[treeItemId] = treeItemPosition;
+    });
+  });
 };
 
 primitives.famdiagram.FamilyLayout.prototype.recalcLevelsDepth = function (treeLevels, treeItemsPositions, treeLevelsPositions, verticalAlignment) {
-	var minimalDepth,
-		dotsDepth;
+  var minimalDepth,
+    dotsDepth;
 
-	treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
-		var treeLevelPosition = treeLevelsPositions[levelIndex];
-		treeLevelPosition.shift = 0.0;
-		treeLevelPosition.depth = 0.0;
-		treeLevelPosition.actualVisibility = 4/*primitives.common.Visibility.Invisible*/;
+  treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
+    var treeLevelPosition = treeLevelsPositions[levelIndex];
+    treeLevelPosition.shift = 0.0;
+    treeLevelPosition.depth = 0.0;
+    treeLevelPosition.actualVisibility = 4/*primitives.common.Visibility.Invisible*/;
 
-		minimalDepth = null; /* minimum  height of non-dot items in level */
-		dotsDepth = null; /* maximum dots height */
+    minimalDepth = null; /* minimum  height of non-dot items in level */
+    dotsDepth = null; /* maximum dots height */
 
-		treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
-			var treeItemPosition = treeItemsPositions[itemid];
-			treeLevelPosition.depth = Math.max(treeLevelPosition.depth, treeItemPosition.actualSize.height);
-			switch (treeItemPosition.actualVisibility) {
-				case 2/*primitives.common.Visibility.Dot*/:
-				case 3/*primitives.common.Visibility.Line*/:
-				case 4/*primitives.common.Visibility.Invisible*/:
-					dotsDepth = !dotsDepth ? treeItemPosition.actualSize.height : Math.min(dotsDepth, treeItemPosition.actualSize.height);
-					break;
-				default:
-					minimalDepth = !minimalDepth ? treeItemPosition.actualSize.height : Math.min(minimalDepth, treeItemPosition.actualSize.height);
-					break;
-			}
+    treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
+      var treeItemPosition = treeItemsPositions[itemid];
+      treeLevelPosition.depth = Math.max(treeLevelPosition.depth, treeItemPosition.actualSize.height);
+      switch (treeItemPosition.actualVisibility) {
+        case 2/*primitives.common.Visibility.Dot*/:
+        case 3/*primitives.common.Visibility.Line*/:
+        case 4/*primitives.common.Visibility.Invisible*/:
+          dotsDepth = !dotsDepth ? treeItemPosition.actualSize.height : Math.min(dotsDepth, treeItemPosition.actualSize.height);
+          break;
+        default:
+          minimalDepth = !minimalDepth ? treeItemPosition.actualSize.height : Math.min(minimalDepth, treeItemPosition.actualSize.height);
+          break;
+      }
 
-			treeLevelPosition.actualVisibility = Math.min(treeLevelPosition.actualVisibility, treeItemPosition.actualVisibility);
-		});
+      treeLevelPosition.actualVisibility = Math.min(treeLevelPosition.actualVisibility, treeItemPosition.actualVisibility);
+    });
 
-		if (minimalDepth == null) {
-			minimalDepth = treeLevelPosition.depth;
-		}
-		if (dotsDepth != null && dotsDepth > minimalDepth) {
-			minimalDepth = dotsDepth;
-		}
+    if (minimalDepth == null) {
+      minimalDepth = treeLevelPosition.depth;
+    }
+    if (dotsDepth != null && dotsDepth > minimalDepth) {
+      minimalDepth = dotsDepth;
+    }
 
-		switch (verticalAlignment) {
-			case 0/*primitives.common.VerticalAlignmentType.Top*/:
-				treeLevelPosition.horizontalConnectorsDepth = minimalDepth / 2.0;
-				break;
-			case 1/*primitives.common.VerticalAlignmentType.Middle*/:
-				treeLevelPosition.horizontalConnectorsDepth = treeLevelPosition.depth / 2.0;
-				break;
-			case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
-				treeLevelPosition.horizontalConnectorsDepth = treeLevelPosition.depth - minimalDepth / 2.0;
-				break;
-		}
-	});
+    switch (verticalAlignment) {
+      case 0/*primitives.common.VerticalAlignmentType.Top*/:
+        treeLevelPosition.horizontalConnectorsDepth = minimalDepth / 2.0;
+        break;
+      case 1/*primitives.common.VerticalAlignmentType.Middle*/:
+        treeLevelPosition.horizontalConnectorsDepth = treeLevelPosition.depth / 2.0;
+        break;
+      case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
+        treeLevelPosition.horizontalConnectorsDepth = treeLevelPosition.depth - minimalDepth / 2.0;
+        break;
+    }
+  });
 };
 
 primitives.famdiagram.FamilyLayout.prototype.shiftLevels = function (treeLevelsPositions, shift, shifts, arrowsDirection, linesWidth, getConnectorsStacksSizes) {
-	var index,
-		len,
-		treeLevelPosition,
-		treeLevelConnectorStackSize,
-		childrenSpace = 0,
-		parentsSpace = 0,
-		arrowTipLength = linesWidth * 8;
+  var index,
+    len,
+    treeLevelPosition,
+    treeLevelConnectorStackSize,
+    childrenSpace = 0,
+    parentsSpace = 0,
+    arrowTipLength = linesWidth * 8;
 
-	switch (arrowsDirection) {
-		case 1/*primitives.common.GroupByType.Parents*/:
-			childrenSpace = arrowTipLength;
-			parentsSpace = 0;
-			break;
-		case 2/*primitives.common.GroupByType.Children*/:
-			childrenSpace = 0;
-			parentsSpace = arrowTipLength;
-			break;
-	}
+  switch (arrowsDirection) {
+    case 1/*primitives.common.GroupByType.Parents*/:
+      childrenSpace = arrowTipLength;
+      parentsSpace = 0;
+      break;
+    case 2/*primitives.common.GroupByType.Children*/:
+      childrenSpace = 0;
+      parentsSpace = arrowTipLength;
+      break;
+  }
 
-	for (index = 0, len = treeLevelsPositions.length; index < len; index += 1) {
-		treeLevelPosition = treeLevelsPositions[index];
+  for (index = 0, len = treeLevelsPositions.length; index < len; index += 1) {
+    treeLevelPosition = treeLevelsPositions[index];
 
-		treeLevelConnectorStackSize = getConnectorsStacksSizes(index);
-		shift += treeLevelPosition.setShift(shift, shifts[treeLevelPosition.actualVisibility], parentsSpace, childrenSpace, treeLevelConnectorStackSize.parentsStackSize);
-	}
+    treeLevelConnectorStackSize = getConnectorsStacksSizes(index);
+    shift += treeLevelPosition.setShift(shift, shifts[treeLevelPosition.actualVisibility], parentsSpace, childrenSpace, treeLevelConnectorStackSize.parentsStackSize);
+  }
 };
 
 primitives.famdiagram.FamilyLayout.prototype.setOffsets = function (treeLevels, treeItemsPositions, treeLevelsPositions, logicalFamily, intervals) {
-	var index, len;
+  var index, len;
 
-	for (index = 0, len = treeLevelsPositions.length; index < len; index += 1) {
-		treeLevelsPositions[index].currentOffset = 0.0;
-	}
+  for (index = 0, len = treeLevelsPositions.length; index < len; index += 1) {
+    treeLevelsPositions[index].currentOffset = 0.0;
+  }
 
-	var family = logicalFamily.getPlanarFamily(treeLevels);
+  var family = logicalFamily.getPlanarFamily(treeLevels);
 
-	var familyAlignment = new primitives.common.FamilyAlignment(this, family, treeLevels, function (nodeid, node) {
-		var treeItemPosition = treeItemsPositions[nodeid];
-		var treeItemPadding = intervals[treeItemPosition.actualVisibility] / 2;
+  var familyAlignment = new primitives.common.FamilyAlignment(this, family, treeLevels, function (nodeid, node) {
+    var treeItemPosition = treeItemsPositions[nodeid];
+    var treeItemPadding = intervals[treeItemPosition.actualVisibility] / 2;
 
-		treeItemPosition.leftPadding = treeItemPadding;
-		treeItemPosition.rightPadding = treeItemPadding;
+    treeItemPosition.leftPadding = treeItemPadding;
+    treeItemPosition.rightPadding = treeItemPadding;
 
-		return treeItemPosition.leftPadding + treeItemPosition.actualSize.width + treeItemPosition.rightPadding;
-	});
+    return treeItemPosition.leftPadding + treeItemPosition.actualSize.width + treeItemPosition.rightPadding;
+  });
 
-	var leftMargin = null;
-	treeLevels.loopLevels(this, function (levelIndex, level) {
-		var nodeid = treeLevels.getItemAtPosition(levelIndex, 0);
-		if (nodeid != null) {
-			var treeItemPosition = treeItemsPositions[nodeid];
-			var nodeOffset = familyAlignment.getOffset(nodeid) - treeItemPosition.leftPadding - treeItemPosition.actualSize.width / 2;
-			leftMargin = (leftMargin == null) ? nodeOffset : Math.min(leftMargin, nodeOffset);
-		}
-	});
+  var leftMargin = null;
+  treeLevels.loopLevels(this, function (levelIndex, level) {
+    var nodeid = treeLevels.getItemAtPosition(levelIndex, 0);
+    if (nodeid != null) {
+      var treeItemPosition = treeItemsPositions[nodeid];
+      var nodeOffset = familyAlignment.getOffset(nodeid) - treeItemPosition.leftPadding - treeItemPosition.actualSize.width / 2;
+      leftMargin = (leftMargin == null) ? nodeOffset : Math.min(leftMargin, nodeOffset);
+    }
+  });
 
-	treeLevels.loopLevels(this, function (levelIndex, level) {
-		treeLevels.loopLevelItems(this, levelIndex, function (nodeid, node, position) {
-			var treeItemPosition = treeItemsPositions[nodeid];
-			var nodeOffset = familyAlignment.getOffset(nodeid);
-			treeItemPosition.offset = nodeOffset - treeItemPosition.actualSize.width / 2;
+  treeLevels.loopLevels(this, function (levelIndex, level) {
+    treeLevels.loopLevelItems(this, levelIndex, function (nodeid, node, position) {
+      var treeItemPosition = treeItemsPositions[nodeid];
+      var nodeOffset = familyAlignment.getOffset(nodeid);
+      treeItemPosition.offset = nodeOffset - treeItemPosition.actualSize.width / 2;
 
-			treeItemPosition.offset -= leftMargin;
-		});
-	});
+      treeItemPosition.offset -= leftMargin;
+    });
+  });
 };
 
 primitives.famdiagram.FamilyLayout.prototype.arrange = function (thisArg, onItemPositioned) {
-	var prevLevelPosition = null;
-	if (onItemPositioned != null) {
-		this.params.treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
-			var treeLevelPosition = this.data.treeLevelsPositions[levelIndex];
+  var prevLevelPosition = null;
+  if (onItemPositioned != null) {
+    this.params.treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
+      var treeLevelPosition = this.data.treeLevelsPositions[levelIndex];
 
-			this.params.treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
-				var treeItemPosition = this.data.treeItemsPositions[itemid];
-				var result = this.getItemPosition(treeItemPosition.actualVisibility, treeItemPosition.offset, treeItemPosition.actualSize, prevLevelPosition, treeLevelPosition, this.options.verticalAlignment);
-				treeItemPosition.actualPosition = result.position;
-				treeItemPosition.horizontalConnectorsShift = result.horizontalConnectorsShift;
-				treeItemPosition.topConnectorShift = result.topConnectorShift;
-				treeItemPosition.topConnectorInterval = result.topConnectorInterval;
-				treeItemPosition.bottomConnectorShift = result.bottomConnectorShift;
-				treeItemPosition.bottomConnectorInterval = result.bottomConnectorInterval;
+      this.params.treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
+        var treeItemPosition = this.data.treeItemsPositions[itemid];
+        var result = this.getItemPosition(treeItemPosition.actualVisibility, treeItemPosition.offset, treeItemPosition.actualSize, prevLevelPosition, treeLevelPosition, this.options.verticalAlignment);
+        treeItemPosition.actualPosition = result.position;
+        treeItemPosition.horizontalConnectorsShift = result.horizontalConnectorsShift;
+        treeItemPosition.topConnectorShift = result.topConnectorShift;
+        treeItemPosition.topConnectorInterval = result.topConnectorInterval;
+        treeItemPosition.bottomConnectorShift = result.bottomConnectorShift;
+        treeItemPosition.bottomConnectorInterval = result.bottomConnectorInterval;
 
-				onItemPositioned.call(thisArg, itemid, treeItemPosition);
+        onItemPositioned.call(thisArg, itemid, treeItemPosition);
 
-				var childLayout = this.getLayout(itemid);
-				if (childLayout != null) {
-					childLayout.arrange(thisArg, result.position, onItemPositioned);
-				}
-			});
+        var childLayout = this.getLayout(itemid);
+        if (childLayout != null) {
+          childLayout.arrange(thisArg, result.position, onItemPositioned);
+        }
+      });
 
-			prevLevelPosition = treeLevelPosition;
-		});
-	}
+      prevLevelPosition = treeLevelPosition;
+    });
+  }
 };
 
 primitives.famdiagram.FamilyLayout.prototype.getItemPosition = function (visibility, offset, size, prevLevel, level, verticalAlignment) {
-	var itemShift = 0;
+  var itemShift = 0;
 
-	switch (visibility) {
-		case 1/*primitives.common.Visibility.Normal*/:
-			switch (verticalAlignment) {
-				case 0/*primitives.common.VerticalAlignmentType.Top*/:
-					itemShift = 0;
-					break;
-				case 1/*primitives.common.VerticalAlignmentType.Middle*/:
-					itemShift = (level.depth - size.height) / 2.0;
-					break;
-				case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
-					itemShift = level.depth - size.height;
-					break;
-			}
-			break;
-		case 2/*primitives.common.Visibility.Dot*/:
-		case 3/*primitives.common.Visibility.Line*/:
-		case 4/*primitives.common.Visibility.Invisible*/:
-			itemShift = level.horizontalConnectorsDepth - size.height / 2.0;
-			break;
-	}
+  switch (visibility) {
+    case 1/*primitives.common.Visibility.Normal*/:
+      switch (verticalAlignment) {
+        case 0/*primitives.common.VerticalAlignmentType.Top*/:
+          itemShift = 0;
+          break;
+        case 1/*primitives.common.VerticalAlignmentType.Middle*/:
+          itemShift = (level.depth - size.height) / 2.0;
+          break;
+        case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
+          itemShift = level.depth - size.height;
+          break;
+      }
+      break;
+    case 2/*primitives.common.Visibility.Dot*/:
+    case 3/*primitives.common.Visibility.Line*/:
+    case 4/*primitives.common.Visibility.Invisible*/:
+      itemShift = level.horizontalConnectorsDepth - size.height / 2.0;
+      break;
+  }
 
-	return {
-		position: new primitives.common.Rect(offset, level.shift + itemShift, size.width, size.height),
-		horizontalConnectorsShift: level.shift + level.horizontalConnectorsDepth,
-		topConnectorShift: prevLevel != null ? prevLevel.shift + prevLevel.connectorShift : null,
-		topConnectorInterval: prevLevel != null ? prevLevel.levelSpace / 2 : null,
-		bottomConnectorShift: level.shift + level.connectorShift,
-		bottomConnectorInterval: level.levelSpace / 2
-	};
+  return {
+    position: new primitives.common.Rect(offset, level.shift + itemShift, size.width, size.height),
+    horizontalConnectorsShift: level.shift + level.horizontalConnectorsDepth,
+    topConnectorShift: prevLevel != null ? prevLevel.shift + prevLevel.connectorShift : null,
+    topConnectorInterval: prevLevel != null ? prevLevel.levelSpace / 2 : null,
+    bottomConnectorShift: level.shift + level.connectorShift,
+    bottomConnectorInterval: level.levelSpace / 2
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Transformations/Layouts/MatrixLayout.js*/
 primitives.famdiagram.MatrixLayout = function (params, options) {
-	this.params = {
-		items: [], // primitives.orgdiagram.OrgItem used properties: isVisible
-		isItemSelected: null,
-		cursorItemId: null,
-		getTemplateParams: null, //primitives.orgdiagram.TemplateParams
-		hideParentConnection: false,
-		hideChildrenConnection: false
-	};
+  this.params = {
+    items: [], // primitives.orgdiagram.OrgItem used properties: isVisible
+    isItemSelected: null,
+    cursorItemId: null,
+    getTemplateParams: null, //primitives.orgdiagram.TemplateParams
+    hideParentConnection: false,
+    hideChildrenConnection: false
+  };
 
-	this.options = {
-		verticalAlignment: 1/*primitives.common.VerticalAlignmentType.Middle*/,
-		orientationType: 0/*primitives.common.OrientationType.Top*/,
-		arrowsDirection: 0/*primitives.common.GroupByType.None*/,
-		linesWidth: 1,
-		checkBoxPanelSize: 24,
-		buttonsPanelSize: 28,
-		groupTitlePanelSize: 24,
-		groupTitlePlacementType: 2/*primitives.common.AdviserPlacementType.Left*/,
-		normalLevelShift: 20,
-		dotLevelShift: 20,
-		lineLevelShift: 20,
-		normalItemsInterval: 10,
-		dotItemsInterval: 1,
-		lineItemsInterval: 2,
-		maximumColumnsInMatrix: 6
-	};
+  this.options = {
+    verticalAlignment: 1/*primitives.common.VerticalAlignmentType.Middle*/,
+    orientationType: 0/*primitives.common.OrientationType.Top*/,
+    arrowsDirection: 0/*primitives.common.GroupByType.None*/,
+    linesWidth: 1,
+    checkBoxPanelSize: 24,
+    buttonsPanelSize: 28,
+    groupTitlePanelSize: 24,
+    groupTitlePlacementType: 2/*primitives.common.AdviserPlacementType.Left*/,
+    normalLevelShift: 20,
+    dotLevelShift: 20,
+    lineLevelShift: 20,
+    normalItemsInterval: 10,
+    dotItemsInterval: 1,
+    lineItemsInterval: 2,
+    maximumColumnsInMatrix: 6
+  };
 
-	this.data = {
-		treeItemsPositions: {},
-		columns: [],
-		rows: []
-	};
+  this.data = {
+    treeItemsPositions: {},
+    columns: [],
+    rows: []
+  };
 
-	this.parent = primitives.common.BaseLayout.prototype;
-	this.parent.constructor.apply(this, arguments);
+  this.parent = primitives.common.BaseLayout.prototype;
+  this.parent.constructor.apply(this, arguments);
 };
 
 primitives.famdiagram.MatrixLayout.prototype = new primitives.common.BaseLayout();
 
 primitives.famdiagram.MatrixLayout.prototype.Column = function () {
-	this.depth = 0;
-	this.offset = 0;
-	this.leftPadding = 0;
-	this.rightPadding = 0;
+  this.depth = 0;
+  this.offset = 0;
+  this.leftPadding = 0;
+  this.rightPadding = 0;
 };
 
 primitives.famdiagram.MatrixLayout.prototype.Row = function () {
-	this.depth = 0;
-	this.offset = 0;
-	this.horizontalConnectorsDepth = 0;
-	this.minimalDepth = null;
-	this.dotsDepth = null;
+  this.depth = 0;
+  this.offset = 0;
+  this.horizontalConnectorsDepth = 0;
+  this.minimalDepth = null;
+  this.dotsDepth = null;
 };
 
 primitives.famdiagram.MatrixLayout.prototype.getMatrixWidth = function (maximumColumnsInMatrix, len) {
-	return Math.min(maximumColumnsInMatrix, Math.ceil(Math.sqrt(len)));
+  return Math.min(maximumColumnsInMatrix, Math.ceil(Math.sqrt(len)));
 };
 
 primitives.famdiagram.MatrixLayout.prototype.measure = function (visibility) {
-	var data = {
-		treeItemsPositions: {},
-		columns: [],
-		rows: []
-	};
+  var data = {
+    treeItemsPositions: {},
+    columns: [],
+    rows: []
+  };
 
-	this.measureItems(data, this.params, this.options, visibility);
-	this.measureColumns(data, this.params, this.options);
-	this.measureRows(data, this.params, this.options);
+  this.measureItems(data, this.params, this.options, visibility);
+  this.measureColumns(data, this.params, this.options);
+  this.measureRows(data, this.params, this.options);
 
-	this.data = data;
+  this.data = data;
 
-	return this.getLayoutSize(data);
+  return this.getLayoutSize(data);
 };
 
 primitives.famdiagram.MatrixLayout.prototype.measureItems = function (data, params, options, visibility) {
-	for (var index = 0, len = params.items.length; index < len; index += 1) {
-		var treeItem = params.items[index];
-		var treeItemId = treeItem.id;
-		var treeItemPosition = new primitives.orgdiagram.TreeItemPosition();
+  for (var index = 0, len = params.items.length; index < len; index += 1) {
+    var treeItem = params.items[index];
+    var treeItemId = treeItem.id;
+    var treeItemPosition = new primitives.orgdiagram.TreeItemPosition();
 
-		var treeItemVisibility = params.isItemSelected(treeItemId) ? 1/*primitives.common.Visibility.Normal*/ : (!treeItem.isVisible ? 4/*primitives.common.Visibility.Invisible*/ : 0/*primitives.common.Visibility.Auto*/),
-			treeItemtemplate = params.getTemplateParams(treeItemId);
+    var treeItemVisibility = params.isItemSelected(treeItemId) ? 1/*primitives.common.Visibility.Normal*/ : (!treeItem.isVisible ? 4/*primitives.common.Visibility.Invisible*/ : 0/*primitives.common.Visibility.Auto*/),
+      treeItemtemplate = params.getTemplateParams(treeItemId);
 
-		var actualVisibility = (treeItemVisibility === 0/*primitives.common.Visibility.Auto*/) ? visibility : treeItemVisibility;
-		var size = this.getItemSize(actualVisibility, params.cursorItemId == treeItemId, treeItemtemplate, options);
-		treeItemPosition.actualVisibility = actualVisibility;
-		treeItemPosition.actualSize = size.actualSize;
-		treeItemPosition.contentPosition = size.contentPosition;
+    var actualVisibility = (treeItemVisibility === 0/*primitives.common.Visibility.Auto*/) ? visibility : treeItemVisibility;
+    var size = this.getItemSize(actualVisibility, params.cursorItemId == treeItemId, treeItemtemplate, options);
+    treeItemPosition.actualVisibility = actualVisibility;
+    treeItemPosition.actualSize = size.actualSize;
+    treeItemPosition.contentPosition = size.contentPosition;
 
-		data.treeItemsPositions[treeItemId] = treeItemPosition;
-	}
+    data.treeItemsPositions[treeItemId] = treeItemPosition;
+  }
 };
 
 primitives.famdiagram.MatrixLayout.prototype.measureColumns = function (data, params, options) {
-	var column,
-		index, len,
-		maximumColumns = this.getMatrixWidth(options.maximumColumnsInMatrix, params.items.length);
-	for (index = 0, len = params.items.length; index < len; index += 1) {
-		var treeItem = params.items[index];
-		var treeItemId = treeItem.id;
-		var treeItemPosition = data.treeItemsPositions[treeItemId];
+  var column,
+    index, len,
+    maximumColumns = this.getMatrixWidth(options.maximumColumnsInMatrix, params.items.length);
+  for (index = 0, len = params.items.length; index < len; index += 1) {
+    var treeItem = params.items[index];
+    var treeItemId = treeItem.id;
+    var treeItemPosition = data.treeItemsPositions[treeItemId];
 
-		var horizontalPadding = options.intervals[treeItemPosition.actualVisibility] / 2;
-		treeItemPosition.leftPadding = horizontalPadding;
-		treeItemPosition.rightPadding = horizontalPadding;
+    var horizontalPadding = options.intervals[treeItemPosition.actualVisibility] / 2;
+    treeItemPosition.leftPadding = horizontalPadding;
+    treeItemPosition.rightPadding = horizontalPadding;
 
-		var columnIndex = index % maximumColumns;
-		column = data.columns[columnIndex];
-		if (column == null) {
-			column = new this.Column();
-			data.columns[columnIndex] = column;
-		}
-		var itemWidth = treeItemPosition.leftPadding + treeItemPosition.actualSize.width + treeItemPosition.rightPadding;
-		column.depth = Math.max(column.depth, itemWidth);
-	}
+    var columnIndex = index % maximumColumns;
+    column = data.columns[columnIndex];
+    if (column == null) {
+      column = new this.Column();
+      data.columns[columnIndex] = column;
+    }
+    var itemWidth = treeItemPosition.leftPadding + treeItemPosition.actualSize.width + treeItemPosition.rightPadding;
+    column.depth = Math.max(column.depth, itemWidth);
+  }
 
-	var arrowTipLength = options.linesWidth * 8;
-
-
-	var offset = 0;
-	for (index = 0, len = data.columns.length; index < len; index += 1) {
-		column = data.columns[index];
+  var arrowTipLength = options.linesWidth * 8;
 
 
-		if (index % 2 == 0) {
-			switch (options.arrowsDirection) {
-				case 1/*primitives.common.GroupByType.Parents*/:
-					column.leftPadding = params.hideChildrenConnection ? 0 : arrowTipLength;
-					column.rightPadding = 0;
-					break;
-				case 2/*primitives.common.GroupByType.Children*/:
-					column.leftPadding = 0;
-					column.rightPadding = params.hideParentConnection ? 0 : arrowTipLength;
-					break;
-			}
-		} else {
-			switch (options.arrowsDirection) {
-				case 1/*primitives.common.GroupByType.Parents*/:
-					column.leftPadding = 0;
-					column.rightPadding = params.hideChildrenConnection ? 0 : arrowTipLength;
-					break;
-				case 2/*primitives.common.GroupByType.Children*/:
-					column.leftPadding = params.hideParentConnection ? 0 : arrowTipLength;
-					column.rightPadding = 0;
-					break;
-			}
-		}
+  var offset = 0;
+  for (index = 0, len = data.columns.length; index < len; index += 1) {
+    column = data.columns[index];
 
-		column.offset = offset + column.leftPadding + column.depth / 2;
 
-		offset = column.offset + column.depth / 2 + column.rightPadding;
-	}
+    if (index % 2 == 0) {
+      switch (options.arrowsDirection) {
+        case 1/*primitives.common.GroupByType.Parents*/:
+          column.leftPadding = params.hideChildrenConnection ? 0 : arrowTipLength;
+          column.rightPadding = 0;
+          break;
+        case 2/*primitives.common.GroupByType.Children*/:
+          column.leftPadding = 0;
+          column.rightPadding = params.hideParentConnection ? 0 : arrowTipLength;
+          break;
+      }
+    } else {
+      switch (options.arrowsDirection) {
+        case 1/*primitives.common.GroupByType.Parents*/:
+          column.leftPadding = 0;
+          column.rightPadding = params.hideChildrenConnection ? 0 : arrowTipLength;
+          break;
+        case 2/*primitives.common.GroupByType.Children*/:
+          column.leftPadding = params.hideParentConnection ? 0 : arrowTipLength;
+          column.rightPadding = 0;
+          break;
+      }
+    }
+
+    column.offset = offset + column.leftPadding + column.depth / 2;
+
+    offset = column.offset + column.depth / 2 + column.rightPadding;
+  }
 };
 
 primitives.famdiagram.MatrixLayout.prototype.measureRows = function (data, params, options) {
-	var index, len,
-		row,
-		maximumColumns = this.getMatrixWidth(options.maximumColumnsInMatrix, params.items.length);
-	for (index = 0, len = params.items.length; index < len; index += 1) {
-		var treeItem = params.items[index];
-		var treeItemId = treeItem.id;
-		var treeItemPosition = data.treeItemsPositions[treeItemId];
+  var index, len,
+    row,
+    maximumColumns = this.getMatrixWidth(options.maximumColumnsInMatrix, params.items.length);
+  for (index = 0, len = params.items.length; index < len; index += 1) {
+    var treeItem = params.items[index];
+    var treeItemId = treeItem.id;
+    var treeItemPosition = data.treeItemsPositions[treeItemId];
 
-		var rowIndex = Math.floor(index / maximumColumns);
-		var verticalPadding = options.shifts[treeItemPosition.actualVisibility] / 2;
+    var rowIndex = Math.floor(index / maximumColumns);
+    var verticalPadding = options.shifts[treeItemPosition.actualVisibility] / 2;
 
-		row = data.rows[rowIndex];
-		if (row == null) {
-			row = new this.Row();
-			data.rows[rowIndex] = row;
-		}
-		row.depth = Math.max(row.depth, verticalPadding + treeItemPosition.actualSize.height + verticalPadding);
+    row = data.rows[rowIndex];
+    if (row == null) {
+      row = new this.Row();
+      data.rows[rowIndex] = row;
+    }
+    row.depth = Math.max(row.depth, verticalPadding + treeItemPosition.actualSize.height + verticalPadding);
 
-		switch (treeItemPosition.actualVisibility) {
-			case 2/*primitives.common.Visibility.Dot*/:
-			case 3/*primitives.common.Visibility.Line*/:
-			case 4/*primitives.common.Visibility.Invisible*/:
-				row.dotsDepth = !row.dotsDepth ? treeItemPosition.actualSize.height : Math.min(row.dotsDepth, treeItemPosition.actualSize.height);
-				break;
-			default:
-				row.minimalDepth = !row.minimalDepth ? treeItemPosition.actualSize.height : Math.min(row.minimalDepth, treeItemPosition.actualSize.height);
-				break;
-		}
-	}
+    switch (treeItemPosition.actualVisibility) {
+      case 2/*primitives.common.Visibility.Dot*/:
+      case 3/*primitives.common.Visibility.Line*/:
+      case 4/*primitives.common.Visibility.Invisible*/:
+        row.dotsDepth = !row.dotsDepth ? treeItemPosition.actualSize.height : Math.min(row.dotsDepth, treeItemPosition.actualSize.height);
+        break;
+      default:
+        row.minimalDepth = !row.minimalDepth ? treeItemPosition.actualSize.height : Math.min(row.minimalDepth, treeItemPosition.actualSize.height);
+        break;
+    }
+  }
 
-	var offset = 0;
-	for (index = 0, len = data.rows.length; index < len; index += 1) {
-		row = data.rows[index];
+  var offset = 0;
+  for (index = 0, len = data.rows.length; index < len; index += 1) {
+    row = data.rows[index];
 
-		row.offset = offset + row.depth / 2;
-		offset = row.offset + row.depth / 2;
+    row.offset = offset + row.depth / 2;
+    offset = row.offset + row.depth / 2;
 
-		if (row.minimalDepth == null) {
-			row.minimalDepth = row.depth;
-		}
-		if (row.dotsDepth != null && row.dotsDepth > row.minimalDepth) {
-			row.minimalDepth = row.dotsDepth;
-		}
+    if (row.minimalDepth == null) {
+      row.minimalDepth = row.depth;
+    }
+    if (row.dotsDepth != null && row.dotsDepth > row.minimalDepth) {
+      row.minimalDepth = row.dotsDepth;
+    }
 
-		switch (options.verticalAlignment) {
-			case 0/*primitives.common.VerticalAlignmentType.Top*/:
-				row.horizontalConnectorsDepth = row.minimalDepth / 2.0;
-				break;
-			case 1/*primitives.common.VerticalAlignmentType.Middle*/:
-				row.horizontalConnectorsDepth = row.depth / 2.0;
-				break;
-			case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
-				row.horizontalConnectorsDepth = row.depth - row.minimalDepth / 2.0;
-				break;
-		}
-	}
+    switch (options.verticalAlignment) {
+      case 0/*primitives.common.VerticalAlignmentType.Top*/:
+        row.horizontalConnectorsDepth = row.minimalDepth / 2.0;
+        break;
+      case 1/*primitives.common.VerticalAlignmentType.Middle*/:
+        row.horizontalConnectorsDepth = row.depth / 2.0;
+        break;
+      case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
+        row.horizontalConnectorsDepth = row.depth - row.minimalDepth / 2.0;
+        break;
+    }
+  }
 };
 
 primitives.famdiagram.MatrixLayout.prototype.getLayoutSize = function (data) {
-	return new primitives.common.Rect(0, 0, Math.round(this.getLayoutWidth(data)), Math.round(this.getLayoutHeight(data)));
+  return new primitives.common.Rect(0, 0, Math.round(this.getLayoutWidth(data)), Math.round(this.getLayoutHeight(data)));
 };
 
 primitives.famdiagram.MatrixLayout.prototype.getLayoutWidth = function (data) {
-	var result = 0,
-		length = data.columns.length;
-	if (length > 0) {
-		var lastColumn = data.columns[length - 1];
-		result = lastColumn.offset + lastColumn.depth / 2 + lastColumn.rightPadding;
-	}
-	return result;
+  var result = 0,
+    length = data.columns.length;
+  if (length > 0) {
+    var lastColumn = data.columns[length - 1];
+    result = lastColumn.offset + lastColumn.depth / 2 + lastColumn.rightPadding;
+  }
+  return result;
 };
 
 primitives.famdiagram.MatrixLayout.prototype.getLayoutHeight = function (data) {
-	var result = 0,
-		length = data.rows.length;
-	if (length > 0) {
-		var lastRow = data.rows[length - 1];
-		result = lastRow.offset + lastRow.depth / 2;
-	}
-	return result;
+  var result = 0,
+    length = data.rows.length;
+  if (length > 0) {
+    var lastRow = data.rows[length - 1];
+    result = lastRow.offset + lastRow.depth / 2;
+  }
+  return result;
 };
 
 primitives.famdiagram.MatrixLayout.prototype.arrange = function (thisArg, parentPosition, onItemPositioned) {
-	if (onItemPositioned != null) {
-		var maximumColumns = this.getMatrixWidth(this.options.maximumColumnsInMatrix, this.params.items.length);
-		for (var index = 0, len = this.params.items.length; index < len; index += 1) {
-			var treeItem = this.params.items[index],
-				treeItemId = treeItem.id;
+  if (onItemPositioned != null) {
+    var maximumColumns = this.getMatrixWidth(this.options.maximumColumnsInMatrix, this.params.items.length);
+    for (var index = 0, len = this.params.items.length; index < len; index += 1) {
+      var treeItem = this.params.items[index],
+        treeItemId = treeItem.id;
 
-			var columnIndex = index % maximumColumns;
-			var column = this.data.columns[columnIndex];
+      var columnIndex = index % maximumColumns;
+      var column = this.data.columns[columnIndex];
 
-			var rowIndex = Math.floor(index / maximumColumns);
-			var row = this.data.rows[rowIndex];
+      var rowIndex = Math.floor(index / maximumColumns);
+      var row = this.data.rows[rowIndex];
 
-			var treeItemPosition = this.data.treeItemsPositions[treeItemId];
+      var treeItemPosition = this.data.treeItemsPositions[treeItemId];
 
-			var actualPosition = this.getItemPosition(treeItemPosition.actualVisibility, column, row, treeItemPosition.actualSize, this.options);
-			actualPosition.translate(parentPosition.x, parentPosition.y);
+      var actualPosition = this.getItemPosition(treeItemPosition.actualVisibility, column, row, treeItemPosition.actualSize, this.options);
+      actualPosition.translate(parentPosition.x, parentPosition.y);
 
-			treeItemPosition.actualPosition = actualPosition;
-			treeItemPosition.horizontalConnectorsShift = parentPosition.y + row.offset - row.depth / 2 + row.horizontalConnectorsDepth,
-			treeItemPosition.leftMedianOffset = column.depth / 2 + column.leftPadding;
-			treeItemPosition.rightMedianOffset = column.depth / 2 + column.rightPadding;
-			treeItemPosition.topConnectorShift = row.depth / 2;
-			treeItemPosition.bottomConnectorShift = row.depth / 2;
+      treeItemPosition.actualPosition = actualPosition;
+      treeItemPosition.horizontalConnectorsShift = parentPosition.y + row.offset - row.depth / 2 + row.horizontalConnectorsDepth,
+        treeItemPosition.leftMedianOffset = column.depth / 2 + column.leftPadding;
+      treeItemPosition.rightMedianOffset = column.depth / 2 + column.rightPadding;
+      treeItemPosition.topConnectorShift = row.depth / 2;
+      treeItemPosition.bottomConnectorShift = row.depth / 2;
 
-			onItemPositioned.call(thisArg, treeItemId, treeItemPosition);
-		}
-	}
+      onItemPositioned.call(thisArg, treeItemId, treeItemPosition);
+    }
+  }
 };
 
 primitives.famdiagram.MatrixLayout.prototype.getItemPosition = function (visibility, column, row, size, options) {
-	var itemShift = 0;
+  var itemShift = 0;
 
-	switch (visibility) {
-		case 1/*primitives.common.Visibility.Normal*/:
-			switch (options.verticalAlignment) {
-				case 0/*primitives.common.VerticalAlignmentType.Top*/:
-					itemShift = 0;
-					break;
-				case 1/*primitives.common.VerticalAlignmentType.Middle*/:
-					itemShift = (row.depth - size.height) / 2.0;
-					break;
-				case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
-					itemShift = row.depth - size.height;
-					break;
-			}
-			break;
-		case 2/*primitives.common.Visibility.Dot*/:
-		case 3/*primitives.common.Visibility.Line*/:
-		case 4/*primitives.common.Visibility.Invisible*/:
-			itemShift = row.horizontalConnectorsDepth - size.height / 2.0;
-			break;
-	}
+  switch (visibility) {
+    case 1/*primitives.common.Visibility.Normal*/:
+      switch (options.verticalAlignment) {
+        case 0/*primitives.common.VerticalAlignmentType.Top*/:
+          itemShift = 0;
+          break;
+        case 1/*primitives.common.VerticalAlignmentType.Middle*/:
+          itemShift = (row.depth - size.height) / 2.0;
+          break;
+        case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
+          itemShift = row.depth - size.height;
+          break;
+      }
+      break;
+    case 2/*primitives.common.Visibility.Dot*/:
+    case 3/*primitives.common.Visibility.Line*/:
+    case 4/*primitives.common.Visibility.Invisible*/:
+      itemShift = row.horizontalConnectorsDepth - size.height / 2.0;
+      break;
+  }
 
-	return new primitives.common.Rect(column.offset - size.width / 2, row.offset - row.depth / 2 + itemShift, size.width, size.height);
+  return new primitives.common.Rect(column.offset - size.width / 2, row.offset - row.depth / 2 + itemShift, size.width, size.height);
 };
 
 /* /Controls/FamDiagram/Tasks/Transformations/Selection/CursorNeighboursTask.js*/
@@ -12645,7 +12600,7 @@ primitives.famdiagram.AddSpousesTask = function (spousesOptionTask, addLabelAnno
 };
 
 /* /Controls/FamDiagram/Tasks/Transformations/HideGrandParentsConnectorsTask.js*/
-/*	This task optionally eliminates direct connections to grand parents */
+/*  This task optionally eliminates direct connections to grand parents */
 primitives.famdiagram.HideGrandParentsConnectorsTask = function (hideGrandParentsConnectorsOptionTask, addSpousesTask) {
   var _data = {
     maximumId: null, /* maximum of OrgItem.id */
@@ -12689,169 +12644,169 @@ primitives.famdiagram.HideGrandParentsConnectorsTask = function (hideGrandParent
 
 /* /Controls/FamDiagram/Tasks/Transformations/ItemsPositionsTask.js*/
 primitives.famdiagram.ItemsPositionsTask = function (currentControlSizeTask, scaleOptionTask, orientationOptionTask, itemsSizesOptionTask, connectorsOptionTask,
-	normalizeOptionTask, normalizeLogicalFamilyTask,
-	itemTemplateParamsTask,
-	cursorItemTask, combinedNormalVisibilityItemsTask) {
+  normalizeOptionTask, normalizeLogicalFamilyTask,
+  itemTemplateParamsTask,
+  cursorItemTask, combinedNormalVisibilityItemsTask) {
 
-	var _data = {
-		treeItemsPositions: {}, // primitives.orgdiagram.TreeItemPosition();
-		panelSize: null // primitives.common.Rect();
-	};
+  var _data = {
+    treeItemsPositions: {}, // primitives.orgdiagram.TreeItemPosition();
+    panelSize: null // primitives.common.Rect();
+  };
 
-	function process() {
-		var itemsSizesOptions = itemsSizesOptionTask.getOptions();
-		var connectorsOptions = connectorsOptionTask.getOptions();
-		var normalizationOptions = normalizeOptionTask.getOptions();
+  function process() {
+    var itemsSizesOptions = itemsSizesOptionTask.getOptions();
+    var connectorsOptions = connectorsOptionTask.getOptions();
+    var normalizationOptions = normalizeOptionTask.getOptions();
 
-		var params = {
-			logicalFamily: normalizeLogicalFamilyTask.getLogicalFamily(),
-			treeLevels: normalizeLogicalFamilyTask.getTreeLevels(),
-			getConnectorsStacksSizes: normalizeLogicalFamilyTask.getConnectorsStacksSizes,
-			isItemSelected: combinedNormalVisibilityItemsTask.isItemSelected,
-			cursorItemId: cursorItemTask.getCursorTreeItem(),
-			getTemplateParams: itemTemplateParamsTask.getTemplateParams
-		};
+    var params = {
+      logicalFamily: normalizeLogicalFamilyTask.getLogicalFamily(),
+      treeLevels: normalizeLogicalFamilyTask.getTreeLevels(),
+      getConnectorsStacksSizes: normalizeLogicalFamilyTask.getConnectorsStacksSizes,
+      isItemSelected: combinedNormalVisibilityItemsTask.isItemSelected,
+      cursorItemId: cursorItemTask.getCursorTreeItem(),
+      getTemplateParams: itemTemplateParamsTask.getTemplateParams
+    };
 
-		var options = {
-			verticalAlignment: itemsSizesOptions.verticalAlignment,
-			pageFitMode: itemsSizesOptions.pageFitMode,
-			minimalVisibility: itemsSizesOptions.minimalVisibility,
-			normalLevelShift: itemsSizesOptions.normalLevelShift,
-			dotLevelShift: itemsSizesOptions.dotLevelShift,
-			lineLevelShift: itemsSizesOptions.lineLevelShift,
-			normalItemsInterval: itemsSizesOptions.normalItemsInterval,
-			dotItemsInterval: itemsSizesOptions.dotItemsInterval,
-			lineItemsInterval: itemsSizesOptions.lineItemsInterval,
-			orientationType: orientationOptionTask.getOptions().orientationType,
-			arrowsDirection: connectorsOptions.arrowsDirection, 
-			linesWidth: connectorsOptions.linesWidth,
-			checkBoxPanelSize: itemsSizesOptions.checkBoxPanelSize,
-			buttonsPanelSize: itemsSizesOptions.buttonsPanelSize,
-			groupTitlePanelSize: itemsSizesOptions.groupTitlePanelSize,
-			groupTitlePlacementType: itemsSizesOptions.groupTitlePlacementType,
-			maximumColumnsInMatrix: normalizationOptions.maximumColumnsInMatrix
-		};
+    var options = {
+      verticalAlignment: itemsSizesOptions.verticalAlignment,
+      pageFitMode: itemsSizesOptions.pageFitMode,
+      minimalVisibility: itemsSizesOptions.minimalVisibility,
+      normalLevelShift: itemsSizesOptions.normalLevelShift,
+      dotLevelShift: itemsSizesOptions.dotLevelShift,
+      lineLevelShift: itemsSizesOptions.lineLevelShift,
+      normalItemsInterval: itemsSizesOptions.normalItemsInterval,
+      dotItemsInterval: itemsSizesOptions.dotItemsInterval,
+      lineItemsInterval: itemsSizesOptions.lineItemsInterval,
+      orientationType: orientationOptionTask.getOptions().orientationType,
+      arrowsDirection: connectorsOptions.arrowsDirection,
+      linesWidth: connectorsOptions.linesWidth,
+      checkBoxPanelSize: itemsSizesOptions.checkBoxPanelSize,
+      buttonsPanelSize: itemsSizesOptions.buttonsPanelSize,
+      groupTitlePanelSize: itemsSizesOptions.groupTitlePanelSize,
+      groupTitlePlacementType: itemsSizesOptions.groupTitlePlacementType,
+      maximumColumnsInMatrix: normalizationOptions.maximumColumnsInMatrix
+    };
 
-		/* calculate panel size */
-		var panelSize = currentControlSizeTask.getOptimalPanelSize();
-		var scale = scaleOptionTask.getOptions().scale;
-		panelSize.scale(1.0 / scale);
-		var panelRect = new primitives.common.Rect(0, 0, panelSize.width, panelSize.height);
+    /* calculate panel size */
+    var panelSize = currentControlSizeTask.getOptimalPanelSize();
+    var scale = scaleOptionTask.getOptions().scale;
+    panelSize.scale(1.0 / scale);
+    var panelRect = new primitives.common.Rect(0, 0, panelSize.width, panelSize.height);
 
-		var layout = new primitives.famdiagram.FamilyLayout(params, options);
-		var matrixes = normalizeLogicalFamilyTask.getMatrixes();
-		for (var key in matrixes) {
-			if (matrixes.hasOwnProperty(key)) {
-				var layoutItem = params.logicalFamily.node(key);
-				layout.add(key, new primitives.famdiagram.MatrixLayout({
-					items: matrixes[key],
-					isItemSelected: params.isItemSelected,
-					cursorItemId: params.cursorItemId,
-					getTemplateParams: params.getTemplateParams,
-					hideParentConnection: layoutItem.hideParentConnection,
-					hideChildrenConnection: layoutItem.hideChildrenConnection
-				}, options));
-			}
-		}
-		/* calculate items placement */
-		_data.panelSize = layout.measure(panelRect);
-		_data.treeItemsPositions = {};
-		layout.arrange(this, function (treeItemId, treeItemPosition) {
-			_data.treeItemsPositions[treeItemId] = treeItemPosition;
-		});
-		return true;
-	}
+    var layout = new primitives.famdiagram.FamilyLayout(params, options);
+    var matrixes = normalizeLogicalFamilyTask.getMatrixes();
+    for (var key in matrixes) {
+      if (matrixes.hasOwnProperty(key)) {
+        var layoutItem = params.logicalFamily.node(key);
+        layout.add(key, new primitives.famdiagram.MatrixLayout({
+          items: matrixes[key],
+          isItemSelected: params.isItemSelected,
+          cursorItemId: params.cursorItemId,
+          getTemplateParams: params.getTemplateParams,
+          hideParentConnection: layoutItem.hideParentConnection,
+          hideChildrenConnection: layoutItem.hideChildrenConnection
+        }, options));
+      }
+    }
+    /* calculate items placement */
+    _data.panelSize = layout.measure(panelRect);
+    _data.treeItemsPositions = {};
+    layout.arrange(this, function (treeItemId, treeItemPosition) {
+      _data.treeItemsPositions[treeItemId] = treeItemPosition;
+    });
+    return true;
+  }
 
-	function addMatrixLayouts(parent, matrixes, options) {
+  function addMatrixLayouts(parent, matrixes, options) {
 
-	}
+  }
 
-	function getItemPosition(itemid) {
-		return _data.treeItemsPositions[itemid];
-	}
+  function getItemPosition(itemid) {
+    return _data.treeItemsPositions[itemid];
+  }
 
-	function getItemsPositions() {
-		return _data.treeItemsPositions;
-	}
+  function getItemsPositions() {
+    return _data.treeItemsPositions;
+  }
 
-	function getContentSize() {
-		return _data.panelSize;
-	}
+  function getContentSize() {
+    return _data.panelSize;
+  }
 
-	return {
-		process: process,
-		getItemsPositions: getItemsPositions,
-		getItemPosition: getItemPosition,
-		getContentSize: getContentSize
-	};
+  return {
+    process: process,
+    getItemsPositions: getItemsPositions,
+    getItemPosition: getItemPosition,
+    getContentSize: getContentSize
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Transformations/LogicalFamilyTask.js*/
 primitives.famdiagram.LogicalFamilyTask = function (itemsOptionTask) {
-	var _data = {
-		logicalFamily: null,
-		maximumId: null
-	};
+  var _data = {
+    logicalFamily: null,
+    maximumId: null
+  };
 
-	function process(debug) {
-		var index, len,
-			itemConfig, famItem,
-			items = itemsOptionTask.getItems(),
-			logicalFamily = primitives.common.family(), /*family contains primitives.famdiagram.ItemConfig */
-			maximumId = 0,
-			parsedId;
+  function process(debug) {
+    var index, len,
+      itemConfig, famItem,
+      items = itemsOptionTask.getItems(),
+      logicalFamily = primitives.common.family(), /*family contains primitives.famdiagram.ItemConfig */
+      maximumId = 0,
+      parsedId;
 
-		if (items.length > 0) {
-			for (index = 0, len = items.length; index < len; index += 1) {
-				itemConfig = items[index];
+    if (items.length > 0) {
+      for (index = 0, len = items.length; index < len; index += 1) {
+        itemConfig = items[index];
 
-				if (itemConfig != null) {
-					famItem = new primitives.famdiagram.FamilyItem({
-						id: itemConfig.id,
-						itemConfig: itemConfig,
-						isActive: itemConfig.isActive
-					});
+        if (itemConfig != null) {
+          famItem = new primitives.famdiagram.FamilyItem({
+            id: itemConfig.id,
+            itemConfig: itemConfig,
+            isActive: itemConfig.isActive
+          });
 
-					logicalFamily.add(itemConfig.parents, famItem.id, famItem);
+          logicalFamily.add(itemConfig.parents, famItem.id, famItem);
 
-					parsedId = parseInt(itemConfig.id, 10);
-					maximumId = Math.max(isNaN(parsedId) ? 0 : parsedId, maximumId);
-				}
-			}
-		}
+          parsedId = parseInt(itemConfig.id, 10);
+          maximumId = Math.max(isNaN(parsedId) ? 0 : parsedId, maximumId);
+        }
+      }
+    }
 
-		_data.logicalFamily = logicalFamily;
-		_data.maximumId = maximumId;
+    _data.logicalFamily = logicalFamily;
+    _data.maximumId = maximumId;
 
-		if (debug && !logicalFamily.validate()) {
-			throw "References are broken in family structure!";
-		}
+    if (debug && !logicalFamily.validate()) {
+      throw "References are broken in family structure!";
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	function getLogicalFamily() {
-		return _data.logicalFamily;
-	}
+  function getLogicalFamily() {
+    return _data.logicalFamily;
+  }
 
-	function getMaximumId() {
-		return _data.maximumId;
-	}
+  function getMaximumId() {
+    return _data.maximumId;
+  }
 
-	return {
-		process: process,
-		getLogicalFamily: getLogicalFamily,
-		getMaximumId: getMaximumId
-	};
+  return {
+    process: process,
+    getLogicalFamily: getLogicalFamily,
+    getMaximumId: getMaximumId
+  };
 };
 
 /* /Controls/FamDiagram/Tasks/Transformations/NormalizeLogicalFamilyTask.js*/
-/*	1. Topologically sort _logicalFamily items and assign levels.
-	2. Optimize references. Transform M:N relations to M:1:N where it is possible.
-	3. Eliminate Many to Many relations. Logical family consists of 1:M and M:1 relations only.
-	4. Resort items, so original visible items stay at the same level.
-	5. Fill in missed items between levels. So that way we have invisible items between parent/child family items if they have gap between levels.
-		Such invisible family items have isVisible option set to false.
+/*  1. Topologically sort _logicalFamily items and assign levels.
+    2. Optimize references. Transform M:N relations to M:1:N where it is possible.
+    3. Eliminate Many to Many relations. Logical family consists of 1:M and M:1 relations only.
+    4. Resort items, so original visible items stay at the same level.
+    5. Fill in missed items between levels. So that way we have invisible items between parent/child family items if they have gap between levels.
+      Such invisible family items have isVisible option set to false.
 */
 primitives.famdiagram.NormalizeLogicalFamilyTask = function (normalizeOptionTask, hideGrandParentsConnectorsTask) {
   var _data = {
@@ -12895,7 +12850,7 @@ primitives.famdiagram.NormalizeLogicalFamilyTask = function (normalizeOptionTask
 
 
 /* /Controls/FamDiagram/Tasks/Transformations/OrderFamilyNodesTask.js*/
-/*	Balance family tree so parents sharing the most children stay close to each other 
+/*  Balance family tree so parents sharing the most children stay close to each other 
     Account for users position and primnaryParent options
 */
 primitives.famdiagram.OrderFamilyNodesTask = function (orderFamilyNodesOptionTask, userDefinedNodesOrderTask, normalizeLogicalFamilyTask) {
@@ -13262,58 +13217,58 @@ primitives.famdiagram.Control = function (element, options) {
 
 /* /Controls/FamDiagram/EventArgsFactory.js*/
 primitives.famdiagram.EventArgsFactory = function (data, oldTreeItemId, newTreeItemId, name) {
-	var result = new primitives.famdiagram.EventArgs(),
-		combinedContextsTask = data.tasks.getTask("CombinedContextsTask"),
-		alignDiagramTask = data.tasks.getTask("AlignDiagramTask"),
-		logicalFamilyTask = data.tasks.getTask("LogicalFamilyTask"),
-		oldItemConfig = combinedContextsTask.getConfig(oldTreeItemId),
-		newItemConfig = combinedContextsTask.getConfig(newTreeItemId),
-		family = logicalFamilyTask.getLogicalFamily(),
-		itemPosition,
-		offset,
-		panelOffset;
+  var result = new primitives.famdiagram.EventArgs(),
+    combinedContextsTask = data.tasks.getTask("CombinedContextsTask"),
+    alignDiagramTask = data.tasks.getTask("AlignDiagramTask"),
+    logicalFamilyTask = data.tasks.getTask("LogicalFamilyTask"),
+    oldItemConfig = combinedContextsTask.getConfig(oldTreeItemId),
+    newItemConfig = combinedContextsTask.getConfig(newTreeItemId),
+    family = logicalFamilyTask.getLogicalFamily(),
+    itemPosition,
+    offset,
+    panelOffset;
 
-	if (oldItemConfig && oldItemConfig.id != null) {
-		result.oldContext = oldItemConfig;
-	}
+  if (oldItemConfig && oldItemConfig.id != null) {
+    result.oldContext = oldItemConfig;
+  }
 
-	if (newItemConfig && newItemConfig.id != null) {
-		result.context = newItemConfig;
+  if (newItemConfig && newItemConfig.id != null) {
+    result.context = newItemConfig;
 
-		family.loopParents(this, newItemConfig.id, function (itemid, item, levelIndex) {
-			if (levelIndex > 0) {
-				return family.BREAK;
-			}
-			result.parentItems.push(combinedContextsTask.getConfig(itemid));
-		});
+    family.loopParents(this, newItemConfig.id, function (itemid, item, levelIndex) {
+      if (levelIndex > 0) {
+        return family.BREAK;
+      }
+      result.parentItems.push(combinedContextsTask.getConfig(itemid));
+    });
 
-		family.loopChildren(this, newItemConfig.id, function (itemid, item, levelIndex) {
-			if (levelIndex > 0) {
-				return family.BREAK;
-			}
-			result.childrenItems.push(combinedContextsTask.getConfig(itemid));
-		});
+    family.loopChildren(this, newItemConfig.id, function (itemid, item, levelIndex) {
+      if (levelIndex > 0) {
+        return family.BREAK;
+      }
+      result.childrenItems.push(combinedContextsTask.getConfig(itemid));
+    });
 
-		panelOffset = primitives.common.getElementOffset(data.layout.mousePanel);
-		offset = primitives.common.getElementOffset(data.layout.element);
-		itemPosition = alignDiagramTask.getItemPosition(newTreeItemId);
-		result.position = new primitives.common.Rect(itemPosition.actualPosition)
-				.translate(panelOffset.left, panelOffset.top)
-				.translate(-offset.left, -offset.top);
-	}
+    panelOffset = primitives.common.getElementOffset(data.layout.mousePanel);
+    offset = primitives.common.getElementOffset(data.layout.element);
+    itemPosition = alignDiagramTask.getItemPosition(newTreeItemId);
+    result.position = new primitives.common.Rect(itemPosition.actualPosition)
+      .translate(panelOffset.left, panelOffset.top)
+      .translate(-offset.left, -offset.top);
+  }
 
-	if (name != null) {
-		result.name = name;
-	}
+  if (name != null) {
+    result.name = name;
+  }
 
-	return result;
+  return result;
 };
 
 /* /Controls/FamDiagram/getProcessDiagramConfig.js*/
 primitives.famdiagram.getProcessDiagramConfig = function () {
-	var dummyFunction = function () { };
-	var tasks = primitives.famdiagram.TaskManagerFactory(dummyFunction, dummyFunction, dummyFunction);
-	return tasks.getProcessDiagramConfig();
+  var dummyFunction = function () { };
+  var tasks = primitives.famdiagram.TaskManagerFactory(dummyFunction, dummyFunction, dummyFunction);
+  return tasks.getProcessDiagramConfig();
 };
 
 /* /Controls/FamDiagram/TaskManagerFactory.js*/
@@ -13340,9 +13295,9 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
   tasks.addDependency('defaultLabelAnnotationConfig', new primitives.famdiagram.LabelAnnotationConfig());
 
   tasks.addDependency('isFamilyChartMode', true);/* in regular org diagram we hide branch if it contains only invisible nodes, 
-		in the family chart we use invisible items to draw connectors across multiple levels */
+    in the family chart we use invisible items to draw connectors across multiple levels */
   tasks.addDependency('showElbowDots', true);/* in regular org chart we don;t have situations when connector lines cross, but we have such situations in 
-		family tree so we need extra visual attribute to distinguish intersections betwen connectors */
+    family tree so we need extra visual attribute to distinguish intersections betwen connectors */
   tasks.addDependency('null', null);
   tasks.addDependency('foreground', 2/*primitives.common.ZOrderType.Foreground*/);
   tasks.addDependency('background', 1/*primitives.common.ZOrderType.Background*/);
@@ -14623,7 +14578,7 @@ primitives.orgdiagram.Config = function (name) {
   this.groupTitleHorizontalAlignment = 0/*primitives.common.HorizontalAlignmentType.Center*/;
 
   /**
-   * 	Group titles font size.
+   * Group titles font size.
    * 
    * @group Group Titles
    * @type {number}
@@ -15398,7 +15353,7 @@ primitives.orgdiagram.ShapeAnnotationConfig = function (arg0) {
    */
   this.items = [];
 
-	/**
+  /**
    * Shape
    * 
    * @type {ShapeType}
@@ -15510,7 +15465,7 @@ primitives.orgdiagram.ShapeAnnotationConfig = function (arg0) {
  * Context object
  */
 primitives.orgdiagram.EventArgs = function () {
-	/**
+  /**
    * Current item
    * 
    * @type {string}
@@ -15563,21 +15518,21 @@ primitives.common.BaseConnectorBundle = function () {
 
 primitives.common.BaseConnectorBundle.prototype.trace = function (data, params, options) {
   //var data = {
-  //	graph: null, //primitives.common.graph
-  //	nodeid: 0
+  //  graph: null, //primitives.common.graph
+  //  nodeid: 0
   //};
 
   //var params = {
-  //	treeItemsPositions: [],
-  //	transform: null,
-  //	hasGraphics: true
+  //  treeItemsPositions: [],
+  //  transform: null,
+  //  hasGraphics: true
   //};
 
   //var options = {
-  //	connectorType: primitives.common.ConnectorType.Squared,
-  //	showExtraArrows: true,
-  //	bevelSize: 4,
-  //	elbowType: primitives.common.ElbowType.None
+  //  connectorType: primitives.common.ConnectorType.Squared,
+  //  showExtraArrows: true,
+  //  bevelSize: 4,
+  //  elbowType: primitives.common.ElbowType.None
   //};
 };
 
@@ -16307,8 +16262,8 @@ primitives.common.VerticalConnectorBundle.prototype.trace = function (data, para
 
 /* /Controls/OrgDiagram/Models/LevelVisibility.js*/
 primitives.orgdiagram.LevelVisibility = function (level, currentvisibility) {
-	this.level = level;
-	this.currentvisibility = currentvisibility;
+  this.level = level;
+  this.currentvisibility = currentvisibility;
 };
 
 
@@ -16382,367 +16337,367 @@ primitives.orgdiagram.TemplateParams = function () {
 /* /Controls/OrgDiagram/Models/TreeItem.js*/
 /* This is model class used to define visual structure of chart */
 primitives.orgdiagram.TreeItem = function () {
-	/* auto generated internal item id */
-	this.id = null;
+  /* auto generated internal item id */
+  this.id = null;
 
-	/* Visual child id which is supposed to be straight under it */
-	this.visualAggregatorId = null;
-	this.visualDepth = 1; // private 
+  /* Visual child id which is supposed to be straight under it */
+  this.visualAggregatorId = null;
+  this.visualDepth = 1; // private 
 
-	this.partners = []; /* thess are nodes connected with bottom line together into one family, family is group of items having common set of children */
+  this.partners = []; /* thess are nodes connected with bottom line together into one family, family is group of items having common set of children */
 
-	this.visibility = 1/*primitives.common.Visibility.Normal*/;
+  this.visibility = 1/*primitives.common.Visibility.Normal*/;
 
-	this.actualItemType = null; // primitives.orgdiagram.ItemType
-	this.connectorPlacement = 0; // primitives.common.SideFlag
-	this.gravity = 0; // primitives.common.HorizontalAlignmentType.Center
+  this.actualItemType = null; // primitives.orgdiagram.ItemType
+  this.connectorPlacement = 0; // primitives.common.SideFlag
+  this.gravity = 0; // primitives.common.HorizontalAlignmentType.Center
 
-	/* This value is used to increase gap between neighboring left item in hiearchy */
-	this.relationDegree = 0;
+  /* This value is used to increase gap between neighboring left item in hiearchy */
+  this.relationDegree = 0;
 };
 
 /* /Controls/OrgDiagram/Models/TreeItemPosition.js*/
 /* This is model class used to define visual structure of chart */
 primitives.orgdiagram.TreeItemPosition = function (source) {
-	this.partnerConnectorOffset = 0;
+  this.partnerConnectorOffset = 0;
 
-	this.level = null;
-	this.levelPosition = null;
-	this.offset = 0;
-	this.leftPadding = 0;
-	this.rightPadding = 0;
+  this.level = null;
+  this.levelPosition = null;
+  this.offset = 0;
+  this.leftPadding = 0;
+  this.rightPadding = 0;
 
-	this.actualVisibility = 1/*primitives.common.Visibility.Normal*/;
+  this.actualVisibility = 1/*primitives.common.Visibility.Normal*/;
 
-	this.actualSize = null;
-	this.actualPosition = null;
-	this.contentPosition = null;
+  this.actualSize = null;
+  this.actualPosition = null;
+  this.contentPosition = null;
 
-	this.horizontalConnectorsShift = null;
-	this.topConnectorShift = null;
-	this.topConnectorInterval = 0;
-	this.bottomConnectorShift = null;
-	this.bottomConnectorInterval = 0;
+  this.horizontalConnectorsShift = null;
+  this.topConnectorShift = null;
+  this.topConnectorInterval = 0;
+  this.bottomConnectorShift = null;
+  this.bottomConnectorInterval = 0;
 
-	/* following properties are being used in matrix layout to draw connector lines */
-	this.leftMedianOffset = null; /* this property is position of vertical connector lines going between columns of nodes in matrix layout on left side of the node */
-	this.rightMedianOffset = null; /* the same but on the right side */
+  /* following properties are being used in matrix layout to draw connector lines */
+  this.leftMedianOffset = null; /* this property is position of vertical connector lines going between columns of nodes in matrix layout on left side of the node */
+  this.rightMedianOffset = null; /* the same but on the right side */
 
-	if (source != null) {
-		for (var property in source) {
-			if (source.hasOwnProperty(property)) {
-				switch (property) {
-					case 'actualPosition':
-						this.actualPosition = new primitives.common.Rect(source.actualPosition);
-						break;
-					default:
-						this[property] = source[property];
-						break;
-				}
-				
-			}
-		}
-	}
+  if (source != null) {
+    for (var property in source) {
+      if (source.hasOwnProperty(property)) {
+        switch (property) {
+          case 'actualPosition':
+            this.actualPosition = new primitives.common.Rect(source.actualPosition);
+            break;
+          default:
+            this[property] = source[property];
+            break;
+        }
+
+      }
+    }
+  }
 };
 
 
 /* /Controls/OrgDiagram/Models/TreeLevelConnectorStackSize.js*/
 primitives.orgdiagram.TreeLevelConnectorStackSize = function () {
-	this.parentsStackSize = 0; /* number of overlapping horiontal connection lines between partners in level */
+  this.parentsStackSize = 0; /* number of overlapping horiontal connection lines between partners in level */
 };
 
 /* /Controls/OrgDiagram/Models/TreeLevelPosition.js*/
 primitives.orgdiagram.TreeLevelPosition = function (source) {
-	this.currentvisibility = 1/*primitives.common.Visibility.Normal*/;
-	this.actualVisibility = 1/*primitives.common.Visibility.Normal*/;
+  this.currentvisibility = 1/*primitives.common.Visibility.Normal*/;
+  this.actualVisibility = 1/*primitives.common.Visibility.Normal*/;
 
-	this.shift = 0.0; /* top abolute position of items in level */
-	this.depth = 0.0; /* maximum  height of items in level */
-	this.nextLevelShift = 0.0; /* next level relative position */
-	this.horizontalConnectorsDepth = 0; /* relative position of horizontal connectors between items */
-	this.topConnectorShift = 0.0; /* relative position of top connector horizontal line */
-	this.connectorShift = 0.0; /* relative position of bottom horizontal line */
-	this.levelSpace = 0.0; /* user interval between prev level and this one based on options set by user, if number of horizontal connections is bigger that one it is proportionally increased */
+  this.shift = 0.0; /* top abolute position of items in level */
+  this.depth = 0.0; /* maximum  height of items in level */
+  this.nextLevelShift = 0.0; /* next level relative position */
+  this.horizontalConnectorsDepth = 0; /* relative position of horizontal connectors between items */
+  this.topConnectorShift = 0.0; /* relative position of top connector horizontal line */
+  this.connectorShift = 0.0; /* relative position of bottom horizontal line */
+  this.levelSpace = 0.0; /* user interval between prev level and this one based on options set by user, if number of horizontal connections is bigger that one it is proportionally increased */
 
-	this.currentOffset = 0.0; /* this is x axis coordinate offset, it used to calculate horizontal items position in level */
+  this.currentOffset = 0.0; /* this is x axis coordinate offset, it used to calculate horizontal items position in level */
 
-	this.labels = [];
-	this.labelsRect = null;
-	this.showLabels = true;
-	this.hasFixedLabels = false;
+  this.labels = [];
+  this.labelsRect = null;
+  this.showLabels = true;
+  this.hasFixedLabels = false;
 
-	if (source != null) {
-		for (var property in source) {
-			if (source.hasOwnProperty(property)) {
-				this[property] = source[property];
-			}
-		}
-	}
+  if (source != null) {
+    for (var property in source) {
+      if (source.hasOwnProperty(property)) {
+        this[property] = source[property];
+      }
+    }
+  }
 };
 
 primitives.orgdiagram.TreeLevelPosition.prototype.setShift = function (shift, levelSpace, topConnectorSpace, connectorSpace, partnerConnectorOffset) {
-	this.shift = shift;
-	this.levelSpace = levelSpace;
+  this.shift = shift;
+  this.levelSpace = levelSpace;
 
-	this.topConnectorShift = -levelSpace / 2.0 - topConnectorSpace;
-	this.connectorShift = this.depth + connectorSpace + (partnerConnectorOffset + 1) * (levelSpace / 2.0);
-	this.nextLevelShift = topConnectorSpace + this.depth + connectorSpace + levelSpace + partnerConnectorOffset * levelSpace / 2.0;
+  this.topConnectorShift = -levelSpace / 2.0 - topConnectorSpace;
+  this.connectorShift = this.depth + connectorSpace + (partnerConnectorOffset + 1) * (levelSpace / 2.0);
+  this.nextLevelShift = topConnectorSpace + this.depth + connectorSpace + levelSpace + partnerConnectorOffset * levelSpace / 2.0;
 
-	return this.nextLevelShift;
+  return this.nextLevelShift;
 };
 
 primitives.orgdiagram.TreeLevelPosition.prototype.shiftDown = function (shift) {
-	this.shift += shift;
+  this.shift += shift;
 };
 
 primitives.orgdiagram.TreeLevelPosition.prototype.toString = function () {
-	return this.currentvisibility;
+  return this.currentvisibility;
 };
 
 /* /Controls/OrgDiagram/Tasks/Layout/AlignDiagramTask.js*/
 primitives.orgdiagram.AlignDiagramTask = function (orientationOptionTask, itemsSizesOptionTask, visualTreeOptionTask, scaleOptionTask,
-	currentControlSizeTask, activeItemsTask, itemsPositionsTask, isFamilyChartMode) {
-	var _data = {
-		treeItemsPositions: {}, // primitives.orgdiagram.TreeItemPosition();
-		panelSize: null // primitives.common.Rect();
-	},
-	_activeItems,
-	_treeItemsPositions,
+  currentControlSizeTask, activeItemsTask, itemsPositionsTask, isFamilyChartMode) {
+  var _data = {
+    treeItemsPositions: {}, // primitives.orgdiagram.TreeItemPosition();
+    panelSize: null // primitives.common.Rect();
+  },
+    _activeItems,
+    _treeItemsPositions,
 
-	_options,
-	_orientationOptions,
-	_visualTreeOptions,
-	_scaleOptions,
-	_spatialIndex,
-	_keyboardNavigationManager;
+    _options,
+    _orientationOptions,
+    _visualTreeOptions,
+    _scaleOptions,
+    _spatialIndex,
+    _keyboardNavigationManager;
 
-	function process() {
-		var placeholderSize = new primitives.common.Size(itemsPositionsTask.getContentSize()),
-			panelSize = new primitives.common.Size(currentControlSizeTask.getOptimalPanelSize());
+  function process() {
+    var placeholderSize = new primitives.common.Size(itemsPositionsTask.getContentSize()),
+      panelSize = new primitives.common.Size(currentControlSizeTask.getOptimalPanelSize());
 
-		_spatialIndex = null;
-		_keyboardNavigationManager = null;
+    _spatialIndex = null;
+    _keyboardNavigationManager = null;
 
-		_activeItems = activeItemsTask != null ? activeItemsTask.getActiveItems() : {};
-		_treeItemsPositions = itemsPositionsTask.getItemsPositions();
+    _activeItems = activeItemsTask != null ? activeItemsTask.getActiveItems() : {};
+    _treeItemsPositions = itemsPositionsTask.getItemsPositions();
 
-		_options = itemsSizesOptionTask.getOptions();
-		_orientationOptions = orientationOptionTask.getOptions();
-		_visualTreeOptions = visualTreeOptionTask.getOptions();
-		_scaleOptions = scaleOptionTask.getOptions();
+    _options = itemsSizesOptionTask.getOptions();
+    _orientationOptions = orientationOptionTask.getOptions();
+    _visualTreeOptions = visualTreeOptionTask.getOptions();
+    _scaleOptions = scaleOptionTask.getOptions();
 
-		switch (_orientationOptions.orientationType) {
-			case 2/*primitives.common.OrientationType.Left*/:
-			case 3/*primitives.common.OrientationType.Right*/:
-				panelSize.invert();
-				break;
-		}
+    switch (_orientationOptions.orientationType) {
+      case 2/*primitives.common.OrientationType.Left*/:
+      case 3/*primitives.common.OrientationType.Right*/:
+        panelSize.invert();
+        break;
+    }
 
-		panelSize.scale(1.0 / _scaleOptions.scale);
+    panelSize.scale(1.0 / _scaleOptions.scale);
 
-		// By default we translate everything forward
-		_data.panelSize = panelSize;
-		_data.treeItemsPositions = _treeItemsPositions;
+    // By default we translate everything forward
+    _data.panelSize = panelSize;
+    _data.treeItemsPositions = _treeItemsPositions;
 
-		switch (_options.pageFitMode) {
-			case 5/*primitives.common.PageFitMode.AutoSize*/:
-				_data.panelSize = new primitives.common.Size(placeholderSize);
-				break;
-			default:
-				_data.panelSize = new primitives.common.Size(placeholderSize);
-				if (placeholderSize.width < panelSize.width) {
-					_data.treeItemsPositions = {};
-					stretchToWidth(_data.treeItemsPositions, placeholderSize.width, panelSize.width);
-					_data.panelSize.width = panelSize.width;
-				}
-				if (placeholderSize.height < panelSize.height) {
-					_data.panelSize.height = panelSize.height;
-				}
-				break;
-		}
+    switch (_options.pageFitMode) {
+      case 5/*primitives.common.PageFitMode.AutoSize*/:
+        _data.panelSize = new primitives.common.Size(placeholderSize);
+        break;
+      default:
+        _data.panelSize = new primitives.common.Size(placeholderSize);
+        if (placeholderSize.width < panelSize.width) {
+          _data.treeItemsPositions = {};
+          stretchToWidth(_data.treeItemsPositions, placeholderSize.width, panelSize.width);
+          _data.panelSize.width = panelSize.width;
+        }
+        if (placeholderSize.height < panelSize.height) {
+          _data.panelSize.height = panelSize.height;
+        }
+        break;
+    }
 
-		switch (_orientationOptions.orientationType) {
-			case 2/*primitives.common.OrientationType.Left*/:
-			case 3/*primitives.common.OrientationType.Right*/:
-				_data.panelSize.invert();
-				break;
-		}
+    switch (_orientationOptions.orientationType) {
+      case 2/*primitives.common.OrientationType.Left*/:
+      case 3/*primitives.common.OrientationType.Right*/:
+        _data.panelSize.invert();
+        break;
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	function stretchToWidth(treeItemsPositions, treeWidth, panelWidth) {
-		var offset;
-		if (isFamilyChartMode) {
-			offset = (panelWidth - treeWidth) / 2.0;
-		} else {
-			switch (_visualTreeOptions.horizontalAlignment) {
-				case 1/*primitives.common.HorizontalAlignmentType.Left*/:
-					offset = 0;
-					break;
-				case 2/*primitives.common.HorizontalAlignmentType.Right*/:
-					offset = panelWidth - treeWidth;
-					break;
-				case 0/*primitives.common.HorizontalAlignmentType.Center*/:
-					offset = (panelWidth - treeWidth) / 2.0;
-					break;
-			}
-		}
-		translateItemPositions(treeItemsPositions, offset, 0);
-	}
+  function stretchToWidth(treeItemsPositions, treeWidth, panelWidth) {
+    var offset;
+    if (isFamilyChartMode) {
+      offset = (panelWidth - treeWidth) / 2.0;
+    } else {
+      switch (_visualTreeOptions.horizontalAlignment) {
+        case 1/*primitives.common.HorizontalAlignmentType.Left*/:
+          offset = 0;
+          break;
+        case 2/*primitives.common.HorizontalAlignmentType.Right*/:
+          offset = panelWidth - treeWidth;
+          break;
+        case 0/*primitives.common.HorizontalAlignmentType.Center*/:
+          offset = (panelWidth - treeWidth) / 2.0;
+          break;
+      }
+    }
+    translateItemPositions(treeItemsPositions, offset, 0);
+  }
 
-	function translateItemPositions(treeItemsPositions, offsetX, offsetY) {
-		var treeItemid, treeItemPosition;
-		for (treeItemid in _treeItemsPositions) {
-			if (_treeItemsPositions.hasOwnProperty(treeItemid)) {
-				treeItemPosition = new primitives.orgdiagram.TreeItemPosition(_treeItemsPositions[treeItemid]);
-				treeItemPosition.actualPosition.translate(offsetX, offsetY);
-				treeItemsPositions[treeItemid] = treeItemPosition;
-			}
-		}
-	}
+  function translateItemPositions(treeItemsPositions, offsetX, offsetY) {
+    var treeItemid, treeItemPosition;
+    for (treeItemid in _treeItemsPositions) {
+      if (_treeItemsPositions.hasOwnProperty(treeItemid)) {
+        treeItemPosition = new primitives.orgdiagram.TreeItemPosition(_treeItemsPositions[treeItemid]);
+        treeItemPosition.actualPosition.translate(offsetX, offsetY);
+        treeItemsPositions[treeItemid] = treeItemPosition;
+      }
+    }
+  }
 
-	function getSizes() {
-		var result = [];
-		var hash = {};
-		for (var itemid in _data.treeItemsPositions) {
-			if (_data.treeItemsPositions.hasOwnProperty(itemid)) {
-				var treeItemPosition = _data.treeItemsPositions[itemid];
-				switch (treeItemPosition.actualVisibility) {
-					case 1/*primitives.common.Visibility.Normal*/:
-					case 2/*primitives.common.Visibility.Dot*/://ignore jslint
-					case 3/*primitives.common.Visibility.Line*/:
-						var item = treeItemPosition.actualPosition;
-						var size = Math.max(item.width, item.height);
-						if (!hash.hasOwnProperty(size)) {
-							hash[size] = true;
-							result.push(size);
-						}
-				}
-			}
-		}
-		return result;
-	}
+  function getSizes() {
+    var result = [];
+    var hash = {};
+    for (var itemid in _data.treeItemsPositions) {
+      if (_data.treeItemsPositions.hasOwnProperty(itemid)) {
+        var treeItemPosition = _data.treeItemsPositions[itemid];
+        switch (treeItemPosition.actualVisibility) {
+          case 1/*primitives.common.Visibility.Normal*/:
+          case 2/*primitives.common.Visibility.Dot*/://ignore jslint
+          case 3/*primitives.common.Visibility.Line*/:
+            var item = treeItemPosition.actualPosition;
+            var size = Math.max(item.width, item.height);
+            if (!hash.hasOwnProperty(size)) {
+              hash[size] = true;
+              result.push(size);
+            }
+        }
+      }
+    }
+    return result;
+  }
 
-	function getSpatialIndex() {
-		if (_spatialIndex == null) {
-			_spatialIndex = primitives.common.SpatialIndex(getSizes());
-			for (var itemid in _data.treeItemsPositions) {
-				if (_data.treeItemsPositions.hasOwnProperty(itemid)) {
-					var treeItemPosition = _data.treeItemsPositions[itemid];
-					if (_activeItems.hasOwnProperty(itemid)) {
-						switch (treeItemPosition.actualVisibility) {
-							case 1/*primitives.common.Visibility.Normal*/:
-							case 2/*primitives.common.Visibility.Dot*/://ignore jslint
-							case 3/*primitives.common.Visibility.Line*/:
-								var rect = new primitives.common.Rect(treeItemPosition.actualPosition);
-								rect.context = itemid;
-								_spatialIndex.addRect(rect);
-						}
-					}
-				}
-			}
-		}
-		return _spatialIndex;
-	}
+  function getSpatialIndex() {
+    if (_spatialIndex == null) {
+      _spatialIndex = primitives.common.SpatialIndex(getSizes());
+      for (var itemid in _data.treeItemsPositions) {
+        if (_data.treeItemsPositions.hasOwnProperty(itemid)) {
+          var treeItemPosition = _data.treeItemsPositions[itemid];
+          if (_activeItems.hasOwnProperty(itemid)) {
+            switch (treeItemPosition.actualVisibility) {
+              case 1/*primitives.common.Visibility.Normal*/:
+              case 2/*primitives.common.Visibility.Dot*/://ignore jslint
+              case 3/*primitives.common.Visibility.Line*/:
+                var rect = new primitives.common.Rect(treeItemPosition.actualPosition);
+                rect.context = itemid;
+                _spatialIndex.addRect(rect);
+            }
+          }
+        }
+      }
+    }
+    return _spatialIndex;
+  }
 
-	function getTreeItemForMousePosition(x, y, gravityRadius) {
-		var result = null,
-			bestDistance = null, distance,
-			scale = _scaleOptions.scale,
-			spatialIndex = getSpatialIndex(),
-			selection,
-			center;
+  function getTreeItemForMousePosition(x, y, gravityRadius) {
+    var result = null,
+      bestDistance = null, distance,
+      scale = _scaleOptions.scale,
+      spatialIndex = getSpatialIndex(),
+      selection,
+      center;
 
-		x = x / scale;
-		y = y / scale;
-		selection = new primitives.common.Rect(x, y, 0, 0);
-		center = new primitives.common.Point(x, y);
-		selection.offset(gravityRadius, gravityRadius, gravityRadius, gravityRadius);
+    x = x / scale;
+    y = y / scale;
+    selection = new primitives.common.Rect(x, y, 0, 0);
+    center = new primitives.common.Point(x, y);
+    selection.offset(gravityRadius, gravityRadius, gravityRadius, gravityRadius);
 
-		spatialIndex.loopArea(this, selection, function (rect) {
-			var itemid = rect.context;
-			if (rect.contains(x, y)) {
-				result = itemid;
-				return true;
-			}
-			var treeItemPosition = _data.treeItemsPositions[itemid];
-			switch (treeItemPosition.actualVisibility) {
-				case 2/*primitives.common.Visibility.Dot*/://ignore jslint
-				case 3/*primitives.common.Visibility.Line*/:
-					var distance = center.distanceTo(rect.horizontalCenter(), rect.verticalCenter());
-					if (bestDistance == null || distance < bestDistance) {
-						bestDistance = distance;
-						result = itemid;
-					}
-			}
-		});
+    spatialIndex.loopArea(this, selection, function (rect) {
+      var itemid = rect.context;
+      if (rect.contains(x, y)) {
+        result = itemid;
+        return true;
+      }
+      var treeItemPosition = _data.treeItemsPositions[itemid];
+      switch (treeItemPosition.actualVisibility) {
+        case 2/*primitives.common.Visibility.Dot*/://ignore jslint
+        case 3/*primitives.common.Visibility.Line*/:
+          var distance = center.distanceTo(rect.horizontalCenter(), rect.verticalCenter());
+          if (bestDistance == null || distance < bestDistance) {
+            bestDistance = distance;
+            result = itemid;
+          }
+      }
+    });
 
-		return result;
-	}
+    return result;
+  }
 
-	function getKeyboardNavigationManager() {
-		if (_keyboardNavigationManager == null) {
-			_keyboardNavigationManager = primitives.common.KeyboardNavigationManager();
-			for (var itemid in _data.treeItemsPositions) {
-				if (_data.treeItemsPositions.hasOwnProperty(itemid)) {
-					var treeItemPosition = _data.treeItemsPositions[itemid];
-					if (_activeItems.hasOwnProperty(itemid)) {
-						switch (treeItemPosition.actualVisibility) {
-							case 1/*primitives.common.Visibility.Normal*/:
-								var rect = new primitives.common.Rect(treeItemPosition.actualPosition);
-								_keyboardNavigationManager.addRect(rect, itemid);
-						}
-					}
-				}
-			}
-		}
-		return _keyboardNavigationManager;
-	}
+  function getKeyboardNavigationManager() {
+    if (_keyboardNavigationManager == null) {
+      _keyboardNavigationManager = primitives.common.KeyboardNavigationManager();
+      for (var itemid in _data.treeItemsPositions) {
+        if (_data.treeItemsPositions.hasOwnProperty(itemid)) {
+          var treeItemPosition = _data.treeItemsPositions[itemid];
+          if (_activeItems.hasOwnProperty(itemid)) {
+            switch (treeItemPosition.actualVisibility) {
+              case 1/*primitives.common.Visibility.Normal*/:
+                var rect = new primitives.common.Rect(treeItemPosition.actualPosition);
+                _keyboardNavigationManager.addRect(rect, itemid);
+            }
+          }
+        }
+      }
+    }
+    return _keyboardNavigationManager;
+  }
 
-	function getNextItem(cursorItem, direction) {
-		var manager = getKeyboardNavigationManager(),
-			result;
+  function getNextItem(cursorItem, direction) {
+    var manager = getKeyboardNavigationManager(),
+      result;
 
-		switch (direction) {
-			case 0/*primitives.common.OrientationType.Top*/:
-				result = manager.getItemAbove(cursorItem);
-				break;
-			case 1/*primitives.common.OrientationType.Bottom*/:
-				result = manager.getItemBelow(cursorItem);
-				break;
-			case 2/*primitives.common.OrientationType.Left*/:
-				result = manager.getItemOnLeft(cursorItem);
-				break;
-			case 3/*primitives.common.OrientationType.Right*/:
-				result = manager.getItemOnRight(cursorItem);
-				break;
-		}
+    switch (direction) {
+      case 0/*primitives.common.OrientationType.Top*/:
+        result = manager.getItemAbove(cursorItem);
+        break;
+      case 1/*primitives.common.OrientationType.Bottom*/:
+        result = manager.getItemBelow(cursorItem);
+        break;
+      case 2/*primitives.common.OrientationType.Left*/:
+        result = manager.getItemOnLeft(cursorItem);
+        break;
+      case 3/*primitives.common.OrientationType.Right*/:
+        result = manager.getItemOnRight(cursorItem);
+        break;
+    }
 
-		return result;
-	}
+    return result;
+  }
 
-	function getItemPosition(itemid) {
-		return _data.treeItemsPositions[itemid];
-	}
+  function getItemPosition(itemid) {
+    return _data.treeItemsPositions[itemid];
+  }
 
-	function getItemsPositions() {
-		return _data.treeItemsPositions;
-	}
+  function getItemsPositions() {
+    return _data.treeItemsPositions;
+  }
 
-	function getContentSize() {
-		return _data.panelSize;
-	}
+  function getContentSize() {
+    return _data.panelSize;
+  }
 
-	return {
-		process: process,
-		getItemPosition: getItemPosition,
-		getItemsPositions: getItemsPositions,
-		getContentSize: getContentSize,
+  return {
+    process: process,
+    getItemPosition: getItemPosition,
+    getItemsPositions: getItemsPositions,
+    getContentSize: getContentSize,
 
-		getTreeItemForMousePosition: getTreeItemForMousePosition,
-		getNextItem: getNextItem
-	};
+    getTreeItemForMousePosition: getTreeItemForMousePosition,
+    getNextItem: getNextItem
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Layout/ApplyLayoutChangesTask.js*/
@@ -16785,7 +16740,7 @@ primitives.orgdiagram.ApplyLayoutChangesTask = function (getGraphics, setLayout,
 
 /* /Controls/OrgDiagram/Tasks/Layout/CenterOnCursorTask.js*/
 /*
-	This method should try to keep cursor item as close as possible to its previous position
+  This method should try to keep cursor item as close as possible to its previous position
 */
 primitives.orgdiagram.CenterOnCursorTask = function (layoutOptionsTask, currentControlSizeTask, currentScrollPositionTask, cursorItemTask, alignDiagramTask, createTransformTask, scaleOptionTask) {
   var _data = {
@@ -16850,41 +16805,41 @@ primitives.orgdiagram.CenterOnCursorTask = function (layoutOptionsTask, currentC
 
 /* /Controls/OrgDiagram/Tasks/Layout/CreateTransformTask.js*/
 primitives.orgdiagram.CreateTransformTask = function (orientationOptionTask, alignDiagramTask) {
-	var _data = {
-		transform: null
-	},
-	_activeTreeLevels;
+  var _data = {
+    transform: null
+  },
+    _activeTreeLevels;
 
-	function process() {
-		var orientationOptions = orientationOptionTask.getOptions();
+  function process() {
+    var orientationOptions = orientationOptionTask.getOptions();
 
-		var panelSize = new primitives.common.Size(alignDiagramTask.getContentSize());
+    var panelSize = new primitives.common.Size(alignDiagramTask.getContentSize());
 
-		_data.transform = new primitives.common.Transform();
-		_data.transform.setOrientation(orientationOptions.orientationType);
-		_data.transform.size = new primitives.common.Size(panelSize);
+    _data.transform = new primitives.common.Transform();
+    _data.transform.setOrientation(orientationOptions.orientationType);
+    _data.transform.size = new primitives.common.Size(panelSize);
 
-		return true;
-	}
+    return true;
+  }
 
-	function getTreeItemForMousePosition(x, y, gravityRadius) {
-		var result = null;
-		_data.transform.transformPoint(x, y, false, this, function (x, y) {
-			result = alignDiagramTask.getTreeItemForMousePosition(x, y, gravityRadius);
-		});
-		return result;
-	}
+  function getTreeItemForMousePosition(x, y, gravityRadius) {
+    var result = null;
+    _data.transform.transformPoint(x, y, false, this, function (x, y) {
+      result = alignDiagramTask.getTreeItemForMousePosition(x, y, gravityRadius);
+    });
+    return result;
+  }
 
-	function getTransform() {
-		return _data.transform;
-	}
+  function getTransform() {
+    return _data.transform;
+  }
 
-	return {
-		process: process,
-		getTransform: getTransform,
-		getTreeItemForMousePosition: getTreeItemForMousePosition,
-		description: "Create oordiante system tranfromation object."
-	};
+  return {
+    process: process,
+    getTransform: getTransform,
+    getTreeItemForMousePosition: getTreeItemForMousePosition,
+    description: "Create oordiante system tranfromation object."
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Layout/CurrentControlSizeTask.js*/
@@ -16977,588 +16932,588 @@ primitives.orgdiagram.CurrentScrollPositionTask = function (layoutOptionsTask) {
 
 /* /Controls/OrgDiagram/Tasks/Options/Annotations/BackgroundAnnotationOptionTask.js*/
 primitives.orgdiagram.BackgroundAnnotationOptionTask = function (splitAnnotationsOptionTask, defaultBackgroundAnnotationConfig) {
-	var _annotations = [],
-		_hash = {};
+  var _annotations = [],
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ArrayReader(
-			new primitives.common.ObjectReader({
-				items: new primitives.common.ArrayReader(
-					new primitives.common.ValueReader(["string", "number"], true),
-					true
-				),
-				includeChildren: new primitives.common.ValueReader(["boolean"], false, defaultBackgroundAnnotationConfig.includeChildren),
-				zOrderType: new primitives.common.EnumerationReader(primitives.common.ZOrderType, false, defaultBackgroundAnnotationConfig.zOrderType),
-				offset: new primitives.common.ObjectReader({
-					left: new primitives.common.ValueReader(["number"], false, defaultBackgroundAnnotationConfig.offset.left),
-					top: new primitives.common.ValueReader(["number"], false, defaultBackgroundAnnotationConfig.offset.top),
-					right: new primitives.common.ValueReader(["number"], false, defaultBackgroundAnnotationConfig.offset.right),
-					bottom: new primitives.common.ValueReader(["number"], false, defaultBackgroundAnnotationConfig.offset.bottom)
-				}, false, defaultBackgroundAnnotationConfig.offset),
-				lineWidth: new primitives.common.ValueReader(["number"], false, defaultBackgroundAnnotationConfig.lineWidth),
-				opacity: new primitives.common.ValueReader(["number"], false, defaultBackgroundAnnotationConfig.opacity),
-				borderColor: new primitives.common.ValueReader(["string"], false, defaultBackgroundAnnotationConfig.borderColor),
-				fillColor: new primitives.common.ValueReader(["string"], false, defaultBackgroundAnnotationConfig.fillColor),
-				lineType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultBackgroundAnnotationConfig.lineType),
-				selectItems: new primitives.common.ValueReader(["boolean"], false, defaultBackgroundAnnotationConfig.selectItems)
-			}),
-			false
-		);
+  var _dataTemplate = new primitives.common.ArrayReader(
+    new primitives.common.ObjectReader({
+      items: new primitives.common.ArrayReader(
+        new primitives.common.ValueReader(["string", "number"], true),
+        true
+      ),
+      includeChildren: new primitives.common.ValueReader(["boolean"], false, defaultBackgroundAnnotationConfig.includeChildren),
+      zOrderType: new primitives.common.EnumerationReader(primitives.common.ZOrderType, false, defaultBackgroundAnnotationConfig.zOrderType),
+      offset: new primitives.common.ObjectReader({
+        left: new primitives.common.ValueReader(["number"], false, defaultBackgroundAnnotationConfig.offset.left),
+        top: new primitives.common.ValueReader(["number"], false, defaultBackgroundAnnotationConfig.offset.top),
+        right: new primitives.common.ValueReader(["number"], false, defaultBackgroundAnnotationConfig.offset.right),
+        bottom: new primitives.common.ValueReader(["number"], false, defaultBackgroundAnnotationConfig.offset.bottom)
+      }, false, defaultBackgroundAnnotationConfig.offset),
+      lineWidth: new primitives.common.ValueReader(["number"], false, defaultBackgroundAnnotationConfig.lineWidth),
+      opacity: new primitives.common.ValueReader(["number"], false, defaultBackgroundAnnotationConfig.opacity),
+      borderColor: new primitives.common.ValueReader(["string"], false, defaultBackgroundAnnotationConfig.borderColor),
+      fillColor: new primitives.common.ValueReader(["string"], false, defaultBackgroundAnnotationConfig.fillColor),
+      lineType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultBackgroundAnnotationConfig.lineType),
+      selectItems: new primitives.common.ValueReader(["boolean"], false, defaultBackgroundAnnotationConfig.selectItems)
+    }),
+    false
+  );
 
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_annotations = _dataTemplate.read(_annotations, splitAnnotationsOptionTask.getAnnotations(4/*primitives.common.AnnotationType.Background*/, null), "annotations", context);
+    _annotations = _dataTemplate.read(_annotations, splitAnnotationsOptionTask.getAnnotations(4/*primitives.common.AnnotationType.Background*/, null), "annotations", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getAnnotations() {
-		return _annotations;
-	}
+  function getAnnotations() {
+    return _annotations;
+  }
 
-	return {
-		process: process,
-		getAnnotations: getAnnotations
-	};
+  return {
+    process: process,
+    getAnnotations: getAnnotations
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/Annotations/ConnectorAnnotationOptionTask.js*/
 primitives.orgdiagram.ConnectorAnnotationOptionTask = function (splitAnnotationsOptionTask, defaultConnectorAnnotationConfig, zOrderType) {
-	var _annotations = [],
-		_hash = {};
+  var _annotations = [],
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ArrayReader(
-			new primitives.common.ObjectReader({
-				zOrderType: new primitives.common.EnumerationReader(primitives.common.ZOrderType, false, defaultConnectorAnnotationConfig.zOrderType),
-				fromItem: new primitives.common.ValueReader(["string", "number"], true),
-				toItem: new primitives.common.ValueReader(["string", "number"], true),
-				connectorShapeType: new primitives.common.EnumerationReader(primitives.common.ShapeType, false, defaultConnectorAnnotationConfig.connectorShapeType),
-				connectorPlacementType: new primitives.common.EnumerationReader(primitives.common.ConnectorPlacementType, false, defaultConnectorAnnotationConfig.connectorPlacementType),
-				labelPlacementType: new primitives.common.EnumerationReader(primitives.common.ConnectorLabelPlacementType, false, defaultConnectorAnnotationConfig.labelPlacementType),
-				offset: new primitives.common.ObjectReader({
-					left: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.offset.left),
-					top: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.offset.top),
-					right: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.offset.right),
-					bottom: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.offset.bottom)
-				}, false, defaultConnectorAnnotationConfig.offset),
-				lineWidth: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.lineWidth),
-				color: new primitives.common.ValueReader(["string"], false, defaultConnectorAnnotationConfig.color),
-				lineType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultConnectorAnnotationConfig.lineType),
-				selectItems: new primitives.common.ValueReader(["boolean"], false, defaultConnectorAnnotationConfig.selectItems),
-				label: new primitives.common.ValueReader(["string", "object"], false, defaultConnectorAnnotationConfig.label),
-				labelSize: new primitives.common.ObjectReader({
-					width: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.labelSize.width),
-					height: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.labelSize.height)
-				}, false, defaultConnectorAnnotationConfig.labelSize)
-			}),
-			false
-		);
+  var _dataTemplate = new primitives.common.ArrayReader(
+    new primitives.common.ObjectReader({
+      zOrderType: new primitives.common.EnumerationReader(primitives.common.ZOrderType, false, defaultConnectorAnnotationConfig.zOrderType),
+      fromItem: new primitives.common.ValueReader(["string", "number"], true),
+      toItem: new primitives.common.ValueReader(["string", "number"], true),
+      connectorShapeType: new primitives.common.EnumerationReader(primitives.common.ShapeType, false, defaultConnectorAnnotationConfig.connectorShapeType),
+      connectorPlacementType: new primitives.common.EnumerationReader(primitives.common.ConnectorPlacementType, false, defaultConnectorAnnotationConfig.connectorPlacementType),
+      labelPlacementType: new primitives.common.EnumerationReader(primitives.common.ConnectorLabelPlacementType, false, defaultConnectorAnnotationConfig.labelPlacementType),
+      offset: new primitives.common.ObjectReader({
+        left: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.offset.left),
+        top: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.offset.top),
+        right: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.offset.right),
+        bottom: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.offset.bottom)
+      }, false, defaultConnectorAnnotationConfig.offset),
+      lineWidth: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.lineWidth),
+      color: new primitives.common.ValueReader(["string"], false, defaultConnectorAnnotationConfig.color),
+      lineType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultConnectorAnnotationConfig.lineType),
+      selectItems: new primitives.common.ValueReader(["boolean"], false, defaultConnectorAnnotationConfig.selectItems),
+      label: new primitives.common.ValueReader(["string", "object"], false, defaultConnectorAnnotationConfig.label),
+      labelSize: new primitives.common.ObjectReader({
+        width: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.labelSize.width),
+        height: new primitives.common.ValueReader(["number"], false, defaultConnectorAnnotationConfig.labelSize.height)
+      }, false, defaultConnectorAnnotationConfig.labelSize)
+    }),
+    false
+  );
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_annotations = _dataTemplate.read(_annotations, splitAnnotationsOptionTask.getAnnotations(0/*primitives.common.AnnotationType.Connector*/, zOrderType), "annotations", context);
+    _annotations = _dataTemplate.read(_annotations, splitAnnotationsOptionTask.getAnnotations(0/*primitives.common.AnnotationType.Connector*/, zOrderType), "annotations", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getAnnotations() {
-		return _annotations;
-	}
+  function getAnnotations() {
+    return _annotations;
+  }
 
-	return {
-		process: process,
-		getAnnotations: getAnnotations
-	};
+  return {
+    process: process,
+    getAnnotations: getAnnotations
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/Annotations/HighlightPathAnnotationOptionTask.js*/
 primitives.orgdiagram.HighlightPathAnnotationOptionTask = function (splitAnnotationsOptionTask, defaultHighlightPathAnnotationConfig, zOrderType) {
-	var _data = {},
-		_annotations = [],
-		_hash = {};
+  var _data = {},
+    _annotations = [],
+    _hash = {};
 
-	var _dataAnnotationsTemplate = new primitives.common.ArrayReader(
-			new primitives.common.ObjectReader({
-				zOrderType: new primitives.common.EnumerationReader(primitives.common.ZOrderType, false, defaultHighlightPathAnnotationConfig.zOrderType),
-				lineWidth: new primitives.common.ValueReader(["number"], false, defaultHighlightPathAnnotationConfig.lineWidth),
-				opacity: new primitives.common.ValueReader(["number"], false, defaultHighlightPathAnnotationConfig.opacity),
-				color: new primitives.common.ValueReader(["string"], false, defaultHighlightPathAnnotationConfig.color),
-				lineType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultHighlightPathAnnotationConfig.lineType),
-				items: new primitives.common.ArrayReader(
-					new primitives.common.ValueReader(["string", "number"], true),
-					false
-				),
-				selectItems: new primitives.common.ValueReader(["boolean"], false, defaultHighlightPathAnnotationConfig.selectItems),
-				showArrows: new primitives.common.ValueReader(["boolean"], false, defaultHighlightPathAnnotationConfig.showArrows)
-			},
-			false)
-		);
+  var _dataAnnotationsTemplate = new primitives.common.ArrayReader(
+    new primitives.common.ObjectReader({
+      zOrderType: new primitives.common.EnumerationReader(primitives.common.ZOrderType, false, defaultHighlightPathAnnotationConfig.zOrderType),
+      lineWidth: new primitives.common.ValueReader(["number"], false, defaultHighlightPathAnnotationConfig.lineWidth),
+      opacity: new primitives.common.ValueReader(["number"], false, defaultHighlightPathAnnotationConfig.opacity),
+      color: new primitives.common.ValueReader(["string"], false, defaultHighlightPathAnnotationConfig.color),
+      lineType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultHighlightPathAnnotationConfig.lineType),
+      items: new primitives.common.ArrayReader(
+        new primitives.common.ValueReader(["string", "number"], true),
+        false
+      ),
+      selectItems: new primitives.common.ValueReader(["boolean"], false, defaultHighlightPathAnnotationConfig.selectItems),
+      showArrows: new primitives.common.ValueReader(["boolean"], false, defaultHighlightPathAnnotationConfig.showArrows)
+    },
+      false)
+  );
 
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_annotations = _dataAnnotationsTemplate.read(_annotations, splitAnnotationsOptionTask.getAnnotations(2/*primitives.common.AnnotationType.HighlightPath*/, zOrderType), "annotations", context);
+    _annotations = _dataAnnotationsTemplate.read(_annotations, splitAnnotationsOptionTask.getAnnotations(2/*primitives.common.AnnotationType.HighlightPath*/, zOrderType), "annotations", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getAnnotations() {
-		return _annotations;
-	}
+  function getAnnotations() {
+    return _annotations;
+  }
 
-	return {
-		process: process,
-		getAnnotations: getAnnotations
-	};
+  return {
+    process: process,
+    getAnnotations: getAnnotations
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/Annotations/ShapeAnnotationOptionTask.js*/
 primitives.orgdiagram.ShapeAnnotationOptionTask = function (splitAnnotationsOptionTask, defaultShapeAnnotationConfig, zOrderType) {
-	var _annotations = [],
-		_hash = {};
+  var _annotations = [],
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ArrayReader(
-			new primitives.common.ObjectReader({
-				zOrderType: new primitives.common.EnumerationReader(primitives.common.ZOrderType, false, defaultShapeAnnotationConfig.zOrderType),
-				items: new primitives.common.ArrayReader(
-					new primitives.common.ValueReader(["string", "number"], true),
-					true
-				),
-				shapeType: new primitives.common.EnumerationReader(primitives.common.ShapeType, false, defaultShapeAnnotationConfig.shapeType),
-				offset: new primitives.common.ObjectReader({
-					left: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.offset.left),
-					top: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.offset.top),
-					right: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.offset.right),
-					bottom: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.offset.bottom)
-				}, false, defaultShapeAnnotationConfig.offset),
-				lineWidth: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.lineWidth),
-				cornerRadius: new primitives.common.ValueReader(["string"], false, defaultShapeAnnotationConfig.cornerRadius),
-				opacity: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.opacity),
-				borderColor: new primitives.common.ValueReader(["string"], false, defaultShapeAnnotationConfig.borderColor),
-				fillColor: new primitives.common.ValueReader(["string"], false, defaultShapeAnnotationConfig.fillColor),
-				lineType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultShapeAnnotationConfig.lineType),
-				selectItems: new primitives.common.ValueReader(["boolean"], false, defaultShapeAnnotationConfig.selectItems),
-				label: new primitives.common.ValueReader(["string", "object"], false, defaultShapeAnnotationConfig.label),
-				labelSize: new primitives.common.ObjectReader({
-					width: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.labelSize.width),
-					height: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.labelSize.height)
-				}, false, defaultShapeAnnotationConfig.labelSize),
-				labelPlacement: new primitives.common.EnumerationReader(primitives.common.PlacementType, false, defaultShapeAnnotationConfig.labelPlacement),
-				labelOffset: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.labelOffset)
-			},
-			false
-		)
-		);
+  var _dataTemplate = new primitives.common.ArrayReader(
+    new primitives.common.ObjectReader({
+      zOrderType: new primitives.common.EnumerationReader(primitives.common.ZOrderType, false, defaultShapeAnnotationConfig.zOrderType),
+      items: new primitives.common.ArrayReader(
+        new primitives.common.ValueReader(["string", "number"], true),
+        true
+      ),
+      shapeType: new primitives.common.EnumerationReader(primitives.common.ShapeType, false, defaultShapeAnnotationConfig.shapeType),
+      offset: new primitives.common.ObjectReader({
+        left: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.offset.left),
+        top: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.offset.top),
+        right: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.offset.right),
+        bottom: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.offset.bottom)
+      }, false, defaultShapeAnnotationConfig.offset),
+      lineWidth: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.lineWidth),
+      cornerRadius: new primitives.common.ValueReader(["string"], false, defaultShapeAnnotationConfig.cornerRadius),
+      opacity: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.opacity),
+      borderColor: new primitives.common.ValueReader(["string"], false, defaultShapeAnnotationConfig.borderColor),
+      fillColor: new primitives.common.ValueReader(["string"], false, defaultShapeAnnotationConfig.fillColor),
+      lineType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultShapeAnnotationConfig.lineType),
+      selectItems: new primitives.common.ValueReader(["boolean"], false, defaultShapeAnnotationConfig.selectItems),
+      label: new primitives.common.ValueReader(["string", "object"], false, defaultShapeAnnotationConfig.label),
+      labelSize: new primitives.common.ObjectReader({
+        width: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.labelSize.width),
+        height: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.labelSize.height)
+      }, false, defaultShapeAnnotationConfig.labelSize),
+      labelPlacement: new primitives.common.EnumerationReader(primitives.common.PlacementType, false, defaultShapeAnnotationConfig.labelPlacement),
+      labelOffset: new primitives.common.ValueReader(["number"], false, defaultShapeAnnotationConfig.labelOffset)
+    },
+      false
+    )
+  );
 
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_annotations = _dataTemplate.read(_annotations, splitAnnotationsOptionTask.getAnnotations(1/*primitives.common.AnnotationType.Shape*/, zOrderType), "annotations", context);
+    _annotations = _dataTemplate.read(_annotations, splitAnnotationsOptionTask.getAnnotations(1/*primitives.common.AnnotationType.Shape*/, zOrderType), "annotations", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getAnnotations() {
-		return _annotations;
-	}
+  function getAnnotations() {
+    return _annotations;
+  }
 
-	return {
-		process: process,
-		getAnnotations: getAnnotations
-	};
+  return {
+    process: process,
+    getAnnotations: getAnnotations
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/Annotations/SplitAnnotationsOptionTask.js*/
 primitives.orgdiagram.SplitAnnotationsOptionTask = function (optionsTask) {
-	var _data = {
-		annotations: {}
-	};
+  var _data = {
+    annotations: {}
+  };
 
-	function process() {
-		var options = optionsTask.getOptions(),
-			annotations = options.annotations,
-			index, len,
-			annotationConfig,
-			annotationType,
-			zOrderType,
-			key,
-			hash = {};
+  function process() {
+    var options = optionsTask.getOptions(),
+      annotations = options.annotations,
+      index, len,
+      annotationConfig,
+      annotationType,
+      zOrderType,
+      key,
+      hash = {};
 
-		if (primitives.common.isArray(annotations)) {
-			for (index = 0, len = annotations.length; index < len; index += 1) {
-				annotationConfig = annotations[index];
-				annotationType = annotationConfig.annotationType;
+    if (primitives.common.isArray(annotations)) {
+      for (index = 0, len = annotations.length; index < len; index += 1) {
+        annotationConfig = annotations[index];
+        annotationType = annotationConfig.annotationType;
 
-				switch (annotationType) {
-					case 1/*primitives.common.AnnotationType.Shape*/:
-					case 0/*primitives.common.AnnotationType.Connector*/:
-					case 2/*primitives.common.AnnotationType.HighlightPath*/:
-						switch (annotationConfig.zOrderType) {
-							case 1/*primitives.common.ZOrderType.Background*/:
-								zOrderType = 1/*primitives.common.ZOrderType.Background*/;
-								break;
-							case 2/*primitives.common.ZOrderType.Foreground*/:
-							case 0/*primitives.common.ZOrderType.Auto*/: //ignore jslint
-							default: 
-								zOrderType = 2/*primitives.common.ZOrderType.Foreground*/;
-								break;
-						}
-						break;
-					case 4/*primitives.common.AnnotationType.Background*/:
-					case 3/*primitives.common.AnnotationType.Label*/: //ignore jslint
-					default:
-						zOrderType = null;
-						break;
-				}
+        switch (annotationType) {
+          case 1/*primitives.common.AnnotationType.Shape*/:
+          case 0/*primitives.common.AnnotationType.Connector*/:
+          case 2/*primitives.common.AnnotationType.HighlightPath*/:
+            switch (annotationConfig.zOrderType) {
+              case 1/*primitives.common.ZOrderType.Background*/:
+                zOrderType = 1/*primitives.common.ZOrderType.Background*/;
+                break;
+              case 2/*primitives.common.ZOrderType.Foreground*/:
+              case 0/*primitives.common.ZOrderType.Auto*/: //ignore jslint
+              default:
+                zOrderType = 2/*primitives.common.ZOrderType.Foreground*/;
+                break;
+            }
+            break;
+          case 4/*primitives.common.AnnotationType.Background*/:
+          case 3/*primitives.common.AnnotationType.Label*/: //ignore jslint
+          default:
+            zOrderType = null;
+            break;
+        }
 
-				if (annotationType != null) {
-					key = annotationType * 1000 + (zOrderType || 0);
+        if (annotationType != null) {
+          key = annotationType * 1000 + (zOrderType || 0);
 
-					if (!hash.hasOwnProperty(key)) {
-						hash[key] = [];
-					}
-					hash[key].push(annotationConfig);
-				}
-			}
-		}
+          if (!hash.hasOwnProperty(key)) {
+            hash[key] = [];
+          }
+          hash[key].push(annotationConfig);
+        }
+      }
+    }
 
-		_data.annotations = hash;
+    _data.annotations = hash;
 
-		return true;
-	}
+    return true;
+  }
 
-	function getAnnotations(annotationType, zOrderType) {
-		var key = annotationType * 1000 + (zOrderType || 0);
-		return _data.annotations[key];
-	}
+  function getAnnotations(annotationType, zOrderType) {
+    var key = annotationType * 1000 + (zOrderType || 0);
+    return _data.annotations[key];
+  }
 
-	return {
-		process: process,
-		getAnnotations: getAnnotations
-	};
+  return {
+    process: process,
+    getAnnotations: getAnnotations
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/Selection/CursorItemOptionTask.js*/
 primitives.orgdiagram.CursorItemOptionTask = function (optionsTask, defaultConfig) {
-	var _data = {};
+  var _data = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-		cursorItem: new primitives.common.ValueReader(["string", "number"], true),
-		navigationMode: new primitives.common.EnumerationReader(primitives.common.NavigationMode, false, defaultConfig.navigationMode)
-	});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    cursorItem: new primitives.common.ValueReader(["string", "number"], true),
+    navigationMode: new primitives.common.EnumerationReader(primitives.common.NavigationMode, false, defaultConfig.navigationMode)
+  });
 
-	function process() {
-		var context = {
-			isChanged: false
-		};
+  function process() {
+    var context = {
+      isChanged: false
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getCursorItem() {
-		return _data.cursorItem;
-	}
+  function getCursorItem() {
+    return _data.cursorItem;
+  }
 
-	function hasCursorEnabled() {
-		switch (_data.navigationMode) {
-			case 0/*primitives.common.NavigationMode.Default*/:
-			case 1/*primitives.common.NavigationMode.CursorOnly*/:
-				return true;
-		}
-		return false;
-	}
+  function hasCursorEnabled() {
+    switch (_data.navigationMode) {
+      case 0/*primitives.common.NavigationMode.Default*/:
+      case 1/*primitives.common.NavigationMode.CursorOnly*/:
+        return true;
+    }
+    return false;
+  }
 
-	return {
-		process: process,
-		getCursorItem: getCursorItem,
-		hasCursorEnabled: hasCursorEnabled,
-		description: "Checks currenct cursor item option."
-	};
+  return {
+    process: process,
+    getCursorItem: getCursorItem,
+    hasCursorEnabled: hasCursorEnabled,
+    description: "Checks currenct cursor item option."
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/Selection/CursorSelectionPathModeOptionTask.js*/
 primitives.orgdiagram.CursorSelectionPathModeOptionTask = function (optionsTask, defaultConfig) {
-	var _data = {};
+  var _data = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-			selectionPathMode: new primitives.common.EnumerationReader(primitives.common.SelectionPathMode, false, defaultConfig.selectionPathMode)
-		});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    selectionPathMode: new primitives.common.EnumerationReader(primitives.common.SelectionPathMode, false, defaultConfig.selectionPathMode)
+  });
 
-	function process() {
-		var context = {
-			isChanged: false
-		};
+  function process() {
+    var context = {
+      isChanged: false
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getSelectionPathMode() {
-		return _data.selectionPathMode;
-	}
+  function getSelectionPathMode() {
+    return _data.selectionPathMode;
+  }
 
-	return {
-		process: process,
-		getSelectionPathMode: getSelectionPathMode,
-		description: "Checks cursor selection path option."
-	};
+  return {
+    process: process,
+    getSelectionPathMode: getSelectionPathMode,
+    description: "Checks cursor selection path option."
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/Selection/HighlightItemOptionTask.js*/
 primitives.orgdiagram.HighlightItemOptionTask = function (optionsTask, defaultConfig) {
-	var _data = {};
+  var _data = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-		highlightItem: new primitives.common.ValueReader(["string", "number"], true),
-		navigationMode: new primitives.common.EnumerationReader(primitives.common.NavigationMode, false, defaultConfig.navigationMode),
-		highlightGravityRadius: new primitives.common.ValueReader(["number"], false, defaultConfig.highlightGravityRadius)
-		});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    highlightItem: new primitives.common.ValueReader(["string", "number"], true),
+    navigationMode: new primitives.common.EnumerationReader(primitives.common.NavigationMode, false, defaultConfig.navigationMode),
+    highlightGravityRadius: new primitives.common.ValueReader(["number"], false, defaultConfig.highlightGravityRadius)
+  });
 
-	function process() {
-		var context = {
-			isChanged: false
-		};
+  function process() {
+    var context = {
+      isChanged: false
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getHighlightItem() {
-		return _data.highlightItem;
-	}
+  function getHighlightItem() {
+    return _data.highlightItem;
+  }
 
-	function getGravityRadius() {
-		return _data.highlightGravityRadius;
-	}
+  function getGravityRadius() {
+    return _data.highlightGravityRadius;
+  }
 
-	function hasHighlightEnabled() {
-		switch (_data.navigationMode) {
-			case 0/*primitives.common.NavigationMode.Default*/:
-			case 3/*primitives.common.NavigationMode.HighlightOnly*/:
-				return true;
-		}
-		return false;
-	}
+  function hasHighlightEnabled() {
+    switch (_data.navigationMode) {
+      case 0/*primitives.common.NavigationMode.Default*/:
+      case 3/*primitives.common.NavigationMode.HighlightOnly*/:
+        return true;
+    }
+    return false;
+  }
 
-	return {
-		process: process,
-		getHighlightItem: getHighlightItem,
-		hasHighlightEnabled: hasHighlightEnabled,
-		getGravityRadius: getGravityRadius,
-		description: "Checks highlight item option."
-	};
+  return {
+    process: process,
+    getHighlightItem: getHighlightItem,
+    hasHighlightEnabled: hasHighlightEnabled,
+    getGravityRadius: getGravityRadius,
+    description: "Checks highlight item option."
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/Selection/SelectedItemsOptionTask.js*/
 primitives.orgdiagram.SelectedItemsOptionTask = function (optionsTask) {
-	var _data = {},
-		_hash = {};
+  var _data = {},
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-			selectedItems: new primitives.common.ArrayReader(
-				new primitives.common.ValueReader(["string", "number"], true),
-				true
-				)
-		});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    selectedItems: new primitives.common.ArrayReader(
+      new primitives.common.ValueReader(["string", "number"], true),
+      true
+    )
+  });
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		},
-		options = optionsTask.getOptions();
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    },
+      options = optionsTask.getOptions();
 
-		_data = _dataTemplate.read(_data, options, "options", context);
-		return context.isChanged;
-	}
+    _data = _dataTemplate.read(_data, options, "options", context);
+    return context.isChanged;
+  }
 
-	function getSelectedItems() {
-		return _data.selectedItems;
-	}
+  function getSelectedItems() {
+    return _data.selectedItems;
+  }
 
-	return {
-		process: process,
-		getSelectedItems: getSelectedItems,
-		description: "Checks user selected items option."
-	};
+  return {
+    process: process,
+    getSelectedItems: getSelectedItems,
+    description: "Checks user selected items option."
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/CalloutOptionTask.js*/
 primitives.orgdiagram.CalloutOptionTask = function (optionsTask, defaultConfig, defaultItemConfig) {
-	var _data = {},
-		_hash = {};
+  var _data = {},
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-			calloutMaximumVisibility: new primitives.common.EnumerationReader(primitives.common.Visibility, false, defaultConfig.calloutMaximumVisibility),
-			showCallout: new primitives.common.ValueReader(["boolean"], false, defaultConfig.showCallout),
-			calloutPlacementOffset: new primitives.common.ValueReader(["number"], false, defaultConfig.calloutPlacementOffset),
-			orientationType: new primitives.common.EnumerationReader(primitives.common.OrientationType, false, defaultConfig.orientationType),
+  var _dataTemplate = new primitives.common.ObjectReader({
+    calloutMaximumVisibility: new primitives.common.EnumerationReader(primitives.common.Visibility, false, defaultConfig.calloutMaximumVisibility),
+    showCallout: new primitives.common.ValueReader(["boolean"], false, defaultConfig.showCallout),
+    calloutPlacementOffset: new primitives.common.ValueReader(["number"], false, defaultConfig.calloutPlacementOffset),
+    orientationType: new primitives.common.EnumerationReader(primitives.common.OrientationType, false, defaultConfig.orientationType),
 
-			defaultTemplateName: new primitives.common.ValueReader(["string"], true),
-			defaultCalloutTemplateName: new primitives.common.ValueReader(["string"], true),
+    defaultTemplateName: new primitives.common.ValueReader(["string"], true),
+    defaultCalloutTemplateName: new primitives.common.ValueReader(["string"], true),
 
-			calloutfillColor: new primitives.common.ValueReader(["string"], false, defaultConfig.calloutfillColor),
-			calloutBorderColor: new primitives.common.ValueReader(["string"], true),
-			calloutOffset: new primitives.common.ValueReader(["number"], false, defaultConfig.calloutOffset),
-			calloutCornerRadius: new primitives.common.ValueReader(["string"], false, defaultConfig.calloutCornerRadius),
-			calloutPointerWidth: new primitives.common.ValueReader(["string"], false, defaultConfig.calloutPointerWidth),
-			calloutLineWidth: new primitives.common.ValueReader(["number"], false, defaultConfig.calloutLineWidth),
-			calloutOpacity: new primitives.common.ValueReader(["number"], false, defaultConfig.calloutOpacity),
+    calloutfillColor: new primitives.common.ValueReader(["string"], false, defaultConfig.calloutfillColor),
+    calloutBorderColor: new primitives.common.ValueReader(["string"], true),
+    calloutOffset: new primitives.common.ValueReader(["number"], false, defaultConfig.calloutOffset),
+    calloutCornerRadius: new primitives.common.ValueReader(["string"], false, defaultConfig.calloutCornerRadius),
+    calloutPointerWidth: new primitives.common.ValueReader(["string"], false, defaultConfig.calloutPointerWidth),
+    calloutLineWidth: new primitives.common.ValueReader(["number"], false, defaultConfig.calloutLineWidth),
+    calloutOpacity: new primitives.common.ValueReader(["number"], false, defaultConfig.calloutOpacity),
 
-			items: new primitives.common.ArrayReader(
-				new primitives.common.ObjectReader({
-					id: new primitives.common.ValueReader(["string", "number"], true),
-					showCallout: new primitives.common.EnumerationReader(primitives.common.Enabled, false, defaultConfig.showCallout),
-					calloutTemplateName: new primitives.common.ValueReader(["string"], true),
-					templateName: new primitives.common.ValueReader(["string"], true)
-				}),
-				true,
-				"id"
-				)
-		});
+    items: new primitives.common.ArrayReader(
+      new primitives.common.ObjectReader({
+        id: new primitives.common.ValueReader(["string", "number"], true),
+        showCallout: new primitives.common.EnumerationReader(primitives.common.Enabled, false, defaultConfig.showCallout),
+        calloutTemplateName: new primitives.common.ValueReader(["string"], true),
+        templateName: new primitives.common.ValueReader(["string"], true)
+      }),
+      true,
+      "id"
+    )
+  });
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getItemOptions(itemid) {
-		return _hash["options-items"][itemid];
-	}
+  function getItemOptions(itemid) {
+    return _hash["options-items"][itemid];
+  }
 
-	function getOptions() {
-		return _data;
-	}
+  function getOptions() {
+    return _data;
+  }
 
-	return {
-		process: process,
-		getOptions: getOptions,
-		getItemOptions: getItemOptions,
-		description: "Checks item callout options."
-	};
+  return {
+    process: process,
+    getOptions: getOptions,
+    getItemOptions: getItemOptions,
+    description: "Checks item callout options."
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/ConnectorsOptionTask.js*/
 primitives.orgdiagram.ConnectorsOptionTask = function (optionsTask, defaultConfig) {
-	var _data = {},
-		_hash = {};
+  var _data = {},
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-		arrowsDirection: new primitives.common.EnumerationReader(primitives.common.GroupByType, false, defaultConfig.arrowsDirection),
-		showExtraArrows: new primitives.common.ValueReader(["boolean"], false, defaultConfig.showExtraArrows),
-		extraArrowsMinimumSpace: new primitives.common.ValueReader(["number"], false, defaultConfig.extraArrowsMinimumSpace),
-		connectorType: new primitives.common.EnumerationReader(primitives.common.ConnectorType, false, defaultConfig.hasOwnProperty("connectorType") ? defaultConfig.connectorType : 0/*primitives.common.ConnectorType.Squared*/),
-		showNeigboursConnectorsHighlighted: new primitives.common.EnumerationReader(primitives.common.ConnectorType, false, defaultConfig.hasOwnProperty("showNeigboursConnectorsHighlighted") ? defaultConfig.showNeigboursConnectorsHighlighted : false),
-		elbowType: new primitives.common.EnumerationReader(primitives.common.ElbowType, false, defaultConfig.elbowType),
-		bevelSize: new primitives.common.ValueReader(["number"], false, defaultConfig.bevelSize),
-		elbowDotSize: new primitives.common.ValueReader(["number"], false, defaultConfig.elbowDotSize),
-		linesColor: new primitives.common.ValueReader(["string"], false, defaultConfig.linesColor),
-		linesWidth: new primitives.common.ValueReader(["number"], false, defaultConfig.linesWidth),
-		linesType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultConfig.linesType),
-		highlightLinesColor: new primitives.common.ValueReader(["string"], false, defaultConfig.highlightLinesColor),
-		highlightLinesWidth: new primitives.common.ValueReader(["number"], false, defaultConfig.highlightLinesWidth),
-		highlightLinesType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultConfig.highlightLinesType)
-	});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    arrowsDirection: new primitives.common.EnumerationReader(primitives.common.GroupByType, false, defaultConfig.arrowsDirection),
+    showExtraArrows: new primitives.common.ValueReader(["boolean"], false, defaultConfig.showExtraArrows),
+    extraArrowsMinimumSpace: new primitives.common.ValueReader(["number"], false, defaultConfig.extraArrowsMinimumSpace),
+    connectorType: new primitives.common.EnumerationReader(primitives.common.ConnectorType, false, defaultConfig.hasOwnProperty("connectorType") ? defaultConfig.connectorType : 0/*primitives.common.ConnectorType.Squared*/),
+    showNeigboursConnectorsHighlighted: new primitives.common.EnumerationReader(primitives.common.ConnectorType, false, defaultConfig.hasOwnProperty("showNeigboursConnectorsHighlighted") ? defaultConfig.showNeigboursConnectorsHighlighted : false),
+    elbowType: new primitives.common.EnumerationReader(primitives.common.ElbowType, false, defaultConfig.elbowType),
+    bevelSize: new primitives.common.ValueReader(["number"], false, defaultConfig.bevelSize),
+    elbowDotSize: new primitives.common.ValueReader(["number"], false, defaultConfig.elbowDotSize),
+    linesColor: new primitives.common.ValueReader(["string"], false, defaultConfig.linesColor),
+    linesWidth: new primitives.common.ValueReader(["number"], false, defaultConfig.linesWidth),
+    linesType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultConfig.linesType),
+    highlightLinesColor: new primitives.common.ValueReader(["string"], false, defaultConfig.highlightLinesColor),
+    highlightLinesWidth: new primitives.common.ValueReader(["number"], false, defaultConfig.highlightLinesWidth),
+    highlightLinesType: new primitives.common.EnumerationReader(primitives.common.LineType, false, defaultConfig.highlightLinesType)
+  });
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getOptions() {
-		return _data;
-	}
+  function getOptions() {
+    return _data;
+  }
 
-	return {
-		process: process,
-		getOptions: getOptions,
-		description: "Checks connector lines drawing options."
-	};
+  return {
+    process: process,
+    getOptions: getOptions,
+    description: "Checks connector lines drawing options."
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/ItemsContentOptionTask.js*/
 primitives.orgdiagram.ItemsContentOptionTask = function (optionsTask, defaultItemConfig) {
-	var _data = {},
-		_hash = {},
-		_sourceHash = {};
+  var _data = {},
+    _hash = {},
+    _sourceHash = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-			items: new primitives.common.ArrayReader(
-				new primitives.common.ObjectReader({
-					id: new primitives.common.ValueReader(["string", "number"], true),
-					title: new primitives.common.ValueReader(["string"], true),
-					description: new primitives.common.ValueReader(["string"], true),
-					image: new primitives.common.ValueReader(["string"], true),
-					context: new primitives.common.ValueReader(["string", "number", "object"], true),
-					itemTitleColor: new primitives.common.ValueReader(["string"], false, defaultItemConfig.itemTitleColor),
-					groupTitle: new primitives.common.ValueReader(["string"], false, defaultItemConfig.groupTitle),
-					groupTitleColor: new primitives.common.ValueReader(["string"], false, defaultItemConfig.groupTitleColor)
-				}),
-				true,
-				"id",
-				true,
-				true
-				)
-		});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    items: new primitives.common.ArrayReader(
+      new primitives.common.ObjectReader({
+        id: new primitives.common.ValueReader(["string", "number"], true),
+        title: new primitives.common.ValueReader(["string"], true),
+        description: new primitives.common.ValueReader(["string"], true),
+        image: new primitives.common.ValueReader(["string"], true),
+        context: new primitives.common.ValueReader(["string", "number", "object"], true),
+        itemTitleColor: new primitives.common.ValueReader(["string"], false, defaultItemConfig.itemTitleColor),
+        groupTitle: new primitives.common.ValueReader(["string"], false, defaultItemConfig.groupTitle),
+        groupTitleColor: new primitives.common.ValueReader(["string"], false, defaultItemConfig.groupTitleColor)
+      }),
+      true,
+      "id",
+      true,
+      true
+    )
+  });
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash,
-			sourceHash: _sourceHash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash,
+      sourceHash: _sourceHash
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getItems() {
-		return _data.items;
-	}
+  function getItems() {
+    return _data.items;
+  }
 
-	function getConfig(itemId) {
-		return _sourceHash["options-items"][itemId];
-	}
+  function getConfig(itemId) {
+    return _sourceHash["options-items"][itemId];
+  }
 
-	return {
-		process: process,
-		getItems: getItems,
-		getConfig: getConfig,
-		description: "Checks items configuration options effecting their placement in layout."
-	};
+  return {
+    process: process,
+    getItems: getItems,
+    getConfig: getConfig,
+    description: "Checks items configuration options effecting their placement in layout."
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/ItemsOptionTask.js*/
@@ -17808,124 +17763,124 @@ primitives.orgdiagram.LayoutOptionsTask = function (getLayout, optionsTask) {
 
 /* /Controls/OrgDiagram/Tasks/Options/MinimizedItemsOptionTask.js*/
 primitives.orgdiagram.MinimizedItemsOptionTask = function (optionsTask) {
-	var _data = {},
-		_hash = {};
+  var _data = {},
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-			minimizedItemShapeType: new primitives.common.EnumerationReader(primitives.common.ShapeType, true),
-			items: new primitives.common.ArrayReader(
-				new primitives.common.ObjectReader({
-					id: new primitives.common.ValueReader(["string", "number"], true),
-					minimizedItemShapeType: new primitives.common.EnumerationReader(primitives.common.ShapeType, true),
-					itemTitleColor: new primitives.common.ValueReader(["string"], true)
-				}),
-				true,
-				"id"
-				)
-		});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    minimizedItemShapeType: new primitives.common.EnumerationReader(primitives.common.ShapeType, true),
+    items: new primitives.common.ArrayReader(
+      new primitives.common.ObjectReader({
+        id: new primitives.common.ValueReader(["string", "number"], true),
+        minimizedItemShapeType: new primitives.common.EnumerationReader(primitives.common.ShapeType, true),
+        itemTitleColor: new primitives.common.ValueReader(["string"], true)
+      }),
+      true,
+      "id"
+    )
+  });
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getItemOptions(itemid) {
-		return _hash["options-items"][itemid];
-	}
+  function getItemOptions(itemid) {
+    return _hash["options-items"][itemid];
+  }
 
-	function getOptions() {
-		return _data;
-	}
+  function getOptions() {
+    return _data;
+  }
 
-	return {
-		process: process,
-		getItemOptions: getItemOptions,
-		getOptions: getOptions,
-		description: "Checks minimized items drawing options."
-	};
+  return {
+    process: process,
+    getItemOptions: getItemOptions,
+    getOptions: getOptions,
+    description: "Checks minimized items drawing options."
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/OptionsTask.js*/
 primitives.orgdiagram.OptionsTask = function (getOptions) {
 
-	function process() {
-		return true;
-	}
+  function process() {
+    return true;
+  }
 
-	return {
-		process: process,
-		getOptions: getOptions,
-		description: "Raw options."
-	};
+  return {
+    process: process,
+    getOptions: getOptions,
+    description: "Raw options."
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/OrientationOptionTask.js*/
 primitives.orgdiagram.OrientationOptionTask = function (optionsTask, defaultConfig) {
-	var _data = {},
-		_hash = {};
+  var _data = {},
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-			orientationType: new primitives.common.EnumerationReader(primitives.common.OrientationType, false, defaultConfig.orientationType)
-		});
+  var _dataTemplate = new primitives.common.ObjectReader({
+    orientationType: new primitives.common.EnumerationReader(primitives.common.OrientationType, false, defaultConfig.orientationType)
+  });
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getOptions() {
-		return _data;
-	}
+  function getOptions() {
+    return _data;
+  }
 
-	return {
-		process: process,
-		getOptions: getOptions,
-		description: "Checks diagram orientation options."
-	};
+  return {
+    process: process,
+    getOptions: getOptions,
+    description: "Checks diagram orientation options."
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/ScaleOptionTask.js*/
 primitives.orgdiagram.ScaleOptionTask = function (optionsTask, defaultConfig) {
-	var _data = {},
-		_hash = {};
+  var _data = {},
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ObjectReader({
-			scale: new primitives.common.ValueReader(["number"], false, defaultConfig.scale),
-			minimumScale: new primitives.common.ValueReader(["number"], false, defaultConfig.minimumScale),
-			maximumScale: new primitives.common.ValueReader(["number"], false, defaultConfig.maximumScale)
-		});
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		};
+  var _dataTemplate = new primitives.common.ObjectReader({
+    scale: new primitives.common.ValueReader(["number"], false, defaultConfig.scale),
+    minimumScale: new primitives.common.ValueReader(["number"], false, defaultConfig.minimumScale),
+    maximumScale: new primitives.common.ValueReader(["number"], false, defaultConfig.maximumScale)
+  });
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
 
-		_data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getOptions() {
-		return _data;
-	}
+  function getOptions() {
+    return _data;
+  }
 
-	return {
-		process: process,
-		getOptions: getOptions,
-		description: "Checks control scale options."
-	};
+  return {
+    process: process,
+    getOptions: getOptions,
+    description: "Checks control scale options."
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Options/TemplatesOptionTask.js*/
@@ -18067,82 +18022,82 @@ primitives.orgdiagram.VisualTreeOptionTask = function (optionsTask, defaultConfi
 
 /* /Controls/OrgDiagram/Tasks/Renders/OffsetResolver/CollinearVectorBundle.js*/
 primitives.orgdiagram.CollinearVectorBundle = function () {
-	var _boundingRect = new primitives.common.Rect(),
-		_vectors = [],
-		_continuations = [];
+  var _boundingRect = new primitives.common.Rect(),
+    _vectors = [],
+    _continuations = [];
 
-	function addVector(vector, continuation) {
-		_vectors.push(vector);
-		_continuations.push(continuation);
+  function addVector(vector, continuation) {
+    _vectors.push(vector);
+    _continuations.push(continuation);
 
-		_boundingRect.addRect(vector.from.x, vector.from.y);
-		_boundingRect.addRect(vector.to.x, vector.to.y);
-	}
+    _boundingRect.addRect(vector.from.x, vector.from.y);
+    _boundingRect.addRect(vector.to.x, vector.to.y);
+  }
 
-	function loopProjections(callback) { // calback(from, to)
-		var index, len,
-			vector;
-		if (_boundingRect.width > _boundingRect.height) {
-			for (index = 0, len = _vectors.length; index < len; index += 1) {
-				vector = _vectors[index];
-				callback(vector.from.x, vector.to.x, _continuations[index]);
-			}
-		} else {
-			for (index = 0, len = _vectors.length; index < len; index += 1) {
-				vector = _vectors[index];
-				callback(vector.from.y, vector.to.y, _continuations[index]);
-			}
-		}
-	}
+  function loopProjections(callback) { // calback(from, to)
+    var index, len,
+      vector;
+    if (_boundingRect.width > _boundingRect.height) {
+      for (index = 0, len = _vectors.length; index < len; index += 1) {
+        vector = _vectors[index];
+        callback(vector.from.x, vector.to.x, _continuations[index]);
+      }
+    } else {
+      for (index = 0, len = _vectors.length; index < len; index += 1) {
+        vector = _vectors[index];
+        callback(vector.from.y, vector.to.y, _continuations[index]);
+      }
+    }
+  }
 
-	function resolve() {
-		if (_vectors.length == 1) {
-			_continuations[0](0, 1, 1);
-		} else {
-			var stackSegments = primitives.common.pile();
-			loopProjections(function (from, to, continuation) {
-				stackSegments.add(from, to, continuation);
-			});
+  function resolve() {
+    if (_vectors.length == 1) {
+      _continuations[0](0, 1, 1);
+    } else {
+      var stackSegments = primitives.common.pile();
+      loopProjections(function (from, to, continuation) {
+        stackSegments.add(from, to, continuation);
+      });
 
-			var totalOffset = stackSegments.resolve(this, function (from, to, context, offset, bundleSize, direction) {
-				context(offset, bundleSize, direction);
-			});
-		}
-	}
+      var totalOffset = stackSegments.resolve(this, function (from, to, context, offset, bundleSize, direction) {
+        context(offset, bundleSize, direction);
+      });
+    }
+  }
 
-	return {
-		addVector: addVector,
-		resolve: resolve
-	};
+  return {
+    addVector: addVector,
+    resolve: resolve
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Renders/OffsetResolver/ConnectorAnnotationOffsetResolver.js*/
 primitives.orgdiagram.ConnectorAnnotationOffsetResolver = function () {
-	var _bundles = {};
+  var _bundles = {};
 
-	function getOffset(vector, callback) {
-		var key = vector.getLineKey();
+  function getOffset(vector, callback) {
+    var key = vector.getLineKey();
 
-		if (!_bundles.hasOwnProperty(key)) {
-			_bundles[key] = new primitives.orgdiagram.CollinearVectorBundle();
-		}
+    if (!_bundles.hasOwnProperty(key)) {
+      _bundles[key] = new primitives.orgdiagram.CollinearVectorBundle();
+    }
 
-		_bundles[key].addVector(vector, callback);
-	}
+    _bundles[key].addVector(vector, callback);
+  }
 
-	function resolve() {
-		for (var key in _bundles) {
-			if (_bundles.hasOwnProperty(key)) {
-				var bundle = _bundles[key];
-				bundle.resolve();
-			}
-		}
-	}
+  function resolve() {
+    for (var key in _bundles) {
+      if (_bundles.hasOwnProperty(key)) {
+        var bundle = _bundles[key];
+        bundle.resolve();
+      }
+    }
+  }
 
-	return {
-		getOffset: getOffset,
-		resolve: resolve
-	};
+  return {
+    getOffset: getOffset,
+    resolve: resolve
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Renders/DrawBackgroundAnnotationTask.js*/
@@ -18772,868 +18727,868 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
 
 /* /Controls/OrgDiagram/Tasks/Renders/DrawHighlightPathAnnotationTask.js*/
 primitives.orgdiagram.DrawHighlightPathAnnotationTask = function (getGraphics, connectorsOptionTask, highlightPathAnnotationOptionTask, connectionsGraphTask, zOrderType) {
-	function process() {
-		var graph = connectionsGraphTask.getGraph(),
-			highlightOptions = connectorsOptionTask.getOptions(),
-			annotations = highlightPathAnnotationOptionTask.getAnnotations(),
-			graphics = getGraphics();
+  function process() {
+    var graph = connectionsGraphTask.getGraph(),
+      highlightOptions = connectorsOptionTask.getOptions(),
+      annotations = highlightPathAnnotationOptionTask.getAnnotations(),
+      graphics = getGraphics();
 
-		switch (zOrderType) {
-			case 1/*primitives.common.ZOrderType.Background*/://ignore jslint
-				graphics.reset("placeholder", 5/*primitives.common.Layers.BackgroundHighlightPathAnnotations*/);
-				break;
-			case 2/*primitives.common.ZOrderType.Foreground*/://ignore jslint
-				graphics.reset("placeholder", 7/*primitives.common.Layers.ForegroundHighlightPathAnnotations*/);
-				break;
-		}
+    switch (zOrderType) {
+      case 1/*primitives.common.ZOrderType.Background*/://ignore jslint
+        graphics.reset("placeholder", 5/*primitives.common.Layers.BackgroundHighlightPathAnnotations*/);
+        break;
+      case 2/*primitives.common.ZOrderType.Foreground*/://ignore jslint
+        graphics.reset("placeholder", 7/*primitives.common.Layers.ForegroundHighlightPathAnnotations*/);
+        break;
+    }
 
-		drawAnnotations(graphics, highlightOptions, annotations, graph);
+    drawAnnotations(graphics, highlightOptions, annotations, graph);
 
-		return false;
-	}
+    return false;
+  }
 
-	function drawAnnotations(graphics, highlightOptions, annotations, graph) {
-		var index, len,
-			index2, len2,
-			index3, len3,
-			firstItemId, nextItemId,
-			treeItem,
-			path,
-			items,
-			connectorEdge,
-			annotationConfig,
-			panel, buffer,
-			from, to;
+  function drawAnnotations(graphics, highlightOptions, annotations, graph) {
+    var index, len,
+      index2, len2,
+      index3, len3,
+      firstItemId, nextItemId,
+      treeItem,
+      path,
+      items,
+      connectorEdge,
+      annotationConfig,
+      panel, buffer,
+      from, to;
 
-		if (annotations.length > 0) {
-			buffer = new primitives.common.PolylinesBuffer();
+    if (annotations.length > 0) {
+      buffer = new primitives.common.PolylinesBuffer();
 
-			switch (zOrderType) {
-				case 1/*primitives.common.ZOrderType.Background*/://ignore jslint
-					panel = graphics.activate("placeholder", 5/*primitives.common.Layers.BackgroundHighlightPathAnnotations*/);
-					break;
-				case 2/*primitives.common.ZOrderType.Foreground*/://ignore jslint
-					panel = graphics.activate("placeholder", 7/*primitives.common.Layers.ForegroundHighlightPathAnnotations*/);
-					break;
-			}
+      switch (zOrderType) {
+        case 1/*primitives.common.ZOrderType.Background*/://ignore jslint
+          panel = graphics.activate("placeholder", 5/*primitives.common.Layers.BackgroundHighlightPathAnnotations*/);
+          break;
+        case 2/*primitives.common.ZOrderType.Foreground*/://ignore jslint
+          panel = graphics.activate("placeholder", 7/*primitives.common.Layers.ForegroundHighlightPathAnnotations*/);
+          break;
+      }
 
-			/* group path segments by from node */
-			var pairs = {};
-			for (index = 0, len = annotations.length; index < len; index += 1) {
-				annotationConfig = annotations[index];
-				if (annotationConfig.items != null && annotationConfig.items.length > 0) {
-					items = annotationConfig.items.slice(0);
-					firstItemId = items[0];
-					if (graph.hasNode(firstItemId)) {
-						for (index2 = 1, len2 = items.length; index2 < len2; index2 += 1) {
-							nextItemId = items[index2];
-							if (graph.hasNode(nextItemId)) {
-								if (pairs.hasOwnProperty(firstItemId)) {
-									pairs[firstItemId].push(nextItemId);
-								} else {
-									pairs[firstItemId] = [nextItemId];
-								}
-								firstItemId = nextItemId;
-							}
-						}
-					}
-				}
-			}
+      /* group path segments by from node */
+      var pairs = {};
+      for (index = 0, len = annotations.length; index < len; index += 1) {
+        annotationConfig = annotations[index];
+        if (annotationConfig.items != null && annotationConfig.items.length > 0) {
+          items = annotationConfig.items.slice(0);
+          firstItemId = items[0];
+          if (graph.hasNode(firstItemId)) {
+            for (index2 = 1, len2 = items.length; index2 < len2; index2 += 1) {
+              nextItemId = items[index2];
+              if (graph.hasNode(nextItemId)) {
+                if (pairs.hasOwnProperty(firstItemId)) {
+                  pairs[firstItemId].push(nextItemId);
+                } else {
+                  pairs[firstItemId] = [nextItemId];
+                }
+                firstItemId = nextItemId;
+              }
+            }
+          }
+        }
+      }
 
-			/* get shortest paths */
-			var paths = {};
-			for (from in pairs) {
-				paths[from] = {};
-				if (pairs.hasOwnProperty(from)) {
-					graph.getShortestPath(this, from, pairs[from], function (connectorEdge, fromItem, toItem) {
-						return connectorEdge.weight;
-					}, function (path2, to2) {
-						paths[from][to2] = path2;
-					}); //ignore jslint
-				}
-			}
+      /* get shortest paths */
+      var paths = {};
+      for (from in pairs) {
+        paths[from] = {};
+        if (pairs.hasOwnProperty(from)) {
+          graph.getShortestPath(this, from, pairs[from], function (connectorEdge, fromItem, toItem) {
+            return connectorEdge.weight;
+          }, function (path2, to2) {
+            paths[from][to2] = path2;
+          }); //ignore jslint
+        }
+      }
 
-			/* trace annotations */
-			for (index = 0, len = annotations.length; index < len; index += 1) {
-				annotationConfig = annotations[index];
+      /* trace annotations */
+      for (index = 0, len = annotations.length; index < len; index += 1) {
+        annotationConfig = annotations[index];
 
-				var paletteItem = new primitives.common.PaletteItem({
-					lineColor: (annotationConfig.color != null ? annotationConfig.color : highlightOptions.highlightLinesColor),
-					lineWidth: (annotationConfig.lineWidth != null ? annotationConfig.lineWidth : highlightOptions.highlightLinesWidth),
-					lineType: (annotationConfig.lineType != null ? annotationConfig.lineType : highlightOptions.highlightLinesType),
-					fillColor: null,
-					opacity: annotationConfig.opacity
-				});
-				var polyline = buffer.getPolyline(paletteItem);
+        var paletteItem = new primitives.common.PaletteItem({
+          lineColor: (annotationConfig.color != null ? annotationConfig.color : highlightOptions.highlightLinesColor),
+          lineWidth: (annotationConfig.lineWidth != null ? annotationConfig.lineWidth : highlightOptions.highlightLinesWidth),
+          lineType: (annotationConfig.lineType != null ? annotationConfig.lineType : highlightOptions.highlightLinesType),
+          fillColor: null,
+          opacity: annotationConfig.opacity
+        });
+        var polyline = buffer.getPolyline(paletteItem);
 
-				if (annotationConfig.items != null && annotationConfig.items.length > 0) {
-					items = annotationConfig.items.slice(0);
-					firstItemId = items[0];
+        if (annotationConfig.items != null && annotationConfig.items.length > 0) {
+          items = annotationConfig.items.slice(0);
+          firstItemId = items[0];
 
-					if (graph.hasNode(firstItemId)) {
-						for (index2 = 1, len2 = items.length; index2 < len2; index2 += 1) {
-							nextItemId = items[index2];
-							if (graph.hasNode(nextItemId)) {
-								path = paths[firstItemId][nextItemId] || [];
-								for (index3 = path.length - 2; index3 >= 0; index3 -= 1) {
-									from = path[index3 + 1];
-									to = path[index3];
-									connectorEdge = graph.edge(from, to);
-									if (connectorEdge.from == from) {
-										connectorEdge.polyline.clone().mergeTo(polyline);
-									} else {
-										polyline.addInverted(connectorEdge.polyline.clone());
-									}
-									if (annotationConfig.showArrows) {
-										if (to == connectorEdge.parentsArrowId || to == connectorEdge.childrenArrowId) {
-											polyline.addArrow(annotationConfig.lineWidth, function (arrowPolyline) {
-												arrowPolyline.mergeTo(buffer.getPolyline(arrowPolyline.paletteItem));
-											}); //ignore jslint
-										}
-									}
-								}
+          if (graph.hasNode(firstItemId)) {
+            for (index2 = 1, len2 = items.length; index2 < len2; index2 += 1) {
+              nextItemId = items[index2];
+              if (graph.hasNode(nextItemId)) {
+                path = paths[firstItemId][nextItemId] || [];
+                for (index3 = path.length - 2; index3 >= 0; index3 -= 1) {
+                  from = path[index3 + 1];
+                  to = path[index3];
+                  connectorEdge = graph.edge(from, to);
+                  if (connectorEdge.from == from) {
+                    connectorEdge.polyline.clone().mergeTo(polyline);
+                  } else {
+                    polyline.addInverted(connectorEdge.polyline.clone());
+                  }
+                  if (annotationConfig.showArrows) {
+                    if (to == connectorEdge.parentsArrowId || to == connectorEdge.childrenArrowId) {
+                      polyline.addArrow(annotationConfig.lineWidth, function (arrowPolyline) {
+                        arrowPolyline.mergeTo(buffer.getPolyline(arrowPolyline.paletteItem));
+                      }); //ignore jslint
+                    }
+                  }
+                }
 
-								firstItemId = nextItemId;
-							}
-						}
-					}
-				}
-			}
+                firstItemId = nextItemId;
+              }
+            }
+          }
+        }
+      }
 
-			graphics.polylinesBuffer(buffer);
-		}
-	}
+      graphics.polylinesBuffer(buffer);
+    }
+  }
 
-	return {
-		process: process
-	};
+  return {
+    process: process
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Renders/DrawHighlightTask.js*/
 primitives.orgdiagram.DrawHighlightTask = function (getGraphics, createTranfromTask, applyLayoutChangesTask,
-	combinedContextsTask,
-	alignDiagramTask, itemTemplateParamsTask,
-	highlightItemTask, cursorItemTask, selectedItemsTask) {
-	var _graphics,
-		_transform,
-		_levelsOfLabels = [];
+  combinedContextsTask,
+  alignDiagramTask, itemTemplateParamsTask,
+  highlightItemTask, cursorItemTask, selectedItemsTask) {
+  var _graphics,
+    _transform,
+    _levelsOfLabels = [];
 
-	function process() {
-		var treeItemId = highlightItemTask.getHighlightTreeItem();
+  function process() {
+    var treeItemId = highlightItemTask.getHighlightTreeItem();
 
-		_graphics = getGraphics();
-		_graphics.reset("placeholder", 8/*primitives.common.Layers.Highlight*/);
+    _graphics = getGraphics();
+    _graphics.reset("placeholder", 8/*primitives.common.Layers.Highlight*/);
 
-		if (treeItemId != null) {
-			_transform = createTranfromTask.getTransform();
-			drawHighlight(treeItemId);
-		}
+    if (treeItemId != null) {
+      _transform = createTranfromTask.getTransform();
+      drawHighlight(treeItemId);
+    }
 
-		return false;
-	}
+    return false;
+  }
 
-	function drawHighlight(treeItemId) {
-		var uiHash,
-			panel = _graphics.activate("placeholder", 8/*primitives.common.Layers.Highlight*/),
-			treeItemPosition = alignDiagramTask.getItemPosition(treeItemId),
-			actualPosition = treeItemPosition.actualPosition,
-			templateParams = itemTemplateParamsTask.getTemplateParams(treeItemId),
-			template = templateParams.template,
-			templateConfig = template.templateConfig,
-			highlightPadding = templateConfig.highlightPadding;
+  function drawHighlight(treeItemId) {
+    var uiHash,
+      panel = _graphics.activate("placeholder", 8/*primitives.common.Layers.Highlight*/),
+      treeItemPosition = alignDiagramTask.getItemPosition(treeItemId),
+      actualPosition = treeItemPosition.actualPosition,
+      templateParams = itemTemplateParamsTask.getTemplateParams(treeItemId),
+      template = templateParams.template,
+      templateConfig = template.templateConfig,
+      highlightPadding = templateConfig.highlightPadding;
 
-		uiHash = new primitives.common.RenderEventArgs();
-		uiHash.context = combinedContextsTask.getConfig(treeItemId);
-		uiHash.isCursor = (cursorItemTask.getCursorTreeItem() == treeItemId);
-		uiHash.isSelected = selectedItemsTask.isSelected(treeItemId);
-		uiHash.templateName = templateConfig.name;
+    uiHash = new primitives.common.RenderEventArgs();
+    uiHash.context = combinedContextsTask.getConfig(treeItemId);
+    uiHash.isCursor = (cursorItemTask.getCursorTreeItem() == treeItemId);
+    uiHash.isSelected = selectedItemsTask.isSelected(treeItemId);
+    uiHash.templateName = templateConfig.name;
 
-		_transform.transformRect(actualPosition.x, actualPosition.y, actualPosition.width, actualPosition.height, true,
-			this, function (x, y, width, height) {
-				var position = new primitives.common.Rect(0, 0, Math.round(width), Math.round(height));
-				position.offset(highlightPadding.left, highlightPadding.top, highlightPadding.right, highlightPadding.bottom);
+    _transform.transformRect(actualPosition.x, actualPosition.y, actualPosition.width, actualPosition.height, true,
+      this, function (x, y, width, height) {
+        var position = new primitives.common.Rect(0, 0, Math.round(width), Math.round(height));
+        position.offset(highlightPadding.left, highlightPadding.top, highlightPadding.right, highlightPadding.bottom);
 
-				var element;
-				if (treeItemPosition.actualVisibility == 1/*primitives.common.Visibility.Normal*/) {
-					element = _graphics.template(
-						x
-						, y
-						, width
-						, height
-						, position.x
-						, position.y
-						, position.width
-						, position.height
-						, template.highlightTemplate.template()
-						, template.highlightTemplate.getHashCode()
-						, template.highlightTemplate.render
-						, uiHash
-						, { "borderWidth": templateConfig.highlightBorderWidth }
-						);
-				} else {
-					element = _graphics.template(
-						Math.round(x)
-						, Math.round(y)
-						, Math.round(width)
-						, Math.round(height)
-						, Math.round(position.x)
-						, Math.round(position.y)
-						, Math.round(position.width)
-						, Math.round(position.height)
-						, template.dotHighlightTemplate.template()
-						, template.dotHighlightTemplate.getHashCode()
-						, template.dotHighlightTemplate.render
-						, uiHash
-						, { "borderWidth": templateConfig.highlightBorderWidth }
-						);
-				}
-			});
-	}
+        var element;
+        if (treeItemPosition.actualVisibility == 1/*primitives.common.Visibility.Normal*/) {
+          element = _graphics.template(
+            x
+            , y
+            , width
+            , height
+            , position.x
+            , position.y
+            , position.width
+            , position.height
+            , template.highlightTemplate.template()
+            , template.highlightTemplate.getHashCode()
+            , template.highlightTemplate.render
+            , uiHash
+            , { "borderWidth": templateConfig.highlightBorderWidth }
+          );
+        } else {
+          element = _graphics.template(
+            Math.round(x)
+            , Math.round(y)
+            , Math.round(width)
+            , Math.round(height)
+            , Math.round(position.x)
+            , Math.round(position.y)
+            , Math.round(position.width)
+            , Math.round(position.height)
+            , template.dotHighlightTemplate.template()
+            , template.dotHighlightTemplate.getHashCode()
+            , template.dotHighlightTemplate.render
+            , uiHash
+            , { "borderWidth": templateConfig.highlightBorderWidth }
+          );
+        }
+      });
+  }
 
-	return {
-		process: process
-	};
+  return {
+    process: process
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Renders/DrawItemLabelsTask.js*/
 primitives.orgdiagram.DrawItemLabelsTask = function (getGraphics, createTranfromTask, applyLayoutChangesTask,
-	labelsOptionTask,
-	alignDiagramTask) {
+  labelsOptionTask,
+  alignDiagramTask) {
 
-	function process() {
-		var labelsOption = labelsOptionTask.getOptions();
+  function process() {
+    var labelsOption = labelsOptionTask.getOptions();
 
-		var params = {
-			graphics: getGraphics(),
-			transform: createTranfromTask.getTransform(),
-			treeItemsPositions: alignDiagramTask.getItemsPositions()
-		};
+    var params = {
+      graphics: getGraphics(),
+      transform: createTranfromTask.getTransform(),
+      treeItemsPositions: alignDiagramTask.getItemsPositions()
+    };
 
-		var options = {
-			showLabels: labelsOption.showLabels,
-			labelFontSize: labelsOption.labelFontSize,
-			labelFontFamily: labelsOption.labelFontFamily,
-			labelFontStyle: labelsOption.labelFontStyle,
-			labelFontWeight: labelsOption.labelFontWeight,
-			labelColor: labelsOption.labelColor,
-			itemsOptions: labelsOptionTask.getItemsOptions(),
-			labelSize: labelsOption.labelSize,
-			labelOrientation: labelsOption.labelOrientation,
-			labelPlacement: labelsOption.labelPlacement,
-			labelOffset: labelsOption.labelOffset
-		};
+    var options = {
+      showLabels: labelsOption.showLabels,
+      labelFontSize: labelsOption.labelFontSize,
+      labelFontFamily: labelsOption.labelFontFamily,
+      labelFontStyle: labelsOption.labelFontStyle,
+      labelFontWeight: labelsOption.labelFontWeight,
+      labelColor: labelsOption.labelColor,
+      itemsOptions: labelsOptionTask.getItemsOptions(),
+      labelSize: labelsOption.labelSize,
+      labelOrientation: labelsOption.labelOrientation,
+      labelPlacement: labelsOption.labelPlacement,
+      labelOffset: labelsOption.labelOffset
+    };
 
-		params.graphics.reset("placeholder", 10/*primitives.common.Layers.Label*/);
+    params.graphics.reset("placeholder", 10/*primitives.common.Layers.Label*/);
 
-		redrawLabels(params, options);
+    redrawLabels(params, options);
 
-		return false;
-	}
+    return false;
+  }
 
-	function redrawLabels(params, options) {
-		var labels = [];
-		if (options.showLabels == 0/*primitives.common.Enabled.Auto*/ || options.showLabels == 1/*primitives.common.Enabled.True*/) {
-			for (var treeItemId in params.treeItemsPositions) {
-				if (params.treeItemsPositions.hasOwnProperty(treeItemId)) {
-					var labelOptions = options.itemsOptions[treeItemId],
-						treeItemPosition = params.treeItemsPositions[treeItemId],
-						actualPosition = treeItemPosition.actualPosition;
+  function redrawLabels(params, options) {
+    var labels = [];
+    if (options.showLabels == 0/*primitives.common.Enabled.Auto*/ || options.showLabels == 1/*primitives.common.Enabled.True*/) {
+      for (var treeItemId in params.treeItemsPositions) {
+        if (params.treeItemsPositions.hasOwnProperty(treeItemId)) {
+          var labelOptions = options.itemsOptions[treeItemId],
+            treeItemPosition = params.treeItemsPositions[treeItemId],
+            actualPosition = treeItemPosition.actualPosition;
 
-					if (labelOptions != null) {
-						params.transform.transformRect(actualPosition.x, actualPosition.y, actualPosition.width, actualPosition.height, true,
-							this, function (x, y, width, height) {
+          if (labelOptions != null) {
+            params.transform.transformRect(actualPosition.x, actualPosition.y, actualPosition.width, actualPosition.height, true,
+              this, function (x, y, width, height) {
 
-								switch (treeItemPosition.actualVisibility) {
-									case 1/*primitives.common.Visibility.Normal*/:
-										if (options.showLabels == 0/*primitives.common.Enabled.Auto*/) {
-											// Don't allow labels overlap normal items in Auto mode
-											label = new primitives.common.Label(x, y, width, height);
-											label.weight = 10000;
-											label.labelType = 1/*primitives.common.LabelType.Dummy*/;
-											labels.push(label);
-										}
-										break;
-									case 2/*primitives.common.Visibility.Dot*/:
-									case 3/*primitives.common.Visibility.Line*/:
-										var label = createLabel(x, y, width, height, labelOptions, treeItemPosition, options);
-										if (label != null) {
-											labels.push(label);
-										}
-										break;
-									default:
-										break;
-								}
-							});//ignore jslint
-					}
-				}
-			}
-		}
+                switch (treeItemPosition.actualVisibility) {
+                  case 1/*primitives.common.Visibility.Normal*/:
+                    if (options.showLabels == 0/*primitives.common.Enabled.Auto*/) {
+                      // Don't allow labels overlap normal items in Auto mode
+                      label = new primitives.common.Label(x, y, width, height);
+                      label.weight = 10000;
+                      label.labelType = 1/*primitives.common.LabelType.Dummy*/;
+                      labels.push(label);
+                    }
+                    break;
+                  case 2/*primitives.common.Visibility.Dot*/:
+                  case 3/*primitives.common.Visibility.Line*/:
+                    var label = createLabel(x, y, width, height, labelOptions, treeItemPosition, options);
+                    if (label != null) {
+                      labels.push(label);
+                    }
+                    break;
+                  default:
+                    break;
+                }
+              });//ignore jslint
+          }
+        }
+      }
+    }
 
-		/* Auto resolve overllapings between nodes */
-		if (options.showLabels == 0/*primitives.common.Enabled.Auto*/) {
-			primitives.common.getCrossingRectangles(this, labels, function (label1, label2) {
-				if (label1.isActive && label2.isActive) {
-					switch (label1.labelType) {
-						case 1/*primitives.common.LabelType.Dummy*/:
-							switch (label2.labelType) {
-								case 1/*primitives.common.LabelType.Dummy*/:
-									break;
-								case 0/*primitives.common.LabelType.Regular*/:
-									label2.isActive = false;
-									break;
-								case 2/*primitives.common.LabelType.Fixed*/:
-									label2.isActive = false;
-									break;
-							}
-							break;
-						case 2/*primitives.common.LabelType.Fixed*/:
-							switch (label2.labelType) {
-								case 1/*primitives.common.LabelType.Dummy*/:
-									label1.isActive = false;
-									break;
-								case 0/*primitives.common.LabelType.Regular*/:
-									label2.isActive = false;
-									break;
-								case 2/*primitives.common.LabelType.Fixed*/:
-									break;
-							}
-							break;
-						case 0/*primitives.common.LabelType.Regular*/:
-							switch (label2.labelType) {
-								case 1/*primitives.common.LabelType.Dummy*/:
-									label1.isActive = false;
-									break;
-								case 0/*primitives.common.LabelType.Regular*/:
-									if (label1.weight <= label2.weight) {
-										label1.isActive = false;
-									} else {
-										label2.isActive = false;
-									}
-									break;
-								case 2/*primitives.common.LabelType.Fixed*/:
-									label1.isActive = false;
-									break;
-							}
-							break;
-					}
-				}
-			});
-		}
+    /* Auto resolve overllapings between nodes */
+    if (options.showLabels == 0/*primitives.common.Enabled.Auto*/) {
+      primitives.common.getCrossingRectangles(this, labels, function (label1, label2) {
+        if (label1.isActive && label2.isActive) {
+          switch (label1.labelType) {
+            case 1/*primitives.common.LabelType.Dummy*/:
+              switch (label2.labelType) {
+                case 1/*primitives.common.LabelType.Dummy*/:
+                  break;
+                case 0/*primitives.common.LabelType.Regular*/:
+                  label2.isActive = false;
+                  break;
+                case 2/*primitives.common.LabelType.Fixed*/:
+                  label2.isActive = false;
+                  break;
+              }
+              break;
+            case 2/*primitives.common.LabelType.Fixed*/:
+              switch (label2.labelType) {
+                case 1/*primitives.common.LabelType.Dummy*/:
+                  label1.isActive = false;
+                  break;
+                case 0/*primitives.common.LabelType.Regular*/:
+                  label2.isActive = false;
+                  break;
+                case 2/*primitives.common.LabelType.Fixed*/:
+                  break;
+              }
+              break;
+            case 0/*primitives.common.LabelType.Regular*/:
+              switch (label2.labelType) {
+                case 1/*primitives.common.LabelType.Dummy*/:
+                  label1.isActive = false;
+                  break;
+                case 0/*primitives.common.LabelType.Regular*/:
+                  if (label1.weight <= label2.weight) {
+                    label1.isActive = false;
+                  } else {
+                    label2.isActive = false;
+                  }
+                  break;
+                case 2/*primitives.common.LabelType.Fixed*/:
+                  label1.isActive = false;
+                  break;
+              }
+              break;
+          }
+        }
+      });
+    }
 
-		/* Draw labels */
-		params.graphics.activate("placeholder", 10/*primitives.common.Layers.Label*/);
-		var attr = {
-			"fontSize": options.labelFontSize,
-			"fontFamily": options.labelFontFamily,
-			"fontStyle": options.labelFontStyle,
-			"fontWeight": options.labelFontWeight,
-			"fontColor": options.labelColor
-		};
+    /* Draw labels */
+    params.graphics.activate("placeholder", 10/*primitives.common.Layers.Label*/);
+    var attr = {
+      "fontSize": options.labelFontSize,
+      "fontFamily": options.labelFontFamily,
+      "fontStyle": options.labelFontStyle,
+      "fontWeight": options.labelFontWeight,
+      "fontColor": options.labelColor
+    };
 
-		for (var index = 0, len = labels.length; index < len; index += 1) {
-			var label = labels[index];
-			if (label.isActive) {
-				switch (label.labelType) {
-					case 0/*primitives.common.LabelType.Regular*/:
-					case 2/*primitives.common.LabelType.Fixed*/:
-						params.graphics.text(label.x, label.y, label.width, label.height, label.text,
-							label.labelOrientation,
-							label.horizontalAlignmentType,
-							label.verticalAlignmentType,
-							attr);
-						break;
-				}
-			}
-		}
-	}
+    for (var index = 0, len = labels.length; index < len; index += 1) {
+      var label = labels[index];
+      if (label.isActive) {
+        switch (label.labelType) {
+          case 0/*primitives.common.LabelType.Regular*/:
+          case 2/*primitives.common.LabelType.Fixed*/:
+            params.graphics.text(label.x, label.y, label.width, label.height, label.text,
+              label.labelOrientation,
+              label.horizontalAlignmentType,
+              label.verticalAlignmentType,
+              attr);
+            break;
+        }
+      }
+    }
+  }
 
-	function createLabel(x, y, width, height, labelOptions, treeItemPosition, options) {
-		var result = null,
-			labelWidth,
-			labelHeight,
-			labelSize,
-			labelPlacement,
-			weight;
+  function createLabel(x, y, width, height, labelOptions, treeItemPosition, options) {
+    var result = null,
+      labelWidth,
+      labelHeight,
+      labelSize,
+      labelPlacement,
+      weight;
 
 
-		if (!primitives.common.isNullOrEmpty(labelOptions.label)) {
-			var labelType = getLabelType(treeItemPosition.actualVisibility, labelOptions.showLabel, options.showLabels);
+    if (!primitives.common.isNullOrEmpty(labelOptions.label)) {
+      var labelType = getLabelType(treeItemPosition.actualVisibility, labelOptions.showLabel, options.showLabels);
 
-			switch (labelType) {
-				case 0/*primitives.common.LabelType.Regular*/:
-					weight = treeItemPosition.leftPadding + treeItemPosition.rightPadding;
-					break;
-				case 2/*primitives.common.LabelType.Fixed*/:
-					weight = 10000;
-					break;
-				case 3/*primitives.common.LabelType.None*/:
-					weight = 0;
-					break;
-			}
+      switch (labelType) {
+        case 0/*primitives.common.LabelType.Regular*/:
+          weight = treeItemPosition.leftPadding + treeItemPosition.rightPadding;
+          break;
+        case 2/*primitives.common.LabelType.Fixed*/:
+          weight = 10000;
+          break;
+        case 3/*primitives.common.LabelType.None*/:
+          weight = 0;
+          break;
+      }
 
-			if (labelType != 3/*primitives.common.LabelType.None*/) {
-				labelSize = (labelOptions.labelSize != null) ? labelOptions.labelSize : options.labelSize;
+      if (labelType != 3/*primitives.common.LabelType.None*/) {
+        labelSize = (labelOptions.labelSize != null) ? labelOptions.labelSize : options.labelSize;
 
-				var labelOrientation = (labelOptions.labelOrientation != 3/*primitives.text.TextOrientationType.Auto*/) ? labelOptions.labelOrientation :
-					(options.labelOrientation != 3/*primitives.text.TextOrientationType.Auto*/) ? options.labelOrientation :
-						0/*primitives.text.TextOrientationType.Horizontal*/;
+        var labelOrientation = (labelOptions.labelOrientation != 3/*primitives.text.TextOrientationType.Auto*/) ? labelOptions.labelOrientation :
+          (options.labelOrientation != 3/*primitives.text.TextOrientationType.Auto*/) ? options.labelOrientation :
+            0/*primitives.text.TextOrientationType.Horizontal*/;
 
-				labelPlacement = (labelOptions.labelPlacement != 0/*primitives.common.PlacementType.Auto*/) ? labelOptions.labelPlacement :
-					(options.labelPlacement != 0/*primitives.common.PlacementType.Auto*/) ? options.labelPlacement :
-					1/*primitives.common.PlacementType.Top*/;
+        labelPlacement = (labelOptions.labelPlacement != 0/*primitives.common.PlacementType.Auto*/) ? labelOptions.labelPlacement :
+          (options.labelPlacement != 0/*primitives.common.PlacementType.Auto*/) ? options.labelPlacement :
+            1/*primitives.common.PlacementType.Top*/;
 
-				switch (labelOrientation) {
-					case 0/*primitives.text.TextOrientationType.Horizontal*/:
-						labelWidth = labelSize.width;
-						labelHeight = labelSize.height;
-						break;
-					case 1/*primitives.text.TextOrientationType.RotateLeft*/:
-					case 2/*primitives.text.TextOrientationType.RotateRight*/:
-						labelHeight = labelSize.width;
-						labelWidth = labelSize.height;
-						break;
-				}
+        switch (labelOrientation) {
+          case 0/*primitives.text.TextOrientationType.Horizontal*/:
+            labelWidth = labelSize.width;
+            labelHeight = labelSize.height;
+            break;
+          case 1/*primitives.text.TextOrientationType.RotateLeft*/:
+          case 2/*primitives.text.TextOrientationType.RotateRight*/:
+            labelHeight = labelSize.width;
+            labelWidth = labelSize.height;
+            break;
+        }
 
-				var position = getLabelPosition(labelPlacement, labelOrientation, x, y, width, height, labelWidth, labelHeight, options.labelOffset);
+        var position = getLabelPosition(labelPlacement, labelOrientation, x, y, width, height, labelWidth, labelHeight, options.labelOffset);
 
-				result = new primitives.common.Label(position.position);
-				result.labelType = labelType;
-				result.weight = weight;
-				result.text = labelOptions.label;
-				
+        result = new primitives.common.Label(position.position);
+        result.labelType = labelType;
+        result.weight = weight;
+        result.text = labelOptions.label;
 
-				result.labelOrientation = labelOrientation;
-				result.horizontalAlignmentType = position.horizontalAlignmentType;
-				result.verticalAlignmentType = position.verticalAlignmentType;
-			}
-		}
-		return result;
-	}
 
-	function getLabelType(actualVisibility, showLabel, showLabels) {
-		var result = 3/*primitives.common.LabelType.None*/;
-		switch (showLabel) {
-			case 0/*primitives.common.Enabled.Auto*/:
-				switch (showLabels) {
-					case 0/*primitives.common.Enabled.Auto*/:
-						switch (actualVisibility) {
-							case 3/*primitives.common.Visibility.Line*/:
-							case 2/*primitives.common.Visibility.Dot*/:
-								result = 0/*primitives.common.LabelType.Regular*/;
-								break;
-							default:
-								break;
-						}
-						break;
-					case 2/*primitives.common.Enabled.False*/:
-						break;
-					case 1/*primitives.common.Enabled.True*/:
-						result = 2/*primitives.common.LabelType.Fixed*/;
-						break;
-				}
-				break;
-			case 2/*primitives.common.Enabled.False*/:
-				break;
-			case 1/*primitives.common.Enabled.True*/:
-				result = 2/*primitives.common.LabelType.Fixed*/;
-				break;
-		}
-		return result;
-	}
+        result.labelOrientation = labelOrientation;
+        result.horizontalAlignmentType = position.horizontalAlignmentType;
+        result.verticalAlignmentType = position.verticalAlignmentType;
+      }
+    }
+    return result;
+  }
 
-	function getLabelPosition(labelPlacement, labelOrientation, x, y, width, height, labelWidth, labelHeight, labelOffset) {
-		var position,
-			horizontalAlignmentType,
-			verticalAlignmentType;
+  function getLabelType(actualVisibility, showLabel, showLabels) {
+    var result = 3/*primitives.common.LabelType.None*/;
+    switch (showLabel) {
+      case 0/*primitives.common.Enabled.Auto*/:
+        switch (showLabels) {
+          case 0/*primitives.common.Enabled.Auto*/:
+            switch (actualVisibility) {
+              case 3/*primitives.common.Visibility.Line*/:
+              case 2/*primitives.common.Visibility.Dot*/:
+                result = 0/*primitives.common.LabelType.Regular*/;
+                break;
+              default:
+                break;
+            }
+            break;
+          case 2/*primitives.common.Enabled.False*/:
+            break;
+          case 1/*primitives.common.Enabled.True*/:
+            result = 2/*primitives.common.LabelType.Fixed*/;
+            break;
+        }
+        break;
+      case 2/*primitives.common.Enabled.False*/:
+        break;
+      case 1/*primitives.common.Enabled.True*/:
+        result = 2/*primitives.common.LabelType.Fixed*/;
+        break;
+    }
+    return result;
+  }
 
-		switch (labelPlacement) {
-			case 0/*primitives.common.PlacementType.Auto*/:
-			case 1/*primitives.common.PlacementType.Top*/:
-				position = new primitives.common.Rect(x + width / 2.0 - labelWidth / 2.0, y - labelOffset - labelHeight, labelWidth, labelHeight);
-				switch (labelOrientation) {
-					case 0/*primitives.text.TextOrientationType.Horizontal*/:
-						horizontalAlignmentType = 0/*primitives.common.HorizontalAlignmentType.Center*/;
-						verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
-						break;
-					case 1/*primitives.text.TextOrientationType.RotateLeft*/:
-						horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
-						verticalAlignmentType = 1/*primitives.common.VerticalAlignmentType.Middle*/;
-						break;
-					case 2/*primitives.text.TextOrientationType.RotateRight*/:
-						horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
-						verticalAlignmentType = 1/*primitives.common.VerticalAlignmentType.Middle*/;
-						break;
-				}
-				break;
-			case 2/*primitives.common.PlacementType.TopRight*/:
-			case 11/*primitives.common.PlacementType.RightTop*/:
-				position = new primitives.common.Rect(x + width + labelOffset, y - labelOffset - labelHeight, labelWidth, labelHeight);
-				switch (labelOrientation) {
-					case 0/*primitives.text.TextOrientationType.Horizontal*/:
-						horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
-						verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
-						break;
-					case 1/*primitives.text.TextOrientationType.RotateLeft*/:
-						horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
-						verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
-						break;
-					case 2/*primitives.text.TextOrientationType.RotateRight*/:
-						horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
-						verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
-						break;
-				}
-				break;
-			case 3/*primitives.common.PlacementType.Right*/:
-				position = new primitives.common.Rect(x + width + labelOffset, y + height / 2.0 - labelHeight / 2.0, labelWidth, labelHeight);
-				switch (labelOrientation) {
-					case 0/*primitives.text.TextOrientationType.Horizontal*/:
-						horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
-						verticalAlignmentType = 1/*primitives.common.VerticalAlignmentType.Middle*/;
-						break;
-					case 1/*primitives.text.TextOrientationType.RotateLeft*/:
-						horizontalAlignmentType = 0/*primitives.common.HorizontalAlignmentType.Center*/;
-						verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
-						break;
-					case 2/*primitives.text.TextOrientationType.RotateRight*/:
-						horizontalAlignmentType = 0/*primitives.common.HorizontalAlignmentType.Center*/;
-						verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
-						break;
-				}
-				break;
-			case 4/*primitives.common.PlacementType.BottomRight*/:
-			case 12/*primitives.common.PlacementType.RightBottom*/:
-				position = new primitives.common.Rect(x + width + labelOffset, y + height + labelOffset, labelWidth, labelHeight);
-				switch (labelOrientation) {
-					case 0/*primitives.text.TextOrientationType.Horizontal*/:
-						horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
-						verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
-						break;
-					case 1/*primitives.text.TextOrientationType.RotateLeft*/:
-						horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
-						verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
-						break;
-					case 2/*primitives.text.TextOrientationType.RotateRight*/:
-						horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
-						verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
-						break;
-				}
-				break;
-			case 5/*primitives.common.PlacementType.Bottom*/:
-				position = new primitives.common.Rect(x + width / 2.0 - labelWidth / 2.0, y + height + labelOffset, labelWidth, labelHeight);
-				switch (labelOrientation) {
-					case 0/*primitives.text.TextOrientationType.Horizontal*/:
-						horizontalAlignmentType = 0/*primitives.common.HorizontalAlignmentType.Center*/;
-						verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
-						break;
-					case 1/*primitives.text.TextOrientationType.RotateLeft*/:
-						horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
-						verticalAlignmentType = 1/*primitives.common.VerticalAlignmentType.Middle*/;
-						break;
-					case 2/*primitives.text.TextOrientationType.RotateRight*/:
-						horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
-						verticalAlignmentType = 1/*primitives.common.VerticalAlignmentType.Middle*/;
-						break;
-				}
-				break;
-			case 6/*primitives.common.PlacementType.BottomLeft*/:
-			case 10/*primitives.common.PlacementType.LeftBottom*/:
-				position = new primitives.common.Rect(x - labelWidth - labelOffset, y + height + labelOffset, labelWidth, labelHeight);
-				switch (labelOrientation) {
-					case 0/*primitives.text.TextOrientationType.Horizontal*/:
-						horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
-						verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
-						break;
-					case 1/*primitives.text.TextOrientationType.RotateLeft*/:
-						horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
-						verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
-						break;
-					case 2/*primitives.text.TextOrientationType.RotateRight*/:
-						horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
-						verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
-						break;
-				}
-				break;
-			case 7/*primitives.common.PlacementType.Left*/:
-				position = new primitives.common.Rect(x - labelWidth - labelOffset, y + height / 2.0 - labelHeight / 2.0, labelWidth, labelHeight);
-				switch (labelOrientation) {
-					case 0/*primitives.text.TextOrientationType.Horizontal*/:
-						horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
-						verticalAlignmentType = 1/*primitives.common.VerticalAlignmentType.Middle*/;
-						break;
-					case 1/*primitives.text.TextOrientationType.RotateLeft*/:
-						horizontalAlignmentType = 0/*primitives.common.HorizontalAlignmentType.Center*/;
-						verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
-						break;
-					case 2/*primitives.text.TextOrientationType.RotateRight*/:
-						horizontalAlignmentType = 0/*primitives.common.HorizontalAlignmentType.Center*/;
-						verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
-						break;
-				}
-				break;
-			case 8/*primitives.common.PlacementType.TopLeft*/:
-			case 9/*primitives.common.PlacementType.LeftTop*/:
-				position = new primitives.common.Rect(x - labelWidth - labelOffset, y - labelOffset - labelHeight, labelWidth, labelHeight);
-				switch (labelOrientation) {
-					case 0/*primitives.text.TextOrientationType.Horizontal*/:
-						horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
-						verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
-						break;
-					case 1/*primitives.text.TextOrientationType.RotateLeft*/:
-						horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
-						verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
-						break;
-					case 2/*primitives.text.TextOrientationType.RotateRight*/:
-						horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
-						verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
-						break;
-				}
-				break;
-		}
+  function getLabelPosition(labelPlacement, labelOrientation, x, y, width, height, labelWidth, labelHeight, labelOffset) {
+    var position,
+      horizontalAlignmentType,
+      verticalAlignmentType;
 
-		return {
-			position: position,
-			horizontalAlignmentType: horizontalAlignmentType,
-			verticalAlignmentType: verticalAlignmentType
-		};
-	}
+    switch (labelPlacement) {
+      case 0/*primitives.common.PlacementType.Auto*/:
+      case 1/*primitives.common.PlacementType.Top*/:
+        position = new primitives.common.Rect(x + width / 2.0 - labelWidth / 2.0, y - labelOffset - labelHeight, labelWidth, labelHeight);
+        switch (labelOrientation) {
+          case 0/*primitives.text.TextOrientationType.Horizontal*/:
+            horizontalAlignmentType = 0/*primitives.common.HorizontalAlignmentType.Center*/;
+            verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
+            break;
+          case 1/*primitives.text.TextOrientationType.RotateLeft*/:
+            horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
+            verticalAlignmentType = 1/*primitives.common.VerticalAlignmentType.Middle*/;
+            break;
+          case 2/*primitives.text.TextOrientationType.RotateRight*/:
+            horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
+            verticalAlignmentType = 1/*primitives.common.VerticalAlignmentType.Middle*/;
+            break;
+        }
+        break;
+      case 2/*primitives.common.PlacementType.TopRight*/:
+      case 11/*primitives.common.PlacementType.RightTop*/:
+        position = new primitives.common.Rect(x + width + labelOffset, y - labelOffset - labelHeight, labelWidth, labelHeight);
+        switch (labelOrientation) {
+          case 0/*primitives.text.TextOrientationType.Horizontal*/:
+            horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
+            verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
+            break;
+          case 1/*primitives.text.TextOrientationType.RotateLeft*/:
+            horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
+            verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
+            break;
+          case 2/*primitives.text.TextOrientationType.RotateRight*/:
+            horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
+            verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
+            break;
+        }
+        break;
+      case 3/*primitives.common.PlacementType.Right*/:
+        position = new primitives.common.Rect(x + width + labelOffset, y + height / 2.0 - labelHeight / 2.0, labelWidth, labelHeight);
+        switch (labelOrientation) {
+          case 0/*primitives.text.TextOrientationType.Horizontal*/:
+            horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
+            verticalAlignmentType = 1/*primitives.common.VerticalAlignmentType.Middle*/;
+            break;
+          case 1/*primitives.text.TextOrientationType.RotateLeft*/:
+            horizontalAlignmentType = 0/*primitives.common.HorizontalAlignmentType.Center*/;
+            verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
+            break;
+          case 2/*primitives.text.TextOrientationType.RotateRight*/:
+            horizontalAlignmentType = 0/*primitives.common.HorizontalAlignmentType.Center*/;
+            verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
+            break;
+        }
+        break;
+      case 4/*primitives.common.PlacementType.BottomRight*/:
+      case 12/*primitives.common.PlacementType.RightBottom*/:
+        position = new primitives.common.Rect(x + width + labelOffset, y + height + labelOffset, labelWidth, labelHeight);
+        switch (labelOrientation) {
+          case 0/*primitives.text.TextOrientationType.Horizontal*/:
+            horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
+            verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
+            break;
+          case 1/*primitives.text.TextOrientationType.RotateLeft*/:
+            horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
+            verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
+            break;
+          case 2/*primitives.text.TextOrientationType.RotateRight*/:
+            horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
+            verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
+            break;
+        }
+        break;
+      case 5/*primitives.common.PlacementType.Bottom*/:
+        position = new primitives.common.Rect(x + width / 2.0 - labelWidth / 2.0, y + height + labelOffset, labelWidth, labelHeight);
+        switch (labelOrientation) {
+          case 0/*primitives.text.TextOrientationType.Horizontal*/:
+            horizontalAlignmentType = 0/*primitives.common.HorizontalAlignmentType.Center*/;
+            verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
+            break;
+          case 1/*primitives.text.TextOrientationType.RotateLeft*/:
+            horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
+            verticalAlignmentType = 1/*primitives.common.VerticalAlignmentType.Middle*/;
+            break;
+          case 2/*primitives.text.TextOrientationType.RotateRight*/:
+            horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
+            verticalAlignmentType = 1/*primitives.common.VerticalAlignmentType.Middle*/;
+            break;
+        }
+        break;
+      case 6/*primitives.common.PlacementType.BottomLeft*/:
+      case 10/*primitives.common.PlacementType.LeftBottom*/:
+        position = new primitives.common.Rect(x - labelWidth - labelOffset, y + height + labelOffset, labelWidth, labelHeight);
+        switch (labelOrientation) {
+          case 0/*primitives.text.TextOrientationType.Horizontal*/:
+            horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
+            verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
+            break;
+          case 1/*primitives.text.TextOrientationType.RotateLeft*/:
+            horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
+            verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
+            break;
+          case 2/*primitives.text.TextOrientationType.RotateRight*/:
+            horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
+            verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
+            break;
+        }
+        break;
+      case 7/*primitives.common.PlacementType.Left*/:
+        position = new primitives.common.Rect(x - labelWidth - labelOffset, y + height / 2.0 - labelHeight / 2.0, labelWidth, labelHeight);
+        switch (labelOrientation) {
+          case 0/*primitives.text.TextOrientationType.Horizontal*/:
+            horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
+            verticalAlignmentType = 1/*primitives.common.VerticalAlignmentType.Middle*/;
+            break;
+          case 1/*primitives.text.TextOrientationType.RotateLeft*/:
+            horizontalAlignmentType = 0/*primitives.common.HorizontalAlignmentType.Center*/;
+            verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
+            break;
+          case 2/*primitives.text.TextOrientationType.RotateRight*/:
+            horizontalAlignmentType = 0/*primitives.common.HorizontalAlignmentType.Center*/;
+            verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
+            break;
+        }
+        break;
+      case 8/*primitives.common.PlacementType.TopLeft*/:
+      case 9/*primitives.common.PlacementType.LeftTop*/:
+        position = new primitives.common.Rect(x - labelWidth - labelOffset, y - labelOffset - labelHeight, labelWidth, labelHeight);
+        switch (labelOrientation) {
+          case 0/*primitives.text.TextOrientationType.Horizontal*/:
+            horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
+            verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
+            break;
+          case 1/*primitives.text.TextOrientationType.RotateLeft*/:
+            horizontalAlignmentType = 1/*primitives.common.HorizontalAlignmentType.Left*/;
+            verticalAlignmentType = 2/*primitives.common.VerticalAlignmentType.Bottom*/;
+            break;
+          case 2/*primitives.text.TextOrientationType.RotateRight*/:
+            horizontalAlignmentType = 2/*primitives.common.HorizontalAlignmentType.Right*/;
+            verticalAlignmentType = 0/*primitives.common.VerticalAlignmentType.Top*/;
+            break;
+        }
+        break;
+    }
 
-	return {
-		process: process
-	};
+    return {
+      position: position,
+      horizontalAlignmentType: horizontalAlignmentType,
+      verticalAlignmentType: verticalAlignmentType
+    };
+  }
+
+  return {
+    process: process
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Renders/DrawMinimizedItemsTask.js*/
 primitives.orgdiagram.DrawMinimizedItemsTask = function (getGraphics, createTranfromTask, applyLayoutChangesTask,
-	minimizedItemsOptionTask, itemTemplateParamsTask, alignDiagramTask) {
-	var _graphics,
-		_transform,
-		_debug = false,
-		_options,
-		_positions;
+  minimizedItemsOptionTask, itemTemplateParamsTask, alignDiagramTask) {
+  var _graphics,
+    _transform,
+    _debug = false,
+    _options,
+    _positions;
 
-	function process() {
+  function process() {
 
-		_graphics = getGraphics();
+    _graphics = getGraphics();
 
-		_transform = createTranfromTask.getTransform();
-		_options = minimizedItemsOptionTask.getOptions();
-		_positions = alignDiagramTask.getItemsPositions();
+    _transform = createTranfromTask.getTransform();
+    _options = minimizedItemsOptionTask.getOptions();
+    _positions = alignDiagramTask.getItemsPositions();
 
-		_graphics.reset("placeholder", 9/*primitives.common.Layers.Marker*/);
+    _graphics.reset("placeholder", 9/*primitives.common.Layers.Marker*/);
 
-		drawMinimizedItems();
+    drawMinimizedItems();
 
-		return false;
-	}
+    return false;
+  }
 
-	function drawMinimizedItems() {
-		var treeLevel,
-			uiHash,
-			element,
-			markers = new primitives.common.PolylinesBuffer(),
-			paletteItems = {},
-			polyline,
-			index,
-			len,
-			label,
-			marker = new primitives.common.Marker(),
-			itemTitleColor,
-			itemFillColor,
-			minimizedItemShapeType,
-			minimizedItemCornerRadius,
-			treeItemPosition,
-			actualPosition,
-			minimizedItemsOptions,
-			templateParams,
-			templateConfig;
+  function drawMinimizedItems() {
+    var treeLevel,
+      uiHash,
+      element,
+      markers = new primitives.common.PolylinesBuffer(),
+      paletteItems = {},
+      polyline,
+      index,
+      len,
+      label,
+      marker = new primitives.common.Marker(),
+      itemTitleColor,
+      itemFillColor,
+      minimizedItemShapeType,
+      minimizedItemCornerRadius,
+      treeItemPosition,
+      actualPosition,
+      minimizedItemsOptions,
+      templateParams,
+      templateConfig;
 
-		for (var treeItemId in _positions) {
-			if (_positions.hasOwnProperty(treeItemId)) {
-				treeItemPosition = _positions[treeItemId],
-				actualPosition = treeItemPosition.actualPosition,
-				minimizedItemsOptions = minimizedItemsOptionTask.getItemOptions(treeItemId);
+    for (var treeItemId in _positions) {
+      if (_positions.hasOwnProperty(treeItemId)) {
+        treeItemPosition = _positions[treeItemId],
+          actualPosition = treeItemPosition.actualPosition,
+          minimizedItemsOptions = minimizedItemsOptionTask.getItemOptions(treeItemId);
 
-				_transform.transformRect(actualPosition.x, actualPosition.y, actualPosition.width, actualPosition.height, true,
-					this, function (x, y, width, height) {
-						switch (treeItemPosition.actualVisibility) {
-							case 2/*primitives.common.Visibility.Dot*/:
-								templateParams = itemTemplateParamsTask.getTemplateParams(treeItemId);
-								templateConfig = templateParams.template.templateConfig;
+        _transform.transformRect(actualPosition.x, actualPosition.y, actualPosition.width, actualPosition.height, true,
+          this, function (x, y, width, height) {
+            switch (treeItemPosition.actualVisibility) {
+              case 2/*primitives.common.Visibility.Dot*/:
+                templateParams = itemTemplateParamsTask.getTemplateParams(treeItemId);
+                templateConfig = templateParams.template.templateConfig;
 
-								itemTitleColor = null;
-								itemFillColor = null;
-								minimizedItemShapeType = null;
-								minimizedItemCornerRadius = 0;
+                itemTitleColor = null;
+                itemFillColor = null;
+                minimizedItemShapeType = null;
+                minimizedItemCornerRadius = 0;
 
-								/* use individual item options first */
-								if (minimizedItemsOptions != null) {
-									itemTitleColor = minimizedItemsOptions.itemTitleColor;
-									itemFillColor = minimizedItemsOptions.itemTitleColor;
-									minimizedItemShapeType = minimizedItemsOptions.minimizedItemShapeType;
-								}
+                /* use individual item options first */
+                if (minimizedItemsOptions != null) {
+                  itemTitleColor = minimizedItemsOptions.itemTitleColor;
+                  itemFillColor = minimizedItemsOptions.itemTitleColor;
+                  minimizedItemShapeType = minimizedItemsOptions.minimizedItemShapeType;
+                }
 
-								/* use template config & control options next */
-								itemTitleColor = itemTitleColor || templateConfig.minimizedItemBorderColor || "#000080"/*primitives.common.Colors.Navy*/;
-								itemFillColor = itemFillColor || templateConfig.minimizedItemFillColor || "#000080"/*primitives.common.Colors.Navy*/;
-								if (minimizedItemShapeType == null) {
-									minimizedItemShapeType = (templateConfig.minimizedItemShapeType !== null ? templateConfig.minimizedItemShapeType : _options.minimizedItemShapeType);
-								}
-								minimizedItemCornerRadius = templateConfig.minimizedItemCornerRadius === null ? templateConfig.minimizedItemSize.width : templateConfig.minimizedItemCornerRadius;
+                /* use template config & control options next */
+                itemTitleColor = itemTitleColor || templateConfig.minimizedItemBorderColor || "#000080"/*primitives.common.Colors.Navy*/;
+                itemFillColor = itemFillColor || templateConfig.minimizedItemFillColor || "#000080"/*primitives.common.Colors.Navy*/;
+                if (minimizedItemShapeType == null) {
+                  minimizedItemShapeType = (templateConfig.minimizedItemShapeType !== null ? templateConfig.minimizedItemShapeType : _options.minimizedItemShapeType);
+                }
+                minimizedItemCornerRadius = templateConfig.minimizedItemCornerRadius === null ? templateConfig.minimizedItemSize.width : templateConfig.minimizedItemCornerRadius;
 
-								if (minimizedItemShapeType == null || minimizedItemShapeType == 6/*primitives.common.ShapeType.None*/) {
-									polyline = markers.getPolyline(new primitives.common.PaletteItem({
-										'lineColor': itemTitleColor,
-										'lineWidth': templateConfig.minimizedItemLineWidth,
-										'lineType': templateConfig.minimizedItemLineType,
-										'fillColor': itemFillColor,
-										'opacity': templateConfig.minimizedItemOpacity
-									}));
-									polyline.addSegment(new primitives.common.DotSegment(x, y, width, height, minimizedItemCornerRadius));
-								} else {
-									marker.draw(markers, minimizedItemShapeType, new primitives.common.Rect(x, y, width, height),
-										new primitives.common.PaletteItem({
-											'lineColor': itemTitleColor,
-											'lineWidth': templateConfig.minimizedItemLineWidth,
-											'lineType': templateConfig.minimizedItemLineType,
-											'fillColor': itemFillColor,
-											'opacity': templateConfig.minimizedItemOpacity
-										})
-									);
-								}
-								break;
-							default:
-								if (_debug) {
-									itemTitleColor = "#ff0000"/*primitives.common.Colors.Red*/;
-									if (!paletteItems.hasOwnProperty(itemTitleColor)) {
-										paletteItems[itemTitleColor] = new primitives.common.PaletteItem({
-											'lineColor': itemTitleColor,
-											'lineWidth': 1,
-											'lineType': 0/*primitives.common.LineType.Solid*/,
-											'fillColor': itemTitleColor,
-											'opacity': 1
-										});
-									}
-									polyline = markers.getPolyline(paletteItems[itemTitleColor]);
-									polyline.addSegment(new primitives.common.DotSegment(x - 1, y - 1, 2, 2, 1));
-								}
-								break;
-						}
-					});//ignore jslint
-			}
-		}
+                if (minimizedItemShapeType == null || minimizedItemShapeType == 6/*primitives.common.ShapeType.None*/) {
+                  polyline = markers.getPolyline(new primitives.common.PaletteItem({
+                    'lineColor': itemTitleColor,
+                    'lineWidth': templateConfig.minimizedItemLineWidth,
+                    'lineType': templateConfig.minimizedItemLineType,
+                    'fillColor': itemFillColor,
+                    'opacity': templateConfig.minimizedItemOpacity
+                  }));
+                  polyline.addSegment(new primitives.common.DotSegment(x, y, width, height, minimizedItemCornerRadius));
+                } else {
+                  marker.draw(markers, minimizedItemShapeType, new primitives.common.Rect(x, y, width, height),
+                    new primitives.common.PaletteItem({
+                      'lineColor': itemTitleColor,
+                      'lineWidth': templateConfig.minimizedItemLineWidth,
+                      'lineType': templateConfig.minimizedItemLineType,
+                      'fillColor': itemFillColor,
+                      'opacity': templateConfig.minimizedItemOpacity
+                    })
+                  );
+                }
+                break;
+              default:
+                if (_debug) {
+                  itemTitleColor = "#ff0000"/*primitives.common.Colors.Red*/;
+                  if (!paletteItems.hasOwnProperty(itemTitleColor)) {
+                    paletteItems[itemTitleColor] = new primitives.common.PaletteItem({
+                      'lineColor': itemTitleColor,
+                      'lineWidth': 1,
+                      'lineType': 0/*primitives.common.LineType.Solid*/,
+                      'fillColor': itemTitleColor,
+                      'opacity': 1
+                    });
+                  }
+                  polyline = markers.getPolyline(paletteItems[itemTitleColor]);
+                  polyline.addSegment(new primitives.common.DotSegment(x - 1, y - 1, 2, 2, 1));
+                }
+                break;
+            }
+          });//ignore jslint
+      }
+    }
 
 
-		_graphics.activate("placeholder", 9/*primitives.common.Layers.Marker*/);
-		_graphics.polylinesBuffer(markers);
-	}
+    _graphics.activate("placeholder", 9/*primitives.common.Layers.Marker*/);
+    _graphics.polylinesBuffer(markers);
+  }
 
-	return {
-		process: process
-	};
+  return {
+    process: process
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Renders/DrawShapeAnnotationTask.js*/
 primitives.orgdiagram.DrawShapeAnnotationTask = function (getGraphics, createTransformTask, applyLayoutChangesTask,
-	orientationOptionTask, shapeAnnotationOptionTask, alignDiagramTask, annotationLabelTemplateTask, zOrderType) {
-	var _graphics,
-		_transform,
-		_orientationOptions,
-		_annotationLabelTemplate;
+  orientationOptionTask, shapeAnnotationOptionTask, alignDiagramTask, annotationLabelTemplateTask, zOrderType) {
+  var _graphics,
+    _transform,
+    _orientationOptions,
+    _annotationLabelTemplate;
 
-	function process() {
+  function process() {
 
-		_graphics = getGraphics();
+    _graphics = getGraphics();
 
-		_transform = createTransformTask.getTransform();
-		_orientationOptions = orientationOptionTask.getOptions();
+    _transform = createTransformTask.getTransform();
+    _orientationOptions = orientationOptionTask.getOptions();
 
-		_annotationLabelTemplate = annotationLabelTemplateTask.getTemplate();
+    _annotationLabelTemplate = annotationLabelTemplateTask.getTemplate();
 
-		switch (zOrderType) {
-			case 1/*primitives.common.ZOrderType.Background*/://ignore jslint
-				_graphics.reset("placeholder", 3/*primitives.common.Layers.BackgroundAnnotations*/);
-				break;
-			case 2/*primitives.common.ZOrderType.Foreground*/://ignore jslint
-				_graphics.reset("placeholder", 13/*primitives.common.Layers.ForegroundAnnotations*/);
-				break;
-		}
+    switch (zOrderType) {
+      case 1/*primitives.common.ZOrderType.Background*/://ignore jslint
+        _graphics.reset("placeholder", 3/*primitives.common.Layers.BackgroundAnnotations*/);
+        break;
+      case 2/*primitives.common.ZOrderType.Foreground*/://ignore jslint
+        _graphics.reset("placeholder", 13/*primitives.common.Layers.ForegroundAnnotations*/);
+        break;
+    }
 
-		_drawAnnotations(shapeAnnotationOptionTask.getAnnotations(), alignDiagramTask.getItemPosition);
+    _drawAnnotations(shapeAnnotationOptionTask.getAnnotations(), alignDiagramTask.getItemPosition);
 
-		return false;
-	}
+    return false;
+  }
 
-	function _drawAnnotations(annotations, getItemPosition) {
-		var panel,
-			layer = 13/*primitives.common.Layers.ForegroundAnnotations*/,
-			index, len,
-			index2, len2,
-			index3, len3,
-			fromItem,
-			toItem,
-			shape,
-			defaultConfig,
-			items, itemsHash, itemPosition, position,
-			properties, property,
-			annotationConfig,
-			uiHash,
-			backgroundManager,
-			perimeters, treeItem;
+  function _drawAnnotations(annotations, getItemPosition) {
+    var panel,
+      layer = 13/*primitives.common.Layers.ForegroundAnnotations*/,
+      index, len,
+      index2, len2,
+      index3, len3,
+      fromItem,
+      toItem,
+      shape,
+      defaultConfig,
+      items, itemsHash, itemPosition, position,
+      properties, property,
+      annotationConfig,
+      uiHash,
+      backgroundManager,
+      perimeters, treeItem;
 
 
-		switch (zOrderType) {
-			case 1/*primitives.common.ZOrderType.Background*/://ignore jslint
-				panel = _graphics.activate("placeholder", 3/*primitives.common.Layers.BackgroundAnnotations*/);
-				break;
-			case 2/*primitives.common.ZOrderType.Foreground*/://ignore jslint
-				panel = _graphics.activate("placeholder", 13/*primitives.common.Layers.ForegroundAnnotations*/);
-				break;
-		}
+    switch (zOrderType) {
+      case 1/*primitives.common.ZOrderType.Background*/://ignore jslint
+        panel = _graphics.activate("placeholder", 3/*primitives.common.Layers.BackgroundAnnotations*/);
+        break;
+      case 2/*primitives.common.ZOrderType.Foreground*/://ignore jslint
+        panel = _graphics.activate("placeholder", 13/*primitives.common.Layers.ForegroundAnnotations*/);
+        break;
+    }
 
-		for (index = 0, len = annotations.length; index < len; index += 1) {
-			annotationConfig = annotations[index];
+    for (index = 0, len = annotations.length; index < len; index += 1) {
+      annotationConfig = annotations[index];
 
-			if (annotationConfig.items != null && annotationConfig.items.length > 0) {
-				position = new primitives.common.Rect();
-				for (index2 = 0, len2 = annotationConfig.items.length; index2 < len2; index2 += 1) {
-					itemPosition = getItemPosition(annotationConfig.items[index2]);
-					if (itemPosition != null) {
-						position.addRect(itemPosition.actualPosition);
-					}
-				}
+      if (annotationConfig.items != null && annotationConfig.items.length > 0) {
+        position = new primitives.common.Rect();
+        for (index2 = 0, len2 = annotationConfig.items.length; index2 < len2; index2 += 1) {
+          itemPosition = getItemPosition(annotationConfig.items[index2]);
+          if (itemPosition != null) {
+            position.addRect(itemPosition.actualPosition);
+          }
+        }
 
-				if (!position.isEmpty()) {
-					shape = new primitives.common.Shape(_graphics);
-					defaultConfig = new primitives.orgdiagram.ShapeAnnotationConfig();
-					properties = ["opacity", "cornerRadius", "shapeType", "offset", "lineWidth", "borderColor", "fillColor", "lineType", "labelSize", "labelOffset", "labelPlacement", "zOrderType"];
-					for (index3 = 0, len3 = properties.length; index3 < len3; index3 += 1) {
-						property = properties[index3];
-						shape[property] = annotationConfig.hasOwnProperty(property) ? annotationConfig[property] : defaultConfig[property];
-					}
+        if (!position.isEmpty()) {
+          shape = new primitives.common.Shape(_graphics);
+          defaultConfig = new primitives.orgdiagram.ShapeAnnotationConfig();
+          properties = ["opacity", "cornerRadius", "shapeType", "offset", "lineWidth", "borderColor", "fillColor", "lineType", "labelSize", "labelOffset", "labelPlacement", "zOrderType"];
+          for (index3 = 0, len3 = properties.length; index3 < len3; index3 += 1) {
+            property = properties[index3];
+            shape[property] = annotationConfig.hasOwnProperty(property) ? annotationConfig[property] : defaultConfig[property];
+          }
 
-					shape.position = position;
-					shape.orientationType = _orientationOptions.orientationType;
-					shape.panelSize = panel.size;
-					shape.labelTemplate = _annotationLabelTemplate;
-					shape.hasLabel = annotationConfig.templateName != null || annotationConfig.label != null;
+          shape.position = position;
+          shape.orientationType = _orientationOptions.orientationType;
+          shape.panelSize = panel.size;
+          shape.labelTemplate = _annotationLabelTemplate;
+          shape.hasLabel = annotationConfig.templateName != null || annotationConfig.label != null;
 
-					uiHash = new primitives.common.RenderEventArgs();
-					uiHash.context = annotationConfig;
-					uiHash.templateName = shape.labelTemplate;
+          uiHash = new primitives.common.RenderEventArgs();
+          uiHash.context = annotationConfig;
+          uiHash.templateName = shape.labelTemplate;
 
-					_transform.transformRect(position.x, position.y, position.width, position.height, true,
-						this, function (x, y, width, height) {
-							var position = new primitives.common.Rect(x, y, width, height);
-							shape.draw(position, uiHash);
-						});//ignore jslint
-				}
-			}
-		}
-	}
+          _transform.transformRect(position.x, position.y, position.width, position.height, true,
+            this, function (x, y, width, height) {
+              var position = new primitives.common.Rect(x, y, width, height);
+              shape.draw(position, uiHash);
+            });//ignore jslint
+        }
+      }
+    }
+  }
 
-	return {
-		process: process
-	};
+  return {
+    process: process
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Renders/DrawTreeItemsTask.js*/
@@ -19842,53 +19797,53 @@ primitives.orgdiagram.DrawTreeItemsTask = function (getGraphics, createTranfromT
 
 /* /Controls/OrgDiagram/Tasks/Templates/ActiveItemsTask.js*/
 primitives.orgdiagram.ActiveItemsTask = function (itemsSizesOptionTask, readTemplatesTask) {
-	var _data = {
-		items: []
-	},
-	_hash = {};
+  var _data = {
+    items: []
+  },
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ArrayReader(
-			new primitives.common.ValueReader(["string", "number"], true),
-			true
-		);
+  var _dataTemplate = new primitives.common.ArrayReader(
+    new primitives.common.ValueReader(["string", "number"], true),
+    true
+  );
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		},
-			itemsSizesOptions = itemsSizesOptionTask.getOptions(),
-			items = itemsSizesOptions.items;
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    },
+      itemsSizesOptions = itemsSizesOptionTask.getOptions(),
+      items = itemsSizesOptions.items;
 
-		_data.items = _dataTemplate.read(_data.items, collectActiveItems(itemsSizesOptions, items), "items", context);
+    _data.items = _dataTemplate.read(_data.items, collectActiveItems(itemsSizesOptions, items), "items", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function collectActiveItems(itemsSizesOptions, items) {
-		var result = [],
-			index, len;
-		for (index = 0, len = items.length; index < len; index += 1) {
-			var itemConfig = items[index],
-				template = readTemplatesTask.getTemplate(itemConfig.templateName, itemsSizesOptions.defaultTemplateName, readTemplatesTask.DefaultWidgetTemplateName),
-				templateConfig = template.templateConfig,
-				isActive = itemConfig.isActive && templateConfig.isActive;
+  function collectActiveItems(itemsSizesOptions, items) {
+    var result = [],
+      index, len;
+    for (index = 0, len = items.length; index < len; index += 1) {
+      var itemConfig = items[index],
+        template = readTemplatesTask.getTemplate(itemConfig.templateName, itemsSizesOptions.defaultTemplateName, readTemplatesTask.DefaultWidgetTemplateName),
+        templateConfig = template.templateConfig,
+        isActive = itemConfig.isActive && templateConfig.isActive;
 
-			if (isActive) {
-				result.push(itemConfig.id);
-			}
-		}
-		return result;
-	}
+      if (isActive) {
+        result.push(itemConfig.id);
+      }
+    }
+    return result;
+  }
 
-	function getActiveItems() {
-		return _hash.items;
-	}
+  function getActiveItems() {
+    return _hash.items;
+  }
 
-	return {
-		process: process,
-		getActiveItems: getActiveItems
-	};
+  return {
+    process: process,
+    getActiveItems: getActiveItems
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Templates/AnnotationLabelTemplateTask.js*/
@@ -19916,25 +19871,25 @@ primitives.orgdiagram.AnnotationLabelTemplateTask = function (itemsSizesOptionTa
 
 /* /Controls/OrgDiagram/Tasks/Templates/ButtonsTemplateTask.js*/
 primitives.orgdiagram.ButtonsTemplateTask = function (itemsSizesOptionTask, templates) {
-	var _data = {
-		template: null
-	};
+  var _data = {
+    template: null
+  };
 
-	function process() {
-		return false;
-	}
+  function process() {
+    return false;
+  }
 
-	function getTemplate() {
-		if (_data.template == null) {
-			_data.template = new templates.ButtonsTemplate;
-		}
-		return _data.template;
-	}
+  function getTemplate() {
+    if (_data.template == null) {
+      _data.template = new templates.ButtonsTemplate;
+    }
+    return _data.template;
+  }
 
-	return {
-		process: process,
-		getTemplate: getTemplate
-	};
+  return {
+    process: process,
+    getTemplate: getTemplate
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Templates/CheckboxTemplateTask.js*/
@@ -20068,30 +20023,30 @@ primitives.orgdiagram.ItemTemplateParamsTask = function (itemsSizesOptionTask, c
 
 /* /Controls/OrgDiagram/Tasks/Templates/LabelAnnotationTemplate.js*/
 primitives.common.LabelAnnotationTemplate = function () {
-	var _template = ["div",
-		{
-			"class": ["bp-item", "bp-label-annotation"]
-		}
-	];
+  var _template = ["div",
+    {
+      "class": ["bp-item", "bp-label-annotation"]
+    }
+  ];
 
-	function template() {
-		return _template;
-	}
+  function template() {
+    return _template;
+  }
 
-	function getHashCode() {
-		return "defaultLabelAnnotationTemplate";
-	}
+  function getHashCode() {
+    return "defaultLabelAnnotationTemplate";
+  }
 
-	function render(event, data) {
-		var itemConfig = data.context;
-		data.element.innerHTML = itemConfig.title;
-	}
+  function render(event, data) {
+    var itemConfig = data.context;
+    data.element.innerHTML = itemConfig.title;
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Templates/ReadTemplatesTask.js*/
@@ -20254,32 +20209,32 @@ primitives.orgdiagram.CombinedNormalVisibilityItemsTask = function (itemsSizesOp
 
 /* /Controls/OrgDiagram/Tasks/Transformations/Selection/CursorItemTask.js*/
 primitives.orgdiagram.CursorItemTask = function (cursorItemOptionTask, activeItemsTask) {
-	var _data = {
-		cursorTreeItemId: null
-	};
+  var _data = {
+    cursorTreeItemId: null
+  };
 
-	function process() {
-		var treeItemId = cursorItemOptionTask.getCursorItem(),
-			activeItems = activeItemsTask != null ? activeItemsTask.getActiveItems() : {};
+  function process() {
+    var treeItemId = cursorItemOptionTask.getCursorItem(),
+      activeItems = activeItemsTask != null ? activeItemsTask.getActiveItems() : {};
 
-		_data.cursorTreeItemId = (treeItemId != null && activeItems.hasOwnProperty(treeItemId)) ? treeItemId : null;
+    _data.cursorTreeItemId = (treeItemId != null && activeItems.hasOwnProperty(treeItemId)) ? treeItemId : null;
 
-		return true;
-	}
+    return true;
+  }
 
-	function getCursorTreeItem() {
-		return _data.cursorTreeItemId;
-	}
+  function getCursorTreeItem() {
+    return _data.cursorTreeItemId;
+  }
 
-	function getItems() {
-		return (_data.cursorTreeItemId != null) ? [_data.cursorTreeItemId] : [];
-	}
+  function getItems() {
+    return (_data.cursorTreeItemId != null) ? [_data.cursorTreeItemId] : [];
+  }
 
-	return {
-		process: process,
-		getCursorTreeItem: getCursorTreeItem,
-		getItems: getItems
-	};
+  return {
+    process: process,
+    getCursorTreeItem: getCursorTreeItem,
+    getItems: getItems
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Transformations/Selection/CursorNeighboursTask.js*/
@@ -20322,198 +20277,198 @@ primitives.orgdiagram.CursorNeighboursTask = function (cursorItemTask, navigatio
 
 /* /Controls/OrgDiagram/Tasks/Transformations/Selection/HighlightItemTask.js*/
 primitives.orgdiagram.HighlightItemTask = function (highlightItemOptionTask, activeItemsTask) {
-	var _data = {
-		highlightTreeItemId: null
-	};
+  var _data = {
+    highlightTreeItemId: null
+  };
 
-	function process() {
-		var treeItemId = highlightItemOptionTask.getHighlightItem(),
-			activeItems = (activeItemsTask != null) ? activeItemsTask.getActiveItems() : {};
+  function process() {
+    var treeItemId = highlightItemOptionTask.getHighlightItem(),
+      activeItems = (activeItemsTask != null) ? activeItemsTask.getActiveItems() : {};
 
-		_data.highlightTreeItemId = (treeItemId != null && activeItems.hasOwnProperty(treeItemId)) ? treeItemId : null;
+    _data.highlightTreeItemId = (treeItemId != null && activeItems.hasOwnProperty(treeItemId)) ? treeItemId : null;
 
-		return true;
-	}
+    return true;
+  }
 
-	function getHighlightTreeItem() {
-		return _data.highlightTreeItemId;
-	}
+  function getHighlightTreeItem() {
+    return _data.highlightTreeItemId;
+  }
 
-	return {
-		process: process,
-		getHighlightTreeItem: getHighlightTreeItem
-	};
+  return {
+    process: process,
+    getHighlightTreeItem: getHighlightTreeItem
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Transformations/Selection/NormalVisibilityItemsByAnnotationTask.js*/
 primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask = function (annotationOptionTask) {
-	var _data = {
-		items: []
-	},
-		_hash = {};
+  var _data = {
+    items: []
+  },
+    _hash = {};
 
-	var _dataTemplate = new primitives.common.ArrayReader(
-			new primitives.common.ValueReader(["string", "number"], true),
-			true
-		);
+  var _dataTemplate = new primitives.common.ArrayReader(
+    new primitives.common.ValueReader(["string", "number"], true),
+    true
+  );
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		},
-		annotations = annotationOptionTask.getAnnotations();
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    },
+      annotations = annotationOptionTask.getAnnotations();
 
-		_data.items = _dataTemplate.read(_data.items, getSelectedItems(annotations), "items", context);
+    _data.items = _dataTemplate.read(_data.items, getSelectedItems(annotations), "items", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getSelectedItems(annotations) {
-		var result = [],
-			processed = {},
-			index, len, index2, len2,
-			items, item,
-			annotation,
-			treeItemId;
+  function getSelectedItems(annotations) {
+    var result = [],
+      processed = {},
+      index, len, index2, len2,
+      items, item,
+      annotation,
+      treeItemId;
 
-		for (index = 0, len = annotations.length; index < len; index += 1) {
-			annotation = annotations[index];
-			if (annotation.selectItems) {
-				items = annotation.items;
-				for (index2 = 0, len2 = items.length; index2 < len2; index2 += 1) {
-					treeItemId = items[index2];
-					if (treeItemId != null && !processed.hasOwnProperty(treeItemId)) {
-						result.push(treeItemId);
-						processed[treeItemId] = true;
-					}
-				}
-			}
-		}
+    for (index = 0, len = annotations.length; index < len; index += 1) {
+      annotation = annotations[index];
+      if (annotation.selectItems) {
+        items = annotation.items;
+        for (index2 = 0, len2 = items.length; index2 < len2; index2 += 1) {
+          treeItemId = items[index2];
+          if (treeItemId != null && !processed.hasOwnProperty(treeItemId)) {
+            result.push(treeItemId);
+            processed[treeItemId] = true;
+          }
+        }
+      }
+    }
 
-		return result;
-	}
+    return result;
+  }
 
-	function getItems() {
-		return _data.items;
-	}
+  function getItems() {
+    return _data.items;
+  }
 
-	return {
-		process: process,
-		getItems: getItems
-	};
+  return {
+    process: process,
+    getItems: getItems
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Transformations/Selection/NormalVisibilityItemsByConnectorAnnotationTask.js*/
 primitives.orgdiagram.NormalVisibilityItemsByConnectorAnnotationTask = function (connectorAnnotationOptionTask) {
-	var _data = {
-			items: []
-		},
-		_hash = {},
-		_dataTemplate = new primitives.common.ArrayReader(
-			new primitives.common.ValueReader(["string", "number"], true),
-			true
-		);
+  var _data = {
+    items: []
+  },
+    _hash = {},
+    _dataTemplate = new primitives.common.ArrayReader(
+      new primitives.common.ValueReader(["string", "number"], true),
+      true
+    );
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		},
-		annotations = connectorAnnotationOptionTask.getAnnotations();
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    },
+      annotations = connectorAnnotationOptionTask.getAnnotations();
 
-		_data.items = _dataTemplate.read(_data.items, getSelectedItems(annotations), "items", context);
+    _data.items = _dataTemplate.read(_data.items, getSelectedItems(annotations), "items", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getSelectedItems(annotations) {
-		var result = [],
-			processed = {},
-			index, len,
-			annotation,
-			treeItem;
+  function getSelectedItems(annotations) {
+    var result = [],
+      processed = {},
+      index, len,
+      annotation,
+      treeItem;
 
-		for (index = 0, len = annotations.length; index < len; index += 1) {
-			annotation = annotations[index];
-			if (annotation.selectItems) {
-				if (annotation.fromItem != null && !processed.hasOwnProperty(annotation.fromItem)) {
-					result.push(annotation.fromItem);
-					processed[annotation.fromItem] = true;
-				}
-				if (annotation.toItem != null && !processed.hasOwnProperty(annotation.toItem)) {
-					result.push(annotation.toItem);
-					processed[annotation.toItem] = true;
-				}
-			}
-		}
+    for (index = 0, len = annotations.length; index < len; index += 1) {
+      annotation = annotations[index];
+      if (annotation.selectItems) {
+        if (annotation.fromItem != null && !processed.hasOwnProperty(annotation.fromItem)) {
+          result.push(annotation.fromItem);
+          processed[annotation.fromItem] = true;
+        }
+        if (annotation.toItem != null && !processed.hasOwnProperty(annotation.toItem)) {
+          result.push(annotation.toItem);
+          processed[annotation.toItem] = true;
+        }
+      }
+    }
 
-		return result;
-	}
+    return result;
+  }
 
-	function getItems() {
-		return _data.items;
-	}
+  function getItems() {
+    return _data.items;
+  }
 
-	return {
-		process: process,
-		getItems: getItems
-	};
+  return {
+    process: process,
+    getItems: getItems
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Transformations/Selection/SelectedItemsTask.js*/
 primitives.orgdiagram.SelectedItemsTask = function (selectedItemsOptionTask) {
-	var _data = {
-			items: []
-		},
-		_hash = {},
-		_dataTemplate = new primitives.common.ArrayReader(
-			new primitives.common.ValueReader(["string", "number"], true),
-			true
-		);
+  var _data = {
+    items: []
+  },
+    _hash = {},
+    _dataTemplate = new primitives.common.ArrayReader(
+      new primitives.common.ValueReader(["string", "number"], true),
+      true
+    );
 
-	function process() {
-		var context = {
-			isChanged: false,
-			hash: _hash
-		},
-		selectedItems = selectedItemsOptionTask.getSelectedItems();
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    },
+      selectedItems = selectedItemsOptionTask.getSelectedItems();
 
-		_data.items = _dataTemplate.read(_data.items, getSelectedItems(selectedItems), "items", context);
+    _data.items = _dataTemplate.read(_data.items, getSelectedItems(selectedItems), "items", context);
 
-		return context.isChanged;
-	}
+    return context.isChanged;
+  }
 
-	function getSelectedItems(selectedItems) {
-		var result = [],
-			processed = {},
-			index, len,
-			treeItemId;
+  function getSelectedItems(selectedItems) {
+    var result = [],
+      processed = {},
+      index, len,
+      treeItemId;
 
-		for (index = 0, len = selectedItems.length; index < len; index += 1) {
-			treeItemId = selectedItems[index];
-			if (treeItemId != null && !processed.hasOwnProperty(treeItemId)) {
-				result.push(treeItemId);
-				processed[treeItemId] = true;
-			}
-		}
+    for (index = 0, len = selectedItems.length; index < len; index += 1) {
+      treeItemId = selectedItems[index];
+      if (treeItemId != null && !processed.hasOwnProperty(treeItemId)) {
+        result.push(treeItemId);
+        processed[treeItemId] = true;
+      }
+    }
 
-		return result;
-	}
+    return result;
+  }
 
-	function isSelected(itemid) {
-		return _hash.items.hasOwnProperty(itemid);
-	}
+  function isSelected(itemid) {
+    return _hash.items.hasOwnProperty(itemid);
+  }
 
-	function getItems() {
-		return _data.items;
-	}
+  function getItems() {
+    return _data.items;
+  }
 
-	return {
-		process: process,
-		getItems: getItems,
-		isSelected: isSelected
-	};
+  return {
+    process: process,
+    getItems: getItems,
+    isSelected: isSelected
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Transformations/Selection/SelectionPathItemsTask.js*/
@@ -20576,18 +20531,18 @@ primitives.orgdiagram.SelectionPathItemsTask = function (navigationFamilyTask, c
 
 /* /Controls/OrgDiagram/Tasks/Transformations/CombinedContextsTask.js*/
 primitives.orgdiagram.CombinedContextsTask = function (task1, task2) {
-	function process() {
-		return true;
-	}
+  function process() {
+    return true;
+  }
 
-	function getConfig(itemId) {
-		return task1.getConfig(itemId) || (task2 != null && task2.getConfig(itemId));
-	}
+  function getConfig(itemId) {
+    return task1.getConfig(itemId) || (task2 != null && task2.getConfig(itemId));
+  }
 
-	return {
-		process: process,
-		getConfig: getConfig
-	};
+  return {
+    process: process,
+    getConfig: getConfig
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Transformations/ConnectionsGraphTask.js*/
@@ -20667,1051 +20622,1051 @@ primitives.orgdiagram.ConnectionsGraphTask = function (getGraphics, createTranfr
 
 /* /Controls/OrgDiagram/Tasks/Transformations/ItemsPositionsTask.js*/
 primitives.orgdiagram.ItemsPositionsTask = function (currentControlSizeTask, scaleOptionTask, orientationOptionTask, itemsSizesOptionTask, connectorsOptionTask, visualTreeOptionTask,
-	visualTreeTask, visualTreeLevelsTask,
-	itemTemplateParamsTask,
-	cursorItemTask, combinedNormalVisibilityItemsTask) {
-	var _data = {
-		treeItemsPositions: {}, // primitives.orgdiagram.TreeItemPosition();
-		panelSize: null // primitives.common.Rect();
-	},
-	_treeLevels,
-	_treeLevelsPositions, // primitives.orgdiagram.TreeLevelPosition()
-	_visualTree,
-	_leftMargins,
-	_rightMargins,
-	_orientationOptions,
-	_connectorsOptions,
-	_visualTreeOptions,
-	_itemsSizesOptions,
-	_scaleOptions,
-	_intervals;
-
-	function process() {
-		var panelSize,
-			panelRect,
-			scale;
-
-		_itemsSizesOptions = itemsSizesOptionTask.getOptions();
-		_intervals = getIntervals(_itemsSizesOptions);
-		_orientationOptions = orientationOptionTask.getOptions();
-		_connectorsOptions = connectorsOptionTask.getOptions();
-		_visualTreeOptions = visualTreeOptionTask.getOptions();
-
-		_treeLevels = visualTreeLevelsTask.getTreeLevels();
-		_visualTree = visualTreeTask.getVisualTree();
-		_leftMargins = visualTreeTask.getLeftMargins();
-		_rightMargins = visualTreeTask.getRightMargins();
-
-		_treeLevelsPositions = [];
-
-		_data.treeItemsPositions = {};
-
-		panelSize = currentControlSizeTask.getOptimalPanelSize();
-		_scaleOptions = scaleOptionTask.getOptions();
-		scale = _scaleOptions.scale;
-		panelSize.scale(1.0 / scale);
-		panelRect = new primitives.common.Rect(0, 0, panelSize.width, panelSize.height);
-		_data.panelSize = positionTreeItems(panelRect);
-
-		recalcItemsPositions();
-
-		return true;
-	}
-
-	/*  Position */
-	function positionTreeItems(panelSize) {
-		var placeholderSize = new primitives.common.Rect(0, 0, 0, 0),
-			levelVisibilities,
-			visibilities,
-			level,
-			index,
-			minimalPlaceholderSize,
-			leftMargin,
-			rightMargin,
-			cursorIndex,
-			pageSize;
-
-		switch (_orientationOptions.orientationType) {
-			case 2/*primitives.common.OrientationType.Left*/:
-			case 3/*primitives.common.OrientationType.Right*/:
-				panelSize.invert();
-				break;
-		}
-
-		if (!_treeLevels.isEmpty()) {
-			switch (_itemsSizesOptions.pageFitMode) {
-				case 0/*primitives.common.PageFitMode.None*/:
-				case 5/*primitives.common.PageFitMode.AutoSize*/:
-					levelVisibilities = [new primitives.orgdiagram.LevelVisibility(0, 1/*primitives.common.Visibility.Normal*/)];
-					placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, 0);
-					break;
-				default:
-					levelVisibilities = [new primitives.orgdiagram.LevelVisibility(0, 1/*primitives.common.Visibility.Normal*/)];
-					visibilities = [];
-					switch (_itemsSizesOptions.minimalVisibility) {
-						case 1/*primitives.common.Visibility.Normal*/:
-							break;
-						case 2/*primitives.common.Visibility.Dot*/:
-							visibilities.push(2/*primitives.common.Visibility.Dot*/);
-							break;
-						case 0/*primitives.common.Visibility.Auto*/:
-						case 3/*primitives.common.Visibility.Line*/:
-						case 4/*primitives.common.Visibility.Invisible*/:
-							visibilities.push(2/*primitives.common.Visibility.Dot*/);
-							visibilities.push(3/*primitives.common.Visibility.Line*/);
-							break;
-					}
-
-					_treeLevels.loopLevelsReversed(this, function (level, levelContext) {
-						var index;
-						for (index = 0; index < visibilities.length; index += 1) {
-							levelVisibilities.push(new primitives.orgdiagram.LevelVisibility(level, visibilities[index]));
-						}
-					});
-
-					// Find minimal placeholder size to hold completly folded diagram
-					minimalPlaceholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, levelVisibilities.length - 1);
-					minimalPlaceholderSize.addRect(panelSize);
-					minimalPlaceholderSize.offset(0, 0, 5, 5);
-
-					leftMargin = null;
-					rightMargin = null;
-					cursorIndex = null;
-					// Maximized
-					placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, 0);
-					if (!checkDiagramSize(placeholderSize, minimalPlaceholderSize)) {
-						leftMargin = 0;
-
-						// Minimized
-						placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, levelVisibilities.length - 1);
-						if (checkDiagramSize(placeholderSize, minimalPlaceholderSize)) {
-							rightMargin = levelVisibilities.length - 1;
-
-							cursorIndex = rightMargin;
-							while (rightMargin - leftMargin > 1) {
-								cursorIndex = Math.floor((rightMargin + leftMargin) / 2.0);
-
-								placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, cursorIndex);
-								if (checkDiagramSize(placeholderSize, minimalPlaceholderSize)) {
-									rightMargin = cursorIndex;
-								}
-								else {
-									leftMargin = cursorIndex;
-								}
-							}
-							if (rightMargin !== cursorIndex) {
-								placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, rightMargin);
-							}
-						}
-					}
-					break;
-			}
-		}
-		return placeholderSize;
-	}
-
-	function setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, cursorIndex) {
-		var index,
-			levelVisibility;
-
-		_treeLevelsPositions = [];
-		_treeLevels.loopLevels(this, function (index, levelContext) {
-			var treeLevelPosition = new primitives.orgdiagram.TreeLevelPosition();
-			treeLevelPosition.currentvisibility = 1/*primitives.common.Visibility.Normal*/;
-
-			_treeLevelsPositions.push(treeLevelPosition);
-		});
-
-
-		for (index = 0; index <= cursorIndex; index += 1) {
-			levelVisibility = levelVisibilities[index];
-
-			_treeLevelsPositions[levelVisibility.level].currentvisibility = levelVisibility.currentvisibility;
-		}
-		recalcItemsSize();
-		setOffsets();
-		recalcLevelsDepth();
-		shiftLevels();
-
-		return new primitives.common.Rect(0, 0, Math.round(getDiagramWidth()), Math.round(getDiagramHeight()));
-	}
-
-	function checkDiagramSize(diagramSize, panelSize) {
-		var result = false;
-		switch (_itemsSizesOptions.pageFitMode) {
-			case 1/*primitives.common.PageFitMode.PageWidth*/:
-				if (panelSize.width >= diagramSize.width) {
-					result = true;
-				}
-				break;
-			case 2/*primitives.common.PageFitMode.PageHeight*/:
-				if (panelSize.height >= diagramSize.height) {
-					result = true;
-				}
-				break;
-			case 3/*primitives.common.PageFitMode.FitToPage*/:
-				if (panelSize.height >= diagramSize.height && panelSize.width >= diagramSize.width) {
-					result = true;
-				}
-				break;
-		}
-		return result;
-	}
-
-	function getDiagramHeight() {
-		var len = _treeLevelsPositions.length,
-			treeLevel = _treeLevelsPositions[len - 1];
-		return treeLevel.shift + treeLevel.nextLevelShift;
-	}
-
-	function getDiagramWidth() {
-		var result = 0,
-			index,
-			len;
-		for (index = 0, len = _treeLevelsPositions.length; index < len; index += 1) {
-			result = Math.max(result, _treeLevelsPositions[index].currentOffset);
-		}
-		result += _itemsSizesOptions.normalItemsInterval;
-		return result;
-	}
-
-	function recalcItemsSize() {
-		var cursorItemId = cursorItemTask.getCursorTreeItem();
-
-		_data.treeItemsPositions = {};
-		_treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
-			var treeLevelPosition = _treeLevelsPositions[levelIndex];
-
-			_treeLevels.loopLevelItems(this, levelIndex, function (treeItemId, treeItem, position) {
-				var treeItemPosition = new primitives.orgdiagram.TreeItemPosition(),
-					treeItemVisibility = combinedNormalVisibilityItemsTask.isItemSelected(treeItemId) ? 1/*primitives.common.Visibility.Normal*/ : treeItem.visibility,
-					treeItemtemplate = itemTemplateParamsTask.getTemplateParams(treeItemId);
-
-				var actualVisibility = (treeItemVisibility === 0/*primitives.common.Visibility.Auto*/) ? treeLevelPosition.currentvisibility : treeItemVisibility;
-				var size = getSize(actualVisibility, cursorItemId == treeItemId, treeItemtemplate, _itemsSizesOptions, _orientationOptions.orientationType);
-
-				treeItemPosition.actualVisibility = actualVisibility;
-				treeItemPosition.actualSize = size.actualSize;
-				treeItemPosition.contentPosition = size.contentPosition;
-
-				_data.treeItemsPositions[treeItemId] = treeItemPosition;
-			});
-		});
-	}
-
-	function recalcLevelsDepth() {
-		var index, len,
-			index2, len2,
-			index3, len3,
-			treeItem,
-			treeLevel,
-			treeItems,
-			itemPosition,
-			treeItemsHavingPartners,
-			treeItemsGroup,
-			partners, partner,
-			levelOffset,
-			minimalDepth,
-			dotsDepth,
-			startIndex, endIndex,
-			stackSegments;
-
-
-		_treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
-			var treeLevelPosition = _treeLevelsPositions[levelIndex];
-			treeLevelPosition.shift = 0.0;
-			treeLevelPosition.depth = 0.0;
-			treeLevelPosition.actualVisibility = 4/*primitives.common.Visibility.Invisible*/;
-
-			treeItemsHavingPartners = [];
-
-			minimalDepth = null; /* minimum  height of non-dot items in level */
-			dotsDepth = null; /* maximum dots height */
-
-			_treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
-				var treeItemPosition = _data.treeItemsPositions[itemid];
-				treeLevelPosition.depth = Math.max(treeLevelPosition.depth, treeItemPosition.actualSize.height);
-				switch (treeItemPosition.actualVisibility) {
-					case 2/*primitives.common.Visibility.Dot*/:
-					case 3/*primitives.common.Visibility.Line*/:
-					case 4/*primitives.common.Visibility.Invisible*/:
-						dotsDepth = !dotsDepth ? treeItemPosition.actualSize.height : Math.min(dotsDepth, treeItemPosition.actualSize.height);
-						break;
-					default:
-						minimalDepth = !minimalDepth ? treeItemPosition.actualSize.height : Math.min(minimalDepth, treeItemPosition.actualSize.height);
-						break;
-				}
-
-				treeLevelPosition.actualVisibility = Math.min(treeLevelPosition.actualVisibility, treeItemPosition.actualVisibility);
-			});
-
-			if (minimalDepth == null) {
-				minimalDepth = treeLevelPosition.depth;
-			}
-			if (dotsDepth != null && dotsDepth > minimalDepth) {
-				minimalDepth = dotsDepth;
-			}
-
-			switch (_itemsSizesOptions.verticalAlignment) {
-				case 0/*primitives.common.VerticalAlignmentType.Top*/:
-					treeLevelPosition.horizontalConnectorsDepth = minimalDepth / 2.0;
-					break;
-				case 1/*primitives.common.VerticalAlignmentType.Middle*/:
-					treeLevelPosition.horizontalConnectorsDepth = treeLevelPosition.depth / 2.0;
-					break;
-				case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
-					treeLevelPosition.horizontalConnectorsDepth = treeLevelPosition.depth - minimalDepth / 2.0;
-					break;
-			}
-		});
-	}
-
-	function shiftLevels() {
-		var shift = _itemsSizesOptions.lineLevelShift,
-			index,
-			len,
-			treeLevelPosition, treeLevelConnectorStackSize,
-			childrenSpace = 0,
-			parentsSpace = 0,
-			arrowTipLength = _connectorsOptions.linesWidth * 8;
-
-		switch (_connectorsOptions.arrowsDirection) {
-			case 1/*primitives.common.GroupByType.Parents*/:
-				childrenSpace = arrowTipLength;
-				parentsSpace = 0;
-				break;
-			case 2/*primitives.common.GroupByType.Children*/:
-				childrenSpace = 0;
-				parentsSpace = arrowTipLength;
-				break;
-		}
-
-		for (index = 0, len = _treeLevelsPositions.length; index < len; index += 1) {
-			treeLevelPosition = _treeLevelsPositions[index];
-			treeLevelConnectorStackSize = visualTreeLevelsTask.getConnectorsStacksSizes(index);
-			shift += treeLevelPosition.setShift(shift, getLevelSpace(treeLevelPosition.actualVisibility), parentsSpace, childrenSpace, treeLevelConnectorStackSize.parentsStackSize);
-		}
-	}
-
-	function getLevelSpace(visibility) {
-		var result = 0.0;
-
-		switch (visibility) {
-			case 1/*primitives.common.Visibility.Normal*/:
-				result = _itemsSizesOptions.normalLevelShift;
-				break;
-			case 2/*primitives.common.Visibility.Dot*/:
-				result = _itemsSizesOptions.dotLevelShift;
-				break;
-			case 3/*primitives.common.Visibility.Line*/:
-			case 4/*primitives.common.Visibility.Invisible*/:
-				result = _itemsSizesOptions.lineLevelShift;
-				break;
-		}
-		return result;
-	}
-
-	function setOffsets() {
-		var index,
-			len;
-		for (index = 0, len = _treeLevelsPositions.length; index < len; index += 1) {
-			_treeLevelsPositions[index].currentOffset = 0.0;
-		}
-		_visualTree.loopPostOrder(this, function (treeItemId, treeItem, parentid, parent) {
-			var treeItemPosition = _data.treeItemsPositions[treeItemId],
-				treeItemVisibility = treeItemPosition.actualVisibility,
-				treeItemLevelIndex = _treeLevels.getLevelIndex(treeItemId),
-				treeLevelPosition = _treeLevelsPositions[treeItemLevelIndex],
-				treeItemPadding = _intervals[treeItemVisibility === 0/*primitives.common.Visibility.Auto*/ ? treeLevelPosition.currentvisibility : treeItemVisibility] / 2.0,
-				index,
-				len,
-				offset,
-				siblings,
-				gaps,
-				gap,
-				leftMargin,
-				parentItem,
-				groups,
-				items,
-				item1,
-				item2,
-				groupIndex,
-				groupOffset,
-				group,
-				sibling,
-				cousinsInterval = treeLevelPosition.currentOffset > 0 ? treeItemPadding * (treeItem.relationDegree) * _itemsSizesOptions.cousinsIntervalMultiplier : 0,
-				arrowTipLength = _connectorsOptions.linesWidth * 8;
-			treeItemPosition.leftPadding = treeItemPadding + cousinsInterval;
-			treeItemPosition.rightPadding = treeItemPadding;
-			if (_connectorsOptions.arrowsDirection != 0/*primitives.common.GroupByType.None*/) {
-				if (treeItem.connectorPlacement & 8/*primitives.common.SideFlag.Left*/) {
-					treeItemPosition.leftPadding += arrowTipLength;
-				}
-				if (treeItem.connectorPlacement & 2/*primitives.common.SideFlag.Right*/) {
-					treeItemPosition.rightPadding += arrowTipLength;
-				}
-			}
-			treeItemPosition.offset = treeLevelPosition.currentOffset + treeItemPosition.leftPadding;
-			treeLevelPosition.currentOffset = treeItemPosition.offset + treeItemPosition.actualSize.width + treeItemPosition.rightPadding;
-
-			if (_visualTree.hasChildren(treeItemId)) {
-				offset = getChildrenOffset(treeItem);
-				if (offset > 0) {
-					offsetItemChildren(treeItem, offset);
-				}
-				else if (offset < 0) {
-					offset = -offset;
-					offsetItem(treeItem, offset);
-
-					siblings = null;
-					gaps = {};
-					leftMargin = null;
-					parentItem = _visualTree.parent(treeItem.id);
-					if (parentItem !== null) {
-						_visualTree.loopChildrenReversed(this, parentItem.id, function (childItemId, childItem, index) {
-							if (childItem === treeItem) {
-								siblings = [];
-							}
-							else if (siblings !== null) {
-								gap = getGapBetweenSiblings(childItem, treeItem);
-								gaps[childItem.id] = gap;
-								if (gap > 0) {
-									siblings.splice(0, 0, childItem);
-								}
-								else {
-									leftMargin = childItem;
-									return true;
-								}
-							}
-						});
-
-						if (siblings.length > 0) {
-							groups = null;
-							if (leftMargin !== null) {
-								items = [leftMargin];
-								items = items.concat(siblings);
-								items.push(treeItem);
-
-								groups = [[leftMargin]];
-								for (index = 1, len = items.length; index < len; index += 1) {
-									item1 = items[index - 1];
-									item2 = items[index];
-									if (item1.gravity == 2/*primitives.common.HorizontalAlignmentType.Right*/ || item2.gravity == 1/*primitives.common.HorizontalAlignmentType.Left*/) {
-										groups[groups.length - 1].push(item2);
-									}
-									else {
-										groups.push([item2]);
-									}
-								}
-							}
-							else {
-								groups = [siblings.slice(0)];
-								groups[groups.length - 1].push(treeItem);
-							}
-
-							// align items to the right
-							if (groups.length > 0) {
-								siblings = groups[groups.length - 1];
-								for (index = siblings.length - 2; index >= 0; index -= 1) {
-									sibling = siblings[index];
-									gap = gaps[sibling.id];
-									offset = Math.min(gap, offset);
-
-									offsetItem(sibling, offset);
-									offsetItemChildren(sibling, offset);
-								}
-							}
-
-							// spread items proportionally
-							groupOffset = offset / (groups.length - 1);
-							for (groupIndex = groups.length - 2; groupIndex > 0; groupIndex -= 1) {
-								group = groups[groupIndex];
-								for (index = group.length - 1; index >= 0; index -= 1) {
-									sibling = group[index];
-									gap = gaps[sibling.id];
-									offset = Math.min(groupIndex * groupOffset, Math.min(gap, offset));
-
-									offsetItem(sibling, offset);
-									offsetItemChildren(sibling, offset);
-								}
-							}
-						}
-					}
-				}
-			}
-		});
-	}
-
-	function getGapBetweenSiblings(leftItem, rightItem) {
-		var result = null,
-			rightMargins = getRightMargins(leftItem),
-			leftMargins = getLeftMargins(rightItem),
-			depth = Math.min(rightMargins.length, leftMargins.length),
-			index,
-			gap;
-
-		for (index = 0; index < depth; index += 1) {
-			gap = leftMargins[index] - rightMargins[index];
-			result = (result !== null) ? Math.min(result, gap) : gap;
-
-			if (gap <= 0) {
-				break;
-			}
-		}
-
-		return Math.floor(result);
-	}
-
-	function getRightMargins(treeItem) {
-		var result = [],
-			rightMargins,
-			index,
-			len,
-			marginItemPosition;
-
-		rightMargins = _rightMargins[treeItem.id];
-		if (rightMargins === undefined) {
-			rightMargins = [];
-		}
-		rightMargins = rightMargins.slice();
-		rightMargins.splice(0, 0, treeItem.id);
-		for (index = 0, len = rightMargins.length; index < len; index += 1) {
-			marginItemPosition = _data.treeItemsPositions[rightMargins[index]];
-			result[index] = marginItemPosition.offset + marginItemPosition.actualSize.width + marginItemPosition.rightPadding;
-		}
-
-		return result;
-	}
-
-	function getLeftMargins(treeItem) {
-		var result = [],
-			leftMargins,
-			index, len,
-			marginItemPosition;
-
-		leftMargins = _leftMargins[treeItem.id];
-		if (leftMargins === undefined) {
-			leftMargins = [];
-		}
-		leftMargins = leftMargins.slice();
-		leftMargins.splice(0, 0, treeItem.id);
-		for (index = 0, len = leftMargins.length; index < len; index += 1) {
-			marginItemPosition = _data.treeItemsPositions[leftMargins[index]];
-			result[index] = marginItemPosition.offset - marginItemPosition.leftPadding;
-		}
-
-		return result;
-	}
-
-	function getChildrenOffset(treeItem) {
-		var treeItemPosition = _data.treeItemsPositions[treeItem.id],
-			treeItemCenterOffset = treeItemPosition.offset + treeItemPosition.actualSize.width / 2.0,
-			childrenCenterOffset = null,
-			firstItem, firstItemPosition,
-			lastItem, lastItemPosition,
-			visualAggregatorPosition;
-		if (treeItem.visualAggregatorId === null) {
-			firstItem = null;
-			_visualTree.loopChildren(this, treeItem.id, function (childItemId, childItem, index) {
-				firstItem = childItem;
-				if (firstItem.connectorPlacement & 1/*primitives.common.SideFlag.Top*/) {
-					return true;
-				}
-			});
-			firstItemPosition = _data.treeItemsPositions[firstItem.id];
-
-			lastItem = null;
-			_visualTree.loopChildrenReversed(this, treeItem.id, function (childItemId, childItem, index) {
-				lastItem = childItem;
-				if (lastItem.connectorPlacement & 1/*primitives.common.SideFlag.Top*/) {
-					return true;
-				}
-			});
-			lastItemPosition = _data.treeItemsPositions[lastItem.id];
-
-			switch (_visualTreeOptions.horizontalAlignment) {
-				case 1/*primitives.common.HorizontalAlignmentType.Left*/:
-					childrenCenterOffset = firstItemPosition.offset + firstItemPosition.actualSize.width / 2.0;
-					break;
-				case 2/*primitives.common.HorizontalAlignmentType.Right*/:
-					childrenCenterOffset = lastItemPosition.offset + lastItemPosition.actualSize.width / 2.0;
-					break;
-				case 0/*primitives.common.HorizontalAlignmentType.Center*/:
-					childrenCenterOffset = (firstItemPosition.offset + lastItemPosition.offset + lastItemPosition.actualSize.width) / 2.0;
-					break;
-			}
-		}
-		else {
-			visualAggregatorPosition = _data.treeItemsPositions[treeItem.visualAggregatorId];
-			childrenCenterOffset = visualAggregatorPosition.offset + visualAggregatorPosition.actualSize.width / 2.0;
-		}
-
-		var i = treeItemCenterOffset - childrenCenterOffset;
-		return treeItemCenterOffset - childrenCenterOffset;
-	}
-
-	function offsetItem(treeItem, offset) {
-		var treeItemPosition = _data.treeItemsPositions[treeItem.id];
-		treeItemPosition.offset += offset;
-
-		var treeLevelPosition = _treeLevelsPositions[_treeLevels.getLevelIndex(treeItem.id)];
-		treeLevelPosition.currentOffset = Math.max(treeLevelPosition.currentOffset, treeItemPosition.offset + treeItemPosition.actualSize.width + treeItemPosition.rightPadding);
-	}
-
-	function offsetItemChildren(treeItem, offset) {
-		var childTreeItemPosition,
-			treeLevelPosition;
-
-		_visualTree.loopLevels(this, treeItem.id, function (childItemId, childItem, levelid) {
-			childTreeItemPosition = _data.treeItemsPositions[childItemId];
-			childTreeItemPosition.offset += offset;
-
-			treeLevelPosition = _treeLevelsPositions[_treeLevels.getLevelIndex(childItemId)];
-			treeLevelPosition.currentOffset = Math.max(treeLevelPosition.currentOffset, childTreeItemPosition.offset + childTreeItemPosition.actualSize.width);
-
-			return true;
-		});
-	}
-
-	function recalcItemsPositions() {
-		var prevLevelPosition = null;
-		_treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
-			var treeLevelPosition = _treeLevelsPositions[levelIndex];
-
-			_treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
-				var treeItemPosition = _data.treeItemsPositions[itemid];
-				var result = getPosition(treeItemPosition.actualVisibility, treeItemPosition.offset, treeItemPosition.actualSize, prevLevelPosition, treeLevelPosition, _itemsSizesOptions.verticalAlignment);
-				treeItemPosition.actualPosition = result.position;
-				treeItemPosition.horizontalConnectorsShift = result.horizontalConnectorsShift;
-				treeItemPosition.topConnectorShift = result.topConnectorShift;
-				treeItemPosition.topConnectorInterval = result.topConnectorInterval;
-				treeItemPosition.bottomConnectorShift = result.bottomConnectorShift;
-				treeItemPosition.bottomConnectorInterval = result.bottomConnectorInterval;
-			});
-
-			prevLevelPosition = treeLevelPosition;
-		});
-	}
-
-	function getSize(visibility, isCursor, treeItemTemplate, itemsSizesOptions, orientationType) {
-		var templateConfig,
-			size,
-			contentPosition;
-
-		switch (visibility) {
-			case 1/*primitives.common.Visibility.Normal*/:
-				templateConfig = treeItemTemplate.template.templateConfig;
-				size = new primitives.common.Size(templateConfig.itemSize);
-				contentPosition = new primitives.common.Rect(0, 0, size.width, size.height);
-				if (isCursor) {
-					size.height += templateConfig.cursorPadding.top + templateConfig.cursorPadding.bottom;
-					size.width += templateConfig.cursorPadding.left + templateConfig.cursorPadding.right;
-					contentPosition.x = templateConfig.cursorPadding.left;
-					contentPosition.y = templateConfig.cursorPadding.top;
-				}
-				if (treeItemTemplate.hasSelectorCheckbox) {
-					size.height += itemsSizesOptions.checkBoxPanelSize;
-				}
-				if (treeItemTemplate.hasButtons) {
-					size.width += itemsSizesOptions.buttonsPanelSize;
-					switch(itemsSizesOptions.groupTitlePlacementType) {
-						case 3/*primitives.common.AdviserPlacementType.Right*/:
-							contentPosition.x += itemsSizesOptions.buttonsPanelSize;
-							break;
-					}
-				}
-				if (treeItemTemplate.hasGroupTitle) {
-					size.width += itemsSizesOptions.groupTitlePanelSize;
-					switch(itemsSizesOptions.groupTitlePlacementType) {
-						case 3/*primitives.common.AdviserPlacementType.Right*/:
-							break;
-						default:
-							contentPosition.x += itemsSizesOptions.groupTitlePanelSize;
-							break;
-					}
-				}
-				break;
-			case 2/*primitives.common.Visibility.Dot*/:
-				templateConfig = treeItemTemplate.template.templateConfig;
-				size = new primitives.common.Size(templateConfig.minimizedItemSize);
-				break;
-			case 3/*primitives.common.Visibility.Line*/:
-			case 4/*primitives.common.Visibility.Invisible*/:
-				size = new primitives.common.Size();
-				break;
-		}
-
-		switch (orientationType) {
-			case 2/*primitives.common.OrientationType.Left*/:
-			case 3/*primitives.common.OrientationType.Right*/:
-				size.invert();
-				break;
-		}
-
-		return {
-			actualSize: size,
-			contentPosition: contentPosition
-		};
-	}
-
-	function getPosition(visibility, offset, size, prevLevel, level, verticalAlignment) {
-		var itemShift = 0;
-
-		switch (visibility) {
-			case 1/*primitives.common.Visibility.Normal*/:
-				switch (verticalAlignment) {
-					case 0/*primitives.common.VerticalAlignmentType.Top*/:
-						itemShift = 0;
-						break;
-					case 1/*primitives.common.VerticalAlignmentType.Middle*/:
-						itemShift = (level.depth - size.height) / 2.0;
-						break;
-					case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
-						itemShift = level.depth - size.height;
-						break;
-				}
-				break;
-			case 2/*primitives.common.Visibility.Dot*/:
-			case 3/*primitives.common.Visibility.Line*/:
-			case 4/*primitives.common.Visibility.Invisible*/:
-				itemShift = level.horizontalConnectorsDepth - size.height / 2.0;
-				break;
-		}
-
-		return {
-			position: new primitives.common.Rect(offset, level.shift + itemShift, size.width, size.height),
-			horizontalConnectorsShift: level.shift + level.horizontalConnectorsDepth,
-			topConnectorShift: prevLevel != null ? prevLevel.shift + prevLevel.connectorShift : null,
-			topConnectorInterval: prevLevel != null ? prevLevel.levelSpace / 2 : null,
-			bottomConnectorShift: level.shift + level.connectorShift,
-			bottomConnectorInterval: level.levelSpace / 2
-		};
-	}
-
-	function getIntervals(options) {
-		var result = [];
-		result[1/*primitives.common.Visibility.Normal*/] = options.normalItemsInterval;
-		result[2/*primitives.common.Visibility.Dot*/] = options.dotItemsInterval;
-		result[3/*primitives.common.Visibility.Line*/] = options.lineItemsInterval;
-		result[4/*primitives.common.Visibility.Invisible*/] = options.lineItemsInterval;
-		return result;
-	}
-
-	function getItemPosition(itemid) {
-		return _data.treeItemsPositions[itemid];
-	}
-
-	function getItemsPositions() {
-		return _data.treeItemsPositions;
-	}
-
-	function getContentSize() {
-		return _data.panelSize;
-	}
-
-	return {
-		process: process,
-		getItemsPositions: getItemsPositions,
-		getItemPosition: getItemPosition,
-		getContentSize: getContentSize
-	};
+  visualTreeTask, visualTreeLevelsTask,
+  itemTemplateParamsTask,
+  cursorItemTask, combinedNormalVisibilityItemsTask) {
+  var _data = {
+    treeItemsPositions: {}, // primitives.orgdiagram.TreeItemPosition();
+    panelSize: null // primitives.common.Rect();
+  },
+    _treeLevels,
+    _treeLevelsPositions, // primitives.orgdiagram.TreeLevelPosition()
+    _visualTree,
+    _leftMargins,
+    _rightMargins,
+    _orientationOptions,
+    _connectorsOptions,
+    _visualTreeOptions,
+    _itemsSizesOptions,
+    _scaleOptions,
+    _intervals;
+
+  function process() {
+    var panelSize,
+      panelRect,
+      scale;
+
+    _itemsSizesOptions = itemsSizesOptionTask.getOptions();
+    _intervals = getIntervals(_itemsSizesOptions);
+    _orientationOptions = orientationOptionTask.getOptions();
+    _connectorsOptions = connectorsOptionTask.getOptions();
+    _visualTreeOptions = visualTreeOptionTask.getOptions();
+
+    _treeLevels = visualTreeLevelsTask.getTreeLevels();
+    _visualTree = visualTreeTask.getVisualTree();
+    _leftMargins = visualTreeTask.getLeftMargins();
+    _rightMargins = visualTreeTask.getRightMargins();
+
+    _treeLevelsPositions = [];
+
+    _data.treeItemsPositions = {};
+
+    panelSize = currentControlSizeTask.getOptimalPanelSize();
+    _scaleOptions = scaleOptionTask.getOptions();
+    scale = _scaleOptions.scale;
+    panelSize.scale(1.0 / scale);
+    panelRect = new primitives.common.Rect(0, 0, panelSize.width, panelSize.height);
+    _data.panelSize = positionTreeItems(panelRect);
+
+    recalcItemsPositions();
+
+    return true;
+  }
+
+  /*  Position */
+  function positionTreeItems(panelSize) {
+    var placeholderSize = new primitives.common.Rect(0, 0, 0, 0),
+      levelVisibilities,
+      visibilities,
+      level,
+      index,
+      minimalPlaceholderSize,
+      leftMargin,
+      rightMargin,
+      cursorIndex,
+      pageSize;
+
+    switch (_orientationOptions.orientationType) {
+      case 2/*primitives.common.OrientationType.Left*/:
+      case 3/*primitives.common.OrientationType.Right*/:
+        panelSize.invert();
+        break;
+    }
+
+    if (!_treeLevels.isEmpty()) {
+      switch (_itemsSizesOptions.pageFitMode) {
+        case 0/*primitives.common.PageFitMode.None*/:
+        case 5/*primitives.common.PageFitMode.AutoSize*/:
+          levelVisibilities = [new primitives.orgdiagram.LevelVisibility(0, 1/*primitives.common.Visibility.Normal*/)];
+          placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, 0);
+          break;
+        default:
+          levelVisibilities = [new primitives.orgdiagram.LevelVisibility(0, 1/*primitives.common.Visibility.Normal*/)];
+          visibilities = [];
+          switch (_itemsSizesOptions.minimalVisibility) {
+            case 1/*primitives.common.Visibility.Normal*/:
+              break;
+            case 2/*primitives.common.Visibility.Dot*/:
+              visibilities.push(2/*primitives.common.Visibility.Dot*/);
+              break;
+            case 0/*primitives.common.Visibility.Auto*/:
+            case 3/*primitives.common.Visibility.Line*/:
+            case 4/*primitives.common.Visibility.Invisible*/:
+              visibilities.push(2/*primitives.common.Visibility.Dot*/);
+              visibilities.push(3/*primitives.common.Visibility.Line*/);
+              break;
+          }
+
+          _treeLevels.loopLevelsReversed(this, function (level, levelContext) {
+            var index;
+            for (index = 0; index < visibilities.length; index += 1) {
+              levelVisibilities.push(new primitives.orgdiagram.LevelVisibility(level, visibilities[index]));
+            }
+          });
+
+          // Find minimal placeholder size to hold completly folded diagram
+          minimalPlaceholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, levelVisibilities.length - 1);
+          minimalPlaceholderSize.addRect(panelSize);
+          minimalPlaceholderSize.offset(0, 0, 5, 5);
+
+          leftMargin = null;
+          rightMargin = null;
+          cursorIndex = null;
+          // Maximized
+          placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, 0);
+          if (!checkDiagramSize(placeholderSize, minimalPlaceholderSize)) {
+            leftMargin = 0;
+
+            // Minimized
+            placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, levelVisibilities.length - 1);
+            if (checkDiagramSize(placeholderSize, minimalPlaceholderSize)) {
+              rightMargin = levelVisibilities.length - 1;
+
+              cursorIndex = rightMargin;
+              while (rightMargin - leftMargin > 1) {
+                cursorIndex = Math.floor((rightMargin + leftMargin) / 2.0);
+
+                placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, cursorIndex);
+                if (checkDiagramSize(placeholderSize, minimalPlaceholderSize)) {
+                  rightMargin = cursorIndex;
+                }
+                else {
+                  leftMargin = cursorIndex;
+                }
+              }
+              if (rightMargin !== cursorIndex) {
+                placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, rightMargin);
+              }
+            }
+          }
+          break;
+      }
+    }
+    return placeholderSize;
+  }
+
+  function setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, cursorIndex) {
+    var index,
+      levelVisibility;
+
+    _treeLevelsPositions = [];
+    _treeLevels.loopLevels(this, function (index, levelContext) {
+      var treeLevelPosition = new primitives.orgdiagram.TreeLevelPosition();
+      treeLevelPosition.currentvisibility = 1/*primitives.common.Visibility.Normal*/;
+
+      _treeLevelsPositions.push(treeLevelPosition);
+    });
+
+
+    for (index = 0; index <= cursorIndex; index += 1) {
+      levelVisibility = levelVisibilities[index];
+
+      _treeLevelsPositions[levelVisibility.level].currentvisibility = levelVisibility.currentvisibility;
+    }
+    recalcItemsSize();
+    setOffsets();
+    recalcLevelsDepth();
+    shiftLevels();
+
+    return new primitives.common.Rect(0, 0, Math.round(getDiagramWidth()), Math.round(getDiagramHeight()));
+  }
+
+  function checkDiagramSize(diagramSize, panelSize) {
+    var result = false;
+    switch (_itemsSizesOptions.pageFitMode) {
+      case 1/*primitives.common.PageFitMode.PageWidth*/:
+        if (panelSize.width >= diagramSize.width) {
+          result = true;
+        }
+        break;
+      case 2/*primitives.common.PageFitMode.PageHeight*/:
+        if (panelSize.height >= diagramSize.height) {
+          result = true;
+        }
+        break;
+      case 3/*primitives.common.PageFitMode.FitToPage*/:
+        if (panelSize.height >= diagramSize.height && panelSize.width >= diagramSize.width) {
+          result = true;
+        }
+        break;
+    }
+    return result;
+  }
+
+  function getDiagramHeight() {
+    var len = _treeLevelsPositions.length,
+      treeLevel = _treeLevelsPositions[len - 1];
+    return treeLevel.shift + treeLevel.nextLevelShift;
+  }
+
+  function getDiagramWidth() {
+    var result = 0,
+      index,
+      len;
+    for (index = 0, len = _treeLevelsPositions.length; index < len; index += 1) {
+      result = Math.max(result, _treeLevelsPositions[index].currentOffset);
+    }
+    result += _itemsSizesOptions.normalItemsInterval;
+    return result;
+  }
+
+  function recalcItemsSize() {
+    var cursorItemId = cursorItemTask.getCursorTreeItem();
+
+    _data.treeItemsPositions = {};
+    _treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
+      var treeLevelPosition = _treeLevelsPositions[levelIndex];
+
+      _treeLevels.loopLevelItems(this, levelIndex, function (treeItemId, treeItem, position) {
+        var treeItemPosition = new primitives.orgdiagram.TreeItemPosition(),
+          treeItemVisibility = combinedNormalVisibilityItemsTask.isItemSelected(treeItemId) ? 1/*primitives.common.Visibility.Normal*/ : treeItem.visibility,
+          treeItemtemplate = itemTemplateParamsTask.getTemplateParams(treeItemId);
+
+        var actualVisibility = (treeItemVisibility === 0/*primitives.common.Visibility.Auto*/) ? treeLevelPosition.currentvisibility : treeItemVisibility;
+        var size = getSize(actualVisibility, cursorItemId == treeItemId, treeItemtemplate, _itemsSizesOptions, _orientationOptions.orientationType);
+
+        treeItemPosition.actualVisibility = actualVisibility;
+        treeItemPosition.actualSize = size.actualSize;
+        treeItemPosition.contentPosition = size.contentPosition;
+
+        _data.treeItemsPositions[treeItemId] = treeItemPosition;
+      });
+    });
+  }
+
+  function recalcLevelsDepth() {
+    var index, len,
+      index2, len2,
+      index3, len3,
+      treeItem,
+      treeLevel,
+      treeItems,
+      itemPosition,
+      treeItemsHavingPartners,
+      treeItemsGroup,
+      partners, partner,
+      levelOffset,
+      minimalDepth,
+      dotsDepth,
+      startIndex, endIndex,
+      stackSegments;
+
+
+    _treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
+      var treeLevelPosition = _treeLevelsPositions[levelIndex];
+      treeLevelPosition.shift = 0.0;
+      treeLevelPosition.depth = 0.0;
+      treeLevelPosition.actualVisibility = 4/*primitives.common.Visibility.Invisible*/;
+
+      treeItemsHavingPartners = [];
+
+      minimalDepth = null; /* minimum  height of non-dot items in level */
+      dotsDepth = null; /* maximum dots height */
+
+      _treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
+        var treeItemPosition = _data.treeItemsPositions[itemid];
+        treeLevelPosition.depth = Math.max(treeLevelPosition.depth, treeItemPosition.actualSize.height);
+        switch (treeItemPosition.actualVisibility) {
+          case 2/*primitives.common.Visibility.Dot*/:
+          case 3/*primitives.common.Visibility.Line*/:
+          case 4/*primitives.common.Visibility.Invisible*/:
+            dotsDepth = !dotsDepth ? treeItemPosition.actualSize.height : Math.min(dotsDepth, treeItemPosition.actualSize.height);
+            break;
+          default:
+            minimalDepth = !minimalDepth ? treeItemPosition.actualSize.height : Math.min(minimalDepth, treeItemPosition.actualSize.height);
+            break;
+        }
+
+        treeLevelPosition.actualVisibility = Math.min(treeLevelPosition.actualVisibility, treeItemPosition.actualVisibility);
+      });
+
+      if (minimalDepth == null) {
+        minimalDepth = treeLevelPosition.depth;
+      }
+      if (dotsDepth != null && dotsDepth > minimalDepth) {
+        minimalDepth = dotsDepth;
+      }
+
+      switch (_itemsSizesOptions.verticalAlignment) {
+        case 0/*primitives.common.VerticalAlignmentType.Top*/:
+          treeLevelPosition.horizontalConnectorsDepth = minimalDepth / 2.0;
+          break;
+        case 1/*primitives.common.VerticalAlignmentType.Middle*/:
+          treeLevelPosition.horizontalConnectorsDepth = treeLevelPosition.depth / 2.0;
+          break;
+        case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
+          treeLevelPosition.horizontalConnectorsDepth = treeLevelPosition.depth - minimalDepth / 2.0;
+          break;
+      }
+    });
+  }
+
+  function shiftLevels() {
+    var shift = _itemsSizesOptions.lineLevelShift,
+      index,
+      len,
+      treeLevelPosition, treeLevelConnectorStackSize,
+      childrenSpace = 0,
+      parentsSpace = 0,
+      arrowTipLength = _connectorsOptions.linesWidth * 8;
+
+    switch (_connectorsOptions.arrowsDirection) {
+      case 1/*primitives.common.GroupByType.Parents*/:
+        childrenSpace = arrowTipLength;
+        parentsSpace = 0;
+        break;
+      case 2/*primitives.common.GroupByType.Children*/:
+        childrenSpace = 0;
+        parentsSpace = arrowTipLength;
+        break;
+    }
+
+    for (index = 0, len = _treeLevelsPositions.length; index < len; index += 1) {
+      treeLevelPosition = _treeLevelsPositions[index];
+      treeLevelConnectorStackSize = visualTreeLevelsTask.getConnectorsStacksSizes(index);
+      shift += treeLevelPosition.setShift(shift, getLevelSpace(treeLevelPosition.actualVisibility), parentsSpace, childrenSpace, treeLevelConnectorStackSize.parentsStackSize);
+    }
+  }
+
+  function getLevelSpace(visibility) {
+    var result = 0.0;
+
+    switch (visibility) {
+      case 1/*primitives.common.Visibility.Normal*/:
+        result = _itemsSizesOptions.normalLevelShift;
+        break;
+      case 2/*primitives.common.Visibility.Dot*/:
+        result = _itemsSizesOptions.dotLevelShift;
+        break;
+      case 3/*primitives.common.Visibility.Line*/:
+      case 4/*primitives.common.Visibility.Invisible*/:
+        result = _itemsSizesOptions.lineLevelShift;
+        break;
+    }
+    return result;
+  }
+
+  function setOffsets() {
+    var index,
+      len;
+    for (index = 0, len = _treeLevelsPositions.length; index < len; index += 1) {
+      _treeLevelsPositions[index].currentOffset = 0.0;
+    }
+    _visualTree.loopPostOrder(this, function (treeItemId, treeItem, parentid, parent) {
+      var treeItemPosition = _data.treeItemsPositions[treeItemId],
+        treeItemVisibility = treeItemPosition.actualVisibility,
+        treeItemLevelIndex = _treeLevels.getLevelIndex(treeItemId),
+        treeLevelPosition = _treeLevelsPositions[treeItemLevelIndex],
+        treeItemPadding = _intervals[treeItemVisibility === 0/*primitives.common.Visibility.Auto*/ ? treeLevelPosition.currentvisibility : treeItemVisibility] / 2.0,
+        index,
+        len,
+        offset,
+        siblings,
+        gaps,
+        gap,
+        leftMargin,
+        parentItem,
+        groups,
+        items,
+        item1,
+        item2,
+        groupIndex,
+        groupOffset,
+        group,
+        sibling,
+        cousinsInterval = treeLevelPosition.currentOffset > 0 ? treeItemPadding * (treeItem.relationDegree) * _itemsSizesOptions.cousinsIntervalMultiplier : 0,
+        arrowTipLength = _connectorsOptions.linesWidth * 8;
+      treeItemPosition.leftPadding = treeItemPadding + cousinsInterval;
+      treeItemPosition.rightPadding = treeItemPadding;
+      if (_connectorsOptions.arrowsDirection != 0/*primitives.common.GroupByType.None*/) {
+        if (treeItem.connectorPlacement & 8/*primitives.common.SideFlag.Left*/) {
+          treeItemPosition.leftPadding += arrowTipLength;
+        }
+        if (treeItem.connectorPlacement & 2/*primitives.common.SideFlag.Right*/) {
+          treeItemPosition.rightPadding += arrowTipLength;
+        }
+      }
+      treeItemPosition.offset = treeLevelPosition.currentOffset + treeItemPosition.leftPadding;
+      treeLevelPosition.currentOffset = treeItemPosition.offset + treeItemPosition.actualSize.width + treeItemPosition.rightPadding;
+
+      if (_visualTree.hasChildren(treeItemId)) {
+        offset = getChildrenOffset(treeItem);
+        if (offset > 0) {
+          offsetItemChildren(treeItem, offset);
+        }
+        else if (offset < 0) {
+          offset = -offset;
+          offsetItem(treeItem, offset);
+
+          siblings = null;
+          gaps = {};
+          leftMargin = null;
+          parentItem = _visualTree.parent(treeItem.id);
+          if (parentItem !== null) {
+            _visualTree.loopChildrenReversed(this, parentItem.id, function (childItemId, childItem, index) {
+              if (childItem === treeItem) {
+                siblings = [];
+              }
+              else if (siblings !== null) {
+                gap = getGapBetweenSiblings(childItem, treeItem);
+                gaps[childItem.id] = gap;
+                if (gap > 0) {
+                  siblings.splice(0, 0, childItem);
+                }
+                else {
+                  leftMargin = childItem;
+                  return true;
+                }
+              }
+            });
+
+            if (siblings.length > 0) {
+              groups = null;
+              if (leftMargin !== null) {
+                items = [leftMargin];
+                items = items.concat(siblings);
+                items.push(treeItem);
+
+                groups = [[leftMargin]];
+                for (index = 1, len = items.length; index < len; index += 1) {
+                  item1 = items[index - 1];
+                  item2 = items[index];
+                  if (item1.gravity == 2/*primitives.common.HorizontalAlignmentType.Right*/ || item2.gravity == 1/*primitives.common.HorizontalAlignmentType.Left*/) {
+                    groups[groups.length - 1].push(item2);
+                  }
+                  else {
+                    groups.push([item2]);
+                  }
+                }
+              }
+              else {
+                groups = [siblings.slice(0)];
+                groups[groups.length - 1].push(treeItem);
+              }
+
+              // align items to the right
+              if (groups.length > 0) {
+                siblings = groups[groups.length - 1];
+                for (index = siblings.length - 2; index >= 0; index -= 1) {
+                  sibling = siblings[index];
+                  gap = gaps[sibling.id];
+                  offset = Math.min(gap, offset);
+
+                  offsetItem(sibling, offset);
+                  offsetItemChildren(sibling, offset);
+                }
+              }
+
+              // spread items proportionally
+              groupOffset = offset / (groups.length - 1);
+              for (groupIndex = groups.length - 2; groupIndex > 0; groupIndex -= 1) {
+                group = groups[groupIndex];
+                for (index = group.length - 1; index >= 0; index -= 1) {
+                  sibling = group[index];
+                  gap = gaps[sibling.id];
+                  offset = Math.min(groupIndex * groupOffset, Math.min(gap, offset));
+
+                  offsetItem(sibling, offset);
+                  offsetItemChildren(sibling, offset);
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function getGapBetweenSiblings(leftItem, rightItem) {
+    var result = null,
+      rightMargins = getRightMargins(leftItem),
+      leftMargins = getLeftMargins(rightItem),
+      depth = Math.min(rightMargins.length, leftMargins.length),
+      index,
+      gap;
+
+    for (index = 0; index < depth; index += 1) {
+      gap = leftMargins[index] - rightMargins[index];
+      result = (result !== null) ? Math.min(result, gap) : gap;
+
+      if (gap <= 0) {
+        break;
+      }
+    }
+
+    return Math.floor(result);
+  }
+
+  function getRightMargins(treeItem) {
+    var result = [],
+      rightMargins,
+      index,
+      len,
+      marginItemPosition;
+
+    rightMargins = _rightMargins[treeItem.id];
+    if (rightMargins === undefined) {
+      rightMargins = [];
+    }
+    rightMargins = rightMargins.slice();
+    rightMargins.splice(0, 0, treeItem.id);
+    for (index = 0, len = rightMargins.length; index < len; index += 1) {
+      marginItemPosition = _data.treeItemsPositions[rightMargins[index]];
+      result[index] = marginItemPosition.offset + marginItemPosition.actualSize.width + marginItemPosition.rightPadding;
+    }
+
+    return result;
+  }
+
+  function getLeftMargins(treeItem) {
+    var result = [],
+      leftMargins,
+      index, len,
+      marginItemPosition;
+
+    leftMargins = _leftMargins[treeItem.id];
+    if (leftMargins === undefined) {
+      leftMargins = [];
+    }
+    leftMargins = leftMargins.slice();
+    leftMargins.splice(0, 0, treeItem.id);
+    for (index = 0, len = leftMargins.length; index < len; index += 1) {
+      marginItemPosition = _data.treeItemsPositions[leftMargins[index]];
+      result[index] = marginItemPosition.offset - marginItemPosition.leftPadding;
+    }
+
+    return result;
+  }
+
+  function getChildrenOffset(treeItem) {
+    var treeItemPosition = _data.treeItemsPositions[treeItem.id],
+      treeItemCenterOffset = treeItemPosition.offset + treeItemPosition.actualSize.width / 2.0,
+      childrenCenterOffset = null,
+      firstItem, firstItemPosition,
+      lastItem, lastItemPosition,
+      visualAggregatorPosition;
+    if (treeItem.visualAggregatorId === null) {
+      firstItem = null;
+      _visualTree.loopChildren(this, treeItem.id, function (childItemId, childItem, index) {
+        firstItem = childItem;
+        if (firstItem.connectorPlacement & 1/*primitives.common.SideFlag.Top*/) {
+          return true;
+        }
+      });
+      firstItemPosition = _data.treeItemsPositions[firstItem.id];
+
+      lastItem = null;
+      _visualTree.loopChildrenReversed(this, treeItem.id, function (childItemId, childItem, index) {
+        lastItem = childItem;
+        if (lastItem.connectorPlacement & 1/*primitives.common.SideFlag.Top*/) {
+          return true;
+        }
+      });
+      lastItemPosition = _data.treeItemsPositions[lastItem.id];
+
+      switch (_visualTreeOptions.horizontalAlignment) {
+        case 1/*primitives.common.HorizontalAlignmentType.Left*/:
+          childrenCenterOffset = firstItemPosition.offset + firstItemPosition.actualSize.width / 2.0;
+          break;
+        case 2/*primitives.common.HorizontalAlignmentType.Right*/:
+          childrenCenterOffset = lastItemPosition.offset + lastItemPosition.actualSize.width / 2.0;
+          break;
+        case 0/*primitives.common.HorizontalAlignmentType.Center*/:
+          childrenCenterOffset = (firstItemPosition.offset + lastItemPosition.offset + lastItemPosition.actualSize.width) / 2.0;
+          break;
+      }
+    }
+    else {
+      visualAggregatorPosition = _data.treeItemsPositions[treeItem.visualAggregatorId];
+      childrenCenterOffset = visualAggregatorPosition.offset + visualAggregatorPosition.actualSize.width / 2.0;
+    }
+
+    var i = treeItemCenterOffset - childrenCenterOffset;
+    return treeItemCenterOffset - childrenCenterOffset;
+  }
+
+  function offsetItem(treeItem, offset) {
+    var treeItemPosition = _data.treeItemsPositions[treeItem.id];
+    treeItemPosition.offset += offset;
+
+    var treeLevelPosition = _treeLevelsPositions[_treeLevels.getLevelIndex(treeItem.id)];
+    treeLevelPosition.currentOffset = Math.max(treeLevelPosition.currentOffset, treeItemPosition.offset + treeItemPosition.actualSize.width + treeItemPosition.rightPadding);
+  }
+
+  function offsetItemChildren(treeItem, offset) {
+    var childTreeItemPosition,
+      treeLevelPosition;
+
+    _visualTree.loopLevels(this, treeItem.id, function (childItemId, childItem, levelid) {
+      childTreeItemPosition = _data.treeItemsPositions[childItemId];
+      childTreeItemPosition.offset += offset;
+
+      treeLevelPosition = _treeLevelsPositions[_treeLevels.getLevelIndex(childItemId)];
+      treeLevelPosition.currentOffset = Math.max(treeLevelPosition.currentOffset, childTreeItemPosition.offset + childTreeItemPosition.actualSize.width);
+
+      return true;
+    });
+  }
+
+  function recalcItemsPositions() {
+    var prevLevelPosition = null;
+    _treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
+      var treeLevelPosition = _treeLevelsPositions[levelIndex];
+
+      _treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
+        var treeItemPosition = _data.treeItemsPositions[itemid];
+        var result = getPosition(treeItemPosition.actualVisibility, treeItemPosition.offset, treeItemPosition.actualSize, prevLevelPosition, treeLevelPosition, _itemsSizesOptions.verticalAlignment);
+        treeItemPosition.actualPosition = result.position;
+        treeItemPosition.horizontalConnectorsShift = result.horizontalConnectorsShift;
+        treeItemPosition.topConnectorShift = result.topConnectorShift;
+        treeItemPosition.topConnectorInterval = result.topConnectorInterval;
+        treeItemPosition.bottomConnectorShift = result.bottomConnectorShift;
+        treeItemPosition.bottomConnectorInterval = result.bottomConnectorInterval;
+      });
+
+      prevLevelPosition = treeLevelPosition;
+    });
+  }
+
+  function getSize(visibility, isCursor, treeItemTemplate, itemsSizesOptions, orientationType) {
+    var templateConfig,
+      size,
+      contentPosition;
+
+    switch (visibility) {
+      case 1/*primitives.common.Visibility.Normal*/:
+        templateConfig = treeItemTemplate.template.templateConfig;
+        size = new primitives.common.Size(templateConfig.itemSize);
+        contentPosition = new primitives.common.Rect(0, 0, size.width, size.height);
+        if (isCursor) {
+          size.height += templateConfig.cursorPadding.top + templateConfig.cursorPadding.bottom;
+          size.width += templateConfig.cursorPadding.left + templateConfig.cursorPadding.right;
+          contentPosition.x = templateConfig.cursorPadding.left;
+          contentPosition.y = templateConfig.cursorPadding.top;
+        }
+        if (treeItemTemplate.hasSelectorCheckbox) {
+          size.height += itemsSizesOptions.checkBoxPanelSize;
+        }
+        if (treeItemTemplate.hasButtons) {
+          size.width += itemsSizesOptions.buttonsPanelSize;
+          switch (itemsSizesOptions.groupTitlePlacementType) {
+            case 3/*primitives.common.AdviserPlacementType.Right*/:
+              contentPosition.x += itemsSizesOptions.buttonsPanelSize;
+              break;
+          }
+        }
+        if (treeItemTemplate.hasGroupTitle) {
+          size.width += itemsSizesOptions.groupTitlePanelSize;
+          switch (itemsSizesOptions.groupTitlePlacementType) {
+            case 3/*primitives.common.AdviserPlacementType.Right*/:
+              break;
+            default:
+              contentPosition.x += itemsSizesOptions.groupTitlePanelSize;
+              break;
+          }
+        }
+        break;
+      case 2/*primitives.common.Visibility.Dot*/:
+        templateConfig = treeItemTemplate.template.templateConfig;
+        size = new primitives.common.Size(templateConfig.minimizedItemSize);
+        break;
+      case 3/*primitives.common.Visibility.Line*/:
+      case 4/*primitives.common.Visibility.Invisible*/:
+        size = new primitives.common.Size();
+        break;
+    }
+
+    switch (orientationType) {
+      case 2/*primitives.common.OrientationType.Left*/:
+      case 3/*primitives.common.OrientationType.Right*/:
+        size.invert();
+        break;
+    }
+
+    return {
+      actualSize: size,
+      contentPosition: contentPosition
+    };
+  }
+
+  function getPosition(visibility, offset, size, prevLevel, level, verticalAlignment) {
+    var itemShift = 0;
+
+    switch (visibility) {
+      case 1/*primitives.common.Visibility.Normal*/:
+        switch (verticalAlignment) {
+          case 0/*primitives.common.VerticalAlignmentType.Top*/:
+            itemShift = 0;
+            break;
+          case 1/*primitives.common.VerticalAlignmentType.Middle*/:
+            itemShift = (level.depth - size.height) / 2.0;
+            break;
+          case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
+            itemShift = level.depth - size.height;
+            break;
+        }
+        break;
+      case 2/*primitives.common.Visibility.Dot*/:
+      case 3/*primitives.common.Visibility.Line*/:
+      case 4/*primitives.common.Visibility.Invisible*/:
+        itemShift = level.horizontalConnectorsDepth - size.height / 2.0;
+        break;
+    }
+
+    return {
+      position: new primitives.common.Rect(offset, level.shift + itemShift, size.width, size.height),
+      horizontalConnectorsShift: level.shift + level.horizontalConnectorsDepth,
+      topConnectorShift: prevLevel != null ? prevLevel.shift + prevLevel.connectorShift : null,
+      topConnectorInterval: prevLevel != null ? prevLevel.levelSpace / 2 : null,
+      bottomConnectorShift: level.shift + level.connectorShift,
+      bottomConnectorInterval: level.levelSpace / 2
+    };
+  }
+
+  function getIntervals(options) {
+    var result = [];
+    result[1/*primitives.common.Visibility.Normal*/] = options.normalItemsInterval;
+    result[2/*primitives.common.Visibility.Dot*/] = options.dotItemsInterval;
+    result[3/*primitives.common.Visibility.Line*/] = options.lineItemsInterval;
+    result[4/*primitives.common.Visibility.Invisible*/] = options.lineItemsInterval;
+    return result;
+  }
+
+  function getItemPosition(itemid) {
+    return _data.treeItemsPositions[itemid];
+  }
+
+  function getItemsPositions() {
+    return _data.treeItemsPositions;
+  }
+
+  function getContentSize() {
+    return _data.panelSize;
+  }
+
+  return {
+    process: process,
+    getItemsPositions: getItemsPositions,
+    getItemPosition: getItemPosition,
+    getContentSize: getContentSize
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Transformations/OrgTreeTask.js*/
 primitives.orgdiagram.OrgTreeTask = function (itemsOptionTask) {
-	var _data = {
-		orgTree: null, /*tree primitives.orgdiagram.OrgItem */
-		maximumId: null /* maximum of OrgItem.id */
-	};
+  var _data = {
+    orgTree: null, /*tree primitives.orgdiagram.OrgItem */
+    maximumId: null /* maximum of OrgItem.id */
+  };
 
-	function process() {
-		createOrgTree(itemsOptionTask.getItems());
+  function process() {
+    createOrgTree(itemsOptionTask.getItems());
 
-		return true;
-	}
+    return true;
+  }
 
-	function createOrgTree(items) {
-		var orgItem,
-			orgItemRoot,
-			userItem,
-			index, len,
-			index2, len2,
-			property,
-			maximumId = 0,
-			parsedId,
-			// Organizational chart definition 
-			orgTree = primitives.common.tree(),
-			rootItemConfig;
+  function createOrgTree(items) {
+    var orgItem,
+      orgItemRoot,
+      userItem,
+      index, len,
+      index2, len2,
+      property,
+      maximumId = 0,
+      parsedId,
+      // Organizational chart definition 
+      orgTree = primitives.common.tree(),
+      rootItemConfig;
 
-		/* convert items to hash table */
-		for (index = 0, len = items.length; index < len; index += 1) {
-			userItem = items[index];
-			/* user should define unique id for every ItemConfig otherwise we ignore it
-				if parent does not exists in the tree then item is considered as root item
-			*/
-			if (userItem.id != null) {
-				/* Organizational chart ItemConfig is almost the same as OrgItem 
-					except options used to draw connectors in multi parent chart
-				*/
-				orgItem = new primitives.orgdiagram.OrgItem(userItem);
+    /* convert items to hash table */
+    for (index = 0, len = items.length; index < len; index += 1) {
+      userItem = items[index];
+      /* user should define unique id for every ItemConfig otherwise we ignore it
+        if parent does not exists in the tree then item is considered as root item
+      */
+      if (userItem.id != null) {
+        /* Organizational chart ItemConfig is almost the same as OrgItem 
+          except options used to draw connectors in multi parent chart
+        */
+        orgItem = new primitives.orgdiagram.OrgItem(userItem);
 
-				// OrgItem id coinsides with ItemConfig id since we don't add any new org items to user's org chart definition
-				parsedId = parseInt(userItem.id, 10);
-				maximumId = Math.max(isNaN(parsedId) ? 0 : parsedId, maximumId);
+        // OrgItem id coinsides with ItemConfig id since we don't add any new org items to user's org chart definition
+        parsedId = parseInt(userItem.id, 10);
+        maximumId = Math.max(isNaN(parsedId) ? 0 : parsedId, maximumId);
 
-				// Collect org items
-				orgTree.add(userItem.parent, orgItem.id, orgItem);
+        // Collect org items
+        orgTree.add(userItem.parent, orgItem.id, orgItem);
 
-				/* We ignore looped items, it is applications responsibility to control data consistency */
-			}
-		}
-		/* create chart root item config */
-		maximumId += 1;
+        /* We ignore looped items, it is applications responsibility to control data consistency */
+      }
+    }
+    /* create chart root item config */
+    maximumId += 1;
 
-		rootItemConfig = new primitives.orgdiagram.ItemConfig();
-		rootItemConfig.id = maximumId;
-		rootItemConfig.title = "internal root";
-		rootItemConfig.isVisible = false;
-		rootItemConfig.isActive = false;
-		
-		/* create chart org root item */
-		orgItemRoot = new primitives.orgdiagram.OrgItem(rootItemConfig);
-		orgItemRoot.hideParentConnection = true;
-		orgItemRoot.hideChildrenConnection = true;
+    rootItemConfig = new primitives.orgdiagram.ItemConfig();
+    rootItemConfig.id = maximumId;
+    rootItemConfig.title = "internal root";
+    rootItemConfig.isVisible = false;
+    rootItemConfig.isActive = false;
 
-		orgTree.add(null, orgItemRoot.id, orgItemRoot);
+    /* create chart org root item */
+    orgItemRoot = new primitives.orgdiagram.OrgItem(rootItemConfig);
+    orgItemRoot.hideParentConnection = true;
+    orgItemRoot.hideChildrenConnection = true;
 
-		orgTree.loopLevels(this, function (nodeid, node, levelid) {
-			if (levelid > 0) {
-				return orgTree.BREAK;
-			}
-			if (orgItemRoot.id != nodeid) {
-				orgTree.adopt(orgItemRoot.id, nodeid);
+    orgTree.add(null, orgItemRoot.id, orgItemRoot);
 
-				/* root item must be regular */
-				node.itemType = 0/*primitives.orgdiagram.ItemType.Regular*/;
-			}
-		});
+    orgTree.loopLevels(this, function (nodeid, node, levelid) {
+      if (levelid > 0) {
+        return orgTree.BREAK;
+      }
+      if (orgItemRoot.id != nodeid) {
+        orgTree.adopt(orgItemRoot.id, nodeid);
 
-		hideRootConnectors(orgTree);
+        /* root item must be regular */
+        node.itemType = 0/*primitives.orgdiagram.ItemType.Regular*/;
+      }
+    });
 
-		_data.orgTree = orgTree;
-		_data.maximumId = maximumId;
+    hideRootConnectors(orgTree);
 
-		return true;
-	}
+    _data.orgTree = orgTree;
+    _data.maximumId = maximumId;
 
-	function hideRootConnectors(orgTree) {
-		orgTree.loopLevels(this, function (nodeid, node, levelid) {
-			var allRegular = true;
-			if (!node.isVisible) {
-				orgTree.loopChildren(this, nodeid, function (childid, child, index) {
-					if (child.itemType != 0/*primitives.orgdiagram.ItemType.Regular*/) {
-						allRegular = false;
-						return true; // break
-					}
-				}); //ignore jslint
+    return true;
+  }
 
-				if (allRegular) {
-					node.hideChildrenConnection = true;
+  function hideRootConnectors(orgTree) {
+    orgTree.loopLevels(this, function (nodeid, node, levelid) {
+      var allRegular = true;
+      if (!node.isVisible) {
+        orgTree.loopChildren(this, nodeid, function (childid, child, index) {
+          if (child.itemType != 0/*primitives.orgdiagram.ItemType.Regular*/) {
+            allRegular = false;
+            return true; // break
+          }
+        }); //ignore jslint
 
-					orgTree.loopChildren(this, nodeid, function (childid, child, index) {
-						child.hideParentConnection = true;
-					});
-				} else {
-					return orgTree.SKIP; // skip children
-				}
-			} else {
-				return orgTree.SKIP;
-			}
-		});
-	}
+        if (allRegular) {
+          node.hideChildrenConnection = true;
 
-	function getOrgTree() {
-		return _data.orgTree;
-	}
+          orgTree.loopChildren(this, nodeid, function (childid, child, index) {
+            child.hideParentConnection = true;
+          });
+        } else {
+          return orgTree.SKIP; // skip children
+        }
+      } else {
+        return orgTree.SKIP;
+      }
+    });
+  }
 
-	function getMaximumId() {
-		return _data.maximumId;
-	}
+  function getOrgTree() {
+    return _data.orgTree;
+  }
 
-	return {
-		process: process,
-		getOrgTree: getOrgTree,
-		getMaximumId: getMaximumId
-	};
+  function getMaximumId() {
+    return _data.maximumId;
+  }
+
+  return {
+    process: process,
+    getOrgTree: getOrgTree,
+    getMaximumId: getMaximumId
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Transformations/PalleteManagerTask.js*/
 primitives.orgdiagram.PaletteManagerTask = function (connectorsOptionTask, linePaletteOptionTask) {
-	var _paletteManager;
+  var _paletteManager;
 
-	function process() {
-		var linesPalette = [];
-		if (linePaletteOptionTask != null) {
-			linesPalette = linePaletteOptionTask.getOptions().linesPalette;
-		}
-		_paletteManager = new primitives.common.PaletteManager(connectorsOptionTask.getOptions(), linesPalette);
+  function process() {
+    var linesPalette = [];
+    if (linePaletteOptionTask != null) {
+      linesPalette = linePaletteOptionTask.getOptions().linesPalette;
+    }
+    _paletteManager = new primitives.common.PaletteManager(connectorsOptionTask.getOptions(), linesPalette);
 
-		return true;
-	}
+    return true;
+  }
 
-	function getPaletteManager() {
-		return _paletteManager;
-	}
+  function getPaletteManager() {
+    return _paletteManager;
+  }
 
-	return {
-		process: process,
-		getPaletteManager: getPaletteManager
-	};
+  return {
+    process: process,
+    getPaletteManager: getPaletteManager
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Transformations/VisualTreeLevelsTask.js*/
 /* Read visual tree
-		populate treeLevels array of type TreeLevel
-			TreeLevel object contains ordered list of all its items 
-			plus when items added to that collection we store level & levelPosition in item
+    populate treeLevels array of type TreeLevel
+      TreeLevel object contains ordered list of all its items 
+      plus when items added to that collection we store level & levelPosition in item
 */
 primitives.orgdiagram.VisualTreeLevelsTask = function (visualTreeTask, itemTemplateParamsTask) {
-	var _data = {
-		treeLevels: null, /* primitives.common.TreeLevels */
-		bundles: null, /* array of primitives.common.BaseConnectorBundle objects */
-		connectorStacks: null /* array of primitives.orgdiagram.TreeLevelConnectorStackSize objects, 
-			it keeps total number of horizontal connectors lines between parents and children stack on top of each other */
-	},
-	_nullTreeLevelConnectorStackSize = new primitives.orgdiagram.TreeLevelConnectorStackSize();
+  var _data = {
+    treeLevels: null, /* primitives.common.TreeLevels */
+    bundles: null, /* array of primitives.common.BaseConnectorBundle objects */
+    connectorStacks: null /* array of primitives.orgdiagram.TreeLevelConnectorStackSize objects, 
+      it keeps total number of horizontal connectors lines between parents and children stack on top of each other */
+  },
+    _nullTreeLevelConnectorStackSize = new primitives.orgdiagram.TreeLevelConnectorStackSize();
 
-	function process() {
-		var visualTree = visualTreeTask.getVisualTree();
+  function process() {
+    var visualTree = visualTreeTask.getVisualTree();
 
-		_data.treeLevels = primitives.common.TreeLevels();
+    _data.treeLevels = primitives.common.TreeLevels();
 
-		visualTree.loopLevels(this, function (treeItemId, treeItem, levelIndex) {
-			_data.treeLevels.addItem(levelIndex, treeItemId, treeItem);
-		});
+    visualTree.loopLevels(this, function (treeItemId, treeItem, levelIndex) {
+      _data.treeLevels.addItem(levelIndex, treeItemId, treeItem);
+    });
 
-		_data.bundles = [];
-		_data.connectorStacks = [];
+    _data.bundles = [];
+    _data.connectorStacks = [];
 
-		recalcLevelsDepth(_data.bundles, _data.connectorStacks, _data.treeLevels, visualTree);
+    recalcLevelsDepth(_data.bundles, _data.connectorStacks, _data.treeLevels, visualTree);
 
-		return true;
-	}
+    return true;
+  }
 
-	function recalcLevelsDepth(bundles, connectorStacks, treeLevels, orgTree, orgPartners) {
-		var index, len,
-			index2, len2,
-			index3, len3,
-			treeItem,
-			itemPosition,
-			bundle, bundlesToStack, bundlesByItemmId = {},
-			startIndex, endIndex, stackSegments;
+  function recalcLevelsDepth(bundles, connectorStacks, treeLevels, orgTree, orgPartners) {
+    var index, len,
+      index2, len2,
+      index3, len3,
+      treeItem,
+      itemPosition,
+      bundle, bundlesToStack, bundlesByItemmId = {},
+      startIndex, endIndex, stackSegments;
 
 
-		treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
-			var stacksSizes = new primitives.orgdiagram.TreeLevelConnectorStackSize();
-			connectorStacks[levelIndex] = stacksSizes;
+    treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
+      var stacksSizes = new primitives.orgdiagram.TreeLevelConnectorStackSize();
+      connectorStacks[levelIndex] = stacksSizes;
 
-			bundlesToStack = [];
+      bundlesToStack = [];
 
-			treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
-				var parents = [];
-				if (!bundlesByItemmId.hasOwnProperty(itemid)) {
-					if (treeItem.connectorPlacement & 4/*primitives.common.SideFlag.Bottom*/) {
-						parents.push(itemid);
-					}
-					parents = parents.concat(treeItem.partners);
+      treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
+        var parents = [];
+        if (!bundlesByItemmId.hasOwnProperty(itemid)) {
+          if (treeItem.connectorPlacement & 4/*primitives.common.SideFlag.Bottom*/) {
+            parents.push(itemid);
+          }
+          parents = parents.concat(treeItem.partners);
 
-					if (parents.length > 0) {
-						bundle = new primitives.common.VerticalConnectorBundle(parents, []);
+          if (parents.length > 0) {
+            bundle = new primitives.common.VerticalConnectorBundle(parents, []);
 
-						for (var index = 0, len = parents.length; index < len; index += 1) {
-							bundlesByItemmId[parents[index]] = bundle;
-						}
+            for (var index = 0, len = parents.length; index < len; index += 1) {
+              bundlesByItemmId[parents[index]] = bundle;
+            }
 
-						orgTree.loopChildren(this, itemid, function (childid, child, index) {
-							if (child.connectorPlacement & 1/*primitives.common.SideFlag.Top*/) {
-								bundle.toItems.push(childid);
-							}
-						}); //ignore jslint
+            orgTree.loopChildren(this, itemid, function (childid, child, index) {
+              if (child.connectorPlacement & 1/*primitives.common.SideFlag.Top*/) {
+                bundle.toItems.push(childid);
+              }
+            }); //ignore jslint
 
-						if (parents.length > 1) {
-							bundlesToStack.push(bundle);
-						}
+            if (parents.length > 1) {
+              bundlesToStack.push(bundle);
+            }
 
-						if (bundle.fromItems.length > 1 || bundle.toItems.length > 0) {
-							bundles.push(bundle);
-						}
-					}
-				}
+            if (bundle.fromItems.length > 1 || bundle.toItems.length > 0) {
+              bundles.push(bundle);
+            }
+          }
+        }
 
-				if (treeItem.connectorPlacement & 8/*primitives.common.SideFlag.Left*/) {
-					bundle = new primitives.common.HorizontalConnectorBundle(itemid, treeLevels.getPrevItem(itemid));
-					bundles.push(bundle);
-				}
+        if (treeItem.connectorPlacement & 8/*primitives.common.SideFlag.Left*/) {
+          bundle = new primitives.common.HorizontalConnectorBundle(itemid, treeLevels.getPrevItem(itemid));
+          bundles.push(bundle);
+        }
 
-				if (treeItem.connectorPlacement & 2/*primitives.common.SideFlag.Right*/) {
-					bundle = new primitives.common.HorizontalConnectorBundle(itemid, treeLevels.getNextItem(itemid));
-					bundles.push(bundle);
-				}
-			});
+        if (treeItem.connectorPlacement & 2/*primitives.common.SideFlag.Right*/) {
+          bundle = new primitives.common.HorizontalConnectorBundle(itemid, treeLevels.getNextItem(itemid));
+          bundles.push(bundle);
+        }
+      });
 
-			if (bundlesToStack.length > 0) {
-				/* find minimum and maximum partner index at level */
-				stackSegments = primitives.common.pile();
-				for (index2 = 0, len2 = bundlesToStack.length; index2 < len2; index2 += 1) {
-					bundle = bundlesToStack[index2];
+      if (bundlesToStack.length > 0) {
+        /* find minimum and maximum partner index at level */
+        stackSegments = primitives.common.pile();
+        for (index2 = 0, len2 = bundlesToStack.length; index2 < len2; index2 += 1) {
+          bundle = bundlesToStack[index2];
 
-					startIndex = null;
-					endIndex = null;
-					for (index3 = 0, len3 = bundle.fromItems.length; index3 < len3; index3 += 1) {
-						itemPosition = treeLevels.getItemPosition(bundle.fromItems[index3]);
+          startIndex = null;
+          endIndex = null;
+          for (index3 = 0, len3 = bundle.fromItems.length; index3 < len3; index3 += 1) {
+            itemPosition = treeLevels.getItemPosition(bundle.fromItems[index3]);
 
-						startIndex = (startIndex != null) ? Math.min(startIndex, itemPosition) : itemPosition;
-						endIndex = (endIndex != null) ? Math.max(endIndex, itemPosition) : itemPosition;
-					}
-					stackSegments.add(startIndex, endIndex, bundle);
-				}
+            startIndex = (startIndex != null) ? Math.min(startIndex, itemPosition) : itemPosition;
+            endIndex = (endIndex != null) ? Math.max(endIndex, itemPosition) : itemPosition;
+          }
+          stackSegments.add(startIndex, endIndex, bundle);
+        }
 
-				stacksSizes.parentsStackSize = stackSegments.resolve(this, function (from, to, bundle, offset, stackSize) {
-					bundle.fromOffset = offset + 1;
-					bundle.fromStackSize = stackSize;
-				});//ignore jslint
-			}
-		});
-	}
+        stacksSizes.parentsStackSize = stackSegments.resolve(this, function (from, to, bundle, offset, stackSize) {
+          bundle.fromOffset = offset + 1;
+          bundle.fromStackSize = stackSize;
+        });//ignore jslint
+      }
+    });
+  }
 
-	function getTreeLevels() {
-		return _data.treeLevels;
-	}
+  function getTreeLevels() {
+    return _data.treeLevels;
+  }
 
-	function getBundles() {
-		return _data.bundles;
-	}
+  function getBundles() {
+    return _data.bundles;
+  }
 
-	function getNestedLayoutBottomConnectorIds() {
-		return {}; /* org chart does not support nested layouts */
-	}
+  function getNestedLayoutBottomConnectorIds() {
+    return {}; /* org chart does not support nested layouts */
+  }
 
-	function getConnectorsStacksSizes(levelid) {
-		return _data.connectorStacks[levelid] || _nullTreeLevelConnectorStackSize;
-	}
+  function getConnectorsStacksSizes(levelid) {
+    return _data.connectorStacks[levelid] || _nullTreeLevelConnectorStackSize;
+  }
 
-	return {
-		process: process,
-		getTreeLevels: getTreeLevels,
-		getBundles: getBundles,
-		getConnectorsStacksSizes: getConnectorsStacksSizes,
-		getNestedLayoutBottomConnectorIds: getNestedLayoutBottomConnectorIds
-	};
+  return {
+    process: process,
+    getTreeLevels: getTreeLevels,
+    getBundles: getBundles,
+    getConnectorsStacksSizes: getConnectorsStacksSizes,
+    getNestedLayoutBottomConnectorIds: getNestedLayoutBottomConnectorIds
+  };
 };
 
 /* /Controls/OrgDiagram/Tasks/Transformations/VisualTreeTask.js*/
 /* method uses structures created in orgTreeTask to create visual tree used to render chart
-	It populates visualTree structure with TreeItem objects.
-	
-	1. Create invisble visual root item, so all orphants added to it, but since it is invisible, no connections are going to be drawn betwen them
-	2. Loop orgTree nodes and populate visual tree hierarchy: visualTree
+  It populates visualTree structure with TreeItem objects.
+  
+  1. Create invisble visual root item, so all orphants added to it, but since it is invisible, no connections are going to be drawn betwen them
+  2. Loop orgTree nodes and populate visual tree hierarchy: visualTree
 */
 primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, visualTreeOptionTask, isFamilyChartMode) {
   var _data = {
@@ -21795,8 +21750,8 @@ primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, v
         visualTree.add(null, parentOrgItemId, logicalParentItem);
       }
 
-			/* find left and right siblings margins of logical parent item
-				they are needed to properly place GeneralPartner & LimitedPartner nodes. */
+      /* find left and right siblings margins of logical parent item
+        they are needed to properly place GeneralPartner & LimitedPartner nodes. */
       leftSiblingOffset = 0;
       rightSiblingOffset = 0;
       if ((index = visualTree.indexOf(parentOrgItemId)) != null) {
@@ -22710,626 +22665,626 @@ primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, v
 /* /Controls/OrgDiagram/Templates/AnnotationLabelTemplate.js*/
 /* jshint latedef: true, unused: false */
 primitives.common.AnnotationLabelTemplate = function () {
-	var _template = ["div",
-		{
-			"type": "checkbox",
-			"name": "checkbox",
-			"class": ["bp-item", "bp-corner-all", "bp-connector-label"]
-		}
-	];
+  var _template = ["div",
+    {
+      "type": "checkbox",
+      "name": "checkbox",
+      "class": ["bp-item", "bp-corner-all", "bp-connector-label"]
+    }
+  ];
 
-	function template() {
-		return _template;
-	}
+  function template() {
+    return _template;
+  }
 
-	function getHashCode() {
-		return "defaultAnnotationLabelTemplate";
-	}
+  function getHashCode() {
+    return "defaultAnnotationLabelTemplate";
+  }
 
-	function render(event, data) {
-		var annotationConfig = data.context;
-		if (primitives.common.isArray(annotationConfig.label)) {
-			data.element.innerHTML = "";
-			data.element.appendChild(primitives.common.JsonML.toHTML(annotationConfig.label));
-		} else {
-			data.element.innerHTML = annotationConfig.label;
-		}
-	}
+  function render(event, data) {
+    var annotationConfig = data.context;
+    if (primitives.common.isArray(annotationConfig.label)) {
+      data.element.innerHTML = "";
+      data.element.appendChild(primitives.common.JsonML.toHTML(annotationConfig.label));
+    } else {
+      data.element.innerHTML = annotationConfig.label;
+    }
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /Controls/OrgDiagram/Templates/ButtonsTemplate.js*/
 primitives.common.ButtonsTemplate = function (options) {
-	var _template = ["div", {
-		"style": {
-			position: "absolute"
-		}
-	}
-	];
+  var _template = ["div", {
+    "style": {
+      position: "absolute"
+    }
+  }
+  ];
 
-	function template() {
-		return _template;
-	}
+  function template() {
+    return _template;
+  }
 
-	function getHashCode() {
-		return "defaultButtonsTemplate";
-	}
+  function getHashCode() {
+    return "defaultButtonsTemplate";
+  }
 
-	function render(event, data) {
-		var element = data.element,
-			topOffset = 0,
-			buttonsInterval = 10,
-			buttonConfig,
-			buttons = data.buttons,
-			buttonprop,
-			button,
-			index;
+  function render(event, data) {
+    var element = data.element,
+      topOffset = 0,
+      buttonsInterval = 10,
+      buttonConfig,
+      buttons = data.buttons,
+      buttonprop,
+      button,
+      index;
 
 
 
-		switch (data.renderingMode) {
-			case 0/*primitives.common.RenderingMode.Create*/:
-				for (index = 0; index < buttons.length; index += 1) {
-					buttonConfig = buttons[index];
-					button = ["button",
-						{
-							"style": {
-								position: "absolute",
-								top: topOffset + "px",
-								left: "0px"
-							},
-							"class": ["orgdiagrambutton", "bp-button"],
-							"data-buttonname": buttonConfig.name
-						},
-						["span",
-							{
-								"style": {
-									width: buttonConfig.size.width + "px",
-									height: buttonConfig.size.height + "px"
-								},
-								"class": ["bp-icon", buttonConfig.icon]
-							}
-						]
-					];
-					data.element.appendChild(primitives.common.JsonML.toHTML(button));
-					topOffset += buttonsInterval + buttonConfig.size.height;
-				}
-				
+    switch (data.renderingMode) {
+      case 0/*primitives.common.RenderingMode.Create*/:
+        for (index = 0; index < buttons.length; index += 1) {
+          buttonConfig = buttons[index];
+          button = ["button",
+            {
+              "style": {
+                position: "absolute",
+                top: topOffset + "px",
+                left: "0px"
+              },
+              "class": ["orgdiagrambutton", "bp-button"],
+              "data-buttonname": buttonConfig.name
+            },
+            ["span",
+              {
+                "style": {
+                  width: buttonConfig.size.width + "px",
+                  height: buttonConfig.size.height + "px"
+                },
+                "class": ["bp-icon", buttonConfig.icon]
+              }
+            ]
+          ];
+          data.element.appendChild(primitives.common.JsonML.toHTML(button));
+          topOffset += buttonsInterval + buttonConfig.size.height;
+        }
 
-				break;
-			case 1/*primitives.common.RenderingMode.Update*/:
-				break;
-		}
-	}
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+        break;
+      case 1/*primitives.common.RenderingMode.Update*/:
+        break;
+    }
+  }
+
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 
 
 /* /Controls/OrgDiagram/Templates/CheckBoxTemplate.js*/
 primitives.common.CheckBoxTemplate = function (selectCheckBoxLabel) {
-	var _template = ["div",
-		["label",
-			["nobr",
-				["input",
-					{
-						"type": "checkbox",
-						"name": "checkbox",
-						"class": "bp-selectioncheckbox"
-					}
-				],
-				'\xa0',
-				["span",
-					{
-						"name": "selectiontext",
-						"class": "bp-selectiontext"
-					},
-					selectCheckBoxLabel
-				]
-			]
-		]
-	];
+  var _template = ["div",
+    ["label",
+      ["nobr",
+        ["input",
+          {
+            "type": "checkbox",
+            "name": "checkbox",
+            "class": "bp-selectioncheckbox"
+          }
+        ],
+        '\xa0',
+        ["span",
+          {
+            "name": "selectiontext",
+            "class": "bp-selectiontext"
+          },
+          selectCheckBoxLabel
+        ]
+      ]
+    ]
+  ];
 
-	function template() {
-		return _template;
-	}
+  function template() {
+    return _template;
+  }
 
-	function getHashCode() {
-		return "defaultCheckBoxTemplate";
-	}
+  function getHashCode() {
+    return "defaultCheckBoxTemplate";
+  }
 
-	function render(event, data) {
-		var checkBox = data.element.firstChild.firstChild.firstChild;
-		checkBox.checked = data.isSelected;
-		checkBox.setAttribute("data-id", data.id);
-		var label = data.element.firstChild.firstChild.childNodes[2];
-		label.setAttribute("data-id", data.id);
-	}
+  function render(event, data) {
+    var checkBox = data.element.firstChild.firstChild.firstChild;
+    checkBox.checked = data.isSelected;
+    checkBox.setAttribute("data-id", data.id);
+    var label = data.element.firstChild.firstChild.childNodes[2];
+    label.setAttribute("data-id", data.id);
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /Controls/OrgDiagram/Templates/CursorTemplate.js*/
 primitives.common.CursorTemplate = function (options, itemTemplateConfig) {
-	var _template = create(itemTemplateConfig);
+  var _template = create(itemTemplateConfig);
 
-	function create(config) {
-		return ["div",
-				{
-					"style": {
-						width: (config.itemSize.width + config.cursorPadding.left + config.cursorPadding.right) + "px",
-						height: (config.itemSize.height + config.cursorPadding.top + config.cursorPadding.bottom) + "px",
-						"borderWidth": config.cursorBorderWidth + "px"
-					},
-					"class": ["bp-item", "bp-corner-all", "bp-cursor-frame"]
-				}
-		];
-	}
+  function create(config) {
+    return ["div",
+      {
+        "style": {
+          width: (config.itemSize.width + config.cursorPadding.left + config.cursorPadding.right) + "px",
+          height: (config.itemSize.height + config.cursorPadding.top + config.cursorPadding.bottom) + "px",
+          "borderWidth": config.cursorBorderWidth + "px"
+        },
+        "class": ["bp-item", "bp-corner-all", "bp-cursor-frame"]
+      }
+    ];
+  }
 
-	function template() {
-		return _template;
-	}
+  function template() {
+    return _template;
+  }
 
-	function getHashCode() {
-		return "defaultCursorTemplate";
-	}
+  function getHashCode() {
+    return "defaultCursorTemplate";
+  }
 
-	function render(event, data) {
+  function render(event, data) {
 
-	}
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /Controls/OrgDiagram/Templates/DotHighlightTemplate.js*/
 primitives.common.DotHighlightTemplate = function (options, itemTemplateConfig) {
-	var _template = create(itemTemplateConfig);
+  var _template = create(itemTemplateConfig);
 
-	function create(config) {
-		var radius = config.minimizedItemCornerRadius;
-		if(radius == null) {
-			radius = Math.max(
-				config.highlightPadding.left + config.minimizedItemSize.width + config.highlightPadding.right,
-				config.highlightPadding.top + config.minimizedItemSize.height + config.highlightPadding.bottom
-			) + config.highlightBorderWidth; 
-		}
-		return ["div",
-				{
-					"style": {
-						"borderWidth": config.highlightBorderWidth + "px",
-						"MozBorderRadius": radius + "px",
-						"WebkitBorderRadius": radius + "px",
-						"-khtml-border-radius": radius + "px",
-						"borderRadius": radius + "px"
-					},
-					"class": ["bp-item", "bp-highlight-dot-frame"]
-				}
-		];
-	}
+  function create(config) {
+    var radius = config.minimizedItemCornerRadius;
+    if (radius == null) {
+      radius = Math.max(
+        config.highlightPadding.left + config.minimizedItemSize.width + config.highlightPadding.right,
+        config.highlightPadding.top + config.minimizedItemSize.height + config.highlightPadding.bottom
+      ) + config.highlightBorderWidth;
+    }
+    return ["div",
+      {
+        "style": {
+          "borderWidth": config.highlightBorderWidth + "px",
+          "MozBorderRadius": radius + "px",
+          "WebkitBorderRadius": radius + "px",
+          "-khtml-border-radius": radius + "px",
+          "borderRadius": radius + "px"
+        },
+        "class": ["bp-item", "bp-highlight-dot-frame"]
+      }
+    ];
+  }
 
-	function template() {
-		return _template;
-	}
+  function template() {
+    return _template;
+  }
 
-	function getHashCode() {
-		return "defaultDotHighlightTemplate";
-	}
+  function getHashCode() {
+    return "defaultDotHighlightTemplate";
+  }
 
-	function render(event, data) {
+  function render(event, data) {
 
-	}
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /Controls/OrgDiagram/Templates/GroupTitleTemplate.js*/
 primitives.common.GroupTitleTemplate = function (options) {
-	var _template = create();
+  var _template = create();
 
-	function create() {
-		return ["div",
-				{
-					"style": {
-						"fontSize": options.groupTitleFontSize,
-						"fontFamily": options.groupTitleFontFamily,
-						"fontWeight": options.groupTitleFontWeight,
-						"fontStyle": options.groupTitleFontStyle
-					},
-					"class": ["bp-item", "bp-corner-all", "bp-grouptitle-frame"]
-				},
-				text(options.groupTitleOrientation, options.groupTitleHorizontalAlignment, options.groupTitleVerticalAlignment)
-		];
-	}
+  function create() {
+    return ["div",
+      {
+        "style": {
+          "fontSize": options.groupTitleFontSize,
+          "fontFamily": options.groupTitleFontFamily,
+          "fontWeight": options.groupTitleFontWeight,
+          "fontStyle": options.groupTitleFontStyle
+        },
+        "class": ["bp-item", "bp-corner-all", "bp-grouptitle-frame"]
+      },
+      text(options.groupTitleOrientation, options.groupTitleHorizontalAlignment, options.groupTitleVerticalAlignment)
+    ];
+  }
 
-	function text(orientation, horizontalAlignment, verticalAlignment) {
-		var rotation = "",
-			element;
+  function text(orientation, horizontalAlignment, verticalAlignment) {
+    var rotation = "",
+      element;
 
-		switch (orientation) {
-			case 0/*primitives.text.TextOrientationType.Horizontal*/:
-			case 3/*primitives.text.TextOrientationType.Auto*/:
-				break;
-			case 1/*primitives.text.TextOrientationType.RotateLeft*/:
-				rotation = "rotate(-90deg)";
-				break;
-			case 2/*primitives.text.TextOrientationType.RotateRight*/:
-				rotation = "rotate(90deg)";
-				break;
-		}
+    switch (orientation) {
+      case 0/*primitives.text.TextOrientationType.Horizontal*/:
+      case 3/*primitives.text.TextOrientationType.Auto*/:
+        break;
+      case 1/*primitives.text.TextOrientationType.RotateLeft*/:
+        rotation = "rotate(-90deg)";
+        break;
+      case 2/*primitives.text.TextOrientationType.RotateRight*/:
+        rotation = "rotate(90deg)";
+        break;
+    }
 
-		var style = {
-			"fontSize": options.groupTitleFontSize,
-			"fontFamily": options.groupTitleFontFamily,
-			"fontWeight": options.groupTitleFontWeight,
-			"fontStyle": options.groupTitleFontStyle,
-			"position": "absolute",
-			"padding": 0,
-			"margin": 0,
-			"textAlign": _getTextAlign(horizontalAlignment),
-			"lineHeight": 1,
-			"-webkit-transform-origin": "center center",
-			"-moz-transform-origin": "center center",
-			"-o-transform-origin": "center center",
-			"-ms-transform-origin": "center center",
-			"-webkit-transform": rotation,
-			"-moz-transform": rotation,
-			"-o-transform": rotation,
-			"-ms-transform": rotation,
-			"transform": rotation
-		};
+    var style = {
+      "fontSize": options.groupTitleFontSize,
+      "fontFamily": options.groupTitleFontFamily,
+      "fontWeight": options.groupTitleFontWeight,
+      "fontStyle": options.groupTitleFontStyle,
+      "position": "absolute",
+      "padding": 0,
+      "margin": 0,
+      "textAlign": _getTextAlign(horizontalAlignment),
+      "lineHeight": 1,
+      "-webkit-transform-origin": "center center",
+      "-moz-transform-origin": "center center",
+      "-o-transform-origin": "center center",
+      "-ms-transform-origin": "center center",
+      "-webkit-transform": rotation,
+      "-moz-transform": rotation,
+      "-o-transform": rotation,
+      "-ms-transform": rotation,
+      "transform": rotation
+    };
 
-		switch (verticalAlignment) {
-			case 0/*primitives.common.VerticalAlignmentType.Top*/:
-				element = ["div",
-					{
-						"style": style,
-						"class": ["bp-title-content", "bp-item", "bp-corner-all"]
-					}
-				];
-				break;
-			default:
-				style.borderCollapse = "collapse";
+    switch (verticalAlignment) {
+      case 0/*primitives.common.VerticalAlignmentType.Top*/:
+        element = ["div",
+          {
+            "style": style,
+            "class": ["bp-title-content", "bp-item", "bp-corner-all"]
+          }
+        ];
+        break;
+      default:
+        style.borderCollapse = "collapse";
 
-				element = ["table",
-					{
-						"style": style
-					},
-					["tbody",
-						["tr",
-							["td",
-								{
-									"style": {
-										"verticalAlign": _getVerticalAlignment(verticalAlignment),
-										"padding": 0
-									},
-									"class": "bp-title-content"
-								}
-							]
-						]
-					]
-				];
-				break;
-		}
+        element = ["table",
+          {
+            "style": style
+          },
+          ["tbody",
+            ["tr",
+              ["td",
+                {
+                  "style": {
+                    "verticalAlign": _getVerticalAlignment(verticalAlignment),
+                    "padding": 0
+                  },
+                  "class": "bp-title-content"
+                }
+              ]
+            ]
+          ]
+        ];
+        break;
+    }
 
-		return element;
-	}
+    return element;
+  }
 
-	function _getTextAlign(alignment) {
-		var result = null;
-		switch (alignment) {
-			case 0/*primitives.common.HorizontalAlignmentType.Center*/:
-				result = "center";
-				break;
-			case 1/*primitives.common.HorizontalAlignmentType.Left*/:
-				result = "left";
-				break;
-			case 2/*primitives.common.HorizontalAlignmentType.Right*/:
-				result = "right";
-				break;
-		}
-		return result;
-	}
+  function _getTextAlign(alignment) {
+    var result = null;
+    switch (alignment) {
+      case 0/*primitives.common.HorizontalAlignmentType.Center*/:
+        result = "center";
+        break;
+      case 1/*primitives.common.HorizontalAlignmentType.Left*/:
+        result = "left";
+        break;
+      case 2/*primitives.common.HorizontalAlignmentType.Right*/:
+        result = "right";
+        break;
+    }
+    return result;
+  }
 
-	function _getVerticalAlignment(alignment) {
-		var result = null;
-		switch (alignment) {
-			case 1/*primitives.common.VerticalAlignmentType.Middle*/:
-				result = "middle";
-				break;
-			case 0/*primitives.common.VerticalAlignmentType.Top*/:
-				result = "top";
-				break;
-			case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
-				result = "bottom";
-				break;
-		}
-		return result;
-	}
+  function _getVerticalAlignment(alignment) {
+    var result = null;
+    switch (alignment) {
+      case 1/*primitives.common.VerticalAlignmentType.Middle*/:
+        result = "middle";
+        break;
+      case 0/*primitives.common.VerticalAlignmentType.Top*/:
+        result = "top";
+        break;
+      case 2/*primitives.common.VerticalAlignmentType.Bottom*/:
+        result = "bottom";
+        break;
+    }
+    return result;
+  }
 
-	function template() {
-		return _template;
-	}
+  function template() {
+    return _template;
+  }
 
-	function getHashCode() {
-		return "defaultGroupTitleTemplate";
-	}
+  function getHashCode() {
+    return "defaultGroupTitleTemplate";
+  }
 
-	function render(event, data) {
-		var itemConfig = data.context,
-			groupTitleColor = itemConfig.groupTitleColor || options.groupTitleColor,
-			style = {},
-			width = data.width,
-			height = data.height;
+  function render(event, data) {
+    var itemConfig = data.context,
+      groupTitleColor = itemConfig.groupTitleColor || options.groupTitleColor,
+      style = {},
+      width = data.width,
+      height = data.height;
 
-		style.left = Math.round(width / 2.0 - height / 2.0) + "px";
-		style.top = Math.round(height / 2.0 - width / 2.0) + "px";
-		style.width = height + "px";
-		style.height = width + "px";
-		style.maxWidth = style.width;
-		style.maxHeight = style.height;
+    style.left = Math.round(width / 2.0 - height / 2.0) + "px";
+    style.top = Math.round(height / 2.0 - width / 2.0) + "px";
+    style.width = height + "px";
+    style.height = width + "px";
+    style.maxWidth = style.width;
+    style.maxHeight = style.height;
 
-		var container = data.element.firstChild;
-		primitives.common.JsonML.applyStyles(container, style);
+    var container = data.element.firstChild;
+    primitives.common.JsonML.applyStyles(container, style);
 
-		var label = itemConfig.groupTitle || "";
-		label = label.replace(new RegExp("\n", 'g'), "<br/>");
+    var label = itemConfig.groupTitle || "";
+    label = label.replace(new RegExp("\n", 'g'), "<br/>");
 
-		var title;
-		switch (options.groupTitleVerticalAlignment) {
-			case 0/*primitives.common.VerticalAlignmentType.Top*/:
-				title = data.element.firstChild;
-				break;
-			default:
-				title = data.element.firstChild.firstChild.firstChild.firstChild;
-				title.style.borderCollapse = "collapse";
-				break;
-		}
-		title.style.color = primitives.common.highestContrast(groupTitleColor, options.itemTitleSecondFontColor, options.itemTitleFirstFontColor);
-		title.textContent = label;
+    var title;
+    switch (options.groupTitleVerticalAlignment) {
+      case 0/*primitives.common.VerticalAlignmentType.Top*/:
+        title = data.element.firstChild;
+        break;
+      default:
+        title = data.element.firstChild.firstChild.firstChild.firstChild;
+        title.style.borderCollapse = "collapse";
+        break;
+    }
+    title.style.color = primitives.common.highestContrast(groupTitleColor, options.itemTitleSecondFontColor, options.itemTitleFirstFontColor);
+    title.textContent = label;
 
-		primitives.common.JsonML.applyStyles(data.element, {
-			"backgroundColor": groupTitleColor
-		});
-	}
+    primitives.common.JsonML.applyStyles(data.element, {
+      "backgroundColor": groupTitleColor
+    });
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 
 
 /* /Controls/OrgDiagram/Templates/HighlightTemplate.js*/
 primitives.common.HighlightTemplate = function (options, itemTemplateConfig) {
-	var _template = create(itemTemplateConfig);
+  var _template = create(itemTemplateConfig);
 
-	function create(config) {
-		return ["div",
-		{
-			"style": {
-				"borderWidth": config.highlightBorderWidth + "px"
-			},
-			"class": ["bp-item", "bp-corner-all", "bp-highlight-frame"]
-		}
-		];
-	}
+  function create(config) {
+    return ["div",
+      {
+        "style": {
+          "borderWidth": config.highlightBorderWidth + "px"
+        },
+        "class": ["bp-item", "bp-corner-all", "bp-highlight-frame"]
+      }
+    ];
+  }
 
-	function template() {
-		return _template;
-	}
+  function template() {
+    return _template;
+  }
 
-	function getHashCode() {
-		return "defaultHighlightTemplate";
-	}
+  function getHashCode() {
+    return "defaultHighlightTemplate";
+  }
 
-	function render(event, data) {
+  function render(event, data) {
 
-	}
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /Controls/OrgDiagram/Templates/ItemTemplate.js*/
 primitives.common.ItemTemplate = function (options, itemTemplateConfig) {
-	var _template = create(itemTemplateConfig);
+  var _template = create(itemTemplateConfig);
 
-	function create(config) {
-		var contentSize = new primitives.common.Size(config.itemSize),
-			itemTemplate,
-			titleBackground,
-			title,
-			photoborder,
-			photo,
-			description;
+  function create(config) {
+    var contentSize = new primitives.common.Size(config.itemSize),
+      itemTemplate,
+      titleBackground,
+      title,
+      photoborder,
+      photo,
+      description;
 
-		contentSize.width -= config.itemBorderWidth * 2;
-		contentSize.height -= config.itemBorderWidth * 2;
+    contentSize.width -= config.itemBorderWidth * 2;
+    contentSize.height -= config.itemBorderWidth * 2;
 
-		itemTemplate = ["div",
-				{
-					"style": {
-						"borderWidth": config.itemBorderWidth + "px"
-					},
-					"class": ["bp-item", "bp-corner-all", "bt-item-frame"]
-				},
-				["div",
-					{
-						"name": "titleBackground",
-						"style": {
-							top: "2px",
-							left: "2px",
-							width: (contentSize.width - 4) + "px",
-							height: "18px"
-						},
-						"class": ["bp-item", "bp-corner-all", "bp-title-frame"]
-					},
-					["div",
-						{
-							"name": "title",
-							"style": {
-								top: "1px",
-								left: "4px",
-								width: (contentSize.width - 4 - 4 * 2) + "px",
-								height: "16px"
-							},
-							"class": ["bp-item", "bp-title"]
-						}
-					]
-				],
-                ["div", // photo border
-                    {
-                        "name": "photoBorder",
-						"style": {
-							top: "24px",
-							left: "2px",
-							width: "50px",
-							height: "60px"
-						},
-						"class": ["bp-item", "bp-photo-frame"]
-					},
-					["img", // photo
-						{
-							"name": "photo",
-							"alt": "",
-							"style": {
-								width: "50px",
-								height: "60px"
-							}
-						}
-					]
-				],
-				["div",
-					{
-						"name": "description",
-						"style": {
-							top: "24px",
-							left: "56px",
-							width: (contentSize.width - 4 - 56) + "px",
-							height: "74px"
-						},
-						"class": ["bp-item", "bp-description"]
-					}
+    itemTemplate = ["div",
+      {
+        "style": {
+          "borderWidth": config.itemBorderWidth + "px"
+        },
+        "class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+      },
+      ["div",
+        {
+          "name": "titleBackground",
+          "style": {
+            top: "2px",
+            left: "2px",
+            width: (contentSize.width - 4) + "px",
+            height: "18px"
+          },
+          "class": ["bp-item", "bp-corner-all", "bp-title-frame"]
+        },
+        ["div",
+          {
+            "name": "title",
+            "style": {
+              top: "1px",
+              left: "4px",
+              width: (contentSize.width - 4 - 4 * 2) + "px",
+              height: "16px"
+            },
+            "class": ["bp-item", "bp-title"]
+          }
+        ]
+      ],
+      ["div", // photo border
+        {
+          "name": "photoBorder",
+          "style": {
+            top: "24px",
+            left: "2px",
+            width: "50px",
+            height: "60px"
+          },
+          "class": ["bp-item", "bp-photo-frame"]
+        },
+        ["img", // photo
+          {
+            "name": "photo",
+            "alt": "",
+            "style": {
+              width: "50px",
+              height: "60px"
+            }
+          }
+        ]
+      ],
+      ["div",
+        {
+          "name": "description",
+          "style": {
+            top: "24px",
+            left: "56px",
+            width: (contentSize.width - 4 - 56) + "px",
+            height: "74px"
+          },
+          "class": ["bp-item", "bp-description"]
+        }
 
-				]
-		];
+      ]
+    ];
 
-		return itemTemplate;
-	}
+    return itemTemplate;
+  }
 
-	function template() {
-		return _template;
-	}
+  function template() {
+    return _template;
+  }
 
-	function getHashCode() {
-		return "defaultItemTemplate";
-	}
+  function getHashCode() {
+    return "defaultItemTemplate";
+  }
 
-	function render(event, data) {
-        var itemConfig = data.context,
-            itemTitleColor = itemConfig.itemTitleColor != null ? itemConfig.itemTitleColor : "#4169e1"/*primitives.common.Colors.RoyalBlue*/,
-            color = primitives.common.highestContrast(itemTitleColor, options.itemTitleSecondFontColor, options.itemTitleFirstFontColor),
-            element = data.element,
-            titleBackground = element.firstChild,
-            photo = element.childNodes[1].firstChild,
-            title = titleBackground.firstChild,
-            description = element.childNodes[2];
+  function render(event, data) {
+    var itemConfig = data.context,
+      itemTitleColor = itemConfig.itemTitleColor != null ? itemConfig.itemTitleColor : "#4169e1"/*primitives.common.Colors.RoyalBlue*/,
+      color = primitives.common.highestContrast(itemTitleColor, options.itemTitleSecondFontColor, options.itemTitleFirstFontColor),
+      element = data.element,
+      titleBackground = element.firstChild,
+      photo = element.childNodes[1].firstChild,
+      title = titleBackground.firstChild,
+      description = element.childNodes[2];
 
-        primitives.common.JsonML.applyStyles(titleBackground, {
-            "backgroundColor": itemTitleColor
-        });
-        photo.src = itemConfig.image;
-        photo.alt = itemConfig.title;
-        primitives.common.JsonML.applyStyles(title, {
-            "color": color
-        });
-        title.textContent = itemConfig.title;
-        description.textContent = itemConfig.description;
-    }
+    primitives.common.JsonML.applyStyles(titleBackground, {
+      "backgroundColor": itemTitleColor
+    });
+    photo.src = itemConfig.image;
+    photo.alt = itemConfig.title;
+    primitives.common.JsonML.applyStyles(title, {
+      "color": color
+    });
+    title.textContent = itemConfig.title;
+    description.textContent = itemConfig.description;
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /Controls/OrgDiagram/Templates/UserTemplate.js*/
 primitives.common.UserTemplate = function (options, content, onRender) {
-	var _hashCode = primitives.common.hashCode(JSON.stringify(content));
+  var _hashCode = primitives.common.hashCode(JSON.stringify(content));
 
-	function template() {
-		return content;
-	}
+  function template() {
+    return content;
+  }
 
-	function getHashCode() {
-		return _hashCode;
-	}
+  function getHashCode() {
+    return _hashCode;
+  }
 
-	function render(event, data) {
-		if (onRender != null) {
-			onRender(event, data);
-		} else {
-			var itemConfig = data.context,
-				itemTitleColor = itemConfig.itemTitleColor != null ? itemConfig.itemTitleColor : "#4169e1"/*primitives.common.Colors.RoyalBlue*/,
-				color = primitives.common.highestContrast(itemTitleColor, options.itemTitleSecondFontColor, options.itemTitleFirstFontColor);
+  function render(event, data) {
+    if (onRender != null) {
+      onRender(event, data);
+    } else {
+      var itemConfig = data.context,
+        itemTitleColor = itemConfig.itemTitleColor != null ? itemConfig.itemTitleColor : "#4169e1"/*primitives.common.Colors.RoyalBlue*/,
+        color = primitives.common.highestContrast(itemTitleColor, options.itemTitleSecondFontColor, options.itemTitleFirstFontColor);
 
-			primitives.common.getElementsByName(this, data.element, "photo", function(node) {
-				node.src = itemConfig.image;
-				node.alt = itemConfig.title;
-			});
+      primitives.common.getElementsByName(this, data.element, "photo", function (node) {
+        node.src = itemConfig.image;
+        node.alt = itemConfig.title;
+      });
 
-			primitives.common.getElementsByName(this, data.element, "titleBackground", function(node) {
-				primitives.common.JsonML.applyStyles(node, {
-					"background": itemTitleColor
-				});
-			});
+      primitives.common.getElementsByName(this, data.element, "titleBackground", function (node) {
+        primitives.common.JsonML.applyStyles(node, {
+          "background": itemTitleColor
+        });
+      });
 
-			primitives.common.getElementsByName(this, data.element, "title", function(node) {
-				primitives.common.JsonML.applyStyles(node, {
-					"color": color
-				});
-				node.textContent = itemConfig.title;
-			});
+      primitives.common.getElementsByName(this, data.element, "title", function (node) {
+        primitives.common.JsonML.applyStyles(node, {
+          "color": color
+        });
+        node.textContent = itemConfig.title;
+      });
 
-			primitives.common.getElementsByName(this, data.element, "description", function(node) {
-				node.textContent = itemConfig.description;
-			});
-		}
-	}
+      primitives.common.getElementsByName(this, data.element, "description", function (node) {
+        node.textContent = itemConfig.description;
+      });
+    }
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /Controls/OrgDiagram/BaseControl.js*/
@@ -23415,8 +23370,8 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
       placeholderOffset;
 
     //_data.layout.scrollPanel.css({
-    //	"display": "none",
-    //	"-webkit-overflow-scrolling": "auto"
+    //  "display": "none",
+    //  "-webkit-overflow-scrolling": "auto"
     //});
 
     //this.graphics.begin();
@@ -23427,7 +23382,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     _data.graphics.end();
 
     //_data.layout.scrollPanel.css({
-    //	"display": "block"
+    //  "display": "block"
     //});
 
     if (forceCenterOnCursor) {
@@ -23438,7 +23393,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
       _data.layout.scrollPanel.scrollTop = placeholderOffset.y;
     }
     //_data.layout.scrollPanel.css({
-    //	"-webkit-overflow-scrolling": "touch"
+    //  "-webkit-overflow-scrolling": "touch"
     //});
 
     /* fix pixel alignment */
@@ -23989,48 +23944,48 @@ primitives.orgdiagram.Control = function (element, options) {
 
 /* /Controls/OrgDiagram/EventArgsFactory.js*/
 primitives.orgdiagram.EventArgsFactory = function (data, oldTreeItemId, newTreeItemId, name) {
-	var result = new primitives.orgdiagram.EventArgs(),
-		combinedContextsTask = data.tasks.getTask("CombinedContextsTask"),
-		alignDiagramTask = data.tasks.getTask("AlignDiagramTask"),
-		oldItemConfig = combinedContextsTask.getConfig(oldTreeItemId),
-		newItemConfig = combinedContextsTask.getConfig(newTreeItemId),
-		itemPosition,
-		actualPosition,
-		offset,
-		panelOffset;
+  var result = new primitives.orgdiagram.EventArgs(),
+    combinedContextsTask = data.tasks.getTask("CombinedContextsTask"),
+    alignDiagramTask = data.tasks.getTask("AlignDiagramTask"),
+    oldItemConfig = combinedContextsTask.getConfig(oldTreeItemId),
+    newItemConfig = combinedContextsTask.getConfig(newTreeItemId),
+    itemPosition,
+    actualPosition,
+    offset,
+    panelOffset;
 
-	if (oldItemConfig && oldItemConfig.id != null) {
-		result.oldContext = oldItemConfig;
-	}
+  if (oldItemConfig && oldItemConfig.id != null) {
+    result.oldContext = oldItemConfig;
+  }
 
-	if (newItemConfig && newItemConfig.id != null) {
-		result.context = newItemConfig;
+  if (newItemConfig && newItemConfig.id != null) {
+    result.context = newItemConfig;
 
-		if (newItemConfig.parent !== null) {
-			result.parentItem = combinedContextsTask.getConfig(newItemConfig.parent);
-		}
+    if (newItemConfig.parent !== null) {
+      result.parentItem = combinedContextsTask.getConfig(newItemConfig.parent);
+    }
 
-		panelOffset = primitives.common.getElementOffset(data.layout.mousePanel);
-		offset = primitives.common.getElementOffset(data.layout.element);
-		itemPosition = alignDiagramTask.getItemPosition(newTreeItemId),
-		result.position = new primitives.common.Rect(itemPosition.actualPosition)
-				.translate(panelOffset.left, panelOffset.top)
-				.translate(-offset.left, -offset.top);
-	}
+    panelOffset = primitives.common.getElementOffset(data.layout.mousePanel);
+    offset = primitives.common.getElementOffset(data.layout.element);
+    itemPosition = alignDiagramTask.getItemPosition(newTreeItemId),
+      result.position = new primitives.common.Rect(itemPosition.actualPosition)
+        .translate(panelOffset.left, panelOffset.top)
+        .translate(-offset.left, -offset.top);
+  }
 
-	if (name != null) {
-		result.name = name;
-	}
+  if (name != null) {
+    result.name = name;
+  }
 
-	return result;
+  return result;
 };
 
 
 /* /Controls/OrgDiagram/getProcessDiagramConfig.js*/
 primitives.orgdiagram.getProcessDiagramConfig = function () {
-	var dummyFunction = function () { };
-	var tasks = primitives.orgdiagram.TaskManagerFactory(dummyFunction, dummyFunction, dummyFunction);
-	return tasks.getProcessDiagramConfig();
+  var dummyFunction = function () { };
+  var tasks = primitives.orgdiagram.TaskManagerFactory(dummyFunction, dummyFunction, dummyFunction);
+  return tasks.getProcessDiagramConfig();
 };
 
 /* /Controls/OrgDiagram/TaskManagerFactory.js*/
@@ -26319,146 +26274,146 @@ primitives.common.FamilyAlignment = function (thisArg, family, treeLevels, onIte
 
 /* /algorithms/FamilyMargins.js*/
 primitives.common.FamilyMargins = function () {
-	this.items = [];
+  this.items = [];
 
-	function Margin(left, right, leftIndex, rightIndex) {
-		this.left = left;
-		this.right = right;
-		this.leftIndex = leftIndex;
-		this.rightIndex = rightIndex;
-	}
+  function Margin(left, right, leftIndex, rightIndex) {
+    this.left = left;
+    this.right = right;
+    this.leftIndex = leftIndex;
+    this.rightIndex = rightIndex;
+  }
 
-	this.add = function (arg0, arg1, arg2, arg3) {
-		switch (arguments.length) {
-			case 2:
-				this.items.push(new Margin(-arg0 / 2, arg0 / 2, arg1, arg1));
-				break;
-			case 4:
-				this.items.push(new Margin(arg0, arg1, arg2, arg3));
-				break;
-		}
-	};
+  this.add = function (arg0, arg1, arg2, arg3) {
+    switch (arguments.length) {
+      case 2:
+        this.items.push(new Margin(-arg0 / 2, arg0 / 2, arg1, arg1));
+        break;
+      case 4:
+        this.items.push(new Margin(arg0, arg1, arg2, arg3));
+        break;
+    }
+  };
 
-	this.merge = function (from, interval) {
-		var distance = this.getDistanceTo(from);
-		var leftOffset = 0;
-		var rightOffset = 0;
+  this.merge = function (from, interval) {
+    var distance = this.getDistanceTo(from);
+    var leftOffset = 0;
+    var rightOffset = 0;
 
-		var len1 = this.items.length;
-		var len2 = from.items.length;
-		var min = Math.min(len1, len2);
-		var max = Math.max(len1, len2);
+    var len1 = this.items.length;
+    var len2 = from.items.length;
+    var min = Math.min(len1, len2);
+    var max = Math.max(len1, len2);
 
-		for (var index = 0; index < min; index += 1) {
-			var leftMargin = this.items[len1 - 1 - index];
-			var rightMargin = from.items[len2 - 1 - index];
+    for (var index = 0; index < min; index += 1) {
+      var leftMargin = this.items[len1 - 1 - index];
+      var rightMargin = from.items[len2 - 1 - index];
 
-			if (index === 0) {
-				var width = (leftMargin.right - leftMargin.left + (distance || 0) + (interval || 0) + rightMargin.right - rightMargin.left);
-				leftOffset = width / 2 + leftMargin.left;
-				rightOffset = width / 2 - rightMargin.right;
-			}
-			leftMargin.left -= leftOffset;
-			leftMargin.right = rightMargin.right + rightOffset;
+      if (index === 0) {
+        var width = (leftMargin.right - leftMargin.left + (distance || 0) + (interval || 0) + rightMargin.right - rightMargin.left);
+        leftOffset = width / 2 + leftMargin.left;
+        rightOffset = width / 2 - rightMargin.right;
+      }
+      leftMargin.left -= leftOffset;
+      leftMargin.right = rightMargin.right + rightOffset;
 
-			leftMargin.rightIndex = rightMargin.rightIndex;
+      leftMargin.rightIndex = rightMargin.rightIndex;
 
-			this.items[max - 1 - index] = leftMargin;
-		}
-		for (index = min; index < max; index += 1) {
-			leftMargin = this.items[len1 - 1 - index];
-			rightMargin = from.items[len2 - 1 - index];
+      this.items[max - 1 - index] = leftMargin;
+    }
+    for (index = min; index < max; index += 1) {
+      leftMargin = this.items[len1 - 1 - index];
+      rightMargin = from.items[len2 - 1 - index];
 
-			if (leftMargin == null) {
-				this.items[max - 1 - index] = new Margin(rightMargin.left + rightOffset, rightMargin.right + rightOffset,
-					rightMargin.leftIndex, rightMargin.rightIndex);
-			} else {
-				leftMargin.left -= leftOffset;
-				leftMargin.right -= leftOffset;
-			}
+      if (leftMargin == null) {
+        this.items[max - 1 - index] = new Margin(rightMargin.left + rightOffset, rightMargin.right + rightOffset,
+          rightMargin.leftIndex, rightMargin.rightIndex);
+      } else {
+        leftMargin.left -= leftOffset;
+        leftMargin.right -= leftOffset;
+      }
 
-		}
-		return distance;
-	};
+    }
+    return distance;
+  };
 
-	this.attach = function (from, interval) {
-		var distance = this.getDistanceTo(from);
-		var rightOffset = interval || 0;
+  this.attach = function (from, interval) {
+    var distance = this.getDistanceTo(from);
+    var rightOffset = interval || 0;
 
-		var len1 = this.items.length;
-		var len2 = from.items.length;
-		var min = Math.min(len1, len2);
-		var max = Math.max(len1, len2);
+    var len1 = this.items.length;
+    var len2 = from.items.length;
+    var min = Math.min(len1, len2);
+    var max = Math.max(len1, len2);
 
-		for (var index = 0; index < min; index += 1) {
-			var leftMargin = this.items[len1 - 1 - index];
-			var rightMargin = from.items[len2 - 1 - index];
+    for (var index = 0; index < min; index += 1) {
+      var leftMargin = this.items[len1 - 1 - index];
+      var rightMargin = from.items[len2 - 1 - index];
 
-			if (index === 0) {
-				rightOffset = (leftMargin.right + (distance || 0) + (interval || 0) - rightMargin.left);
-			}
-			leftMargin.right = rightMargin.right + rightOffset;
+      if (index === 0) {
+        rightOffset = (leftMargin.right + (distance || 0) + (interval || 0) - rightMargin.left);
+      }
+      leftMargin.right = rightMargin.right + rightOffset;
 
-			leftMargin.rightIndex = rightMargin.rightIndex;
+      leftMargin.rightIndex = rightMargin.rightIndex;
 
-			this.items[max - 1 - index] = leftMargin;
-		}
-		for (index = min; index < max; index += 1) {
-			leftMargin = this.items[len1 - 1 - index];
-			if (leftMargin == null) {
-				rightMargin = from.items[len2 - 1 - index];
+      this.items[max - 1 - index] = leftMargin;
+    }
+    for (index = min; index < max; index += 1) {
+      leftMargin = this.items[len1 - 1 - index];
+      if (leftMargin == null) {
+        rightMargin = from.items[len2 - 1 - index];
 
-				this.items[max - 1 - index] = new Margin(rightMargin.left + rightOffset, rightMargin.right + rightOffset,
-					rightMargin.leftIndex, rightMargin.rightIndex);
-			}
-		}
-		return distance;
-	};
+        this.items[max - 1 - index] = new Margin(rightMargin.left + rightOffset, rightMargin.right + rightOffset,
+          rightMargin.leftIndex, rightMargin.rightIndex);
+      }
+    }
+    return distance;
+  };
 
-	this.getDistanceTo = function (to) {
-		var distance = null;
-		var baseDistance = 0;
-		var len1 = this.items.length;
-		var len2 = to.items.length;
-		var len = Math.min(len1, len2);
-		if (len > 0) {
-			for (var index = 0; index < len; index += 1) {
-				var leftMargins = this.items[len1 - 1 - index];
-				var rightMargins = to.items[len2 - 1 - index];
+  this.getDistanceTo = function (to) {
+    var distance = null;
+    var baseDistance = 0;
+    var len1 = this.items.length;
+    var len2 = to.items.length;
+    var len = Math.min(len1, len2);
+    if (len > 0) {
+      for (var index = 0; index < len; index += 1) {
+        var leftMargins = this.items[len1 - 1 - index];
+        var rightMargins = to.items[len2 - 1 - index];
 
 
-				if (index === 0) {
-					baseDistance = leftMargins.right - rightMargins.left;
-					distance = baseDistance;
-				} else {
-					if (leftMargins.rightIndex < rightMargins.leftIndex) {
-						distance = Math.max(distance, leftMargins.right - rightMargins.left);
-					}
-				}
-			}
-			distance = distance - baseDistance;
-		}
+        if (index === 0) {
+          baseDistance = leftMargins.right - rightMargins.left;
+          distance = baseDistance;
+        } else {
+          if (leftMargins.rightIndex < rightMargins.leftIndex) {
+            distance = Math.max(distance, leftMargins.right - rightMargins.left);
+          }
+        }
+      }
+      distance = distance - baseDistance;
+    }
 
-		return distance;
-	};
+    return distance;
+  };
 
-	this.loop = function (thisArg, onItem) {
-		if (onItem != null) {
-			for (var index = 0, len = this.items.length; index < len; index += 1) {
-				var margin = this.items[len - 1 - index];
-				if (onItem.call(thisArg, index, margin.left, margin.right, margin.leftIndex, margin.rightIndex)) {
-					break;
-				}
-			}
-		}
-	};
+  this.loop = function (thisArg, onItem) {
+    if (onItem != null) {
+      for (var index = 0, len = this.items.length; index < len; index += 1) {
+        var margin = this.items[len - 1 - index];
+        if (onItem.call(thisArg, index, margin.left, margin.right, margin.leftIndex, margin.rightIndex)) {
+          break;
+        }
+      }
+    }
+  };
 
-	this.getLeft = function (level) {
-		var maximum = this.items.length - 1;
-		if (maximum >= level) {
-			return this.items[maximum - level].left;
-		}
-	};
+  this.getLeft = function (level) {
+    var maximum = this.items.length - 1;
+    if (maximum >= level) {
+      return this.items[maximum - level].left;
+    }
+  };
 };
 
 /* /algorithms/FibonacciHeap.js*/
@@ -26500,11 +26455,11 @@ primitives.common.FibonacciHeap = function (isMaximum) {
     this.right = null;
   }
 
-	/**
-	 * Validates internal structure consistency.
-	 * 
-	 * @returns {boolean} Returns true if structure pass data consistency check.
-	 */
+  /**
+   * Validates internal structure consistency.
+   * 
+   * @returns {boolean} Returns true if structure pass data consistency check.
+   */
   function validate() {
     var totalNodes = 0;
     for (var key in nodes) {
@@ -26588,12 +26543,12 @@ primitives.common.FibonacciHeap = function (isMaximum) {
     }
   }
 
-	/**
-	 * Adds a new item into the heap
-	 * @param {string} key A key of the new element 
-	 * @param {number} priority A priority of the new element
-	 * @param {object} item A context object of the new element 
-	 */
+  /**
+   * Adds a new item into the heap
+   * @param {string} key A key of the new element 
+   * @param {number} priority A priority of the new element
+   * @param {object} item A context object of the new element 
+   */
   function add(key, priority, item) {
     if (nodes.hasOwnProperty(key)) {
       throw "Duplicate keys are not supported!";
@@ -26634,11 +26589,11 @@ primitives.common.FibonacciHeap = function (isMaximum) {
     node.left = node.key;
   }
 
-	/**
-	 * Gets priority of element by key
-	 * @param {string} key The element key
-	 * @returns {number} Returns priority of the element
-	 */
+  /**
+   * Gets priority of element by key
+   * @param {string} key The element key
+   * @returns {number} Returns priority of the element
+   */
   function getPriority(key) {
     var result = null;
     if (nodes.hasOwnProperty(key)) {
@@ -26647,11 +26602,11 @@ primitives.common.FibonacciHeap = function (isMaximum) {
     return result;
   }
 
-	/**
-	 * Returns heap root element
-	 * 
-	 * @returns {HeapResult} Returns root element of the heap 
-	 */
+  /**
+   * Returns heap root element
+   * 
+   * @returns {HeapResult} Returns root element of the heap 
+   */
   function heapRoot() {
     var result = null;
     if (root != null) {
@@ -26660,11 +26615,11 @@ primitives.common.FibonacciHeap = function (isMaximum) {
     return result;
   }
 
-	/**
-	 * Returns heap root element with removal
-	 * 
-	 * @returns {HeapResult} Returns root element of the heap 
-	 */
+  /**
+   * Returns heap root element with removal
+   * 
+   * @returns {HeapResult} Returns root element of the heap 
+   */
   function extractRoot() {
     var result = heapRoot();
     if (result != null) {
@@ -26744,11 +26699,11 @@ primitives.common.FibonacciHeap = function (isMaximum) {
     node2.parent = node1.key;
   }
 
-	/**
-	 * Sets priority of an element by key
-	 * @param {string} key The key of the element 
-	 * @param {number} priority Priority
-	 */
+  /**
+   * Sets priority of an element by key
+   * @param {string} key The key of the element 
+   * @param {number} priority Priority
+   */
   function setPriority(key, priority) {
     var node = nodes[key];
     if (isMaximum ? node.priority > priority : node.priority < priority) {
@@ -26793,10 +26748,10 @@ primitives.common.FibonacciHeap = function (isMaximum) {
     }
   }
 
-	/**
-	 * Deletes heap element by key
-	 * @param {string} key The Key 
-	 */
+  /**
+   * Deletes heap element by key
+   * @param {string} key The Key 
+   */
   function deleteKey(key) {
     setPriority(key, isMaximum ? Infinity : -1);
     extractRoot();
@@ -27172,99 +27127,99 @@ primitives.common.getFamilyLoops = function (family, debug) {
 
 /* /algorithms/getFamilyUnits.js*/
 primitives.common.getFamilyUnits = function (family) {
-	var familyUnits = [],
-		familyUnitByParent = {},
-		index,
-		len;
+  var familyUnits = [],
+    familyUnitByParent = {},
+    index,
+    len;
 
-	function FamilySiblings() {
-		this.fromIndex = 0;
-		this.toIndex = 0;
-		this.items = [];
-		this.hash = {};
-	}
+  function FamilySiblings() {
+    this.fromIndex = 0;
+    this.toIndex = 0;
+    this.items = [];
+    this.hash = {};
+  }
 
-	function FamilyUnit(id) {
-		this.id = id;
-		this.parents = new FamilySiblings();
-		this.children = new FamilySiblings();
+  function FamilyUnit(id) {
+    this.id = id;
+    this.parents = new FamilySiblings();
+    this.children = new FamilySiblings();
 
-		this.loopSiblings = function (thisArg, itemid, onItem) {
-			this._loop(thisArg, this.parents.hash.hasOwnProperty(itemid) ? this.parents.items : this.children.items, onItem);
-		};
+    this.loopSiblings = function (thisArg, itemid, onItem) {
+      this._loop(thisArg, this.parents.hash.hasOwnProperty(itemid) ? this.parents.items : this.children.items, onItem);
+    };
 
-		this.loopNonSiblings = function (thisArg, itemid, onItem) {
-			this._loop(thisArg, !this.parents.hash.hasOwnProperty(itemid) ? this.parents.items : this.children.items, onItem);
-		};
+    this.loopNonSiblings = function (thisArg, itemid, onItem) {
+      this._loop(thisArg, !this.parents.hash.hasOwnProperty(itemid) ? this.parents.items : this.children.items, onItem);
+    };
 
-		this.loop = function (thisArg, onItem) {
-			this._loop(thisArg, this.parents.items, onItem);
-			this._loop(thisArg, this.children.items, onItem);
-		};
+    this.loop = function (thisArg, onItem) {
+      this._loop(thisArg, this.parents.items, onItem);
+      this._loop(thisArg, this.children.items, onItem);
+    };
 
-		this._loop = function (thisArg, items, onItem) {
-			if (onItem != null) {
-				for (var index = 0, len = items.length; index < len; index += 1) {
-					var sibling = items[index];
-					onItem.call(thisArg, sibling);
-				}
-			}
-		};
+    this._loop = function (thisArg, items, onItem) {
+      if (onItem != null) {
+        for (var index = 0, len = items.length; index < len; index += 1) {
+          var sibling = items[index];
+          onItem.call(thisArg, sibling);
+        }
+      }
+    };
 
-		this.addParent = function (itemid) {
-			this._add(itemid, this.parents);
-		};
+    this.addParent = function (itemid) {
+      this._add(itemid, this.parents);
+    };
 
-		this.addChild = function (itemid) {
-			this._add(itemid, this.children);
-		};
+    this.addChild = function (itemid) {
+      this._add(itemid, this.children);
+    };
 
-		this._add = function (itemid, siblings) {
-			if (!siblings.hash.hasOwnProperty(itemid)) {
-				siblings.items.push(itemid);
-				siblings.hash[itemid] = true;
-			}
-		};
-	}
+    this._add = function (itemid, siblings) {
+      if (!siblings.hash.hasOwnProperty(itemid)) {
+        siblings.items.push(itemid);
+        siblings.hash[itemid] = true;
+      }
+    };
+  }
 
-	index = 0;
-	family.loop(this, function (itemid, item) {
-		var childrenCount = family.countChildren(itemid);
-		if (childrenCount > 0) {
-			if (!familyUnitByParent.hasOwnProperty(itemid)) {
-				var familyUnit = new FamilyUnit(index);
-				index += 1;
-				familyUnit.addParent(itemid);
-				family.loopChildren(this, itemid, function (childid, child) {
-					familyUnit.addChild(childid);
-					if (childrenCount == 1) {
-						family.loopParents(this, childid, function (parentid) {
-							familyUnit.addParent(parentid);
-							familyUnitByParent[parentid] = familyUnit;
-							return family.SKIP;
-						});
-					}
-					return family.SKIP;
-				});
-				familyUnits.push(familyUnit);
-				familyUnitByParent[itemid] = familyUnit;
-			}
-		}
-	});
+  index = 0;
+  family.loop(this, function (itemid, item) {
+    var childrenCount = family.countChildren(itemid);
+    if (childrenCount > 0) {
+      if (!familyUnitByParent.hasOwnProperty(itemid)) {
+        var familyUnit = new FamilyUnit(index);
+        index += 1;
+        familyUnit.addParent(itemid);
+        family.loopChildren(this, itemid, function (childid, child) {
+          familyUnit.addChild(childid);
+          if (childrenCount == 1) {
+            family.loopParents(this, childid, function (parentid) {
+              familyUnit.addParent(parentid);
+              familyUnitByParent[parentid] = familyUnit;
+              return family.SKIP;
+            });
+          }
+          return family.SKIP;
+        });
+        familyUnits.push(familyUnit);
+        familyUnitByParent[itemid] = familyUnit;
+      }
+    }
+  });
 
-	var familyUnitByItemId = {};
-	for (index = 0, len = familyUnits.length; index < len; index += 1) {
-		var familyUnit = familyUnits[index];
-		familyUnit.loop(this, function (itemid) {
-			if (!familyUnitByItemId.hasOwnProperty(itemid)) {
-				familyUnitByItemId[itemid] = [familyUnit];
-			} else {
-				familyUnitByItemId[itemid].push(familyUnit);
-			}
-		});
-	}
+  var familyUnitByItemId = {};
+  for (index = 0, len = familyUnits.length; index < len; index += 1) {
+    var familyUnit = familyUnits[index];
+    familyUnit.loop(this, function (itemid) {
+      if (!familyUnitByItemId.hasOwnProperty(itemid)) {
+        familyUnitByItemId[itemid] = [familyUnit];
+      } else {
+        familyUnitByItemId[itemid].push(familyUnit);
+      }
+    });
+  }
 
-	return familyUnitByItemId;
+  return familyUnitByItemId;
 };
 
 /* /algorithms/getLiniarBreaks.js*/
@@ -27276,74 +27231,74 @@ primitives.common.getFamilyUnits = function (family) {
  * the last index is actuall index of the last element in the values collection. 
  */
 primitives.common.getLiniarBreaks = function (values) {
-	var _leftTotal = [],
-		_rightTotal = [],
-		_len = values.length;
+  var _leftTotal = [],
+    _rightTotal = [],
+    _len = values.length;
 
-	// Sum up values from left to right
-	var total = 0;
-	for(var index = 0; index < _len; index += 1) {
-		total += values[index];
-		_leftTotal[index] = total;
-	}
+  // Sum up values from left to right
+  var total = 0;
+  for (var index = 0; index < _len; index += 1) {
+    total += values[index];
+    _leftTotal[index] = total;
+  }
 
-	function getLinearDeviation(leftIndex, rightIndex) {
-		var result = 0;
+  function getLinearDeviation(leftIndex, rightIndex) {
+    var result = 0;
 
-		var avg = (_leftTotal[rightIndex] - _leftTotal[leftIndex] + values[leftIndex]) / (rightIndex - leftIndex + 1);
+    var avg = (_leftTotal[rightIndex] - _leftTotal[leftIndex] + values[leftIndex]) / (rightIndex - leftIndex + 1);
 
-		var median = primitives.common.binarySearch(values, function (item) {
-			return avg - item;
-		}, leftIndex, rightIndex);
+    var median = primitives.common.binarySearch(values, function (item) {
+      return avg - item;
+    }, leftIndex, rightIndex);
 
-		if (median.item <= avg) {
-			result += (avg * (median.index + 1 - leftIndex) - (_leftTotal[median.index] - _leftTotal[leftIndex] + values[leftIndex]));
-			result += (_leftTotal[rightIndex] - _leftTotal[median.index] - avg * (rightIndex - median.index));
-		} else {
-			result += (avg * (median.index - leftIndex) - (_leftTotal[median.index] - _leftTotal[leftIndex] - values[median.index] + values[leftIndex]));
-			result += (_leftTotal[rightIndex] - _leftTotal[median.index] + values[median.index] - avg * (rightIndex - median.index + 1));
-		}
+    if (median.item <= avg) {
+      result += (avg * (median.index + 1 - leftIndex) - (_leftTotal[median.index] - _leftTotal[leftIndex] + values[leftIndex]));
+      result += (_leftTotal[rightIndex] - _leftTotal[median.index] - avg * (rightIndex - median.index));
+    } else {
+      result += (avg * (median.index - leftIndex) - (_leftTotal[median.index] - _leftTotal[leftIndex] - values[median.index] + values[leftIndex]));
+      result += (_leftTotal[rightIndex] - _leftTotal[median.index] + values[median.index] - avg * (rightIndex - median.index + 1));
+    }
 
-		return result;
-	}
+    return result;
+  }
 
-	function getScore(leftIndex, rightIndex) {
-		var score = 0;
+  function getScore(leftIndex, rightIndex) {
+    var score = 0;
 
-		score += getLinearDeviation(0, leftIndex);
-		if (rightIndex > leftIndex + 1) {
-			score += getLinearDeviation(leftIndex + 1, rightIndex - 1);
-		}
-		score += getLinearDeviation(rightIndex, _len - 1);
+    score += getLinearDeviation(0, leftIndex);
+    if (rightIndex > leftIndex + 1) {
+      score += getLinearDeviation(leftIndex + 1, rightIndex - 1);
+    }
+    score += getLinearDeviation(rightIndex, _len - 1);
 
-		return score;
-	}
+    return score;
+  }
 
-	var leftIndex = 0,
-		rightIndex = _len - 1;
+  var leftIndex = 0,
+    rightIndex = _len - 1;
 
-	var score = getScore(leftIndex, rightIndex);
+  var score = getScore(leftIndex, rightIndex);
 
-	while (leftIndex < rightIndex + 1) {
-		var leftScore = getScore(leftIndex + 1, rightIndex);
-		var rightScore = getScore(leftIndex, rightIndex - 1);
+  while (leftIndex < rightIndex + 1) {
+    var leftScore = getScore(leftIndex + 1, rightIndex);
+    var rightScore = getScore(leftIndex, rightIndex - 1);
 
-		if (leftScore < rightScore) {
-			if (leftScore >= score) {
-				break;
-			}
-			leftIndex += 1;
-			score = leftScore;
-		} else {
-			if (rightScore >= score) {
-				break;
-			}
-			rightIndex -= 1;
-			score = rightScore;
-		}
-	}
+    if (leftScore < rightScore) {
+      if (leftScore >= score) {
+        break;
+      }
+      leftIndex += 1;
+      score = leftScore;
+    } else {
+      if (rightScore >= score) {
+        break;
+      }
+      rightIndex -= 1;
+      score = rightScore;
+    }
+  }
 
-	return [leftIndex, rightIndex - 1, _len - 1];
+  return [leftIndex, rightIndex - 1, _len - 1];
 };
 
 
@@ -28395,12 +28350,12 @@ primitives.common.LCA = function (tree) {
     _rmq = primitives.common.RMQ(_levels);
   }
 
-	/**
-	 * Returns lowest common ancestor for the given pair of tree nodes
-	 * @param {string} from The first tree node id
-	 * @param {string} to The second tree node id
-	 * @returns {string} Returns the lowest common ancestor tree node id
-	 */
+  /**
+   * Returns lowest common ancestor for the given pair of tree nodes
+   * @param {string} from The first tree node id
+   * @param {string} to The second tree node id
+   * @returns {string} Returns the lowest common ancestor tree node id
+   */
   function getLowestCommonAncestor(from, to) {
     var fromIndex = _fai[from],
       toIndex = _fai[to],
@@ -28914,13 +28869,13 @@ primitives.common.mergeSort = function (arrays, getItemWeight, ignoreDuplicates)
 primitives.common.pile = function () {
   var _items = [];
 
-	/**
-	 * Adds new segment to pile object.
-	 * 
-	 * @param {number} from Left margin of segment.
-	 * @param {number} to Right margin of segment.
-	 * @param {object} context Any reference to user object. It is returned as parameter in callback function of resolve method.
-	 */
+  /**
+   * Adds new segment to pile object.
+   * 
+   * @param {number} from Left margin of segment.
+   * @param {number} to Right margin of segment.
+   * @param {object} context Any reference to user object. It is returned as parameter in callback function of resolve method.
+   */
   function add(from, to, context) {
     if (from < to) {
       _items.push(new Segment(from, to, context, 1));
@@ -28929,23 +28884,23 @@ primitives.common.pile = function () {
     }
   }
 
-	/**
-	 * Callback function or iterating result offsets of the pile items in the stack.
-	 * 
-	 * @callback onPileItemCallback
-	 * @param {number} from The left margin of the segment 
-	 * @param {number} to The right margin of the segment
-	 * @param {object} context The context of the pile item
-	 * @param {number} offset Index of the pile item in the stack
-	 */
+  /**
+   * Callback function or iterating result offsets of the pile items in the stack.
+   * 
+   * @callback onPileItemCallback
+   * @param {number} from The left margin of the segment 
+   * @param {number} to The right margin of the segment
+   * @param {object} context The context of the pile item
+   * @param {number} offset Index of the pile item in the stack
+   */
 
-	/**
-	 * Sorts and stack segments on top of each other so they occupy minimum number of rows.
-	 * 
-	 * @param {objct} thisArg A context object of the callback function invocation.
-	 * @param {onPileItemCallback} onItem Callback function for setting segments offsets in the pile.
-	 * @returns {number} Number of stacked rows in pile.
-	 */
+  /**
+   * Sorts and stack segments on top of each other so they occupy minimum number of rows.
+   * 
+   * @param {objct} thisArg A context object of the callback function invocation.
+   * @param {onPileItemCallback} onItem Callback function for setting segments offsets in the pile.
+   * @returns {number} Number of stacked rows in pile.
+   */
   function resolve(thisArg, onItem) {
     var hash,
       backtraceNext,
@@ -29174,7 +29129,7 @@ primitives.common.QuadTree = function (minimalSize) {
   /**
    * Loops rectangular area of quad tree structure
    * 
-	 * @param {object} thisArg The callback function invocation context
+   * @param {object} thisArg The callback function invocation context
    * @param {Rect} rect Rectangular search area
    * @param {onQuadTreePointCallback} onItem Callback function to call for every point within the search area
    */
@@ -29341,13 +29296,13 @@ primitives.common.RMQ = function (items) {
     }
   }
 
-	/**
-	 * Returns index of minimum item for the given range of items
+  /**
+   * Returns index of minimum item for the given range of items
    * 
-	 * @param {number} from The left margin index
-	 * @param {number} to The right margin index
-	 * @returns {number} Returns index of the minimum item
-	 */
+   * @param {number} from The left margin index
+   * @param {number} to The right margin index
+   * @returns {number} Returns index of the minimum item
+   */
   function getRangeMinimumIndex(from, to) {
     var power = Math.floor(Math.log(to - from + 1) / _log2);
 
@@ -29358,13 +29313,13 @@ primitives.common.RMQ = function (items) {
     }
   }
 
-	/**
-	 * Return minimum value for the given range
+  /**
+   * Return minimum value for the given range
    * 
-	 * @param {number} from The left index of the range
-	 * @param {number} to The right index of the range
-	 * @returns {number} Returns minimum value in the range
-	 */
+   * @param {number} from The left index of the range
+   * @param {number} to The right index of the range
+   * @returns {number} Returns minimum value in the range
+   */
   function getRangeMinimum(from, to) {
     return items[getRangeMinimumIndex(from, to)];
   }
@@ -29957,7 +29912,7 @@ primitives.common.SpatialIndex = function (sizes) {
   /**
    * Loops rectangular area of spacial index
    * 
-	 * @param {object} thisArg The callback function invocation context
+   * @param {object} thisArg The callback function invocation context
    * @param {Rect}} rect Rectangular search area
    * @param {onSpatialIndexItemCallback} onItem Callback function to call for every rectangle intersecting given rectangular search area
    */
@@ -31520,182 +31475,182 @@ primitives.common.TreeLevels = function (source) {
 
 /* /Managers/DependencyManager.js*/
 primitives.common.DependencyManager = function () {
-	var hash = {};
+  var hash = {};
 
-	function register(key, value) {
-		hash[key] = value;
+  function register(key, value) {
+    hash[key] = value;
 
-		return value;
-	}
+    return value;
+  }
 
-	function resolve() {
-		var args = [],
-			deps = arguments[0],
-			func = arguments[1],
-			scope = arguments[2] || {};
-		return function () {
-			var a = Array.prototype.slice.call(arguments, 0);
-			for (var i = 0; i < deps.length; i += 1) {
-				var d = deps[i];
-				args.push(hash.hasOwnProperty(d) && d !== '' ? hash[d] : a.shift());
-			}
-			args = args.concat(a);
-			return func.apply(scope || {}, args);
-		};
-	}
+  function resolve() {
+    var args = [],
+      deps = arguments[0],
+      func = arguments[1],
+      scope = arguments[2] || {};
+    return function () {
+      var a = Array.prototype.slice.call(arguments, 0);
+      for (var i = 0; i < deps.length; i += 1) {
+        var d = deps[i];
+        args.push(hash.hasOwnProperty(d) && d !== '' ? hash[d] : a.shift());
+      }
+      args = args.concat(a);
+      return func.apply(scope || {}, args);
+    };
+  }
 
-	return {
-		register: register,
-		resolve: resolve
-	};
+  return {
+    register: register,
+    resolve: resolve
+  };
 };
 
 /* /Managers/KeyboardNavigationManager.js*/
 primitives.common.KeyboardNavigationManager = function () {
-	var /*
-			Rectangles of the layout. Every rectangle has context property set to itemid.
-		*/
-		_placements = [],
-		/*
-			This is sorted list of horizontal lines user may navigate along them and across with arrow keys between rectangles of the layout
-			Every rectangle may belong to multiple rows, so rows selection is optimized to minimize their number
-		*/
-		_rows,
-		/*
-			Tree levels structure is collection of colelctions. Its level contains sorted list of rectangles cross by individual row
-		*/
-		_treeLevels,
-		/*
-			Current itemid and row. Every rectangle may belong to multiple rows, so this structure helps to stay within row during navigation. 
-		*/
-		_cursor = null;
+  var /*
+      Rectangles of the layout. Every rectangle has context property set to itemid.
+    */
+    _placements = [],
+    /*
+      This is sorted list of horizontal lines user may navigate along them and across with arrow keys between rectangles of the layout
+      Every rectangle may belong to multiple rows, so rows selection is optimized to minimize their number
+    */
+    _rows,
+    /*
+      Tree levels structure is collection of colelctions. Its level contains sorted list of rectangles cross by individual row
+    */
+    _treeLevels,
+    /*
+      Current itemid and row. Every rectangle may belong to multiple rows, so this structure helps to stay within row during navigation. 
+    */
+    _cursor = null;
 
-	function Cursor(itemid, row) {
-		this.itemid = itemid;
-		this.row = row;
-	}
+  function Cursor(itemid, row) {
+    this.itemid = itemid;
+    this.row = row;
+  }
 
-	function addRect(rect, itemid) {
-		var newRect = new primitives.common.Rect(rect);
-		newRect.context = itemid;
+  function addRect(rect, itemid) {
+    var newRect = new primitives.common.Rect(rect);
+    newRect.context = itemid;
 
-		_placements.push(newRect);
-	}
+    _placements.push(newRect);
+  }
 
-	function prepair() {
-		if (_treeLevels == null) {
-			var levelIndex = 0;
-			_rows = primitives.common.SortedList();
-			primitives.common.getMinimumCrossingRows(this, _placements, function (row) {
-				_rows.add(row, levelIndex);
-				levelIndex += 1;
-			});
+  function prepair() {
+    if (_treeLevels == null) {
+      var levelIndex = 0;
+      _rows = primitives.common.SortedList();
+      primitives.common.getMinimumCrossingRows(this, _placements, function (row) {
+        _rows.add(row, levelIndex);
+        levelIndex += 1;
+      });
 
-			_treeLevels = primitives.common.TreeLevels();
-			_placements.sort(function (a, b) {
-				return a.horizontalCenter() - b.horizontalCenter();
-			});
-			for (var index = 0, len = _placements.length; index < len; index += 1) {
-				var placement = _placements[index];
-				_rows.loopForward(this, placement.y, function (row, levelIndex) {
-					if (row > placement.bottom()) {
-						return true;
-					}
-					_treeLevels.addItem(levelIndex, placement.context, placement);
-				});
-			}
-		}
-	}
+      _treeLevels = primitives.common.TreeLevels();
+      _placements.sort(function (a, b) {
+        return a.horizontalCenter() - b.horizontalCenter();
+      });
+      for (var index = 0, len = _placements.length; index < len; index += 1) {
+        var placement = _placements[index];
+        _rows.loopForward(this, placement.y, function (row, levelIndex) {
+          if (row > placement.bottom()) {
+            return true;
+          }
+          _treeLevels.addItem(levelIndex, placement.context, placement);
+        });
+      }
+    }
+  }
 
-	function getCursor(itemid) {
-		prepair();
+  function getCursor(itemid) {
+    prepair();
 
-		if (_cursor == null || _cursor.itemid != itemid) {
-			_cursor = new Cursor(itemid, _treeLevels.getLevelIndex(itemid));
-		}
+    if (_cursor == null || _cursor.itemid != itemid) {
+      _cursor = new Cursor(itemid, _treeLevels.getLevelIndex(itemid));
+    }
 
-		return _cursor;
-	}
+    return _cursor;
+  }
 
-	function getItemAbove(itemid) {
-		_cursor = getCursor(itemid);
+  function getItemAbove(itemid) {
+    _cursor = getCursor(itemid);
 
-		moveCursorNextRow(false);
+    moveCursorNextRow(false);
 
-		return _cursor.itemid;
-	}
+    return _cursor.itemid;
+  }
 
-	function getItemBelow(itemid) {
-		_cursor = getCursor(itemid);
+  function getItemBelow(itemid) {
+    _cursor = getCursor(itemid);
 
-		moveCursorNextRow(true);
+    moveCursorNextRow(true);
 
-		return _cursor.itemid;
-	}
+    return _cursor.itemid;
+  }
 
-	function moveCursorNextRow(isBelow) {
-		var cursorItemRect = _treeLevels.getItemContext(_cursor.itemid);
-		var cursorCenter = cursorItemRect.horizontalCenter();
-		var previousCursorItem = _cursor.itemid;
-		_treeLevels.loopLevelsFromItem(this, _cursor.itemid, isBelow, function (levelIndex) {
-			_cursor.row = levelIndex;
-			_cursor.itemid = _treeLevels.binarySearch(this, levelIndex, function (itemid, placement) {
-				return cursorCenter - placement.horizontalCenter();
-			});
-			return true;
-		});
-		if (previousCursorItem == _cursor.itemid) {
-			if (isBelow) {
-				_cursor.row = _treeLevels.getEndLevelIndex(_cursor.itemid);
-			} else {
-				_cursor.row = _treeLevels.getLevelIndex(_cursor.itemid);
-			}
-		}
-	}
+  function moveCursorNextRow(isBelow) {
+    var cursorItemRect = _treeLevels.getItemContext(_cursor.itemid);
+    var cursorCenter = cursorItemRect.horizontalCenter();
+    var previousCursorItem = _cursor.itemid;
+    _treeLevels.loopLevelsFromItem(this, _cursor.itemid, isBelow, function (levelIndex) {
+      _cursor.row = levelIndex;
+      _cursor.itemid = _treeLevels.binarySearch(this, levelIndex, function (itemid, placement) {
+        return cursorCenter - placement.horizontalCenter();
+      });
+      return true;
+    });
+    if (previousCursorItem == _cursor.itemid) {
+      if (isBelow) {
+        _cursor.row = _treeLevels.getEndLevelIndex(_cursor.itemid);
+      } else {
+        _cursor.row = _treeLevels.getLevelIndex(_cursor.itemid);
+      }
+    }
+  }
 
-	function getItemOnLeft(itemid) {
-		_cursor = getCursor(itemid);
+  function getItemOnLeft(itemid) {
+    _cursor = getCursor(itemid);
 
-		var nextItem = _treeLevels.getPrevItem(_cursor.itemid, _cursor.row);
-		if (nextItem != null) {
-			_cursor.itemid = nextItem;
-		}
-		return _cursor.itemid;
-	}
+    var nextItem = _treeLevels.getPrevItem(_cursor.itemid, _cursor.row);
+    if (nextItem != null) {
+      _cursor.itemid = nextItem;
+    }
+    return _cursor.itemid;
+  }
 
-	function getItemOnRight(itemid) {
-		_cursor = getCursor(itemid);
+  function getItemOnRight(itemid) {
+    _cursor = getCursor(itemid);
 
-		var nextItem = _treeLevels.getNextItem(_cursor.itemid, _cursor.row);
-		if(nextItem != null) {
-			_cursor.itemid =  nextItem;
-		}
-		return _cursor.itemid;
-	}
+    var nextItem = _treeLevels.getNextItem(_cursor.itemid, _cursor.row);
+    if (nextItem != null) {
+      _cursor.itemid = nextItem;
+    }
+    return _cursor.itemid;
+  }
 
-	function getNavigationLevels() {
-		prepair();
+  function getNavigationLevels() {
+    prepair();
 
-		var result = [];
-		_treeLevels.loopLevels(this, function (levelIndex, level) {
-			var levelItems = [];
-			_treeLevels.loopLevelItems(this, levelIndex, function (itemid, item, position) {
-				levelItems.push(itemid);
-			});
-			result.push(levelItems);
-		});
-		return result;
-	}
+    var result = [];
+    _treeLevels.loopLevels(this, function (levelIndex, level) {
+      var levelItems = [];
+      _treeLevels.loopLevelItems(this, levelIndex, function (itemid, item, position) {
+        levelItems.push(itemid);
+      });
+      result.push(levelItems);
+    });
+    return result;
+  }
 
-	return {
-		addRect: addRect,
-		prepair: prepair,
-		getItemAbove: getItemAbove,
-		getItemBelow: getItemBelow,
-		getItemOnLeft: getItemOnLeft,
-		getItemOnRight: getItemOnRight,
-		getNavigationLevels: getNavigationLevels
-	};
+  return {
+    addRect: addRect,
+    prepair: prepair,
+    getItemAbove: getItemAbove,
+    getItemBelow: getItemBelow,
+    getItemOnLeft: getItemOnLeft,
+    getItemOnRight: getItemOnRight,
+    getNavigationLevels: getNavigationLevels
+  };
 };
 
 /* /Managers/TaskManager.js*/
@@ -31815,9 +31770,9 @@ primitives.common.TaskManager = function () {
 
 /* /pdf/graphics/graphics.js*/
 primitives.pdf.graphics = function (doc) {
-	this._doc = doc,
-	this._context = this._doc;
-	this._dummyPlaceholder = new primitives.common.Placeholder();
+  this._doc = doc,
+    this._context = this._doc;
+  this._dummyPlaceholder = new primitives.common.Placeholder();
 };
 
 primitives.pdf.graphics.prototype.clean = function () {
@@ -31841,7 +31796,7 @@ primitives.pdf.graphics.prototype.reset = function (arg0, arg1) {
 };
 
 primitives.pdf.graphics.prototype.activate = function (arg0, arg1) {
-	return this._dummyPlaceholder;
+  return this._dummyPlaceholder;
 };
 
 primitives.pdf.graphics.prototype.text = function (x, y, width, height, label, orientation, horizontalAlignment, verticalAlignment, attr) {
@@ -31849,93 +31804,93 @@ primitives.pdf.graphics.prototype.text = function (x, y, width, height, label, o
 };
 
 primitives.pdf.graphics.prototype.polylinesBuffer = function (buffer) {
-	buffer.loop(this, function (polyline) {
-		if (polyline.length() > 0) {
-			this.polyline(polyline);
-		}
-	});
+  buffer.loop(this, function (polyline) {
+    if (polyline.length() > 0) {
+      this.polyline(polyline);
+    }
+  });
 };
 
 primitives.pdf.graphics.prototype.polyline = function (polylineData) {
-	var placeholder = this.m_activePlaceholder,
-		attr = polylineData.paletteItem.toAttr(),
-		step,
-		cornerRadius,
-		doc = this._doc;
+  var placeholder = this.m_activePlaceholder,
+    attr = polylineData.paletteItem.toAttr(),
+    step,
+    cornerRadius,
+    doc = this._doc;
 
-	doc.save();
-	polylineData.loop(this, function (segment) {
-		switch (segment.segmentType) {
-			case 1/*primitives.common.SegmentType.Move*/:
-				doc.moveTo(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
-				break;
-			case 0/*primitives.common.SegmentType.Line*/:
-				doc.lineTo(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
-				break;
-			case 4/*primitives.common.SegmentType.Dot*/:
-				if (segment.width == segment.height && segment.width / 2.0 <= segment.cornerRadius) {
-					// circle dot
-					doc.roundedRect(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5, segment.width, segment.height, Math.min(segment.width, segment.height) / 2.0);
-				} else if (segment.cornerRadius === 0) {
-					// square
-					doc.moveTo(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
-					doc.lineTo(Math.round(segment.x + segment.width) + 0.5, Math.round(segment.y) + 0.5);
-					doc.lineTo(Math.round(segment.x + segment.width) + 0.5, Math.round(segment.y + segment.height) + 0.5);
-					doc.lineTo(Math.round(segment.x) + 0.5, Math.round(segment.y + segment.height) + 0.5);
-					doc.lineTo(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
-				} else {
-					// rounded corners rectangle
-					cornerRadius = Math.min(segment.cornerRadius, Math.min(segment.width / 2.0, segment.height / 2.0));
-					doc.roundedRect(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5, segment.width, segment.height, cornerRadius);
-				}
-				break;
-			case 2/*primitives.common.SegmentType.QuadraticArc*/:
-				doc.quadraticCurveTo(Math.round(segment.cpX) + 0.5, Math.round(segment.cpY) + 0.5, Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
-				break;
-			case 3/*primitives.common.SegmentType.CubicArc*/:
-				doc.bezierCurveTo(Math.round(segment.cpX1) + 0.5,
-					Math.round(segment.cpY1) + 0.5,
-					Math.round(segment.cpX2) + 0.5,
-					Math.round(segment.cpY2) + 0.5,
-					Math.round(segment.x) + 0.5,
-					Math.round(segment.y) + 0.5);
-				break;
-		}
-	});
+  doc.save();
+  polylineData.loop(this, function (segment) {
+    switch (segment.segmentType) {
+      case 1/*primitives.common.SegmentType.Move*/:
+        doc.moveTo(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
+        break;
+      case 0/*primitives.common.SegmentType.Line*/:
+        doc.lineTo(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
+        break;
+      case 4/*primitives.common.SegmentType.Dot*/:
+        if (segment.width == segment.height && segment.width / 2.0 <= segment.cornerRadius) {
+          // circle dot
+          doc.roundedRect(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5, segment.width, segment.height, Math.min(segment.width, segment.height) / 2.0);
+        } else if (segment.cornerRadius === 0) {
+          // square
+          doc.moveTo(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
+          doc.lineTo(Math.round(segment.x + segment.width) + 0.5, Math.round(segment.y) + 0.5);
+          doc.lineTo(Math.round(segment.x + segment.width) + 0.5, Math.round(segment.y + segment.height) + 0.5);
+          doc.lineTo(Math.round(segment.x) + 0.5, Math.round(segment.y + segment.height) + 0.5);
+          doc.lineTo(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
+        } else {
+          // rounded corners rectangle
+          cornerRadius = Math.min(segment.cornerRadius, Math.min(segment.width / 2.0, segment.height / 2.0));
+          doc.roundedRect(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5, segment.width, segment.height, cornerRadius);
+        }
+        break;
+      case 2/*primitives.common.SegmentType.QuadraticArc*/:
+        doc.quadraticCurveTo(Math.round(segment.cpX) + 0.5, Math.round(segment.cpY) + 0.5, Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
+        break;
+      case 3/*primitives.common.SegmentType.CubicArc*/:
+        doc.bezierCurveTo(Math.round(segment.cpX1) + 0.5,
+          Math.round(segment.cpY1) + 0.5,
+          Math.round(segment.cpX2) + 0.5,
+          Math.round(segment.cpY2) + 0.5,
+          Math.round(segment.x) + 0.5,
+          Math.round(segment.y) + 0.5);
+        break;
+    }
+  });
 
-	doc.lineJoin('round');
+  doc.lineJoin('round');
 
-	if (attr.lineType != null) {
-		step = Math.round(attr.lineWidth) || 1;
-		switch (attr.lineType) {
-			case 0/*primitives.common.LineType.Solid*/:
-				break;
-			case 1/*primitives.common.LineType.Dotted*/:
-				doc.dash(step, step * 2);
-				break;
-			case 2/*primitives.common.LineType.Dashed*/:
-				doc.dash(step * 5, step * 3);
-				break;
-		}
-	}
+  if (attr.lineType != null) {
+    step = Math.round(attr.lineWidth) || 1;
+    switch (attr.lineType) {
+      case 0/*primitives.common.LineType.Solid*/:
+        break;
+      case 1/*primitives.common.LineType.Dotted*/:
+        doc.dash(step, step * 2);
+        break;
+      case 2/*primitives.common.LineType.Dashed*/:
+        doc.dash(step * 5, step * 3);
+        break;
+    }
+  }
 
-	if (attr.lineWidth !== undefined && attr.fillColor !== undefined) {
-		doc
-			.lineWidth(attr.lineWidth)
-			.fillOpacity(attr.opacity)
-			.fillAndStroke(attr.fillColor, attr.borderColor);
-	}
-	else if (attr.lineWidth !== undefined) {
-		doc
-			.lineWidth(attr.lineWidth)
-			.stroke(attr.borderColor);
-	}
-	else if (attr.fillColor !== undefined) {
-		doc
-			.fillOpacity(attr.opacity)
-			.fillColor(attr.fillColor);
-	}
-	doc.restore();
+  if (attr.lineWidth !== undefined && attr.fillColor !== undefined) {
+    doc
+      .lineWidth(attr.lineWidth)
+      .fillOpacity(attr.opacity)
+      .fillAndStroke(attr.fillColor, attr.borderColor);
+  }
+  else if (attr.lineWidth !== undefined) {
+    doc
+      .lineWidth(attr.lineWidth)
+      .stroke(attr.borderColor);
+  }
+  else if (attr.fillColor !== undefined) {
+    doc
+      .fillOpacity(attr.opacity)
+      .fillColor(attr.fillColor);
+  }
+  doc.restore();
 };
 
 
@@ -31944,39 +31899,39 @@ primitives.pdf.graphics.prototype.rightAngleLine = function (fromX, fromY, toX, 
 };
 
 primitives.pdf.graphics.prototype.template = function (x, y, width, height, contentx, contenty, contentWidth, contentHeight, template, hashCode, onRenderTemplate, uiHash, attr) { //ignore jslint
-	var gap = 0;
+  var gap = 0;
 
-	if (attr !== null) {
-		if (attr.borderWidth !== undefined) {
-			gap = this.getPxSize(attr.borderWidth);
-		}
-	}
+  if (attr !== null) {
+    if (attr.borderWidth !== undefined) {
+      gap = this.getPxSize(attr.borderWidth);
+    }
+  }
 
-	var position = new primitives.common.Rect(x + contentx, y + contenty, contentWidth - gap, contentHeight - gap);
+  var position = new primitives.common.Rect(x + contentx, y + contenty, contentWidth - gap, contentHeight - gap);
 
-	if (uiHash == null) {
-		uiHash = new primitives.common.RenderEventArgs();
-	}
+  if (uiHash == null) {
+    uiHash = new primitives.common.RenderEventArgs();
+  }
 
-	if (onRenderTemplate !== null) {
-		onRenderTemplate(this._doc, position, uiHash);
-	}
+  if (onRenderTemplate !== null) {
+    onRenderTemplate(this._doc, position, uiHash);
+  }
 };
 
 primitives.pdf.graphics.prototype.getPxSize = function (value, base) {
-	var result = value;
-	if (typeof value === "string") {
-		if (value.indexOf("pt") > 0) {
-			result = parseInt(value, 10) * 96 / 72;
-		}
-		else if (value.indexOf("%") > 0) {
-			result = parseFloat(value) / 100.0 * base;
-		}
-		else {
-			result = parseInt(value, 10);
-		}
-	}
-	return result;
+  var result = value;
+  if (typeof value === "string") {
+    if (value.indexOf("pt") > 0) {
+      result = parseInt(value, 10) * 96 / 72;
+    }
+    else if (value.indexOf("%") > 0) {
+      result = parseFloat(value) / 100.0 * base;
+    }
+    else {
+      result = parseInt(value, 10);
+    }
+  }
+  return result;
 };
 
 /* /pdf/FamDiagram/Plugin.js*/
@@ -32027,9 +31982,9 @@ primitives.pdf.famdiagram.Plugin = function (options) {
     tasks.addDependency('defaultLabelAnnotationConfig', new primitives.famdiagram.LabelAnnotationConfig());
 
     tasks.addDependency('isFamilyChartMode', true);/* in regular org diagram we hide branch if it contains only invisible nodes, 
-		in the family chart we use invisible items to draw connectors across multiple levels */
+    in the family chart we use invisible items to draw connectors across multiple levels */
     tasks.addDependency('showElbowDots', true);/* in regular org chart we don;t have situations when connector lines cross, but we have such situations in 
-		family tree so we need extra visual attribute to distinguish intersections betwen connectors */
+    family tree so we need extra visual attribute to distinguish intersections betwen connectors */
     tasks.addDependency('null', null);
     tasks.addDependency('foreground', 2/*primitives.common.ZOrderType.Foreground*/);
     tasks.addDependency('background', 1/*primitives.common.ZOrderType.Background*/);
@@ -32252,219 +32207,219 @@ primitives.pdf.famdiagram.Plugin = function (options) {
 
 /* /pdf/Models/Template.js*/
 primitives.pdf.Template = function (options, templateConfig) {
-	this.templateConfig = null;
-	this.itemTemplate = null;
-	this.highlightTemplate = null;
-	this.dotHighlightTemplate = null;
-	this.cursorTemplate = null;
+  this.templateConfig = null;
+  this.itemTemplate = null;
+  this.highlightTemplate = null;
+  this.dotHighlightTemplate = null;
+  this.cursorTemplate = null;
 
-	if (templateConfig != null) {
-		this.templateConfig = templateConfig;
+  if (templateConfig != null) {
+    this.templateConfig = templateConfig;
 
-		this.itemTemplate = primitives.common.isNullOrEmpty(templateConfig.itemTemplate) ?
-			new primitives.pdf.ItemTemplate(options, templateConfig) :
-			new primitives.pdf.UserTemplate(options, templateConfig, options.onItemRender);
+    this.itemTemplate = primitives.common.isNullOrEmpty(templateConfig.itemTemplate) ?
+      new primitives.pdf.ItemTemplate(options, templateConfig) :
+      new primitives.pdf.UserTemplate(options, templateConfig, options.onItemRender);
 
-		this.highlightTemplate = primitives.common.isNullOrEmpty(templateConfig.highlightTemplate) ?
-			new primitives.pdf.HighlightTemplate(options, templateConfig) :
-			new primitives.pdf.UserTemplate(options, templateConfig, options.onHighlightRender);
+    this.highlightTemplate = primitives.common.isNullOrEmpty(templateConfig.highlightTemplate) ?
+      new primitives.pdf.HighlightTemplate(options, templateConfig) :
+      new primitives.pdf.UserTemplate(options, templateConfig, options.onHighlightRender);
 
-		this.dotHighlightTemplate = new primitives.pdf.DummyTemplate(options, templateConfig);
+    this.dotHighlightTemplate = new primitives.pdf.DummyTemplate(options, templateConfig);
 
-		this.cursorTemplate = primitives.common.isNullOrEmpty(templateConfig.cursorTemplate) ?
-			new primitives.pdf.CursorTemplate(options, templateConfig) :
-			new primitives.pdf.UserTemplate(options, templateConfig, options.onCursorRender);
-	}
+    this.cursorTemplate = primitives.common.isNullOrEmpty(templateConfig.cursorTemplate) ?
+      new primitives.pdf.CursorTemplate(options, templateConfig) :
+      new primitives.pdf.UserTemplate(options, templateConfig, options.onCursorRender);
+  }
 };
 
 
 /* /pdf/OrgDiagram/Tasks/Layout/DummyCurrentControlSizeTask.js*/
 primitives.pdf.orgdiagram.DummyCurrentControlSizeTask = function (optionsTask) {
-	function process() {
-		return true;
-	}
+  function process() {
+    return true;
+  }
 
-	function getScrollPanelSize() {
-		return new primitives.common.Size(800, 600);
-	}
+  function getScrollPanelSize() {
+    return new primitives.common.Size(800, 600);
+  }
 
-	function getOptimalPanelSize() {
-		return new primitives.common.Size(800 - 25, 600 - 25);
-	}
+  function getOptimalPanelSize() {
+    return new primitives.common.Size(800 - 25, 600 - 25);
+  }
 
-	return {
-		process: process,
-		getScrollPanelSize: getScrollPanelSize,
-		getOptimalPanelSize: getOptimalPanelSize
-	};
+  return {
+    process: process,
+    getScrollPanelSize: getScrollPanelSize,
+    getOptimalPanelSize: getOptimalPanelSize
+  };
 };
 
 /* /pdf/OrgDiagram/Tasks/Templates/AnnotationLabelTemplateTask.js*/
 primitives.pdf.orgdiagram.AnnotationLabelTemplateTask = function (itemsSizesOptionTask) {
-	var _data = {
-		template: null
-	};
+  var _data = {
+    template: null
+  };
 
-	function process() {
-		return false;
-	}
+  function process() {
+    return false;
+  }
 
-	function getTemplate() {
-		if (_data.template == null) {
-			_data.template = new primitives.pdf.AnnotationLabelTemplate();
-		}
-		return _data.template;
-	}
+  function getTemplate() {
+    if (_data.template == null) {
+      _data.template = new primitives.pdf.AnnotationLabelTemplate();
+    }
+    return _data.template;
+  }
 
-	return {
-		process: process,
-		getTemplate: getTemplate
-	};
+  return {
+    process: process,
+    getTemplate: getTemplate
+  };
 };
 
 /* /pdf/OrgDiagram/Tasks/Templates/ButtonsTemplateTask.js*/
 primitives.pdf.orgdiagram.ButtonsTemplateTask = function (itemsSizesOptionTask) {
-	var _data = {
-		template: null
-	};
+  var _data = {
+    template: null
+  };
 
-	function process() {
-		return false;
-	}
+  function process() {
+    return false;
+  }
 
-	function getTemplate() {
-		if (_data.template == null) {
-			_data.template = new primitives.pdf.DummyTemplate();
-		}
-		return _data.template;
-	}
+  function getTemplate() {
+    if (_data.template == null) {
+      _data.template = new primitives.pdf.DummyTemplate();
+    }
+    return _data.template;
+  }
 
-	return {
-		process: process,
-		getTemplate: getTemplate
-	};
+  return {
+    process: process,
+    getTemplate: getTemplate
+  };
 };
 
 /* /pdf/OrgDiagram/Tasks/Templates/CheckboxTemplateTask.js*/
 primitives.pdf.orgdiagram.CheckBoxTemplateTask = function (itemsSizesOptionTask) {
-	var _data = {
-		template: null
-	};
+  var _data = {
+    template: null
+  };
 
-	function process() {
-		_data.template = null;
-		return true;
-	}
+  function process() {
+    _data.template = null;
+    return true;
+  }
 
-	function getTemplate() {
-		var options;
-		if (_data.template == null) {
-			options = itemsSizesOptionTask.getOptions();
-			_data.template = new primitives.pdf.CheckBoxTemplate(options.selectCheckBoxLabel);
-		}
-		return _data.template;
-	}
+  function getTemplate() {
+    var options;
+    if (_data.template == null) {
+      options = itemsSizesOptionTask.getOptions();
+      _data.template = new primitives.pdf.CheckBoxTemplate(options.selectCheckBoxLabel);
+    }
+    return _data.template;
+  }
 
-	return {
-		process: process,
-		getTemplate: getTemplate
-	};
+  return {
+    process: process,
+    getTemplate: getTemplate
+  };
 };
 
 /* /pdf/OrgDiagram/Tasks/Templates/GroupTitleTemplateTask.js*/
 primitives.pdf.orgdiagram.GroupTitleTemplateTask = function (templatesOptionTask) {
-	var _data = {
-		template: null
-	};
+  var _data = {
+    template: null
+  };
 
-	function process() {
-		_data.template = null;
-		return true;
-	}
+  function process() {
+    _data.template = null;
+    return true;
+  }
 
-	function getTemplate() {
-		var options;
-		if (_data.template == null) {
-			options = templatesOptionTask.getOptions();
-			_data.template = new primitives.pdf.GroupTitleTemplate(options.itemTitleFirstFontColor, options.itemTitleSecondFontColor);
-		}
-		return _data.template;
-	}
+  function getTemplate() {
+    var options;
+    if (_data.template == null) {
+      options = templatesOptionTask.getOptions();
+      _data.template = new primitives.pdf.GroupTitleTemplate(options.itemTitleFirstFontColor, options.itemTitleSecondFontColor);
+    }
+    return _data.template;
+  }
 
-	return {
-		process: process,
-		getTemplate: getTemplate
-	};
+  return {
+    process: process,
+    getTemplate: getTemplate
+  };
 };
 
 /* /pdf/OrgDiagram/Tasks/Templates/ReadTemplatesTask.js*/
 primitives.pdf.orgdiagram.ReadTemplatesTask = function (templatesOptionTask) {
-	var _data = {
-		templates: {}
-	},
-	_defaultWidgetTemplateName = "DefaultWidgetTemplate",
-	_defaultWidgetLabelAnnotationTemplateName = "DefaultWidgetLabelAnnotationTemplate";
+  var _data = {
+    templates: {}
+  },
+    _defaultWidgetTemplateName = "DefaultWidgetTemplate",
+    _defaultWidgetLabelAnnotationTemplateName = "DefaultWidgetLabelAnnotationTemplate";
 
-	function process() {
-		var index, len,
-			templateConfig,
-			templatesOptions = templatesOptionTask.getOptions(),
-			templates = templatesOptions.templates;
-
-
-		_data.templates = {};
-		_data.templates[_defaultWidgetTemplateName] = new primitives.pdf.Template(templatesOptions, new primitives.orgdiagram.TemplateConfig());
-
-		var labelAnnotationTemplateConfig = new primitives.orgdiagram.TemplateConfig();
-		labelAnnotationTemplateConfig.name = _defaultWidgetLabelAnnotationTemplateName;
-		labelAnnotationTemplateConfig.isActive = false;
-		labelAnnotationTemplateConfig.itemSize = new primitives.common.Size(100, 20);
-		labelAnnotationTemplateConfig.minimizedItemSize = new primitives.common.Size(0, 0);
-
-		var labelAnnotationTemplate = new primitives.pdf.Template();
-		labelAnnotationTemplate.templateConfig = labelAnnotationTemplateConfig;
-		labelAnnotationTemplate.minimizedItemCornerRadius = labelAnnotationTemplateConfig.minimizedItemSize.width / 2;
-		labelAnnotationTemplate.itemTemplate = new primitives.pdf.LabelAnnotationTemplate();
-		labelAnnotationTemplate.dotHighlightTemplate = new primitives.pdf.DummyTemplate();
-
-		_data.templates[_defaultWidgetLabelAnnotationTemplateName] = labelAnnotationTemplate;
+  function process() {
+    var index, len,
+      templateConfig,
+      templatesOptions = templatesOptionTask.getOptions(),
+      templates = templatesOptions.templates;
 
 
-		for (index = 0, len = templates.length; index < len; index += 1) {
-			templateConfig = templates[index];
-			_data.templates[templateConfig.name] = new primitives.pdf.Template(templatesOptions, templateConfig);
-		}
+    _data.templates = {};
+    _data.templates[_defaultWidgetTemplateName] = new primitives.pdf.Template(templatesOptions, new primitives.orgdiagram.TemplateConfig());
 
-		return true;
-	}
+    var labelAnnotationTemplateConfig = new primitives.orgdiagram.TemplateConfig();
+    labelAnnotationTemplateConfig.name = _defaultWidgetLabelAnnotationTemplateName;
+    labelAnnotationTemplateConfig.isActive = false;
+    labelAnnotationTemplateConfig.itemSize = new primitives.common.Size(100, 20);
+    labelAnnotationTemplateConfig.minimizedItemSize = new primitives.common.Size(0, 0);
 
-	function getTemplate(templateName1, templateName2, templateName3) {
-		var result = _data.templates[templateName1] || _data.templates[templateName2] || _data.templates[templateName3];
-		return result;
-	}
+    var labelAnnotationTemplate = new primitives.pdf.Template();
+    labelAnnotationTemplate.templateConfig = labelAnnotationTemplateConfig;
+    labelAnnotationTemplate.minimizedItemCornerRadius = labelAnnotationTemplateConfig.minimizedItemSize.width / 2;
+    labelAnnotationTemplate.itemTemplate = new primitives.pdf.LabelAnnotationTemplate();
+    labelAnnotationTemplate.dotHighlightTemplate = new primitives.pdf.DummyTemplate();
 
-	return {
-		process: process,
-		getTemplate: getTemplate,
-		DefaultWidgetTemplateName: _defaultWidgetTemplateName,
-		DefaultWidgetLabelAnnotationTemplateName: _defaultWidgetLabelAnnotationTemplateName
-	};
+    _data.templates[_defaultWidgetLabelAnnotationTemplateName] = labelAnnotationTemplate;
+
+
+    for (index = 0, len = templates.length; index < len; index += 1) {
+      templateConfig = templates[index];
+      _data.templates[templateConfig.name] = new primitives.pdf.Template(templatesOptions, templateConfig);
+    }
+
+    return true;
+  }
+
+  function getTemplate(templateName1, templateName2, templateName3) {
+    var result = _data.templates[templateName1] || _data.templates[templateName2] || _data.templates[templateName3];
+    return result;
+  }
+
+  return {
+    process: process,
+    getTemplate: getTemplate,
+    DefaultWidgetTemplateName: _defaultWidgetTemplateName,
+    DefaultWidgetLabelAnnotationTemplateName: _defaultWidgetLabelAnnotationTemplateName
+  };
 };
 
 /* /pdf/OrgDiagram/Tasks/Transformations/Selection/DummyCombinedNormalVisibilityItemsTask.js*/
 primitives.pdf.orgdiagram.DummyCombinedNormalVisibilityItemsTask = function (optionsTask) {
-	function process() {
-		return true;
-	}
+  function process() {
+    return true;
+  }
 
-	function isItemSelected(treeItem) {
-		return false;
-	}
+  function isItemSelected(treeItem) {
+    return false;
+  }
 
-	return {
-		process: process,
-		isItemSelected: isItemSelected
-	};
+  return {
+    process: process,
+    isItemSelected: isItemSelected
+  };
 };
 
 /* /pdf/OrgDiagram/Plugin.js*/
@@ -32713,166 +32668,166 @@ primitives.pdf.orgdiagram.Plugin = function (options) {
 /* /pdf/Templates/AnnotationLabelTemplate.js*/
 /* jshint latedef: true, unused: false */
 primitives.pdf.AnnotationLabelTemplate = function () {
-	function template() {
-		return {};
-	}
+  function template() {
+    return {};
+  }
 
-	function getHashCode() {
-		return 0;
-	}
+  function getHashCode() {
+    return 0;
+  }
 
-	function render(doc, position, data) {
-		var annotationConfig = data.context;
+  function render(doc, position, data) {
+    var annotationConfig = data.context;
 
-		doc.save();
+    doc.save();
 
-		doc.font('Helvetica', 12)
-			.text(annotationConfig.label, position.x, position.y, {
-				width: position.width,
-				height: position.height,
-				align: 'center'
-			});
+    doc.font('Helvetica', 12)
+      .text(annotationConfig.label, position.x, position.y, {
+        width: position.width,
+        height: position.height,
+        align: 'center'
+      });
 
-		doc.restore();
-	}
+    doc.restore();
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /pdf/Templates/CheckBoxTemplate.js*/
 primitives.pdf.CheckBoxTemplate = function (selectCheckBoxLabel) {
-	var _checked = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAF/SURBVDhPpZM7rwFREMf/u4hEY5vVkigoSERiKwq1QqOh28R30QnFRqnSKHwFn0C37Sbi0SCE2KzE41wzd/feG48g91ftmdn5zznzkLLZrNhutzidTvgEv98PRVEgxeNx0e12EYvFcDweXfdjZFmGEIKDx+MxdF0HotGomEwmV/tnUAzFyqT8KrNHLpdDJpPBZrPh81UHLPAO7XYb6/Ua8/kcpmnC5/NBkqT3BJbLJRqNBgKBACqVCgqFAg6HA/veEiiVSlBVFZfLBZ1Ox7V+81KAMtPVV6sV+v2+a/2FBeg9RDqdhqZp/E1Mp1O0Wi32V6tVLuAtLEBvGw6HmM1m2O/3yOfz7CyXy4hEItz3ZrPJtr/8dIEKUiwWYRgGX3e32yGZTOJ8PnMBB4MBB9xy14VarcaZFosFQqEQHMdBvV5HIpFw/3gATZNlWTxdHr1eT4TDYZFKpVzLPRRDsU9HeTQaCdu23dM91wKzwNNlCgaDXINHW0pF95bpn+us4AsY2TIOZFyZ9AAAAABJRU5ErkJggg==',
-		_unchecked = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAACjSURBVDhPrZNNCsQgDEY/f2q33sCCN+iNPJlXE2/gTtDiVBln1TJo+zZBJS+YELLvewkhIOeMETjnkFKCaK2LtRbbtiGl9H2+hlKKUkpLds7BGAMopYr3/rwfo+bUXFrN/yrfcXrQBDMwxkAImRfEGFucFnTeEdT/zNIEy7K0wyi/KfSGjPJoCp13BDM9EEK0eLtM67riOI7LLa0F+zI9XGeJDyTldfBA9FNyAAAAAElFTkSuQmCC';
+  var _checked = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAF/SURBVDhPpZM7rwFREMf/u4hEY5vVkigoSERiKwq1QqOh28R30QnFRqnSKHwFn0C37Sbi0SCE2KzE41wzd/feG48g91ftmdn5zznzkLLZrNhutzidTvgEv98PRVEgxeNx0e12EYvFcDweXfdjZFmGEIKDx+MxdF0HotGomEwmV/tnUAzFyqT8KrNHLpdDJpPBZrPh81UHLPAO7XYb6/Ua8/kcpmnC5/NBkqT3BJbLJRqNBgKBACqVCgqFAg6HA/veEiiVSlBVFZfLBZ1Ox7V+81KAMtPVV6sV+v2+a/2FBeg9RDqdhqZp/E1Mp1O0Wi32V6tVLuAtLEBvGw6HmM1m2O/3yOfz7CyXy4hEItz3ZrPJtr/8dIEKUiwWYRgGX3e32yGZTOJ8PnMBB4MBB9xy14VarcaZFosFQqEQHMdBvV5HIpFw/3gATZNlWTxdHr1eT4TDYZFKpVzLPRRDsU9HeTQaCdu23dM91wKzwNNlCgaDXINHW0pF95bpn+us4AsY2TIOZFyZ9AAAAABJRU5ErkJggg==',
+    _unchecked = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAACjSURBVDhPrZNNCsQgDEY/f2q33sCCN+iNPJlXE2/gTtDiVBln1TJo+zZBJS+YELLvewkhIOeMETjnkFKCaK2LtRbbtiGl9H2+hlKKUkpLds7BGAMopYr3/rwfo+bUXFrN/yrfcXrQBDMwxkAImRfEGFucFnTeEdT/zNIEy7K0wyi/KfSGjPJoCp13BDM9EEK0eLtM67riOI7LLa0F+zI9XGeJDyTldfBA9FNyAAAAAElFTkSuQmCC';
 
-	function template() {
-		return {};
-	}
+  function template() {
+    return {};
+  }
 
-	function getHashCode() {
-		return 0;
-	}
+  function getHashCode() {
+    return 0;
+  }
 
-	function render(doc, position, data) {
-		var image = data.isSelected ? _checked : _unchecked;
+  function render(doc, position, data) {
+    var image = data.isSelected ? _checked : _unchecked;
 
-		doc.save();
+    doc.save();
 
-		/* photo */
-		doc.image(image, position.x, position.y);
+    /* photo */
+    doc.image(image, position.x, position.y);
 
-		doc.font('Helvetica', 11)
-			.text(selectCheckBoxLabel, position.x + 20, position.y + 4, {
-				ellipsis: true,
-				width: (position.width - 4),
-				height: position.height,
-				align: 'left'
-			});
+    doc.font('Helvetica', 11)
+      .text(selectCheckBoxLabel, position.x + 20, position.y + 4, {
+        ellipsis: true,
+        width: (position.width - 4),
+        height: position.height,
+        align: 'left'
+      });
 
-		doc.restore();
-	}
+    doc.restore();
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /pdf/Templates/CursorTemplate.js*/
 primitives.pdf.CursorTemplate = function (options, itemTemplateConfig) {
-	var _config = itemTemplateConfig;
+  var _config = itemTemplateConfig;
 
-	function template() {
-		return {};
-	}
+  function template() {
+    return {};
+  }
 
-	function getHashCode() {
-		return 0;
-	}
+  function getHashCode() {
+    return 0;
+  }
 
-	function render(doc, position, data) {
-		doc.save();
+  function render(doc, position, data) {
+    doc.save();
 
-		/* item border */
-		doc.roundedRect(position.x, position.y, position.width, position.height, 4)
-			.lineWidth(_config.cursorBorderWidth)
-			.stroke('#fbd850');
+    /* item border */
+    doc.roundedRect(position.x, position.y, position.width, position.height, 4)
+      .lineWidth(_config.cursorBorderWidth)
+      .stroke('#fbd850');
 
-		doc.restore();
-	}
+    doc.restore();
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /pdf/Templates/DummyTemplate.js*/
 primitives.pdf.DummyTemplate = function () {
-	function template() {
-		return {};
-	}
+  function template() {
+    return {};
+  }
 
-	function getHashCode() {
-		return 0;
-	}
+  function getHashCode() {
+    return 0;
+  }
 
-	function render() {}
+  function render() { }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /pdf/Templates/GroupTitleTemplate.js*/
-primitives.pdf.GroupTitleTemplate = function (itemTitleFirstFontColor, itemTitleSecondFontColor ) {
-	function template() {
-		return {};
-	}
+primitives.pdf.GroupTitleTemplate = function (itemTitleFirstFontColor, itemTitleSecondFontColor) {
+  function template() {
+    return {};
+  }
 
-	function getHashCode() {
-		return 0;
-	}
+  function getHashCode() {
+    return 0;
+  }
 
-	function render(doc, position, data) {
-		var itemConfig = data.context,
-			groupTitleColor = itemConfig.groupTitleColor || "#4169e1"/*primitives.common.Colors.RoyalBlue*/,
-			color = primitives.common.highestContrast(groupTitleColor, itemTitleSecondFontColor, itemTitleFirstFontColor);
+  function render(doc, position, data) {
+    var itemConfig = data.context,
+      groupTitleColor = itemConfig.groupTitleColor || "#4169e1"/*primitives.common.Colors.RoyalBlue*/,
+      color = primitives.common.highestContrast(groupTitleColor, itemTitleSecondFontColor, itemTitleFirstFontColor);
 
-		/* title background */
-		doc.save();
-		doc.translate(position.width, 0)
-			.rotate(90, {
-			origin: [position.x, position.y]
-		});
-		doc.fillColor(groupTitleColor)
-			.roundedRect(position.x, position.y, position.height - 2, position.width, 4)
-			.fill();
+    /* title background */
+    doc.save();
+    doc.translate(position.width, 0)
+      .rotate(90, {
+        origin: [position.x, position.y]
+      });
+    doc.fillColor(groupTitleColor)
+      .roundedRect(position.x, position.y, position.height - 2, position.width, 4)
+      .fill();
 
-		/* title */
-		doc.fillColor(color)
-			.font('Helvetica', 12)
-			.text(itemConfig.groupTitle, position.x + 4, position.y + 6, {
-				ellipsis: true,
-				width: (position.height - 4),
-				height: position.width - 4,
-				align: 'center'
-			});
-		doc.restore();
-	}
+    /* title */
+    doc.fillColor(color)
+      .font('Helvetica', 12)
+      .text(itemConfig.groupTitle, position.x + 4, position.y + 6, {
+        ellipsis: true,
+        width: (position.height - 4),
+        height: position.width - 4,
+        align: 'center'
+      });
+    doc.restore();
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 
@@ -32909,130 +32864,130 @@ primitives.pdf.HighlightTemplate = function (options, itemTemplateConfig) {
 
 /* /pdf/Templates/ItemTemplate.js*/
 primitives.pdf.ItemTemplate = function (options, itemTemplateConfig) {
-	var _config = itemTemplateConfig;
+  var _config = itemTemplateConfig;
 
-	function template() {
-		return {};
-	}
+  function template() {
+    return {};
+  }
 
-	function getHashCode() {
-		return 0;
-	}
+  function getHashCode() {
+    return 0;
+  }
 
-	function render(doc, position, data) {
-		var itemConfig = data.context,
-			itemTitleColor = itemConfig.itemTitleColor != null ? itemConfig.itemTitleColor : "#4169e1"/*primitives.common.Colors.RoyalBlue*/,
-			color = primitives.common.highestContrast(itemTitleColor, options.itemTitleSecondFontColor, options.itemTitleFirstFontColor),
-			contentSize = new primitives.common.Size(_config.itemSize);
+  function render(doc, position, data) {
+    var itemConfig = data.context,
+      itemTitleColor = itemConfig.itemTitleColor != null ? itemConfig.itemTitleColor : "#4169e1"/*primitives.common.Colors.RoyalBlue*/,
+      color = primitives.common.highestContrast(itemTitleColor, options.itemTitleSecondFontColor, options.itemTitleFirstFontColor),
+      contentSize = new primitives.common.Size(_config.itemSize);
 
-		contentSize.width -= _config.itemBorderWidth * 2;
-		contentSize.height -= _config.itemBorderWidth * 2;
+    contentSize.width -= _config.itemBorderWidth * 2;
+    contentSize.height -= _config.itemBorderWidth * 2;
 
-		doc.save();
+    doc.save();
 
-		/* item border */
-		doc.roundedRect(position.x, position.y, position.width, position.height, 4)
-			.lineWidth(_config.itemBorderWidth)
-			.stroke('#dddddd');
+    /* item border */
+    doc.roundedRect(position.x, position.y, position.width, position.height, 4)
+      .lineWidth(_config.itemBorderWidth)
+      .stroke('#dddddd');
 
-		/* title background */
-		doc.fillColor(itemTitleColor)
-			.roundedRect(position.x + 2, position.y + 2, (contentSize.width - 4), 18, 2)
-			.fill();
-		
-		/* title */
-		doc.fillColor(color)
-			.font('Helvetica', 12)
-			.text(itemConfig.title, position.x + 4, position.y + 7, {
-				ellipsis: true,
-				width: (contentSize.width - 4 - 4 * 2),
-				height: 16,
-				align: 'left'
-			});
+    /* title background */
+    doc.fillColor(itemTitleColor)
+      .roundedRect(position.x + 2, position.y + 2, (contentSize.width - 4), 18, 2)
+      .fill();
 
-		/* photo */
-		if (itemConfig.image != null) {
-			doc.image(itemConfig.image, position.x + 3, position.y + 24);
-		}
-		/* photo frame */
-		doc.rect(position.x + 3, position.y + 24, 50, 60)
-			.stroke('#cccccc');
+    /* title */
+    doc.fillColor(color)
+      .font('Helvetica', 12)
+      .text(itemConfig.title, position.x + 4, position.y + 7, {
+        ellipsis: true,
+        width: (contentSize.width - 4 - 4 * 2),
+        height: 16,
+        align: 'left'
+      });
 
-		/* description */
-		doc.fillColor('black')
-			.font('Helvetica', 10)
-			.text(itemConfig.description, position.x + 56, position.y + 24, {
-				ellipsis: true,
-				width: (contentSize.width - 4 - 56),
-				height: 74,
-				align: 'left'
-			});
-		doc.restore();
-	}
+    /* photo */
+    if (itemConfig.image != null) {
+      doc.image(itemConfig.image, position.x + 3, position.y + 24);
+    }
+    /* photo frame */
+    doc.rect(position.x + 3, position.y + 24, 50, 60)
+      .stroke('#cccccc');
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+    /* description */
+    doc.fillColor('black')
+      .font('Helvetica', 10)
+      .text(itemConfig.description, position.x + 56, position.y + 24, {
+        ellipsis: true,
+        width: (contentSize.width - 4 - 56),
+        height: 74,
+        align: 'left'
+      });
+    doc.restore();
+  }
+
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /pdf/Templates/LabelAnnotationTemplate.js*/
 primitives.pdf.LabelAnnotationTemplate = function () {
-	function template() {
-		return {};
-	}
+  function template() {
+    return {};
+  }
 
-	function getHashCode() {
-		return 0;
-	}
+  function getHashCode() {
+    return 0;
+  }
 
-	function render(doc, position, data) {
-		var itemConfig = data.context;
+  function render(doc, position, data) {
+    var itemConfig = data.context;
 
-		doc.save();
+    doc.save();
 
-		doc.font('Helvetica', 12)
-			.text(itemConfig.title, position.x, position.y, {
-				width: position.width,
-				height: position.height,
-				align: 'center'
-			});
+    doc.font('Helvetica', 12)
+      .text(itemConfig.title, position.x, position.y, {
+        width: position.width,
+        height: position.height,
+        align: 'center'
+      });
 
-		doc.restore();
-	}
+    doc.restore();
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 /* /pdf/Templates/UserTemplate.js*/
 primitives.pdf.UserTemplate = function (options, itemTemplateConfig, onRender) {
-	function template() {
-		return {};
-	}
+  function template() {
+    return {};
+  }
 
-	function getHashCode() {
-		return 0;
-	}
+  function getHashCode() {
+    return 0;
+  }
 
-	function render(doc, position, data) {
-		if (onRender != null) {
-			onRender(doc, position, data);
-		} else {
-			var itemTemplate = primitives.pdf.ItemTemplate(options, itemTemplateConfig);
-			itemTemplate.render(doc, position, data);
-		}
-	}
+  function render(doc, position, data) {
+    if (onRender != null) {
+      onRender(doc, position, data);
+    } else {
+      var itemTemplate = primitives.pdf.ItemTemplate(options, itemTemplateConfig);
+      itemTemplate.render(doc, position, data);
+    }
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
   return primitives;

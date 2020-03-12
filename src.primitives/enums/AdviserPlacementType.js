@@ -11,17 +11,17 @@
  * @enum {AdviserPlacementType}
  */
 primitives.common.AdviserPlacementType = {
-	/**
-	 * Auto select by layout manager
-	 */
+  /**
+   * Auto select by layout manager
+   */
   Auto: 0,
-	/**
-	 * Left side
-	 */
+  /**
+   * Left side
+   */
   Left: 2,
-	/**
-	 * Right side
-	 */
+  /**
+   * Right side
+   */
   Right: 3
 };
 

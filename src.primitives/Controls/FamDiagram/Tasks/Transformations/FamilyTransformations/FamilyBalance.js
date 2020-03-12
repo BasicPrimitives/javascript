@@ -1,36 +1,36 @@
 ﻿/*  This class transforms normalized logical family into levels of nodes.
-	The current approach to optimize items placement is to transform family into hierarchy of nodes and order 
-	children of every node in the way minimizing number of intersections between connection lines.
-	1. Extract families into _families array of type FamilyItem. Family is sub tree of items logicalFamily. 
-		In order to extract families out of logicalFamily we count from bottom to roots total number of descendants for eevry item and then extract 
-		sub hierarchy having minimum number of members. This process is repeated till all nodes are extracted into separate families.
-			orgPartners - When we extract families we store links to parents in other branches having the same children of 
-			some already extracted item as partner in orgPartners hash
-		This hash table is used to create links collections between families
-		The orgTree collection is used to define final org hierarchy used to balance nodes in levels.
-	2. Use links in families to build family graph
-	3. Find maximum spanning tree of family graph
-	4. Since spanning tree is the tree we calculate number of descendants in every branch. So when we join families into one 
-		org chart we sort them taking first child family having maximum number of links to its parent family
-		sortedFamilies collection
-	5. Using sortedFamilies collection we merge roots of families back to primary org chart. The rule of that backword merging is 
-		to find ancestor in target tree having level less then root item of merged family.
-		this is done without extra collection creation via making changes in orgTree
-		If family has no links it is added to root of orgTree
-	6. Balance organizational chart in order to place items having extra connections close to each other. 
-		Assign every extra link to every pair of parent nodes up to the root.
-	7. Scan orgTree hierarchy from root to bottom and balance children using extra links collected from children
-		So at the top most level we know number of links between children, so we sort them, then number of overlappings between branches should be minimal
-		Balancing algorithms finds maximum spanning tree in connections between children and groups them from bottom of that tree up to the root
-		In the way when groups having maximum mutual links placed close to each other.
+  The current approach to optimize items placement is to transform family into hierarchy of nodes and order 
+  children of every node in the way minimizing number of intersections between connection lines.
+  1. Extract families into _families array of type FamilyItem. Family is sub tree of items logicalFamily. 
+    In order to extract families out of logicalFamily we count from bottom to roots total number of descendants for eevry item and then extract 
+    sub hierarchy having minimum number of members. This process is repeated till all nodes are extracted into separate families.
+      orgPartners - When we extract families we store links to parents in other branches having the same children of 
+      some already extracted item as partner in orgPartners hash
+    This hash table is used to create links collections between families
+    The orgTree collection is used to define final org hierarchy used to balance nodes in levels.
+  2. Use links in families to build family graph
+  3. Find maximum spanning tree of family graph
+  4. Since spanning tree is the tree we calculate number of descendants in every branch. So when we join families into one 
+    org chart we sort them taking first child family having maximum number of links to its parent family
+    sortedFamilies collection
+  5. Using sortedFamilies collection we merge roots of families back to primary org chart. The rule of that backword merging is 
+    to find ancestor in target tree having level less then root item of merged family.
+    this is done without extra collection creation via making changes in orgTree
+    If family has no links it is added to root of orgTree
+  6. Balance organizational chart in order to place items having extra connections close to each other. 
+    Assign every extra link to every pair of parent nodes up to the root.
+  7. Scan orgTree hierarchy from root to bottom and balance children using extra links collected from children
+    So at the top most level we know number of links between children, so we sort them, then number of overlappings between branches should be minimal
+    Balancing algorithms finds maximum spanning tree in connections between children and groups them from bottom of that tree up to the root
+    In the way when groups having maximum mutual links placed close to each other.
 */
 primitives.famdiagram.FamilyBalance = function () {
 
 };
 
 //var params = {
-//	logicalFamily,
-//	maximumId,
+//  logicalFamily,
+//  maximumId,
 //  items
 //};
 primitives.famdiagram.FamilyBalance.prototype.balance = function (params) {
@@ -120,9 +120,9 @@ primitives.famdiagram.FamilyBalance.prototype.createOrgTree = function (params, 
     params.logicalFamily.loopRoots(this, function (grandParentId, grandParent) {
       //ignore jslint
       family = new this.Family(familyId);
-			/* extractOrgChart method extracts hiearchy of family members starting from grandParent and takes only non extracted family items 
-			 * For every extracted item it assigns its familyId, it is used for building families relations graph and finding cross family links
-			*/
+      /* extractOrgChart method extracts hiearchy of family members starting from grandParent and takes only non extracted family items 
+       * For every extracted item it assigns its familyId, it is used for building families relations graph and finding cross family links
+      */
       this.extractOrgChart(grandParentId, params.logicalFamily, params.primaryParents, data.orgTree, data.orgPartners, data.itemByChildrenKey, famItemsExtracted, family);
       families.push(family);
       families2.push(family);
@@ -375,9 +375,9 @@ primitives.famdiagram.FamilyBalance.prototype.balanceOrgTree = function (orgTree
           }
         }
       }
-			/* add extra zero connection to graph when child org item has no connections
-				it is connected to the first item in the graph with zero link
-			*/
+      /* add extra zero connection to graph when child org item has no connections
+        it is connected to the first item in the graph with zero link
+      */
       if (index > 0) {
         graph.addEdge(childOrgItem.id, firstOrgItem.id, { weight: 0 });
       }

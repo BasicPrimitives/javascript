@@ -118,7 +118,7 @@ primitives.common.QuadTree = function (minimalSize) {
   /**
    * Loops rectangular area of quad tree structure
    * 
-	 * @param {object} thisArg The callback function invocation context
+   * @param {object} thisArg The callback function invocation context
    * @param {Rect} rect Rectangular search area
    * @param {onQuadTreePointCallback} onItem Callback function to call for every point within the search area
    */

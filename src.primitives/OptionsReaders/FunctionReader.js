@@ -3,9 +3,9 @@
 };
 
 primitives.common.FunctionReader.prototype.read = function (target, source, path, context) {
-	var result = null;
+  var result = null;
 
-	result = (typeof source == "function") ? source : null;
+  result = (typeof source == "function") ? source : null;
 
-	return result;
+  return result;
 };

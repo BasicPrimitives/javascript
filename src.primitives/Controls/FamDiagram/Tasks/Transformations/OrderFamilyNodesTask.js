@@ -1,4 +1,4 @@
-﻿/*	Balance family tree so parents sharing the most children stay close to each other 
+﻿/*  Balance family tree so parents sharing the most children stay close to each other 
     Account for users position and primnaryParent options
 */
 primitives.famdiagram.OrderFamilyNodesTask = function (orderFamilyNodesOptionTask, userDefinedNodesOrderTask, normalizeLogicalFamilyTask) {

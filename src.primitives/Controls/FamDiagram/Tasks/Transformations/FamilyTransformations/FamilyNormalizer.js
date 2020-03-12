@@ -6,29 +6,6 @@
 primitives.famdiagram.FamilyNormalizer.prototype = new primitives.famdiagram.BaseTransformer();
 
 primitives.famdiagram.FamilyNormalizer.prototype.normalize = function (options, logicalFamily, maximumId) {
-  var index, len, index2, len2,
-    famItem,
-    familiesGraph, /* primitives.common.graph */
-    link, links,
-    fromFamily,
-    toFamily,
-    sortedFamilies = [], sortedFamiliesHash,
-    attachedFamilies,
-    userItem,
-    familyId,
-    family,
-    familyRootItem,
-    fromItem,
-    toItem,
-    rootItem, rootItems, bestRootItem, bestReference,
-    spanningTree,
-    extraGravities, grandChildren,
-    parsedId,
-    itemsHavingSpouses, spouses,
-    orgItemRoot,
-    famItemsExtracted,
-    families2;
-
   if (logicalFamily.hasNodes() > 0) {
 
     /* Distribute FamilyItem-s by levels. Item levels aligned to bottom. */
@@ -121,7 +98,7 @@ primitives.famdiagram.FamilyNormalizer.prototype.resortItemsBylevels = function 
   var itemsAtLevels = [],
     minimumLevel = null,
     maximumLevel = null,
-    currentLevel, index, itemsAtLevel;
+    index, itemsAtLevel;
 
   logicalFamily.loop(this, function (famItemId, famItem) {
     famItem.originalLevel = famItem.level;

@@ -1,21 +1,21 @@
 ﻿primitives.orgdiagram.ButtonsTemplateTask = function (itemsSizesOptionTask, templates) {
-	var _data = {
-		template: null
-	};
+  var _data = {
+    template: null
+  };
 
-	function process() {
-		return false;
-	}
+  function process() {
+    return false;
+  }
 
-	function getTemplate() {
-		if (_data.template == null) {
-			_data.template = new templates.ButtonsTemplate;
-		}
-		return _data.template;
-	}
+  function getTemplate() {
+    if (_data.template == null) {
+      _data.template = new templates.ButtonsTemplate;
+    }
+    return _data.template;
+  }
 
-	return {
-		process: process,
-		getTemplate: getTemplate
-	};
+  return {
+    process: process,
+    getTemplate: getTemplate
+  };
 };

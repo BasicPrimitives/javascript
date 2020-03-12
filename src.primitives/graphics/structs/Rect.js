@@ -18,7 +18,7 @@ primitives.common.Rect = function (arg0, arg1, arg2, arg3) {
    * @type {number}
    */
   this.x = null;
-	/**
+  /**
    * The location y coordinate
    * @type {number}
    */

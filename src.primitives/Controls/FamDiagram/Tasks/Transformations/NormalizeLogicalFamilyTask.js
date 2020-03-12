@@ -1,9 +1,9 @@
-﻿/*	1. Topologically sort _logicalFamily items and assign levels.
-	2. Optimize references. Transform M:N relations to M:1:N where it is possible.
-	3. Eliminate Many to Many relations. Logical family consists of 1:M and M:1 relations only.
-	4. Resort items, so original visible items stay at the same level.
-	5. Fill in missed items between levels. So that way we have invisible items between parent/child family items if they have gap between levels.
-		Such invisible family items have isVisible option set to false.
+﻿/*  1. Topologically sort _logicalFamily items and assign levels.
+    2. Optimize references. Transform M:N relations to M:1:N where it is possible.
+    3. Eliminate Many to Many relations. Logical family consists of 1:M and M:1 relations only.
+    4. Resort items, so original visible items stay at the same level.
+    5. Fill in missed items between levels. So that way we have invisible items between parent/child family items if they have gap between levels.
+      Such invisible family items have isVisible option set to false.
 */
 primitives.famdiagram.NormalizeLogicalFamilyTask = function (normalizeOptionTask, hideGrandParentsConnectorsTask) {
   var _data = {

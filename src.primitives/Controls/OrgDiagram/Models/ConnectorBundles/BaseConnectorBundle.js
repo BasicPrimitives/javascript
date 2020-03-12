@@ -6,21 +6,21 @@
 
 primitives.common.BaseConnectorBundle.prototype.trace = function (data, params, options) {
   //var data = {
-  //	graph: null, //primitives.common.graph
-  //	nodeid: 0
+  //  graph: null, //primitives.common.graph
+  //  nodeid: 0
   //};
 
   //var params = {
-  //	treeItemsPositions: [],
-  //	transform: null,
-  //	hasGraphics: true
+  //  treeItemsPositions: [],
+  //  transform: null,
+  //  hasGraphics: true
   //};
 
   //var options = {
-  //	connectorType: primitives.common.ConnectorType.Squared,
-  //	showExtraArrows: true,
-  //	bevelSize: 4,
-  //	elbowType: primitives.common.ElbowType.None
+  //  connectorType: primitives.common.ConnectorType.Squared,
+  //  showExtraArrows: true,
+  //  bevelSize: 4,
+  //  elbowType: primitives.common.ElbowType.None
   //};
 };
 

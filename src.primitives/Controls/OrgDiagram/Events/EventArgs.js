@@ -4,7 +4,7 @@
  * Context object
  */
 primitives.orgdiagram.EventArgs = function () {
-	/**
+  /**
    * Current item
    * 
    * @type {string}

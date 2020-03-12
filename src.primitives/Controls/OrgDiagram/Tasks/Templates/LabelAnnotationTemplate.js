@@ -1,26 +1,26 @@
 primitives.common.LabelAnnotationTemplate = function () {
-	var _template = ["div",
-		{
-			"class": ["bp-item", "bp-label-annotation"]
-		}
-	];
+  var _template = ["div",
+    {
+      "class": ["bp-item", "bp-label-annotation"]
+    }
+  ];
 
-	function template() {
-		return _template;
-	}
+  function template() {
+    return _template;
+  }
 
-	function getHashCode() {
-		return "defaultLabelAnnotationTemplate";
-	}
+  function getHashCode() {
+    return "defaultLabelAnnotationTemplate";
+  }
 
-	function render(event, data) {
-		var itemConfig = data.context;
-		data.element.innerHTML = itemConfig.title;
-	}
+  function render(event, data) {
+    var itemConfig = data.context;
+    data.element.innerHTML = itemConfig.title;
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };

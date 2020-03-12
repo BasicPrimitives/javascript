@@ -219,8 +219,8 @@ primitives.orgdiagram.Widget.prototype._readOptions = function (options) {
  * Basic Primitives organization diagram.
  *
  * Depends:
- *	jquery.ui.core.js
- *	jquery.ui.widget.js
+ *  jquery.ui.core.js
+ *  jquery.ui.widget.js
  */
 if (typeof jQuery != "undefined") {
   (function ($) {
@@ -338,114 +338,114 @@ primitives.callout.Config = function () {
 
 /* /callout/controllers/Controller.js*/
 primitives.callout.Controller = function () {
-	this.widgetEventPrefix = "bpcallout";
+  this.widgetEventPrefix = "bpcallout";
 
-	this.options = new primitives.callout.Config();
+  this.options = new primitives.callout.Config();
 
-	this.m_placeholder = null;
-	this.m_panelSize = null;
+  this.m_placeholder = null;
+  this.m_panelSize = null;
 
-	this.m_graphics = null;
+  this.m_graphics = null;
 
-	this.m_shape = null;
+  this.m_shape = null;
 };
 
 primitives.callout.Controller.prototype._create = function () {
-	this.element
-			.addClass("ui-widget");
+  this.element
+    .addClass("ui-widget");
 
-	this._createLayout();
+  this._createLayout();
 
-	this._redraw();
+  this._redraw();
 };
 
 primitives.callout.Controller.prototype.destroy = function () {
-	this._cleanLayout();
+  this._cleanLayout();
 };
 
 primitives.callout.Controller.prototype._createLayout = function () {
-	this.m_panelSize = new primitives.common.Rect(0, 0, this.element.outerWidth(), this.element.outerHeight());
+  this.m_panelSize = new primitives.common.Rect(0, 0, this.element.outerWidth(), this.element.outerHeight());
 
-	this.m_placeholder = jQuery('<div></div>');
-	this.m_placeholder.css({
-		"position": "relative",
-		"overflow": "hidden",
-		"top": "0px",
-		"left": "0px",
-		"padding": "0px",
-		"margin": "0px"
-	});
-	this.m_placeholder.css(this.m_panelSize.getCSS());
-	this.m_placeholder.addClass("placeholder");
-	this.m_placeholder.addClass(this.widgetEventPrefix);
+  this.m_placeholder = jQuery('<div></div>');
+  this.m_placeholder.css({
+    "position": "relative",
+    "overflow": "hidden",
+    "top": "0px",
+    "left": "0px",
+    "padding": "0px",
+    "margin": "0px"
+  });
+  this.m_placeholder.css(this.m_panelSize.getCSS());
+  this.m_placeholder.addClass("placeholder");
+  this.m_placeholder.addClass(this.widgetEventPrefix);
 
-	this.element.append(this.m_placeholder);
+  this.element.append(this.m_placeholder);
 
-	this.m_graphics = primitives.common.createGraphics(this.options.graphicsType, this.element[0]);
+  this.m_graphics = primitives.common.createGraphics(this.options.graphicsType, this.element[0]);
 
-	this.m_shape = new primitives.common.Callout(this.m_graphics);
+  this.m_shape = new primitives.common.Callout(this.m_graphics);
 };
 
 primitives.callout.Controller.prototype._cleanLayout = function () {
-	if (this.m_graphics !== null) {
-		this.m_graphics.clean();
-	}
-	this.m_graphics = null;
+  if (this.m_graphics !== null) {
+    this.m_graphics.clean();
+  }
+  this.m_graphics = null;
 
-	this.element.find("." + this.widgetEventPrefix).remove();
+  this.element.find("." + this.widgetEventPrefix).remove();
 };
 
 primitives.callout.Controller.prototype._updateLayout = function () {
-	this.m_panelSize = new primitives.common.Rect(0, 0, this.element.innerWidth(), this.element.innerHeight());
-	this.m_placeholder.css(this.m_panelSize.getCSS());
+  this.m_panelSize = new primitives.common.Rect(0, 0, this.element.innerWidth(), this.element.innerHeight());
+  this.m_placeholder.css(this.m_panelSize.getCSS());
 };
 
 primitives.callout.Controller.prototype.update = function (recreate) {
-	if (recreate) {
-		this._cleanLayout();
-		this._createLayout();
-		this._redraw();
-	}
-	else {
-		this._updateLayout();
-		this.m_graphics.resize("placeholder", this.m_panelSize.width, this.m_panelSize.height);
-		this.m_graphics.begin();
-		this._redraw();
-		this.m_graphics.end();
-	}
+  if (recreate) {
+    this._cleanLayout();
+    this._createLayout();
+    this._redraw();
+  }
+  else {
+    this._updateLayout();
+    this.m_graphics.resize("placeholder", this.m_panelSize.width, this.m_panelSize.height);
+    this.m_graphics.begin();
+    this._redraw();
+    this.m_graphics.end();
+  }
 };
 
 primitives.callout.Controller.prototype._redraw = function () {
-	var names = ["pointerPlacement", "cornerRadius", "offset", "opacity", "lineWidth", "lineType", "pointerWidth", "borderColor", "fillColor"],
-		index,
-		name;
-	this.m_graphics.activate("placeholder");
-	for (index = 0; index < names.length; index += 1) {
-		name = names[index];
-		this.m_shape[name] = this.options[name];
-	}
-	this.m_shape.draw(this.options.snapPoint, this.options.position);
+  var names = ["pointerPlacement", "cornerRadius", "offset", "opacity", "lineWidth", "lineType", "pointerWidth", "borderColor", "fillColor"],
+    index,
+    name;
+  this.m_graphics.activate("placeholder");
+  for (index = 0; index < names.length; index += 1) {
+    name = names[index];
+    this.m_shape[name] = this.options[name];
+  }
+  this.m_shape.draw(this.options.snapPoint, this.options.position);
 };
 
 primitives.callout.Controller.prototype._setOption = function (key, value) {
-	jQuery.Widget.prototype._setOption.apply(this, arguments);
+  jQuery.Widget.prototype._setOption.apply(this, arguments);
 
-	switch (key) {
-		case "disabled":
-			var handles = jQuery([]);
-			if (value) {
-				handles.filter(".ui-state-focus").blur();
-				handles.removeClass("ui-state-hover");
-				handles.propAttr("disabled", true);
-				this.element.addClass("ui-disabled");
-			} else {
-				handles.propAttr("disabled", false);
-				this.element.removeClass("ui-disabled");
-			}
-			break;
-		default:
-			break;
-	}
+  switch (key) {
+    case "disabled":
+      var handles = jQuery([]);
+      if (value) {
+        handles.filter(".ui-state-focus").blur();
+        handles.removeClass("ui-state-hover");
+        handles.propAttr("disabled", true);
+        this.element.addClass("ui-disabled");
+      } else {
+        handles.propAttr("disabled", false);
+        this.element.removeClass("ui-disabled");
+      }
+      break;
+    default:
+      break;
+  }
 };
 
 /* /callout/callout.js*/
@@ -455,13 +455,13 @@ primitives.callout.Controller.prototype._setOption = function (key, value) {
  * Basic Primitives Callout.
  *
  * Depends:
- *	jquery.ui.core.js
- *	jquery.ui.widget.js
+ *  jquery.ui.core.js
+ *  jquery.ui.widget.js
  */
 if (typeof jQuery != "undefined") {
-	(function ($) {
-		$.widget("ui.bpCallout", new primitives.callout.Controller());
-	}(jQuery));
+  (function ($) {
+    $.widget("ui.bpCallout", new primitives.callout.Controller());
+  }(jQuery));
 }; //ignore jslint
 
 /* /connector/configs/Config.js*/
@@ -579,29 +579,29 @@ primitives.connector.Config = function () {
 
 /* /connector/controllers/AnnotationLabelTemplate.js*/
 primitives.connector.AnnotationLabelTemplate = function (options) {
-	var _template = ["div",
-		{
-			"class": ["bp-item", "bp-corner-all", "bp-connector-label"]
-		}
-	];
+  var _template = ["div",
+    {
+      "class": ["bp-item", "bp-corner-all", "bp-connector-label"]
+    }
+  ];
 
-	function template() {
-		return _template;
-	}
+  function template() {
+    return _template;
+  }
 
-	function getHashCode() {
-		return "defaultAnnotationLabelTemplate";
-	}
+  function getHashCode() {
+    return "defaultAnnotationLabelTemplate";
+  }
 
-	function render(event, data) {
-		data.element.innerHTML = options.label;
-	}
+  function render(event, data) {
+    data.element.innerHTML = options.label;
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 
@@ -823,13 +823,13 @@ primitives.connector.Controller.prototype._setOption = function (key, value) {
  * Basic Primitives Connector.
  *
  * Depends:
- *	jquery.ui.core.js
- *	jquery.ui.widget.js
+ *  jquery.ui.core.js
+ *  jquery.ui.widget.js
  */
 if (typeof jQuery != "undefined") {
-	(function ($) {
-		$.widget("ui.bpConnector", new primitives.connector.Controller());
-	}(jQuery));
+  (function ($) {
+    $.widget("ui.bpConnector", new primitives.connector.Controller());
+  }(jQuery));
 }; //ignore jslint
 
 /* /famdiagram/famDiagram.js*/
@@ -839,32 +839,32 @@ if (typeof jQuery != "undefined") {
  * Basic Primitives family diagram.
  *
  * Depends:
- *	jquery.ui.core.js
- *	jquery.ui.widget.js
+ *  jquery.ui.core.js
+ *  jquery.ui.widget.js
  */
 if (typeof jQuery != "undefined") {
-	(function ($) {
-		$.widget("ui.famDiagram", new primitives.orgdiagram.Widget(primitives.famdiagram.Config, primitives.famdiagram.TaskManagerFactory, primitives.famdiagram.EventArgsFactory, {
-			AnnotationLabelTemplate: primitives.common.AnnotationLabelTemplate,
-			ButtonsTemplate: primitives.common.jQueryButtonsTemplate,
-			CheckBoxTemplate: primitives.common.CheckBoxTemplate,
-			CursorTemplate: primitives.common.CursorTemplate,
-			DotHighlightTemplate: primitives.common.DotHighlightTemplate,
-			GroupTitleTemplate: primitives.common.GroupTitleTemplate,
-			HighlightTemplate: primitives.common.HighlightTemplate,
-			ItemTemplate: primitives.common.ItemTemplate,
-			UserTemplate: primitives.common.UserTemplate,
-			/* famDiagram specific templates */
-			LabelAnnotationTemplate: primitives.common.LabelAnnotationTemplate
-		}));
-	}(jQuery));
+  (function ($) {
+    $.widget("ui.famDiagram", new primitives.orgdiagram.Widget(primitives.famdiagram.Config, primitives.famdiagram.TaskManagerFactory, primitives.famdiagram.EventArgsFactory, {
+      AnnotationLabelTemplate: primitives.common.AnnotationLabelTemplate,
+      ButtonsTemplate: primitives.common.jQueryButtonsTemplate,
+      CheckBoxTemplate: primitives.common.CheckBoxTemplate,
+      CursorTemplate: primitives.common.CursorTemplate,
+      DotHighlightTemplate: primitives.common.DotHighlightTemplate,
+      GroupTitleTemplate: primitives.common.GroupTitleTemplate,
+      HighlightTemplate: primitives.common.HighlightTemplate,
+      ItemTemplate: primitives.common.ItemTemplate,
+      UserTemplate: primitives.common.UserTemplate,
+      /* famDiagram specific templates */
+      LabelAnnotationTemplate: primitives.common.LabelAnnotationTemplate
+    }));
+  }(jQuery));
 }; //ignore jslint
 
 /* /shape/configs/Config.js*/
 /*
-	Class: primitives.connector.Config
-		Connector options class.
-	
+  Class: primitives.connector.Config
+    Connector options class.
+  
 */
 primitives.shape.Config = function () {
   this.classPrefix = "bpconnector";
@@ -978,152 +978,152 @@ primitives.shape.Config = function () {
 
 /* /shape/controllers/AnnotationLabelTemplate.js*/
 primitives.shape.AnnotationLabelTemplate = function (options) {
-	var _template = ["div",
-		{
-			"class": ["bp-item", "bp-corner-all", "bp-connector-label"]
-		}
-	];
+  var _template = ["div",
+    {
+      "class": ["bp-item", "bp-corner-all", "bp-connector-label"]
+    }
+  ];
 
-	function template() {
-		return _template;
-	}
+  function template() {
+    return _template;
+  }
 
-	function getHashCode() {
-		return "defaultAnnotationLabelTemplate";
-	}
+  function getHashCode() {
+    return "defaultAnnotationLabelTemplate";
+  }
 
-	function render(event, data) {
-		data.element.innerHTML = options.label;
-	}
+  function render(event, data) {
+    data.element.innerHTML = options.label;
+  }
 
-	return {
-		template: template,
-		getHashCode: getHashCode,
-		render: render
-	};
+  return {
+    template: template,
+    getHashCode: getHashCode,
+    render: render
+  };
 };
 
 
 
 /* /shape/controllers/Controller.js*/
 primitives.shape.Controller = function () {
-	this.widgetEventPrefix = "bpshape";
+  this.widgetEventPrefix = "bpshape";
 
-	this.options = new primitives.shape.Config();
+  this.options = new primitives.shape.Config();
 
-	this.m_placeholder = null;
-	this.m_panelSize = null;
+  this.m_placeholder = null;
+  this.m_panelSize = null;
 
-	this.m_graphics = null;
+  this.m_graphics = null;
 
-	this.m_shape = null;
+  this.m_shape = null;
 
-	this._labelTemplate = null;
+  this._labelTemplate = null;
 };
 
 primitives.shape.Controller.prototype._create = function () {
-	var self = this;
+  var self = this;
 
-	this.element
-			.addClass("ui-widget");
+  this.element
+    .addClass("ui-widget");
 
-	this._labelTemplate = primitives.shape.AnnotationLabelTemplate(this.options);
+  this._labelTemplate = primitives.shape.AnnotationLabelTemplate(this.options);
 
-	this._createLayout();
+  this._createLayout();
 
-	this._redraw();
+  this._redraw();
 };
 
 primitives.shape.Controller.prototype.destroy = function () {
-	this._cleanLayout();
+  this._cleanLayout();
 };
 
 primitives.shape.Controller.prototype._createLayout = function () {
-	this.m_panelSize = new primitives.common.Rect(0, 0, this.element.outerWidth(), this.element.outerHeight());
+  this.m_panelSize = new primitives.common.Rect(0, 0, this.element.outerWidth(), this.element.outerHeight());
 
-	this.m_placeholder = jQuery('<div></div>');
-	this.m_placeholder.css({
-		"position": "relative",
-		"overflow": "hidden",
-		"top": "0px",
-		"left": "0px",
-		"padding": "0px",
-		"margin": "0px"
-	});
-	this.m_placeholder.css(this.m_panelSize.getCSS());
-	this.m_placeholder.addClass("placeholder");
-	this.m_placeholder.addClass(this.widgetEventPrefix);
+  this.m_placeholder = jQuery('<div></div>');
+  this.m_placeholder.css({
+    "position": "relative",
+    "overflow": "hidden",
+    "top": "0px",
+    "left": "0px",
+    "padding": "0px",
+    "margin": "0px"
+  });
+  this.m_placeholder.css(this.m_panelSize.getCSS());
+  this.m_placeholder.addClass("placeholder");
+  this.m_placeholder.addClass(this.widgetEventPrefix);
 
-	this.element.append(this.m_placeholder);
+  this.element.append(this.m_placeholder);
 
-	this.m_graphics = primitives.common.createGraphics(this.options.graphicsType, this.element[0]);
+  this.m_graphics = primitives.common.createGraphics(this.options.graphicsType, this.element[0]);
 };
 
 primitives.shape.Controller.prototype._cleanLayout = function () {
-	if (this.m_graphics !== null) {
-		this.m_graphics.clean();
-	}
-	this.m_graphics = null;
+  if (this.m_graphics !== null) {
+    this.m_graphics.clean();
+  }
+  this.m_graphics = null;
 
-	this.element.find("." + this.widgetEventPrefix).remove();
+  this.element.find("." + this.widgetEventPrefix).remove();
 };
 
 primitives.shape.Controller.prototype._updateLayout = function () {
-	this.m_panelSize = new primitives.common.Rect(0, 0, this.element.innerWidth(), this.element.innerHeight());
-	this.m_placeholder.css(this.m_panelSize.getCSS());
+  this.m_panelSize = new primitives.common.Rect(0, 0, this.element.innerWidth(), this.element.innerHeight());
+  this.m_placeholder.css(this.m_panelSize.getCSS());
 };
 
 primitives.shape.Controller.prototype.update = function (recreate) {
-	if (recreate) {
-		this._cleanLayout();
-		this._createLayout();
-		this._redraw();
-	}
-	else {
-		this._updateLayout();
-		this.m_graphics.resize("placeholder", this.m_panelSize.width, this.m_panelSize.height);
-		this.m_graphics.begin();
-		this._redraw();
-		this.m_graphics.end();
-	}
+  if (recreate) {
+    this._cleanLayout();
+    this._createLayout();
+    this._redraw();
+  }
+  else {
+    this._updateLayout();
+    this.m_graphics.resize("placeholder", this.m_panelSize.width, this.m_panelSize.height);
+    this.m_graphics.begin();
+    this._redraw();
+    this.m_graphics.end();
+  }
 };
 
 primitives.shape.Controller.prototype._redraw = function () {
-	var names = ["orientationType", "shapeType", "offset", "lineWidth", "borderColor", "lineType", "labelSize", "labelOffset", "labelPlacement", "cornerRadius", "opacity", "fillColor"],
-		index,
-		name;
-	this.m_graphics.activate("placeholder");
+  var names = ["orientationType", "shapeType", "offset", "lineWidth", "borderColor", "lineType", "labelSize", "labelOffset", "labelPlacement", "cornerRadius", "opacity", "fillColor"],
+    index,
+    name;
+  this.m_graphics.activate("placeholder");
 
-	this.m_shape = new primitives.common.Shape(this.m_graphics);
-	for (index = 0; index < names.length; index += 1) {
-		name = names[index];
-		this.m_shape[name] = this.options[name];
-	}
-	this.m_shape.hasLabel = !primitives.common.isNullOrEmpty(this.options.label);
-	this.m_shape.labelTemplate = this._labelTemplate;
-	this.m_shape.panelSize = new primitives.common.Size(this.m_panelSize.width, this.m_panelSize.height);
-	this.m_shape.draw(this.options.position);
+  this.m_shape = new primitives.common.Shape(this.m_graphics);
+  for (index = 0; index < names.length; index += 1) {
+    name = names[index];
+    this.m_shape[name] = this.options[name];
+  }
+  this.m_shape.hasLabel = !primitives.common.isNullOrEmpty(this.options.label);
+  this.m_shape.labelTemplate = this._labelTemplate;
+  this.m_shape.panelSize = new primitives.common.Size(this.m_panelSize.width, this.m_panelSize.height);
+  this.m_shape.draw(this.options.position);
 };
 
 primitives.shape.Controller.prototype._setOption = function (key, value) {
-	jQuery.Widget.prototype._setOption.apply(this, arguments);
+  jQuery.Widget.prototype._setOption.apply(this, arguments);
 
-	switch (key) {
-		case "disabled":
-			var handles = jQuery([]);
-			if (value) {
-				handles.filter(".ui-state-focus").blur();
-				handles.removeClass("ui-state-hover");
-				handles.propAttr("disabled", true);
-				this.element.addClass("ui-disabled");
-			} else {
-				handles.propAttr("disabled", false);
-				this.element.removeClass("ui-disabled");
-			}
-			break;
-		default:
-			break;
-	}
+  switch (key) {
+    case "disabled":
+      var handles = jQuery([]);
+      if (value) {
+        handles.filter(".ui-state-focus").blur();
+        handles.removeClass("ui-state-hover");
+        handles.propAttr("disabled", true);
+        this.element.addClass("ui-disabled");
+      } else {
+        handles.propAttr("disabled", false);
+        this.element.removeClass("ui-disabled");
+      }
+      break;
+    default:
+      break;
+  }
 };
 
 /* /shape/shape.js*/
@@ -1133,13 +1133,13 @@ primitives.shape.Controller.prototype._setOption = function (key, value) {
  * Basic Primitives Shape.
  *
  * Depends:
- *	jquery.ui.core.js
- *	jquery.ui.widget.js
+ *  jquery.ui.core.js
+ *  jquery.ui.widget.js
  */
 if (typeof jQuery != "undefined") {
-	(function ($) {
-		$.widget("ui.bpShape", new primitives.shape.Controller());
-	}(jQuery));
+  (function ($) {
+    $.widget("ui.bpShape", new primitives.shape.Controller());
+  }(jQuery));
 }; //ignore jslint
 
 /* /text/configs/Config.js*/
@@ -1226,121 +1226,121 @@ primitives.text.Config = function () {
 
 /* /text/controllers/Controller.js*/
 primitives.text.Controller = function () {
-	this.widgetEventPrefix = "bptext";
+  this.widgetEventPrefix = "bptext";
 
-	this.options = new primitives.text.Config();
+  this.options = new primitives.text.Config();
 
-	this.m_placeholder = null;
-	this.m_panelSize = null;
+  this.m_placeholder = null;
+  this.m_panelSize = null;
 
-	this.m_graphics = null;
+  this.m_graphics = null;
 };
 
 primitives.text.Controller.prototype._create = function () {
-	this.element
-			.addClass("ui-widget");
+  this.element
+    .addClass("ui-widget");
 
-	this._createLayout();
+  this._createLayout();
 
-	this._redraw();
+  this._redraw();
 };
 
 primitives.text.Controller.prototype.destroy = function () {
-	this._cleanLayout();
+  this._cleanLayout();
 };
 
 primitives.text.Controller.prototype._createLayout = function () {
-	this.m_panelSize = new primitives.common.Rect(0, 0, this.element.outerWidth(), this.element.outerHeight());
-		
+  this.m_panelSize = new primitives.common.Rect(0, 0, this.element.outerWidth(), this.element.outerHeight());
 
-	this.m_placeholder = jQuery('<div></div>');
-	this.m_placeholder.css({
-		"position": "relative",
-		"overflow": "hidden",
-		"top": "0px",
-		"left": "0px",
-		"padding": "0px",
-		"margin": "0px"
-	});
-	this.m_placeholder.css(this.m_panelSize.getCSS());
-	this.m_placeholder.addClass("placeholder");
-	this.m_placeholder.addClass(this.widgetEventPrefix);
 
-	this.element.append(this.m_placeholder);
+  this.m_placeholder = jQuery('<div></div>');
+  this.m_placeholder.css({
+    "position": "relative",
+    "overflow": "hidden",
+    "top": "0px",
+    "left": "0px",
+    "padding": "0px",
+    "margin": "0px"
+  });
+  this.m_placeholder.css(this.m_panelSize.getCSS());
+  this.m_placeholder.addClass("placeholder");
+  this.m_placeholder.addClass(this.widgetEventPrefix);
 
-	this.m_graphics = primitives.common.createGraphics(this.options.graphicsType, this.element[0]);
+  this.element.append(this.m_placeholder);
+
+  this.m_graphics = primitives.common.createGraphics(this.options.graphicsType, this.element[0]);
 };
 
 primitives.text.Controller.prototype._cleanLayout = function () {
-	if (this.m_graphics !== null) {
-		this.m_graphics.clean();
-	}
-	this.m_graphics = null;
+  if (this.m_graphics !== null) {
+    this.m_graphics.clean();
+  }
+  this.m_graphics = null;
 
-	this.element.find("." + this.widgetEventPrefix).remove();
+  this.element.find("." + this.widgetEventPrefix).remove();
 };
 
 primitives.text.Controller.prototype._updateLayout = function () {
-	this.m_panelSize = new primitives.common.Rect(0, 0, this.element.innerWidth(), this.element.innerHeight());
-	this.m_placeholder.css(this.m_panelSize.getCSS());
+  this.m_panelSize = new primitives.common.Rect(0, 0, this.element.innerWidth(), this.element.innerHeight());
+  this.m_placeholder.css(this.m_panelSize.getCSS());
 };
 
 primitives.text.Controller.prototype.update = function (recreate) {
-	if (recreate) {
-		this._cleanLayout();
-		this._createLayout();
-		this._redraw();
-	}
-	else {
-		this._updateLayout();
-		this.m_graphics.resize("placeholder", this.m_panelSize.width, this.m_panelSize.height);
-		this.m_graphics.begin();
-		this._redraw();
-		this.m_graphics.end();
-	}
+  if (recreate) {
+    this._cleanLayout();
+    this._createLayout();
+    this._redraw();
+  }
+  else {
+    this._updateLayout();
+    this.m_graphics.resize("placeholder", this.m_panelSize.width, this.m_panelSize.height);
+    this.m_graphics.begin();
+    this._redraw();
+    this.m_graphics.end();
+  }
 };
 
 primitives.text.Controller.prototype._redraw = function () {
-	var panel = this.m_graphics.activate("placeholder"),
-		attr = {
-			"fontSize": this.options.fontSize,
-			"fontFamily": this.options.fontFamily,
-			"fontStyle": this.options.fontStyle,
-			"fontWeight": this.options.fontWeight,
-			"fontColor": this.options.color
-		};
-	this.m_graphics.text(
-	panel.rect.x,
-	panel.rect.y,
-	panel.rect.width,
-	panel.rect.height,
-	this.options.text,
-	this.options.orientation,
-	this.options.horizontalAlignment,
-	this.options.verticalAlignment,
-	attr
-	);
+  var panel = this.m_graphics.activate("placeholder"),
+    attr = {
+      "fontSize": this.options.fontSize,
+      "fontFamily": this.options.fontFamily,
+      "fontStyle": this.options.fontStyle,
+      "fontWeight": this.options.fontWeight,
+      "fontColor": this.options.color
+    };
+  this.m_graphics.text(
+    panel.rect.x,
+    panel.rect.y,
+    panel.rect.width,
+    panel.rect.height,
+    this.options.text,
+    this.options.orientation,
+    this.options.horizontalAlignment,
+    this.options.verticalAlignment,
+    attr
+  );
 };
 
 primitives.text.Controller.prototype._setOption = function (key, value) {
-	jQuery.Widget.prototype._setOption.apply(this, arguments);
+  jQuery.Widget.prototype._setOption.apply(this, arguments);
 
-	switch (key) {
-		case "disabled":
-			var handles = jQuery([]);
-			if (value) {
-				handles.filter(".ui-state-focus").blur();
-				handles.removeClass("ui-state-hover");
-				handles.propAttr("disabled", true);
-				this.element.addClass("ui-disabled");
-			} else {
-				handles.propAttr("disabled", false);
-				this.element.removeClass("ui-disabled");
-			}
-			break;
-		default:
-			break;
-	}
+  switch (key) {
+    case "disabled":
+      var handles = jQuery([]);
+      if (value) {
+        handles.filter(".ui-state-focus").blur();
+        handles.removeClass("ui-state-hover");
+        handles.propAttr("disabled", true);
+        this.element.addClass("ui-disabled");
+      } else {
+        handles.propAttr("disabled", false);
+        this.element.removeClass("ui-disabled");
+      }
+      break;
+    default:
+      break;
+  }
 };
 
 /* /text/text.js*/
@@ -1350,11 +1350,11 @@ primitives.text.Controller.prototype._setOption = function (key, value) {
  * Basic Primitives Text.
  *
  * Depends:
- *	jquery.ui.core.js
- *	jquery.ui.widget.js
+ *  jquery.ui.core.js
+ *  jquery.ui.widget.js
  */
 if (typeof jQuery != "undefined") {
-	(function ($) {
-		$.widget("ui.bpText", new primitives.text.Controller());
-	}(jQuery));
+  (function ($) {
+    $.widget("ui.bpText", new primitives.text.Controller());
+  }(jQuery));
 }; //ignore jslint

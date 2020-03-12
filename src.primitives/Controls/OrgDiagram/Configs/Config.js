@@ -764,7 +764,7 @@ primitives.orgdiagram.Config = function (name) {
   this.groupTitleHorizontalAlignment = primitives.common.HorizontalAlignmentType.Center;
 
   /**
-   * 	Group titles font size.
+   * Group titles font size.
    * 
    * @group Group Titles
    * @type {number}

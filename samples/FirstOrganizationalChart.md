@@ -159,31 +159,31 @@ Basic Primitives Organizational Chart PDFkit plugin is just a rendering function
 
 ``` JavaScript
 var firstOrganizationalChartSample = primitives.pdf.orgdiagram.Plugin({
-	items: [
-		new primitives.orgdiagram.ItemConfig({
-			id: 0,
-			parent: null,
-			title: "Scott Aasrud",
-			description: "VP, Public Sector",
-			image: photos.a
-		}),
-		new primitives.orgdiagram.ItemConfig({
-			id: 1,
-			parent: 0,
-			title: "Ted Lucas",
-			description: "VP, Human Resources",
-			image: photos.b
-		}),
-		new primitives.orgdiagram.ItemConfig({
-			id: 2,
-			parent: 0,
-			title: "Joao Stuger",
-			description: "Business Solutions, US",
-			image: photos.c
-		})
-	],
-	cursorItem: null,
-	hasSelectorCheckbox: primitives.common.Enabled.False
+  items: [
+    new primitives.orgdiagram.ItemConfig({
+      id: 0,
+      parent: null,
+      title: "Scott Aasrud",
+      description: "VP, Public Sector",
+      image: photos.a
+    }),
+    new primitives.orgdiagram.ItemConfig({
+      id: 1,
+      parent: 0,
+      title: "Ted Lucas",
+      description: "VP, Human Resources",
+      image: photos.b
+    }),
+    new primitives.orgdiagram.ItemConfig({
+      id: 2,
+      parent: 0,
+      title: "Joao Stuger",
+      description: "Business Solutions, US",
+      image: photos.c
+    })
+  ],
+  cursorItem: null,
+  hasSelectorCheckbox: primitives.common.Enabled.False
 });
 
 var size = firstOrganizationalChartSample.draw(doc, 100, 150);

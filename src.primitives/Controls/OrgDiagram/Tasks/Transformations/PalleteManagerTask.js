@@ -1,22 +1,22 @@
 primitives.orgdiagram.PaletteManagerTask = function (connectorsOptionTask, linePaletteOptionTask) {
-	var _paletteManager;
+  var _paletteManager;
 
-	function process() {
-		var linesPalette = [];
-		if (linePaletteOptionTask != null) {
-			linesPalette = linePaletteOptionTask.getOptions().linesPalette;
-		}
-		_paletteManager = new primitives.common.PaletteManager(connectorsOptionTask.getOptions(), linesPalette);
+  function process() {
+    var linesPalette = [];
+    if (linePaletteOptionTask != null) {
+      linesPalette = linePaletteOptionTask.getOptions().linesPalette;
+    }
+    _paletteManager = new primitives.common.PaletteManager(connectorsOptionTask.getOptions(), linesPalette);
 
-		return true;
-	}
+    return true;
+  }
 
-	function getPaletteManager() {
-		return _paletteManager;
-	}
+  function getPaletteManager() {
+    return _paletteManager;
+  }
 
-	return {
-		process: process,
-		getPaletteManager: getPaletteManager
-	};
+  return {
+    process: process,
+    getPaletteManager: getPaletteManager
+  };
 };

@@ -1,8 +1,8 @@
 ﻿/* method uses structures created in orgTreeTask to create visual tree used to render chart
-	It populates visualTree structure with TreeItem objects.
-	
-	1. Create invisble visual root item, so all orphants added to it, but since it is invisible, no connections are going to be drawn betwen them
-	2. Loop orgTree nodes and populate visual tree hierarchy: visualTree
+  It populates visualTree structure with TreeItem objects.
+  
+  1. Create invisble visual root item, so all orphants added to it, but since it is invisible, no connections are going to be drawn betwen them
+  2. Loop orgTree nodes and populate visual tree hierarchy: visualTree
 */
 primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, visualTreeOptionTask, isFamilyChartMode) {
   var _data = {
@@ -86,8 +86,8 @@ primitives.orgdiagram.VisualTreeTask = function (orgTreeTask, activeItemsTask, v
         visualTree.add(null, parentOrgItemId, logicalParentItem);
       }
 
-			/* find left and right siblings margins of logical parent item
-				they are needed to properly place GeneralPartner & LimitedPartner nodes. */
+      /* find left and right siblings margins of logical parent item
+        they are needed to properly place GeneralPartner & LimitedPartner nodes. */
       leftSiblingOffset = 0;
       rightSiblingOffset = 0;
       if ((index = visualTree.indexOf(parentOrgItemId)) != null) {

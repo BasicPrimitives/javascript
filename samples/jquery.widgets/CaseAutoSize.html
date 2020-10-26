@@ -18,7 +18,8 @@
       "640*480": new primitives.common.Size(640, 480),
       "800*600": new primitives.common.Size(800, 600),
       "1024*768": new primitives.common.Size(1024, 768),
-      "1280*1024": new primitives.common.Size(1280, 1024)
+      "1280*1024": new primitives.common.Size(1280, 1024),
+      "Unlimited": new primitives.common.Size(100000, 100000)
     }
 
     jQuery(document).ready(function () {
@@ -36,8 +37,10 @@
       /* Minimum Auto Size */
       var autoSizeMinimums = jQuery("#autoSizeMinimum");
       for (var key in sizes) {
-        var value = sizes[key];
-        autoSizeMinimums.append(jQuery("<label><input name='autoSizeMinimum' type='radio' value='" + key + "' " + (key == "640*480" ? "checked" : "") + " />" + key + "</label>"));
+        if(key != "Unlimited") {
+          var value = sizes[key];
+          autoSizeMinimums.append(jQuery("<label><input name='autoSizeMinimum' type='radio' value='" + key + "' " + (key == "640*480" ? "checked" : "") + " />" + key + "</label>"));
+        }
       };
 
       jQuery("input:radio[name=autoSizeMinimum]").change(function () {

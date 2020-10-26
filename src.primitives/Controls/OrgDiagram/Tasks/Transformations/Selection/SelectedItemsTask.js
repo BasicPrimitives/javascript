@@ -1,4 +1,4 @@
-﻿primitives.orgdiagram.SelectedItemsTask = function (selectedItemsOptionTask) {
+﻿primitives.orgdiagram.SelectedItemsTask = function (selectedItemsOptionTask, itemsOptionTask) {
   var _data = {
     items: []
   },
@@ -29,8 +29,10 @@
     for (index = 0, len = selectedItems.length; index < len; index += 1) {
       treeItemId = selectedItems[index];
       if (treeItemId != null && !processed.hasOwnProperty(treeItemId)) {
-        result.push(treeItemId);
         processed[treeItemId] = true;
+        if(itemsOptionTask.getConfig(treeItemId) != null) {
+          result.push(treeItemId);
+        }
       }
     }
 

@@ -1,4 +1,4 @@
-primitives.orgdiagram.CurrentControlSizeTask = function (layoutOptionsTask, itemsSizesOptionTask) {
+primitives.orgdiagram.CurrentControlSizeTask = function (layoutOptionsTask, itemsSizesOptionTask, frameSizeTask) {
   var _data = {
     scrollPanelSize: null
   },
@@ -17,15 +17,28 @@ primitives.orgdiagram.CurrentControlSizeTask = function (layoutOptionsTask, item
     },
       layoutOptions = layoutOptionsTask.getOptions(),
       result = false,
-      options = itemsSizesOptionTask.getOptions();
+      pageFitMode = itemsSizesOptionTask.getOptions().pageFitMode,
+      thickness = frameSizeTask.getThickness();
+
+    // disable frame if its square space is bigger than viewport
+    var viewportSize = new primitives.common.Size(layoutOptions.scrollPanelSize);
+    viewportSize.removeThickness(thickness);
+
+    if(layoutOptions.scrollPanelSize.space() < viewportSize.space() * 2) {
+      layoutOptions.scrollPanelSize = viewportSize;
+      layoutOptions.frameThickness = thickness;
+    } else {
+      layoutOptions.frameThickness = new primitives.common.Thickness( 0, 0, 0, 0 );
+    }
 
     _data = _dataTemplate.read(_data, layoutOptions, "layout", context);
 
-    switch (options.pageFitMode) {
+    switch (pageFitMode) {
       case primitives.common.PageFitMode.PageWidth:
       case primitives.common.PageFitMode.PageHeight:
       case primitives.common.PageFitMode.FitToPage:
       case primitives.common.PageFitMode.None:
+      case primitives.common.PageFitMode.SelectionOnly:
         result = context.isChanged;
         break;
       default:
@@ -37,7 +50,7 @@ primitives.orgdiagram.CurrentControlSizeTask = function (layoutOptionsTask, item
   }
 
   function getScrollPanelSize() {
-    return _data.scrollPanelSize;
+    return new primitives.common.Size(_data.scrollPanelSize);
   }
 
   function getOptimalPanelSize() {

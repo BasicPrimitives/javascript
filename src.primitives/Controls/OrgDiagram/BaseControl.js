@@ -11,6 +11,9 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     mouse: null,
     layout: {
       element: element,
+      controlPanel: null,
+      frameMousePanel: null,
+      framePlaceholder: null,
       scrollPanel: null,
       mousePanel: null,
       placeholder: null,
@@ -23,7 +26,6 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     _scrollTo,
     _dragImage,
     _dragTimer,
-    _scale,
     _debug = false,
     _timer = null;
 
@@ -109,8 +111,6 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     /* fix pixel alignment */
     var pixelAlignmentFix = primitives.common.getFixOfPixelALignment(_data.layout.element);
     primitives.common.JsonML.applyStyles(_data.layout.scrollPanel, {
-      "top": "0px",
-      "left": "0px",
       "marginBottom": "0px",
       "marginRight": "0px",
       "marginLeft": pixelAlignmentFix.width + "px", /* fixes div pixel alignment */
@@ -190,7 +190,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 
   function getLayout() {
     var layout = _data.layout,
-      scrollPanelSize = primitives.common.getInnerSize(layout.element),
+      scrollPanelSize = primitives.common.getInnerSize(layout.controlPanel),
       placeholderOffset = new primitives.common.Point(layout.scrollPanel.scrollLeft, layout.scrollPanel.scrollTop);
     return {
       forceCenterOnCursor: layout.forceCenterOnCursor,
@@ -200,104 +200,156 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
   }
 
   function setLayout(layoutOptions) {
-    var layout = _data.layout;
+    var layout = _data.layout,
+      pixelAlignmentFix = primitives.common.getFixOfPixelALignment(layout.element);
 
-    /* set size of panel with content */
-    var mousePanelSize = new primitives.common.Size(layoutOptions.contentSize);
-    mousePanelSize.scale(1 * layoutOptions.scale);
-    primitives.common.JsonML.applyStyles(layout.mousePanel, mousePanelSize.getCSS());
+    primitives.common.JsonML.applyStyles(layout.controlPanel, {
+      "marginLeft": pixelAlignmentFix.width + "px", /* fixes div pixel alignment */
+      "marginTop": pixelAlignmentFix.height + "px"
+    });
 
-    /* set size of panel with content */
-    primitives.common.JsonML.applyStyles(layout.placeholder, layoutOptions.contentSize.getCSS());
+    /* set scaled content panel for tracking mouse events without scaling */
+    primitives.common.JsonML.applyStyles(layout.mousePanel, layoutOptions.scaledContentSize.getCSS());
 
-    /* set CSS scale of content */
+    /* set size and scale of content panel */
     var scaletext = "scale(" + layoutOptions.scale + "," + layoutOptions.scale + ")";
-
-    primitives.common.JsonML.applyStyles(layout.placeholder, {
+    var scaleProperties = {
       "transform-origin": "0 0",
       "transform": scaletext,
       "-ms-transform": scaletext, /* IE 9 */
       "-webkit-transform": scaletext, /* Safari and Chrome */
       "-o-transform": scaletext, /* Opera */
       "-moz-transform": scaletext /* Firefox */
-    });
+    };
+    primitives.common.JsonML.applyStyles(layout.placeholder, primitives.common.mergeObjects(scaleProperties, layoutOptions.contentSize.getCSS()));
 
-    var scrollPanelSize = new primitives.common.Size(layoutOptions.scrollPanelSize);
     if (layoutOptions.autoSize) {
       /* resize element to fit placeholder if control in autosize mode */
-      scrollPanelSize = new primitives.common.Size(mousePanelSize.width + 25, mousePanelSize.height + 25);
-      scrollPanelSize.cropBySize(layoutOptions.autoSizeMaximum);
-      scrollPanelSize.addSize(layoutOptions.autoSizeMinimum);//ignore jslint
-      primitives.common.JsonML.applyStyles(layout.element, scrollPanelSize.getCSS());
+      primitives.common.JsonML.applyStyles(layout.element, layoutOptions.controlSize.getCSS());
     }
 
-    /* set scroll of content */
-    primitives.common.JsonML.applyStyles(layout.scrollPanel, scrollPanelSize.getCSS());
+    /* set frame panel scale and size */
+    primitives.common.JsonML.applyStyles(layout.framePlaceholder, primitives.common.mergeObjects(scaleProperties, layoutOptions.framePlaceholderSize.getCSS()));
 
-    return scrollPanelSize;
+    /* set mouse frame panel size  */
+    primitives.common.JsonML.applyStyles(layout.frameMousePanel, layoutOptions.controlSize.getCSS());
+
+    /* set scroll panel position */
+    primitives.common.JsonML.applyStyles(layout.scrollPanel, primitives.common.mergeObjects({
+        left: layoutOptions.frameThickness.left + "px",
+        top: layoutOptions.frameThickness.top + "px"
+      },
+      layoutOptions.viewportSize.getCSS())
+    );
   }
 
   function createLayout(layout, name) {
-    var elementSize = primitives.common.getInnerSize(layout.element),
-      scrollPanelRect = new primitives.common.Rect(0, 0, elementSize.width, elementSize.height),
-      placeholderRect = new primitives.common.Rect(scrollPanelRect),
+    var viewportSize = primitives.common.getInnerSize(layout.element),
+      viewportRect = new primitives.common.Rect(0, 0, viewportSize.width, viewportSize.height),
       pixelAlignmentFix = primitives.common.getFixOfPixelALignment(element);
 
 
     primitives.common.JsonML.appendDOM(layout.element, primitives.common.JsonML.toHTML(
-      ["div", /* scrollPanel - root scroll panel */
+      ["div", /* root control panel */
         {
           "tabindex": 0,
           "style": {
             "position": "relative",
-            "overflow": "auto",
-            "-webkit-overflow-scrolling": "touch",
+            "overflow": "hidden",
             "top": "0px",
             "left": "0px",
-            "width": scrollPanelRect.width + "px",
-            "height": scrollPanelRect.height + "px",
+            "width": "100%",
+            "height": "100%",
             "padding": "0px",
             "marginBottom": "0px",
             "marginRight": "0px",
             "marginLeft": pixelAlignmentFix.width + "px", /* fixes div pixel alignment */
             "marginTop": pixelAlignmentFix.height + "px"
           },
+          "name": "controlPanel",
           "class": name,
-          "$": function (element) { layout.scrollPanel = element; }
+          "$": function (element) { layout.controlPanel = element; }
         },
-        ["div", /* mousePanel - mouse tracking events panel */
+        ["div", /* frameMousePanel - frame mouse tracking events panel */
           {
             "style": primitives.common.mergeObjects({
               position: "absolute",
               overflow: "hidden"
             },
-              placeholderRect.getCSS()),
+            viewportRect.getCSS()),
+              "name": "frameMousePanel",
             "class": name,
-            "$": function (element) { layout.mousePanel = element; }
+            "$": function (element) { layout.frameMousePanel = element; }
           },
-          ["div", /* placeholder - contents scalable panel */
+          ["div", /* frameplaceholder - contents scalable panel */
             {
               "style": primitives.common.mergeObjects({
                 position: "absolute",
                 overflow: "hidden"
               },
-                placeholderRect.getCSS()),
-              "class": ["placeholder", name],
-              "$": function (element) { layout.placeholder = element; }
+              viewportRect.getCSS()),
+              "name": "framePlaceholder",
+              "class": ["frameplaceholder", name],
+              "$": function (element) { layout.framePlaceholder = element; }
+            }
+          ]
+        ],
+        ["div", /* scrollPanel - root scroll panel */
+          {
+            "style": primitives.common.mergeObjects({
+              position: "absolute",
+              "overflow": "auto",
+              "-webkit-overflow-scrolling": "touch",
+              "top": "0px",
+              "left": "0px",
+              "width": viewportRect.width + "px",
+              "height": viewportRect.height + "px"//,
+              //"border-width": "1px",
+              //"border-style": "solid",
+              //"border-color": "lightgrey"
             },
-            ["div", /* calloutPlaceholder - callout panel */
+            viewportRect.getCSS()),
+            "name": "scrollPanel",
+            "class": name,
+            "$": function (element) { layout.scrollPanel = element; }
+          },
+          ["div", /* mousePanel - mouse tracking events panel */
+            {
+              "style": primitives.common.mergeObjects({
+                position: "absolute",
+                overflow: "visible"
+              },
+              viewportRect.getCSS()),
+                "name": "mousePanel",
+                "class": name,
+                "$": function (element) { layout.mousePanel = element; }
+            },
+            ["div", /* placeholder - contents scalable panel */
               {
-                "style": {
+                "style": primitives.common.mergeObjects({
                   position: "absolute",
-                  overflow: "visible",
-                  top: "0px",
-                  left: "0px",
-                  width: "0px",
-                  height: "0px"
+                  overflow: "visible"
                 },
-                "class": ["calloutplaceholder", name],
-                "$": function (element) { layout.calloutPlaceholder = element; }
-              }
+                viewportRect.getCSS()),
+                  "name": "placeholder",
+                  "class": ["placeholder", name],
+                  "$": function (element) { layout.placeholder = element; }
+              },
+              ["div", /* calloutPlaceholder - callout panel */
+                {
+                  "style": {
+                    position: "absolute",
+                    overflow: "visible",
+                    top: "0px",
+                    left: "0px",
+                    width: "0px",
+                    height: "0px"
+                  },
+                  "name": "calloutPlaceholder",
+                  "class": ["calloutplaceholder", name],
+                  "$": function (element) { layout.calloutPlaceholder = element; }
+                }
+              ]
             ]
           ]
         ]
@@ -305,11 +357,12 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     );
   }
 
-  function cleanLayout(layout) {
-    if (_data.layout.scrollPanel != null) {
-      var parent = _data.layout.scrollPanel.parentNode;
+  function cleanLayout() {
+    var controlPanel = _data.layout.controlPanel;
+    if (controlPanel != null) {
+      var parent = controlPanel.parentNode;
       if (parent != null) {
-        parent.removeChild(_data.layout.scrollPanel);
+        parent.removeChild(controlPanel);
       }
     }
   }
@@ -319,9 +372,11 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     layout.mousePanel.addEventListener('click', onMouseClick);
     layout.mousePanel.addEventListener('dblclick', onMouseDblClick);
     layout.mousePanel.addEventListener('change', onCheckboxChange);
-
-    layout.scrollPanel.addEventListener('keydown', onKeyDown);
+    
+    layout.element.addEventListener('keydown', onKeyDown);
+    
     layout.scrollPanel.addEventListener('scroll', onScroll);
+
     if (_data.options.enablePanning && primitives.common.isChrome()) {
       layout.scrollPanel.draggable = true;
       layout.scrollPanel.addEventListener('dragstart', onDragStart);
@@ -329,6 +384,9 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
       layout.scrollPanel.addEventListener('dragend', onDragScroll);
       layout.scrollPanel.addEventListener('dragover', onDragOver);
     }
+
+    layout.frameMousePanel.addEventListener('mousemove', onFrameMouseMove);
+    layout.frameMousePanel.addEventListener('click', onFrameMouseClick);
   }
 
   function unbind(layout) {
@@ -338,14 +396,57 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
       layout.mousePanel.removeEventListener("dblclick", onMouseDblClick);
       layout.mousePanel.removeEventListener("change", onCheckboxChange);
     }
+    if(layout.element != null) {
+      layout.element.removeEventListener("keydown", onKeyDown);
+    }
     if (layout.scrollPanel != null) {
-      layout.scrollPanel.removeEventListener("keydown", onKeyDown);
       layout.scrollPanel.removeEventListener("scroll", onScroll);
-
       layout.scrollPanel.removeEventListener('dragstart', onDragStart);
       layout.scrollPanel.removeEventListener('drag', onDragScroll);
       layout.scrollPanel.removeEventListener('dragend', onDragScroll);
       layout.scrollPanel.removeEventListener('dragover', onDragOver);
+    }
+
+    if(layout.frameMousePanel != null) {
+      layout.frameMousePanel.removeEventListener('mousemove', onFrameMouseMove);
+      layout.frameMousePanel.removeEventListener('click', onFrameMouseClick);
+    }
+  }
+
+  function onFrameMouseMove(event) {
+    var placeholderOffset = primitives.common.getElementOffset(_data.layout.frameMousePanel),
+      x = event.pageX - placeholderOffset.left,
+      y = event.pageY - placeholderOffset.top,
+      projectItemsToFrameTask = _data.tasks.getTask("ProjectItemsToFrameTask"),
+      highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
+      itemId;
+
+    if (highlightItemOptionTask.hasHighlightEnabled()) {
+      itemId = projectItemsToFrameTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius());
+      setHighlightItem(event, itemId);
+    }
+  }
+
+  function onFrameMouseClick(event) {
+    var placeholderOffset = primitives.common.getElementOffset(_data.layout.frameMousePanel),
+      x = event.pageX - placeholderOffset.left,
+      y = event.pageY - placeholderOffset.top,
+      projectItemsToFrameTask = _data.tasks.getTask("ProjectItemsToFrameTask"),
+      cursorItemOptionTask = _data.tasks.getTask("CursorItemOptionTask"),
+      highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
+      newCursorItemId = projectItemsToFrameTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius()),
+      target,
+      eventArgs;
+    target = event.target;
+    if (newCursorItemId !== null) {
+      eventArgs = getEventArgs(null, newCursorItemId);
+      trigger("onMouseClick", event, eventArgs);
+      if (!eventArgs.cancel) {
+        if (cursorItemOptionTask.hasCursorEnabled()) {
+          setCursorItem(event, newCursorItemId);
+          _data.layout.element.focus();
+        }
+      }
     }
   }
 
@@ -400,14 +501,11 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
       createTransformTask = _data.tasks.getTask("CreateTransformTask"),
       cursorItemOptionTask = _data.tasks.getTask("CursorItemOptionTask"),
       highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
-      item,
       newCursorItemId = createTransformTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius()),
       target,
       button,
       buttonname,
-      eventArgs,
-      position,
-      selectedItems;
+      eventArgs;
     target = event.target;
     if (newCursorItemId !== null) {
       if (primitives.common.hasClass(target, _data.name + "button") || primitives.common.hasClass(target.parentNode, _data.name + "button")) {
@@ -426,7 +524,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
         if (!eventArgs.cancel) {
           if (cursorItemOptionTask.hasCursorEnabled()) {
             setCursorItem(event, newCursorItemId);
-            _data.layout.scrollPanel.focus();
+            _data.layout.element.focus();
           }
         }
       }
@@ -476,7 +574,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
           if (cursorItemOptionTask.hasCursorEnabled()) {
             setCursorItem(event, navigationItem);
             event.preventDefault();
-            layout.scrollPanel.focus();
+            layout.element.focus();
           }
           break;
         case 40: /*Down*/
@@ -513,7 +611,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 
           }
         }
-        layout.scrollPanel.focus();
+        layout.element.focus();
       }
     }
   }

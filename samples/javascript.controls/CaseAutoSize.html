@@ -14,7 +14,8 @@
 			"640*480": new primitives.common.Size(640, 480),
 			"800*600": new primitives.common.Size(800, 600),
 			"1024*768": new primitives.common.Size(1024, 768),
-			"1280*1024": new primitives.common.Size(1280, 1024)
+			"1280*1024": new primitives.common.Size(1280, 1024),
+			"Unlimited": new primitives.common.Size(100000, 100000)
 		}
 
 		document.addEventListener('DOMContentLoaded', function () {
@@ -91,6 +92,7 @@
 		<label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="800*600" checked="">800*600</label>
 		<label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="1024*768">1024*768</label>
 		<label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="1280*1024">1280*1024</label>
+		<label><input onclick="Update()" name="autoSizeMaximum" type="radio" value="Unlimited">Unlimited</label>
 	</p>
 	<div id="diagram" style="border-style: dotted; border-width: 1px;"></div>
 </body>

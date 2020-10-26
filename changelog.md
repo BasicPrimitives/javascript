@@ -1,3 +1,7 @@
+#### Version 5.9.0
+* Add `showFrame`, `fameInnerPadding`, `frameOuterPadding` properties to `primitives.orgdiagram.Config` & `primitives.famdiagram.Config`
+* Modified callout annotation palacement for minimized nodes placed outside view port.
+* Fixed exception when `selectedItems` collection contains non existing items.
 #### Version 5.8.2
 * Fixed `selectionPathMode` in Family Diagram.
 #### Version 5.8.1

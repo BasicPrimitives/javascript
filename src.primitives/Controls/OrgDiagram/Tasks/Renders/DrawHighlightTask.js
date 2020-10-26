@@ -3,8 +3,7 @@ primitives.orgdiagram.DrawHighlightTask = function (getGraphics, createTranfromT
   alignDiagramTask, itemTemplateParamsTask,
   highlightItemTask, cursorItemTask, selectedItemsTask) {
   var _graphics,
-    _transform,
-    _levelsOfLabels = [];
+    _transform;
 
   function process() {
     var treeItemId = highlightItemTask.getHighlightTreeItem();

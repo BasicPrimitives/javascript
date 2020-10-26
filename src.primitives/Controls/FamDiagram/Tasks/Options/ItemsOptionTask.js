@@ -23,12 +23,10 @@ primitives.famdiagram.ItemsOptionTask = function (optionsTask, defaultItemConfig
     var context = {
       isChanged: false,
       hash: _hash,
-      sourceHash: {}
+      sourceHash: _sourceHash
     };
 
     _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
-
-    _sourceHash = context.sourceHash["options-items"];
 
     return context.isChanged;
   }
@@ -38,7 +36,7 @@ primitives.famdiagram.ItemsOptionTask = function (optionsTask, defaultItemConfig
   }
 
   function getConfig(itemId) {
-    return _sourceHash[itemId];
+    return _sourceHash["options-items"][itemId];
   }
 
   return {

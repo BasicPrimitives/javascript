@@ -58,6 +58,10 @@
         Update(primitives.common.UpdateMode.Refresh);
       });
 
+      jQuery("input:radio[name=showFrame]").change(function () {
+        Update(primitives.common.UpdateMode.Refresh);
+      });
+
       var options = new primitives.orgdiagram.Config();
 
       var items = [
@@ -96,6 +100,7 @@
       options.pageFitMode = parseInt(jQuery("input:radio[name=pageFitMode]:checked").val(), 10);
       options.autoSizeMinimum = sizes[jQuery("input:radio[name=autoSizeMinimum]:checked").val()];
       options.autoSizeMaximum = sizes[jQuery("input:radio[name=autoSizeMaximum]:checked").val()];
+      options.showFrame = (parseInt(jQuery("input:radio[name=showFrame]:checked").val()) == 1 ? true : false);
       jQuery("#diagram").orgDiagram(options);
     });
 
@@ -103,10 +108,12 @@
       var pageFitMode = parseInt(jQuery("input:radio[name=pageFitMode]:checked").val(), 10);
       var autoSizeMinimum = sizes[jQuery("input:radio[name=autoSizeMinimum]:checked").val()];
       var autoSizeMaximum = sizes[jQuery("input:radio[name=autoSizeMaximum]:checked").val()];
+      var showFrame = (parseInt(jQuery("input:radio[name=showFrame]:checked").val()) == 1 ? true : false);
       jQuery("#diagram").orgDiagram("option", {
         pageFitMode: pageFitMode,
         autoSizeMinimum: autoSizeMinimum,
-        autoSizeMaximum: autoSizeMaximum
+        autoSizeMaximum: autoSizeMaximum,
+        showFrame: showFrame
       });
       jQuery("#diagram").orgDiagram("update", updateMode);
     }
@@ -117,6 +124,9 @@
   <p id="pageFitMode">Page Fit Mode: </p>
   <p id="autoSizeMinimum">Minimum Auto Size: </p>
   <p id="autoSizeMaximum">Maximum Auto Size: </p>
+	Show selected items on the control's frame: &nbsp;
+	<label><input name='showFrame' type='radio' value="1" />Yes</label>
+	<label><input name='showFrame' type='radio' value="0" checked=""/>No</label>
   <div id="diagram" style="border-style: dotted; border-width: 1px;"></div>
 </body>
 

@@ -1,7 +1,7 @@
 /*
   This method should try to keep cursor item as close as possible to its previous position
 */
-primitives.orgdiagram.CenterOnCursorTask = function (layoutOptionsTask, currentControlSizeTask, currentScrollPositionTask, cursorItemTask, alignDiagramTask, createTransformTask, scaleOptionTask) {
+primitives.orgdiagram.CenterOnCursorTask = function (layoutOptionsTask, applyLayoutChangesTask, currentScrollPositionTask, cursorItemTask, alignDiagramTask, createTransformTask, scaleOptionTask) {
   var _data = {
     placeholderOffset: null
   },
@@ -25,7 +25,7 @@ primitives.orgdiagram.CenterOnCursorTask = function (layoutOptionsTask, currentC
         snapRect = getTransformedItemPosition(treeItemPosition.actualPosition);
         snapRect.scale(scale);
         contentSize.scale(scale);
-        scrollPanelSize = currentControlSizeTask.getScrollPanelSize();
+        scrollPanelSize = applyLayoutChangesTask.getScrollPanelSize();
         _data.placeholderOffset = new primitives.common.Point(
           Math.max(Math.min(snapRect.horizontalCenter() - scrollPanelSize.width / 2, contentSize.width - scrollPanelSize.width), 0),
           Math.max(Math.min(snapRect.verticalCenter() - scrollPanelSize.height / 2, contentSize.height - scrollPanelSize.height), 0)
@@ -35,10 +35,6 @@ primitives.orgdiagram.CenterOnCursorTask = function (layoutOptionsTask, currentC
 
 
     return true;
-  }
-
-  function isAnnotationNeeded(snapRect, panelPosition) {
-    return !panelPosition.overlaps(snapRect);
   }
 
   function getTransformedItemPosition(position) {

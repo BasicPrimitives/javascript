@@ -303,14 +303,11 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
               "top": "0px",
               "left": "0px",
               "width": viewportRect.width + "px",
-              "height": viewportRect.height + "px"//,
-              //"border-width": "1px",
-              //"border-style": "solid",
-              //"border-color": "lightgrey"
+              "height": viewportRect.height + "px"
             },
             viewportRect.getCSS()),
             "name": "scrollPanel",
-            "class": name,
+            "class": ["bp-scrollpanel", name],
             "$": function (element) { layout.scrollPanel = element; }
           },
           ["div", /* mousePanel - mouse tracking events panel */
@@ -328,7 +325,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
               {
                 "style": primitives.common.mergeObjects({
                   position: "absolute",
-                  overflow: "visible"
+                  overflow: "hidden"
                 },
                 viewportRect.getCSS()),
                   "name": "placeholder",

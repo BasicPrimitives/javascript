@@ -56,15 +56,18 @@
 			options.pageFitMode = primitives.common.PageFitMode.AutoSize;
 			options.autoSizeMinimum = sizes[getRadioValue("autoSizeMinimum")];
 			options.autoSizeMaximum = sizes[getRadioValue("autoSizeMaximum")];
+			options.showFrame = false;
 			control = primitives.orgdiagram.Control(document.getElementById("diagram"), options);
 		});
 
 		function Update() {
 			var autoSizeMinimum = sizes[getRadioValue("autoSizeMinimum")];
 			var autoSizeMaximum = sizes[getRadioValue("autoSizeMaximum")];
+			var showFrame = (getRadioValue("showFrame") == "1" ? true : false);
 			control.setOptions({
 				autoSizeMinimum: autoSizeMinimum,
-				autoSizeMaximum: autoSizeMaximum
+				autoSizeMaximum: autoSizeMaximum,
+				showFrame: showFrame
 			});
 			control.update(primitives.common.UpdateMode.Refresh);
 		}
@@ -81,6 +84,11 @@
 	</script>
 </head>
 <body>
+	<p>
+		Show Selected Items on the frame:
+		<label><input onclick="Update()" name="showFrame" type="radio" value="1">Yes</label>
+		<label><input onclick="Update()" name="showFrame" type="radio" value="0" checked="">No</label>
+	</p>
 	<p id="autoSizeMinimum">Minimum Auto Size: 
 		<br><label><input onclick="Update()" name="autoSizeMinimum" type="radio" value="640*480" checked="">640*480</label>
 		<label><input onclick="Update()" name="autoSizeMinimum" type="radio" value="800*600">800*600</label>

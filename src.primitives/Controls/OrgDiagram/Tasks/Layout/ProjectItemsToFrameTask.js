@@ -18,8 +18,7 @@ primitives.orgdiagram.ProjectItemsToFrameTask = function (createTranformTask, fr
     _spatialIndex = null;
     _data.positions = [];
 
-    var treeItemPosition,
-      medianPosition = getFrameMedianPosition(),
+    var medianPosition = getFrameMedianPosition(),
       selectedItems = selectedItemsTask.getItems();
 
     if(medianPosition != null) {
@@ -70,9 +69,9 @@ primitives.orgdiagram.ProjectItemsToFrameTask = function (createTranformTask, fr
         medianThickness.scale(1.0 / scale);
 
 
-        frameOffset = new primitives.common.Point(placeholderOffset.x - frameThickness.left, placeholderOffset.y - frameThickness.top);
+        var frameOffset = new primitives.common.Point(placeholderOffset.x - frameThickness.left, placeholderOffset.y - frameThickness.top);
 
-        medianRect = new primitives.common.Rect(placeholderOffset.x, placeholderOffset.y, scrollPanelSize.width, scrollPanelSize.height);
+        var medianRect = new primitives.common.Rect(placeholderOffset.x, placeholderOffset.y, scrollPanelSize.width, scrollPanelSize.height);
         medianRect.offset(medianThickness);
 
         result = {

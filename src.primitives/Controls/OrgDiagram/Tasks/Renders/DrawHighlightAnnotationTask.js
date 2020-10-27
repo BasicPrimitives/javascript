@@ -99,7 +99,7 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
                 _graphics.show("calloutplaceholder");
                 panel = _graphics.activate("calloutplaceholder", primitives.common.Layers.Annotation);
                 _graphics.position("calloutplaceholder", calloutPanelPosition.x, calloutPanelPosition.y, calloutPanelPosition.width, calloutPanelPosition.height);
-                element = _graphics.template(
+                _graphics.template(
                   position.x
                   , position.y
                   , position.width

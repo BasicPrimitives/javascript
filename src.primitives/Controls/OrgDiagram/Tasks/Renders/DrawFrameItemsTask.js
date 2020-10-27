@@ -18,7 +18,8 @@ primitives.orgdiagram.DrawFrameItemsTask = function (getGraphics, applyLayoutCha
     var markers = new primitives.common.PolylinesBuffer(),
       positions = projectItemsToFrameTask.getPositions(),
       options = minimizedItemsOptionTask.getOptions(),
-      marker = new primitives.common.Marker();
+      marker = new primitives.common.Marker(),
+      polyline;
 
     for (var treeItemId in positions) {
       if(positions.hasOwnProperty(treeItemId)) {

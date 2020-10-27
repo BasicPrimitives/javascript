@@ -28,7 +28,7 @@ primitives.orgdiagram.FrameSizeTask = function (frameOptionTask, readTemplatesTa
     return context.isChanged;
   }
 
-  function getFrameSize(showFrame, templates) {
+  function getFrameSize() {
     var frameOptions = frameOptionTask.getOptions(),
       showFrame = frameOptions.showFrame,
       frameInnerPadding = frameOptions.frameInnerPadding,

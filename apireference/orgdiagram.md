@@ -62,6 +62,13 @@ Organizational Chart configuration object. Use this object as a reference for av
  | `defaultCalloutTemplateName` | string | `null` | Callout annotation default template name. Templates are HTML fragments containing layout and styles used to render diagram nodes. They are defined with a named configuration objects. See `templates` property of control's configuration object. | 
  | `showCallout` | boolean | `true` | Sets callout visibility. | 
 
+### Frame Properties
+| Name | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `frameInnerPadding` | Thickness | `{2, 2, 2, 2}` | Frame inner padding. Adds extra padding around markers on the inner side of the frame. | 
+ | `frameOuterPadding` | Thickness | `{2, 2, 2, 2}` | Frame outer padding. Adds extra padding around markers on the outer side of the frame. | 
+ | `showFrame` | boolean | `false` | Sets selected items frame visibility. If selected item is outside of the diagram's area visible to the end user, control displays that item in the form of the marker on frame around the diagram. | 
+
 ### Group Titles Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 

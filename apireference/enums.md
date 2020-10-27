@@ -212,9 +212,9 @@ Fits diagram into available screen space. When diagram size significantly larger
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `AutoSize` | number | `5` | This is opposite mode to auto fit. In this mode diagram controls its size, it sets its size to accomodate all nodes and render them normally. | 
+ | `AutoSize` | number | `5` | This is opposite mode to auto fit. In this mode diagram controls its size, it sets its size to fit all nodes and render them full size using templates. | 
  | `FitToPage` | number | `3` | Fits diagram into the view so it has no scrollbars. | 
- | `None` | number | `0` | Disabled. All nodes rendered with their templates. | 
+ | `None` | number | `0` | Disabled. All nodes are being rendered using their templates. | 
  | `PageHeight` | number | `2` | Fits diagram into the view hight, so it has no vertical scrollbar. | 
  | `PageWidth` | number | `1` | Fits diagram into the view width, so it has no horizontal scrollbar. | 
  | `SelectionOnly` | number | `6` | Renders all nodes as markers regardless of available screen space. Control selects and renders full size cursor, its neighbours and selected nodes only. Don't forget to disable selection path as well, so nodes from cursor up to the root are not selected. | 

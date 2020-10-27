@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagrams v5.8.2
+ * @preserve Basic Primitives Diagrams v5.9.0
  * Copyright (c) 2013 - 2020 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -35,7 +35,7 @@
 
 var primitives = {
   common: {
-    version: "5.8.2"
+    version: "5.9.0"
   },
   orgdiagram: {},
   famdiagram: {},
@@ -2180,7 +2180,7 @@ primitives.orgdiagram.OrientationType = primitives.common.OrientationType;
  */
 primitives.common.PageFitMode = {
   /**
-   * Disabled. All nodes rendered with their templates.
+   * Disabled. All nodes are being rendered using their templates.
    */
   None: 0,
   /**
@@ -2196,7 +2196,7 @@ primitives.common.PageFitMode = {
    */
   FitToPage: 3,
   /**
-   * This is opposite mode to auto fit. In this mode diagram controls its size, it sets its size to accomodate all nodes and render them normally.
+   * This is opposite mode to auto fit. In this mode diagram controls its size, it sets its size to fit all nodes and render them full size using templates.
    */
   AutoSize: 5,
   /**
@@ -3942,6 +3942,23 @@ primitives.common.Rect.prototype.equalTo = function (rect) {
   return this.x == rect.x && this.y == rect.y && this.width == rect.width && this.height == rect.height;
 };
 
+/**
+ * Find intersection point between rectangle's permiter and line connecting the given point and center of the rectangle
+ * 
+ * @param {Point} point Point to project
+ * @returns {Point} Returns point or null if point is inside rectangle.
+ */
+primitives.common.Rect.prototype.getProjectionPoint = function (point) {
+  var result = null;
+  if(!this.contains(point)) {
+    var vector = new primitives.common.Vector(this.centerPoint(), point);
+    this.loopEdges(function(edge) {
+      result = vector.getIntersectionPoint(edge, true, 1.0);
+      return (result != null);
+    });
+  }
+  return result;
+};
 
 /* /graphics/structs/MoveSegment.js*/
 primitives.common.MoveSegment = function () {
@@ -5032,6 +5049,15 @@ primitives.common.Size.prototype.scale = function (scale) {
   return this;
 };
 
+/**
+ * Returns square size
+ * 
+ * @returns {number} Returns square size.
+ */
+primitives.common.Size.prototype.space = function () {
+  return this.width * this.height;
+};
+
 
 /**
  * Returns size in form of CSS style object.
@@ -5043,8 +5069,6 @@ primitives.common.Size.prototype.getCSS = function (units) {
   units = (units !== undefined) ? units : "px";
 
   var result = {
-    left: this.x + units,
-    top: this.y + units,
     width: this.width + units,
     height: this.height + units
   };
@@ -5070,9 +5094,35 @@ primitives.common.Size.prototype.cropBySize = function (size) {
  * @param {Size} size The size to use as extension.
  * @returns {Size} Returns reference to the current size object
  */
-primitives.common.Size.prototype.addSize = function (size) {
+primitives.common.Size.prototype.maxSize = function (size) {
   this.width = Math.max(this.width, size.width);
   this.height = Math.max(this.height, size.height);
+
+  return this;
+};
+
+/**
+ * Expands the current size by the thickness object.
+ * 
+ * @param {Thickness} thickness The thickness to use for expansion.
+ * @returns {Size} Returns reference to the current size object
+ */
+primitives.common.Size.prototype.addThickness = function (thickness) {
+  this.width = Math.max(0, this.width + thickness.left + thickness.right);
+  this.height = Math.max(0, this.height + thickness.top + thickness.bottom);
+
+  return this;
+};
+
+/**
+ * Shrinks the current size by the thickness object.
+ * 
+ * @param {Thickness} thickness The thickness to use for contraction.
+ * @returns {Size} Returns reference to the current size object
+ */
+primitives.common.Size.prototype.removeThickness = function (thickness) {
+  this.width = Math.max(0, this.width - thickness.left - thickness.right);
+  this.height = Math.max(0, this.height - thickness.top - thickness.bottom);
 
   return this;
 };
@@ -5098,26 +5148,49 @@ primitives.common.Size.prototype.validate = function () {
  * @param {number} right Right.
  * @param {number} bottom Bottom.
  */
-primitives.common.Thickness = function (left, top, right, bottom) {
+primitives.common.Thickness = function (arg0, arg1, arg2, arg3) {
   /**
    * The thickness for the left side of the rectangle.
    */
-  this.left = left;
+  this.left = 0;
 
   /**
    * The thickness for the upper side of the rectangle.
    */
-  this.top = top;
+  this.top = 0;
 
   /**
    * The thickness for the right side of the rectangle.
    */
-  this.right = right;
+  this.right = 0;
 
   /**
    * The thickness for the bottom side of the rectangle.
    */
-  this.bottom = bottom;
+  this.bottom = 0;
+
+  switch (arguments.length) {
+    case 1:
+      if (arg0 !== null && typeof arg0 == "object") {
+        this.left = arg0.left;
+        this.top = arg0.top;
+        this.right = arg0.right;
+        this.bottom = arg0.bottom;
+      } else {
+        this.left = arg0;
+        this.top = arg0;
+        this.right = arg0;
+        this.bottom = arg0;
+      }
+      break;
+    case 4:
+      this.left = arg0;
+      this.top = arg1;
+      this.right = arg2;
+      this.bottom = arg3;
+      break;
+  }
+  return this;
 };
 
 /**
@@ -5127,6 +5200,67 @@ primitives.common.Thickness = function (left, top, right, bottom) {
  */
 primitives.common.Thickness.prototype.isEmpty = function () {
   return this.left === 0 && this.top === 0 && this.right === 0 && this.bottom === 0;
+};
+
+/**
+ * Maximum thickness.
+ * 
+ * @param {Thickness} thickness The thickness to compaire with.
+ * @returns {Thickness} Returns reference to the current thickness object
+ */
+primitives.common.Thickness.prototype.maxThickness = function (thickness) {
+  this.left = Math.max(this.left, thickness.left);
+  this.top = Math.max(this.top, thickness.top);
+  this.right = Math.max(this.right, thickness.right);
+  this.bottom = Math.max(this.bottom, thickness.bottom);
+
+  return this;
+};
+
+/**
+ * Add thickness.
+ * 
+ * @param {Thickness} thickness The thickness to add.
+ * @returns {Thickness} Returns reference to the current thickness object
+ */
+primitives.common.Thickness.prototype.addThickness = function (arg0, arg1, arg2, arg3) {
+  switch (arguments.length) {
+    case 1:
+      if (arg0 !== null && typeof arg0 == "object") {
+        this.left += arg0.left;
+        this.top += arg0.top;
+        this.right += arg0.right;
+        this.bottom += arg0.bottom;
+      } else {
+        this.left += arg0;
+        this.top += arg0;
+        this.right += arg0;
+        this.bottom += arg0;
+      }
+      break;
+    case 4:
+      this.left += arg0;
+      this.top += arg1;
+      this.right += arg2;
+      this.bottom += arg3;
+      break;
+  }
+
+  return this;
+};
+
+/**
+ * Scales the thickness by the specified value
+ * 
+ * @param {number} scale
+ * @returns {Thickness} Returns reference to the current size.
+ */
+primitives.common.Thickness.prototype.scale = function (scale) {
+  this.left = this.left * scale;
+  this.top = this.top * scale;
+  this.right = this.right * scale;
+  this.bottom = this.bottom * scale;
+  return this;
 };
 
 /**
@@ -7856,6 +7990,32 @@ primitives.famdiagram.Config = function (name) {
    * @type {NeighboursSelectionMode}
    */
   this.neighboursSelectionMode = 0/*primitives.common.NeighboursSelectionMode.ParentsAndChildren*/;
+
+
+  /**
+   * Sets selected items frame visibility. If selected item is outside of the diagram's area visible to the end user,
+   * control displays that item in the form of the marker on frame around the diagram.
+   * 
+   * @group Frame
+   * @type {boolean}
+   */
+  this.showFrame = false;
+
+  /**
+   * Frame inner padding. Adds extra padding around markers on the inner side of the frame.
+   * 
+   * @group Frame
+   * @type {Thickness}
+   */
+  this.frameInnerPadding = new primitives.common.Thickness(2, 2, 2, 2);
+
+  /**
+   * Frame outer padding. Adds extra padding around markers on the outer side of the frame.
+   * 
+   * @group Frame
+   * @type {Thickness}
+   */
+  this.frameOuterPadding = new primitives.common.Thickness(2, 2, 2, 2);
 
   /**
    * Collection of named templates used to define content for nodes, cursor and highlight.
@@ -13304,11 +13464,6 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 
   // Options
   tasks.addTask('OptionsTask', ['options'], primitives.famdiagram.OptionsTask, "#000000"/*primitives.common.Colors.Black*/);
-  tasks.addTask('LayoutOptionsTask', ['getLayout', 'OptionsTask'], primitives.orgdiagram.LayoutOptionsTask, "#000000"/*primitives.common.Colors.Black*/);
-
-  // Layout
-  tasks.addTask('CurrentControlSizeTask', ['LayoutOptionsTask', 'ItemsSizesOptionTask'], primitives.orgdiagram.CurrentControlSizeTask, "#000000"/*primitives.common.Colors.Black*/);
-  tasks.addTask('CurrentScrollPositionTask', ['LayoutOptionsTask'], primitives.orgdiagram.CurrentScrollPositionTask, "#000000"/*primitives.common.Colors.Black*/);
 
   tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
   tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
@@ -13344,6 +13499,7 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
   tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], primitives.orgdiagram.BackgroundAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
   tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ScaleOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('FrameOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.FrameOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
   // Transformations
   tasks.addTask('UserDefinedNodesOrderTask', ['OrderFamilyNodesOptionTask', 'defaultItemConfig'], primitives.famdiagram.UserDefinedNodesOrderTask, "#ff0000"/*primitives.common.Colors.Red*/);
@@ -13382,7 +13538,7 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 
   tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
   tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'NeighboursSelectionModeOptionTask', 'AddSpousesTask', 'ActiveItemsTask'], primitives.famdiagram.CursorNeighboursTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-  tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask', 'ItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
   tasks.addTask('SelectionPathItemsTask', ['AddSpousesTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], primitives.famdiagram.SelectionPathItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
   tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
@@ -13406,6 +13562,12 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
     'NormalVisibilityItemsByForegroundConnectorAnnotationTask',
     'NormalVisibilityItemsByBackgroundConnectorAnnotationTask'], primitives.orgdiagram.CombinedNormalVisibilityItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
+  // Layout
+  tasks.addTask('FrameSizeTask', ['FrameOptionTask', 'ReadTemplatesTask', 'ScaleOptionTask'], primitives.orgdiagram.FrameSizeTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('LayoutOptionsTask', ['getLayout', 'OptionsTask'], primitives.orgdiagram.LayoutOptionsTask, "#000000"/*primitives.common.Colors.Black*/);
+  tasks.addTask('CurrentControlSizeTask', ['LayoutOptionsTask', 'ItemsSizesOptionTask', 'FrameSizeTask'], primitives.orgdiagram.CurrentControlSizeTask, "#000000"/*primitives.common.Colors.Black*/);
+  tasks.addTask('CurrentScrollPositionTask', ['LayoutOptionsTask'], primitives.orgdiagram.CurrentScrollPositionTask, "#000000"/*primitives.common.Colors.Black*/);
+
   tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask',
     'OrderFamilyNodesOptionTask', 'OrderFamilyNodesTask',
     'CombinedTemplateParamsTask',
@@ -13413,13 +13575,18 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 
   tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], primitives.orgdiagram.AlignDiagramTask, "#ff0000"/*primitives.common.Colors.Red*/);
   tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.CreateTransformTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-  tasks.addTask('CenterOnCursorTask', ['LayoutOptionsTask', 'CurrentControlSizeTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], primitives.orgdiagram.CenterOnCursorTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
   // Managers
   tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'LinePaletteOptionTask'], primitives.orgdiagram.PaletteManagerTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
   // Apply Layout Changes
-  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.ApplyLayoutChangesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask', 'FrameSizeTask'], primitives.orgdiagram.ApplyLayoutChangesTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('CenterOnCursorTask', ['LayoutOptionsTask', 'ApplyLayoutChangesTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], primitives.orgdiagram.CenterOnCursorTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('ProjectItemsToFrameTask', ['CreateTransformTask', 'FrameSizeTask',
+    'ApplyLayoutChangesTask', 'ScaleOptionTask',
+    'AlignDiagramTask', 'CenterOnCursorTask',
+    'ItemTemplateParamsTask',
+    'SelectedItemsTask'], primitives.orgdiagram.ProjectItemsToFrameTask, "#00ffff"/*primitives.common.Colors.Cyan*/);  
 
   // Renders
   tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
@@ -13433,7 +13600,7 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 
   tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawCursorTask, "#008000"/*primitives.common.Colors.Green*/);
   tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightTask, "#008000"/*primitives.common.Colors.Green*/);
-  tasks.addTask('DrawHighlightAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawHighlightAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'FrameSizeTask'], primitives.orgdiagram.DrawHighlightAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
 
   tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask',
     'ItemsSizesOptionTask',
@@ -13449,6 +13616,9 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
   tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask'], primitives.orgdiagram.DrawConnectorsTask, "#008000"/*primitives.common.Colors.Green*/);
   tasks.addTask('DrawItemLabelsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LabelsOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawItemLabelsTask, "#008000"/*primitives.common.Colors.Green*/);
 
+  tasks.addTask('DrawFrameItemsTask', ['graphics', 'ApplyLayoutChangesTask', 'ProjectItemsToFrameTask', 'ItemTemplateParamsTask', 'MinimizedItemsOptionTask'], primitives.orgdiagram.DrawFrameItemsTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawFrameHighlightTask', ['graphics', 'ProjectItemsToFrameTask', 'CombinedContextsTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask'], primitives.orgdiagram.DrawFrameHighlightTask, "#008000"/*primitives.common.Colors.Green*/);
+  
   return tasks;
 };
 
@@ -14072,6 +14242,31 @@ primitives.orgdiagram.Config = function (name) {
    * @type {SelectionPathMode}
    */
   this.selectionPathMode = 1/*primitives.common.SelectionPathMode.FullStack*/;
+
+  /**
+   * Sets selected items frame visibility. If selected item is outside of the diagram's area visible to the end user,
+   * control displays that item in the form of the marker on frame around the diagram.
+   * 
+   * @group Frame
+   * @type {boolean}
+   */
+  this.showFrame = false;
+
+  /**
+   * Frame inner padding. Adds extra padding around markers on the inner side of the frame.
+   * 
+   * @group Frame
+   * @type {Thickness}
+   */
+  this.frameInnerPadding = new primitives.common.Thickness(2, 2, 2, 2);
+
+  /**
+   * Frame outer padding. Adds extra padding around markers on the outer side of the frame.
+   * 
+   * @group Frame
+   * @type {Thickness}
+   */
+  this.frameOuterPadding = new primitives.common.Thickness(2, 2, 2, 2);
 
   /**
    * Collection of named templates used to define content for nodes, cursor and highlight.
@@ -16702,39 +16897,88 @@ primitives.orgdiagram.AlignDiagramTask = function (orientationOptionTask, itemsS
 
 /* /Controls/OrgDiagram/Tasks/Layout/ApplyLayoutChangesTask.js*/
 primitives.orgdiagram.ApplyLayoutChangesTask = function (getGraphics, setLayout, itemsSizesOptionTask,
-  currentControlSizeTask, scaleOptionTask, alignDiagramTask) {
+  currentControlSizeTask, scaleOptionTask, alignDiagramTask, frameSizeTask) {
   var _data = {
-    scrollPanelSize: null
+    viewportSize: null,
+    frameThickness: null,
+    framePlaceholderSize: null
   };
 
   function process() {
     var graphics = getGraphics(),
-      scaleOptions = scaleOptionTask.getOptions(),
+      scale = scaleOptionTask.getOptions().scale,
       itemsSizesOptions = itemsSizesOptionTask.getOptions(),
       contentSize = alignDiagramTask.getContentSize(),
-      scrollPanelSize = currentControlSizeTask.getScrollPanelSize();
+      viewportSize = currentControlSizeTask.getScrollPanelSize(),
+      frameThickness = frameSizeTask.getThickness(),
+      autoSize = (itemsSizesOptions.pageFitMode == 5/*primitives.common.PageFitMode.AutoSize*/);
+
+    /* scaled content size */
+    var scaledContentSize = new primitives.common.Size(contentSize);
+    scaledContentSize.scale(scale);
+
+    if (autoSize) {
+      /* resize element to fit placeholder if control in autosize mode */
+      viewportSize = new primitives.common.Size(scaledContentSize.width + 25, scaledContentSize.height + 25);
+      viewportSize.addThickness(frameThickness);
+      viewportSize.cropBySize(itemsSizesOptions.autoSizeMaximum);
+      viewportSize.maxSize(itemsSizesOptions.autoSizeMinimum);//ignore jslint
+
+      // disable frame if its square space is bigger than viewport
+      var framedViewportSize = new primitives.common.Size(viewportSize);
+      framedViewportSize.removeThickness(frameThickness);
+
+      if(viewportSize.space() < framedViewportSize.space() * 2) {
+        viewportSize = framedViewportSize;
+      } else {
+        frameThickness = new primitives.common.Thickness( 0, 0, 0, 0 );
+      }
+    }
+
+    var controlSize = new primitives.common.Size(viewportSize);
+    controlSize.addThickness(frameThickness);
+
+
+    var framePlaceholderSize = new primitives.common.Size(controlSize);
+    framePlaceholderSize.scale(1 / scale);
 
     graphics.resize("placeholder", contentSize.width, contentSize.height);
+    graphics.resize("framePlaceholder", framePlaceholderSize.width, framePlaceholderSize.height );
 
-    _data.scrollPanelSize = setLayout({
-      scale: (scaleOptions.scale),
+    setLayout({
+      scale: scale,
+      autoSize: autoSize,
       contentSize: contentSize,
-      scrollPanelSize: scrollPanelSize,
-      autoSize: (itemsSizesOptions.pageFitMode == 5/*primitives.common.PageFitMode.AutoSize*/),
-      autoSizeMaximum: (itemsSizesOptions.autoSizeMaximum),
-      autoSizeMinimum: (itemsSizesOptions.autoSizeMinimum)
+      scaledContentSize: scaledContentSize,
+      viewportSize: viewportSize,
+      frameThickness: frameThickness,
+      controlSize: controlSize,
+      framePlaceholderSize: framePlaceholderSize
     });
 
+    _data.viewportSize = viewportSize;
+    _data.frameThickness = frameThickness;
+    _data.framePlaceholderSize = framePlaceholderSize;
     return true;
   }
 
   function getOptimalPanelSize() {
-    return new primitives.common.Size(_data.scrollPanelSize.width - 25, _data.scrollPanelSize.height - 25);
+    return new primitives.common.Size(_data.viewportSize.width - 25, _data.viewportSize.height - 25);
+  }
+
+  function getScrollPanelSize() {
+    return new primitives.common.Size(_data.viewportSize.width, _data.viewportSize.height);
+  }
+
+  function getFrameThickness() {
+    return new primitives.common.Thickness(_data.frameThickness);
   }
 
   return {
     process: process,
-    getOptimalPanelSize: getOptimalPanelSize
+    getOptimalPanelSize: getOptimalPanelSize,
+    getScrollPanelSize: getScrollPanelSize,
+    getFrameThickness: getFrameThickness
   };
 };
 
@@ -16742,7 +16986,7 @@ primitives.orgdiagram.ApplyLayoutChangesTask = function (getGraphics, setLayout,
 /*
   This method should try to keep cursor item as close as possible to its previous position
 */
-primitives.orgdiagram.CenterOnCursorTask = function (layoutOptionsTask, currentControlSizeTask, currentScrollPositionTask, cursorItemTask, alignDiagramTask, createTransformTask, scaleOptionTask) {
+primitives.orgdiagram.CenterOnCursorTask = function (layoutOptionsTask, applyLayoutChangesTask, currentScrollPositionTask, cursorItemTask, alignDiagramTask, createTransformTask, scaleOptionTask) {
   var _data = {
     placeholderOffset: null
   },
@@ -16766,7 +17010,7 @@ primitives.orgdiagram.CenterOnCursorTask = function (layoutOptionsTask, currentC
         snapRect = getTransformedItemPosition(treeItemPosition.actualPosition);
         snapRect.scale(scale);
         contentSize.scale(scale);
-        scrollPanelSize = currentControlSizeTask.getScrollPanelSize();
+        scrollPanelSize = applyLayoutChangesTask.getScrollPanelSize();
         _data.placeholderOffset = new primitives.common.Point(
           Math.max(Math.min(snapRect.horizontalCenter() - scrollPanelSize.width / 2, contentSize.width - scrollPanelSize.width), 0),
           Math.max(Math.min(snapRect.verticalCenter() - scrollPanelSize.height / 2, contentSize.height - scrollPanelSize.height), 0)
@@ -16776,10 +17020,6 @@ primitives.orgdiagram.CenterOnCursorTask = function (layoutOptionsTask, currentC
 
 
     return true;
-  }
-
-  function isAnnotationNeeded(snapRect, panelPosition) {
-    return !panelPosition.overlaps(snapRect);
   }
 
   function getTransformedItemPosition(position) {
@@ -16843,7 +17083,7 @@ primitives.orgdiagram.CreateTransformTask = function (orientationOptionTask, ali
 };
 
 /* /Controls/OrgDiagram/Tasks/Layout/CurrentControlSizeTask.js*/
-primitives.orgdiagram.CurrentControlSizeTask = function (layoutOptionsTask, itemsSizesOptionTask) {
+primitives.orgdiagram.CurrentControlSizeTask = function (layoutOptionsTask, itemsSizesOptionTask, frameSizeTask) {
   var _data = {
     scrollPanelSize: null
   },
@@ -16862,15 +17102,28 @@ primitives.orgdiagram.CurrentControlSizeTask = function (layoutOptionsTask, item
     },
       layoutOptions = layoutOptionsTask.getOptions(),
       result = false,
-      options = itemsSizesOptionTask.getOptions();
+      pageFitMode = itemsSizesOptionTask.getOptions().pageFitMode,
+      thickness = frameSizeTask.getThickness();
+
+    // disable frame if its square space is bigger than viewport
+    var viewportSize = new primitives.common.Size(layoutOptions.scrollPanelSize);
+    viewportSize.removeThickness(thickness);
+
+    if(layoutOptions.scrollPanelSize.space() < viewportSize.space() * 2) {
+      layoutOptions.scrollPanelSize = viewportSize;
+      layoutOptions.frameThickness = thickness;
+    } else {
+      layoutOptions.frameThickness = new primitives.common.Thickness( 0, 0, 0, 0 );
+    }
 
     _data = _dataTemplate.read(_data, layoutOptions, "layout", context);
 
-    switch (options.pageFitMode) {
+    switch (pageFitMode) {
       case 1/*primitives.common.PageFitMode.PageWidth*/:
       case 2/*primitives.common.PageFitMode.PageHeight*/:
       case 3/*primitives.common.PageFitMode.FitToPage*/:
       case 0/*primitives.common.PageFitMode.None*/:
+      case 6/*primitives.common.PageFitMode.SelectionOnly*/:
         result = context.isChanged;
         break;
       default:
@@ -16882,7 +17135,7 @@ primitives.orgdiagram.CurrentControlSizeTask = function (layoutOptionsTask, item
   }
 
   function getScrollPanelSize() {
-    return _data.scrollPanelSize;
+    return new primitives.common.Size(_data.scrollPanelSize);
   }
 
   function getOptimalPanelSize() {
@@ -16927,6 +17180,253 @@ primitives.orgdiagram.CurrentScrollPositionTask = function (layoutOptionsTask) {
   return {
     process: process,
     getPlaceholderOffset: getPlaceholderOffset
+  };
+};
+
+/* /Controls/OrgDiagram/Tasks/Layout/FrameSizeTask.js*/
+primitives.orgdiagram.FrameSizeTask = function (frameOptionTask, readTemplatesTask, scaleOptionTask) {
+  var _data = {},
+    _hash = {};
+
+  var _dataTemplate = new primitives.common.ObjectReader({
+    median: new primitives.common.ObjectReader({
+      left: new primitives.common.ValueReader(["number"], false, 0),
+      top: new primitives.common.ValueReader(["number"], false, 0),
+      right: new primitives.common.ValueReader(["number"], false, 0),
+      bottom: new primitives.common.ValueReader(["number"], false, 0)
+    }, false, new primitives.common.Thickness(0, 0, 0, 0)),
+    thickness: new primitives.common.ObjectReader({
+      left: new primitives.common.ValueReader(["number"], false, 0),
+      top: new primitives.common.ValueReader(["number"], false, 0),
+      right: new primitives.common.ValueReader(["number"], false, 0),
+      bottom: new primitives.common.ValueReader(["number"], false, 0)
+    }, false, new primitives.common.Thickness(0, 0, 0, 0))
+  });
+
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
+
+    _data = _dataTemplate.read(_data, getFrameSize(), "options", context);
+
+    return context.isChanged;
+  }
+
+  function getFrameSize() {
+    var frameOptions = frameOptionTask.getOptions(),
+      showFrame = frameOptions.showFrame,
+      frameInnerPadding = frameOptions.frameInnerPadding,
+      frameOuterPadding = frameOptions.frameOuterPadding,
+      scale = scaleOptionTask.getOptions().scale,
+      median = new primitives.common.Thickness(0, 0, 0, 0),
+      thickness = new primitives.common.Thickness(0, 0, 0, 0);
+
+    if(showFrame) {
+      var maximumMarkerSize = new primitives.common.Size(0, 0),
+          maximumMarkerPadding = new primitives.common.Thickness(0, 0, 0, 0),
+          index, len,
+          templates = readTemplatesTask.getItemTemplates();
+
+      for (index = 0, len = templates.length; index < len; index += 1) {
+        var template = templates[index];
+        var templateConfig = template.templateConfig,
+            cursorPadding = new primitives.common.Thickness(templateConfig.cursorPadding),
+            highlightPadding = new primitives.common.Thickness(templateConfig.highlightPadding);
+        
+        cursorPadding.addThickness(templateConfig.cursorBorderWidth);
+        highlightPadding.addThickness(templateConfig.highlightBorderWidth);
+
+        maximumMarkerSize.maxSize(templateConfig.minimizedItemSize);
+        maximumMarkerPadding.maxThickness(templateConfig.cursorPadding);
+        maximumMarkerPadding.maxThickness(templateConfig.highlightPadding);
+      }
+
+      median = new primitives.common.Thickness(Math.ceil(maximumMarkerSize.width / 2.0) + maximumMarkerPadding.right, 
+        Math.ceil(maximumMarkerSize.height / 2.0) + maximumMarkerPadding.bottom, 
+        Math.ceil(maximumMarkerSize.width / 2.0) + maximumMarkerPadding.left, 
+        Math.ceil(maximumMarkerSize.height / 2.0) + maximumMarkerPadding.top
+      );
+      median.addThickness(frameInnerPadding);
+      median.scale(scale);
+      thickness = new primitives.common.Thickness(maximumMarkerSize.width + maximumMarkerPadding.left + maximumMarkerPadding.right, 
+        maximumMarkerSize.height + maximumMarkerPadding.top + maximumMarkerPadding.bottom, 
+        maximumMarkerSize.width + maximumMarkerPadding.left + maximumMarkerPadding.right, 
+        maximumMarkerSize.height + maximumMarkerPadding.top + maximumMarkerPadding.bottom
+      );
+      thickness.addThickness(frameInnerPadding);
+      thickness.addThickness(frameOuterPadding);
+      thickness.scale(scale);
+    }
+    return { median: median, thickness: thickness };
+  }
+
+  function getMedian() {
+    return _data.median;
+  }
+
+  function getThickness() {
+    return _data.thickness;
+  }
+
+  return {
+    process: process,
+    getMedian: getMedian,
+    getThickness: getThickness
+  };
+};
+
+/* /Controls/OrgDiagram/Tasks/Layout/ProjectItemsToFrameTask.js*/
+primitives.orgdiagram.ProjectItemsToFrameTask = function (createTranformTask, frameSizeTask,
+  applyLayoutChangesTask, scaleOptionTask,
+  alignDiagramTask, centerOnCursorTask,
+  itemTemplateParamsTask,
+  selectedItemsTask) {
+
+  var _data = {
+    positions: {}
+  },
+  _scaleOptions,
+  _spatialIndex;
+
+  function process() {
+    var positions = alignDiagramTask.getItemsPositions(),
+      transform = createTranformTask.getTransform();
+
+    _scaleOptions = scaleOptionTask.getOptions(),
+    _spatialIndex = null;
+    _data.positions = [];
+
+    var medianPosition = getFrameMedianPosition(),
+      selectedItems = selectedItemsTask.getItems();
+
+    if(medianPosition != null) {
+      for(var index = 0, len = selectedItems.length; index < len; index+=1) {
+        var treeItemId = selectedItems[index],
+          treeItemPosition = positions[treeItemId],
+          actualPosition = treeItemPosition.actualPosition;
+
+        transform.transformRect(actualPosition.x, actualPosition.y, actualPosition.width, actualPosition.height, true,
+          this, function (x, y, width, height) {
+            var nodePosition = new primitives.common.Rect(x, y, width, height);
+            if (!medianPosition.rect.overlaps(nodePosition)) {
+              var projectionPoint = medianPosition.rect.getProjectionPoint(nodePosition.centerPoint());
+              if (projectionPoint != null) {
+                // node position is not scaled, scaling is done with CSS
+                var templateParams = itemTemplateParamsTask.getTemplateParams(treeItemId),
+                    templateConfig = templateParams.template.templateConfig,
+                    markerSize = new primitives.common.Size(templateConfig.minimizedItemSize),
+                    markerProjectionRect = new primitives.common.Rect(
+                      projectionPoint.x - markerSize.width / 2, 
+                      projectionPoint.y - markerSize.height / 2, 
+                      markerSize.width, 
+                      markerSize.height);
+  
+                markerProjectionRect.translate(- medianPosition.offset.x, - medianPosition.offset.y);
+                _data.positions[treeItemId] = markerProjectionRect;
+              }
+            }
+          });
+      }
+    }
+    return true;
+  }
+
+  function getFrameMedianPosition() {
+    var result = null;
+    if (centerOnCursorTask != null) {
+      var scale = _scaleOptions.scale,
+        placeholderOffset = new primitives.common.Point(centerOnCursorTask.getPlaceholderOffset()),
+        scrollPanelSize = new primitives.common.Size(applyLayoutChangesTask.getScrollPanelSize()),
+        frameThickness = new primitives.common.Thickness(applyLayoutChangesTask.getFrameThickness()),
+        medianThickness = new primitives.common.Thickness(frameSizeTask.getMedian());
+
+      if(!frameThickness.isEmpty()) {
+        placeholderOffset.scale(1.0 / scale);
+        frameThickness.scale(1.0 / scale);
+        scrollPanelSize.scale(1.0 / scale);
+        medianThickness.scale(1.0 / scale);
+
+
+        var frameOffset = new primitives.common.Point(placeholderOffset.x - frameThickness.left, placeholderOffset.y - frameThickness.top);
+
+        var medianRect = new primitives.common.Rect(placeholderOffset.x, placeholderOffset.y, scrollPanelSize.width, scrollPanelSize.height);
+        medianRect.offset(medianThickness);
+
+        result = {
+          offset: frameOffset,
+          rect: medianRect         
+        }
+      }
+    }
+    return result;
+  }
+
+  function getSizes() {
+    var result = [];
+    var hash = {};
+    for (var treeItemId in _data.positions) {
+      if(_data.positions.hasOwnProperty(treeItemId)) {
+        var rect = _data.positions[treeItemId];
+        var size = Math.max(rect.width, rect.height);
+        if (!hash.hasOwnProperty(size)) {
+          hash[size] = true;
+          result.push(size);
+        }
+      }
+    }
+    return result;
+  }
+
+  function getSpatialIndex() {
+    if (_spatialIndex == null) {
+      _spatialIndex = primitives.common.SpatialIndex(getSizes());
+      for (var treeItemId in _data.positions) {
+        if(_data.positions.hasOwnProperty(treeItemId)) {
+          var rect = _data.positions[treeItemId];
+          rect.context = treeItemId;
+          _spatialIndex.addRect(rect);
+        }
+      }
+    }
+    return _spatialIndex;
+  }
+
+  function getTreeItemForMousePosition(x, y, gravityRadius) {
+    var result = null,
+      bestDistance = null,
+      scale = _scaleOptions.scale,
+      spatialIndex = getSpatialIndex(),
+      selection,
+      center;
+
+    x = x / scale;
+    y = y / scale;
+    selection = new primitives.common.Rect(x, y, 0, 0);
+    center = new primitives.common.Point(x, y);
+    selection.offset(gravityRadius, gravityRadius, gravityRadius, gravityRadius);
+
+    spatialIndex.loopArea(this, selection, function (rect) {
+      var itemid = rect.context;
+      var distance = center.distanceTo(rect.horizontalCenter(), rect.verticalCenter());
+      if (bestDistance == null || distance < bestDistance) {
+        bestDistance = distance;
+        result = itemid;
+      }
+    });
+
+    return result;
+  }
+
+  function getPositions() {
+    return _data.positions;
+  }
+
+  return {
+    getPositions:getPositions,
+    getTreeItemForMousePosition: getTreeItemForMousePosition,
+    process: process
   };
 };
 
@@ -17460,6 +17960,48 @@ primitives.orgdiagram.ConnectorsOptionTask = function (optionsTask, defaultConfi
     process: process,
     getOptions: getOptions,
     description: "Checks connector lines drawing options."
+  };
+};
+
+/* /Controls/OrgDiagram/Tasks/Options/FrameOptionTask.js*/
+primitives.orgdiagram.FrameOptionTask = function (optionsTask, defaultConfig) {
+  var _data = {},
+    _hash = {};
+
+  var _dataTemplate = new primitives.common.ObjectReader({
+    showFrame: new primitives.common.ValueReader(["boolean"], false, defaultConfig.showFrame),
+    frameInnerPadding: new primitives.common.ObjectReader({
+      left: new primitives.common.ValueReader(["number"], false, defaultConfig.frameInnerPadding.left),
+      top: new primitives.common.ValueReader(["number"], false, defaultConfig.frameInnerPadding.top),
+      right: new primitives.common.ValueReader(["number"], false, defaultConfig.frameInnerPadding.right),
+      bottom: new primitives.common.ValueReader(["number"], false, defaultConfig.frameInnerPadding.bottom)
+    }, false, defaultConfig.frameInnerPadding),
+    frameOuterPadding: new primitives.common.ObjectReader({
+      left: new primitives.common.ValueReader(["number"], false, defaultConfig.frameOuterPadding.left),
+      top: new primitives.common.ValueReader(["number"], false, defaultConfig.frameOuterPadding.top),
+      right: new primitives.common.ValueReader(["number"], false, defaultConfig.frameOuterPadding.right),
+      bottom: new primitives.common.ValueReader(["number"], false, defaultConfig.frameOuterPadding.bottom)
+    }, false, defaultConfig.frameOuterPadding)
+  });
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
+
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+
+    return context.isChanged;
+  }
+
+  function getOptions() {
+    return _data;
+  }
+
+  return {
+    process: process,
+    getOptions: getOptions,
+    description: "Checks control scale options."
   };
 };
 
@@ -18520,13 +19062,158 @@ primitives.orgdiagram.DrawCursorTask = function (getGraphics, createTranfromTask
   };
 };
 
+/* /Controls/OrgDiagram/Tasks/Renders/DrawFrameHighlightTask.js*/
+primitives.orgdiagram.DrawFrameHighlightTask = function (getGraphics, projectItemsToFrameTask,
+  combinedContextsTask,
+  itemTemplateParamsTask,
+  highlightItemTask, cursorItemTask) {
+  var _graphics;
+
+  function process() {
+    var treeItemId = highlightItemTask.getHighlightTreeItem();
+
+    _graphics = getGraphics();
+    _graphics.reset("frameplaceholder", 8/*primitives.common.Layers.Highlight*/);
+
+    if (treeItemId != null) {
+      drawHighlight(treeItemId);
+    }
+
+    return false;
+  }
+
+  function drawHighlight(treeItemId) {
+    var uiHash,
+      positions = projectItemsToFrameTask.getPositions(),
+      position = positions[treeItemId];
+    if(position != null) {
+      var templateParams = itemTemplateParamsTask.getTemplateParams(treeItemId),
+        template = templateParams.template,
+        templateConfig = template.templateConfig,
+        highlightPadding = templateConfig.highlightPadding;
+
+      _graphics.activate("frameplaceholder", 8/*primitives.common.Layers.Highlight*/)
+
+      uiHash = new primitives.common.RenderEventArgs();
+      uiHash.context = combinedContextsTask.getConfig(treeItemId);
+      uiHash.isCursor = (cursorItemTask.getCursorTreeItem() == treeItemId);
+      uiHash.isSelected = true;
+      uiHash.templateName = templateConfig.name;
+
+      var contentPosition = new primitives.common.Rect(0, 0, Math.round(position.width), Math.round(position.height));
+      contentPosition.offset(highlightPadding.left, highlightPadding.top, highlightPadding.right, highlightPadding.bottom);
+
+      _graphics.template(
+        Math.round(position.x)
+        , Math.round(position.y)
+        , Math.round(position.width)
+        , Math.round(position.height)
+        , Math.round(contentPosition.x)
+        , Math.round(contentPosition.y)
+        , Math.round(contentPosition.width)
+        , Math.round(contentPosition.height)
+        , template.dotHighlightTemplate.template()
+        , template.dotHighlightTemplate.getHashCode()
+        , template.dotHighlightTemplate.render
+        , uiHash
+        , { "borderWidth": templateConfig.highlightBorderWidth }
+      );
+    }
+  }
+
+  return {
+    process: process
+  };
+};
+
+/* /Controls/OrgDiagram/Tasks/Renders/DrawFrameItemsTask.js*/
+primitives.orgdiagram.DrawFrameItemsTask = function (getGraphics, applyLayoutChangesTask, projectItemsToFrameTask, itemTemplateParamsTask, minimizedItemsOptionTask) {
+
+  var _graphics;
+
+  function process() {
+    var frameThickness = new primitives.common.Thickness(applyLayoutChangesTask.getFrameThickness());
+
+    _graphics = getGraphics();
+    _graphics.reset("frameplaceholder", 9/*primitives.common.Layers.Marker*/);
+
+    if(!frameThickness.isEmpty()) {
+      drawFrameItems();
+    }
+    return false;
+  }
+
+  function drawFrameItems() {
+    var markers = new primitives.common.PolylinesBuffer(),
+      positions = projectItemsToFrameTask.getPositions(),
+      options = minimizedItemsOptionTask.getOptions(),
+      marker = new primitives.common.Marker(),
+      polyline;
+
+    for (var treeItemId in positions) {
+      if(positions.hasOwnProperty(treeItemId)) {
+        var actualPosition = positions[treeItemId],
+          templateParams = itemTemplateParamsTask.getTemplateParams(treeItemId),
+          templateConfig = templateParams.template.templateConfig,
+          minimizedItemsOptions = minimizedItemsOptionTask.getItemOptions(treeItemId),
+          itemTitleColor = null,
+          itemFillColor = null,
+          minimizedItemShapeType = null,
+          minimizedItemCornerRadius = 0;
+
+        /* use individual item options first */
+        if (minimizedItemsOptions != null) {
+          itemTitleColor = minimizedItemsOptions.itemTitleColor;
+          itemFillColor = minimizedItemsOptions.itemTitleColor;
+          minimizedItemShapeType = minimizedItemsOptions.minimizedItemShapeType;
+        }
+
+        /* use template config & control options next */
+        itemTitleColor = itemTitleColor || templateConfig.minimizedItemBorderColor || "#000080"/*primitives.common.Colors.Navy*/;
+        itemFillColor = itemFillColor || templateConfig.minimizedItemFillColor || "#000080"/*primitives.common.Colors.Navy*/;
+        if (minimizedItemShapeType == null) {
+          minimizedItemShapeType = (templateConfig.minimizedItemShapeType !== null ? templateConfig.minimizedItemShapeType : options.minimizedItemShapeType);
+        }
+        minimizedItemCornerRadius = templateConfig.minimizedItemCornerRadius === null ? templateConfig.minimizedItemSize.width : templateConfig.minimizedItemCornerRadius;
+
+        if (minimizedItemShapeType == null || minimizedItemShapeType == 6/*primitives.common.ShapeType.None*/) {
+          polyline = markers.getPolyline(new primitives.common.PaletteItem({
+            'lineColor': itemTitleColor,
+            'lineWidth': templateConfig.minimizedItemLineWidth,
+            'lineType': templateConfig.minimizedItemLineType,
+            'fillColor': itemFillColor,
+            'opacity': templateConfig.minimizedItemOpacity
+          }));
+          polyline.addSegment(new primitives.common.DotSegment(actualPosition.x, actualPosition.y, actualPosition.width, actualPosition.height, minimizedItemCornerRadius));
+        } else {
+          marker.draw(markers, minimizedItemShapeType, actualPosition,
+            new primitives.common.PaletteItem({
+              'lineColor': itemTitleColor,
+              'lineWidth': templateConfig.minimizedItemLineWidth,
+              'lineType': templateConfig.minimizedItemLineType,
+              'fillColor': itemFillColor,
+              'opacity': templateConfig.minimizedItemOpacity
+            })
+          );
+        }
+      }
+    }
+    _graphics.activate("frameplaceholder", 9/*primitives.common.Layers.Marker*/);
+    _graphics.polylinesBuffer(markers);
+  }
+
+  return {
+    process: process
+  };
+};
+
 /* /Controls/OrgDiagram/Tasks/Renders/DrawHighlightAnnotationTask.js*/
 primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, createTranfromTask, applyLayoutChangesTask, scaleOptionTask,
   combinedContextsTask,
   calloutOptionTask,
   readTemplatesTask,
   alignDiagramTask, centerOnCursorTask,
-  highlightItemTask, cursorItemTask, selectedItemsTask) {
+  highlightItemTask, cursorItemTask, selectedItemsTask, frameSizeTask) {
   var _graphics,
     _transform,
     _calloutShape = new primitives.common.Callout(getGraphics()),
@@ -18553,11 +19240,9 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
       calloutPanelPosition,
       position,
       uiHash,
-      element,
       calloutTemplateName,
       calloutTemplate,
       showCallout = true,
-      style,
       treeItemPosition = alignDiagramTask.getItemPosition(treeItemId),
       actualPosition = treeItemPosition.actualPosition;
 
@@ -18586,9 +19271,14 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
           _transform.transformRect(actualPosition.x, actualPosition.y, actualPosition.width, actualPosition.height, true,
             this, function (x, y, width, height) {
               var snapRect = new primitives.common.Rect(x, y, width, height),
-                snapPoint = new primitives.common.Point(snapRect.horizontalCenter(), snapRect.verticalCenter()),
-                viewPortPosition = getViewPortPosition();
+                snapPoint = new primitives.common.Point(snapRect.centerPoint()),
+                viewPortPosition = getFrameMedianPosition(),
+                projectionPoint = viewPortPosition.getProjectionPoint(snapRect.centerPoint());
 
+              if(projectionPoint == null) {
+                /* snapPoint is inside viewport, no need to project */
+                projectionPoint = snapPoint;
+              }
               if ((treeItemPosition.actualVisibility >= _options.calloutMaximumVisibility && treeItemPosition.actualVisibility != 4/*primitives.common.Visibility.Invisible*/) || !viewPortPosition.overlaps(snapRect)) {
 
                 calloutTemplateName = !primitives.common.isNullOrEmpty(itemConfig.calloutTemplateName) ? itemConfig.calloutTemplateName :
@@ -18598,16 +19288,16 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
 
                 calloutTemplate = readTemplatesTask.getTemplate(calloutTemplateName, readTemplatesTask.DefaultWidgetTemplateName);
 
-                position = getAnnotationPosition(snapPoint, viewPortPosition, calloutTemplate.templateConfig.itemSize);
+                position = getAnnotationPosition(projectionPoint, viewPortPosition, calloutTemplate.templateConfig.itemSize);
 
                 /* position callout div placeholder */
                 calloutPanelPosition = new primitives.common.Rect(position);
-                calloutPanelPosition.addRect(snapPoint.x, snapPoint.y);
+                calloutPanelPosition.addRect(projectionPoint.x, projectionPoint.y);
                 calloutPanelPosition.offset(50);
 
                 /* recalculate geometries */
-                snapPoint.x -= calloutPanelPosition.x;
-                snapPoint.y -= calloutPanelPosition.y;
+                projectionPoint.x -= calloutPanelPosition.x;
+                projectionPoint.y -= calloutPanelPosition.y;
                 position.x -= calloutPanelPosition.x;
                 position.y -= calloutPanelPosition.y;
 
@@ -18619,7 +19309,7 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
                 _graphics.show("calloutplaceholder");
                 panel = _graphics.activate("calloutplaceholder", 15/*primitives.common.Layers.Annotation*/);
                 _graphics.position("calloutplaceholder", calloutPanelPosition.x, calloutPanelPosition.y, calloutPanelPosition.width, calloutPanelPosition.height);
-                element = _graphics.template(
+                _graphics.template(
                   position.x
                   , position.y
                   , position.width
@@ -18643,7 +19333,7 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
                 _calloutShape.pointerWidth = _options.calloutPointerWidth;
                 _calloutShape.borderColor = _options.calloutBorderColor;
                 _calloutShape.fillColor = _options.calloutfillColor;
-                _calloutShape.draw(snapPoint, position);
+                _calloutShape.draw(projectionPoint, position);
               } else {
                 _graphics.hide("calloutplaceholder");
               }
@@ -18659,22 +19349,24 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
     }
   }
 
-  function getViewPortPosition() {
+  function getFrameMedianPosition() {
     var scaleOptions = scaleOptionTask.getOptions(),
       scale = scaleOptions.scale,
       placeholderOffset = new primitives.common.Point(centerOnCursorTask.getPlaceholderOffset()),
-      panelSize = new primitives.common.Rect(alignDiagramTask.getContentSize()),
-      optimalPanelSize = new primitives.common.Size(applyLayoutChangesTask.getOptimalPanelSize());
+      scrollPanelSize = new primitives.common.Size(applyLayoutChangesTask.getScrollPanelSize()),
+      frameThickness = new primitives.common.Thickness(applyLayoutChangesTask.getFrameThickness()),
+      medianThickness = new primitives.common.Thickness(frameSizeTask.getMedian());
 
+    
     placeholderOffset.scale(1.0 / scale);
-    optimalPanelSize.scale(1.0 / scale);
+    frameThickness.scale(1.0 / scale);
+    scrollPanelSize.scale(1.0 / scale);
+    medianThickness.scale(1.0 / scale);
 
-    return new primitives.common.Rect(
-      placeholderOffset.x,
-      placeholderOffset.y,
-      Math.min(optimalPanelSize.width, panelSize.width),
-      Math.min(optimalPanelSize.height, panelSize.height)
-    );
+    var medianRect = new primitives.common.Rect(placeholderOffset.x, placeholderOffset.y, scrollPanelSize.width, scrollPanelSize.height);
+    medianRect.offset(medianThickness);
+
+    return medianRect;
   }
 
   function getAnnotationPosition(snapPoint, panelRect, itemSize) {
@@ -18704,17 +19396,17 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
 
     // If annotation clipped then move it back into view port
     if (result.x < panelRect.x) {
-      result.x = panelRect.x + 5;
+      result.x = panelRect.x + _options.calloutPlacementOffset;
     }
     else if (result.right() > panelRect.right()) {
-      result.x -= (result.right() - panelRect.right() + 5);
+      result.x -= (result.right() - panelRect.right() + _options.calloutPlacementOffset);
     }
 
     if (result.y < panelRect.y) {
-      result.y = panelRect.y + 5;
+      result.y = panelRect.y + _options.calloutPlacementOffset;
     }
     else if (result.bottom() > panelRect.bottom()) {
-      result.y -= (result.bottom() - panelRect.bottom() + 5);
+      result.y -= (result.bottom() - panelRect.bottom() + _options.calloutPlacementOffset);
     }
 
     return result;
@@ -18870,8 +19562,7 @@ primitives.orgdiagram.DrawHighlightTask = function (getGraphics, createTranfromT
   alignDiagramTask, itemTemplateParamsTask,
   highlightItemTask, cursorItemTask, selectedItemsTask) {
   var _graphics,
-    _transform,
-    _levelsOfLabels = [];
+    _transform;
 
   function process() {
     var treeItemId = highlightItemTask.getHighlightTreeItem();
@@ -19382,15 +20073,9 @@ primitives.orgdiagram.DrawMinimizedItemsTask = function (getGraphics, createTran
   }
 
   function drawMinimizedItems() {
-    var treeLevel,
-      uiHash,
-      element,
-      markers = new primitives.common.PolylinesBuffer(),
+    var markers = new primitives.common.PolylinesBuffer(),
       paletteItems = {},
       polyline,
-      index,
-      len,
-      label,
       marker = new primitives.common.Marker(),
       itemTitleColor,
       itemFillColor,
@@ -19631,12 +20316,6 @@ primitives.orgdiagram.DrawTreeItemsTask = function (getGraphics, createTranfromT
   function redrawTreeItems() {
     var uiHash,
       element,
-      polyline,
-      index,
-      len,
-      label,
-      itemTitleColor,
-      itemFillColor,
       cursorItemId = cursorItemTask.getCursorTreeItem(),
       treeItemPosition,
       actualPosition,
@@ -19645,7 +20324,7 @@ primitives.orgdiagram.DrawTreeItemsTask = function (getGraphics, createTranfromT
     for (var treeItemId in _positions) {
       if (_positions.hasOwnProperty(treeItemId)) {
         treeItemPosition = _positions[treeItemId],
-          actualPosition = treeItemPosition.actualPosition;
+        actualPosition = treeItemPosition.actualPosition;
         if (treeItemPosition.actualVisibility == 1/*primitives.common.Visibility.Normal*/) {
           _transform.transformRect(actualPosition.x, actualPosition.y, actualPosition.width, actualPosition.height, true,
             this, function (x, y, width, height) {
@@ -20052,7 +20731,8 @@ primitives.common.LabelAnnotationTemplate = function () {
 /* /Controls/OrgDiagram/Tasks/Templates/ReadTemplatesTask.js*/
 primitives.orgdiagram.ReadTemplatesTask = function (templatesOptionTask, defaultTemplates) {
   var _data = {
-    templates: {}
+    templates: {},
+    itemTemplates: []
   },
     _defaultWidgetTemplateName = "DefaultWidgetTemplate",
     _defaultWidgetLabelAnnotationTemplateName = "DefaultWidgetLabelAnnotationTemplate";
@@ -20065,6 +20745,7 @@ primitives.orgdiagram.ReadTemplatesTask = function (templatesOptionTask, default
 
 
     _data.templates = {};
+    _data.itemTemplates = [];
 
     templateConfig = new primitives.orgdiagram.TemplateConfig();
 
@@ -20075,6 +20756,8 @@ primitives.orgdiagram.ReadTemplatesTask = function (templatesOptionTask, default
       new defaultTemplates.DotHighlightTemplate(options, templateConfig),
       new defaultTemplates.CursorTemplate(options, templateConfig)
     );
+
+    _data.itemTemplates.push(_data.templates[_defaultWidgetTemplateName]);
 
     templateConfig = getLabelAnnotationTemplateConfig(_defaultWidgetLabelAnnotationTemplateName);
 
@@ -20102,6 +20785,8 @@ primitives.orgdiagram.ReadTemplatesTask = function (templatesOptionTask, default
           new defaultTemplates.CursorTemplate(options, templateConfig) :
           new defaultTemplates.UserTemplate(options, templateConfig.cursorTemplate, options.onCursorRender)
       );
+
+      _data.itemTemplates.push(_data.templates[templateConfig.name]);
     }
 
     return true;
@@ -20122,9 +20807,14 @@ primitives.orgdiagram.ReadTemplatesTask = function (templatesOptionTask, default
     return result;
   }
 
+  function getItemTemplates() {
+    return _data.itemTemplates;
+  }
+
   return {
     process: process,
     getTemplate: getTemplate,
+    getItemTemplates: getItemTemplates,
     DefaultWidgetTemplateName: _defaultWidgetTemplateName,
     DefaultWidgetLabelAnnotationTemplateName: _defaultWidgetLabelAnnotationTemplateName
   };
@@ -20417,7 +21107,7 @@ primitives.orgdiagram.NormalVisibilityItemsByConnectorAnnotationTask = function 
 };
 
 /* /Controls/OrgDiagram/Tasks/Transformations/Selection/SelectedItemsTask.js*/
-primitives.orgdiagram.SelectedItemsTask = function (selectedItemsOptionTask) {
+primitives.orgdiagram.SelectedItemsTask = function (selectedItemsOptionTask, itemsOptionTask) {
   var _data = {
     items: []
   },
@@ -20448,8 +21138,10 @@ primitives.orgdiagram.SelectedItemsTask = function (selectedItemsOptionTask) {
     for (index = 0, len = selectedItems.length; index < len; index += 1) {
       treeItemId = selectedItems[index];
       if (treeItemId != null && !processed.hasOwnProperty(treeItemId)) {
-        result.push(treeItemId);
         processed[treeItemId] = true;
+        if(itemsOptionTask.getConfig(treeItemId) != null) {
+          result.push(treeItemId);
+        }
       }
     }
 
@@ -23301,6 +23993,9 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     mouse: null,
     layout: {
       element: element,
+      controlPanel: null,
+      frameMousePanel: null,
+      framePlaceholder: null,
       scrollPanel: null,
       mousePanel: null,
       placeholder: null,
@@ -23313,7 +24008,6 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     _scrollTo,
     _dragImage,
     _dragTimer,
-    _scale,
     _debug = false,
     _timer = null;
 
@@ -23399,8 +24093,6 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     /* fix pixel alignment */
     var pixelAlignmentFix = primitives.common.getFixOfPixelALignment(_data.layout.element);
     primitives.common.JsonML.applyStyles(_data.layout.scrollPanel, {
-      "top": "0px",
-      "left": "0px",
       "marginBottom": "0px",
       "marginRight": "0px",
       "marginLeft": pixelAlignmentFix.width + "px", /* fixes div pixel alignment */
@@ -23480,7 +24172,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 
   function getLayout() {
     var layout = _data.layout,
-      scrollPanelSize = primitives.common.getInnerSize(layout.element),
+      scrollPanelSize = primitives.common.getInnerSize(layout.controlPanel),
       placeholderOffset = new primitives.common.Point(layout.scrollPanel.scrollLeft, layout.scrollPanel.scrollTop);
     return {
       forceCenterOnCursor: layout.forceCenterOnCursor,
@@ -23490,104 +24182,153 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
   }
 
   function setLayout(layoutOptions) {
-    var layout = _data.layout;
+    var layout = _data.layout,
+      pixelAlignmentFix = primitives.common.getFixOfPixelALignment(layout.element);
 
-    /* set size of panel with content */
-    var mousePanelSize = new primitives.common.Size(layoutOptions.contentSize);
-    mousePanelSize.scale(1 * layoutOptions.scale);
-    primitives.common.JsonML.applyStyles(layout.mousePanel, mousePanelSize.getCSS());
+    primitives.common.JsonML.applyStyles(layout.controlPanel, {
+      "marginLeft": pixelAlignmentFix.width + "px", /* fixes div pixel alignment */
+      "marginTop": pixelAlignmentFix.height + "px"
+    });
 
-    /* set size of panel with content */
-    primitives.common.JsonML.applyStyles(layout.placeholder, layoutOptions.contentSize.getCSS());
+    /* set scaled content panel for tracking mouse events without scaling */
+    primitives.common.JsonML.applyStyles(layout.mousePanel, layoutOptions.scaledContentSize.getCSS());
 
-    /* set CSS scale of content */
+    /* set size and scale of content panel */
     var scaletext = "scale(" + layoutOptions.scale + "," + layoutOptions.scale + ")";
-
-    primitives.common.JsonML.applyStyles(layout.placeholder, {
+    var scaleProperties = {
       "transform-origin": "0 0",
       "transform": scaletext,
       "-ms-transform": scaletext, /* IE 9 */
       "-webkit-transform": scaletext, /* Safari and Chrome */
       "-o-transform": scaletext, /* Opera */
       "-moz-transform": scaletext /* Firefox */
-    });
+    };
+    primitives.common.JsonML.applyStyles(layout.placeholder, primitives.common.mergeObjects(scaleProperties, layoutOptions.contentSize.getCSS()));
 
-    var scrollPanelSize = new primitives.common.Size(layoutOptions.scrollPanelSize);
     if (layoutOptions.autoSize) {
       /* resize element to fit placeholder if control in autosize mode */
-      scrollPanelSize = new primitives.common.Size(mousePanelSize.width + 25, mousePanelSize.height + 25);
-      scrollPanelSize.cropBySize(layoutOptions.autoSizeMaximum);
-      scrollPanelSize.addSize(layoutOptions.autoSizeMinimum);//ignore jslint
-      primitives.common.JsonML.applyStyles(layout.element, scrollPanelSize.getCSS());
+      primitives.common.JsonML.applyStyles(layout.element, layoutOptions.controlSize.getCSS());
     }
 
-    /* set scroll of content */
-    primitives.common.JsonML.applyStyles(layout.scrollPanel, scrollPanelSize.getCSS());
+    /* set frame panel scale and size */
+    primitives.common.JsonML.applyStyles(layout.framePlaceholder, primitives.common.mergeObjects(scaleProperties, layoutOptions.framePlaceholderSize.getCSS()));
 
-    return scrollPanelSize;
+    /* set mouse frame panel size  */
+    primitives.common.JsonML.applyStyles(layout.frameMousePanel, layoutOptions.controlSize.getCSS());
+
+    /* set scroll panel position */
+    primitives.common.JsonML.applyStyles(layout.scrollPanel, primitives.common.mergeObjects({
+        left: layoutOptions.frameThickness.left + "px",
+        top: layoutOptions.frameThickness.top + "px"
+      },
+      layoutOptions.viewportSize.getCSS())
+    );
   }
 
   function createLayout(layout, name) {
-    var elementSize = primitives.common.getInnerSize(layout.element),
-      scrollPanelRect = new primitives.common.Rect(0, 0, elementSize.width, elementSize.height),
-      placeholderRect = new primitives.common.Rect(scrollPanelRect),
+    var viewportSize = primitives.common.getInnerSize(layout.element),
+      viewportRect = new primitives.common.Rect(0, 0, viewportSize.width, viewportSize.height),
       pixelAlignmentFix = primitives.common.getFixOfPixelALignment(element);
 
 
     primitives.common.JsonML.appendDOM(layout.element, primitives.common.JsonML.toHTML(
-      ["div", /* scrollPanel - root scroll panel */
+      ["div", /* root control panel */
         {
           "tabindex": 0,
           "style": {
             "position": "relative",
-            "overflow": "auto",
-            "-webkit-overflow-scrolling": "touch",
+            "overflow": "hidden",
             "top": "0px",
             "left": "0px",
-            "width": scrollPanelRect.width + "px",
-            "height": scrollPanelRect.height + "px",
+            "width": "100%",
+            "height": "100%",
             "padding": "0px",
             "marginBottom": "0px",
             "marginRight": "0px",
             "marginLeft": pixelAlignmentFix.width + "px", /* fixes div pixel alignment */
             "marginTop": pixelAlignmentFix.height + "px"
           },
+          "name": "controlPanel",
           "class": name,
-          "$": function (element) { layout.scrollPanel = element; }
+          "$": function (element) { layout.controlPanel = element; }
         },
-        ["div", /* mousePanel - mouse tracking events panel */
+        ["div", /* frameMousePanel - frame mouse tracking events panel */
           {
             "style": primitives.common.mergeObjects({
               position: "absolute",
               overflow: "hidden"
             },
-              placeholderRect.getCSS()),
+            viewportRect.getCSS()),
+              "name": "frameMousePanel",
             "class": name,
-            "$": function (element) { layout.mousePanel = element; }
+            "$": function (element) { layout.frameMousePanel = element; }
           },
-          ["div", /* placeholder - contents scalable panel */
+          ["div", /* frameplaceholder - contents scalable panel */
             {
               "style": primitives.common.mergeObjects({
                 position: "absolute",
                 overflow: "hidden"
               },
-                placeholderRect.getCSS()),
-              "class": ["placeholder", name],
-              "$": function (element) { layout.placeholder = element; }
+              viewportRect.getCSS()),
+              "name": "framePlaceholder",
+              "class": ["frameplaceholder", name],
+              "$": function (element) { layout.framePlaceholder = element; }
+            }
+          ]
+        ],
+        ["div", /* scrollPanel - root scroll panel */
+          {
+            "style": primitives.common.mergeObjects({
+              position: "absolute",
+              "overflow": "auto",
+              "-webkit-overflow-scrolling": "touch",
+              "top": "0px",
+              "left": "0px",
+              "width": viewportRect.width + "px",
+              "height": viewportRect.height + "px"
             },
-            ["div", /* calloutPlaceholder - callout panel */
+            viewportRect.getCSS()),
+            "name": "scrollPanel",
+            "class": ["bp-scrollpanel", name],
+            "$": function (element) { layout.scrollPanel = element; }
+          },
+          ["div", /* mousePanel - mouse tracking events panel */
+            {
+              "style": primitives.common.mergeObjects({
+                position: "absolute",
+                overflow: "visible"
+              },
+              viewportRect.getCSS()),
+                "name": "mousePanel",
+                "class": name,
+                "$": function (element) { layout.mousePanel = element; }
+            },
+            ["div", /* placeholder - contents scalable panel */
               {
-                "style": {
+                "style": primitives.common.mergeObjects({
                   position: "absolute",
-                  overflow: "visible",
-                  top: "0px",
-                  left: "0px",
-                  width: "0px",
-                  height: "0px"
+                  overflow: "hidden"
                 },
-                "class": ["calloutplaceholder", name],
-                "$": function (element) { layout.calloutPlaceholder = element; }
-              }
+                viewportRect.getCSS()),
+                  "name": "placeholder",
+                  "class": ["placeholder", name],
+                  "$": function (element) { layout.placeholder = element; }
+              },
+              ["div", /* calloutPlaceholder - callout panel */
+                {
+                  "style": {
+                    position: "absolute",
+                    overflow: "visible",
+                    top: "0px",
+                    left: "0px",
+                    width: "0px",
+                    height: "0px"
+                  },
+                  "name": "calloutPlaceholder",
+                  "class": ["calloutplaceholder", name],
+                  "$": function (element) { layout.calloutPlaceholder = element; }
+                }
+              ]
             ]
           ]
         ]
@@ -23595,11 +24336,12 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     );
   }
 
-  function cleanLayout(layout) {
-    if (_data.layout.scrollPanel != null) {
-      var parent = _data.layout.scrollPanel.parentNode;
+  function cleanLayout() {
+    var controlPanel = _data.layout.controlPanel;
+    if (controlPanel != null) {
+      var parent = controlPanel.parentNode;
       if (parent != null) {
-        parent.removeChild(_data.layout.scrollPanel);
+        parent.removeChild(controlPanel);
       }
     }
   }
@@ -23609,9 +24351,11 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     layout.mousePanel.addEventListener('click', onMouseClick);
     layout.mousePanel.addEventListener('dblclick', onMouseDblClick);
     layout.mousePanel.addEventListener('change', onCheckboxChange);
-
-    layout.scrollPanel.addEventListener('keydown', onKeyDown);
+    
+    layout.element.addEventListener('keydown', onKeyDown);
+    
     layout.scrollPanel.addEventListener('scroll', onScroll);
+
     if (_data.options.enablePanning && primitives.common.isChrome()) {
       layout.scrollPanel.draggable = true;
       layout.scrollPanel.addEventListener('dragstart', onDragStart);
@@ -23619,6 +24363,9 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
       layout.scrollPanel.addEventListener('dragend', onDragScroll);
       layout.scrollPanel.addEventListener('dragover', onDragOver);
     }
+
+    layout.frameMousePanel.addEventListener('mousemove', onFrameMouseMove);
+    layout.frameMousePanel.addEventListener('click', onFrameMouseClick);
   }
 
   function unbind(layout) {
@@ -23628,14 +24375,57 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
       layout.mousePanel.removeEventListener("dblclick", onMouseDblClick);
       layout.mousePanel.removeEventListener("change", onCheckboxChange);
     }
+    if(layout.element != null) {
+      layout.element.removeEventListener("keydown", onKeyDown);
+    }
     if (layout.scrollPanel != null) {
-      layout.scrollPanel.removeEventListener("keydown", onKeyDown);
       layout.scrollPanel.removeEventListener("scroll", onScroll);
-
       layout.scrollPanel.removeEventListener('dragstart', onDragStart);
       layout.scrollPanel.removeEventListener('drag', onDragScroll);
       layout.scrollPanel.removeEventListener('dragend', onDragScroll);
       layout.scrollPanel.removeEventListener('dragover', onDragOver);
+    }
+
+    if(layout.frameMousePanel != null) {
+      layout.frameMousePanel.removeEventListener('mousemove', onFrameMouseMove);
+      layout.frameMousePanel.removeEventListener('click', onFrameMouseClick);
+    }
+  }
+
+  function onFrameMouseMove(event) {
+    var placeholderOffset = primitives.common.getElementOffset(_data.layout.frameMousePanel),
+      x = event.pageX - placeholderOffset.left,
+      y = event.pageY - placeholderOffset.top,
+      projectItemsToFrameTask = _data.tasks.getTask("ProjectItemsToFrameTask"),
+      highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
+      itemId;
+
+    if (highlightItemOptionTask.hasHighlightEnabled()) {
+      itemId = projectItemsToFrameTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius());
+      setHighlightItem(event, itemId);
+    }
+  }
+
+  function onFrameMouseClick(event) {
+    var placeholderOffset = primitives.common.getElementOffset(_data.layout.frameMousePanel),
+      x = event.pageX - placeholderOffset.left,
+      y = event.pageY - placeholderOffset.top,
+      projectItemsToFrameTask = _data.tasks.getTask("ProjectItemsToFrameTask"),
+      cursorItemOptionTask = _data.tasks.getTask("CursorItemOptionTask"),
+      highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
+      newCursorItemId = projectItemsToFrameTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius()),
+      target,
+      eventArgs;
+    target = event.target;
+    if (newCursorItemId !== null) {
+      eventArgs = getEventArgs(null, newCursorItemId);
+      trigger("onMouseClick", event, eventArgs);
+      if (!eventArgs.cancel) {
+        if (cursorItemOptionTask.hasCursorEnabled()) {
+          setCursorItem(event, newCursorItemId);
+          _data.layout.element.focus();
+        }
+      }
     }
   }
 
@@ -23690,14 +24480,11 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
       createTransformTask = _data.tasks.getTask("CreateTransformTask"),
       cursorItemOptionTask = _data.tasks.getTask("CursorItemOptionTask"),
       highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
-      item,
       newCursorItemId = createTransformTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius()),
       target,
       button,
       buttonname,
-      eventArgs,
-      position,
-      selectedItems;
+      eventArgs;
     target = event.target;
     if (newCursorItemId !== null) {
       if (primitives.common.hasClass(target, _data.name + "button") || primitives.common.hasClass(target.parentNode, _data.name + "button")) {
@@ -23716,7 +24503,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
         if (!eventArgs.cancel) {
           if (cursorItemOptionTask.hasCursorEnabled()) {
             setCursorItem(event, newCursorItemId);
-            _data.layout.scrollPanel.focus();
+            _data.layout.element.focus();
           }
         }
       }
@@ -23766,7 +24553,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
           if (cursorItemOptionTask.hasCursorEnabled()) {
             setCursorItem(event, navigationItem);
             event.preventDefault();
-            layout.scrollPanel.focus();
+            layout.element.focus();
           }
           break;
         case 40: /*Down*/
@@ -23803,7 +24590,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
 
           }
         }
-        layout.scrollPanel.focus();
+        layout.element.focus();
       }
     }
   }
@@ -24017,12 +24804,6 @@ primitives.orgdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 
   // Options
   tasks.addTask('OptionsTask', ['options'], primitives.orgdiagram.OptionsTask, "#000000"/*primitives.common.Colors.Black*/);
-  tasks.addTask('LayoutOptionsTask', ['getLayout', 'OptionsTask'], primitives.orgdiagram.LayoutOptionsTask, "#000000"/*primitives.common.Colors.Black*/);
-
-  // Layout
-  tasks.addTask('CurrentControlSizeTask', ['LayoutOptionsTask', 'ItemsSizesOptionTask'], primitives.orgdiagram.CurrentControlSizeTask, "#000000"/*primitives.common.Colors.Black*/);
-  tasks.addTask('CurrentScrollPositionTask', ['LayoutOptionsTask'], primitives.orgdiagram.CurrentScrollPositionTask, "#000000"/*primitives.common.Colors.Black*/);
-
   tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
   tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
   tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], primitives.orgdiagram.ItemsOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
@@ -24050,6 +24831,7 @@ primitives.orgdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
   tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], primitives.orgdiagram.BackgroundAnnotationOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
   tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ScaleOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('FrameOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.FrameOptionTask, "#000080"/*primitives.common.Colors.Navy*/);
 
   // Transformations
   tasks.addTask('CombinedContextsTask', ['ItemsContentOptionTask'], primitives.orgdiagram.CombinedContextsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
@@ -24075,7 +24857,7 @@ primitives.orgdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 
   tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
   tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'VisualTreeTask'], primitives.orgdiagram.CursorNeighboursTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-  tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask', 'ItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
   tasks.addTask('SelectionPathItemsTask', ['VisualTreeTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], primitives.orgdiagram.SelectionPathItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
   tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
@@ -24099,6 +24881,12 @@ primitives.orgdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
     'NormalVisibilityItemsByForegroundConnectorAnnotationTask',
     'NormalVisibilityItemsByBackgroundConnectorAnnotationTask'], primitives.orgdiagram.CombinedNormalVisibilityItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
+  // Layout
+  tasks.addTask('FrameSizeTask', ['FrameOptionTask', 'ReadTemplatesTask', 'ScaleOptionTask'], primitives.orgdiagram.FrameSizeTask, "#000080"/*primitives.common.Colors.Navy*/);
+  tasks.addTask('LayoutOptionsTask', ['getLayout', 'OptionsTask'], primitives.orgdiagram.LayoutOptionsTask, "#000000"/*primitives.common.Colors.Black*/);
+  tasks.addTask('CurrentControlSizeTask', ['LayoutOptionsTask', 'ItemsSizesOptionTask', 'FrameSizeTask'], primitives.orgdiagram.CurrentControlSizeTask, "#000000"/*primitives.common.Colors.Black*/);
+  tasks.addTask('CurrentScrollPositionTask', ['LayoutOptionsTask'], primitives.orgdiagram.CurrentScrollPositionTask, "#000000"/*primitives.common.Colors.Black*/);
+
   tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'VisualTreeOptionTask',
     'VisualTreeTask', 'VisualTreeLevelsTask',
     'ItemTemplateParamsTask',
@@ -24106,14 +24894,19 @@ primitives.orgdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 
   tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], primitives.orgdiagram.AlignDiagramTask, "#ff0000"/*primitives.common.Colors.Red*/);
   tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.CreateTransformTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-  tasks.addTask('CenterOnCursorTask', ['LayoutOptionsTask', 'CurrentControlSizeTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], primitives.orgdiagram.CenterOnCursorTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
   // Managers
   tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'null'], primitives.orgdiagram.PaletteManagerTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
   // Apply Layout Changes
-  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.ApplyLayoutChangesTask, "#008000"/*primitives.common.Colors.Green*/);
-
+  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask', 'FrameSizeTask'], primitives.orgdiagram.ApplyLayoutChangesTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('CenterOnCursorTask', ['LayoutOptionsTask', 'ApplyLayoutChangesTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], primitives.orgdiagram.CenterOnCursorTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+  tasks.addTask('ProjectItemsToFrameTask', ['CreateTransformTask', 'FrameSizeTask',
+    'ApplyLayoutChangesTask', 'ScaleOptionTask',
+    'AlignDiagramTask', 'CenterOnCursorTask',
+    'ItemTemplateParamsTask',
+    'SelectedItemsTask'], primitives.orgdiagram.ProjectItemsToFrameTask, "#008000"/*primitives.common.Colors.Green*/);
+  
   // Renders
   tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'VisualTreeTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawBackgroundAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
 
@@ -24127,7 +24920,7 @@ primitives.orgdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 
   tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawCursorTask, "#008000"/*primitives.common.Colors.Green*/);
   tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightTask, "#008000"/*primitives.common.Colors.Green*/);
-  tasks.addTask('DrawHighlightAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawHighlightAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'FrameSizeTask'], primitives.orgdiagram.DrawHighlightAnnotationTask, "#008000"/*primitives.common.Colors.Green*/);
 
   tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask',
     'ItemsSizesOptionTask',
@@ -24141,6 +24934,9 @@ primitives.orgdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
   tasks.addTask('DrawMinimizedItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'MinimizedItemsOptionTask', 'ItemTemplateParamsTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawMinimizedItemsTask, "#008000"/*primitives.common.Colors.Green*/);
   tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask'], primitives.orgdiagram.DrawConnectorsTask, "#008000"/*primitives.common.Colors.Green*/);
   tasks.addTask('DrawItemLabelsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LabelsOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawItemLabelsTask, "#008000"/*primitives.common.Colors.Green*/);
+
+  tasks.addTask('DrawFrameItemsTask', ['graphics', 'ApplyLayoutChangesTask', 'ProjectItemsToFrameTask', 'ItemTemplateParamsTask', 'MinimizedItemsOptionTask'], primitives.orgdiagram.DrawFrameItemsTask, "#008000"/*primitives.common.Colors.Green*/);
+  tasks.addTask('DrawFrameHighlightTask', ['graphics', 'ProjectItemsToFrameTask', 'CombinedContextsTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask'], primitives.orgdiagram.DrawFrameHighlightTask, "#008000"/*primitives.common.Colors.Green*/);
 
   return tasks;
 };
@@ -32058,7 +32854,7 @@ primitives.pdf.famdiagram.Plugin = function (options) {
     tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'null'], primitives.orgdiagram.HighlightItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
     tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'null'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-    tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask', 'ItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
     tasks.addTask('CombinedNormalVisibilityItemsTask', ['OptionsTask'], primitives.pdf.orgdiagram.DummyCombinedNormalVisibilityItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
     tasks.addTask('CurrentControlSizeTask', ['OptionsTask'], primitives.pdf.orgdiagram.DummyCurrentControlSizeTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
@@ -32522,7 +33318,7 @@ primitives.pdf.orgdiagram.Plugin = function (options) {
     tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'null'], primitives.orgdiagram.HighlightItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
     tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'null'], primitives.orgdiagram.CursorItemTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
-    tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
+    tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask', 'ItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
     tasks.addTask('CombinedNormalVisibilityItemsTask', ['OptionsTask'], primitives.pdf.orgdiagram.DummyCombinedNormalVisibilityItemsTask, "#00ffff"/*primitives.common.Colors.Cyan*/);
 
     tasks.addTask('CurrentControlSizeTask', ['OptionsTask'], primitives.pdf.orgdiagram.DummyCurrentControlSizeTask, "#00ffff"/*primitives.common.Colors.Cyan*/);

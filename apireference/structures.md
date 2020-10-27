@@ -210,6 +210,16 @@ Returns rectangle location and size in form of CSS style object.
 | --- | --- | --- | --- | 
  | `units` | string | `"px"` | The string name of units. | 
 
+ `getProjectionPoint(point)` 
+
+Find intersection point between rectangle's permiter and line connecting the given point and center of the rectangle
+
+ Returns: `Point` - returns point or null if point is inside rectangle.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `point` | Point | `` | Point to project | 
+
  `horizontalCenter()` 
 
 Horizontal center
@@ -394,15 +404,15 @@ Size object defines width and height.
 
 ### Functions
 
- `addSize(size)` 
+ `addThickness(thickness)` 
 
-Extends the current size by the other size.
+Expands the current size by the thickness object.
 
  Returns: `Size` - returns reference to the current size object
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `size` | Size | `` | The size to use as extension. | 
+ | `thickness` | Thickness | `` | The thickness to use for expansion. | 
 
  `cropBySize(size)` 
 
@@ -431,6 +441,26 @@ Inverts size dimensions
  Returns: `Size` - returns reference to the current size.
 
 
+ `maxSize(size)` 
+
+Extends the current size by the other size.
+
+ Returns: `Size` - returns reference to the current size object
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `size` | Size | `` | The size to use as extension. | 
+
+ `removeThickness(thickness)` 
+
+Shrinks the current size by the thickness object.
+
+ Returns: `Size` - returns reference to the current size object
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `thickness` | Thickness | `` | The thickness to use for contraction. | 
+
  `scale(scale)` 
 
 Scales the size by the specified value
@@ -440,6 +470,13 @@ Scales the size by the specified value
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `scale` | number | `` | scale | 
+
+ `space()` 
+
+Returns square size
+
+ Returns: `number` - returns square size.
+
 
  `validate()` 
 
@@ -469,12 +506,22 @@ Class describes the thickness of a frame around rectangle.
 ### Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `bottom` |  | `bottom` | The thickness for the bottom side of the rectangle. | 
- | `left` |  | `left` | The thickness for the left side of the rectangle. | 
- | `right` |  | `right` | The thickness for the right side of the rectangle. | 
- | `top` |  | `top` | The thickness for the upper side of the rectangle. | 
+ | `bottom` |  | `0` | The thickness for the bottom side of the rectangle. | 
+ | `left` |  | `0` | The thickness for the left side of the rectangle. | 
+ | `right` |  | `0` | The thickness for the right side of the rectangle. | 
+ | `top` |  | `0` | The thickness for the upper side of the rectangle. | 
 
 ### Functions
+
+ `addThickness(arg0,  arg1,  arg2,  arg3)` 
+
+Add thickness.
+
+ Returns: `Thickness` - returns reference to the current thickness object
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `thickness` | Thickness | `` | The thickness to add. | 
 
  `isEmpty()` 
 
@@ -482,6 +529,26 @@ Checks object is empty
 
  Returns: `boolean` - returns true if object has no thickness defined for any of its sides
 
+
+ `maxThickness(thickness)` 
+
+Maximum thickness.
+
+ Returns: `Thickness` - returns reference to the current thickness object
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `thickness` | Thickness | `` | The thickness to compaire with. | 
+
+ `scale(scale)` 
+
+Scales the thickness by the specified value
+
+ Returns: `Thickness` - returns reference to the current size.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `scale` | number | `` | scale | 
 
  `toString(units)` 
 

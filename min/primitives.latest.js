@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagrams v5.9.0
+ * @preserve Basic Primitives Diagrams v5.9.1
  * Copyright (c) 2013 - 2020 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -35,7 +35,7 @@
 
 var primitives = {
   common: {
-    version: "5.9.0"
+    version: "5.9.1"
   },
   orgdiagram: {},
   famdiagram: {},
@@ -16943,7 +16943,7 @@ primitives.orgdiagram.ApplyLayoutChangesTask = function (getGraphics, setLayout,
     framePlaceholderSize.scale(1 / scale);
 
     graphics.resize("placeholder", contentSize.width, contentSize.height);
-    graphics.resize("framePlaceholder", framePlaceholderSize.width, framePlaceholderSize.height );
+    graphics.resize("frameplaceholder", framePlaceholderSize.width, framePlaceholderSize.height );
 
     setLayout({
       scale: scale,

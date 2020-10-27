@@ -45,7 +45,7 @@ primitives.orgdiagram.ApplyLayoutChangesTask = function (getGraphics, setLayout,
     framePlaceholderSize.scale(1 / scale);
 
     graphics.resize("placeholder", contentSize.width, contentSize.height);
-    graphics.resize("framePlaceholder", framePlaceholderSize.width, framePlaceholderSize.height );
+    graphics.resize("frameplaceholder", framePlaceholderSize.width, framePlaceholderSize.height );
 
     setLayout({
       scale: scale,

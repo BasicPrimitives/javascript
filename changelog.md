@@ -1,3 +1,5 @@
+#### Version 5.9.1
+* Fixed frame placeholdder size
 #### Version 5.9.0
 * Add `showFrame`, `fameInnerPadding`, `frameOuterPadding` properties to `primitives.orgdiagram.Config` & `primitives.famdiagram.Config`
 * Modified callout annotation palacement for minimized nodes placed outside view port.

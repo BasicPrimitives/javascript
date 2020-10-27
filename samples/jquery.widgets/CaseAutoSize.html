@@ -18,7 +18,8 @@
       "640*480": new primitives.common.Size(640, 480),
       "800*600": new primitives.common.Size(800, 600),
       "1024*768": new primitives.common.Size(1024, 768),
-      "1280*1024": new primitives.common.Size(1280, 1024)
+      "1280*1024": new primitives.common.Size(1280, 1024),
+      "Unlimited": new primitives.common.Size(100000, 100000)
     }
 
     jQuery(document).ready(function () {
@@ -36,8 +37,10 @@
       /* Minimum Auto Size */
       var autoSizeMinimums = jQuery("#autoSizeMinimum");
       for (var key in sizes) {
-        var value = sizes[key];
-        autoSizeMinimums.append(jQuery("<label><input name='autoSizeMinimum' type='radio' value='" + key + "' " + (key == "640*480" ? "checked" : "") + " />" + key + "</label>"));
+        if(key != "Unlimited") {
+          var value = sizes[key];
+          autoSizeMinimums.append(jQuery("<label><input name='autoSizeMinimum' type='radio' value='" + key + "' " + (key == "640*480" ? "checked" : "") + " />" + key + "</label>"));
+        }
       };
 
       jQuery("input:radio[name=autoSizeMinimum]").change(function () {
@@ -52,6 +55,10 @@
       };
 
       jQuery("input:radio[name=autoSizeMaximum]").change(function () {
+        Update(primitives.common.UpdateMode.Refresh);
+      });
+
+      jQuery("input:radio[name=showFrame]").change(function () {
         Update(primitives.common.UpdateMode.Refresh);
       });
 
@@ -93,6 +100,7 @@
       options.pageFitMode = parseInt(jQuery("input:radio[name=pageFitMode]:checked").val(), 10);
       options.autoSizeMinimum = sizes[jQuery("input:radio[name=autoSizeMinimum]:checked").val()];
       options.autoSizeMaximum = sizes[jQuery("input:radio[name=autoSizeMaximum]:checked").val()];
+      options.showFrame = (parseInt(jQuery("input:radio[name=showFrame]:checked").val()) == 1 ? true : false);
       jQuery("#diagram").orgDiagram(options);
     });
 
@@ -100,10 +108,12 @@
       var pageFitMode = parseInt(jQuery("input:radio[name=pageFitMode]:checked").val(), 10);
       var autoSizeMinimum = sizes[jQuery("input:radio[name=autoSizeMinimum]:checked").val()];
       var autoSizeMaximum = sizes[jQuery("input:radio[name=autoSizeMaximum]:checked").val()];
+      var showFrame = (parseInt(jQuery("input:radio[name=showFrame]:checked").val()) == 1 ? true : false);
       jQuery("#diagram").orgDiagram("option", {
         pageFitMode: pageFitMode,
         autoSizeMinimum: autoSizeMinimum,
-        autoSizeMaximum: autoSizeMaximum
+        autoSizeMaximum: autoSizeMaximum,
+        showFrame: showFrame
       });
       jQuery("#diagram").orgDiagram("update", updateMode);
     }
@@ -114,6 +124,9 @@
   <p id="pageFitMode">Page Fit Mode: </p>
   <p id="autoSizeMinimum">Minimum Auto Size: </p>
   <p id="autoSizeMaximum">Maximum Auto Size: </p>
+	Show selected items on the control's frame: &nbsp;
+	<label><input name='showFrame' type='radio' value="1" />Yes</label>
+	<label><input name='showFrame' type='radio' value="0" checked=""/>No</label>
   <div id="diagram" style="border-style: dotted; border-width: 1px;"></div>
 </body>
 

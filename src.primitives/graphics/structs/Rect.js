@@ -458,3 +458,21 @@ primitives.common.Rect.prototype.validate = function () {
 primitives.common.Rect.prototype.equalTo = function (rect) {
   return this.x == rect.x && this.y == rect.y && this.width == rect.width && this.height == rect.height;
 };
+
+/**
+ * Find intersection point between rectangle's permiter and line connecting the given point and center of the rectangle
+ * 
+ * @param {Point} point Point to project
+ * @returns {Point} Returns point or null if point is inside rectangle.
+ */
+primitives.common.Rect.prototype.getProjectionPoint = function (point) {
+  var result = null;
+  if(!this.contains(point)) {
+    var vector = new primitives.common.Vector(this.centerPoint(), point);
+    this.loopEdges(function(edge) {
+      result = vector.getIntersectionPoint(edge, true, 1.0);
+      return (result != null);
+    });
+  }
+  return result;
+};

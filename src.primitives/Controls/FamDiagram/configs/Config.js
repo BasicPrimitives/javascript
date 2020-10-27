@@ -310,6 +310,32 @@ primitives.famdiagram.Config = function (name) {
    */
   this.neighboursSelectionMode = primitives.common.NeighboursSelectionMode.ParentsAndChildren;
 
+
+  /**
+   * Sets selected items frame visibility. If selected item is outside of the diagram's area visible to the end user,
+   * control displays that item in the form of the marker on frame around the diagram.
+   * 
+   * @group Frame
+   * @type {boolean}
+   */
+  this.showFrame = false;
+
+  /**
+   * Frame inner padding. Adds extra padding around markers on the inner side of the frame.
+   * 
+   * @group Frame
+   * @type {Thickness}
+   */
+  this.frameInnerPadding = new primitives.common.Thickness(2, 2, 2, 2);
+
+  /**
+   * Frame outer padding. Adds extra padding around markers on the outer side of the frame.
+   * 
+   * @group Frame
+   * @type {Thickness}
+   */
+  this.frameOuterPadding = new primitives.common.Thickness(2, 2, 2, 2);
+
   /**
    * Collection of named templates used to define content for nodes, cursor and highlight.
    * By default control provides templates for all types of visual elements.

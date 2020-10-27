@@ -115,8 +115,12 @@
 
         /* Graphics */
         graphicsType: primitives.common.GraphicsType.SVG,
+        scale: 1.0,
 
-        scale: 1.0
+        /* Frame */
+        showFrame: true,
+        frameInnerPadding: 4,
+        frameOuterPadding: 4
       },
         /* On property change event handler */
         function () {
@@ -455,9 +459,10 @@
     <div id="westpanel" style="padding: 5px; margin: 5px; font: normal 12px verdana, areal;">
       <h2>Cross Functional Team</h2>
       <p>This Organization Chart shows members of cross functional team "General Audit" and their mutual positions in
-        organization over general view of hierarchy.</p>
+        the organization over general view of hierarchy.</p>
       <p>Organization Chart provides options to show or hide items between root and cross team group members.</p>
       <p>Chart demonstrates rotation of chart to the left side and labels options for minimized items as well.</p>
+      <p>At the bottom you should see markers of selected nodes placed outside view area visible to end user.</p>
     </div>
   </div>
   <div id="centerpanel"

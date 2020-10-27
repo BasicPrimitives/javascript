@@ -1,6 +1,7 @@
 ﻿primitives.orgdiagram.ReadTemplatesTask = function (templatesOptionTask, defaultTemplates) {
   var _data = {
-    templates: {}
+    templates: {},
+    itemTemplates: []
   },
     _defaultWidgetTemplateName = "DefaultWidgetTemplate",
     _defaultWidgetLabelAnnotationTemplateName = "DefaultWidgetLabelAnnotationTemplate";
@@ -13,6 +14,7 @@
 
 
     _data.templates = {};
+    _data.itemTemplates = [];
 
     templateConfig = new primitives.orgdiagram.TemplateConfig();
 
@@ -23,6 +25,8 @@
       new defaultTemplates.DotHighlightTemplate(options, templateConfig),
       new defaultTemplates.CursorTemplate(options, templateConfig)
     );
+
+    _data.itemTemplates.push(_data.templates[_defaultWidgetTemplateName]);
 
     templateConfig = getLabelAnnotationTemplateConfig(_defaultWidgetLabelAnnotationTemplateName);
 
@@ -50,6 +54,8 @@
           new defaultTemplates.CursorTemplate(options, templateConfig) :
           new defaultTemplates.UserTemplate(options, templateConfig.cursorTemplate, options.onCursorRender)
       );
+
+      _data.itemTemplates.push(_data.templates[templateConfig.name]);
     }
 
     return true;
@@ -70,9 +76,14 @@
     return result;
   }
 
+  function getItemTemplates() {
+    return _data.itemTemplates;
+  }
+
   return {
     process: process,
     getTemplate: getTemplate,
+    getItemTemplates: getItemTemplates,
     DefaultWidgetTemplateName: _defaultWidgetTemplateName,
     DefaultWidgetLabelAnnotationTemplateName: _defaultWidgetLabelAnnotationTemplateName
   };

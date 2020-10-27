@@ -13,7 +13,7 @@
  */
 primitives.common.PageFitMode = {
   /**
-   * Disabled. All nodes rendered with their templates.
+   * Disabled. All nodes are being rendered using their templates.
    */
   None: 0,
   /**
@@ -29,7 +29,7 @@ primitives.common.PageFitMode = {
    */
   FitToPage: 3,
   /**
-   * This is opposite mode to auto fit. In this mode diagram controls its size, it sets its size to accomodate all nodes and render them normally.
+   * This is opposite mode to auto fit. In this mode diagram controls its size, it sets its size to fit all nodes and render them full size using templates.
    */
   AutoSize: 5,
   /**

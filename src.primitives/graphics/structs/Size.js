@@ -58,6 +58,15 @@ primitives.common.Size.prototype.scale = function (scale) {
   return this;
 };
 
+/**
+ * Returns square size
+ * 
+ * @returns {number} Returns square size.
+ */
+primitives.common.Size.prototype.space = function () {
+  return this.width * this.height;
+};
+
 
 /**
  * Returns size in form of CSS style object.
@@ -69,8 +78,6 @@ primitives.common.Size.prototype.getCSS = function (units) {
   units = (units !== undefined) ? units : "px";
 
   var result = {
-    left: this.x + units,
-    top: this.y + units,
     width: this.width + units,
     height: this.height + units
   };
@@ -96,9 +103,35 @@ primitives.common.Size.prototype.cropBySize = function (size) {
  * @param {Size} size The size to use as extension.
  * @returns {Size} Returns reference to the current size object
  */
-primitives.common.Size.prototype.addSize = function (size) {
+primitives.common.Size.prototype.maxSize = function (size) {
   this.width = Math.max(this.width, size.width);
   this.height = Math.max(this.height, size.height);
+
+  return this;
+};
+
+/**
+ * Expands the current size by the thickness object.
+ * 
+ * @param {Thickness} thickness The thickness to use for expansion.
+ * @returns {Size} Returns reference to the current size object
+ */
+primitives.common.Size.prototype.addThickness = function (thickness) {
+  this.width = Math.max(0, this.width + thickness.left + thickness.right);
+  this.height = Math.max(0, this.height + thickness.top + thickness.bottom);
+
+  return this;
+};
+
+/**
+ * Shrinks the current size by the thickness object.
+ * 
+ * @param {Thickness} thickness The thickness to use for contraction.
+ * @returns {Size} Returns reference to the current size object
+ */
+primitives.common.Size.prototype.removeThickness = function (thickness) {
+  this.width = Math.max(0, this.width - thickness.left - thickness.right);
+  this.height = Math.max(0, this.height - thickness.top - thickness.bottom);
 
   return this;
 };

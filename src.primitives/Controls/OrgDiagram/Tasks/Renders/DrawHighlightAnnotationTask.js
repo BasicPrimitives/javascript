@@ -3,7 +3,7 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
   calloutOptionTask,
   readTemplatesTask,
   alignDiagramTask, centerOnCursorTask,
-  highlightItemTask, cursorItemTask, selectedItemsTask) {
+  highlightItemTask, cursorItemTask, selectedItemsTask, frameSizeTask) {
   var _graphics,
     _transform,
     _calloutShape = new primitives.common.Callout(getGraphics()),
@@ -30,11 +30,9 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
       calloutPanelPosition,
       position,
       uiHash,
-      element,
       calloutTemplateName,
       calloutTemplate,
       showCallout = true,
-      style,
       treeItemPosition = alignDiagramTask.getItemPosition(treeItemId),
       actualPosition = treeItemPosition.actualPosition;
 
@@ -63,9 +61,14 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
           _transform.transformRect(actualPosition.x, actualPosition.y, actualPosition.width, actualPosition.height, true,
             this, function (x, y, width, height) {
               var snapRect = new primitives.common.Rect(x, y, width, height),
-                snapPoint = new primitives.common.Point(snapRect.horizontalCenter(), snapRect.verticalCenter()),
-                viewPortPosition = getViewPortPosition();
+                snapPoint = new primitives.common.Point(snapRect.centerPoint()),
+                viewPortPosition = getFrameMedianPosition(),
+                projectionPoint = viewPortPosition.getProjectionPoint(snapRect.centerPoint());
 
+              if(projectionPoint == null) {
+                /* snapPoint is inside viewport, no need to project */
+                projectionPoint = snapPoint;
+              }
               if ((treeItemPosition.actualVisibility >= _options.calloutMaximumVisibility && treeItemPosition.actualVisibility != primitives.common.Visibility.Invisible) || !viewPortPosition.overlaps(snapRect)) {
 
                 calloutTemplateName = !primitives.common.isNullOrEmpty(itemConfig.calloutTemplateName) ? itemConfig.calloutTemplateName :
@@ -75,16 +78,16 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
 
                 calloutTemplate = readTemplatesTask.getTemplate(calloutTemplateName, readTemplatesTask.DefaultWidgetTemplateName);
 
-                position = getAnnotationPosition(snapPoint, viewPortPosition, calloutTemplate.templateConfig.itemSize);
+                position = getAnnotationPosition(projectionPoint, viewPortPosition, calloutTemplate.templateConfig.itemSize);
 
                 /* position callout div placeholder */
                 calloutPanelPosition = new primitives.common.Rect(position);
-                calloutPanelPosition.addRect(snapPoint.x, snapPoint.y);
+                calloutPanelPosition.addRect(projectionPoint.x, projectionPoint.y);
                 calloutPanelPosition.offset(50);
 
                 /* recalculate geometries */
-                snapPoint.x -= calloutPanelPosition.x;
-                snapPoint.y -= calloutPanelPosition.y;
+                projectionPoint.x -= calloutPanelPosition.x;
+                projectionPoint.y -= calloutPanelPosition.y;
                 position.x -= calloutPanelPosition.x;
                 position.y -= calloutPanelPosition.y;
 
@@ -120,7 +123,7 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
                 _calloutShape.pointerWidth = _options.calloutPointerWidth;
                 _calloutShape.borderColor = _options.calloutBorderColor;
                 _calloutShape.fillColor = _options.calloutfillColor;
-                _calloutShape.draw(snapPoint, position);
+                _calloutShape.draw(projectionPoint, position);
               } else {
                 _graphics.hide("calloutplaceholder");
               }
@@ -136,22 +139,24 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
     }
   }
 
-  function getViewPortPosition() {
+  function getFrameMedianPosition() {
     var scaleOptions = scaleOptionTask.getOptions(),
       scale = scaleOptions.scale,
       placeholderOffset = new primitives.common.Point(centerOnCursorTask.getPlaceholderOffset()),
-      panelSize = new primitives.common.Rect(alignDiagramTask.getContentSize()),
-      optimalPanelSize = new primitives.common.Size(applyLayoutChangesTask.getOptimalPanelSize());
+      scrollPanelSize = new primitives.common.Size(applyLayoutChangesTask.getScrollPanelSize()),
+      frameThickness = new primitives.common.Thickness(applyLayoutChangesTask.getFrameThickness()),
+      medianThickness = new primitives.common.Thickness(frameSizeTask.getMedian());
 
+    
     placeholderOffset.scale(1.0 / scale);
-    optimalPanelSize.scale(1.0 / scale);
+    frameThickness.scale(1.0 / scale);
+    scrollPanelSize.scale(1.0 / scale);
+    medianThickness.scale(1.0 / scale);
 
-    return new primitives.common.Rect(
-      placeholderOffset.x,
-      placeholderOffset.y,
-      Math.min(optimalPanelSize.width, panelSize.width),
-      Math.min(optimalPanelSize.height, panelSize.height)
-    );
+    var medianRect = new primitives.common.Rect(placeholderOffset.x, placeholderOffset.y, scrollPanelSize.width, scrollPanelSize.height);
+    medianRect.offset(medianThickness);
+
+    return medianRect;
   }
 
   function getAnnotationPosition(snapPoint, panelRect, itemSize) {
@@ -181,17 +186,17 @@ primitives.orgdiagram.DrawHighlightAnnotationTask = function (getGraphics, creat
 
     // If annotation clipped then move it back into view port
     if (result.x < panelRect.x) {
-      result.x = panelRect.x + 5;
+      result.x = panelRect.x + _options.calloutPlacementOffset;
     }
     else if (result.right() > panelRect.right()) {
-      result.x -= (result.right() - panelRect.right() + 5);
+      result.x -= (result.right() - panelRect.right() + _options.calloutPlacementOffset);
     }
 
     if (result.y < panelRect.y) {
-      result.y = panelRect.y + 5;
+      result.y = panelRect.y + _options.calloutPlacementOffset;
     }
     else if (result.bottom() > panelRect.bottom()) {
-      result.y -= (result.bottom() - panelRect.bottom() + 5);
+      result.y -= (result.bottom() - panelRect.bottom() + _options.calloutPlacementOffset);
     }
 
     return result;

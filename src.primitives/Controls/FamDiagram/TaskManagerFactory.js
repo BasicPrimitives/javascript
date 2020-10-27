@@ -30,11 +30,6 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 
   // Options
   tasks.addTask('OptionsTask', ['options'], primitives.famdiagram.OptionsTask, primitives.common.Colors.Black);
-  tasks.addTask('LayoutOptionsTask', ['getLayout', 'OptionsTask'], primitives.orgdiagram.LayoutOptionsTask, primitives.common.Colors.Black);
-
-  // Layout
-  tasks.addTask('CurrentControlSizeTask', ['LayoutOptionsTask', 'ItemsSizesOptionTask'], primitives.orgdiagram.CurrentControlSizeTask, primitives.common.Colors.Black);
-  tasks.addTask('CurrentScrollPositionTask', ['LayoutOptionsTask'], primitives.orgdiagram.CurrentScrollPositionTask, primitives.common.Colors.Black);
 
   tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], primitives.orgdiagram.CalloutOptionTask, primitives.common.Colors.Navy);
   tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ConnectorsOptionTask, primitives.common.Colors.Navy);
@@ -70,6 +65,7 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
   tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], primitives.orgdiagram.BackgroundAnnotationOptionTask, primitives.common.Colors.Navy);
 
   tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.ScaleOptionTask, primitives.common.Colors.Navy);
+  tasks.addTask('FrameOptionTask', ['OptionsTask', 'defaultConfig'], primitives.orgdiagram.FrameOptionTask, primitives.common.Colors.Navy);
 
   // Transformations
   tasks.addTask('UserDefinedNodesOrderTask', ['OrderFamilyNodesOptionTask', 'defaultItemConfig'], primitives.famdiagram.UserDefinedNodesOrderTask, primitives.common.Colors.Red);
@@ -108,7 +104,7 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 
   tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], primitives.orgdiagram.CursorItemTask, primitives.common.Colors.Cyan);
   tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'NeighboursSelectionModeOptionTask', 'AddSpousesTask', 'ActiveItemsTask'], primitives.famdiagram.CursorNeighboursTask, primitives.common.Colors.Cyan);
-  tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, primitives.common.Colors.Cyan);
+  tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask', 'ItemsOptionTask'], primitives.orgdiagram.SelectedItemsTask, primitives.common.Colors.Cyan);
   tasks.addTask('SelectionPathItemsTask', ['AddSpousesTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], primitives.famdiagram.SelectionPathItemsTask, primitives.common.Colors.Cyan);
 
   tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], primitives.orgdiagram.NormalVisibilityItemsByAnnotationTask, primitives.common.Colors.Cyan);
@@ -132,6 +128,12 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
     'NormalVisibilityItemsByForegroundConnectorAnnotationTask',
     'NormalVisibilityItemsByBackgroundConnectorAnnotationTask'], primitives.orgdiagram.CombinedNormalVisibilityItemsTask, primitives.common.Colors.Cyan);
 
+  // Layout
+  tasks.addTask('FrameSizeTask', ['FrameOptionTask', 'ReadTemplatesTask', 'ScaleOptionTask'], primitives.orgdiagram.FrameSizeTask, primitives.common.Colors.Navy);
+  tasks.addTask('LayoutOptionsTask', ['getLayout', 'OptionsTask'], primitives.orgdiagram.LayoutOptionsTask, primitives.common.Colors.Black);
+  tasks.addTask('CurrentControlSizeTask', ['LayoutOptionsTask', 'ItemsSizesOptionTask', 'FrameSizeTask'], primitives.orgdiagram.CurrentControlSizeTask, primitives.common.Colors.Black);
+  tasks.addTask('CurrentScrollPositionTask', ['LayoutOptionsTask'], primitives.orgdiagram.CurrentScrollPositionTask, primitives.common.Colors.Black);
+
   tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask',
     'OrderFamilyNodesOptionTask', 'OrderFamilyNodesTask',
     'CombinedTemplateParamsTask',
@@ -139,13 +141,18 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 
   tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], primitives.orgdiagram.AlignDiagramTask, primitives.common.Colors.Red);
   tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.CreateTransformTask, primitives.common.Colors.Cyan);
-  tasks.addTask('CenterOnCursorTask', ['LayoutOptionsTask', 'CurrentControlSizeTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], primitives.orgdiagram.CenterOnCursorTask, primitives.common.Colors.Cyan);
 
   // Managers
   tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'LinePaletteOptionTask'], primitives.orgdiagram.PaletteManagerTask, primitives.common.Colors.Cyan);
 
   // Apply Layout Changes
-  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.ApplyLayoutChangesTask, primitives.common.Colors.Cyan);
+  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask', 'FrameSizeTask'], primitives.orgdiagram.ApplyLayoutChangesTask, primitives.common.Colors.Cyan);
+  tasks.addTask('CenterOnCursorTask', ['LayoutOptionsTask', 'ApplyLayoutChangesTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], primitives.orgdiagram.CenterOnCursorTask, primitives.common.Colors.Cyan);
+  tasks.addTask('ProjectItemsToFrameTask', ['CreateTransformTask', 'FrameSizeTask',
+    'ApplyLayoutChangesTask', 'ScaleOptionTask',
+    'AlignDiagramTask', 'CenterOnCursorTask',
+    'ItemTemplateParamsTask',
+    'SelectedItemsTask'], primitives.orgdiagram.ProjectItemsToFrameTask, primitives.common.Colors.Cyan);  
 
   // Renders
   tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground'], primitives.orgdiagram.DrawHighlightPathAnnotationTask, primitives.common.Colors.Cyan);
@@ -159,7 +166,7 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
 
   tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawCursorTask, primitives.common.Colors.Green);
   tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightTask, primitives.common.Colors.Green);
-  tasks.addTask('DrawHighlightAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], primitives.orgdiagram.DrawHighlightAnnotationTask, primitives.common.Colors.Green);
+  tasks.addTask('DrawHighlightAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'FrameSizeTask'], primitives.orgdiagram.DrawHighlightAnnotationTask, primitives.common.Colors.Green);
 
   tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask',
     'ItemsSizesOptionTask',
@@ -175,5 +182,8 @@ primitives.famdiagram.TaskManagerFactory = function (getOptions, getGraphics, ge
   tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask'], primitives.orgdiagram.DrawConnectorsTask, primitives.common.Colors.Green);
   tasks.addTask('DrawItemLabelsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LabelsOptionTask', 'AlignDiagramTask'], primitives.orgdiagram.DrawItemLabelsTask, primitives.common.Colors.Green);
 
+  tasks.addTask('DrawFrameItemsTask', ['graphics', 'ApplyLayoutChangesTask', 'ProjectItemsToFrameTask', 'ItemTemplateParamsTask', 'MinimizedItemsOptionTask'], primitives.orgdiagram.DrawFrameItemsTask, primitives.common.Colors.Green);
+  tasks.addTask('DrawFrameHighlightTask', ['graphics', 'ProjectItemsToFrameTask', 'CombinedContextsTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask'], primitives.orgdiagram.DrawFrameHighlightTask, primitives.common.Colors.Green);
+  
   return tasks;
 };

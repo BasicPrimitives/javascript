@@ -22,15 +22,9 @@ primitives.orgdiagram.DrawMinimizedItemsTask = function (getGraphics, createTran
   }
 
   function drawMinimizedItems() {
-    var treeLevel,
-      uiHash,
-      element,
-      markers = new primitives.common.PolylinesBuffer(),
+    var markers = new primitives.common.PolylinesBuffer(),
       paletteItems = {},
       polyline,
-      index,
-      len,
-      label,
       marker = new primitives.common.Marker(),
       itemTitleColor,
       itemFillColor,

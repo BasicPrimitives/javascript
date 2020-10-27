@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Selected Items Frame</title>
+
+  <link rel="stylesheet" href="../../packages/jquery-ui-1.12.1/jquery-ui.min.css" />
+  <script type="text/javascript" src="../../packages/jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+  <script type="text/javascript" src="../../packages/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+
+  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+  <script type="text/javascript" src="../../min/primitives.jquery.min.js?5100"></script>
+  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+		var minimizedItemShapeTypes = [
+				primitives.common.ShapeType.Rectangle,
+				primitives.common.ShapeType.Oval,
+				primitives.common.ShapeType.Triangle,
+				primitives.common.ShapeType.CrossOut,
+				primitives.common.ShapeType.Circle,
+				primitives.common.ShapeType.Rhombus,
+				primitives.common.ShapeType.Wedge,
+				primitives.common.ShapeType.FramedOval,
+				primitives.common.ShapeType.FramedTriangle,
+				primitives.common.ShapeType.FramedWedge,
+				primitives.common.ShapeType.FramedRhombus
+			],
+			shapeIndex = 0,
+			itemTitleColors = [
+				primitives.common.Colors.Red,
+				primitives.common.Colors.Green,
+				primitives.common.Colors.Navy,
+				primitives.common.Colors.Cyan
+			],
+			colorIndex = 0;
+
+		function getNextShapeType() {
+			var result = minimizedItemShapeTypes[shapeIndex];
+			shapeIndex+=1;
+			if(shapeIndex == minimizedItemShapeTypes.length) {
+				shapeIndex = 0;
+			}
+			return result;
+		}
+
+		function getNextColor() {
+			var result = itemTitleColors[colorIndex];
+			colorIndex+=1;
+			if(colorIndex == itemTitleColors.length) {
+				colorIndex = 0;
+			}
+			return result;
+		}
+
+		function getMarkerTemplate() {
+			var result = new primitives.orgdiagram.TemplateConfig();
+			result.name = "MarkerTemplate";
+			result.minimizedItemSize = new primitives.common.Size(8, 8);
+			result.highlightPadding = new primitives.common.Thickness(4, 4, 4, 4);
+			return result;
+		}
+
+    $(document).ready(function () {
+		var options = new primitives.orgdiagram.Config();
+
+		var rootItem = {
+					id: 0,
+					parent: null,
+					title: "Title 0",
+					description: "Description",
+					image: "../images/photos/a.png",
+					minimizedItemShapeType: (getNextShapeType()),
+					itemTitleColor: (getNextColor())
+				};
+		var levelItems = [rootItem];			
+		var items = [rootItem];
+		var id = 1;
+		for(var levelIndex  = 0; levelIndex < 4; levelIndex+=1) {
+			var newLevelItems = [];
+			for(var index = 0; index < levelItems.length; index+=1) {
+				var parent = levelItems[index];
+				for (var index2 = 0; index2 < 2; index2++) {
+					var newItem = {
+						id: ++id,
+						parent: parent.id,
+						title: id.toString() + " Title",
+						description: id.toString() + " Description",
+						image: "../images/photos/b.png",
+						minimizedItemShapeType: (getNextShapeType()),
+						itemTitleColor: (getNextColor())
+					};
+					items.push(newItem);
+					newLevelItems.push(newItem);
+				}
+			}
+			levelItems = newLevelItems;
+		}
+
+		/* collect all ids */
+		var selectedItems = [];
+		for(var index = 0; index < items.length; index+=1) {
+			selectedItems.push(items[index].id);
+		}
+
+		options.items = items;
+		options.cursorItem = 0;
+		options.showFrame = true;
+		options.frameInnerPadding = 4;
+		options.frameOuterPadding = 4;
+		options.templates = [getMarkerTemplate()];
+		options.defaultTemplateName = "MarkerTemplate";
+		options.hasSelectorCheckbox = primitives.common.Enabled.True;
+		options.pageFitMode = primitives.common.PageFitMode.None;
+		options.selectedItems = selectedItems;
+
+      	jQuery("#basicdiagram").orgDiagram(options);
+    });
+
+  </script>
+</head>
+
+<body>
+  	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+
+</html>

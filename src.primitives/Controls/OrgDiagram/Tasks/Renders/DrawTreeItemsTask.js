@@ -37,12 +37,6 @@ primitives.orgdiagram.DrawTreeItemsTask = function (getGraphics, createTranfromT
   function redrawTreeItems() {
     var uiHash,
       element,
-      polyline,
-      index,
-      len,
-      label,
-      itemTitleColor,
-      itemFillColor,
       cursorItemId = cursorItemTask.getCursorTreeItem(),
       treeItemPosition,
       actualPosition,
@@ -51,7 +45,7 @@ primitives.orgdiagram.DrawTreeItemsTask = function (getGraphics, createTranfromT
     for (var treeItemId in _positions) {
       if (_positions.hasOwnProperty(treeItemId)) {
         treeItemPosition = _positions[treeItemId],
-          actualPosition = treeItemPosition.actualPosition;
+        actualPosition = treeItemPosition.actualPosition;
         if (treeItemPosition.actualVisibility == primitives.common.Visibility.Normal) {
           _transform.transformRect(actualPosition.x, actualPosition.y, actualPosition.width, actualPosition.height, true,
             this, function (x, y, width, height) {

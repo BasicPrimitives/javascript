@@ -1,5 +1,5 @@
 /**
- * @preserve Basic Primitives Diagrams v5.9.1
+ * @preserve Basic Primitives Diagrams v5.9.2
  * Copyright (c) 2013 - 2020 Basic Primitives Inc
  *
  * Non-commercial - Free
@@ -35,7 +35,7 @@
 
 var primitives = {
   common: {
-    version: "5.9.1"
+    version: "5.9.2"
   },
   orgdiagram: {},
   famdiagram: {},
@@ -24217,12 +24217,15 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     primitives.common.JsonML.applyStyles(layout.frameMousePanel, layoutOptions.controlSize.getCSS());
 
     /* set scroll panel position */
+    var frameThickness = new primitives.common.Thickness(layoutOptions.frameThickness);
     primitives.common.JsonML.applyStyles(layout.scrollPanel, primitives.common.mergeObjects({
-        left: layoutOptions.frameThickness.left + "px",
-        top: layoutOptions.frameThickness.top + "px"
-      },
+      left: frameThickness.left + "px",
+      top: frameThickness.top + "px"
+    },
       layoutOptions.viewportSize.getCSS())
     );
+
+    layout.scrollPanel.setAttribute("class", (frameThickness.isEmpty() ? name : "bp-scrollframe " + name))
   }
 
   function createLayout(layout, name) {
@@ -24258,8 +24261,8 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
               position: "absolute",
               overflow: "hidden"
             },
-            viewportRect.getCSS()),
-              "name": "frameMousePanel",
+              viewportRect.getCSS()),
+            "name": "frameMousePanel",
             "class": name,
             "$": function (element) { layout.frameMousePanel = element; }
           },
@@ -24269,7 +24272,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
                 position: "absolute",
                 overflow: "hidden"
               },
-              viewportRect.getCSS()),
+                viewportRect.getCSS()),
               "name": "framePlaceholder",
               "class": ["frameplaceholder", name],
               "$": function (element) { layout.framePlaceholder = element; }
@@ -24287,9 +24290,9 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
               "width": viewportRect.width + "px",
               "height": viewportRect.height + "px"
             },
-            viewportRect.getCSS()),
+              viewportRect.getCSS()),
             "name": "scrollPanel",
-            "class": ["bp-scrollpanel", name],
+            "class": name,
             "$": function (element) { layout.scrollPanel = element; }
           },
           ["div", /* mousePanel - mouse tracking events panel */
@@ -24298,10 +24301,10 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
                 position: "absolute",
                 overflow: "visible"
               },
-              viewportRect.getCSS()),
-                "name": "mousePanel",
-                "class": name,
-                "$": function (element) { layout.mousePanel = element; }
+                viewportRect.getCSS()),
+              "name": "mousePanel",
+              "class": name,
+              "$": function (element) { layout.mousePanel = element; }
             },
             ["div", /* placeholder - contents scalable panel */
               {
@@ -24309,10 +24312,10 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
                   position: "absolute",
                   overflow: "hidden"
                 },
-                viewportRect.getCSS()),
-                  "name": "placeholder",
-                  "class": ["placeholder", name],
-                  "$": function (element) { layout.placeholder = element; }
+                  viewportRect.getCSS()),
+                "name": "placeholder",
+                "class": ["placeholder", name],
+                "$": function (element) { layout.placeholder = element; }
               },
               ["div", /* calloutPlaceholder - callout panel */
                 {
@@ -24351,9 +24354,9 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
     layout.mousePanel.addEventListener('click', onMouseClick);
     layout.mousePanel.addEventListener('dblclick', onMouseDblClick);
     layout.mousePanel.addEventListener('change', onCheckboxChange);
-    
+
     layout.element.addEventListener('keydown', onKeyDown);
-    
+
     layout.scrollPanel.addEventListener('scroll', onScroll);
 
     if (_data.options.enablePanning && primitives.common.isChrome()) {
@@ -24375,7 +24378,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
       layout.mousePanel.removeEventListener("dblclick", onMouseDblClick);
       layout.mousePanel.removeEventListener("change", onCheckboxChange);
     }
-    if(layout.element != null) {
+    if (layout.element != null) {
       layout.element.removeEventListener("keydown", onKeyDown);
     }
     if (layout.scrollPanel != null) {
@@ -24386,7 +24389,7 @@ primitives.orgdiagram.BaseControl = function (element, options, taskManagerFacto
       layout.scrollPanel.removeEventListener('dragover', onDragOver);
     }
 
-    if(layout.frameMousePanel != null) {
+    if (layout.frameMousePanel != null) {
       layout.frameMousePanel.removeEventListener('mousemove', onFrameMouseMove);
       layout.frameMousePanel.removeEventListener('click', onFrameMouseClick);
     }

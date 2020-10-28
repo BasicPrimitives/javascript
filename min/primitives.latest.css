@@ -1,3 +1,6 @@
+.bp-scrollframe {
+	border: 1px dotted #dddddd;
+}
 .bp-item {
 	position: absolute;
 	overflow: hidden;

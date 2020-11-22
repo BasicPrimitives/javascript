@@ -16,8 +16,11 @@ The following is the minimal set of files needed to use Basic Primitives compone
 The controls are state-full that means they keep internal state of the diagrams in order to minimize updates of visuals and avoid unnecessarily layout calculations. Library has two methods to construct instances of controls: use primitives.orgdiagram.Control for Organizational Diagrams and primitives.famdiagram.Control for Family Diagrams creation. The following code snippet creates organization chart inside empty div having "basicdiagram" id:
 
 ```Javascript
-var control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), {
-  /* regular JSON object or instance of primitives.orgdiagram.Config class*/
+var control = primitives.orgdiagram.Control(
+  document.getElementById("basicdiagram"), {
+  /* regular JSON object or instance of 
+    primitives.orgdiagram.Config class
+  */
 });
 ```
 
@@ -80,7 +83,7 @@ Historically Basic Primitives provides jQuery UI Widgets wrapping core controls,
 Basic Primitives jQuery UI widgets are added as methods on jQuery object, so for example in order to create a new organization chart inside empty div having "basicdiagram" id, we have to call following jQuery method:
 
 ```Javascript
-jQuery("#basicdiagram").orgDiagram({/* here is we define items & configuration options for our chart*/});
+jQuery("#basicdiagram").orgDiagram({/* new primitives.orgdiagram.Config() */});
 ```
 In order to get configuration object of existing widget call its method with argument "option"
 
@@ -110,9 +113,27 @@ In order to define the same chart as JSON object, replace it with the following 
 ```Javascript
 jQuery("#basicdiagram").orgDiagram({
   items: [
-    { id: 0, parent: null, title: "Scott Aasrud", description: "VP, Public Sector", image: "demo/images/photos/a.png" },
-    { id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: "demo/images/photos/b.png" },
-    { id: 2, parent: 0, title: "Joao Stuger", description: "Business Solutions, US", image: "demo/images/photos/c.png"}
+    { 
+      id: 0,
+      parent: null,
+      title: "Scott Aasrud",
+      description: "VP, Public Sector",
+      image: "demo/images/photos/a.png" 
+    },
+    { 
+      id: 1, 
+      parent: 0, 
+      title: "Ted Lucas", 
+      description: "VP, Human Resources", 
+      image: "demo/images/photos/b.png" 
+    },
+    { 
+      id: 2, 
+      parent: 0, 
+      title: "Joao Stuger", 
+      description: "Business Solutions, US", 
+      image: "demo/images/photos/c.png"
+    }
   ],
   cursorItem: 0,
   hasSelectorCheckbox: primitives.common.Enabled.True
@@ -200,7 +221,9 @@ var sampleSize = samfirstOrganizationalChartSampleple3.getSize();
 `getSize` method returns diagram size, so we can create new PDF document big enough to accomodate our diagram:
 
 ```JavaScript
-var doc = new PDFDocument({ size: [sampleSize.width + 100, sampleSize.height + 150] });
+var doc = new PDFDocument({ 
+  size: [sampleSize.width + 100, sampleSize.height + 150] 
+});
 ```
 
 Plugin draws diagram in current PDFkit document layout transformation context, so developer can rotate, translate and scale diagrams on PDFkit document page.

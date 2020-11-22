@@ -161,9 +161,9 @@ primitives.orgdiagram.Config = function (name) {
   this.items = [];
 
   /**
-   * Annotations. Annotations are API elements that are attached to the diagram nodes.
-   * We draw our annotations either in front of the nodes or in the background. The annotations 
-   * don't affect the nodes placement in any way. As a result the control redraws them 
+   * Annotations. Annotations are API elements that are attached to the diagram nodes positions.
+   * We draw annotations either in front of the diagram nodes or in their background. Annotations 
+   * don't affect nodes placement in any way. As a result the control redraws them 
    * instantaneously without rerendering or recalculating the actual diagram layout.
    * 
    * @type {Array.<(ShapeAnnotationConfig | BackgroundAnnotationConfig | ConnectorAnnotationConfig | HighlightPathAnnotationConfig)>}

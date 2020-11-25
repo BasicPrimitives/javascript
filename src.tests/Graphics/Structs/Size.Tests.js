@@ -1,11 +1,11 @@
 ﻿QUnit.module('Graphics - Structs - Size');
 
-QUnit.test("primitives.common.Size - 2D size structure defined by width and hight", function (assert) {
+QUnit.test("primitives.common.Size - 2D size structure defined by width and height", function (assert) {
 
   var size = new primitives.common.Size(10, 20);
 
   assert.equal(size.space(), 200, "Square size");
-  assert.deepEqual(size.getCSS(), {"width": "10px", "height": "20px"}, "Size conversion to width and hight CSS properties");
+  assert.deepEqual(size.getCSS(), {"width": "10px", "height": "20px"}, "Size conversion to width and height CSS properties");
 
   var size1 = new primitives.common.Size(10, 40);
   var size2 = new primitives.common.Size(50, 30);

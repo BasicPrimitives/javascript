@@ -21,7 +21,7 @@ primitives.common.PageFitMode = {
    */
   PageWidth: 1,
   /**
-   * Fits diagram into the view hight, so it has no vertical scrollbar.
+   * Fits diagram into the view height, so it has no vertical scrollbar.
    */
   PageHeight: 2,
   /**

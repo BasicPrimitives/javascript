@@ -58,7 +58,7 @@ Call this method to update controls configuration. Control uses default Config i
 
  `update(updateMode, forceCenterOnCursor)` 
 
-Makes full redraw of diagram contents reevaluating all options. This method has to be called explisitly after all options are set in order to update controls contents.
+Performs full redraw of the diagram contents via reevaluating all API options. This method has to be called explicitly after all options are set in order to update controls contents.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -124,7 +124,7 @@ Call this method to update controls configuration. Control uses default Config i
 
  `update(updateMode, forceCenterOnCursor)` 
 
-Makes full redraw of diagram contents reevaluating all options. This method has to be called explisitly after all options are set in order to update controls contents.
+Performs full redraw of the diagram contents via reevaluating all API options. This method has to be called explicitly after all options are set in order to update controls contents.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 

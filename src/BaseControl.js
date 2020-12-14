@@ -40,7 +40,7 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
     _timer = null;
 
   /**
-   * Makes full redraw of diagram contents reevaluating all options. This method has to be called explisitly
+   * Performs full redraw of the diagram contents via reevaluating all API options. This method has to be called explicitly
    * after all options are set in order to update controls contents.
    * 
    * @param {UpdateMode} updateMode 

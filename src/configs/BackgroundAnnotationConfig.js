@@ -37,7 +37,7 @@ export default function BackgroundAnnotationConfig(arg0) {
    * Sets annotation Z order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other.
    * If you place annotations over diagram nodes then you block mouse events of UI elements in their templates.
    * Browsers don't support mouse events transparentcy consistently yet. So in order to avoid mouse events blocking of UI elements in item
-   * templates you have to place annotation items under them or explisitly define maximum zindex for controls and make them rendered on top
+   * templates you have to place annotation items under them or explicitly define maximum zindex for controls and make them rendered on top
    * of other visual elements. The control takes this into account and renders buttons panel on top of everyhting,
    * so they are never blocked by annotations drawn in front of diagram nodes.
    * 

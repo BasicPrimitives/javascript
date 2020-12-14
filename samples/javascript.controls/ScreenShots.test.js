@@ -39,6 +39,20 @@ async function testByTemplate({imageName, url}) {
 }
 describe("Screen Shots", () => {
 
+  it('CasePlaceAdvisersAboveChildren', async () => {
+    await testByTemplate({ 
+      imageName: "CasePlaceAdvisersAboveChildren", 
+      url: "http://localhost:8080/samples/javascript.controls/CasePlaceAdvisersAboveChildren.html"
+    })
+  });
+
+  it('CasePlaceAssistantsAboveChildren', async () => {
+    await testByTemplate({ 
+      imageName: "CasePlaceAssistantsAboveChildren", 
+      url: "http://localhost:8080/samples/javascript.controls/CasePlaceAssistantsAboveChildren.html"
+    })
+  });
+
   it('CaseShowFrame', async () => {
     await testByTemplate({ 
       imageName: "CaseShowFrame", 

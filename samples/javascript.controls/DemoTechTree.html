@@ -2,77 +2,76 @@
 <html>
 
 <head>
-  <title>JavaScript Control Dependencies Chart Demo</title>
+  <title>Technology Tree Demo</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-  <!-- header -->
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <script type="text/javascript" src="common/helpers.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <script type="text/javascript" src="../../javascriptsamples.js"></script>
   <script type="text/javascript" src="../data/techtree.js"></script>
+  <link href="./css/styles.css" media="screen" rel="stylesheet" type="text/css" />
 
-  <script type="text/javascript">
+<script type="text/javascript">
     var control = null;
     var timer;
 
-    var optionsRender = primitives.helpers.controls.getFamDiagramOptionsRender([], {
+    var optionsRender = javascriptsamples.getFamDiagramOptionsRender([], {
       /* Family Diagram Specific Options */
-      neighboursSelectionMode: primitives.common.NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses,
-      groupByType: primitives.common.GroupByType.Parents,
-      alignBylevels: "true",
-      hideGrandParentsConnectors: "false",
+      neighboursSelectionMode: primitives.NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses,
+      groupByType: primitives.GroupByType.Parents,
+      alignBylevels: true,
+      hideGrandParentsConnectors: false,
 
       /* On-screen annotations specific options */
       AnnotationOptions: {
-        connectorPlacementType: primitives.common.ConnectorPlacementType.Offbeat,
-        connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-        labelPlacementType: primitives.common.ConnectorLabelPlacementType.Between,
+        connectorPlacementType: primitives.ConnectorPlacementType.Offbeat,
+        connectorShapeType: primitives.ConnectorShapeType.OneWay,
+        labelPlacementType: primitives.ConnectorLabelPlacementType.Between,
         lineWidth: 2,
-        lineType: primitives.common.LineType.Dashed,
-        color: primitives.common.Colors.Red,
+        lineType: primitives.LineType.Dashed,
+        color: primitives.Colors.Red,
         offset: 5,
-        zOrderType: primitives.common.ZOrderType.Auto
+        zOrderType: primitives.ZOrderType.Auto
       },
       /* Layout */
-      pageFitMode: primitives.common.PageFitMode.None,
-      orientationType: primitives.common.OrientationType.Left,
-      verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-      horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
-      childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
-      leavesPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+      pageFitMode: primitives.PageFitMode.None,
+      orientationType: primitives.OrientationType.Left,
+      verticalAlignment: primitives.VerticalAlignmentType.Middle,
+      horizontalAlignment: primitives.HorizontalAlignmentType.Center,
+      childrenPlacementType: primitives.ChildrenPlacementType.Horizontal,
+      leavesPlacementType: primitives.ChildrenPlacementType.Horizontal,
       maximumColumnsInMatrix: 6,
-      minimalVisibility: primitives.common.Visibility.Dot,
-      selectionPathMode: primitives.common.SelectionPathMode.FullStack,
+      minimalVisibility: primitives.Visibility.Dot,
+      selectionPathMode: primitives.SelectionPathMode.FullStack,
 
-      hasButtons: primitives.common.Enabled.True,
-      hasSelectorCheckbox: primitives.common.Enabled.False,
+      hasButtons: primitives.Enabled.True,
+      hasSelectorCheckbox: primitives.Enabled.False,
       selectCheckBoxLabel: "Pinned",
-      itemTitleFirstFontColor: primitives.common.Colors.White,
-      itemTitleSecondFontColor: primitives.common.Colors.White,
-      buttonsPanelSize: 28,
+      itemTitleFirstFontColor: primitives.Colors.White,
+      itemTitleSecondFontColor: primitives.Colors.White,
+      buttonsPanelSize: 32,
       groupTitlePanelSize: 24,
       checkBoxPanelSize: 24,
 
       /* group title options */
-      groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
-      groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
-      groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-      groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+      groupTitlePlacementType: primitives.AdviserPlacementType.Left,
+      groupTitleOrientation: primitives.TextOrientationType.RotateRight,
+      groupTitleVerticalAlignment: primitives.VerticalAlignmentType.Middle,
+      groupTitleHorizontalAlignment: primitives.HorizontalAlignmentType.Center,
       groupTitleFontSize: "12px",
       groupTitleFontFamily: "Arial",
-      groupTitleColor: primitives.common.Colors.RoyalBlue,
+      groupTitleColor: primitives.Colors.RoyalBlue,
       groupTitleFontWeight: "normal",
       groupTitleFontStyle: "normal",
 
       /* Template */
       DefaultTemplateOptions: {
         minimizedItemCornerRadius: 6,
-        minimizedItemSize: new primitives.common.Size(6, 6),
+        minimizedItemSize: new primitives.Size(6, 6),
         highlightPadding: 3,
-        minimizedItemShapeType: primitives.common.ShapeType.None,
+        minimizedItemShapeType: primitives.ShapeType.None,
         minimizedItemLineWidth: 0,
-        minimizedItemLineType: primitives.common.LineType.Solid,
+        minimizedItemLineType: primitives.LineType.Solid,
         minimizedItemBorderColor: null,
         minimizedItemFillColor: null,
         minimizedItemOpacity: 1.0
@@ -88,32 +87,32 @@
       cousinsIntervalMultiplier: 1,
 
       /* Connectors */
-      arrowsDirection: primitives.common.GroupByType.Parents,
+      arrowsDirection: primitives.GroupByType.Parents,
       showExtraArrows: true,
       extraArrowsMinimumSpace: 20,
-      connectorType: primitives.common.ConnectorType.Squared,
-      elbowType: primitives.common.ElbowType.Round,
+      connectorType: primitives.ConnectorType.Squared,
+      elbowType: primitives.ElbowType.Round,
       bevelSize: 4,
       elbowDotSize: 4,
-      linesType: primitives.common.LineType.Solid,
-      linesColor: primitives.common.Colors.Black,
+      linesType: primitives.LineType.Solid,
+      linesColor: primitives.Colors.Black,
       linesWidth: 1,
 
       /* Labels */
-      showLabels: primitives.common.Enabled.False,
-      labelSize: new primitives.common.Size(80, 24),
-      labelOrientation: primitives.text.TextOrientationType.Horizontal,
-      labelPlacement: primitives.common.PlacementType.Top,
+      showLabels: primitives.Enabled.False,
+      labelSize: new primitives.Size(80, 24),
+      labelOrientation: primitives.TextOrientationType.Horizontal,
+      labelPlacement: primitives.PlacementType.Top,
       labelOffset: 1,
       labelFontSize: "10px",
       labelFontFamily: "Arial",
-      labelColor: primitives.common.Colors.Black,
+      labelColor: primitives.Colors.Black,
       labelFontWeight: "normal",
       labelFontStyle: "normal",
 
       /* Callout */
-      calloutMaximumVisibility: primitives.common.Visibility.Dot,
-      showCallout: "true",
+      calloutMaximumVisibility: primitives.Visibility.Dot,
+      showCallout: true,
       calloutPlacementOffset: 100,
       calloutfillColor: "#000000",
       calloutBorderColor: null,
@@ -124,12 +123,12 @@
       calloutOpacity: 0.2,
 
       /* Interactivity */
-      navigationMode: primitives.common.NavigationMode.Default,
+      navigationMode: primitives.NavigationMode.Default,
       highlightGravityRadius: 40,
       enablePanning: true,
 
       /* Graphics */
-      graphicsType: primitives.common.GraphicsType.SVG,
+      graphicsType: primitives.GraphicsType.SVG,
       scale: 1.0,
       
       /* Frame */
@@ -140,12 +139,12 @@
       /* On property change event handler */
       function () {
         control.setOptions(GetDiagramConfig());
-        control.update(primitives.common.UpdateMode.Refresh);
+        control.update(primitives.UpdateMode.Refresh);
       });
 
     document.addEventListener('DOMContentLoaded', function () {
       optionsRender.render(document.getElementById("westpanel"));
-      control = primitives.famdiagram.Control(document.getElementById("centerpanel"),
+      control = primitives.FamDiagram(document.getElementById("centerpanel"),
         GetDiagramConfig()
       );
 
@@ -157,15 +156,15 @@
     function GetDiagramConfig() {
       var options = optionsRender.getValues();
 
-      primitives.common.mergeObjects(options, {
+      primitives.mergeObjects(options, {
         templates: [getUnitTemplate(), getCalloutUnitTemplate(), getDotTemplate()],
         defaultTemplateName: "UnitTemplate",
         defaultCalloutTemplateName: "CalloutUnitTemplate",
         onItemRender: onTemplateRender,
-        arrowsDirection: primitives.common.GroupByType.Children,
+        arrowsDirection: primitives.GroupByType.Children,
       })
 
-      primitives.common.mergeObjects(options, {
+      primitives.mergeObjects(options, {
         onCursorChanging: onCursorChanging,
         onCursorChanged: onCursorChanged,
         onHighlightChanging: onHighlightChanging,
@@ -179,37 +178,37 @@
         var item = famdata[index];
         if (item.relativeItem != null) {
           annotations.push({
-            annotationType: primitives.common.AnnotationType.Connector,
+            annotationType: primitives.AnnotationType.Connector,
             fromItem: item.id,
             toItem: item.relativeItem,
             label: null,
-            connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-            color: primitives.common.Colors.Blue,
+            connectorShapeType: primitives.ConnectorShapeType.OneWay,
+            color: primitives.Colors.Blue,
             offset: -5,
             lineWidth: 3,
-            lineType: primitives.common.LineType.Dotted,
-            connectorPlacementType: primitives.common.ConnectorPlacementType.Straight,
+            lineType: primitives.LineType.Dotted,
+            connectorPlacementType: primitives.ConnectorPlacementType.Straight,
             selectItems: false
           });
         }
         if (item.primaryParent != null) {
           annotations.push({
-            annotationType: primitives.common.AnnotationType.Connector,
+            annotationType: primitives.AnnotationType.Connector,
             fromItem: item.id,
             toItem: item.primaryParent,
             label: null,
-            connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-            color: primitives.common.Colors.Red,
+            connectorShapeType: primitives.ConnectorShapeType.OneWay,
+            color: primitives.Colors.Red,
             offset: -5,
             lineWidth: 3,
-            lineType: primitives.common.LineType.Dotted,
-            connectorPlacementType: primitives.common.ConnectorPlacementType.Offbeat,
+            lineType: primitives.LineType.Dotted,
+            connectorPlacementType: primitives.ConnectorPlacementType.Offbeat,
             selectItems: false
           });
         }
       }
 
-      primitives.common.mergeObjects(options, {
+      primitives.mergeObjects(options, {
         items: famdata,
         cursorItem: 1,
         annotations: annotations
@@ -219,12 +218,12 @@
     }
 
     function getDefaultTemplate(options) {
-      var result = new primitives.orgdiagram.TemplateConfig();
+      var result = new primitives.TemplateConfig();
       result.name = "defaultTemplate";
 
       // If we don't change anything in template then all its properties stays default
       // So we change only minimized item properties
-      primitives.common.mergeObjects(result, options.DefaultTemplateOptions);
+      primitives.mergeObjects(result, options.DefaultTemplateOptions);
 
       return result;
     }
@@ -287,7 +286,7 @@
     }
 
     var options = optionsRender.getValues();
-    control.update(primitives.common.UpdateMode.Refresh);
+    control.update(primitives.UpdateMode.Refresh);
 
     function updateHighlightPathAnnotations(data) {
       var annotations = control.getOption("annotations");
@@ -295,7 +294,7 @@
       var newAnnotations = [];
       for (var index = 0, len = annotations.length; index < len; index += 1) {
         var annotation = annotations[index];
-        if (annotation.annotationType != primitives.common.AnnotationType.HighlightPath) {
+        if (annotation.annotationType != primitives.AnnotationType.HighlightPath) {
           newAnnotations.push(annotation);
         }
       }
@@ -306,12 +305,12 @@
       for (index = 0, len = items.length; index < len; index += 1) {
         var parent = items[index];
         var highlightid = data.context.id;
-        var annotation = new primitives.famdiagram.HighlightPathAnnotationConfig({
+        var annotation = new primitives.HighlightPathAnnotationConfig({
           items: [highlightid, parent.id],
-          color: primitives.common.Colors.Navy,
+          color: primitives.Colors.Navy,
           opacity: 0.4,
           lineWidth: 6,
-          zOrderType: primitives.common.ZOrderType.Background,
+          zOrderType: primitives.ZOrderType.Background,
           showArrows: false
         });
         newAnnotations.push(annotation);
@@ -322,7 +321,7 @@
     function onWindowResize() {
       if (timer == null) {
         timer = window.setTimeout(function () {
-          control.update(primitives.orgdiagram.UpdateMode.Refresh);
+          control.update(primitives.UpdateMode.Refresh);
           window.clearTimeout(timer);
           timer = null;
         }, 300);
@@ -335,12 +334,12 @@
 
       if (data.templateName == "dot") {
         var titleBackground = element;
-        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
       }
 
       if (data.templateName == "UnitTemplate") {
         var titleBackground = element.firstChild;
-        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
 
         var title = titleBackground.firstChild;
         title.textContent = itemConfig.title;
@@ -348,7 +347,7 @@
 
       if (data.templateName == "CalloutUnitTemplate") {
         var titleBackground = element.firstChild;
-        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
 
         var title = element.childNodes[1];
         title.textContent = itemConfig.title;
@@ -359,15 +358,15 @@
     }
 
     function getDotTemplate() {
-      var result = new primitives.famdiagram.TemplateConfig();
+      var result = new primitives.TemplateConfig();
       result.name = "dot";
 
       result.isActive = false;
-      result.itemSize = new primitives.common.Size(8, 8);
-      result.minimizedItemSize = new primitives.common.Size(8, 8);
+      result.itemSize = new primitives.Size(8, 8);
+      result.minimizedItemSize = new primitives.Size(8, 8);
       result.minimizedItemCornerRadius = 4;
       result.minimizedItemLineWidth = 1;
-      result.minimizedItemLineType = primitives.common.LineType.Solid;
+      result.minimizedItemLineType = primitives.LineType.Solid;
       result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
       result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
       result.minimizedItemOpacity = 0.7; // Shape background opacity
@@ -386,14 +385,14 @@
     }
 
     function getUnitTemplate() {
-      var result = new primitives.famdiagram.TemplateConfig();
+      var result = new primitives.TemplateConfig();
       result.name = "UnitTemplate";
 
-      result.itemSize = new primitives.common.Size(164, 34);
-      result.minimizedItemSize = new primitives.common.Size(8, 8);
+      result.itemSize = new primitives.Size(164, 34);
+      result.minimizedItemSize = new primitives.Size(8, 8);
       result.minimizedItemCornerRadius = 4;
       result.minimizedItemLineWidth = 1;
-      result.minimizedItemLineType = primitives.common.LineType.Solid;
+      result.minimizedItemLineType = primitives.LineType.Solid;
       result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
       result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
       result.minimizedItemOpacity = 0.7; // Shape background opacity
@@ -437,14 +436,14 @@
     }
 
     function getCalloutUnitTemplate() {
-      var result = new primitives.famdiagram.TemplateConfig();
+      var result = new primitives.TemplateConfig();
       result.name = "CalloutUnitTemplate";
 
-      result.itemSize = new primitives.common.Size(320, 60);
-      result.minimizedItemSize = new primitives.common.Size(8, 8);
+      result.itemSize = new primitives.Size(320, 60);
+      result.minimizedItemSize = new primitives.Size(8, 8);
       result.minimizedItemCornerRadius = 4;
       result.minimizedItemLineWidth = 1;
-      result.minimizedItemLineType = primitives.common.LineType.Solid;
+      result.minimizedItemLineType = primitives.LineType.Solid;
       result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
       result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
       result.minimizedItemOpacity = 0.7; // Shape background opacity
@@ -502,45 +501,27 @@
       return result;
     }
   </script>
-  <!-- /header -->
+
 </head>
 
 <body>
-  <div
-    style="position: absolute; width: 400px; left: 0px; top: 0px; bottom: 50px; padding: 0px; margin: 0px; border-style: none; font-size: 14px; overflow: scroll; -webkit-overflow-scrolling: touch;">
-    <div id="westpanel" style="padding: 5px; margin: 5px; font: normal 12px verdana, areal;">
-      <h2>Dependency Graph Visualization Demo</h2>
-      <p>On the right you may see a demo of a dependency graph. It contains around 170 nodes with some of the nodes
-        being arranged into multiple
-        explicit
-        sequences that show the evolution and order of dependency of said nodes.
-        We need to display all of the node sequences together in one hierarchy meanwhile allowing the user to see the
-        seperate individual sequences and their nodes.
-        In order to accomplish this, we can set priority for how nodes should align under their parents. In a family
-        diagram every node may have multiple parents and by default
-        aligns itself to be equally distanced from all of them. In this case however, we are intrested in having nodes
-        be closer or farther away from a specific parent.
-        This is done by giving higher priority to one of its parents. Our family diagram provides the property
-        <b>primaryParent</b>
-        which can be applied to a node. Automatically indicating that the child node or nodes should be alligned closer
-        to said parent within the hierarchy. This property is optional and doesn't
-        change any node relations,
-        so if it is applied to a non-exsisting parent then it will simply be ignored.</p>
-      <p>This alignment priority can then be used to create a full sequence, branch or chain of nodes within a grander
-        herarchy. This can be seen if you take a look at the sequence of flight related technologies starting from
-        "Subsonic flight" and ending with
-        "Cutting-Edge Aeronautics".</p>
-      <p>In the diagram red connection annotations display "primaryParent" references to enforce the hierarchy and
-        blue annotations display references enforcing the sorting of nodes within one group.</p>
-
-
+  <div class="container-fluid">
+    <div class="row">
+      <nav id="sidebarMenu" class="col-md-4 col-lg-2 d-md-block bg-light sidebar collapse" style="position: fixed; top: 0; bottom: 0px; overflow-y: auto; float: none;">
+        <div class="position-sticky pt-3">
+          <div id="westpanel" class="flex-column"></div>
+        </div>
+      </nav>
+  
+      <main class="col-md-8 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Technology Tree Demo</h1>
+        </div>
+        <div id="centerpanel" class="mediaPlaceholder my-2 w-100"></div>
+        <div id="southpanel" class="alert alert-primary" style="min-height: 60px;" role="alert">
+        </div>
+      </main>
     </div>
-  </div>
-  <div id="centerpanel"
-    style="position: absolute; border-style: dotted; border-width: 0px; top: 0; right: 0; bottom: 50px; left: 400px;">
-  </div>
-  <div id="southpanel"
-    style="position: absolute; border-style: dotted; border-width: 0px; height: 50px; right: 0; bottom: 0; left: 0;">
   </div>
 </body>
 

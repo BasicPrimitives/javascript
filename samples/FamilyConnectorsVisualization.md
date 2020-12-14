@@ -7,26 +7,26 @@ This is definitely extreme example of family relations, but the fact that famDia
 
 [JavaScript](javascript.controls/CaseFamilyChartRelations.html)
 
-![Screenshot](images/screenshots/CaseFamilyChartRelations.png)
+![Screenshot](javascript.controls/__image_snapshots__/CaseFamilyChartRelations-snap.png)
 
 This visualization is better, but it shows another problem. The big number of parent and children elements does not let to see them together, so in order to make diagram more compact widget API supports clustering of nodes into matrix, so that way they occupy least space possible. In order to enable this layout option set `enableMatrixLayout` to `true`.
 
 [JavaScript](javascript.controls/CaseFamilyChartMatrixLayout.html)
 [PDFKit](pdfkit.plugins/FamilyMatrix.html)
 
-![Screenshot](images/screenshots/CaseFamilyChartMatrixLayout.png)
+![Screenshot](javascript.controls/__image_snapshots__/CaseFamilyChartMatrixLayout-snap.png)
 
 Another typical problem in connectors visualization is excessive grand parents relations. It is situation when item has direct relation to parent, grand parent and grand grand parent. Usually when we draw family diagram we are more interested to show order of dependencies over actual relations. We know that the great-grandparent precedes the grandparent, the grandparent precedes the parent, the parent precedes the child node.  So this precedence defines the indirect relation between child node and grand-grandparent. So direct relation visualization between child node and its grand parents can be omitted out of diagram and replaced with dynamic annotations. Look at the following example where every child references all preceding parents:
 
 [JavaScript](javascript.controls/CaseFamilyChartGrandParentsRelations.html)
 
-![Screenshot](images/screenshots/CaseFamilyChartGrandParentsRelations.png)
+![Screenshot](javascript.controls/__image_snapshots__/CaseFamilyChartGrandParentsRelations-snap.png)
 
 As you may see control already eliminated a lot of connections via making bundles, so we don't see every connection between nodes, but still this diagram has a lot of connections to trace. In order to hide direct connections to grand parents set option `hideGrandParentsConnectors` to `true` and get following layout:
 
 [JavaScript](javascript.controls/CaseFamilyChartHiddenGrandParentsRelations.html)
 [PDFKit](pdfkit.plugins/HideGrandParentsConnectors.html)
 
-![Screenshot](images/screenshots/CaseFamilyChartHiddenGrandParentsRelations.png)
+![Screenshot](javascript.controls/__image_snapshots__/CaseFamilyChartHiddenGrandParentsRelations-snap.png)
 
 So we got quite clean relations diagram between nodes. We still have all relations in place, the only difference is that grand parents connections go through actual parents, so we need to visualize them dynamically, as we navigate around our diagram we can highlight all current node immediate parents and children with Connector Path Annotations and set dynamically custom Item Template for them.

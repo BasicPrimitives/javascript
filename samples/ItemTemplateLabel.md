@@ -6,6 +6,5 @@ If we need labels for regular items we can draw them using templates. Regular it
 Following example demonstrates how to add an extra property "percent" to items and render it as a label over item connection line.
 
 [JavaScript](javascript.controls/CaseItemTemplateLabel.html)
-[JQuery](jquery.widgets/CaseItemTemplateLabel.html)
 
-![Screenshot](images/screenshots/CaseItemTemplateLabel.png)
+![Screenshot](javascript.controls/__image_snapshots__/CaseItemTemplateLabel-snap.png)

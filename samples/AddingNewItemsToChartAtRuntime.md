@@ -8,30 +8,23 @@ Please, pay attention to the fact that the chart does not self update it's visua
 
 The `update` method supports multiple optional parameters which allow you to choose how you want to rerender your diagram.
 
-## In [JavaScript](https://developer.mozilla.org/en-US/docs/Web/javascript) 
+## [JavaScript](https://developer.mozilla.org/en-US/docs/Web/javascript): 
 ```Javascript
-control.update(primitives.orgdiagram.UpdateMode.Recreate);
+control.update(primitives.UpdateMode.Recreate);
 ```
 Recreate - is full content reset and redraw. It is equivalent to complete chart removal and recreation. This is the most expensive update. Use it when you want to be sure that everything ware recreated from scratch.
 
 ```Javascript
-control.update(primitives.orgdiagram.UpdateMode.Refresh);
+control.update(primitives.UpdateMode.Refresh);
 ```
 
 This is above mentioned fast redraw mode, it reuses existing DOM elements in order to speed up update time and it makes visual changes only in scope of changed API properties.
 
 ```Javascript
-control.update(primitives.orgdiagram.UpdateMode.PositonHighlight);
+control.update(primitives.UpdateMode.PositonHighlight);
 ```
 It ignores any API changes except current highlight item position, it just positions highlight item, no layout recalculation or items rendering performed.
 
-## In [jQuery](https://jqueryui.com/)
-```Javascript
-jQuery("#basicdiagram").orgDiagram(`update`, primitives.orgdiagram.UpdateMode.Recreate); /* Recreate */
-jQuery("#placeholder").orgDiagram(`update`, primitives.orgdiagram.UpdateMode.Refresh); /* Refresh */
-jQuery("#placeholder").orgDiagram(`update`, primitives.orgdiagram.UpdateMode.PositonHighlight); /* Highlight placement */
-```
 The following example demonstrates adding new items to organizational chart at run time, or in other words this sample does not recreate control every time we make changes to its items collection. It uses fast refresh mode to update its layout. This example adds "delete" and "add" buttons and implements onButtonClick event handler for adding and removing items. For more complex implementation of chart editing functionality see chart editor demo.
 
 [JavaScript](javascript.controls/CaseAddingNewItemsToChartAtRuntime.html)
-[JQuery](jquery.widgets/CaseAddingNewItemsToChartAtRuntime.html)

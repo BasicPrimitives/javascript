@@ -1,28 +1,46 @@
 {
   "homepage": "https://www.basicprimitives.com/",
+  "version": "6.0.0",
   "author": "Basic Primitives Inc. <support@basicprimitives.com> (https://www.basicprimitives.com)",
-  "license": "SEE LICENSE IN license.pdf",
-  "scripts": {
-    "src.primitives.merge": "node merge.js src.primitives\\src.primitives.json",
-    "src.primitives.compile": "npx google-closure-compiler --platform=windows --js=min\\primitives.latest.js --js_output_file=min\\primitives.min.js",
-    "src.primitives.jquery.merge": "node merge.js src.primitives.jquery\\src.primitives.jquery.json",
-    "src.primitives.jquery.compile": "npx google-closure-compiler --platform=windows --js=min\\primitives.jquery.latest.js --js_output_file=min\\primitives.jquery.min.js",
-    "src.tests.merge": "node merge.js src.tests\\src.tests.json",
-    "merge": "yarn src.primitives.merge && yarn src.primitives.compile && yarn src.primitives.jquery.merge && yarn src.primitives.jquery.compile && yarn src.tests.merge",
-    "apireference": "node apireference.js apireference.json",
-    "screenshots": "node screenshots.js",
-    "eslint": "./node_modules/.bin/eslint ./min/primitives.latest.js"
-  },
-  "dependencies": {
-    "google-closure-compiler": "^20200112.0.0",
-    "puppeteer": "^1.20.0"
-  },
   "description": "Basic Primitives Diagrams for JavaScript - data visualization components library that implements organizational chart and multi-parent dependency diagrams, contains implementations of JavaScript Controls and PDF rendering plugins.",
   "repository": {
     "type": "git",
     "url": "https://github.com/BasicPrimitives/javascript"
   },
+  "license": "SEE LICENSE IN license.pdf",
+  "main": "dist/primitives.js",
+  "module": "./src/index.js",
   "devDependencies": {
-    "eslint": "^5.16.0"
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7",
+    "babel-jest": "^26.6.3",
+    "babel-loader": "^8.2.2",
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^5.0.1",
+    "html-webpack-plugin": "^4.5.0",
+    "jest": "^26.6.3",
+    "jest-image-snapshot": "^4.2.0",
+    "jest-puppeteer": "^4.4.0",
+    "puppeteer": "^5.5.0",
+    "style-loader": "^2.0.0",
+    "url-loader": "^4.1.1",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^3.11.0",
+    "blob-stream": "^0.1.3",
+    "file-saver": "^2.0.5",
+    "pdfkit-nodejs-webpack": "^0.0.2"
+  },
+  "scripts": {
+    "test": "jest",
+    "build": "webpack",
+    "start": "webpack serve ",
+    "apireference": "node apireference.js apireference.json"
+  },
+  "dependencies": {
+
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
   }
 }

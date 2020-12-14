@@ -5,56 +5,56 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Incative items usage in layout</title>
 
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type='text/javascript'>
     var control;
     document.addEventListener('DOMContentLoaded', function () {
-      var options = new primitives.orgdiagram.Config();
+      var options = new primitives.OrgConfig();
 
       var items = [
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({
           id: 0,
           parent: null,
           title: "Scott Aasrud",
           description: "VP, Public Sector",
           image: "../images/photos/a.png"
         }),
-        new primitives.orgdiagram.ItemConfig({ id: 1, parent: 0, hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Finance", itemTitleColor: "Green" }),
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({ id: 1, parent: 0, hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Finance", itemTitleColor: "Green" }),
+        new primitives.OrgItemConfig({
           id: 2,
           parent: 1,
           title: "Ted Lucas",
           description: "VP, Human Resources",
           image: "../images/photos/b.png"
         }),
-        new primitives.orgdiagram.ItemConfig({ id: 3, parent: 0, hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Sales", itemTitleColor: "Navy" }),
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({ id: 3, parent: 0, hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Sales", itemTitleColor: "Navy" }),
+        new primitives.OrgItemConfig({
           id: 4,
           parent: 3,
           title: "Fritz Stuger",
           description: "VP, Human Resources",
           image: "../images/photos/b.png"
         }),
-        new primitives.orgdiagram.ItemConfig({ id: 5, parent: 0, hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Operations", itemTitleColor: "Magenta" }),
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({ id: 5, parent: 0, hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Operations", itemTitleColor: "Magenta" }),
+        new primitives.OrgItemConfig({
           id: 6,
           parent: 5,
           title: "Brad Whitt",
           description: "VP, Human Resources",
           image: "../images/photos/b.png"
         }),
-        new primitives.orgdiagram.ItemConfig({ id: 7, parent: 0, hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "IT", itemTitleColor: "Orange" }),
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({ id: 7, parent: 0, hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "IT", itemTitleColor: "Orange" }),
+        new primitives.OrgItemConfig({
           id: 8,
           parent: 7,
           title: "Ted Whitt",
           description: "VP, Human Resources",
           image: "../images/photos/b.png"
         }),
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({
           id: 18,
           parent: 7,
           title: "Ted Whitt 2",
@@ -77,7 +77,7 @@
       options.cursorItem = 0;
       options.templates = [getDepartmentTitleTemplate()];
       options.onItemRender = onTemplateRender;
-      options.hasSelectorCheckbox = primitives.common.Enabled.True;
+      options.hasSelectorCheckbox = primitives.Enabled.True;
       options.normalLevelShift = 20;
       options.dotLevelShift = 20;
       options.lineLevelShift = 10;
@@ -86,16 +86,16 @@
       options.lineItemsInterval = 4;
 
 
-      control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+      control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
     });
 
 
     function onTemplateRender(event, data) {
       switch (data.renderingMode) {
-        case primitives.common.RenderingMode.Create:
+        case primitives.RenderingMode.Create:
           /* Initialize widgets here */
           break;
-        case primitives.common.RenderingMode.Update:
+        case primitives.RenderingMode.Update:
           /* Update widgets here */
           break;
       }
@@ -104,18 +104,18 @@
       var element = data.element;
 
       if (data.templateName == "DepartmentTitleTemplate") {
-        element.firstChild.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+        element.firstChild.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
         element.firstChild.firstChild.textContent = itemConfig.title;
       }
     }
 
     function getDepartmentTitleTemplate() {
-      var result = new primitives.orgdiagram.TemplateConfig();
+      var result = new primitives.TemplateConfig();
       result.name = "DepartmentTitleTemplate";
       result.isActive = false;
 
-      result.itemSize = new primitives.common.Size(200, 30);
-      result.minimizedItemSize = new primitives.common.Size(3, 3);
+      result.itemSize = new primitives.Size(200, 30);
+      result.minimizedItemSize = new primitives.Size(3, 3);
 
       /* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
       result.itemTemplate = ["div",
@@ -159,7 +159,7 @@
 </head>
 
 <body>
-  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
 </body>
 
 </html>

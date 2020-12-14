@@ -9,7 +9,6 @@
 ## Integration
 * [React Demos](https://github.com/BasicPrimitives/react-demo)
 * [AngularJS Organizational Chart Directive](AngularJSFirstOrganizationalChartDirective.md)
-* [jQuery Specific Use Cases](jQuerySpecific.md)
 * [PDFkit Specific Use Cases](PDFkitSpecific.md)
 
 ## User Interface Events &amp; Options

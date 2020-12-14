@@ -1,32 +1,32 @@
 ﻿<!DOCTYPE html> 
 <html>
 <head>
-	<title>JavaScript Control Financial Ownership Chart Demo</title>
+	<title>Financial Ownership Chart Demo</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-	<!-- header -->
-	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-	<script type="text/javascript" src="common/helpers.js"></script>
-	<script type="text/javascript" src="../data/largedataset.js"></script>
-
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" type='text/css'>
+	<link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet"  type='text/css'>
+	<link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../primitives.js"></script>
+	<script type="text/javascript" src="../../javascriptsamples.js"></script>
+	<script type="text/javascript" src="../data/techtree.js"></script>
+	<link href="./css/styles.css" media="screen" rel="stylesheet" type="text/css" />
+  
 	<script type="text/javascript">
 		var control;
 		var treeItems = {};
 		var timer = null;
-		var optionsRender = new primitives.helpers.controls.Render([
-			new primitives.helpers.controls.PanelConfig("Layout Options", [
-				new primitives.helpers.controls.CaptionConfig("Page Fit Mode defines rule of fitting chart into available screen space. Set it to None if you want to disable it.", false),
-				new primitives.helpers.controls.RadioBoxConfig("pageFitMode", primitives.common.PageFitMode.FitToPage, "Page Fit Mode", { None: 0, PageWidth: 1, PageHeight: 2, FitToPage: 3, SelectionOnly: 6 }, primitives.helpers.controls.ValueType.Integer, onUpdate)
+		var optionsRender = new javascriptsamples.Render([
+			new javascriptsamples.PanelConfig("Layout Options", [
+				new javascriptsamples.CaptionConfig("Page Fit Mode defines rule of fitting chart into available screen space. Set it to None if you want to disable it.", false),
+				new javascriptsamples.RadioBoxConfig("pageFitMode", primitives.PageFitMode.FitToPage, "Page Fit Mode", { None: 0, PageWidth: 1, PageHeight: 2, FitToPage: 3, SelectionOnly: 6 }, javascriptsamples.ValueType.Integer, onUpdate)
 			])
 		], {
-			pageFitMode: primitives.common.PageFitMode.None
+			pageFitMode: primitives.PageFitMode.None
 		});
 
 		document.addEventListener('DOMContentLoaded', function () {
 			optionsRender.render(document.getElementById("westpanel"));
-			control = primitives.famdiagram.Control(document.getElementById("centerpanel"),
+			control = primitives.FamDiagram(document.getElementById("centerpanel"),
 				GetDiagramConfig()
 			);
 
@@ -36,17 +36,17 @@
 		});
 
 		function GetDiagramConfig() {
-			var options = new primitives.famdiagram.Config();
+			var options = new primitives.FamConfig();
 
 			var items = [
-				{ id: 1, title: "20%", isActive: false, templateName: "ShapeTemplate", shapeType: "rhombus.png", minimizedItemShapeType: primitives.common.ShapeType.Rhombus },
-				{ id: 2, title: "80%", isActive: false, templateName: "ShapeTemplate", shapeType: "circle.png", minimizedItemShapeType: primitives.common.ShapeType.Circle },
-				{ id: 3, parents: [1, 2], title: "Top Holdings", hasSelectorCheckbox: primitives.common.Enabled.True, minimizedItemShapeType: primitives.common.ShapeType.Rectangle },
-				{ id: 4, title: "Top Holdings Ltd.", hasSelectorCheckbox: primitives.common.Enabled.True, minimizedItemShapeType: primitives.common.ShapeType.Rectangle },
-				{ id: 5, parents: [3, 4], title: "ABC Holdings", hasSelectorCheckbox: primitives.common.Enabled.True, minimizedItemShapeType: primitives.common.ShapeType.Rectangle },
-				{ id: 6, parents: [5, 3], title: "ABC Co Ltd", hasSelectorCheckbox: primitives.common.Enabled.True, minimizedItemShapeType: primitives.common.ShapeType.Rectangle },
-				{ id: 7, parents: [4, 6], title: "II", isActive: false, templateName: "ShapeTemplate", shapeType: "rectangle.png", minimizedItemShapeType: primitives.common.ShapeType.Rectangle },
-				{ id: 8, parents: [6], title: "I", isActive: false, templateName: "ShapeTemplate", shapeType: "rectangle.png", minimizedItemShapeType: primitives.common.ShapeType.Rectangle }
+				{ id: 1, title: "20%", isActive: false, templateName: "ShapeTemplate", shapeType: "rhombus.png", minimizedItemShapeType: primitives.ShapeType.Rhombus },
+				{ id: 2, title: "80%", isActive: false, templateName: "ShapeTemplate", shapeType: "circle.png", minimizedItemShapeType: primitives.ShapeType.Circle },
+				{ id: 3, parents: [1, 2], title: "Top Holdings", hasSelectorCheckbox: primitives.Enabled.True, minimizedItemShapeType: primitives.ShapeType.Rectangle },
+				{ id: 4, title: "Top Holdings Ltd.", hasSelectorCheckbox: primitives.Enabled.True, minimizedItemShapeType: primitives.ShapeType.Rectangle },
+				{ id: 5, parents: [3, 4], title: "ABC Holdings", hasSelectorCheckbox: primitives.Enabled.True, minimizedItemShapeType: primitives.ShapeType.Rectangle },
+				{ id: 6, parents: [5, 3], title: "ABC Co Ltd", hasSelectorCheckbox: primitives.Enabled.True, minimizedItemShapeType: primitives.ShapeType.Rectangle },
+				{ id: 7, parents: [4, 6], title: "II", isActive: false, templateName: "ShapeTemplate", shapeType: "rectangle.png", minimizedItemShapeType: primitives.ShapeType.Rectangle },
+				{ id: 8, parents: [6], title: "I", isActive: false, templateName: "ShapeTemplate", shapeType: "rectangle.png", minimizedItemShapeType: primitives.ShapeType.Rectangle }
 			];
 
 			/* create hash of items */
@@ -56,24 +56,24 @@
 			}
 
 			var annotations = [
-				new primitives.famdiagram.HighlightPathAnnotationConfig({ items: [3, 5] }),
-				new primitives.famdiagram.HighlightPathAnnotationConfig({ items: [3, 6] }),
+				new primitives.HighlightPathAnnotationConfig({ items: [3, 5] }),
+				new primitives.HighlightPathAnnotationConfig({ items: [3, 6] }),
 
-				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 4, toItems: [5], title: "30%", templateName: "LabelAnnotationTemplate" }),
-				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 4, toItems: [5, 7], title: "100%" }),
-				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 4, toItems: [7], title: "70%" }),
+				new primitives.LabelAnnotationConfig({ fromItem: 4, toItems: [5], title: "30%", templateName: "LabelAnnotationTemplate" }),
+				new primitives.LabelAnnotationConfig({ fromItem: 4, toItems: [5, 7], title: "100%" }),
+				new primitives.LabelAnnotationConfig({ fromItem: 4, toItems: [7], title: "70%" }),
 
-				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 3, toItems: [5], title: "20%" }),
-				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 3, toItems: [6], title: "80%" }),
-				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 3, toItems: [5, 6], title: "100%" }),
+				new primitives.LabelAnnotationConfig({ fromItem: 3, toItems: [5], title: "20%" }),
+				new primitives.LabelAnnotationConfig({ fromItem: 3, toItems: [6], title: "80%" }),
+				new primitives.LabelAnnotationConfig({ fromItem: 3, toItems: [5, 6], title: "100%" }),
 
-				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 6, toItems: [5], title: "⇧27%" }),
-				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 6, toItems: [3], title: "⇧73%" }),
-				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 6, toItems: [5, 3], title: "⇧100%" }),
+				new primitives.LabelAnnotationConfig({ fromItem: 6, toItems: [5], title: "⇧27%" }),
+				new primitives.LabelAnnotationConfig({ fromItem: 6, toItems: [3], title: "⇧73%" }),
+				new primitives.LabelAnnotationConfig({ fromItem: 6, toItems: [5, 3], title: "⇧100%" }),
 
-				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 6, toItems: [7], title: "60%" }),
-				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 6, toItems: [7, 8], title: "100%" }),
-				new primitives.famdiagram.LabelAnnotationConfig({ fromItem: 6, toItems: [8], title: "40%" })
+				new primitives.LabelAnnotationConfig({ fromItem: 6, toItems: [7], title: "60%" }),
+				new primitives.LabelAnnotationConfig({ fromItem: 6, toItems: [7, 8], title: "100%" }),
+				new primitives.LabelAnnotationConfig({ fromItem: 6, toItems: [8], title: "40%" })
 			];
 
 			options.defaultTemplateName = "UnitTemplate";
@@ -83,19 +83,19 @@
 			options.cursorItem = 3;
 			options.linesWidth = 1;
 			options.linesColor = "black";
-			options.highlightLinesColor = primitives.common.Colors.Red;
+			options.highlightLinesColor = primitives.Colors.Red;
 			options.highlightLinesWidth = 2;
-			options.highlightLinesType = primitives.common.LineType.Solid;
+			options.highlightLinesType = primitives.LineType.Solid;
 
 			options.cousinsIntervalMultiplier = 1;
 
-			var buttons = [];
-			options.buttons = buttons;
-			options.hasButtons = primitives.common.Enabled.True;
+			options.hasButtons = primitives.Enabled.True;
 			options.onButtonClick = function (e, data) {
 				var message = "User clicked '" + data.name + "' button for item '" + data.context.title + "'.";
 				alert(message);
 			};
+			options.buttonsPanelSize = 36;
+			options.onButtonsRender = onButtonsRender;
 			options.onCursorChanging = onCursorChanging;
 			options.onCursorChanged = onCursorChanged;
 			options.onHighlightChanging = onHighlightChanging;
@@ -112,9 +112,9 @@
 			options.templates = [getUnitTemplate(), getShapeTemplate(), getLabelAnnotationTemplate()];
 			options.onItemRender = onTemplateRender;
 
-			options.pageFitMode = primitives.orgdiagram.PageFitMode.None;
+			options.pageFitMode = primitives.PageFitMode.None;
 
-			options.arrowsDirection = primitives.common.GroupByType.Children;
+			options.arrowsDirection = primitives.GroupByType.Children;
 			options.showExtraArrows = false;
 
 			return options;
@@ -124,7 +124,7 @@
 			var options = optionsRender.getValues();
 
 			control.setOptions(options);
-			contro.update(primitives.common.UpdateMode.Refresh);
+			contro.update(primitives.UpdateMode.Refresh);
 		}
 
 		function onTemplateRender(event, data) {
@@ -143,7 +143,7 @@
 
 			if (data.templateName == "UnitTemplate") {
 				var titleBackground = element.firstChild;
-				titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+				titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
 
 				var title = element.firstChild.firstChild;
 				title.textContent = itemConfig.title;
@@ -159,11 +159,11 @@
 		}
 
 		function getLabelAnnotationTemplate() {
-			var result = new primitives.famdiagram.TemplateConfig();
+			var result = new primitives.TemplateConfig();
 			result.name = "LabelAnnotationTemplate";
 
-			result.itemSize = new primitives.common.Size(100, 20);
-			result.minimizedItemSize = new primitives.common.Size(3, 3);
+			result.itemSize = new primitives.Size(100, 20);
+			result.minimizedItemSize = new primitives.Size(3, 3);
 
 			result.itemTemplate = ["div",
 				{
@@ -193,13 +193,13 @@
 		}
 
 		function getShapeTemplate() {
-			var result = new primitives.famdiagram.TemplateConfig();
+			var result = new primitives.TemplateConfig();
 			result.name = "ShapeTemplate";
 
-			result.itemSize = new primitives.common.Size(100, 100);
-			result.minimizedItemSize = new primitives.common.Size(16, 16);
+			result.itemSize = new primitives.Size(100, 100);
+			result.minimizedItemSize = new primitives.Size(16, 16);
 			result.minimizedItemLineWidth = 1;
-			result.minimizedItemLineType = primitives.common.LineType.Solid;
+			result.minimizedItemLineType = primitives.LineType.Solid;
 			result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
 			result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
 			result.minimizedItemOpacity = 0.7; // Shape background opacity
@@ -242,7 +242,7 @@
 							top: "40px",
 							left: "0px",
 							width: "100px",
-							height: "20px",
+							height: "30px",
 							fontSize: "20px",
 							textAlign: "center"
 						}
@@ -254,19 +254,14 @@
 		}
 
 		function getUnitTemplate() {
-			var result = new primitives.famdiagram.TemplateConfig();
+			var result = new primitives.TemplateConfig();
 			result.name = "UnitTemplate";
 
-			var buttons = [];
-			buttons.push(new primitives.famdiagram.ButtonConfig("email", "ui-icon-mail-closed", "E-Mail"));
-			buttons.push(new primitives.famdiagram.ButtonConfig("help", "ui-icon-help", "Help"));
-			result.buttons = buttons;
-
-			result.itemSize = new primitives.common.Size(220, 60);
-			result.minimizedItemSize = new primitives.common.Size(30, 30);
+			result.itemSize = new primitives.Size(220, 60);
+			result.minimizedItemSize = new primitives.Size(30, 30);
 			result.minimizedItemCornerRadius = 1; // Sligtly rounded corners 
 			result.minimizedItemLineWidth = 1;
-			result.minimizedItemLineType = primitives.common.LineType.Solid;
+			result.minimizedItemLineType = primitives.LineType.Solid;
 			result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
 			result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
 			result.minimizedItemOpacity = 0.7; // Shape background opacity
@@ -322,6 +317,33 @@
 			return result;
 		}
 
+		function onButtonsRender(data) {
+			var itemConfig = data.context;
+			var element = data.element;
+			element.innerHTML = "";
+			element.appendChild(primitives.JsonML.toHTML(["div",
+				{
+				class: "btn-group-vertical btn-group-sm"
+				},
+				["button", 
+					{
+						"type": "button",
+						"data-buttonname": "envelope",
+						"class": "btn btn-light"
+					},
+					["i", { "class": "fa fa-envelope" }]
+				],
+				["button", 
+					{
+						"type": "button",
+						"data-buttonname": "cog",
+						"class": "btn btn-light"
+					},
+					["i", { "class": "fa fa-cog" }]
+				]
+			]));
+		}
+
 		function onSelectionChanged(e, data) {
 			var selectedItems = control.getOption("selectedItems");
 			var message = "";
@@ -368,7 +390,7 @@
 		function onWindowResize() {
 			if (timer == null) {
 				timer = window.setTimeout(function () {
-					control.update(primitives.orgdiagram.UpdateMode.Refresh);
+					control.update(primitives.UpdateMode.Refresh);
 					window.clearTimeout(timer);
 					timer = null;
 				}, 300);
@@ -377,17 +399,25 @@
 	</script>
 	<!-- /header -->
 </head>
+
 <body>
-	<div style="position: absolute; width: 400px; left: 0px; top: 0px; bottom: 50px; padding: 0px; margin: 0px; border-style: none; font-size: 14px; overflow: scroll; -webkit-overflow-scrolling: touch;">
-		<div id="westpanel" style="padding: 5px; margin: 5px; font: normal 12px verdana, areal;">
-			<h2>Financial Ownership Diagram in JavaScript</h2>
-			<p>Multiple inheritance diagram visualizing financial ownership. Chart supports following features:</p>
-			<p>Label annotations placed over connection lines. They are used to show percentage of ownership and form cascades of labels when total value label for several children or parents needs to be shown over individual labels.</p>
-			<p>Inective items are used to show templated nodes in layout having no user interactivity. They are transarent to cursor node neighbourhood visualization and they are not clickable or selectable. </p>
-			<p>Nodes may have mutial ownership, so control supports loops in parent child relations. See Family demo sample data sets as well.</p>
-		</div>
+	<div class="container-fluid">
+	  <div class="row">
+		<nav id="sidebarMenu" class="col-md-4 col-lg-2 d-md-block bg-light sidebar collapse" style="position: fixed; top: 0; bottom: 0px; overflow-y: auto; float: none;">
+		  <div class="position-sticky pt-3">
+			<div id="westpanel" class="flex-column"></div>
+		  </div>
+		</nav>
+	
+		<main class="col-md-8 ms-sm-auto col-lg-10 px-md-4">
+		  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+			<h1 class="h2">Financial Ownership Diagram Demo</h1>
+		  </div>
+		  <div id="centerpanel" class="mediaPlaceholder my-2 w-100"></div>
+		  <div id="southpanel" class="alert alert-primary" style="min-height: 60px;" role="alert">
+		  </div>
+		</main>
+	  </div>
 	</div>
-	<div id="centerpanel" style="position: absolute; border-style: dotted; border-width: 0px; top: 0; right: 0; bottom: 50px; left: 400px;"></div>
-	<div id="southpanel" style="position: absolute; border-style: dotted; border-width: 0px; height: 50px; right: 0; bottom: 0; left: 0;"></div>
-</body>
+  </body>
 </html>

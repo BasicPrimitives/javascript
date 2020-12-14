@@ -3,19 +3,19 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<title>Item Template</title>
-
-	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" type='text/css'>
+	<link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet"  type='text/css'>
+	<script type="text/javascript" src="../../primitives.js"></script>
+	<link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
 	<script type='text/javascript'>
 		var control;
 
 		document.addEventListener('DOMContentLoaded', function () {
-			var options = new primitives.orgdiagram.Config();
+			var options = new primitives.OrgConfig();
 
 			var items = [
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 0,
 					parent: null,
 					title: "Scott Aasrud",
@@ -26,56 +26,104 @@
 					image: "../images/photos/a.png",
 					templateName: "contactTemplate",
 					itemTitleColor: "red",
-					groupTitle: "Group 2"
+					groupTitle: "contactTemplate"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 1,
 					parent: 0,
 					title: "Ted Lucas",
-					description: "VP, Human Resources",
+					description: "Default template",
 					image: "../images/photos/b.png",
-					groupTitle: "Group 1"
+					groupTitle: "Default template"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 2,
 					parent: 0,
 					title: "Fritz Stuger",
 					phone: "(123) 654-78-90",
 					email: "itemc@org.com",
-					description: "Business Solutions, US",
+					description: "template property hasButtons set to False",
 					image: "../images/photos/c.png",
 					templateName: "contactTemplate2",
-					groupTitle: "Group 3"
+					groupTitle: "contactTemplate2"
 				})
 			];
-
-			var buttons = [];
-
-			buttons.push(new primitives.orgdiagram.ButtonConfig("home", "ui-icon-home", "Home"));
-			buttons.push(new primitives.orgdiagram.ButtonConfig("wrench", "ui-icon-wrench", "Wrench"));
-
-			options.buttons = buttons;
-
 
 			options.items = items;
 			options.cursorItem = 0;
 			options.templates = [getContactTemplate(), getContactTemplate2()];
 			options.onItemRender = onTemplateRender;
-			options.hasButtons = primitives.common.Enabled.True;
+			options.hasButtons = primitives.Enabled.True;
+			options.buttonsPanelSize = 38;
+			options.onButtonsRender = function (data) {
+				var itemConfig = data.context;
+				var element = data.element;
+				element.innerHTML = "";
+
+
+				switch(data.templateName) {
+					case "contactTemplate":
+						element.appendChild(primitives.JsonML.toHTML(["div",
+							{
+							class: "btn-group-vertical btn-group-sm"
+							},
+							["button", 
+								{
+									"type": "button",
+									"data-buttonname": "add",
+									"class": "btn btn-light"
+								},
+								["i", { "class": "fa fa-user-plus" }]
+							]
+						]));
+					break;
+					default:
+						element.appendChild(primitives.JsonML.toHTML(["div",
+							{
+							class: "btn-group-vertical btn-group-sm"
+							},
+							["button", 
+								{
+									"type": "button",
+									"data-buttonname": "envelope",
+									"class": "btn btn-light"
+								},
+								["i", { "class": "fa fa-envelope" }]
+							],
+							["button", 
+								{
+									"type": "button",
+									"data-buttonname": "delete",
+									"class": "btn btn-light"
+								},
+								["i", { "class": "fa fa-minus-circle" }]
+							],
+							["button", 
+								{
+									"type": "button",
+									"data-buttonname": "cog",
+									"class": "btn btn-light"
+								},
+								["i", { "class": "fa fa-cog" }]
+							]
+						]));
+					break;
+				}
+			};
 			options.onButtonClick = function (e, data) {
 				var message = "User clicked '" + data.name + "' button for item '" + data.context.title + "'.";
 				alert(message);
 			};
 
-			control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+			control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
 
 
 			function onTemplateRender(event, data) {
 				switch (data.renderingMode) {
-					case primitives.common.RenderingMode.Create:
+					case primitives.RenderingMode.Create:
 						/* Initialize widgets here */
 						break;
-					case primitives.common.RenderingMode.Update:
+					case primitives.RenderingMode.Update:
 						/* Update widgets here */
 						break;
 				}
@@ -88,7 +136,7 @@
 					photo.alt = itemConfig.title;
 
 					var titleBackground = data.element.firstChild;
-					titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+					titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
 
 					var title = data.element.firstChild.firstChild;
 					title.textContent = itemConfig.title;
@@ -107,7 +155,7 @@
 					photo.alt = itemConfig.title;
 
 					var titleBackground = data.element.firstChild;
-					titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+					titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
 
 					var title = data.element.firstChild.firstChild;
 					title.textContent = itemConfig.title;
@@ -124,18 +172,11 @@
 			}
 
 			function getContactTemplate2() {
-				var result = new primitives.orgdiagram.TemplateConfig();
+				var result = new primitives.TemplateConfig();
 				result.name = "contactTemplate2";
-
-				var buttons = [];
-				buttons.push(new primitives.orgdiagram.ButtonConfig("revert", "ui-icon-transferthick-e-w", "Revert"));
-				buttons.push(new primitives.orgdiagram.ButtonConfig("email", "ui-icon-mail-closed", "E-Mail"));
-				buttons.push(new primitives.orgdiagram.ButtonConfig("help", "ui-icon-help", "Help"));
-
-				result.buttons = buttons;
-
-				result.itemSize = new primitives.common.Size(220, 120);
-				result.minimizedItemSize = new primitives.common.Size(3, 3);
+				result.itemSize = new primitives.Size(220, 120);
+				result.minimizedItemSize = new primitives.Size(3, 3);
+				result.hasButtons = primitives.Enabled.False;
 
 				/* this template demonstrates template definition in form of regular text, see: https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML for details */
 				result.itemTemplate = 
@@ -156,18 +197,10 @@
 			}
 
 			function getContactTemplate() {
-				var result = new primitives.orgdiagram.TemplateConfig();
+				var result = new primitives.TemplateConfig();
 				result.name = "contactTemplate";
-
-				var buttons = [];
-				buttons.push(new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"));
-				buttons.push(new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"));
-				buttons.push(new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add"));
-				buttons.push(new primitives.orgdiagram.ButtonConfig("notice", "ui-icon-notice", "Notice"));
-				result.buttons = buttons;
-
-				result.itemSize = new primitives.common.Size(220, 120);
-				result.minimizedItemSize = new primitives.common.Size(3, 3);
+				result.itemSize = new primitives.Size(220, 120);
+				result.minimizedItemSize = new primitives.Size(3, 3);
 
 				/* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
 				result.itemTemplate = ["div",
@@ -269,6 +302,6 @@
 	</script>
 </head>
 <body>
-	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
 </body>
 </html>

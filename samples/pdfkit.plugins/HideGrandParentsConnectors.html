@@ -4,21 +4,15 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Family Chart Hiding Grand Parents Relations</title>
-
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <!-- PDFkit & Libs -->
-  <script src="../../packages/pdfkit/pdfkit.js"></script>
-  <script src="../../packages/pdfkit/blob-stream.js"></script>
-
-  <!-- Demo Images -->
-  <script src="../data/photos.js"></script>
-
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="../../pdfkitsamples.js"></script>
+  <script type="text/javascript" src="../../primitives.js"></script>
 
   <script type='text/javascript'>
     var control;
     var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
 
     document.addEventListener('DOMContentLoaded', function () {
       // create a document and pipe to a blob
@@ -28,7 +22,7 @@
       doc.fontSize(25)
         .text('Family Diagram Having Hidden Grand Parent Connections', 30, 30);
 
-      var firstOrganizationalChartSample = primitives.pdf.famdiagram.Plugin({
+      var firstOrganizationalChartSample = primitives.FamDiagramPdfkit({
         items: [
           { id: 1, title: "David Dalton", groupTitle: "1", label: "David Dalton", description: "1, Chief Executive Officer (CEO)", phone: "352-206-7599", email: "davidalt@name.com", image: photos.q, itemTitleColor: "#4169e1" },
           { id: 2, parents: [1], title: "Steven Lacombe", groupTitle: "2", label: "Steven Lacombe", description: "2, GM, Platform Strategy", phone: "805-800-7397", email: "stevlaco@name.com", image: photos.a, itemTitleColor: "#4b0082" },
@@ -38,7 +32,7 @@
         cursorItem: 2,
         linesWidth: 1,
         linesColor: "black",
-        hasSelectorCheckbox: primitives.common.Enabled.False,
+        hasSelectorCheckbox: primitives.Enabled.False,
         hideGrandParentsConnectors: true,
         normalLevelShift: 20,
         dotLevelShift: 20,
@@ -46,7 +40,7 @@
         normalItemsInterval: 10,
         dotItemsInterval: 10,
         lineItemsInterval: 10,
-        arrowsDirection: primitives.common.GroupByType.Parents
+        arrowsDirection: primitives.GroupByType.Parents
       });
 
       var size = firstOrganizationalChartSample.draw(doc, 30, 60);

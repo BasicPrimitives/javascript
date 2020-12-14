@@ -55,49 +55,49 @@ var famdata = {
   cursorItem: 5,
   annotations: [
     {
-      annotationType: primitives.common.AnnotationType.Connector,
+      annotationType: primitives.AnnotationType.Connector,
       fromItem: 5,
       toItem: 81,
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
-      labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
-      connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-      color: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">1</span>Connector annotation",
+      labelSize: { width: 80, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
       offset: 5,
       lineWidth: 2,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     },
     {
-      annotationType: primitives.common.AnnotationType.Background,
+      annotationType: primitives.AnnotationType.Background,
       items: [81, 82, 83, 84, 85],
       borderColor: "#f8e5f9",
       fillColor: "#e5f9f8",
       lineWidth: 2,
       selectItems: true,
-      lineType: primitives.common.LineType.Dotted
+      lineType: primitives.LineType.Dotted
     },
     {
-      annotationType: primitives.common.AnnotationType.Shape,
+      annotationType: primitives.AnnotationType.Shape,
       items: [5],
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>3</div>Cross Out shape annotation",
-      labelSize: { width: 120, height: 50 }, //new primitives.common.Size(120, 50)
-      shapeType: primitives.common.ShapeType.CrossOut,
-      borderColor: primitives.common.Colors.Red,
-      offset: { left: 6, top: 3, right: 6, bottom: 6 }, //new primitives.common.Thickness(6, 3, 6, 6)
+      label: "<span class=\"badge bg-danger\">3</span> Cross Out shape annotation",
+      labelSize: { width: 120, height: 50 }, //new primitives.Size(120, 50)
+      shapeType: primitives.ShapeType.CrossOut,
+      borderColor: primitives.Colors.Red,
+      offset: { left: 6, top: 3, right: 6, bottom: 6 }, //new primitives.Thickness(6, 3, 6, 6)
       lineWidth: 2,
       selectItems: false,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     },
     {
-      annotationType: primitives.common.AnnotationType.Shape,
+      annotationType: primitives.AnnotationType.Shape,
       items: [81],
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>4</div>Oval shape annotation",
-      labelSize: new primitives.common.Size(100, 50), //new primitives.common.Size(100, 50)
-      shapeType: primitives.common.ShapeType.Oval,
-      borderColor: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">4</span> Oval shape annotation",
+      labelSize: new primitives.Size(100, 50), //new primitives.Size(100, 50)
+      shapeType: primitives.ShapeType.Oval,
+      borderColor: primitives.Colors.Red,
       offset: 14,
       lineWidth: 2,
       selectItems: true,
-      lineType: primitives.common.LineType.Dashed,
+      lineType: primitives.LineType.Dashed,
       fillColor: null
     }
   ],
@@ -256,16 +256,16 @@ var famdata2 = {
   cursorItem: 5,
   annotations: [
     {
-      annotationType: primitives.common.AnnotationType.Connector,
+      annotationType: primitives.AnnotationType.Connector,
       fromItem: 1,
       toItem: 15,
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
-      labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
-      connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-      color: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">1</span>Connector annotation",
+      labelSize: { width: 80, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
       offset: 5,
       lineWidth: 2,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     }
   ],
   items: [
@@ -300,16 +300,16 @@ var sideBySide = {
   cursorItem: 5,
   annotations: [
     {
-      annotationType: primitives.common.AnnotationType.Connector,
+      annotationType: primitives.AnnotationType.Connector,
       fromItem: 36,
       toItem: 16,
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
-      labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
-      connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-      color: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">1</span>Connector annotation",
+      labelSize: { width: 80, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
       offset: 5,
       lineWidth: 2,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     }
   ],
   items: [
@@ -386,16 +386,16 @@ var crossShape = {
   cursorItem: 2,
   annotations: [
     {
-      annotationType: primitives.common.AnnotationType.Connector,
+      annotationType: primitives.AnnotationType.Connector,
       fromItem: 2,
       toItem: 1,
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
-      labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
-      connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-      color: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">1</span>Connector annotation",
+      labelSize: { width: 80, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
       offset: 5,
       lineWidth: 2,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     }
   ],
   items: [
@@ -418,16 +418,16 @@ var rombusShape = {
   cursorItem: 1,
   annotations: [
     {
-      annotationType: primitives.common.AnnotationType.Connector,
+      annotationType: primitives.AnnotationType.Connector,
       fromItem: 3,
       toItem: 8,
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
-      labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
-      connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-      color: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">1</span>Connector annotation",
+      labelSize: { width: 80, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
       offset: 5,
       lineWidth: 2,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     }
   ],
   items: [
@@ -448,26 +448,26 @@ var sandClockShape = {
   cursorItem: 7,
   annotations: [
     {
-      annotationType: primitives.common.AnnotationType.Connector,
+      annotationType: primitives.AnnotationType.Connector,
       fromItem: 7,
       toItem: 10,
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
-      labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
-      connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-      color: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">1</span>Connector annotation",
+      labelSize: { width: 80, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
       offset: 5,
       lineWidth: 2,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     },
-    new primitives.orgdiagram.BackgroundAnnotationConfig({
+    new primitives.BackgroundAnnotationConfig({
       items: [7],
       borderColor: "#f8e5f9",
       fillColor: "#e5f9f8",
       lineWidth: 2,
       selectItems: true,
       includeChildren: true,
-      lineType: primitives.common.LineType.Dotted,
-      offset: new primitives.common.Thickness(20, 20, 20, 20)
+      lineType: primitives.LineType.Dotted,
+      offset: new primitives.Thickness(20, 20, 20, 20)
     })
   ],
   items: [
@@ -491,16 +491,16 @@ var skippedMembers = {
   cursorItem: 12,
   annotations: [
     {
-      annotationType: primitives.common.AnnotationType.Connector,
+      annotationType: primitives.AnnotationType.Connector,
       fromItem: 2,
       toItem: 13,
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
-      labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
-      connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-      color: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">1</span>Connector annotation",
+      labelSize: { width: 80, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
       offset: 5,
       lineWidth: 2,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     }
   ],
   items: [
@@ -525,16 +525,16 @@ var horizontalChain = {
   cursorItem: 2,
   annotations: [
     {
-      annotationType: primitives.common.AnnotationType.Connector,
+      annotationType: primitives.AnnotationType.Connector,
       fromItem: 8,
       toItem: 10,
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
-      labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
-      connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-      color: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">1</span>Connector annotation",
+      labelSize: { width: 80, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
       offset: 5,
       lineWidth: 2,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     }
   ],
   items: [
@@ -555,16 +555,16 @@ var alignmentData = {
   cursorItem: 6,
   annotations: [
     {
-      annotationType: primitives.common.AnnotationType.Connector,
+      annotationType: primitives.AnnotationType.Connector,
       fromItem: 2,
       toItem: 5,
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
-      labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
-      connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-      color: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">1</span>Connector annotation",
+      labelSize: { width: 80, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
       offset: 5,
       lineWidth: 2,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     }
   ],
   items: [
@@ -582,16 +582,16 @@ var famdataCascade = {
   cursorItem: 10,
   annotations: [
     {
-      annotationType: primitives.common.AnnotationType.Connector,
+      annotationType: primitives.AnnotationType.Connector,
       fromItem: 10,
       toItem: 5,
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
-      labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
-      connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-      color: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">1</span>Connector annotation",
+      labelSize: { width: 80, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
       offset: 5,
       lineWidth: 2,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     }
   ],
   items: [
@@ -612,16 +612,16 @@ var famdataWorld = {
   cursorItem: 2,
   annotations: [
     {
-      annotationType: primitives.common.AnnotationType.Connector,
+      annotationType: primitives.AnnotationType.Connector,
       fromItem: 2,
       toItem: 31,
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
-      labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
-      connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-      color: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">1</span>Connector annotation",
+      labelSize: { width: 80, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
       offset: 5,
       lineWidth: 2,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     }
   ],
   items: [
@@ -680,16 +680,16 @@ var famSpouses = {
   cursorItem: 5,
   annotations: [
     {
-      annotationType: primitives.common.AnnotationType.Connector,
+      annotationType: primitives.AnnotationType.Connector,
       fromItem: 5,
       toItem: 8,
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>Connector annotation",
-      labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
-      connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-      color: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">1</span>Connector annotation",
+      labelSize: { width: 80, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
       offset: 5,
       lineWidth: 2,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     }
   ],
   items: [
@@ -721,17 +721,17 @@ var famSpouses = {
 var famdata2NodesLoopTest = {
   cursorItem: 2,
   annotations: [
-    { annotationType: primitives.common.AnnotationType.Label, fromItem: 2, toItems: [1], title: "2->1" },
-    { annotationType: primitives.common.AnnotationType.Label, fromItem: 1, toItems: [2], title: "1->2" },
-    new primitives.orgdiagram.BackgroundAnnotationConfig({
+    { annotationType: primitives.AnnotationType.Label, fromItem: 2, toItems: [1], title: "2->1" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [2], title: "1->2" },
+    new primitives.BackgroundAnnotationConfig({
       items: [1],
       borderColor: "#f8e5f9",
       fillColor: "#e5f9f8",
       lineWidth: 2,
       selectItems: true,
       includeChildren: true,
-      lineType: primitives.common.LineType.Dotted,
-      offset: new primitives.common.Thickness(20, 20, 20, 20)
+      lineType: primitives.LineType.Dotted,
+      offset: new primitives.Thickness(20, 20, 20, 20)
     })
   ],
   items: [
@@ -744,16 +744,16 @@ var famdataCharless2 = {
   cursorItem: 2,
   annotations: [
     {
-      annotationType: primitives.common.AnnotationType.Connector,
+      annotationType: primitives.AnnotationType.Connector,
       fromItem: 3,
       toItem: 4,
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>",
-      labelSize: { width: 30, height: 30 }, //new primitives.common.Size(80, 30)
-      connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-      color: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">1</span>",
+      labelSize: { width: 30, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
       offset: 5,
       lineWidth: 2,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     }
   ],
   items: [
@@ -797,16 +797,16 @@ var matrixLayout = {
   //lineItemsInterval: 10,
   annotations: [
     {
-      annotationType: primitives.common.AnnotationType.Connector,
+      annotationType: primitives.AnnotationType.Connector,
       fromItem: 10,
       toItem: 24,
-      label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>",
-      labelSize: { width: 30, height: 30 }, //new primitives.common.Size(80, 30)
-      connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-      color: primitives.common.Colors.Red,
+      label: "<span class=\"badge bg-danger\">1</span>",
+      labelSize: { width: 30, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
       offset: 5,
       lineWidth: 2,
-      lineType: primitives.common.LineType.Dashed
+      lineType: primitives.LineType.Dashed
     }
   ],
   items: [

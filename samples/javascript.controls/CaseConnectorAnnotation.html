@@ -4,84 +4,77 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Connector Annotation</title>
-
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type='text/javascript'>
     var control;
 
     document.addEventListener('DOMContentLoaded', function () {
       /* This sample verifies JSON form of items & connector annotation creation */
-      control = primitives.orgdiagram.Control(document.getElementById('basicdiagram'), {
+      control = primitives.OrgDiagram(document.getElementById('basicdiagram'), {
         items: [
-          /* JSON noname objects equivalent to primitives.orgdiagram.ItemConfig */
+          /* JSON noname objects equivalent to primitives.OrgItemConfig */
           { id: 0, parent: null, title: "Scott Aasrud", description: "VP, Public Sector", image: "../images/photos/a.png" },
           { id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: "../images/photos/b.png" },
           { id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: "../images/photos/c.png" },
           { id: 3, parent: 0, title: "Joseph Gipson", description: "President, Entertainment & Devices Devision", image: "../images/photos/d.png" }
         ],
         annotations: [
-          /* JSON noname object equivalent to primitives.orgdiagram.ConnectorAnnotationConfig */
+          /* JSON noname object equivalent to primitives.ConnectorAnnotationConfig */
           {
-            annotationType: primitives.common.AnnotationType.Connector,
+            annotationType: primitives.AnnotationType.Connector,
             fromItem: 0,
             toItem: 2,
-            label: ["div",
+            label: ["span",
               {
-                "style": {
-                  width: "10px",
-                  height: "10px",
-                  backgroundColor: "green",
-                  color: "white"
-                },
-                "class": "bp-badge"
+                "class": "badge bg-success"
               },
               "2"
             ],
             labelSize: { width: 80, height: 30 },
-            connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-            color: primitives.common.Colors.Green,
+            connectorShapeType: primitives.ConnectorShapeType.OneWay,
+            color: primitives.Colors.Green,
             offset: 0,
             lineWidth: 2,
-            lineType: primitives.common.LineType.Dashed,
-            connectorPlacementType: primitives.common.ConnectorPlacementType.Offbeat,
+            lineType: primitives.LineType.Dashed,
+            connectorPlacementType: primitives.ConnectorPlacementType.Offbeat,
             selectItems: false
           },
           /* prototype based instantiation */
-          new primitives.orgdiagram.ConnectorAnnotationConfig({
+          new primitives.ConnectorAnnotationConfig({
             fromItem: 0,
             toItem: 1,
-            label: "<div class='bp-badge' style='width:10px; height:10px;background-color:red; color: white;'>1</div>",
-            labelSize: new primitives.common.Size(80, 30),
-            connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-            color: primitives.common.Colors.Red,
+            label: "<span class=\"badge bg-danger\">1</span>",
+            labelSize: new primitives.Size(80, 30),
+            connectorShapeType: primitives.ConnectorShapeType.OneWay,
+            color: primitives.Colors.Red,
             offset: 0,
             lineWidth: 2,
-            lineType: primitives.common.LineType.Dashed,
-            connectorPlacementType: primitives.common.ConnectorPlacementType.Offbeat,
+            lineType: primitives.LineType.Dashed,
+            connectorPlacementType: primitives.ConnectorPlacementType.Offbeat,
             selectItems: false
           }),
           /* prototype based instantiation */
-          new primitives.orgdiagram.ConnectorAnnotationConfig({
+          new primitives.ConnectorAnnotationConfig({
             fromItem: 0,
             toItem: 3,
-            label: "<div class='bp-badge' style='width:10px; height:10px;background-color:blue; color: white;'>3</div>",
-            labelSize: new primitives.common.Size(80, 30),
-            connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-            color: primitives.common.Colors.Blue,
+            label: "<span class=\"badge bg-primary\">3</span>",
+            labelSize: new primitives.Size(80, 30),
+            connectorShapeType: primitives.ConnectorShapeType.OneWay,
+            color: primitives.Colors.Blue,
             offset: 0,
             lineWidth: 2,
-            lineType: primitives.common.LineType.Dashed,
-            connectorPlacementType: primitives.common.ConnectorPlacementType.Offbeat,
+            lineType: primitives.LineType.Dashed,
+            connectorPlacementType: primitives.ConnectorPlacementType.Offbeat,
             selectItems: false
           })
         ],
         cursorItem: 0,
-        hasSelectorCheckbox: primitives.common.Enabled.True,
-        arrowsDirection: primitives.common.GroupByType.Parents,
-        pageFitMode: primitives.orgdiagram.PageFitMode.None
+        hasSelectorCheckbox: primitives.Enabled.True,
+        arrowsDirection: primitives.GroupByType.Parents,
+        pageFitMode: primitives.PageFitMode.None
       });
     });
 
@@ -92,7 +85,7 @@
         annotation.connectorPlacementType = value;
       }
       control.setOption("annotations", annotations);
-      control.update(primitives.orgdiagram.UpdateMode.Refresh);
+      control.update(primitives.UpdateMode.Refresh);
     }
 
   </script>
@@ -101,10 +94,10 @@
 <body>
   <p>
     Set connector annotation placement type:
-    <input onclick="Update(primitives.common.ConnectorPlacementType.Offbeat)" type="button" value="Offbeat" />
-    <input onclick="Update(primitives.common.ConnectorPlacementType.Straight)" type="button" value="Straight" />
+    <input onclick="Update(primitives.ConnectorPlacementType.Offbeat)" type="button" value="Offbeat" />
+    <input onclick="Update(primitives.ConnectorPlacementType.Straight)" type="button" value="Straight" />
   </p>
-  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
 </body>
 
 </html>

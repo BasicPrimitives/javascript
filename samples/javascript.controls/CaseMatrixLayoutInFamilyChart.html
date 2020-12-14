@@ -5,16 +5,16 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Matrix Nodes Layout In Family Chart</title>
 
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
+  
 
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type='text/javascript'>
     var control;
 
     document.addEventListener('DOMContentLoaded', function () {
-      var options = new primitives.famdiagram.Config();
+      var options = new primitives.FamConfig();
 
       options.items = [
         { id: 1, parents: [], title: "Corp 1", label: "Corp 1", description: "Parent 1", image: "../images/photos/p.png" },
@@ -34,9 +34,9 @@
       options.cursorItem = 1;
       options.enableMatrixLayout = true;
       options.minimumMatrixSize = 3;
-      options.hasSelectorCheckbox = primitives.common.Enabled.False;
-      options.arrowsDirection = primitives.common.GroupByType.Children;
-      options.pageFitMode = primitives.common.PageFitMode.None;
+      options.hasSelectorCheckbox = primitives.Enabled.False;
+      options.arrowsDirection = primitives.GroupByType.Children;
+      options.pageFitMode = primitives.PageFitMode.None;
 
       /* Intervals */
       options.normalLevelShift = 20;
@@ -47,14 +47,14 @@
       options.lineItemsInterval = 5;
       options.cousinsIntervalMultiplier = 5;
 
-      control = primitives.famdiagram.Control(document.getElementById('basicdiagram'), options);
+      control = primitives.FamDiagram(document.getElementById('basicdiagram'), options);
     });
 
   </script>
 </head>
 
 <body>
-  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
 </body>
 
 </html>

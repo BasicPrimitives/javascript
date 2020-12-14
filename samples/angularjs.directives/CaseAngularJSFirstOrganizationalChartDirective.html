@@ -5,14 +5,13 @@
   <title>AngularJS Organizational Chart Directive Example</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
-  <script src="../../packages/angularjs/angular.js"></script>
-
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
 
   <script>
     var myApp = angular.module('myApp', ['BasicPrimitives']);
@@ -24,7 +23,7 @@
       var options = {};
 
       var items = [
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({
           id: 0,
           parent: null,
           title: "Scott Aasrud",
@@ -32,9 +31,9 @@
           phone: "1 (416) 001-4567",
           email: "scott.aasrud@mail.com",
           image: "../images/photos/a.png",
-          itemTitleColor: primitives.common.Colors.RoyalBlue
+          itemTitleColor: primitives.Colors.RoyalBlue
         }),
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({
           id: 1,
           parent: 0,
           title: "Ted Lucas",
@@ -42,9 +41,9 @@
           phone: "1 (416) 002-4567",
           email: "ted.lucas@mail.com",
           image: "../images/photos/b.png",
-          itemTitleColor: primitives.common.Colors.RoyalBlue
+          itemTitleColor: primitives.Colors.RoyalBlue
         }),
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({
           id: 2,
           parent: 0,
           title: "Fritz Stuger",
@@ -52,9 +51,9 @@
           phone: "1 (416) 003-4567",
           email: "joao.stuger@mail.com",
           image: "../images/photos/c.png",
-          itemTitleColor: primitives.common.Colors.RoyalBlue
+          itemTitleColor: primitives.Colors.RoyalBlue
         }),
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({
           id: 3,
           parent: 2,
           title: "Hidden Node",
@@ -62,14 +61,14 @@
           email: "hidden.node@mail.com",
           description: "Dotted Node",
           image: "../images/photos/e.png",
-          itemTitleColor: primitives.common.Colors.PaleVioletRed
+          itemTitleColor: primitives.Colors.PaleVioletRed
         })
       ];
 
       options.items = items;
       options.cursorItem = 0;
       options.highlightItem = 0;
-      options.hasSelectorCheckbox = primitives.common.Enabled.True;
+      options.hasSelectorCheckbox = primitives.Enabled.True;
       options.templates = [getContactTemplate()];
       options.defaultTemplateName = "contactTemplate";
 
@@ -89,7 +88,7 @@
 
       $scope.addItem = function (index, parent) {
         var id = $scope.index++;
-        $scope.myOptions.items.splice(index, 0, new primitives.orgdiagram.ItemConfig({
+        $scope.myOptions.items.splice(index, 0, new primitives.OrgItemConfig({
           id: id,
           parent: parent,
           title: "New title " + id,
@@ -107,11 +106,11 @@
       }
 
       function getContactTemplate() {
-        var result = new primitives.orgdiagram.TemplateConfig();
+        var result = new primitives.TemplateConfig();
         result.name = "contactTemplate";
 
-        result.itemSize = new primitives.common.Size(220, 120);
-        result.minimizedItemSize = new primitives.common.Size(5, 5);
+        result.itemSize = new primitives.Size(220, 120);
+        result.minimizedItemSize = new primitives.Size(5, 5);
         result.minimizedItemCornerRadius = 5;
 
         /* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
@@ -229,20 +228,20 @@
         function link(scope, element, attrs) {
           var itemScopes = [];
 
-          var config = new primitives.orgdiagram.Config();
+          var config = new primitives.OrgConfig();
           angular.extend(config, scope.options);
 
           config.onItemRender = onTemplateRender;
           config.onCursorChanged = onCursorChanged;
           config.onHighlightChanged = onHighlightChanged;
 
-          var chart = primitives.orgdiagram.Control(element[0], config);
+          var chart = primitives.OrgDiagram(element[0], config);
 
           scope.$watch('options.highlightItem', function (newValue, oldValue) {
             var highlightItem = chart.getOption("highlightItem");
             if (highlightItem != newValue) {
               chart.setOption("highlightItem", newValue);
-              chart.update(primitives.orgdiagram.UpdateMode.PositonHighlight);
+              chart.update(primitives.UpdateMode.PositonHighlight);
             }
           });
 
@@ -250,20 +249,20 @@
             var cursorItem = chart.getOption("cursorItem");
             if (cursorItem != newValue) {
               chart.setOption("cursorItem", newValue);
-              chart.update(primitives.orgdiagram.UpdateMode.Refresh);
+              chart.update(primitives.UpdateMode.Refresh);
             }
           });
 
           scope.$watchCollection('options.items', function (items) {
             chart.setOption("items", items);
-            chart.update(primitives.orgdiagram.UpdateMode.Refresh);
+            chart.update(primitives.UpdateMode.Refresh);
           });
 
           function onTemplateRender(event, data) {
             var itemConfig = data.context;
 
             switch (data.renderingMode) {
-              case primitives.common.RenderingMode.Create:
+              case primitives.RenderingMode.Create:
                 /* Initialize widgets here */
                 var itemScope = scope.$new();
                 itemScope.itemConfig = itemConfig;
@@ -273,7 +272,7 @@
                 }
                 itemScopes.push(itemScope);
                 break;
-              case primitives.common.RenderingMode.Update:
+              case primitives.RenderingMode.Update:
                 /* Update widgets here */
                 var itemScope = angular.element(data.element).scope();
                 itemScope.itemConfig = itemConfig;

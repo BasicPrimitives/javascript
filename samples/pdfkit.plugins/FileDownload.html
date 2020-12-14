@@ -3,37 +3,33 @@
 
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>Cursor Item selection</title>
-
-  <!-- PDFkit & Libs -->
-  <script src="../../packages/pdfkit/pdfkit.js"></script>
-  <script src="../../packages/pdfkit/blob-stream.js"></script>
-  <script src="../../packages/FileSaver.js/FileSaver.min.js"></script>
-
-  <!-- Demo Images -->
-  <script src="../data/photos.js"></script>
-
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <title>PDF File Download Sample</title>
+  <script type="text/javascript" src="../../pdfkitsamples.js"></script>
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type='text/javascript'>
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
+    var saveAs = pdfkitsamples.saveAs;
+
     var items = [
-      new primitives.orgdiagram.ItemConfig({
+      new primitives.OrgItemConfig({
         id: 0,
         parent: null,
         title: "Scott Aasrud",
         description: "VP, Public Sector",
         image: "../images/photos/a.png"
       }),
-      new primitives.orgdiagram.ItemConfig({
+      new primitives.OrgItemConfig({
         id: 1,
         parent: 0,
         title: "Ted Lucas",
         description: "VP, Human Resources",
         image: "../images/photos/b.png"
       }),
-      new primitives.orgdiagram.ItemConfig({
+      new primitives.OrgItemConfig({
         id: 2,
         parent: 0,
         title: "Fritz Stuger",
@@ -42,11 +38,11 @@
       })
     ];
     document.addEventListener('DOMContentLoaded', function () {
-      var options = new primitives.orgdiagram.Config();
+      var options = new primitives.OrgConfig();
       options.items = items;
       options.cursorItem = 0;
-      options.hasSelectorCheckbox = primitives.common.Enabled.False;
-      control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+      options.hasSelectorCheckbox = primitives.Enabled.False;
+      control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
     });
 
     function Download() {
@@ -69,10 +65,10 @@
           image: photos[imageName]
         })
       }
-      var firstOrganizationalChartSample = primitives.pdf.orgdiagram.Plugin({
+      var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
         items: newItems,
         cursorItem: null,
-        hasSelectorCheckbox: primitives.common.Enabled.False
+        hasSelectorCheckbox: primitives.Enabled.False
       });
 
       var size = firstOrganizationalChartSample.draw(doc, 30, 60);
@@ -98,7 +94,7 @@
     Click to create and download PDF file:
     <input onclick="Download()" type="button" value="Download PDF" />
     <div id="basicdiagram"
-      style="width: 640px; height: 400px; position: absolute; top: 60px; border-style: dotted; border-width: 1px;" />
+      style="width: 640px; height: 400px; position: absolute; top: 60px; border-style: dotted; border-width: 1px;"></div>
   </div>
 </body>
 

@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Organizational Chart inside Popup Dialog</title>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+	<script type="text/javascript" src="../../primitives.js"></script>
+	<link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+    var control;
+    var timer;
+
+		document.addEventListener('DOMContentLoaded', function () {
+      var myModalEl = document.getElementById('exampleModal')
+      myModalEl.addEventListener('shown.bs.modal', function (event) {
+        var options = new primitives.OrgConfig();
+        var items = [
+          new primitives.OrgItemConfig({
+            id: 0,
+            parent: null,
+            title: "Scott Aasrud",
+            description: "VP, Public Sector",
+            image: "../images/photos/a.png"
+          }),
+          new primitives.OrgItemConfig({
+            id: 1,
+            parent: 0,
+            title: "Ted Lucas",
+            description: "VP, Human Resources",
+            image: "../images/photos/b.png"
+          }),
+          new primitives.OrgItemConfig({
+            id: 2,
+            parent: 0,
+            title: "Fritz Stuger",
+            description: "Business Solutions, US",
+            image: "../images/photos/c.png"
+          })
+        ];
+
+        options.items = items;
+        options.cursorItem = 0;
+        options.hasSelectorCheckbox = primitives.Enabled.True;
+
+        control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
+      })
+
+      myModalEl.addEventListener('hide.bs.modal', function (event) {
+        control.destroy();
+      });
+
+      window.addEventListener('resize', function (event) {
+				onWindowResize();
+			});
+		});
+
+    function onSelect() {
+      var selectedItems = control.getOption("selectedItems");
+      var div = document.getElementById("selectionpanel");
+      div.innerHTML = "";
+      div.appendChild(document.createTextNode(JSON.stringify(selectedItems)));
+    }
+
+
+		function onWindowResize() {
+			if (timer == null) {
+				timer = window.setTimeout(function () {
+          if(control !== undefined) {
+            control.update(primitives.UpdateMode.Refresh);
+          }
+					window.clearTimeout(timer);
+					timer = null;
+				}, 300);
+			}
+		}
+	</script>
+</head>
+<body>
+  <div class="container-fluid">
+    <button type="button" class="btn btn-primary my-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Show Selection Dialog
+    </button>
+    <div id="selectionpanel" class="alert alert-primary my-2" style="min-height: 60px;" role="alert">
+    </div>
+    <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Checkmark nodes and click select button</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div id="basicdiagram" style="left: 0px; right: 0px; top: 0px; height: 100%; border-style: dotted; border-width: 1px;"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="onSelect()">Select</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

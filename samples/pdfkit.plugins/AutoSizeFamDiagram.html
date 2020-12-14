@@ -4,58 +4,52 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Family Chart AutoSize</title>
-
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <!-- PDFkit & Libs -->
-  <script src="../../packages/pdfkit/pdfkit.js"></script>
-  <script src="../../packages/pdfkit/blob-stream.js"></script>
-
-  <!-- Demo Images -->
-  <script src="../data/photos.js"></script>
-
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <script src="../../pdfkitsamples.js"></script>
+  <script type="text/javascript" src="../../primitives.js"></script>
 
   <script type='text/javascript'>
     var control;
     var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
 
     document.addEventListener('DOMContentLoaded', function () {
       // create a document and pipe to a blob
       // create a document and pipe to a blob
-      var sample3 = primitives.pdf.famdiagram.Plugin({
+      var sample3 = primitives.FamDiagramPdfkit({
         dotItemsInterval: 20,
         lineItemsInterval: 40,
         linesWidth: 1,
         linesColor: "black",
         linesPalette: [
-          { lineColor: "#C6C6C6", lineWidth: 1, lineType: primitives.common.LineType.Solid }, //1
-          { lineColor: "#A5A5A5", lineWidth: 1, lineType: primitives.common.LineType.Solid }, //4
-          { lineColor: "#848484", lineWidth: 1, lineType: primitives.common.LineType.Solid }, //7
-          { lineColor: "#646464", lineWidth: 1, lineType: primitives.common.LineType.Solid }, //10
-          { lineColor: "#454545", lineWidth: 1, lineType: primitives.common.LineType.Solid } //13
+          { lineColor: "#C6C6C6", lineWidth: 1, lineType: primitives.LineType.Solid }, //1
+          { lineColor: "#A5A5A5", lineWidth: 1, lineType: primitives.LineType.Solid }, //4
+          { lineColor: "#848484", lineWidth: 1, lineType: primitives.LineType.Solid }, //7
+          { lineColor: "#646464", lineWidth: 1, lineType: primitives.LineType.Solid }, //10
+          { lineColor: "#454545", lineWidth: 1, lineType: primitives.LineType.Solid } //13
         ],
-        itemTitleFirstFontColor: primitives.common.Colors.White,
-        itemTitleSecondFontColor: primitives.common.Colors.White,
-        highlightLinesColor: primitives.common.Colors.Orange,
+        itemTitleFirstFontColor: primitives.Colors.White,
+        itemTitleSecondFontColor: primitives.Colors.White,
+        highlightLinesColor: primitives.Colors.Orange,
         cursorItem: 5,
         normalLevelShift: 20,
         dotLevelShift: 20,
         lineLevelShift: 20,
         normalItemsInterval: 20,
-        hasSelectorCheckbox: primitives.common.Enabled.False,
+        hasSelectorCheckbox: primitives.Enabled.False,
         annotations: [
           {
-            annotationType: primitives.common.AnnotationType.Connector,
+            annotationType: primitives.AnnotationType.Connector,
             fromItem: 1,
             toItem: 15,
             label: "Connector annotation",
-            labelSize: { width: 80, height: 30 }, //new primitives.common.Size(80, 30)
-            connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-            color: primitives.common.Colors.Red,
+            labelSize: { width: 80, height: 30 }, //new primitives.Size(80, 30)
+            connectorShapeType: primitives.ConnectorShapeType.OneWay,
+            color: primitives.Colors.Red,
             offset: 5,
             lineWidth: 2,
-            lineType: primitives.common.LineType.Dashed
+            lineType: primitives.LineType.Dashed
           }
         ],
         items: [
@@ -88,8 +82,8 @@
 
       var sample3size = sample3.getSize();
 
-      var doc = new PDFDocument({ size: [sample3size.width + 100, sample3size.height + 150] });
-      var stream = doc.pipe(blobStream());
+      var doc = new pdfkitsamples.PDFDocument({ size: [sample3size.width + 100, sample3size.height + 150] });
+      var stream = doc.pipe(pdfkitsamples.blobStream());
 
       doc.save();
 

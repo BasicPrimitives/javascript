@@ -3,40 +3,40 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<title>Adding new items at run time</title>
-
-	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" type='text/css'>
+	<link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet"  type='text/css'>
+	<script type="text/javascript" src="../../primitives.js"></script>
+	<link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
 	<script type='text/javascript'>
 		var control;
 		document.addEventListener('DOMContentLoaded', function () {
 			var maximumId = 3;
-			var options = new primitives.orgdiagram.Config();
+			var options = new primitives.OrgConfig();
 
 			var items = [
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 0,
 					parent: null,
 					title: "Scott Aasrud",
 					description: "VP, Public Sector",
 					image: "../images/photos/a.png"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 1,
 					parent: 0,
 					title: "Ted Lucas",
 					description: "VP, Human Resources",
 					image: "../images/photos/b.png"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 2,
 					parent: 0,
 					title: "Fritz Stuger",
 					description: "Business Solutions, US",
 					image: "../images/photos/c.png"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 3,
 					parent: 0,
 					title: "Lynne Rathinam",
@@ -45,28 +45,50 @@
 				})
 			];
 
-			var buttons = [];
-			buttons.push(new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"));
-			buttons.push(new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add"));
-
 			options.items = items;
 			options.cursorItem = 0;
-			options.buttons = buttons;
-			options.hasButtons = primitives.common.Enabled.Auto;
-			options.hasSelectorCheckbox = primitives.common.Enabled.True;
-			options.leavesPlacementType = primitives.orgdiagram.ChildrenPlacementType.Matrix;
-			options.pageFitMode = primitives.common.PageFitMode.None;
-			options.onButtonClick = function (e, /*primitives.orgdiagram.EventArgs*/ data) {
+			options.buttonsPanelSize = 36;
+			options.hasButtons = primitives.Enabled.Auto;
+			options.hasSelectorCheckbox = primitives.Enabled.True;
+			options.leavesPlacementType = primitives.ChildrenPlacementType.Matrix;
+			options.pageFitMode = primitives.PageFitMode.None;
+			options.onButtonsRender = function (data) {
+				var itemConfig = data.context;
+				var element = data.element;
+				element.innerHTML = "";
+				element.appendChild(primitives.JsonML.toHTML(["div",
+					{
+					class: "btn-group-vertical btn-group-sm"
+					},
+					["button", 
+						{
+							"type": "button",
+							"data-buttonname": "delete",
+							"class": "btn btn-light"
+						},
+						["i", { "class": "fa fa-minus-circle" }]
+					],
+					["button", 
+						{
+							"type": "button",
+							"data-buttonname": "add",
+							"class": "btn btn-light"
+						},
+						["i", { "class": "fa fa-user-plus" }]
+					]
+				]));
+			};
+			options.onButtonClick = function (e, /*primitives.EventArgs*/ data) {
 				switch (data.name) {
 					case "delete":
-						if (/*parentItem: primitives.orgdiagram.ItemConfig*/data.parentItem == null) {
+						if (/*parentItem: primitives.OrgItemConfig*/data.parentItem == null) {
 							alert("You are trying to delete root item!");
 						}
 						else {
 							var items = control.getOption("items");
 							var newItems = [];
 							/* collect all children of deleted items, we are going to delete them as well. */
-							var itemsToBeDeleted = getSubItemsForParent(items, /*context: primitives.orgdiagram.ItemConfig*/data.context);
+							var itemsToBeDeleted = getSubItemsForParent(items, /*context: primitives.OrgItemConfig*/data.context);
 							/* add deleted item to that collection*/
 							itemsToBeDeleted[data.context.id] = true;
 
@@ -82,7 +104,7 @@
 								items: newItems,
 								cursorItem: data.parentItem.id
 							});
-							control.update(/*Refresh: use fast refresh to update chart*/ primitives.orgdiagram.UpdateMode.Refresh);
+							control.update(/*Refresh: use fast refresh to update chart*/ primitives.UpdateMode.Refresh);
 
 						}
 						break;
@@ -90,7 +112,7 @@
 						/* get items collection */
 						var items = control.getOption("items");
 						/* create new item */
-						var newItem = new primitives.orgdiagram.ItemConfig({
+						var newItem = new primitives.OrgItemConfig({
 							id: ++maximumId,
 							parent: data.context.id,
 							title: "New Title",
@@ -104,12 +126,12 @@
 							cursorItem: newItem.id
 						});
 						/* updating chart options does not fire its referesh, so it should be call explicitly */
-						control.update(/*Refresh: use fast refresh to update chart*/ primitives.orgdiagram.UpdateMode.Refresh);
+						control.update(/*Refresh: use fast refresh to update chart*/ primitives.UpdateMode.Refresh);
 						break;
 				}
 			};
 
-			control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+			control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
 		});
 
 		function getSubItemsForParent(items, parentItem) {
@@ -145,6 +167,6 @@
 
 </head>
 <body>
-	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
 </body>
 </html>

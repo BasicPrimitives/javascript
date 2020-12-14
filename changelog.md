@@ -1,3 +1,23 @@
+#### Version 6.0.0
+**Warning**: Non-backward compatible API changes!
+* Refactored library into [ES6 Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
+* Replaced custom `merge` tool with [Webpack](https://webpack.js.org/)
+* Removed `common`, `orgdiagram` and `famdiagram` namespaces. 
+* Added [Webpack Tree Shaking](https://webpack.js.org/guides/tree-shaking/) support
+* Renamed `primitives.orgdiagram.Config` into `OrgConfig` 
+* Renamed `primitives.orgdiagram.ItemConfig` into `OrgItemConfig` 
+* Renamed `primitives.orgdiagram.Control` into `OrgDiagram` 
+* Renamed `primitives.famdiagram.Config` into `FamConfig` 
+* Renamed `primitives.famdiagram.ItemConfig` into `FamItemConfig` 
+* Renamed `primitives.famdiagram.Control` into `FamDiagram` 
+* Renamed `primitives.pdf.orgdiagram.Plugin` into `OrgDiagramPdfkit` 
+* Renamed `primitives.pdf.famdiagram.Plugin` into `FamDiagramPdfkit` 
+* Removed `ButtonConfig`, use `onButtonsRender` callback instead.
+* Added `hasButtons` property to `TemplateConfig`
+* Added `onButtonsRender` callback to `OrgConfig`, `FamConfig` and `TemplateConfig`.
+* Removed `jQuery` widgets wrapping library and `jQuery` samples framework.
+* Refactored `jUnit` tests into `Jest`.
+* Refactored samples framework into [Bootstrap](https://getbootstrap.com/)
 #### Version 5.9.1
 * Fixed frame placeholdder size
 #### Version 5.9.0

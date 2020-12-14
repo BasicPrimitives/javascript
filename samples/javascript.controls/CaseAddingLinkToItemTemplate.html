@@ -5,18 +5,18 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Adding link to Item template</title>
 
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type='text/javascript'>
     var control;
 
     document.addEventListener('DOMContentLoaded', function () {
-      var options = new primitives.orgdiagram.Config();
+      var options = new primitives.OrgConfig();
 
       var items = [
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({
           id: 0,
           parent: null,
           title: "Scott Aasrud",
@@ -26,9 +26,9 @@
           email: "itema@org.com",
           templateName: "contactTemplate",
           href: "http://www.basicprimitives.com/",
-          itemTitleColor: primitives.common.Colors.Black
+          itemTitleColor: primitives.Colors.Black
         }),
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({
           id: 1,
           parent: 0,
           title: "Ted Lucas",
@@ -38,9 +38,9 @@
           email: "bname@org.com",
           templateName: "contactTemplate",
           href: "http://www.basicprimitives.com/",
-          itemTitleColor: primitives.common.Colors.Green
+          itemTitleColor: primitives.Colors.Green
         }),
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({
           id: 2,
           parent: 0,
           title: "Fritz Stuger",
@@ -58,7 +58,7 @@
       options.templates = [getContactTemplate()];
       options.onItemRender = onTemplateRender;
 
-      control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+      control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
 
 
       function onTemplateRender(event, data) {
@@ -71,7 +71,7 @@
           photo.alt = itemConfig.title;
 
           var titleBackground = element.firstChild;
-          titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+          titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
 
           var title = element.firstChild.firstChild;
           title.textContent = itemConfig.title;
@@ -90,18 +90,18 @@
           readmore.href = itemConfig.href;
 
           switch (data.renderingMode) {
-            case primitives.common.RenderingMode.Create:
+            case primitives.RenderingMode.Create:
               /* Initialize widgets here */
               readmore.addEventListener("click", function (e) {
                 /* Block mouse click propagation in order to avoid layout updates before server postback*/
-                primitives.common.stopPropagation(e);
+                primitives.stopPropagation(e);
               });
               email.addEventListener("click", function (e) {
                 /* Block mouse click propagation in order to avoid layout updates before server postback*/
-                primitives.common.stopPropagation(e);
+                primitives.stopPropagation(e);
               });
               break;
-            case primitives.common.RenderingMode.Update:
+            case primitives.RenderingMode.Update:
               /* Update widgets here */
               break;
           }
@@ -109,11 +109,11 @@
       }
 
       function getContactTemplate() {
-        var result = new primitives.orgdiagram.TemplateConfig();
+        var result = new primitives.TemplateConfig();
         result.name = "contactTemplate";
 
-        result.itemSize = new primitives.common.Size(220, 120);
-        result.minimizedItemSize = new primitives.common.Size(3, 3);
+        result.itemSize = new primitives.Size(220, 120);
+        result.minimizedItemSize = new primitives.Size(3, 3);
 
         /* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
         result.itemTemplate = ["div",
@@ -234,7 +234,7 @@
 </head>
 
 <body>
-  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
 </body>
 
 </html>

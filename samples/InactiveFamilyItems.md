@@ -5,14 +5,13 @@ Control provides two ways to set inactive items, via direct per node setting pro
 
 See following configuration classes:
 
-* `primitives.famdiagram.ItemConfig`
-* `primitives.famdiagram.TemplateConfig`
+* `primitives.FamItemConfig`
+* `primitives.TemplateConfig`
 
 They have following option:
 
 * `isActive` - Setting it to false makes items inactive in diagram layout, so they become irresponsive to mouse and keyboard navigation events. Note that controls provide global scope options to disable mouse highlights and cursor navigation.
 
 [JavaScript](javascript.controls/CaseInactiveFamilyItems.html)
-[JQuery](jquery.widgets/CaseInactiveFamilyItems.html)
 
-![Screenshot](images/screenshots/CaseInactiveFamilyItems.png)
+![Screenshot](javascript.controls/__image_snapshots__/CaseInactiveFamilyItems-snap.png)

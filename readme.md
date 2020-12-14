@@ -7,7 +7,7 @@ Data visualization components library that implements organizational chart and m
 * [GitHub](https://github.com/BasicPrimitives) Github repositories.
 * [NPM](https://www.npmjs.com/package/basicprimitives) official - release packages.
 * [Basic Primitives for React Live Demos](https://basicprimitives.github.io/react/) - github live site
-* [Basic Primitives for JavaScript, jQUery and PDFkit Live Demos & Samples](https://basicprimitives.github.io/javascript/) - github live site
+* [Basic Primitives for JavaScript, Bootstrap and PDFkit Live Demos & Samples](https://basicprimitives.github.io/javascript/) - github live site
 
 ## Supported Diagrams:
 * Organizational Chart

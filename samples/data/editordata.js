@@ -34,13 +34,13 @@ function GetRandomEmail(firstName, secondName) {
 
 var colorIndex = -1;
 var colors = [
-  primitives.common.Colors.Indigo,
+  primitives.Colors.Indigo,
   "#C57F7F",
-  primitives.common.Colors.Limegreen,
-  primitives.common.Colors.Orange,
+  primitives.Colors.Limegreen,
+  primitives.Colors.Orange,
   "#E64848",
-  primitives.common.Colors.Olive,
-  primitives.common.Colors.DarkCyan,
+  primitives.Colors.Olive,
+  primitives.Colors.DarkCyan,
   "#B800E6"
 
 ];
@@ -145,7 +145,7 @@ function GetCurrentName() {
 function getMatrixedLeaves() {
   var items = [];
 
-  items.push(new primitives.orgdiagram.ItemConfig({
+  items.push(new primitives.OrgItemConfig({
     id: 1,
     parent: null,
     title: GetNextName(),
@@ -155,92 +155,92 @@ function getMatrixedLeaves() {
     email: GetRandomEmail(GetCurrentName())
   }));
 
-  items.push(new primitives.orgdiagram.ItemConfig({
+  items.push(new primitives.OrgItemConfig({
     id: 2,
     parent: 1,
     title: GetNextName(),
     description: "Adviser Description",
     image: "../images/photos/z.png",
-    itemType: primitives.orgdiagram.ItemType.Adviser,
-    adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+    itemType: primitives.ItemType.Adviser,
+    adviserPlacementType: primitives.AdviserPlacementType.Right,
     phone: GetRandomPhone(),
     email: GetRandomEmail(GetCurrentName()),
     groupTitle: "Audit"
   }));
 
-  items.push(new primitives.orgdiagram.ItemConfig({
+  items.push(new primitives.OrgItemConfig({
     id: 3,
     parent: 2,
     title: GetNextName(),
     description: "Assistant Description",
     image: "../images/photos/y.png",
-    itemType: primitives.orgdiagram.ItemType.Assistant,
-    adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+    itemType: primitives.ItemType.Assistant,
+    adviserPlacementType: primitives.AdviserPlacementType.Right,
     phone: GetRandomPhone(),
     email: GetRandomEmail("Assistant 1"),
     groupTitle: "Audit"
   }));
 
-  items.push(new primitives.orgdiagram.ItemConfig({
+  items.push(new primitives.OrgItemConfig({
     id: 4,
     parent: 2,
     title: GetNextName(),
     description: "Regular Description",
     image: "../images/photos/y.png",
-    itemType: primitives.orgdiagram.ItemType.Regular,
-    adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+    itemType: primitives.ItemType.Regular,
+    adviserPlacementType: primitives.AdviserPlacementType.Right,
     phone: GetRandomPhone(),
     email: GetRandomEmail("Regular"),
     groupTitle: "Audit"
   }));
 
-  items.push(new primitives.orgdiagram.ItemConfig({
+  items.push(new primitives.OrgItemConfig({
     id: 5,
     parent: 1,
     title: GetNextName(),
     description: "Adviser Description",
     image: "../images/photos/z.png",
-    itemType: primitives.orgdiagram.ItemType.Adviser,
-    adviserPlacementType: primitives.common.AdviserPlacementType.Left,
+    itemType: primitives.ItemType.Adviser,
+    adviserPlacementType: primitives.AdviserPlacementType.Left,
     phone: GetRandomPhone(),
     email: GetRandomEmail("Adviser 2"),
     groupTitle: "Contract"
   }));
 
 
-  items.push(new primitives.orgdiagram.ItemConfig({
+  items.push(new primitives.OrgItemConfig({
     id: 6,
     parent: 1,
     title: GetNextName(),
     description: "Assitant Description",
     image: "../images/photos/y.png",
-    itemType: primitives.orgdiagram.ItemType.Assistant,
-    adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+    itemType: primitives.ItemType.Assistant,
+    adviserPlacementType: primitives.AdviserPlacementType.Right,
     phone: GetRandomPhone(),
     email: GetRandomEmail("Assistant 1"),
     groupTitle: "Administration"
   }));
 
-  items.push(new primitives.orgdiagram.ItemConfig({
+  items.push(new primitives.OrgItemConfig({
     id: 7,
     parent: 6,
     title: GetNextName(),
     description: "Assitant Description",
     image: "../images/photos/y.png",
-    itemType: primitives.orgdiagram.ItemType.Assistant,
-    adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+    itemType: primitives.ItemType.Assistant,
+    adviserPlacementType: primitives.AdviserPlacementType.Right,
     phone: GetRandomPhone(),
     email: GetRandomEmail("Assistant 1"),
     groupTitle: "Administration"
   }));
 
-  items.push(new primitives.orgdiagram.ItemConfig({
+  items.push(new primitives.OrgItemConfig({
     id: 8,
     parent: 6,
     title: GetNextName(),
     description: "Regular Description",
     image: "../images/photos/y.png",
-    itemType: primitives.orgdiagram.ItemType.Regular,
+    itemType: primitives.ItemType.Regular,
     phone: GetRandomPhone(),
     email: GetRandomEmail("Regular"),
     groupTitle: "Administration"
@@ -251,7 +251,7 @@ function getMatrixedLeaves() {
   for (var groupKey in groups) {
     var groupSize = groups[groupKey];
     counter++;
-    var manager = new primitives.orgdiagram.ItemConfig({
+    var manager = new primitives.OrgItemConfig({
       id: counter,
       parent: 1,
       title: GetNextName(),
@@ -265,7 +265,7 @@ function getMatrixedLeaves() {
 
     for (var index = 0; index < groupSize; index += 1) {
       counter++;
-      var memberItem = new primitives.orgdiagram.ItemConfig({
+      var memberItem = new primitives.OrgItemConfig({
         id: counter,
         parent: manager.id,
         title: GetNextName(),

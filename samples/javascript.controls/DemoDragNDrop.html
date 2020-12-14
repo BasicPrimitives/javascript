@@ -1,0 +1,317 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Organizational Chart Drag & Drop Nodes Demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+	<script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="./css/styles.css" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+    var control;
+    var control2;
+		var timer = null;
+
+    var items = [
+		new primitives.OrgItemConfig({
+			id: 6,
+			parent: null,
+			title: "Scott Aasrud",
+			description: "VP, Public Sector",
+			image: "../images/photos/a.png",
+			phone: "(123) 456-78-90",
+			email: "scott.aasrud@mail.com"
+		}),
+		new primitives.OrgItemConfig({
+			id: 1,
+			parent: 6,
+			title: "Ted Lucas",
+			description: "VP, Human Resources",
+			image: "../images/photos/b.png",
+			phone: "(123) 456-78-91",
+			email: "ted.lucas@mail.com"
+		}),
+		new primitives.OrgItemConfig({
+			id: 2,
+			parent: 6,
+			title: "Fritz Stuger",
+			description: "Business Solutions, US",
+			image: "../images/photos/c.png",
+			phone: "(123) 456-78-92",
+			email: "fritz.stuger@mail.com"
+		})
+    ];
+    
+    var items2 = [
+		new primitives.OrgItemConfig({
+			id: 3,
+			parent: null,
+			title: "Scott Aasrud 2",
+			description: "VP, Public Sector",
+			image: "../images/photos/a.png",
+			phone: "(123) 456-78-90",
+			email: "scott.aasrud@mail.com"
+		}),
+		new primitives.OrgItemConfig({
+			id: 4,
+			parent: 3,
+			title: "Ted Lucas 2",
+			description: "VP, Human Resources",
+			image: "../images/photos/b.png",
+			phone: "(123) 456-78-91",
+			email: "ted.lucas@mail.com"
+		}),
+		new primitives.OrgItemConfig({
+			id: 5,
+			parent: 3,
+			title: "Fritz Stuger 2",
+			description: "Business Solutions, US",
+			image: "../images/photos/c.png",
+			phone: "(123) 456-78-92",
+			email: "fritz.stuger@mail.com"
+		})
+    ];
+
+	document.addEventListener('DOMContentLoaded', function () {
+		var options = new primitives.OrgConfig();
+		options.templates = [getContactTemplate()];
+		options.onItemRender = onTemplateRender;
+		options.defaultTemplateName = "contactTemplate";
+		options.items = items;
+		options.cursorItem = 0;
+		options.pageFitMode = primitives.PageFitMode.None;
+		options.hasSelectorCheckbox = primitives.Enabled.True;
+		control = primitives.OrgDiagram(document.getElementById("basicdiagram1"), options);
+
+		var options2 = new primitives.OrgConfig();
+		options2.templates = [getContactTemplate()];
+		options2.onItemRender = onTemplateRender;
+		options2.defaultTemplateName = "contactTemplate";
+		options2.items = items2;
+		options2.cursorItem = 0;
+		options2.pageFitMode = primitives.PageFitMode.None;
+		options2.hasSelectorCheckbox = primitives.Enabled.True;
+		control2 = primitives.OrgDiagram(document.getElementById("basicdiagram2"), options2);
+
+		window.addEventListener('resize', function (event) {
+			onWindowResize();
+		});
+	});
+
+    function onTemplateRender(event, data) {
+		switch (data.renderingMode) {
+			case primitives.RenderingMode.Create:
+				/* Initialize widgets here */
+				break;
+			case primitives.RenderingMode.Update:
+				/* Update widgets here */
+				break;
+		}
+
+		var itemConfig = data.context;
+
+		if (data.templateName == "contactTemplate") {
+			var photo = data.element.childNodes[1].firstChild;
+			photo.src = itemConfig.image;
+			photo.alt = itemConfig.title;
+
+			var titleBackground = data.element.firstChild;
+			titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
+
+			var title = data.element.firstChild.firstChild;
+			title.textContent = itemConfig.title;
+
+			var phone = data.element.childNodes[2];
+			phone.textContent = itemConfig.phone;
+
+			var email = data.element.childNodes[3];
+			email.textContent = itemConfig.email;
+
+			var description = data.element.childNodes[4];
+			description.textContent = itemConfig.description;
+
+			// This is needed to get dragged item id
+			data.element.setAttribute("data-itemid", itemConfig.id);
+		}
+    }
+          
+    function getContactTemplate() {
+		var result = new primitives.TemplateConfig();
+		result.name = "contactTemplate";
+
+		result.itemSize = new primitives.Size(220, 120);
+		result.minimizedItemSize = new primitives.Size(3, 3);
+
+		/* this template demonstrates template definition in form of regular text, see: https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML for details */
+		result.itemTemplate = 
+			'<div class="bp-item bp-corner-all bt-item-frame" draggable="true" style="width:' + result.itemSize.width + 'px; height: ' + result.itemSize.height + 'px;">'
+			+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 216px; height: 20px; pointer-events: none;">'
+				+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px; pointer-events: none;">'
+				+ '</div>'
+			+ '</div>'
+			+ '<div class="bp-item bp-photo-frame" style="top: 26px; left: 164px; width: 50px; height: 60px; pointer-events: none;">'
+				+ '<img name="photo" style="height:60px; width:50px; pointer-events: none;" />'
+			+ '</div>'
+			+ '<div name="phone" class="bp-item" style="top: 26px; left: 6px; width: 162px; height: 18px; font-size: 12px; pointer-events: none;"></div>'
+			+ '<div name="email" class="bp-item" style="top: 44px; left: 6px; width: 162px; height: 18px; font-size: 12px; pointer-events: none;"></div>'
+			+ '<div name="description" class="bp-item" style="top: 62px; left: 6px; width: 162px; height: 36px; font-size: 10px; pointer-events: none;"></div>'
+		+ '</div>'
+
+		return result;
+	}
+
+	document.addEventListener("drag", function( event ) {
+
+	}, false);
+
+	document.addEventListener("dragstart", function( event ) {
+		var itemid = event.target.getAttribute("data-itemid");
+		event.dataTransfer.setData("itemid", itemid);
+		event.dataTransfer.setData('text/html', "null");
+
+		var div = document.getElementById("selectionpanel");
+		div.innerHTML = "";
+		div.appendChild(document.createTextNode("Drag started of node: " + itemid))
+	}, false);
+
+	document.addEventListener("dragend", function( event ) {
+		// reset the transparency
+		event.target.style.opacity = "";
+	}, false);
+
+	/* events fired on the drop targets */
+	document.addEventListener("dragover", function( event ) {
+		// prevent default to allow drop
+		event.preventDefault();
+	}, false);
+
+	document.addEventListener("dragenter", function( event ) {
+		// highlight potential drop target when the draggable element enters it
+		if ( event.target.className == "dropzone" ) {
+			event.target.style.background = "purple";
+		}
+
+	}, false);
+
+	document.addEventListener("dragleave", function( event ) {
+		// reset background of potential drop target when the draggable element leaves it
+		if ( event.target.className == "dropzone" ) {
+			event.target.style.background = "";
+		}
+
+	}, false);
+
+	document.addEventListener("drop", function( event ) {
+		// prevent default action (open as link for some elements)
+		event.preventDefault();
+		// move dragged elem to the selected drop target
+		event.preventDefault();
+		var parentid = parseInt(event.target.getAttribute("data-itemid"), 10);
+		var itemid = parseInt(event.dataTransfer.getData("itemid"), 10);
+
+		if(canDropItem(parentid, itemid)) {
+			onMoveItem(parentid, itemid);
+
+			onUpdate();
+
+			var div = document.getElementById("selectionpanel");
+			div.innerHTML = "";
+			div.appendChild(document.createTextNode("Node: " + itemid + " dropped over " + parentid));
+		}
+	}, false);
+
+
+	function canDropItem(parentid, itemid) {
+		const tree = getTree(items.concat(items2));
+		let result = parentid !== itemid && !!itemid;
+		if(result) {
+			tree.loopParents(this, parentid, function (id, node) {
+				if (id === itemid) {
+				result = false;
+				return true;
+				}
+			});
+		}
+		return result;
+	}
+
+	function onMoveItem(parentid, itemid) {
+		var root = null;
+		var tree = getTree(items);
+		tree.loopLevels(this, null, function(rootid) {
+			root = rootid;
+			return tree.BREAK;
+		});
+		var root2 = null;
+		var tree2 = getTree(items2);
+		tree2.loopLevels(this, null, function(rootid) {
+			root2 = rootid;
+			return tree.BREAK;
+		});
+		mergedTree = getTree(items.concat(items2));
+		mergedTree.adopt(parentid, itemid);
+
+		items = [];
+		if(root != null && !mergedTree.parentid(root)) {
+			// extract root sub tree
+			items.push(mergedTree.node(root));
+			mergedTree.loopLevels(this, root, function(nodeid, node, level) {
+				node.parent = mergedTree.parentid(nodeid);
+				items.push(node);
+			});
+		}
+
+		items2 = [];
+		if(root2 != null && !mergedTree.parentid(root2)) {
+			// extract root2 sub tree
+			items2.push(mergedTree.node(root2));
+			mergedTree.loopLevels(this, root2, function(nodeid, node, level) {
+				node.parent = mergedTree.parentid(nodeid);
+				items2.push(node);
+			});
+		}
+	}
+
+	function getTree(items = []) {
+		const tree = primitives.Tree();
+
+		for (let index = 0; index < items.length; index += 1) {
+			const item = items[index];
+			tree.add(item.parent, item.id, item);
+		}
+
+		return tree;
+	}
+
+	function onWindowResize() {
+		if (timer == null) {
+			timer = window.setTimeout(function () {
+			onUpdate();
+			window.clearTimeout(timer);
+			timer = null;
+			}, 300);
+		}
+	}
+	  
+	function onUpdate() {
+		control.setOption("items", items);
+		control.update(primitives.UpdateMode.Refresh);
+
+		control2.setOption("items", items2);
+		control2.update(primitives.UpdateMode.Refresh);
+	}
+	</script>
+</head>
+<body>
+  <div class="container-flex">
+    <div class="row">
+      <div id="basicdiagram1" class="col mediaPlaceholder mx-2"  style="left: 0px; right: 0px;border-style: dotted; border-width: 1px;"></div>
+      <div id="basicdiagram2" class="col mediaPlaceholder mx-2"  style="left: 0px; right: 0px;border-style: dotted; border-width: 1px;"></div>
+    </div>
+    <div id="selectionpanel" class="alert alert-primary my-2" style="min-height: 60px;" role="alert">
+      Drag & Drop nodes between diagrams
+    </div>
+  </div>
+</body>
+</html>

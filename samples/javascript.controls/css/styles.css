@@ -1,0 +1,45 @@
+.mediaPlaceholder {
+  height: 350px;
+  border-width: 1px;
+  border-style: dotted;
+}
+
+@media screen and (min-height: 600px) {
+    .mediaPlaceholder {
+      height: 500px; } }
+  
+  @media screen and (min-height: 700px) {
+    .mediaPlaceholder {
+      height: 600px; } }
+  
+  @media screen and (min-height: 800px) {
+    .mediaPlaceholder {
+      height: 700px; } }
+  
+  @media screen and (min-height: 900px) {
+    .mediaPlaceholder {
+      height: 800px; } }
+  
+  @media screen and (min-height: 1000px) {
+    .mediaPlaceholder {
+      height: 900px; } }
+  
+  @media screen and (min-height: 1100px) {
+    .mediaPlaceholder {
+      height: 1000px; } }
+  
+  @media screen and (min-height: 1200px) {
+    .mediaPlaceholder {
+      height: 1100px; } }
+  
+  @media screen and (min-height: 1300px) {
+    .mediaPlaceholder {
+      height: 1200px; } }
+  
+  @media screen and (min-height: 1400px) {
+    .mediaPlaceholder {
+      height: 1300px; } }
+  
+  @media screen and (min-height: 1500px) {
+    .mediaPlaceholder {
+      height: 1400px; } }

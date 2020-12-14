@@ -1,26 +1,14 @@
 {
   "destination": "apireference/",
-  "source": "./min/primitives.latest.js",
+  "source": "./src/index.js",
   "orgdiagram.md": [
-    "Config",
-    "ItemConfig",
-    "TemplateConfig",
-    "ShapeAnnotationConfig",
-    "BackgroundAnnotationConfig",
-    "ConnectorAnnotationConfig",
-    "HighlightPathAnnotationConfig",
-    "ButtonConfig"
+    "OrgConfig",
+    "OrgItemConfig",
+    "OrgEventArgs"
   ],
   "famdiagram.md": [
-    "Config",
-    "ItemConfig",
-    "TemplateConfig",
-    "ShapeAnnotationConfig",
-    "BackgroundAnnotationConfig",
-    "ConnectorAnnotationConfig",
-    "HighlightPathAnnotationConfig",
-    "LabelAnnotationConfig",
-    "PaletteItemConfig",
-    "ButtonConfig"
+    "FamConfig",
+    "FamItemConfig",
+    "FamEventArgs"
   ]
 }

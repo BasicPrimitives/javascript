@@ -4,19 +4,19 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<title>Zoom using Item templates</title>
 
-	<!-- # include file="../../src.primitives/src.primitives.html"-->
+	
 
-	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../primitives.js"></script>
+	<link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
 	<script type='text/javascript'>
 		var control;
 
 		document.addEventListener('DOMContentLoaded', function () {
-			var options = new primitives.orgdiagram.Config();
+			var options = new primitives.OrgConfig();
 
 			var items = [
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 0,
 					parent: null,
 					title: "Scott Aasrud",
@@ -25,7 +25,7 @@
 					phone: "(123) 456-78-90",
 					email: "itema@org.com"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 1,
 					parent: 0,
 					title: "Ted Lucas",
@@ -33,9 +33,9 @@
 					image: "../images/photos/b.png",
 					phone: "(123) 456-78-90",
 					email: "itema@org.com",
-					childrenPlacementType: primitives.common.ChildrenPlacementType.Vertical
+					childrenPlacementType: primitives.ChildrenPlacementType.Vertical
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 8,
 					parent: 1,
 					title: "Edgar Walkup",
@@ -43,9 +43,9 @@
 					image: "../images/photos/c.png",
 					phone: "(123) 456-78-90",
 					email: "itema@org.com",
-					childrenPlacementType: primitives.common.ChildrenPlacementType.Vertical
+					childrenPlacementType: primitives.ChildrenPlacementType.Vertical
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 9,
 					parent: 1,
 					title: "Millagros Buck",
@@ -54,7 +54,7 @@
 					phone: "(123) 126-00-01",
 					email: "harry@org.com"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 2,
 					parent: 0,
 					title: "Fritz Stuger",
@@ -62,9 +62,9 @@
 					image: "../images/photos/c.png",
 					phone: "(123) 456-78-90",
 					email: "itema@org.com",
-					childrenPlacementType: primitives.common.ChildrenPlacementType.Vertical
+					childrenPlacementType: primitives.ChildrenPlacementType.Vertical
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 3,
 					parent: 2,
 					title: "Harry Harter",
@@ -73,7 +73,7 @@
 					phone: "(123) 126-00-01",
 					email: "harry@org.com"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 4,
 					parent: 2,
 					title: "Fannie Carter",
@@ -82,7 +82,7 @@
 					phone: "(123) 800-80-80",
 					email: "fannie@org.com"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 5,
 					parent: 0,
 					title: "Florence Butts",
@@ -90,9 +90,9 @@
 					image: "../images/photos/d.png",
 					phone: "(123) 900-90-90",
 					email: "florence@org.com",
-					childrenPlacementType: primitives.common.ChildrenPlacementType.Vertical
+					childrenPlacementType: primitives.ChildrenPlacementType.Vertical
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 6,
 					parent: 5,
 					title: "Fran Huynh",
@@ -101,7 +101,7 @@
 					phone: "(123) 456-18-90",
 					email: "fran@org.com"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 7,
 					parent: 5,
 					title: "Joseph Gipson",
@@ -116,10 +116,10 @@
 			options.cursorItem = 0;
 			options.onItemRender = onTemplateRender;
 			options.templates = [getZoom0Template(), getZoom1Template(), getZoom2Template(), getZoom3Template(), getZoom4Template()];
-			options.hasSelectorCheckbox = primitives.common.Enabled.True;
-			options.pageFitMode = primitives.common.PageFitMode.None;
-			options.hasSelectorCheckbox = primitives.common.Enabled.False;
-			options.orientationType = primitives.common.OrientationType.Top;
+			options.hasSelectorCheckbox = primitives.Enabled.True;
+			options.pageFitMode = primitives.PageFitMode.None;
+			options.hasSelectorCheckbox = primitives.Enabled.False;
+			options.orientationType = primitives.OrientationType.Top;
 			options.defaultTemplateName = "Zoom3";
 
 			options.normalLevelShift = 20;
@@ -129,17 +129,17 @@
 			options.dotItemsInterval = 10;
 			options.lineItemsInterval = 10;
 
-			options.arrowsDirection = primitives.common.GroupByType.Children;
-			options.pageFitMode = primitives.orgdiagram.PageFitMode.None;
+			options.arrowsDirection = primitives.GroupByType.Children;
+			options.pageFitMode = primitives.PageFitMode.None;
 
-			control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+			control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
 
 			function onTemplateRender(event, data) {
 				switch (data.renderingMode) {
-					case primitives.common.RenderingMode.Create:
+					case primitives.RenderingMode.Create:
 						/* Initialize widgets here */
 						break;
-					case primitives.common.RenderingMode.Update:
+					case primitives.RenderingMode.Update:
 						/* Update widgets here */
 						break;
 				}
@@ -164,7 +164,7 @@
 						element.childNodes[3].textContent = itemConfig.description;
 						break;
 					case "Zoom3":
-						element.firstChild.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+						element.firstChild.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
 						element.firstChild.firstChild.textContent = itemConfig.title;
 
 						var photo = element.childNodes[1].firstChild;
@@ -175,7 +175,7 @@
 						element.childNodes[3].textContent = itemConfig.description;
 						break;
 					case "Zoom4":
-						element.firstChild.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+						element.firstChild.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
 						element.firstChild.firstChild.textContent = itemConfig.title;
 
 						var photo = element.childNodes[1].firstChild;
@@ -190,11 +190,11 @@
 			}
 
 			function getZoom0Template() {
-				var result = new primitives.orgdiagram.TemplateConfig();
+				var result = new primitives.TemplateConfig();
 				result.name = "Zoom0";
 
-				result.itemSize = new primitives.common.Size(100, 10);
-				result.minimizedItemSize = new primitives.common.Size(3, 3);
+				result.itemSize = new primitives.Size(100, 10);
+				result.minimizedItemSize = new primitives.Size(3, 3);
 
 				result.itemTemplate = ["div",
 					{
@@ -224,11 +224,11 @@
 			}
 
 			function getZoom1Template() {
-				var result = new primitives.orgdiagram.TemplateConfig();
+				var result = new primitives.TemplateConfig();
 				result.name = "Zoom1";
 
-				result.itemSize = new primitives.common.Size(120, 28);
-				result.minimizedItemSize = new primitives.common.Size(3, 3);
+				result.itemSize = new primitives.Size(120, 28);
+				result.minimizedItemSize = new primitives.Size(3, 3);
 
 				result.itemTemplate = ["div",
 					{
@@ -271,11 +271,11 @@
 			}
 
 			function getZoom2Template() {
-				var result = new primitives.orgdiagram.TemplateConfig();
+				var result = new primitives.TemplateConfig();
 				result.name = "Zoom2";
 
-				result.itemSize = new primitives.common.Size(140, 64);
-				result.minimizedItemSize = new primitives.common.Size(3, 3);
+				result.itemSize = new primitives.Size(140, 64);
+				result.minimizedItemSize = new primitives.Size(3, 3);
 
 				result.itemTemplate = ["div",
 					{
@@ -354,11 +354,11 @@
 			}
 
 			function getZoom3Template() {
-				var result = new primitives.orgdiagram.TemplateConfig();
+				var result = new primitives.TemplateConfig();
 				result.name = "Zoom3";
 
-				result.itemSize = new primitives.common.Size(160, 86);
-				result.minimizedItemSize = new primitives.common.Size(3, 3);
+				result.itemSize = new primitives.Size(160, 86);
+				result.minimizedItemSize = new primitives.Size(3, 3);
 
 				result.itemTemplate = ["div",
 					{
@@ -450,11 +450,11 @@
 			}
 
 			function getZoom4Template() {
-				var result = new primitives.orgdiagram.TemplateConfig();
+				var result = new primitives.TemplateConfig();
 				result.name = "Zoom4";
 
-				result.itemSize = new primitives.common.Size(220, 120);
-				result.minimizedItemSize = new primitives.common.Size(3, 3);
+				result.itemSize = new primitives.Size(220, 120);
+				result.minimizedItemSize = new primitives.Size(3, 3);
 
 				result.itemTemplate = ["div",
 					{
@@ -563,7 +563,7 @@
 		function Update() {
 			var zoomLevel = getRadioValue("zoom");
 			control.setOption("defaultTemplateName", "Zoom" + zoomLevel);
-			control.update(primitives.orgdiagram.UpdateMode.Refresh);
+			control.update(primitives.UpdateMode.Refresh);
 		}
 
 		function getRadioValue(name) {
@@ -586,6 +586,6 @@
 		<label><input onclick="Update()" name="zoom" type="radio" value="3" checked="">3</label>
 		<label><input onclick="Update()" name="zoom" type="radio" value="4">4</label>
 	</p>
-	<div id="basicdiagram" style="width: 640px; height: 400px; border-style: dotted; border-width: 1px;" />
+	<div id="basicdiagram" style="width: 640px; height: 400px; border-style: dotted; border-width: 1px;"></div>
 </body>
 </html>

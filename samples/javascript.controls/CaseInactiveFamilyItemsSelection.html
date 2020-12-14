@@ -5,95 +5,95 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Inactive items in family chart layout</title>
 
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type='text/javascript'>
     var control;
 
     document.addEventListener('DOMContentLoaded', function () {
-      var options = new primitives.famdiagram.Config();
+      var options = new primitives.FamConfig();
       var items = [
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({
           id: 2000,
           parents: null,
           title: "Scott Aasrud",
           description: "Co-CEO",
           image: "../images/photos/a.png"
         }),
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({
           id: 2100,
           parents: null,
           title: "Scott Aasrud 2",
           description: "Co-CEO",
           image: "../images/photos/a.png"
         }),
-        new primitives.famdiagram.ItemConfig({ id: 2001, parents: [2000, 2100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Finance", itemTitleColor: "Green" }),
+        new primitives.FamItemConfig({ id: 2001, parents: [2000, 2100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Finance", itemTitleColor: "Green" }),
 
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({
           id: 1000,
           parents: null,
           title: "Scott Aasrud",
           description: "Co-CEO",
           image: "../images/photos/a.png"
         }),
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({
           id: 1100,
           parents: null,
           title: "Scott Aasrud 2",
           description: "Co-CEO",
           image: "../images/photos/a.png"
         }),
-        new primitives.famdiagram.ItemConfig({ id: 1001, parents: [1000, 1100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Finance", itemTitleColor: "Green" }),
+        new primitives.FamItemConfig({ id: 1001, parents: [1000, 1100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Finance", itemTitleColor: "Green" }),
 
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({
           id: 0,
           parents: null,
           title: "Scott Aasrud",
           description: "Co-CEO",
           image: "../images/photos/a.png"
         }),
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({
           id: 100,
           parents: null,
           title: "Scott Aasrud 2",
           description: "Co-CEO",
           image: "../images/photos/a.png"
         }),
-        new primitives.famdiagram.ItemConfig({ id: 1, parents: [0, 100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Finance", itemTitleColor: "Green" }),
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({ id: 1, parents: [0, 100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Finance", itemTitleColor: "Green" }),
+        new primitives.FamItemConfig({
           id: 2,
           parents: [1],
           title: "Ted Lucas",
           description: "VP, Human Resources",
           image: "../images/photos/b.png"
         }),
-        new primitives.famdiagram.ItemConfig({ id: 3, parents: [0, 100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Sales", itemTitleColor: "Navy" }),
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({ id: 3, parents: [0, 100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Sales", itemTitleColor: "Navy" }),
+        new primitives.FamItemConfig({
           id: 4,
           parents: [3],
           title: "Fritz Stuger",
           description: "VP, Human Resources",
           image: "../images/photos/b.png"
         }),
-        new primitives.famdiagram.ItemConfig({ id: 5, parents: [0, 100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Operations", itemTitleColor: "Magenta" }),
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({ id: 5, parents: [0, 100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "Operations", itemTitleColor: "Magenta" }),
+        new primitives.FamItemConfig({
           id: 6,
           parents: [5],
           title: "Brad Whitt",
           description: "VP, Human Resources",
           image: "../images/photos/b.png"
         }),
-        new primitives.famdiagram.ItemConfig({ id: 7, parents: [0, 100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "IT", itemTitleColor: "Orange" }),
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({ id: 7, parents: [0, 100], hasSelectorCheckbox: false, templateName: "DepartmentTitleTemplate", title: "IT", itemTitleColor: "Orange" }),
+        new primitives.FamItemConfig({
           id: 8,
           parents: [7],
           title: "Ted Whitt",
           description: "VP, Human Resources",
           image: "../images/photos/b.png"
         }),
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({
           id: 18,
           parents: [7],
           title: "Ted Whitt 2",
@@ -114,11 +114,11 @@
 
       options.items = items;
       options.cursorItem = 0;
-      options.selectionPathMode = primitives.common.SelectionPathMode.FullStack;
-      options.neighboursSelectionMode = primitives.common.NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses;
+      options.selectionPathMode = primitives.SelectionPathMode.FullStack;
+      options.neighboursSelectionMode = primitives.NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses;
       options.templates = [getDepartmentTitleTemplate()];
       options.onItemRender = onTemplateRender;
-      options.hasSelectorCheckbox = primitives.common.Enabled.True;
+      options.hasSelectorCheckbox = primitives.Enabled.True;
       options.normalLevelShift = 20;
       options.dotLevelShift = 20;
       options.lineLevelShift = 10;
@@ -127,16 +127,16 @@
       options.lineItemsInterval = 4;
 
 
-      control = primitives.famdiagram.Control(document.getElementById("basicdiagram"), options);
+      control = primitives.FamDiagram(document.getElementById("basicdiagram"), options);
     });
 
 
     function onTemplateRender(event, data) {
       switch (data.renderingMode) {
-        case primitives.common.RenderingMode.Create:
+        case primitives.RenderingMode.Create:
           /* Initialize widgets here */
           break;
-        case primitives.common.RenderingMode.Update:
+        case primitives.RenderingMode.Update:
           /* Update widgets here */
           break;
       }
@@ -145,25 +145,17 @@
       var element = data.element;
 
       if (data.templateName == "DepartmentTitleTemplate") {
-        element.firstChild.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+        element.firstChild.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
         element.firstChild.firstChild.textContent = itemConfig.title;
       }
     }
 
     function getDepartmentTitleTemplate() {
-      var result = new primitives.famdiagram.TemplateConfig();
+      var result = new primitives.TemplateConfig();
       result.name = "DepartmentTitleTemplate";
       result.isActive = false;
-
-      var buttons = [];
-      buttons.push(new primitives.famdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"));
-      buttons.push(new primitives.famdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"));
-      buttons.push(new primitives.famdiagram.ButtonConfig("add", "ui-icon-person", "Add"));
-      buttons.push(new primitives.famdiagram.ButtonConfig("notice", "ui-icon-notice", "Notice"));
-      result.buttons = buttons;
-
-      result.itemSize = new primitives.common.Size(200, 30);
-      result.minimizedItemSize = new primitives.common.Size(3, 3);
+      result.itemSize = new primitives.Size(200, 30);
+      result.minimizedItemSize = new primitives.Size(3, 3);
 
       /* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
       result.itemTemplate = ["div",
@@ -207,7 +199,7 @@
 </head>
 
 <body>
-  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
 </body>
 
 </html>

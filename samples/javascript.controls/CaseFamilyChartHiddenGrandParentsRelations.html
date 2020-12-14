@@ -5,14 +5,14 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Family Chart Having Excessive Grand Parent Relations</title>
 
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type='text/javascript'>
     var control;
     document.addEventListener('DOMContentLoaded', function () {
-      var options = new primitives.famdiagram.Config();
+      var options = new primitives.FamConfig();
 
       var items = [
         { id: 1, title: "Thomas Williams", label: "Thomas Williams", description: "1", image: "images/photos/t.png" },
@@ -26,34 +26,36 @@
       ];
 
       options.hideGrandParentsConnectors = true;
-      options.pageFitMode = primitives.common.PageFitMode.None;
+      options.pageFitMode = primitives.PageFitMode.AutoSize;
+			options.autoSizeMinimum = new primitives.Size(100, 100);
+			options.autoSizeMaximum = new primitives.Size(2000, 2000);
       options.items = items;
       options.cursorItem = 2;
       options.linesWidth = 1;
       options.linesColor = "black";
-      options.hasSelectorCheckbox = primitives.common.Enabled.False;
+      options.hasSelectorCheckbox = primitives.Enabled.False;
       options.normalLevelShift = 20;
       options.dotLevelShift = 20;
       options.lineLevelShift = 20;
       options.normalItemsInterval = 10;
       options.dotItemsInterval = 10;
       options.lineItemsInterval = 10;
-      options.arrowsDirection = primitives.common.GroupByType.Parents;
+      options.arrowsDirection = primitives.GroupByType.Parents;
       options.showExtraArrows = false;
 
       options.defaultTemplateName = "info";
       options.templates = [getInfoTemplate()];
       options.onItemRender = onTemplateRender;
 
-      control = primitives.famdiagram.Control(document.getElementById("basicdiagram"), options);
+      control = primitives.FamDiagram(document.getElementById("basicdiagram"), options);
     });
 
     function onTemplateRender(event, data) {
       switch (data.renderingMode) {
-        case primitives.common.RenderingMode.Create:
+        case primitives.RenderingMode.Create:
           /* Initialize widgets here */
           break;
-        case primitives.common.RenderingMode.Update:
+        case primitives.RenderingMode.Update:
           /* Update widgets here */
           break;
       }
@@ -67,12 +69,12 @@
     }
 
     function getInfoTemplate() {
-      var result = new primitives.orgdiagram.TemplateConfig();
+      var result = new primitives.TemplateConfig();
       result.name = "info";
 
-      result.itemSize = new primitives.common.Size(80, 36);
-      result.minimizedItemSize = new primitives.common.Size(3, 3);
-      result.highlightPadding = new primitives.common.Thickness(4, 4, 4, 4);
+      result.itemSize = new primitives.Size(80, 36);
+      result.minimizedItemSize = new primitives.Size(3, 3);
+      result.highlightPadding = new primitives.Thickness(4, 4, 4, 4);
 
       result.itemTemplate =
         '<div class="bp-item bp-corner-all bt-item-frame" style="width:' + result.itemSize.width + 'px; height: ' + result.itemSize.height + 'px;">'
@@ -86,7 +88,7 @@
 </head>
 
 <body>
-  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+  <div id="basicdiagram" style="border-style: dotted; border-width: 1px;"></div>
 </body>
 
 </html>

@@ -4,59 +4,59 @@
 <head>
   <title>JavaScript Control Organizational Chart, Vertical Children layout Demo</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-  <!-- header -->
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <script type="text/javascript" src="common/helpers.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" type='text/css'>
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet"  type='text/css'>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <script type="text/javascript" src="../../javascriptsamples.js"></script>
+  <link href="./css/styles.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type="text/javascript">
     var control;
     var timer = null;
     var treeItems = {};
     var /* Layout */
-      optionsRender = primitives.helpers.controls.getOrgDiagramOptionsRender({
-        pageFitMode: primitives.common.PageFitMode.FitToPage,
-        orientationType: primitives.common.OrientationType.Top,
-        verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-        horizontalAlignment: primitives.common.HorizontalAlignmentType.Left,
-        childrenPlacementType: primitives.common.ChildrenPlacementType.Vertical,
-        leavesPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+      optionsRender = javascriptsamples.getOrgDiagramOptionsRender({
+        pageFitMode: primitives.PageFitMode.FitToPage,
+        orientationType: primitives.OrientationType.Top,
+        verticalAlignment: primitives.VerticalAlignmentType.Middle,
+        horizontalAlignment: primitives.HorizontalAlignmentType.Left,
+        childrenPlacementType: primitives.ChildrenPlacementType.Vertical,
+        leavesPlacementType: primitives.ChildrenPlacementType.Horizontal,
         placeAdvisersAboveChildren: true,
         placeAssistantsAboveChildren: true,
         maximumColumnsInMatrix: 6,
-        minimalVisibility: primitives.common.Visibility.Dot,
-        selectionPathMode: primitives.common.SelectionPathMode.FullStack,
+        minimalVisibility: primitives.Visibility.Dot,
+        selectionPathMode: primitives.SelectionPathMode.FullStack,
 
-        hasButtons: primitives.common.Enabled.Auto,
-        hasSelectorCheckbox: primitives.common.Enabled.True,
+        hasButtons: primitives.Enabled.Auto,
+        hasSelectorCheckbox: primitives.Enabled.True,
         selectCheckBoxLabel: "Selected",
-        itemTitleFirstFontColor: primitives.common.Colors.White,
-        itemTitleSecondFontColor: primitives.common.Colors.White,
-        buttonsPanelSize: 28,
+        itemTitleFirstFontColor: primitives.Colors.White,
+        itemTitleSecondFontColor: primitives.Colors.White,
+        buttonsPanelSize: 32,
         groupTitlePanelSize: 24,
         checkBoxPanelSize: 24,
 
         /* group title options */
-        groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
-        groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
-        groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-        groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+        groupTitlePlacementType: primitives.AdviserPlacementType.Left,
+        groupTitleOrientation: primitives.TextOrientationType.RotateRight,
+        groupTitleVerticalAlignment: primitives.VerticalAlignmentType.Middle,
+        groupTitleHorizontalAlignment: primitives.HorizontalAlignmentType.Center,
         groupTitleFontSize: "12px",
         groupTitleFontFamily: "Arial",
-        groupTitleColor: primitives.common.Colors.RoyalBlue,
+        groupTitleColor: primitives.Colors.RoyalBlue,
         groupTitleFontWeight: "normal",
         groupTitleFontStyle: "normal",
 
         /* Template */
         DefaultTemplateOptions: {
           minimizedItemCornerRadius: null,
-          minimizedItemSize: new primitives.common.Size(4, 4),
+          minimizedItemSize: new primitives.Size(4, 4),
           highlightPadding: 3,
-          minimizedItemShapeType: primitives.common.ShapeType.None,
+          minimizedItemShapeType: primitives.ShapeType.None,
           minimizedItemLineWidth: 1,
-          minimizedItemLineType: primitives.common.LineType.Solid,
+          minimizedItemLineType: primitives.LineType.Solid,
           minimizedItemBorderColor: null,
           minimizedItemFillColor: null,
           minimizedItemOpacity: 1.0
@@ -72,32 +72,32 @@
         cousinsIntervalMultiplier: 0,
 
         /* Connectors */
-        arrowsDirection: primitives.common.GroupByType.None,
+        arrowsDirection: primitives.GroupByType.None,
         showExtraArrows: false,
         extraArrowsMinimumSpace: 30,
-        connectorType: primitives.common.ConnectorType.Squared,
-        elbowType: primitives.common.ElbowType.None,
+        connectorType: primitives.ConnectorType.Squared,
+        elbowType: primitives.ElbowType.None,
         bevelSize: 4,
         elbowDotSize: 4,
-        linesType: primitives.common.LineType.Solid,
-        linesColor: primitives.common.Colors.Silver,
+        linesType: primitives.LineType.Solid,
+        linesColor: primitives.Colors.Silver,
         linesWidth: 1,
 
         /* Labels */
-        showLabels: primitives.common.Enabled.Auto,
-        labelSize: new primitives.common.Size(10, 14),
-        labelOrientation: primitives.text.TextOrientationType.Horizontal,
-        labelPlacement: primitives.common.PlacementType.Bottom,
+        showLabels: primitives.Enabled.Auto,
+        labelSize: new primitives.Size(10, 14),
+        labelOrientation: primitives.TextOrientationType.Horizontal,
+        labelPlacement: primitives.PlacementType.Bottom,
         labelOffset: 3,
         labelFontSize: "10px",
         labelFontFamily: "Arial",
-        labelColor: primitives.common.Colors.Black,
+        labelColor: primitives.Colors.Black,
         labelFontWeight: "normal",
         labelFontStyle: "normal",
 
         /* Callout */
-        calloutMaximumVisibility: primitives.common.Visibility.Dot,
-        showCallout: "true",
+        calloutMaximumVisibility: primitives.Visibility.Dot,
+        showCallout: true,
         calloutPlacementOffset: 100,
         calloutfillColor: "#000000",
         calloutBorderColor: null,
@@ -108,12 +108,12 @@
         calloutOpacity: 0.2,
 
         /* Interactivity */
-        navigationMode: primitives.common.NavigationMode.Default,
+        navigationMode: primitives.NavigationMode.Default,
         highlightGravityRadius: 40,
         enablePanning: true,
 
         /* Graphics */
-        graphicsType: primitives.common.GraphicsType.SVG,
+        graphicsType: primitives.GraphicsType.SVG,
         scale: 1.0,
       
         /* Frame */
@@ -125,13 +125,13 @@
         function () {
           var options = getOptions();
           control.setOptions(options);
-          control.update(primitives.common.UpdateMode.Recreate);
+          control.update(primitives.UpdateMode.Recreate);
         });
 
     document.addEventListener('DOMContentLoaded', function () {
       optionsRender.render(document.getElementById("westpanel"));
-      control = primitives.orgdiagram.Control(document.getElementById("centerpanel"),
-        primitives.common.mergeObjects(getOptions(), getUserData())
+      control = primitives.OrgDiagram(document.getElementById("centerpanel"),
+        primitives.mergeObjects(getOptions(), getUserData())
       );
 
       window.addEventListener('resize', function (event) {
@@ -143,7 +143,7 @@
       options = optionsRender.getValues();
 
       // User Event Handlers
-      primitives.common.mergeObjects(options, {
+      primitives.mergeObjects(options, {
         onCursorChanging: onCursorChanging,
         onCursorChanged: onCursorChanged,
         onMouseClick: onMouseClick,
@@ -154,13 +154,9 @@
       });
 
       // Templates, User Buttons & related Event Handlers
-      primitives.common.mergeObjects(options, {
+      primitives.mergeObjects(options, {
         onButtonClick: onButtonClick,
-        buttons: [new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"),
-        new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"),
-        new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add")
-        ],
-
+        onButtonsRender: onButtonsRender,
         onItemRender: onTemplateRender,
         templates: [getDefaultTemplate(options), getManagerTemplate(options)],
         defaultTemplateName: "defaultTemplate"
@@ -174,17 +170,17 @@
 
       var data = [
         /* root */
-        { id: 0, parent: null, isVisible: true, description: "Description A", email: "mail@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/a.png", phone: "1-900-800-70-60", title: "Title A", templateName: "managerTemplate", labelSize: new primitives.common.Size(300, 14), labelPlacement: primitives.common.PlacementType.Right },
-        { id: 1, parent: 0, isVisible: true, description: "Adviser Description", groupTitleColor: "#4169e1", image: "../images/photos/z.png", title: "Adviser 1", label: "Adviser 1", itemType: primitives.orgdiagram.ItemType.Adviser },
-        { id: 2, parent: 0, isVisible: true, description: "Adviser Description", groupTitleColor: "#4169e1", image: "../images/photos/z.png", title: "Adviser 2", label: "Adviser 2", itemType: primitives.orgdiagram.ItemType.Adviser },
-        { id: 3, parent: 0, isVisible: true, description: "Assitant Description", groupTitleColor: "#4169e1", image: "../images/photos/y.png", title: "Assistant 1", label: "Assistant 1", itemType: primitives.orgdiagram.ItemType.Assistant, labelSize: new primitives.common.Size(300, 14), labelPlacement: primitives.common.PlacementType.Right },
+        { id: 0, parent: null, isVisible: true, description: "Description A", email: "mail@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/a.png", phone: "1-900-800-70-60", title: "Title A", templateName: "managerTemplate", labelSize: new primitives.Size(300, 14), labelPlacement: primitives.PlacementType.Right },
+        { id: 1, parent: 0, isVisible: true, description: "Adviser Description", groupTitleColor: "#4169e1", image: "../images/photos/z.png", title: "Adviser 1", label: "Adviser 1", itemType: primitives.ItemType.Adviser },
+        { id: 2, parent: 0, isVisible: true, description: "Adviser Description", groupTitleColor: "#4169e1", image: "../images/photos/z.png", title: "Adviser 2", label: "Adviser 2", itemType: primitives.ItemType.Adviser },
+        { id: 3, parent: 0, isVisible: true, description: "Assitant Description", groupTitleColor: "#4169e1", image: "../images/photos/y.png", title: "Assistant 1", label: "Assistant 1", itemType: primitives.ItemType.Assistant, labelSize: new primitives.Size(300, 14), labelPlacement: primitives.PlacementType.Right },
         /* managers */
-        { id: 4, parent: 0, isVisible: true, description: "Managers E description ", email: "mail1@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/e.png", phone: "1-900-800-70-15", title: "Manager E", label: "Manager E", templateName: "managerTemplate", labelSize: new primitives.common.Size(300, 14), labelPlacement: primitives.common.PlacementType.Right },
-        { id: 20, parent: 0, isVisible: true, description: "Managers V description ", email: "mail2@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/v.png", phone: "1-900-800-70-17", title: "Manager V", label: "Manager V", templateName: "managerTemplate", labelSize: new primitives.common.Size(300, 14), labelPlacement: primitives.common.PlacementType.Right },
-        { id: 38, parent: 0, isVisible: true, description: "Managers U description ", email: "mail3@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/u.png", phone: "1-900-800-70-18", title: "Manager U", label: "Manager U", templateName: "managerTemplate", labelSize: new primitives.common.Size(300, 14), labelPlacement: primitives.common.PlacementType.Right },
-        { id: 57, parent: 0, isVisible: true, description: "Managers O description ", email: "mail4@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/o.png", phone: "1-900-800-70-15", title: "Manager O", label: "Manager O", templateName: "managerTemplate", labelSize: new primitives.common.Size(300, 14), labelPlacement: primitives.common.PlacementType.Right },
-        { id: 73, parent: 0, isVisible: true, description: "Managers P description ", email: "mail5@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/p.png", phone: "1-900-800-70-16", title: "Manager P", label: "Manager P", templateName: "managerTemplate", labelSize: new primitives.common.Size(300, 14), labelPlacement: primitives.common.PlacementType.Right },
-        { id: 90, parent: 0, isVisible: true, description: "Managers L description ", email: "mail6@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/l.png", phone: "1-900-800-70-13", title: "Manager L", label: "Manager L", templateName: "managerTemplate", labelSize: new primitives.common.Size(300, 14), labelPlacement: primitives.common.PlacementType.Right },
+        { id: 4, parent: 0, isVisible: true, description: "Managers E description ", email: "mail1@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/e.png", phone: "1-900-800-70-15", title: "Manager E", label: "Manager E", templateName: "managerTemplate", labelSize: new primitives.Size(300, 14), labelPlacement: primitives.PlacementType.Right },
+        { id: 20, parent: 0, isVisible: true, description: "Managers V description ", email: "mail2@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/v.png", phone: "1-900-800-70-17", title: "Manager V", label: "Manager V", templateName: "managerTemplate", labelSize: new primitives.Size(300, 14), labelPlacement: primitives.PlacementType.Right },
+        { id: 38, parent: 0, isVisible: true, description: "Managers U description ", email: "mail3@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/u.png", phone: "1-900-800-70-18", title: "Manager U", label: "Manager U", templateName: "managerTemplate", labelSize: new primitives.Size(300, 14), labelPlacement: primitives.PlacementType.Right },
+        { id: 57, parent: 0, isVisible: true, description: "Managers O description ", email: "mail4@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/o.png", phone: "1-900-800-70-15", title: "Manager O", label: "Manager O", templateName: "managerTemplate", labelSize: new primitives.Size(300, 14), labelPlacement: primitives.PlacementType.Right },
+        { id: 73, parent: 0, isVisible: true, description: "Managers P description ", email: "mail5@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/p.png", phone: "1-900-800-70-16", title: "Manager P", label: "Manager P", templateName: "managerTemplate", labelSize: new primitives.Size(300, 14), labelPlacement: primitives.PlacementType.Right },
+        { id: 90, parent: 0, isVisible: true, description: "Managers L description ", email: "mail6@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/l.png", phone: "1-900-800-70-13", title: "Manager L", label: "Manager L", templateName: "managerTemplate", labelSize: new primitives.Size(300, 14), labelPlacement: primitives.PlacementType.Right },
         /* direct reports */
         { id: 5, parent: 4, isVisible: true, description: "Description of member0", groupTitleColor: "#4169e1", image: "../images/photos/e.png", title: "0 member of E", label: "0" },
         { id: 6, parent: 4, isVisible: true, description: "Description of member1", groupTitleColor: "#4169e1", image: "../images/photos/e.png", title: "1 member of E", label: "1" },
@@ -295,23 +291,23 @@
     }
 
     function getDefaultTemplate(options) {
-      var result = new primitives.orgdiagram.TemplateConfig();
+      var result = new primitives.TemplateConfig();
       result.name = "defaultTemplate";
 
       // If we don't change anything in template then all its properties stays default
       // So we change only minimized item properties
-      primitives.common.mergeObjects(result, options.DefaultTemplateOptions);
+      primitives.mergeObjects(result, options.DefaultTemplateOptions);
 
       return result;
     }
 
     function getManagerTemplate(options) {
-      var result = new primitives.orgdiagram.TemplateConfig();
+      var result = new primitives.TemplateConfig();
       result.name = "managerTemplate";
 
-      result.itemSize = new primitives.common.Size(220, 120);
+      result.itemSize = new primitives.Size(220, 120);
 
-      primitives.common.mergeObjects(result, options.DefaultTemplateOptions);
+      primitives.mergeObjects(result, options.DefaultTemplateOptions);
 
       /* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
       result.itemTemplate = ["div",
@@ -421,7 +417,7 @@
         photo.alt = itemConfig.title;
 
         var titleBackground = element.firstChild;
-        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
 
         var title = element.firstChild.firstChild;
         title.textContent = itemConfig.title;
@@ -437,18 +433,53 @@
         description.textContent = itemConfig.description;
 
         switch (data.renderingMode) {
-          case primitives.common.RenderingMode.Create:
+          case primitives.RenderingMode.Create:
             /* Initialize widgets here */
             email.addEventListener("click", function (e) {
               /* Block mouse click propagation in order to avoid layout updates before server postback*/
-              primitives.common.stopPropagation(e);
+              primitives.stopPropagation(e);
             });
             break;
-          case primitives.common.RenderingMode.Update:
+          case primitives.RenderingMode.Update:
             /* Update widgets here */
             break;
         }
       }
+    }
+
+    function onButtonsRender(data) {
+      var itemConfig = data.context;
+      var element = data.element;
+      element.innerHTML = "";
+      element.appendChild(primitives.JsonML.toHTML(["div",
+        {
+          class: "btn-group-vertical btn-group-sm"
+        },
+        ["button", 
+          {
+            "type": "button",
+            "data-buttonname": "user",
+            "class": "btn btn-light"
+          },
+          ["i", { "class": "fa fa-user" }]
+        ],
+        ["button", 
+          {
+            "type": "button",
+            "data-buttonname": "remove",
+            "class": "btn btn-light"
+          },
+          ["i", { "class": "fa fa-minus-circle" }]
+        ],
+        ["button", 
+          {
+            "type": "button",
+            "data-buttonname": "properties",
+            "class": "btn btn-light"
+          },
+          ["i", { "class": "fa fa-cog" }]
+        ]
+      ]));
     }
 
     function onButtonClick(e, data) {
@@ -511,7 +542,7 @@
     function onWindowResize() {
       if (timer == null) {
         timer = window.setTimeout(function () {
-          control.update(primitives.orgdiagram.UpdateMode.Refresh);
+          control.update(primitives.UpdateMode.Refresh);
           window.clearTimeout(timer);
           timer = null;
         }, 300);
@@ -519,29 +550,27 @@
     }
 
   </script>
-  <!-- /header -->
+
 </head>
 
-<body style="font-size: 12px">
-  <div
-    style="position: absolute; width: 400px; left: 0px; top: 0px; bottom: 50px; padding: 0px; margin: 0px; border-style: none; font-size: 14px; overflow: scroll; -webkit-overflow-scrolling: touch;">
-    <div id="westpanel" style="padding: 5px; margin: 5px; font: normal 12px verdana, areal;">
-      <h2>Organizational Chart, Vertical Children layout Demo</h2>
-      <p>Chart has two distinct options for children and leaves placement type. These options can be overwritten
-        individually for every item. Chart has 3 types of children layout: Horizontal, Vertical and Matrix. In order to
-        change children alignment relative to its parent use complimentary horizontal children alignment option. In
-        order to occupy minimum space matrix layout has squared shape. Use maximum columns number option to limits
-        number of columns in it. </p>
-      <p>All children in matrix aligned vertically and horizontally, regardless of available assistants, advisers or
-        number of sub children in them.</p>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <nav id="sidebarMenu" class="col-md-4 col-lg-2 d-md-block bg-light sidebar collapse" style="position: fixed; top: 0; bottom: 0px; overflow-y: auto; float: none;">
+        <div class="position-sticky pt-3">
+          <div id="westpanel" class="flex-column"></div>
+        </div>
+      </nav>
+  
+      <main class="col-md-8 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Organizational Chart, Vertical Children layout Demo</h1>
+        </div>
+        <div id="centerpanel" class="mediaPlaceholder my-2 w-100"></div>
+        <div id="southpanel" class="alert alert-primary" style="min-height: 60px;" role="alert">
+        </div>
+      </main>
     </div>
   </div>
-  <div id="centerpanel"
-    style="position: absolute; border-style: dotted; border-width: 0px; top: 0; right: 0; bottom: 50px; left: 400px;">
-  </div>
-  <div id="southpanel"
-    style="position: absolute; border-style: dotted; border-width: 0px; height: 50px; right: 0; bottom: 0; left: 0;">
-  </div>
 </body>
-
 </html>

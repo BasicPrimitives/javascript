@@ -14,7 +14,6 @@ When we draw SVG and Canvas lines it is important to have them pixel aligned oth
 In the following example we show how to listen to window size change event and use Timer to throttle it so our application stays responsive.
 
 [JavaScript](javascript.controls/CasePageSizeDiagram.html)
-[JQuery](jquery.widgets/CasePageSizeDiagramWithoutUILayoutWidget.html)
 
 ## Auto Size Diagram in Article
 
@@ -28,8 +27,8 @@ Use following options to constrain widget auto size:
 for example following code sets widget's minimal size:
 
 ``` JavaScript
-autoSizeMinimum = new primitives.common.Size(800, 600);
+autoSizeMinimum = new primitives.Size(800, 600);
 ```
 
 [JavaScript](javascript.controls/CaseAutoSize.html)
-[JQuery](jquery.widgets/CaseAutoSize.html)
+

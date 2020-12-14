@@ -4,21 +4,16 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Basic Primitives Diagrams PDFKit Plugin Matrix Children Layout Demo</title>
-
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <!-- PDFkit & Libs -->
-  <script src="../../packages/pdfkit/pdfkit.js"></script>
-  <script src="../../packages/pdfkit/blob-stream.js"></script>
-
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="../../pdfkitsamples.js"></script>
+  <script type="text/javascript" src="../../primitives.js"></script>
   <script type="text/javascript" src="../data/editordata.js"></script>
-  <!-- Demo Images -->
-  <script src="../data/photos.js"></script>
 
   <script type='text/javascript'>
     var control;
     var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
 
     function getUserData(data) {
       var index, len;
@@ -31,38 +26,38 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-      var sample3 = primitives.pdf.orgdiagram.Plugin({
+      var sample3 = primitives.OrgDiagramPdfkit({
         items: (getUserData(data)),
         cursorItem: null,
-        hasSelectorCheckbox: primitives.common.Enabled.False,
+        hasSelectorCheckbox: primitives.Enabled.False,
         /* Layout */
-        pageFitMode: primitives.common.PageFitMode.FitToPage,
-        orientationType: primitives.common.OrientationType.Top,
-        verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-        horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
-        childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
-        leavesPlacementType: primitives.common.ChildrenPlacementType.Matrix,
+        pageFitMode: primitives.PageFitMode.FitToPage,
+        orientationType: primitives.OrientationType.Top,
+        verticalAlignment: primitives.VerticalAlignmentType.Middle,
+        horizontalAlignment: primitives.HorizontalAlignmentType.Center,
+        childrenPlacementType: primitives.ChildrenPlacementType.Horizontal,
+        leavesPlacementType: primitives.ChildrenPlacementType.Matrix,
         maximumColumnsInMatrix: 6,
-        minimalVisibility: primitives.common.Visibility.Dot,
-        selectionPathMode: primitives.common.SelectionPathMode.FullStack,
+        minimalVisibility: primitives.Visibility.Dot,
+        selectionPathMode: primitives.SelectionPathMode.FullStack,
 
-        hasButtons: primitives.common.Enabled.Auto,
-        hasSelectorCheckbox: primitives.common.Enabled.True,
+        hasButtons: primitives.Enabled.Auto,
+        hasSelectorCheckbox: primitives.Enabled.True,
         selectCheckBoxLabel: "Selected",
-        itemTitleFirstFontColor: primitives.common.Colors.White,
-        itemTitleSecondFontColor: primitives.common.Colors.White,
-        buttonsPanelSize: 28,
+        itemTitleFirstFontColor: primitives.Colors.White,
+        itemTitleSecondFontColor: primitives.Colors.White,
+        buttonsPanelSize: 32,
         checkBoxPanelSize: 24,
 
         /* group title options */
-        groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
+        groupTitlePlacementType: primitives.AdviserPlacementType.Left,
         groupTitlePanelSize: 24,
-        groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
-        groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-        groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+        groupTitleOrientation: primitives.TextOrientationType.RotateRight,
+        groupTitleVerticalAlignment: primitives.VerticalAlignmentType.Middle,
+        groupTitleHorizontalAlignment: primitives.HorizontalAlignmentType.Center,
         groupTitleFontSize: "12px",
         groupTitleFontFamily: "Arial",
-        groupTitleColor: primitives.common.Colors.RoyalBlue,
+        groupTitleColor: primitives.Colors.RoyalBlue,
         groupTitleFontWeight: "normal",
         groupTitleFontStyle: "normal",
 
@@ -76,32 +71,32 @@
         cousinsIntervalMultiplier: 5,
 
         /* Connectors */
-        arrowsDirection: primitives.common.GroupByType.None,
+        arrowsDirection: primitives.GroupByType.None,
         showExtraArrows: false,
         extraArrowsMinimumSpace: 30,
-        connectorType: primitives.common.ConnectorType.Squared,
-        elbowType: primitives.common.ElbowType.None,
+        connectorType: primitives.ConnectorType.Squared,
+        elbowType: primitives.ElbowType.None,
         bevelSize: 4,
         elbowDotSize: 4,
-        linesType: primitives.common.LineType.Solid,
-        linesColor: primitives.common.Colors.Silver,
+        linesType: primitives.LineType.Solid,
+        linesColor: primitives.Colors.Silver,
         linesWidth: 1,
 
         /* Labels */
-        showLabels: primitives.common.Enabled.True,
-        labelSize: new primitives.common.Size(10, 24),
-        labelOrientation: primitives.text.TextOrientationType.Horizontal,
-        labelPlacement: primitives.common.PlacementType.Top,
+        showLabels: primitives.Enabled.True,
+        labelSize: new primitives.Size(10, 24),
+        labelOrientation: primitives.TextOrientationType.Horizontal,
+        labelPlacement: primitives.PlacementType.Top,
         labelOffset: 1,
         labelFontSize: "10px",
         labelFontFamily: "Arial",
-        labelColor: primitives.common.Colors.Black,
+        labelColor: primitives.Colors.Black,
         labelFontWeight: "normal",
         labelFontStyle: "normal",
 
         /* Callout */
-        calloutMaximumVisibility: primitives.common.Visibility.Dot,
-        showCallout: "true",
+        calloutMaximumVisibility: primitives.Visibility.Dot,
+        showCallout: true,
         calloutPlacementOffset: 100,
         calloutfillColor: "#000000",
         calloutBorderColor: null,
@@ -112,12 +107,12 @@
         calloutOpacity: 0.2,
 
         /* Interactivity */
-        navigationMode: primitives.common.NavigationMode.Default,
+        navigationMode: primitives.NavigationMode.Default,
         highlightGravityRadius: 40,
         enablePanning: true,
 
         /* Graphics */
-        graphicsType: primitives.common.GraphicsType.SVG,
+        graphicsType: primitives.GraphicsType.SVG,
 
         scale: 1.0
       });

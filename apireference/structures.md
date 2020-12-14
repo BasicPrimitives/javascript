@@ -1,24 +1,46 @@
 # Structures
-## <a name="primitives.common.RenderEventArgs" id="primitives.common.RenderEventArgs">RenderEventArgs</a>
-This is object parameter of rendering callback function
+## <a name="Edge" id="Edge">Edge</a>
+Graph edge structure
 
- `primitives.common.RenderEventArgs` 
+ `Edge` 
 
-### Properties
-| Name | Type | Default | Description | 
+## <a name="HeapResult" id="HeapResult">HeapResult</a>
+Heap result object
+
+ `HeapResult` 
+
+## <a name="Matrix" id="Matrix">Matrix</a>
+Square matrix having 2 rows and 2 columns.
+
+ `Matrix` 
+
+### Constructor
+
+ `Matrix(arg0, arg1, arg2, arg3)` 
+
+Square matrix having 2 rows and 2 columns.
+
+| Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `context` | object | `null` | Context object of the node | 
- | `element` | object | `null` | Reference to DOM element. | 
- | `id` | string | `null` | Node id | 
- | `isCursor` | boolean | `false` | The rendered item is current diagram cursor item | 
- | `isSelected` | boolean | `false` | The rendered item is selected | 
- | `renderingMode` | RenderingMode | `null` | This option indicates current template state. | 
- | `templateName` | string | `null` | Node template name | 
+ | `arg0` | Matrix | `` | Matrix to clone | 
+ | `arg0` | number | `` | A1 - top left. | 
+ | `arg1` | number | `` | B1 - top right. | 
+ | `arg2` | number | `` | A2 - bottom left. | 
+ | `arg3` | number | `` | B2 - bottom right. | 
 
-## <a name="primitives.common.Point" id="primitives.common.Point">Point</a>
+### Functions
+
+ `determinant()` 
+
+Finds matrix determinant
+
+ Returns: `number` - returns matrix determinant
+
+
+## <a name="Point" id="Point">Point</a>
 Class represents pair of x and y coordinates that define a point in 2D plane.
 
- `primitives.common.Point` 
+ `Point` 
 
 ### Constructor
 
@@ -108,10 +130,10 @@ Returns point in form of CSS style string.
 | --- | --- | --- | --- | 
  | `units` | string | `"px"` | The string name of units. | 
 
-## <a name="primitives.common.Rect" id="primitives.common.Rect">Rect</a>
+## <a name="Rect" id="Rect">Rect</a>
 Class describes the width, height and location of rectangle.
 
- `primitives.common.Rect` 
+ `Rect` 
 
 ### Constructor
 
@@ -351,38 +373,26 @@ Vertical center
  Returns: `number` - returns y-axis coordinate of the center point of the rectangle.
 
 
-## <a name="primitives.common.Matrix" id="primitives.common.Matrix">Matrix</a>
-Square matrix having 2 rows and 2 columns.
+## <a name="RenderEventArgs" id="RenderEventArgs">RenderEventArgs</a>
+This is object parameter of rendering callback function
 
- `primitives.common.Matrix` 
+ `RenderEventArgs` 
 
-### Constructor
-
- `Matrix(arg0, arg1, arg2, arg3)` 
-
-Square matrix having 2 rows and 2 columns.
-
-| Param | Type | Default | Description | 
+### Properties
+| Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `arg0` | Matrix | `` | Matrix to clone | 
- | `arg0` | number | `` | A1 - top left. | 
- | `arg1` | number | `` | B1 - top right. | 
- | `arg2` | number | `` | A2 - bottom left. | 
- | `arg3` | number | `` | B2 - bottom right. | 
+ | `context` | object | `null` | Context object of the node | 
+ | `element` | object | `null` | Reference to DOM element. | 
+ | `id` | string | `null` | Node id | 
+ | `isCursor` | boolean | `false` | The rendered item is current diagram cursor item | 
+ | `isSelected` | boolean | `false` | The rendered item is selected | 
+ | `renderingMode` | RenderingMode | `null` | This option indicates current template state. | 
+ | `templateName` | string | `null` | Node template name | 
 
-### Functions
-
- `determinant()` 
-
-Finds matrix determinant
-
- Returns: `number` - returns matrix determinant
-
-
-## <a name="primitives.common.Size" id="primitives.common.Size">Size</a>
+## <a name="Size" id="Size">Size</a>
 Size object defines width and height.
 
- `primitives.common.Size` 
+ `Size` 
 
 ### Constructor
 
@@ -485,10 +495,10 @@ Validates size properties
  Returns: `boolean` - returns true if size properties are valid.
 
 
-## <a name="primitives.common.Thickness" id="primitives.common.Thickness">Thickness</a>
+## <a name="Thickness" id="Thickness">Thickness</a>
 Class describes the thickness of a frame around rectangle.
 
- `primitives.common.Thickness` 
+ `Thickness` 
 
 ### Constructor
 
@@ -560,10 +570,10 @@ Returns thickness object in form of CSS style string. It is conversion to paddin
 | --- | --- | --- | --- | 
  | `units` | string | `"px"` | The string name of units. | 
 
-## <a name="primitives.common.Vector" id="primitives.common.Vector">Vector</a>
+## <a name="Vector" id="Vector">Vector</a>
 Class defines a vector in 2D plane.
 
- `primitives.common.Vector` 
+ `Vector` 
 
 ### Constructor
 
@@ -670,13 +680,3 @@ Finds how two vectors relate to each other
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `vector` | Vector | `` | The vector to relate with | 
-
-## <a name="primitives.common.HeapResult" id="primitives.common.HeapResult">HeapResult</a>
-Heap result object
-
- `primitives.common.HeapResult` 
-
-## <a name="primitives.common.Edge" id="primitives.common.Edge">Edge</a>
-Graph edge structure
-
- `primitives.common.Edge` 

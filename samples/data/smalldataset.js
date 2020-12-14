@@ -173,34 +173,34 @@ function enumerateTitles() {
 //enumerateTitles();
 
 var links = [
-	{ fromItem: 0, toItem: 148, color: primitives.common.Colors.Red, connectorShapeType: primitives.common.ConnectorShapeType.OneWay, lineType: primitives.common.LineType.Dashed },
-	{ fromItem: 0, toItem: 150, color: primitives.common.Colors.Blue, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Dotted },
-	{ fromItem: 0, toItem: 90, color: primitives.common.Colors.Green, connectorShapeType: primitives.common.ConnectorShapeType.TwoWay, lineType: primitives.common.LineType.Solid },
-	{ fromItem: 0, toItem: 75, color: primitives.common.Colors.Green, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Solid },
+	{ fromItem: 0, toItem: 148, color: primitives.Colors.Red, connectorShapeType: primitives.ConnectorShapeType.OneWay, lineType: primitives.LineType.Dashed },
+	{ fromItem: 0, toItem: 150, color: primitives.Colors.Blue, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Dotted },
+	{ fromItem: 0, toItem: 90, color: primitives.Colors.Green, connectorShapeType: primitives.ConnectorShapeType.TwoWay, lineType: primitives.LineType.Solid },
+	{ fromItem: 0, toItem: 75, color: primitives.Colors.Green, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Solid },
 
-	{ fromItem: 75, toItem: 90, color: primitives.common.Colors.Red, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Dashed },
-	{ fromItem: 75, toItem: 90, color: primitives.common.Colors.Blue, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Dashed },
-	{ fromItem: 75, toItem: 90, color: primitives.common.Colors.Green, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Solid },
+	{ fromItem: 75, toItem: 90, color: primitives.Colors.Red, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Dashed },
+	{ fromItem: 75, toItem: 90, color: primitives.Colors.Blue, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Dashed },
+	{ fromItem: 75, toItem: 90, color: primitives.Colors.Green, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Solid },
 
-	{ fromItem: 1, toItem: 45, color: primitives.common.Colors.Blue, connectorShapeType: primitives.common.ConnectorShapeType.OneWay, lineType: primitives.common.LineType.Dashed },
-	{ fromItem: 1, toItem: 75, color: primitives.common.Colors.Green, connectorShapeType: primitives.common.ConnectorShapeType.TwoWay, lineType: primitives.common.LineType.Solid },
-	{ fromItem: 1, toItem: 90, color: primitives.common.Colors.Cyan, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Dashed },
+	{ fromItem: 1, toItem: 45, color: primitives.Colors.Blue, connectorShapeType: primitives.ConnectorShapeType.OneWay, lineType: primitives.LineType.Dashed },
+	{ fromItem: 1, toItem: 75, color: primitives.Colors.Green, connectorShapeType: primitives.ConnectorShapeType.TwoWay, lineType: primitives.LineType.Solid },
+	{ fromItem: 1, toItem: 90, color: primitives.Colors.Cyan, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Dashed },
 
-	{ fromItem: 148, toItem: 149, color: primitives.common.Colors.Blue, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Solid },
-	{ fromItem: 148, toItem: 149, color: primitives.common.Colors.Green, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Dotted },
+	{ fromItem: 148, toItem: 149, color: primitives.Colors.Blue, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Solid },
+	{ fromItem: 148, toItem: 149, color: primitives.Colors.Green, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Dotted },
 
-	{ fromItem: 90, toItem: 149, color: primitives.common.Colors.Blue, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Solid },
-	{ fromItem: 149, toItem: 90, color: primitives.common.Colors.Green, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Dotted },
-	{ fromItem: 150, toItem: 149, color: primitives.common.Colors.Blue, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Solid },
-	{ fromItem: 149, toItem: 150, color: primitives.common.Colors.Green, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Dotted },
-	{ fromItem: 156, toItem: 149, color: primitives.common.Colors.Blue, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Solid },
-	{ fromItem: 149, toItem: 156, color: primitives.common.Colors.Green, connectorShapeType: primitives.common.ConnectorShapeType.TwoWay, lineType: primitives.common.LineType.Dotted },
+	{ fromItem: 90, toItem: 149, color: primitives.Colors.Blue, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Solid },
+	{ fromItem: 149, toItem: 90, color: primitives.Colors.Green, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Dotted },
+	{ fromItem: 150, toItem: 149, color: primitives.Colors.Blue, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Solid },
+	{ fromItem: 149, toItem: 150, color: primitives.Colors.Green, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Dotted },
+	{ fromItem: 156, toItem: 149, color: primitives.Colors.Blue, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Solid },
+	{ fromItem: 149, toItem: 156, color: primitives.Colors.Green, connectorShapeType: primitives.ConnectorShapeType.TwoWay, lineType: primitives.LineType.Dotted },
 
 
-	{ fromItem: 75, toItem: 52, color: primitives.common.Colors.Green, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Dashed },
-	{ fromItem: 52, toItem: 63, color: primitives.common.Colors.Green, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Dashed },
-	{ fromItem: 63, toItem: 79, color: primitives.common.Colors.Green, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Dashed },
-	{ fromItem: 63, toItem: 40, color: primitives.common.Colors.Green, connectorShapeType: primitives.common.ConnectorShapeType.BothWay, lineType: primitives.common.LineType.Dashed }
+	{ fromItem: 75, toItem: 52, color: primitives.Colors.Green, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Dashed },
+	{ fromItem: 52, toItem: 63, color: primitives.Colors.Green, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Dashed },
+	{ fromItem: 63, toItem: 79, color: primitives.Colors.Green, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Dashed },
+	{ fromItem: 63, toItem: 40, color: primitives.Colors.Green, connectorShapeType: primitives.ConnectorShapeType.BothWay, lineType: primitives.LineType.Dashed }
 ];
 
 var annotations = [];
@@ -210,12 +210,12 @@ function convertLinksToAnnotations() {
 	for (var index = 0; index < links.length; index += 1) {
 		var link = links[index];
 
-		var annotation = new primitives.orgdiagram.ConnectorAnnotationConfig(link.fromItem, link.toItem);
+		var annotation = new primitives.ConnectorAnnotationConfig(link.fromItem, link.toItem);
 		annotation.id = index;
 		annotation.selectItems = true;
 		annotation.lineType = link.lineType;
 		annotation.color = link.color;
-		annotation.connectorPlacementType = primitives.common.ConnectorPlacementType.Straight;
+		annotation.connectorPlacementType = primitives.ConnectorPlacementType.Straight;
 		annotation.connectorShapeType = link.connectorShapeType;
 
 		if (annotationsHash.hasOwnProperty(link.fromItem)) {

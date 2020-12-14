@@ -5,9 +5,9 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Highlight Template Family Chart</title>
 
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
   <style type="text/css">
     .bp-item2 {
@@ -48,10 +48,10 @@
     var control;
 
     document.addEventListener('DOMContentLoaded', function () {
-      var options = new primitives.famdiagram.Config();
+      var options = new primitives.FamConfig();
 
       var items = [
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({
           id: 1,
           title: "Scott Aasrud",
           description: "VP, Public Sector",
@@ -59,7 +59,7 @@
           highlightColor: "red",
           badge: '1'
         }),
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({
           id: 2,
           title: "Bruce Clift",
           description: "VP, Private Sector",
@@ -67,7 +67,7 @@
           highlightColor: "blue",
           badge: '2'
         }),
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({
           id: 3,
           parents: [1, 2],
           title: "Ted Lucas",
@@ -76,7 +76,7 @@
           highlightColor: "green",
           badge: '3'
         }),
-        new primitives.famdiagram.ItemConfig({
+        new primitives.FamItemConfig({
           id: 4,
           parents: [1, 2],
           title: "Fritz Stuger",
@@ -95,15 +95,15 @@
       options.defaultTemplateName = "BadgeTemplate";
       options.normalItemsInterval = 20; /*add space for badge */
 
-      control = primitives.famdiagram.Control(document.getElementById('basicdiagram'), options);
+      control = primitives.FamDiagram(document.getElementById('basicdiagram'), options);
 
 
       function onHighlightRender(event, data) {
         switch (data.renderingMode) {
-          case primitives.common.RenderingMode.Create:
+          case primitives.RenderingMode.Create:
             /* Initialize widgets here */
             break;
-          case primitives.common.RenderingMode.Update:
+          case primitives.RenderingMode.Update:
             /* Update widgets here */
             break;
         }
@@ -116,16 +116,16 @@
           badge.textContent = itemConfig['badge'];
           badge.style.backgroundColor = itemConfig.highlightColor;
 
-          var size = primitives.common.getInnerSize(data.element);
+          var size = primitives.getInnerSize(data.element);
           badge.style.left = (size.width - 10) + "px";
         }
       }
 
       function getNoteTemplate() {
-        var result = new primitives.famdiagram.TemplateConfig();
+        var result = new primitives.TemplateConfig();
         result.name = "BadgeTemplate";
 
-        result.highlightPadding = new primitives.common.Thickness(4, 4, 2, 2);
+        result.highlightPadding = new primitives.Thickness(4, 4, 2, 2);
         result.highlightBorderWidth = 2;
         result.highlightTemplate = ["div",
           {
@@ -166,7 +166,7 @@
 </head>
 
 <body>
-  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
 </body>
 
 </html>

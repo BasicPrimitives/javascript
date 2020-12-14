@@ -5,16 +5,16 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Family Chart Items Ordering</title>
 
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type='text/javascript'>
     var control;
     var items = [
-      { id: 10, relativeItem: 2, placementType: primitives.common.AdviserPlacementType.Left, position: 1, title: "Roger Dalton", label: "Roger Dalton", description: "Id: 10", image: "../images/photos/a.png", itemTitleColor: "#4169e1" },
+      { id: 10, relativeItem: 2, placementType: primitives.AdviserPlacementType.Left, position: 1, title: "Roger Dalton", label: "Roger Dalton", description: "Id: 10", image: "../images/photos/a.png", itemTitleColor: "#4169e1" },
       { id: 2, title: "Steven Lacombe", label: "Steven Lacombe", description: "Id: 2", image: "../images/photos/b.png", itemTitleColor: "#4b0082" },
-      { id: 11, relativeItem: 2, placementType: primitives.common.AdviserPlacementType.Right, position: 1, title: "Bill Dalton", label: "Bill Dalton", description: "Id: 11", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
+      { id: 11, relativeItem: 2, placementType: primitives.AdviserPlacementType.Right, position: 1, title: "Bill Dalton", label: "Bill Dalton", description: "Id: 11", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
       { id: 1, parents: [11], title: "David Dalton", label: "David Dalton", description: "Id: 1", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
       { id: 3, parents: [10], title: "Ann Smith", label: "Ann Smith", description: "Id: 3", image: "../images/photos/a.png", itemTitleColor: "#4169e1" },
       { id: 4, parents: [2], title: "Nancy Smith", label: "Nancy Smith", description: "Id: 4", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
@@ -30,32 +30,32 @@
     };
 
     document.addEventListener('DOMContentLoaded', function () {
-      var options = new primitives.famdiagram.Config();
+      var options = new primitives.FamConfig();
 
-      options.pageFitMode = primitives.common.PageFitMode.None;
+      options.pageFitMode = primitives.PageFitMode.None;
       options.items = items;
       options.cursorItem = 2;
       options.linesWidth = 1;
       options.linesColor = "black";
-      options.hasSelectorCheckbox = primitives.common.Enabled.False;
+      options.hasSelectorCheckbox = primitives.Enabled.False;
       options.normalLevelShift = 20;
       options.dotLevelShift = 20;
       options.lineLevelShift = 20;
       options.normalItemsInterval = 10;
       options.dotItemsInterval = 10;
       options.lineItemsInterval = 10;
-      options.arrowsDirection = primitives.common.GroupByType.Parents;
+      options.arrowsDirection = primitives.GroupByType.Parents;
       options.showExtraArrows = false;
 
-      control = primitives.famdiagram.Control(document.getElementById("basicdiagram"), options);
+      control = primitives.FamDiagram(document.getElementById("basicdiagram"), options);
     });
 
     function Flip() {
-      hash[10].placementType = (hash[10].placementType == primitives.common.AdviserPlacementType.Right) ? primitives.common.AdviserPlacementType.Left : primitives.common.AdviserPlacementType.Right;
-      hash[11].placementType = (hash[11].placementType == primitives.common.AdviserPlacementType.Right) ? primitives.common.AdviserPlacementType.Left : primitives.common.AdviserPlacementType.Right;
+      hash[10].placementType = (hash[10].placementType == primitives.AdviserPlacementType.Right) ? primitives.AdviserPlacementType.Left : primitives.AdviserPlacementType.Right;
+      hash[11].placementType = (hash[11].placementType == primitives.AdviserPlacementType.Right) ? primitives.AdviserPlacementType.Left : primitives.AdviserPlacementType.Right;
 
       control.setOption("items", items);
-      control.update(primitives.orgdiagram.UpdateMode.Refresh);
+      control.update(primitives.UpdateMode.Refresh);
     }
   </script>
 </head>
@@ -64,7 +64,7 @@
   <p>
     <input onclick="Flip()" type="button" value="Flip Sides of Roger & Bill" />
   </p>
-  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
 </body>
 
 </html>

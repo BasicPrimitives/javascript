@@ -1,21 +1,21 @@
 # JavaScript Controls
-## <a name="primitives.orgdiagram.Control" id="primitives.orgdiagram.Control">Control</a>
+## <a name="OrgDiagram" id="OrgDiagram">OrgDiagram</a>
 Creates JavaScript Organizational Chart Control
 
- `primitives.orgdiagram.Control` 
+ `OrgDiagram` 
 
 ### Constructor
 
- `Control(element, options)` 
+ `OrgDiagram(element, options)` 
 
 Creates JavaScript Organizational Chart Control
 
- Returns: `orgdiagram` - returns reference to organizational chart control. since control adds event listeners bound to its contents, call `destroy` method to clean up everything.
+ Returns: `OrgDiagram` - returns reference to organizational chart control. since control adds event listeners bound to its contents, call `destroy` method to clean up everything.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `element` | object | `` | Reference to placeholder `div` element in the DOM. The control renders diagram content inside of that div element and adds events listeners. | 
- | `options` | Config | `` | Organizational Chart Configuration object | 
+ | `options` | OrgConfig | `` | Organizational Chart Configuration object | 
 
 ### Functions
 
@@ -65,23 +65,23 @@ Makes full redraw of diagram contents reevaluating all options. This method has 
  | `updateMode` | UpdateMode | `` | update Mode | 
  | `forceCenterOnCursor` | bollean | `` | force Center On Cursor | 
 
-## <a name="primitives.famdiagram.Control" id="primitives.famdiagram.Control">Control</a>
-Creates JavaScript Family Chart Control
+## <a name="FamDiagram" id="FamDiagram">FamDiagram</a>
+Creates JavaScript Family Diagram Control
 
- `primitives.famdiagram.Control` 
+ `FamDiagram` 
 
 ### Constructor
 
- `Control(element, options)` 
+ `FamDiagram(element, options)` 
 
-Creates JavaScript Family Chart Control
+Creates JavaScript Family Diagram Control
 
- Returns: `famdiagram` - returns reference to family diagram control. since control adds event listeners bound to its contents, call `destroy` method to clean up everything.
+ Returns: `FamDiagram` - returns reference to family diagram control. since control adds event listeners bound to its contents, call `destroy` method to clean up everything.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `element` | object | `` | Reference to placeholder `div` element in the DOM. The control renders diagram content inside of that div element and adds events listeners. | 
- | `options` | Config | `` | Family Chart Configuration object | 
+ | `options` | FamConfig | `` | Family Diagram Configuration object | 
 
 ### Functions
 

@@ -4,18 +4,18 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Zoom using CSS Scale Transform</title>
 
-	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-	<link href="../../min/primitives.latest.css?2106" media="screen" rel="stylesheet" type="text/css" />
+	
+	<script type="text/javascript" src="../../primitives.js"></script>
+	<link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript">
 		var control;
 
 		document.addEventListener('DOMContentLoaded', function () {
-			var options = new primitives.orgdiagram.Config();
+			var options = new primitives.OrgConfig();
 
 			var items = [
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 0,
 					parent: null,
 					title: "Title 0",
@@ -26,7 +26,7 @@
 
 			var id = 1;
 			for (var index = 0; index < 2; index++) {
-				items.push(new primitives.orgdiagram.ItemConfig({
+				items.push(new primitives.OrgItemConfig({
 					id: ++id,
 					parent: 0,
 					title: id.toString() + " Title",
@@ -35,7 +35,7 @@
 				}));
 				var parent = id;
 				for (var index2 = 0; index2 < 2; index2++) {
-					items.push(new primitives.orgdiagram.ItemConfig({
+					items.push(new primitives.OrgItemConfig({
 						id: ++id,
 						parent: parent,
 						title: id.toString() + " Title",
@@ -45,18 +45,18 @@
 				}
 			}
 
-			options.pageFitMode = primitives.common.PageFitMode.None;
+			options.pageFitMode = primitives.PageFitMode.None;
 			options.items = items;
 			options.cursorItem = 0;
-			options.hasSelectorCheckbox = primitives.common.Enabled.True;
-			control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+			options.hasSelectorCheckbox = primitives.Enabled.True;
+			control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
 		});
 
 		function onScale(scale) {
 			if (scale != null) {
 				control.setOption("scale", scale);
 			}
-			control.update(primitives.orgdiagram.UpdateMode.Refresh);
+			control.update(primitives.UpdateMode.Refresh);
 		}
 	</script>
 </head>

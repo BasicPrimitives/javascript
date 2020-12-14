@@ -5,10 +5,10 @@ Chart's API provides two ways to set inactive items. The first one is isActive o
 
 See following configuration classes:
 
-* `primitives.orgdiagram.ItemConfig`
-* `primitives.famdiagram.ItemConfig`
-* `primitives.orgdiagram.TemplateConfig`
-* `primitives.famdiagram.TemplateConfig`
+* `primitives.OrgItemConfig`
+* `primitives.FamItemConfig`
+* `primitives.TemplateConfig`
+* `primitives.TemplateConfig`
 
 
 They have following option:
@@ -16,6 +16,5 @@ They have following option:
 `isActive` - If it is true then item having this template is selectable in hierarchy and it has mouse over highlight.
 
 [JavaScript](javascript.controls/CaseInactiveItems.html)
-[JQuery](jquery.widgets/CaseInactiveItems.html)
 
-![Screenshot](images/screenshots/CaseInactiveItems.png)
+![Screenshot](javascript.controls/__image_snapshots__/CaseInactiveItems-snap.png)

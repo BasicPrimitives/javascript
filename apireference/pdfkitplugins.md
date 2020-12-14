@@ -1,20 +1,20 @@
 # [PDFKit Plugins](https://pdfkit.org/)
-## <a name="primitives.pdf.orgdiagram.Plugin" id="primitives.pdf.orgdiagram.Plugin">Plugin</a>
+## <a name="OrgDiagramPdfkit" id="OrgDiagramPdfkit">OrgDiagramPdfkit</a>
 Creates PDFKit Organizational Chart Plugin
 
- `primitives.pdf.orgdiagram.Plugin` 
+ `OrgDiagramPdfkit` 
 
 ### Constructor
 
- `Plugin(options)` 
+ `OrgDiagramPdfkit(options)` 
 
 Creates PDFKit Organizational Chart Plugin
 
- Returns: `orgdiagram` - returns reference to organizational chart pdfkit renderer instance.
+ Returns: `OrgDiagramPdfkit` - returns reference to organizational diagram pdfkit renderer instance.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `options` | Config | `` | Organizational Chart Configuration object | 
+ | `options` | OrgConfig | `` | Organizational Chart Configuration object | 
 
 ### Functions
 
@@ -37,22 +37,22 @@ Calculates size of the diagram required to render all nodes without truncation.
  Returns: `Size` - returns size of the diagram
 
 
-## <a name="primitives.pdf.famdiagram.Plugin" id="primitives.pdf.famdiagram.Plugin">Plugin</a>
+## <a name="FamDiagramPdfkit" id="FamDiagramPdfkit">FamDiagramPdfkit</a>
 Creates PDFKit Family Diagram Plugin
 
- `primitives.pdf.famdiagram.Plugin` 
+ `FamDiagramPdfkit` 
 
 ### Constructor
 
- `Plugin(options)` 
+ `FamDiagramPdfkit(options)` 
 
 Creates PDFKit Family Diagram Plugin
 
- Returns: `orgdiagram` - returns reference to family chart pdfkit renderer instance.
+ Returns: `FamDiagramPdfkit` - returns reference to family diagram pdfkit renderer instance.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `options` | Config | `` | Family Diagram Configuration object | 
+ | `options` | FamConfig | `` | Organizational Chart Configuration object | 
 
 ### Functions
 

@@ -5,30 +5,30 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Cursor Item selection</title>
 
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type='text/javascript'>
     document.addEventListener('DOMContentLoaded', function () {
-      var options = new primitives.orgdiagram.Config();
+      var options = new primitives.OrgConfig();
 
       var items = [
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({
           id: 0,
           parent: null,
           title: "Scott Aasrud",
           description: "VP, Public Sector",
           image: "../images/photos/a.png"
         }),
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({
           id: 1,
           parent: 0,
           title: "Ted Lucas",
           description: "VP, Human Resources",
           image: "../images/photos/b.png"
         }),
-        new primitives.orgdiagram.ItemConfig({
+        new primitives.OrgItemConfig({
           id: 2,
           parent: 0,
           title: "Fritz Stuger",
@@ -39,17 +39,17 @@
 
       options.items = items;
       options.cursorItem = 0;
-      options.hasSelectorCheckbox = primitives.common.Enabled.False;
+      options.hasSelectorCheckbox = primitives.Enabled.False;
       options.onCursorChanged = function (e, data) {
         document.getElementById("message").innerHTML = "User clicked on item '" + data.context.title + "'.";
       };
 
-      control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+      control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
     });
 
     function Update(itemid) {
       control.setOption("cursorItem", itemid);
-      control.update(primitives.orgdiagram.UpdateMode.Refresh);
+      control.update(primitives.UpdateMode.Refresh);
     }
   </script>
 </head>
@@ -63,7 +63,7 @@
     <input onclick="Update(null)" type="button" value="Unselect" />
     <div id="message"></div>
     <div id="basicdiagram"
-      style="width: 640px; height: 400px; position: absolute; top: 60px; border-style: dotted; border-width: 1px;" />
+      style="width: 640px; height: 400px; position: absolute; top: 60px; border-style: dotted; border-width: 1px;"></div>
   </div>
 </body>
 

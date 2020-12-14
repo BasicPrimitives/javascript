@@ -12,7 +12,6 @@ The main difference of family diagram compared to organizational chart is suppor
 Family diagram provides some features specific to multi-parent layout, for example it supports in-layout "Labels cascades" over connections between parents and children.
 
 [JavaScript](javascript.controls/CaseFirstFamilyChart.html)
-[JQuery](jquery.widgets/CaseFirstFamilyChart.html)
 [PDFKit](pdfkit.plugins/FirstFamilyChart.html)
 
-![Screenshot](images/screenshots/CaseFirstFamilyChart.png)
+![Screenshot](javascript.controls/__image_snapshots__/CaseFirstFamilyChart-snap.png)

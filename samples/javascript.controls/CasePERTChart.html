@@ -5,16 +5,16 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>PERT chart item template</title>
 
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type='text/javascript'>
     var control;
     var timer = null;
 
     document.addEventListener('DOMContentLoaded', function () {
-      var options = new primitives.famdiagram.Config();
+      var options = new primitives.FamConfig();
       var items = [
         { id: 1, title: "Design", label: "Design", et: 80, lt: 100, itemTitleColor: "#4b0082" },
         { id: 2, parents: [1], title: "Aerodynamics", label: "Aerodynamics", et: 30, lt: 45, itemTitleColor: "#4b0082" },
@@ -33,24 +33,26 @@
 
       ];
 
-      options.annotations = [new primitives.famdiagram.HighlightPathAnnotationConfig({ items: [1, 3, 5, 6, 8, 9, 10, 12], color: primitives.common.Colors.Red, lineWidth: 2, zOrderType: primitives.common.ZOrderType.Foreground, opacity: 0.5 })];
+      options.annotations = [new primitives.HighlightPathAnnotationConfig({ items: [1, 3, 5, 6, 8, 9, 10, 12], color: primitives.Colors.Red, lineWidth: 2, zOrderType: primitives.ZOrderType.Foreground, opacity: 0.5 })];
 
       options.items = items;
       options.cursorItem = 0;
       options.linesWidth = 2;
       options.linesColor = "gray";
       options.lineItemsInterval = 5;
-      options.hasSelectorCheckbox = primitives.common.Enabled.True;
-      options.orientationType = primitives.common.OrientationType.Left;
-      options.pageFitMode = primitives.common.PageFitMode.None;
+      options.hasSelectorCheckbox = primitives.Enabled.True;
+      options.orientationType = primitives.OrientationType.Left;
+      options.pageFitMode = primitives.PageFitMode.AutoSize;
+      options.autoSizeMinimum = new primitives.Size(100, 100);
+      options.autoSizeMaximum = new primitives.Size(2000, 2000);
       options.templates = [getPERTTemplate()];
       options.onItemRender = onTemplateRender;
       options.defaultTemplateName = "pertTemplate";
-      options.arrowsDirection = primitives.common.GroupByType.Children;
+      options.arrowsDirection = primitives.GroupByType.Children;
 
-      options.highlightLinesColor = primitives.common.Colors.Navy;
+      options.highlightLinesColor = primitives.Colors.Navy;
       options.highlightLinesWidth = 2;
-      options.highlightLinesType = primitives.common.LineType.Solid;
+      options.highlightLinesType = primitives.LineType.Solid;
 
       function onTemplateRender(event, data) {
         var itemConfig = data.context;
@@ -59,7 +61,7 @@
           var element = data.element;
 
           var titleBackground = element.firstChild;
-          titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+          titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
 
           var title = element.firstChild.firstChild;
           title.textContent = itemConfig.title;
@@ -70,11 +72,11 @@
       }
 
       function getPERTTemplate() {
-        var result = new primitives.orgdiagram.TemplateConfig();
+        var result = new primitives.TemplateConfig();
         result.name = "pertTemplate";
 
-        result.itemSize = new primitives.common.Size(100, 60);
-        result.minimizedItemSize = new primitives.common.Size(3, 3);
+        result.itemSize = new primitives.Size(100, 60);
+        result.minimizedItemSize = new primitives.Size(3, 3);
 
         /* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
         result.itemTemplate = ["div",
@@ -195,28 +197,13 @@
         return result;
       }
 
-      control = primitives.famdiagram.Control(document.getElementById("basicdiagram"), options);
-
-      window.addEventListener('resize', function (event) {
-        onWindowResize();
-      });
+      control = primitives.FamDiagram(document.getElementById("basicdiagram"), options);
     });
-
-    function onWindowResize() {
-      if (timer == null) {
-        timer = window.setTimeout(function () {
-          control.update(primitives.orgdiagram.UpdateMode.Refresh);
-          window.clearTimeout(timer);
-          timer = null;
-        }, 300);
-      }
-    }
   </script>
 </head>
 
 <body>
-  <div id="basicdiagram"
-    style="position: absolute; border-style: dotted; border-width: 0px; top: 0; right: 0; bottom: 0; left: 0;" />
+  <div id="basicdiagram" style="border-style: dotted; border-width: 1px;"></div>
 </body>
 
 </html>

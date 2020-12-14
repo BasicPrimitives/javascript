@@ -3,22 +3,20 @@
 
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>Family Chart Shapes in Item Template</title>
-
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <!-- PDFkit & Libs -->
-  <script src="../../packages/pdfkit/pdfkit.js"></script>
-  <script src="../../packages/pdfkit/blob-stream.js"></script>
-
-  <!-- Demo Images -->
-  <script src="../data/photos.js"></script>
-
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <title>User Item Template with Shapes PDFKit Sample</title>
+  <script type="text/javascript" src="../../pdfkitsamples.js"></script>
+  <script type="text/javascript" src="../../primitives.js"></script>
 
   <script type='text/javascript'>
     var control;
     var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var PdfGraphics = pdfkitsamples.PdfGraphics;
+    var blobStream = pdfkitsamples.blobStream;
+    var Marker = pdfkitsamples.Marker;
+    var PolylinesBuffer =  pdfkitsamples.PolylinesBuffer;
+    var PaletteItem =  pdfkitsamples.PaletteItem;
 
     document.addEventListener('DOMContentLoaded', function () {
       // create a document and pipe to a blob
@@ -29,41 +27,41 @@
       doc.fontSize(25)
         .text('User Item Template With Shapes', 30, 30);
 
-      var firstOrganizationalChartSample = primitives.pdf.orgdiagram.Plugin({
+      var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
         items: [
-          new primitives.orgdiagram.ItemConfig({
+          new primitives.OrgItemConfig({
             id: 0,
             parent: null,
             title: "Scott Aasrud",
             description: "VP, Public Sector",
             templateName: "contactTemplate",
-            shapeType: primitives.common.ShapeType.Oval,
-            fillColor: primitives.common.Colors.Magenta,
+            shapeType: primitives.ShapeType.Oval,
+            fillColor: primitives.Colors.Magenta,
             groupTitle: "Oval"
           }),
-          new primitives.orgdiagram.ItemConfig({
+          new primitives.OrgItemConfig({
             id: 1,
             parent: 0,
             title: "Ted Lucas",
             description: "VP, Human Resources",
             templateName: "contactTemplate",
-            shapeType: primitives.common.ShapeType.Rhombus,
-            fillColor: primitives.common.Colors.Magenta,
+            shapeType: primitives.ShapeType.Rhombus,
+            fillColor: primitives.Colors.Magenta,
             groupTitle: "Rhombus"
           }),
-          new primitives.orgdiagram.ItemConfig({
+          new primitives.OrgItemConfig({
             id: 2,
             parent: 0,
             title: "Fritz Stuger",
             description: "Business Solutions, US",
             templateName: "contactTemplate",
-            shapeType: primitives.common.ShapeType.Circle,
-            fillColor: primitives.common.Colors.Magenta,
+            shapeType: primitives.ShapeType.Circle,
+            fillColor: primitives.Colors.Magenta,
             groupTitle: "Circle"
           })
         ],
         cursorItem: null,
-        hasSelectorCheckbox: primitives.common.Enabled.False,
+        hasSelectorCheckbox: primitives.Enabled.False,
         templates: [getContactTemplate()],
         onItemRender: onTemplateRender
       });
@@ -75,19 +73,19 @@
           marker,
           buffer,
           options = {
-            orientationType: primitives.common.OrientationType.Top,
-            shapeType: primitives.common.ShapeType.Rectangle,
+            orientationType: primitives.OrientationType.Top,
+            shapeType: primitives.ShapeType.Rectangle,
             position: null,
-            offset: new primitives.common.Thickness(0, 0, 0, 0),
+            offset: new primitives.Thickness(0, 0, 0, 0),
             lineWidth: 2,
             cornerRadius: "10%",
             opacity: 1,
             borderColor: null,
             fillColor: null,
-            lineType: primitives.common.LineType.Solid,
+            lineType: primitives.LineType.Solid,
             label: null,
-            labelSize: new primitives.common.Size(60, 30),
-            labelPlacement: primitives.common.PlacementType.Auto,
+            labelSize: new primitives.Size(60, 30),
+            labelPlacement: primitives.PlacementType.Auto,
             labelOffset: 4
           }
 
@@ -100,13 +98,13 @@
           }
         }
 
-        graphics = new primitives.pdf.graphics(doc);
+        graphics = new PdfGraphics(doc);
 
         doc.save();
 
-        position = new primitives.common.Rect(positionX, positionY, width, height).offset(options.offset);
+        position = new primitives.Rect(positionX, positionY, width, height).offset(options.offset);
 
-        linePaletteItem = new primitives.common.PaletteItem({
+        linePaletteItem = new PaletteItem({
           lineColor: options.borderColor,
           lineWidth: options.lineWidth,
           lineType: options.lineType,
@@ -114,8 +112,8 @@
           opacity: options.opacity
         });
 
-        marker = new primitives.common.Marker();
-        buffer = new primitives.common.PolylinesBuffer();
+        marker = new Marker();
+        buffer = new PolylinesBuffer();
         marker.draw(buffer, options.shapeType, position, linePaletteItem);
 
         graphics.polylinesBuffer(buffer);
@@ -124,11 +122,11 @@
       };
 
       function getContactTemplate() {
-        var result = new primitives.orgdiagram.TemplateConfig();
+        var result = new primitives.TemplateConfig();
         result.name = "contactTemplate";
         result.itemTemplate = "Use onItemRener method.";
-        result.itemSize = new primitives.common.Size(100, 100);
-        result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
+        result.itemSize = new primitives.Size(100, 100);
+        result.highlightPadding = new primitives.Thickness(2, 2, 2, 2);
         return result;
       }
 
@@ -136,7 +134,7 @@
         var itemConfig = data.context;
 
         if (data.templateName == "contactTemplate") {
-          var contentSize = new primitives.common.Size(100, 100);
+          var contentSize = new primitives.Size(100, 100);
 
           contentSize.width -= 2;
           contentSize.height -= 2;
@@ -151,8 +149,8 @@
           /* shape */
           drawShape(doc, position.x, position.y, 100, 100, {
             shapeType: itemConfig.shapeType,
-            lineType: primitives.common.LineType.Solid,
-            borderColor: primitives.common.Colors.Navy,
+            lineType: primitives.LineType.Solid,
+            borderColor: primitives.Colors.Navy,
             offset: -5,
             lineWidth: 3,
             fillColor: itemConfig.fillColor,

@@ -1,13 +1,22 @@
 'use strict';
 
 const fs = require('fs');
-const path = require('path')
+const path = require('path');
+const { exit } = require('process');
 
 const [, , configFile] = process.argv;
 const config = JSON.parse(fs.readFileSync(configFile));
-var content = clean_file(fs.readFileSync(config.source, "utf8"));
+
+var files = getModules(config.source);
+
+var content = clean_file(getContent(files));
 var lines = content.split("\n");
+for(var index = 0; index < lines.length; index+=1) {
+  lines[index] = lines[index].trim();
+}
 var annotations = read_annotations(lines);
+
+
 //fs.writeFileSync(config.destination + "source.json", JSON.stringify(annotations, null, 2));
 
 var doc = getDoc(annotations);
@@ -15,27 +24,41 @@ var doc = getDoc(annotations);
 
 fs.writeFileSync(config.destination + "enums.md", create_enums_md("Enumerations", doc));
 
-var structures = doc.classes.filter(item => { return item.returns == undefined && item.namespace[1] == "common" });
+var structures = doc.classes.filter(item => { return item.returns == undefined 
+  && item.name.indexOf("Config") == -1 
+  && ["BaseControl", "OrgEventArgs", "FamEventArgs"].indexOf(item.name) <0
+});
+ 
+ structures.sort(({name: ap}, {name: bp}) => {
+  if (ap < bp) { return -1; }
+  if (ap > bp) { return 1; }
+  return 0;
+});
 fs.writeFileSync(config.destination + "structures.md", create_classes_md("Structures", structures));
 
-var algorithms = doc.classes.filter(item => { return item.returns != undefined && item.namespace[1] == "common" });
+
+var algorithms = doc.classes.filter(item => { return item.returns != undefined
+  && ["OrgDiagram", "FamDiagram", "FamDiagramPdfkit", "OrgDiagramPdfkit", "BasePdfkitPlugin"].indexOf(item.name) <0
+});
 fs.writeFileSync(config.destination + "algorithms.md", create_classes_md("Algorithms", algorithms));
 
-var functions = doc.functions.filter(item => { return item.namespace[1] == "common" });
+var functions = doc.functions;
+functions.sort(({name: ap}, {name: bp}) => {
+  if (ap < bp) { return -1; }
+  if (ap > bp) { return 1; }
+  return 0;
+});
 fs.writeFileSync(config.destination + "functions.md", create_functions_md("Functions", functions));
 
-var priorities = config["orgdiagram.md"].reduce((agg, name, index) => {
+var orgpriorities = config["orgdiagram.md"].reduce((agg, name, index) => {
   agg[name] = index + 1;
   return agg;
 }, {})
 
-var orgdiagramclasses = doc.classes.filter(item => {
-  return item.namespace[1] == "orgdiagram"
-    && item.name != "Control" && item.name != "BaseControl"
-});
+var orgdiagramclasses = doc.classes.filter(item => { return orgpriorities[item.name] > 0 });
 orgdiagramclasses = orgdiagramclasses.sort((a, b) => {
-  var ap = priorities[a.name] || 100;
-  var bp = priorities[b.name] || 100;
+  var ap = orgpriorities[a.name] || 100;
+  var bp = orgpriorities[b.name] || 100;
   if (ap < bp) { return -1; }
   if (ap > bp) { return 1; }
   return 0;
@@ -43,24 +66,32 @@ orgdiagramclasses = orgdiagramclasses.sort((a, b) => {
 
 fs.writeFileSync(config.destination + "orgdiagram.md", create_classes_md("Organizational Chart Configuration Objects", orgdiagramclasses));
 
-var priorities = config["famdiagram.md"].reduce((agg, name, index) => {
+var fampriorities = config["famdiagram.md"].reduce((agg, name, index) => {
   agg[name] = index + 1;
   return agg;
 }, {})
 
-var famdiagramclasses = doc.classes.filter(item => {
-  return item.namespace[1] == "famdiagram"
-    && item.name != "Control" && item.name != "BaseControl"
-});
+var famdiagramclasses = doc.classes.filter(item => { return fampriorities[item.name] > 0 });
 famdiagramclasses = famdiagramclasses.sort((a, b) => {
-  var ap = priorities[a.name] || 100;
-  var bp = priorities[b.name] || 100;
+  var ap = fampriorities[a.name] || 100;
+  var bp = fampriorities[b.name] || 100;
   if (ap < bp) { return -1; }
   if (ap > bp) { return 1; }
   return 0;
 });
 
 fs.writeFileSync(config.destination + "famdiagram.md", create_classes_md("Family Diagram Configuration Objects", famdiagramclasses));
+
+var configclasses = doc.classes.filter(item => { return item.name.indexOf("Config") > 0 
+  && !(orgpriorities[item.name] > 0 || fampriorities[item.name] > 0)
+});
+configclasses = configclasses.sort(({name: ap}, {name: bp}) => {
+  if (ap < bp) { return -1; }
+  if (ap > bp) { return 1; }
+  return 0;
+});
+
+fs.writeFileSync(config.destination + "configs.md", create_classes_md("Configuration Objects", configclasses));
 
 var controlsclasses = get_controls_annotations(doc);
 fs.writeFileSync(config.destination + "javascriptcontrols.md", create_classes_md("JavaScript Controls", controlsclasses));
@@ -71,6 +102,7 @@ fs.writeFileSync(config.destination + "pdfkitplugins.md", create_classes_md("[PD
 fs.writeFileSync(config.destination + "readme.md", create_index_md("Basic Primitives Diagrams API Reference", {
   orgdiagramclasses,
   famdiagramclasses,
+  configclasses,
   enums: doc.enums,
   functions,
   structures,
@@ -82,6 +114,7 @@ fs.writeFileSync(config.destination + "readme.md", create_index_md("Basic Primit
 function create_index_md(title, {
   orgdiagramclasses,
   famdiagramclasses,
+  configclasses,
   enums,
   functions,
   structures,
@@ -92,67 +125,56 @@ function create_index_md(title, {
   var result = "### " + title;
   result += "\r\n#### [JavaScript Controls](javascriptcontrols.md)";
   result = controlsclasses.reduce((agg, annotation) => {
-    let { namespace, name } = annotation;
-    let key = [...namespace, name].join(".");
-    agg += "\r\n* [" + key + "](javascriptcontrols.md#" + key + ")";
+    agg += "\r\n* [" +  annotation.name + "](javascriptcontrols.md#" +  annotation.name + ")";
     return agg;
   }, result);
   result += "\r\n#### [PDFKit Plugins](pdfkitplugins.md)";
   result = pdfkitclasses.reduce((agg, annotation) => {
-    let { namespace, name } = annotation;
-    let key = [...namespace, name].join(".");
-    agg += "\r\n* [" + key + "](pdfkitplugins.md#" + key + ")";
+    agg += "\r\n* [" +  annotation.name + "](pdfkitplugins.md#" +  annotation.name + ")";
     return agg;
   }, result);
   result += "\r\n#### [Organizational Chart Configuration Objects](orgdiagram.md)";
   result = orgdiagramclasses.reduce((agg, annotation) => {
-    let { namespace, name } = annotation;
-    let key = [...namespace, name].join(".");
-    agg += "\r\n* [" + annotation.name + "](orgdiagram.md#" + key + ")";
+    agg += "\r\n* [" + annotation.name + "](orgdiagram.md#" +  annotation.name + ")";
     return agg;
   }, result);
   result += "\r\n#### [Family Diagram Configuration Objects](famdiagram.md)";
   result = famdiagramclasses.reduce((agg, annotation) => {
-    let { namespace, name } = annotation;
-    let key = [...namespace, name].join(".");
-    agg += "\r\n* [" + annotation.name + "](famdiagram.md#" + key + ")";
+    agg += "\r\n* [" + annotation.name + "](famdiagram.md#" +  annotation.name + ")";
+    return agg;
+  }, result);
+  result += "\r\n#### [Common Configuration Objects](configs.md)";
+  result = configclasses.reduce((agg, annotation) => {
+    agg += "\r\n* [" + annotation.name + "](configs.md#" +  annotation.name + ")";
     return agg;
   }, result);
   result += "\r\n#### [Enumerations](enums.md)";
   result = enums.reduce((agg, annotation) => {
-    let { namespace, name } = annotation;
-    let key = [...namespace, name].join(".");
-    agg += "\r\n* [" + annotation.name + "](enums.md#" + key + ")";
+    agg += "\r\n* [" + annotation.name + "](enums.md#" +  annotation.name + ")";
     return agg;
   }, result);
   result += "\r\n#### [Structures](structures.md)";
   result = structures.reduce((agg, annotation) => {
-    let { namespace, name } = annotation;
-    let key = [...namespace, name].join(".");
-    agg += "\r\n* [" + annotation.name + "](structures.md#" + key + ")";
+    agg += "\r\n* [" + annotation.name + "](structures.md#" +  annotation.name + ")";
     return agg;
   }, result);
   result += "\r\n#### [Functions](functions.md)";
   result = functions.reduce((agg, annotation) => {
-    let { namespace, name } = annotation;
-    let key = [...namespace, name].join(".");
-    agg += "\r\n* [" + annotation.name + "](functions.md#" + key + ")";
+    agg += "\r\n* [" + annotation.name + "](functions.md#" +  annotation.name + ")";
     return agg;
   }, result);
   result += "\r\n#### [Algorithms](algorithms.md)";
   result = algorithms.reduce((agg, annotation) => {
-    let { namespace, name } = annotation;
-    let key = [...namespace, name].join(".");
-    agg += "\r\n* [" + annotation.name + "](algorithms.md#" + key + ")";
+    agg += "\r\n* [" + annotation.name + "](algorithms.md#" +  annotation.name + ")";
     return agg;
   }, result);
   return result;
 }
 
 function get_controls_annotations(doc) {
-  var orgdiagramControl = doc.classes.find(item => item.name == "Control" && item.namespace[1] == "orgdiagram");
-  var famdiagramControl = doc.classes.find(item => item.name == "Control" && item.namespace[1] == "famdiagram");
-  var baseControl = doc.classes.find(item => item.name == "BaseControl" && item.namespace[1] == "orgdiagram");
+  var orgdiagramControl = doc.classes.find(item => item.name == "OrgDiagram" );
+  var famdiagramControl = doc.classes.find(item => item.name == "FamDiagram" );
+  var baseControl = doc.classes.find(item => item.name == "BaseControl" );
   orgdiagramControl.functions = baseControl.functions;
   famdiagramControl.functions = baseControl.functions;
   return [
@@ -162,8 +184,11 @@ function get_controls_annotations(doc) {
 }
 
 function get_pdfkit_annotations(doc) {
-  var orgdiagram = doc.classes.find(item => item.name == "Plugin" && item.namespace[2] == "orgdiagram");
-  var famdiagram = doc.classes.find(item => item.name == "Plugin" && item.namespace[2] == "famdiagram");
+  var orgdiagram = doc.classes.find(item => item.name == "OrgDiagramPdfkit");
+  var famdiagram = doc.classes.find(item => item.name == "FamDiagramPdfkit");
+  var baseControl = doc.classes.find(item => item.name == "BasePdfkitPlugin" );
+  orgdiagram.functions = baseControl.functions;
+  famdiagram.functions = baseControl.functions;
   return [
     orgdiagram,
     famdiagram
@@ -182,12 +207,11 @@ function create_functions_md(title, annotations) {
 function create_classes_md(title, classes) {
   var result = "# " + title;
   return classes.reduce((agg, classAnnotation) => {
-    let { name, description, namespace, constants, properties, functions, returns, params, callbackproperties } = classAnnotation;
-    let key = [...namespace, name].join(".");
-    agg += '\r\n## <a name="' + key + '" id="' + key + '">' + name + '</a>';
+    let { name, description, constants, properties, functions, returns, params, callbackproperties } = classAnnotation;
+    agg += '\r\n## <a name="' + name + '" id="' + name + '">' + name + '</a>';
     agg += "\r\n" + description;
     agg += "\r\n";
-    agg += "\r\n `" + key + "` ";
+    agg += "\r\n `" + name + "` ";
     agg += "\r\n";
     if (returns != undefined || params != undefined) {
       agg += "\r\n### Constructor";
@@ -255,11 +279,10 @@ function create_classes_md(title, classes) {
   }, result);
 }
 
-function create_function_md({ name, namespace, signature, description, params, returns, callbackparams }, hasBookmark) {
+function create_function_md({ name, signature, description, params, returns, callbackparams }, hasBookmark) {
   var result = "\r\n"
   if (hasBookmark) {
-    let key = [...namespace, name].join(".");
-    result += '\r\n## <a name="' + key + '" id="' + key + '">' + name + '</a>';
+    result += '\r\n## <a name="' + name + '" id="' + name + '">' + name + '</a>';
   } else {
     result += "\r\n `" + name + "(" + (signature != undefined ? signature.join(", ") : "") + ")` ";
   }
@@ -289,12 +312,9 @@ function create_function_md({ name, namespace, signature, description, params, r
 
 function create_enums_md(title, doc) {
   var result = "# " + title;
-  return doc.enums.filter(item => item.ignore == undefined).reduce((agg, { name, description, namespace, items, type }) => {
-    let key = [...namespace, name].join(".");
-    agg += '\r\n## <a name="' + key + '" id="' + key + '">' + name + '</a>';
+  return doc.enums.filter(item => item.ignore == undefined).reduce((agg, { name, description, items, type }) => {
+    agg += '\r\n## <a name="' + name + '" id="' + name + '">' + name + '</a>';
     agg += "\r\n" + description;
-    agg += "\r\n";
-    agg += "\r\n `" + [...namespace, name].join(".") + "` ";
     agg += "\r\n";
     agg += "\r\n| Name | Type | Value | Description | ";
     agg += "\r\n| --- | --- | --- | --- | ";
@@ -345,14 +365,13 @@ function getDoc(annotations) {
   }, {});
 
   var classesHash = classes.reduce((agg, item) => {
-    var { namespace, name } = item;
-    var key = [...namespace, name].join(".");
-    agg[key] = item;
+    var { name } = item;
+    agg[name] = item;
     return agg;
   }, {});
 
   annotations.filter(item => {
-    return item.tag == "function" && item.namespace[item.namespace.length - 1] == "prototype"
+    return item.tag == "function" && Array.isArray(item.namespace)
   }).forEach(annotation => {
     var { namespace } = annotation;
     var key = namespace.slice(0, namespace.length - 1).join(".");
@@ -389,7 +408,7 @@ function getDoc(annotations) {
   });
 
   var functions = annotations.filter(item => item.tag == "function"
-    && item.namespace[item.namespace.length - 1] != "prototype"
+    && !Array.isArray(item.namespace)
     && item.ignore == undefined
     && item.private == undefined
   ).sort(sortAnnotationsCallback);
@@ -484,11 +503,18 @@ function read_annotations(lines, parentTag) {
             if (annotation.tag == undefined) {
               var nextLine = lines.shift();
               if (nextLine.indexOf("function") > -1) {
-                var options = get_function_item(nextLine);
-                annotation.tag = "function";
-                annotation.name = options.name;
-                annotation.namespace = options.namespace;
-                annotation.signature = options.signature;
+                if(nextLine.indexOf("prototype") > -1) {
+                  var options = get_prototype_function_item(nextLine);
+                  annotation.tag = "function";
+                  annotation.name = options.name;
+                  annotation.namespace = options.namespace;
+                  annotation.signature = options.signature;
+                } else {
+                  var options = get_function_item(nextLine);
+                  annotation.tag = "function";
+                  annotation.name = options.name;
+                  annotation.signature = options.signature;
+                }
               } else {
                 annotation.undefinedTag = true;
               }
@@ -602,9 +628,7 @@ function read_annotation(lines) {
 
         var blockOfLines = get_block_lines(lines);
         var classLine = blockOfLines.shift();
-        var options2 = get_enum_name(classLine);
-        annotation.namespace = options2.namespace;
-        annotation.name = options2.name;
+        annotation.name = get_class_name(classLine);
         annotation.items = read_annotations(blockOfLines, tagName);
         break;
       case "group":
@@ -637,9 +661,7 @@ function read_annotation(lines) {
           var blockOfLines = get_block_lines(lines);
 
           var enumLine = blockOfLines.shift();
-          var options2 = get_enum_name(enumLine);
-          annotation.namespace = options2.namespace;
-          annotation.name = options2.name;
+          annotation.name = get_enum_name(enumLine);
           annotation.items = read_annotations(blockOfLines, tagName);
         }
         break;
@@ -696,14 +718,9 @@ function get_enum_tag(line) {
 }
 
 function get_enum_name(line) {
-  var words = line.substr(0, line.indexOf("=") - 1).trim().split(".");
+  var words = line.substr(0, line.indexOf("=") - 1).trim().split(" ");
   var name = words[words.length - 1];
-  var namespace = words.slice(0, words.length - 1);
-  var result = {
-    name,
-    namespace
-  }
-  return result;
+  return name;
 }
 
 function get_enum_item(line) {
@@ -718,7 +735,16 @@ function get_enum_item(line) {
   return result;
 }
 
-function get_function_item(line) {
+function get_class_name(line) {
+  line = replaceAll(line, "()", "( )")
+  var words = line.split(/[\s=\(\)]+/);
+  var funIndex = words.indexOf("function");
+  var name = words[funIndex + 1].trim();
+  var signature = words[funIndex + 1].trim().split(",");
+  return name;
+}
+
+function get_prototype_function_item(line) {
   line = replaceAll(line, "()", "( )")
   var words = line.split(/[=\(\)]+/);
   var names = words[0].trim().split(".");
@@ -728,6 +754,19 @@ function get_function_item(line) {
   var result = {
     name,
     namespace,
+    signature
+  }
+  return result;
+}
+
+function get_function_item(line) {
+  line = replaceAll(line, "()", "( )")
+  var words = line.split(/[\s=\(\)]+/);
+  var funIndex = words.indexOf("function");
+  var name = words[funIndex + 1].trim();
+  var signature = words[funIndex + 2].trim().split(",");
+  var result = {
+    name,
     signature
   }
   return result;
@@ -943,3 +982,63 @@ function splitCamelCaseName(name) {
   }
   return result;
 };
+
+function getModules(fileName) {
+  var refs = [];
+  var hash = {};
+  fileName = path.resolve(fileName);
+  hash[fileName] = true;
+  refs.push(fileName);
+  var files = [fileName]
+  while(files.length > 0) {
+    var newFiles = [];
+    for(var fileIndex = 0; fileIndex < files.length; fileIndex+=1) {
+      var file = files[fileIndex];
+      var filedir = path.dirname(file);
+      var content = clean_file(fs.readFileSync(file, "utf8"));
+      var lines = content.split("\n");
+      for(var index = 0; index < lines.length; index+=1) {
+        var line = lines[index].trim();
+        var fromIndex = line.indexOf(' from ');
+        var importIndex = line.indexOf('import');
+        var exportIndex = line.indexOf('export');
+        if( fromIndex > 0 && (importIndex == 0 || exportIndex == 0)) {
+          var ref = line.substr(fromIndex + ' from '.length);
+          ref = ref.replaceAll("'", "");
+          ref = ref.replaceAll("\"", "");
+          ref = ref.replaceAll(";", "");
+          ref = ref.replaceAll(" ", "");
+          try {
+            fs.lstatSync(path.resolve( filedir + "/" + ref));
+            ref = path.resolve( filedir + "/" + ref + "/index.js");
+          } catch(err) {
+            if(err.code == 'ENOENT'){
+              ref = path.resolve( filedir + "/" + ref + ".js");
+            } else {
+              console.log("broken link: " + ref );
+            }
+          }
+          if(!hash.hasOwnProperty(ref)) {
+            hash[ref] = true;
+            newFiles.push(ref)
+            refs.push(ref);
+          }
+        }
+      }
+    }
+    files.length = 0;
+    files = files.concat(newFiles);
+  }
+  return refs;
+}
+
+function getContent(files) {
+  var content = "";
+
+  for(var index = 0; index < files.length; index+=1) {
+    var file = files[index];
+    content += fs.readFileSync(file, "utf8") + "\n";
+  }
+  
+  return content;
+}

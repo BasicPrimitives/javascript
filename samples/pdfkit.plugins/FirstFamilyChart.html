@@ -3,22 +3,16 @@
 
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>First family chart</title>
-
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <!-- PDFkit & Libs -->
-  <script src="../../packages/pdfkit/pdfkit.js"></script>
-  <script src="../../packages/pdfkit/blob-stream.js"></script>
-
-  <!-- Demo Images -->
-  <script src="../data/photos.js"></script>
-
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <title>First Family Chart PDFKit Sample</title>
+  <script type="text/javascript" src="../../pdfkitsamples.js"></script>
+  <script type="text/javascript" src="../../primitives.js"></script>
 
   <script type='text/javascript'>
     var control;
     var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
 
     document.addEventListener('DOMContentLoaded', function () {
       // create a document and pipe to a blob
@@ -28,7 +22,7 @@
       doc.fontSize(25)
         .text('First Family Chart Plugin', 30, 30);
 
-      var firstOrganizationalChartSample = primitives.pdf.famdiagram.Plugin({
+      var firstOrganizationalChartSample = primitives.FamDiagramPdfkit({
         items: [
           { id: 1, spouses: [2], title: "Thomas Williams", label: "Thomas Williams", description: "1, 1st husband", image: photos.t },
           { id: 2, spouses: [], title: "Mary Spencer", label: "Mary Spencer", description: "2, The Mary", image: photos.m },
@@ -42,14 +36,14 @@
         cursorItem: 2,
         linesWidth: 1,
         linesColor: "black",
-        hasSelectorCheckbox: primitives.common.Enabled.False,
+        hasSelectorCheckbox: primitives.Enabled.False,
         normalLevelShift: 20,
         dotLevelShift: 20,
         lineLevelShift: 20,
         normalItemsInterval: 10,
         dotItemsInterval: 10,
         lineItemsInterval: 10,
-        arrowsDirection: primitives.common.GroupByType.Parents
+        arrowsDirection: primitives.GroupByType.Parents
       });
 
       var size = firstOrganizationalChartSample.draw(doc, 30, 60);

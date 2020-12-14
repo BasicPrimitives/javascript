@@ -5,31 +5,31 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>Selected Items Frame</title>
 
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?2106" media="screen" rel="stylesheet" type="text/css" />
+  
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type="text/javascript">
     var control,
       minimizedItemShapeTypes = [
-        primitives.common.ShapeType.Rectangle,
-        primitives.common.ShapeType.Oval,
-        primitives.common.ShapeType.Triangle,
-        primitives.common.ShapeType.CrossOut,
-        primitives.common.ShapeType.Circle,
-        primitives.common.ShapeType.Rhombus,
-        primitives.common.ShapeType.Wedge,
-        primitives.common.ShapeType.FramedOval,
-        primitives.common.ShapeType.FramedTriangle,
-        primitives.common.ShapeType.FramedWedge,
-        primitives.common.ShapeType.FramedRhombus
+        primitives.ShapeType.Rectangle,
+        primitives.ShapeType.Oval,
+        primitives.ShapeType.Triangle,
+        primitives.ShapeType.CrossOut,
+        primitives.ShapeType.Circle,
+        primitives.ShapeType.Rhombus,
+        primitives.ShapeType.Wedge,
+        primitives.ShapeType.FramedOval,
+        primitives.ShapeType.FramedTriangle,
+        primitives.ShapeType.FramedWedge,
+        primitives.ShapeType.FramedRhombus
       ],
       shapeIndex = 0,
       itemTitleColors = [
-        primitives.common.Colors.Red,
-        primitives.common.Colors.Green,
-        primitives.common.Colors.Navy,
-        primitives.common.Colors.Cyan
+        primitives.Colors.Red,
+        primitives.Colors.Green,
+        primitives.Colors.Navy,
+        primitives.Colors.Cyan
       ],
       colorIndex = 0;
 
@@ -52,15 +52,15 @@
     }
 
     function getMarkerTemplate() {
-      var result = new primitives.orgdiagram.TemplateConfig();
+      var result = new primitives.TemplateConfig();
       result.name = "MarkerTemplate";
-      result.minimizedItemSize = new primitives.common.Size(8, 8);
-      result.highlightPadding = new primitives.common.Thickness(4, 4, 4, 4);
+      result.minimizedItemSize = new primitives.Size(8, 8);
+      result.highlightPadding = new primitives.Thickness(4, 4, 4, 4);
       return result;
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-      var options = new primitives.orgdiagram.Config();
+      var options = new primitives.OrgConfig();
 
       var rootItem = {
         id: 0,
@@ -108,10 +108,10 @@
       options.frameOuterPadding = 4;
       options.templates = [getMarkerTemplate()];
       options.defaultTemplateName = "MarkerTemplate";
-      options.hasSelectorCheckbox = primitives.common.Enabled.True;
-      options.pageFitMode = primitives.common.PageFitMode.None;
+      options.hasSelectorCheckbox = primitives.Enabled.True;
+      options.pageFitMode = primitives.PageFitMode.None;
       options.selectedItems = selectedItems;
-      control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+      control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
     });
   </script>
 </head>

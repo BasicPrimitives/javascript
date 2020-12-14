@@ -4,32 +4,32 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<title>Selection checkbox in item template</title>
 
-	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+	
+	<script type="text/javascript" src="../../primitives.js"></script>
+	<link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
 	<script type='text/javascript'>
 		var control;
 		var treeItems = {};
 		document.addEventListener('DOMContentLoaded', function () {
-			var options = new primitives.orgdiagram.Config();
+			var options = new primitives.OrgConfig();
 
 			var items = [
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 0,
 					parent: null,
 					title: "Scott Aasrud",
 					description: "VP, Public Sector",
 					image: "../images/photos/a.png"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 1,
 					parent: 0,
 					title: "Ted Lucas",
 					description: "VP, Human Resources",
 					image: "../images/photos/b.png"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 2,
 					parent: 0,
 					title: "Fritz Stuger",
@@ -45,13 +45,18 @@
 
 			options.items = items;
 			options.selectedItems = [0, 1];
-			options.cursorItem = 0;
-			options.orientationType = primitives.common.OrientationType.Left;
-			options.verticalAlignment= primitives.common.VerticalAlignmentType.Middle;
-			options.horizontalAlignment= primitives.common.HorizontalAlignmentType.Left;
-			options.childrenPlacementType= primitives.common.ChildrenPlacementType.Horizontal;
-			options.leavesPlacementType= primitives.common.ChildrenPlacementType.Horizontal;
-			options.hasSelectorCheckbox= primitives.common.Enabled.False;
+			options.cursorItem = null;
+			options.orientationType = primitives.OrientationType.Left;
+			options.verticalAlignment= primitives.VerticalAlignmentType.Middle;
+			options.horizontalAlignment= primitives.HorizontalAlignmentType.Left;
+			options.childrenPlacementType= primitives.ChildrenPlacementType.Horizontal;
+			options.leavesPlacementType= primitives.ChildrenPlacementType.Horizontal;
+			options.hasSelectorCheckbox= primitives.Enabled.False;
+			options.hasSelectorCheckbox= primitives.Enabled.False;
+			options.navigationMode = primitives.NavigationMode.Inactive;
+			options.pageFitMode = primitives.PageFitMode.AutoSize;
+			options.autoSizeMinimum = new primitives.Size(100, 100);
+			options.autoSizeMaximum = new primitives.Size(2000, 2000);
 			options.templates= [getContactTemplate()];
 			options.onItemRender= onTemplateRender;
 			options.defaultTemplateName= "contactTemplate";
@@ -59,15 +64,15 @@
 				UpdateMessage(control.getOption("selectedItems"));
 			};
 
-			control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+			control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
 		});
 
 		function getContactTemplate() {
-			var result = new primitives.orgdiagram.TemplateConfig();
+			var result = new primitives.TemplateConfig();
 			result.name = "contactTemplate";
 
-			result.itemSize = new primitives.common.Size(160, 30);
-			result.minimizedItemSize = new primitives.common.Size(3, 3);
+			result.itemSize = new primitives.Size(160, 30);
+			result.minimizedItemSize = new primitives.Size(3, 3);
 
 			result.itemTemplate = ["div",
 				{
@@ -133,8 +138,8 @@
 </head>
 <body>
 	<div>
+		<div id="basicdiagram" style="border-style: dotted; border-width: 1px;"></div>
 		<p id="message"></p>
-		<div id="basicdiagram" style="width: 640px; height: 400px; border-style: dotted; border-width: 1px;" />
 	</div>
 </body>
 </html>

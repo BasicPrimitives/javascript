@@ -1,6 +1,6 @@
 # Functions
 
-## <a name="primitives.common.beforeOpacity" id="primitives.common.beforeOpacity">beforeOpacity</a>
+## <a name="beforeOpacity" id="beforeOpacity">beforeOpacity</a>
 
 Calculates before opacity color value producing color you need after applying opacity.
 
@@ -11,7 +11,7 @@ Calculates before opacity color value producing color you need after applying op
  | `color` | string | `` | The color you want to get after applying opacity. | 
  | `opacity` | number | `` | Opacity | 
 
-## <a name="primitives.common.binarySearch" id="primitives.common.binarySearch">binarySearch</a>
+## <a name="binarySearch" id="binarySearch">binarySearch</a>
 
 Search sorted list of elements for the nearest item.
 
@@ -36,7 +36,7 @@ Callback for finding distance for a collection item
  | `item` | Object | `` | A collection item | 
  | `index` | number | `` | An index of the collection item | 
 
-## <a name="primitives.common.compareArrays" id="primitives.common.compareArrays">compareArrays</a>
+## <a name="compareArrays" id="compareArrays">compareArrays</a>
 
 Compares non-sorted arrays.
 
@@ -59,7 +59,7 @@ Callback for getting item key for an element of the array
 | --- | --- | --- | --- | 
  | `item` | Object | `` | A collection item | 
 
-## <a name="primitives.common.getBlue" id="primitives.common.getBlue">getBlue</a>
+## <a name="getBlue" id="getBlue">getBlue</a>
 
 Gets blue value of HEX color string.
 
@@ -69,7 +69,7 @@ Gets blue value of HEX color string.
 | --- | --- | --- | --- | 
  | `color` | string | `` | Color | 
 
-## <a name="primitives.common.getColorHexValue" id="primitives.common.getColorHexValue">getColorHexValue</a>
+## <a name="getColorHexValue" id="getColorHexValue">getColorHexValue</a>
 
 Converts color string into HEX color string.
 
@@ -79,7 +79,7 @@ Converts color string into HEX color string.
 | --- | --- | --- | --- | 
  | `color` | string | `` | Regular HTML color string. | 
 
-## <a name="primitives.common.getColorName" id="primitives.common.getColorName">getColorName</a>
+## <a name="getColorName" id="getColorName">getColorName</a>
 
 Converts color string into HTML color name string or return hex color string.
 
@@ -89,7 +89,7 @@ Converts color string into HTML color name string or return hex color string.
 | --- | --- | --- | --- | 
  | `color` | string | `` | Regular HTML color string | 
 
-## <a name="primitives.common.getCrossingRectangles" id="primitives.common.getCrossingRectangles">getCrossingRectangles</a>
+## <a name="getCrossingRectangles" id="getCrossingRectangles">getCrossingRectangles</a>
 
 Finds pairs of crossing rectangles.
 
@@ -109,7 +109,7 @@ Callback function to iterate over pairs of crosssing rectangles
  | `rect1` | Rect | `` | First rectangle | 
  | `rect2` | Rect | `` | Second rectangle | 
 
-## <a name="primitives.common.getFamilyLoops" id="primitives.common.getFamilyLoops">getFamilyLoops</a>
+## <a name="getFamilyLoops" id="getFamilyLoops">getFamilyLoops</a>
 
 This function finds [optimal collection of feedback edges](https://en.wikipedia.org/wiki/Feedback_arc_set) needed to be cut in order to eliminate loops in family structure.
 
@@ -119,7 +119,7 @@ This function finds [optimal collection of feedback edges](https://en.wikipedia.
 | --- | --- | --- | --- | 
  | `family` | Family | `` | Family structure | 
 
-## <a name="primitives.common.getGreen" id="primitives.common.getGreen">getGreen</a>
+## <a name="getGreen" id="getGreen">getGreen</a>
 
 Gets green value of HEX color string.
 
@@ -129,7 +129,7 @@ Gets green value of HEX color string.
 | --- | --- | --- | --- | 
  | `color` | string | `` | Color | 
 
-## <a name="primitives.common.getLiniarBreaks" id="primitives.common.getLiniarBreaks">getLiniarBreaks</a>
+## <a name="getLiniarBreaks" id="getLiniarBreaks">getLiniarBreaks</a>
 
 Breaks collection of values into 3 intervals, so values stay close to each other within interval.
 
@@ -139,7 +139,7 @@ Breaks collection of values into 3 intervals, so values stay close to each other
 | --- | --- | --- | --- | 
  | `values` | number[] | `` | Array of values | 
 
-## <a name="primitives.common.getMergedRectangles" id="primitives.common.getMergedRectangles">getMergedRectangles</a>
+## <a name="getMergedRectangles" id="getMergedRectangles">getMergedRectangles</a>
 
 Merges collection of rectangles into shapes. Calls callback function to pass result sequences of data points.
 
@@ -158,7 +158,7 @@ Callback function to itterate over result shapes
 | --- | --- | --- | --- | 
  | `points` | Point[] | `` | Collection of points tracing marging around result area formed via merge of rectangles. The outer shape margin has clock wise sequance of data ponts. Internal holes inside of the shape are formed by counterclock wise sequence of data points. | 
 
-## <a name="primitives.common.getMinimumCrossingRows" id="primitives.common.getMinimumCrossingRows">getMinimumCrossingRows</a>
+## <a name="getMinimumCrossingRows" id="getMinimumCrossingRows">getMinimumCrossingRows</a>
 
 Finds minimum number of horizontal lines crossing all reactngles
 
@@ -177,7 +177,7 @@ Callback for iterating rows
 | --- | --- | --- | --- | 
  | `row` | number | `` | The y coordinate of the horizontal line | 
 
-## <a name="primitives.common.getRed" id="primitives.common.getRed">getRed</a>
+## <a name="getRed" id="getRed">getRed</a>
 
 Gets red value of HEX color string.
 
@@ -187,7 +187,7 @@ Gets red value of HEX color string.
 | --- | --- | --- | --- | 
  | `color` | string | `` | Color | 
 
-## <a name="primitives.common.highestContrast" id="primitives.common.highestContrast">highestContrast</a>
+## <a name="highestContrast" id="highestContrast">highestContrast</a>
 
 Finds contrast between base color and two optional first and second colors and returns the one which has highest contrast.
 
@@ -199,31 +199,7 @@ Finds contrast between base color and two optional first and second colors and r
  | `firstColor` | string | `` | First color. | 
  | `secondColor` | string | `` | Second color. | 
 
-## <a name="primitives.common.indexOf" id="primitives.common.indexOf">indexOf</a>
-
-Searches specified item in the array
-
- Returns: `number` - returns index of the item in the array or -1 if item is not found
-
-| Param | Type | Default | Description | 
-| --- | --- | --- | --- | 
- | `vector` | object[] | `` | An array through which to search. | 
- | `item` | object | `` |  The value to search for. | 
- | `compFunc` | compFuncCallback | `` | Callback function to compair two objects | 
-**Callbacks**
-
- `compFuncCallback(item1, item2)` 
-
-Callback for items comparison
-
- Returns: `number` - returns true if items are equal
-
-| Param | Type | Default | Description | 
-| --- | --- | --- | --- | 
- | `item1` | Object | `` | First item to compare | 
- | `item2` | Object | `` | Second item to compare | 
-
-## <a name="primitives.common.luminosity" id="primitives.common.luminosity">luminosity</a>
+## <a name="luminosity" id="luminosity">luminosity</a>
 
 Calculates luminosity between two HEX string colors.
 
@@ -234,7 +210,7 @@ Calculates luminosity between two HEX string colors.
  | `firstColor` | string | `` | First color. | 
  | `secondColor` | string | `` | Second color. | 
 
-## <a name="primitives.common.mergeSort" id="primitives.common.mergeSort">mergeSort</a>
+## <a name="mergeSort" id="mergeSort">mergeSort</a>
 
 Merges array of sorted arrays into one using call back function for comparison.
 

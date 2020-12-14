@@ -4,24 +4,24 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Auto Size Diagram</title>
 
-	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-	<link href="../../min/primitives.latest.css?2106" media="screen" rel="stylesheet" type="text/css" />
+	
+	<script type="text/javascript" src="../../primitives.js"></script>
+	<link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript">
 		var control;
 		var sizes = {
-			"640*480": new primitives.common.Size(640, 480),
-			"800*600": new primitives.common.Size(800, 600),
-			"1024*768": new primitives.common.Size(1024, 768),
-			"1280*1024": new primitives.common.Size(1280, 1024),
-			"Unlimited": new primitives.common.Size(100000, 100000)
+			"640*480": new primitives.Size(640, 480),
+			"800*600": new primitives.Size(800, 600),
+			"1024*768": new primitives.Size(1024, 768),
+			"1280*1024": new primitives.Size(1280, 1024),
+			"Unlimited": new primitives.Size(100000, 100000)
 		}
 
 		document.addEventListener('DOMContentLoaded', function () {
-			var options = new primitives.orgdiagram.Config();
+			var options = new primitives.OrgConfig();
 			var items = [
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 0,
 					parent: null,
 					title: "Title 4",
@@ -32,7 +32,7 @@
 
 			var id = 1;
 			for (var index = 0; index < 4; index++) {
-				items.push(new primitives.orgdiagram.ItemConfig({
+				items.push(new primitives.OrgItemConfig({
 					id: ++id,
 					parent: 0,
 					title: id.toString() + " Title",
@@ -41,7 +41,7 @@
 				}));
 				var parent = id;
 				for (var index2 = 0; index2 < 2; index2++) {
-					items.push(new primitives.orgdiagram.ItemConfig({
+					items.push(new primitives.OrgItemConfig({
 						id: ++id,
 						parent: parent,
 						title: id.toString() + " Title",
@@ -53,11 +53,11 @@
 
 			options.items = items;
 			options.cursorItem = 0;
-			options.pageFitMode = primitives.common.PageFitMode.AutoSize;
+			options.pageFitMode = primitives.PageFitMode.AutoSize;
 			options.autoSizeMinimum = sizes[getRadioValue("autoSizeMinimum")];
 			options.autoSizeMaximum = sizes[getRadioValue("autoSizeMaximum")];
 			options.showFrame = false;
-			control = primitives.orgdiagram.Control(document.getElementById("diagram"), options);
+			control = primitives.OrgDiagram(document.getElementById("diagram"), options);
 		});
 
 		function Update() {
@@ -69,7 +69,7 @@
 				autoSizeMaximum: autoSizeMaximum,
 				showFrame: showFrame
 			});
-			control.update(primitives.common.UpdateMode.Refresh);
+			control.update(primitives.UpdateMode.Refresh);
 		}
 
 		function getRadioValue(name) {

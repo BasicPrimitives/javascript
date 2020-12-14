@@ -5,10 +5,10 @@
   <title>JavaScript Control Organizational Chart Navigation Demo</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-  <!-- header -->
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
+
+  
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="../../primitives.js"></script>
   <script type="text/javascript" src="common/helpers.js"></script>
   <script type="text/javascript" src="../data/xldataset.js"></script>
 
@@ -16,48 +16,48 @@
     var control;
     var timer = null;
     var treeItems = {};
-    var optionsRender = primitives.helpers.controls.getOrgDiagramOptionsRender({
+    var optionsRender = javascriptsamples.getOrgDiagramOptionsRender({
       /* Layout */
-      pageFitMode: primitives.common.PageFitMode.FitToPage,
-      orientationType: primitives.common.OrientationType.Top,
-      verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-      horizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
-      childrenPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
-      leavesPlacementType: primitives.common.ChildrenPlacementType.Horizontal,
+      pageFitMode: primitives.PageFitMode.FitToPage,
+      orientationType: primitives.OrientationType.Top,
+      verticalAlignment: primitives.VerticalAlignmentType.Middle,
+      horizontalAlignment: primitives.HorizontalAlignmentType.Center,
+      childrenPlacementType: primitives.ChildrenPlacementType.Horizontal,
+      leavesPlacementType: primitives.ChildrenPlacementType.Horizontal,
       placeAdvisersAboveChildren: true,
       placeAssistantsAboveChildren: true,
       maximumColumnsInMatrix: 6,
-      minimalVisibility: primitives.common.Visibility.Dot,
-      selectionPathMode: primitives.common.SelectionPathMode.FullStack,
+      minimalVisibility: primitives.Visibility.Dot,
+      selectionPathMode: primitives.SelectionPathMode.FullStack,
 
-      hasButtons: primitives.common.Enabled.Auto,
-      hasSelectorCheckbox: primitives.common.Enabled.True,
+      hasButtons: primitives.Enabled.Auto,
+      hasSelectorCheckbox: primitives.Enabled.True,
       selectCheckBoxLabel: "Selected",
-      itemTitleFirstFontColor: primitives.common.Colors.White,
-      itemTitleSecondFontColor: primitives.common.Colors.White,
-      buttonsPanelSize: 28,
+      itemTitleFirstFontColor: primitives.Colors.White,
+      itemTitleSecondFontColor: primitives.Colors.White,
+      buttonsPanelSize: 32,
       checkBoxPanelSize: 24,
 
       /* group title options */
-      groupTitlePlacementType: primitives.common.AdviserPlacementType.Left,
+      groupTitlePlacementType: primitives.AdviserPlacementType.Left,
       groupTitlePanelSize: 24,
-      groupTitleOrientation: primitives.text.TextOrientationType.RotateRight,
-      groupTitleVerticalAlignment: primitives.common.VerticalAlignmentType.Middle,
-      groupTitleHorizontalAlignment: primitives.common.HorizontalAlignmentType.Center,
+      groupTitleOrientation: primitives.TextOrientationType.RotateRight,
+      groupTitleVerticalAlignment: primitives.VerticalAlignmentType.Middle,
+      groupTitleHorizontalAlignment: primitives.HorizontalAlignmentType.Center,
       groupTitleFontSize: "12px",
       groupTitleFontFamily: "Arial",
-      groupTitleColor: primitives.common.Colors.RoyalBlue,
+      groupTitleColor: primitives.Colors.RoyalBlue,
       groupTitleFontWeight: "normal",
       groupTitleFontStyle: "normal",
 
       /* Template */
       DefaultTemplateOptions: {
         minimizedItemCornerRadius: null,
-        minimizedItemSize: new primitives.common.Size(4, 4),
+        minimizedItemSize: new primitives.Size(4, 4),
         highlightPadding: 3,
-        minimizedItemShapeType: primitives.common.ShapeType.None,
+        minimizedItemShapeType: primitives.ShapeType.None,
         minimizedItemLineWidth: 1,
-        minimizedItemLineType: primitives.common.LineType.Solid,
+        minimizedItemLineType: primitives.LineType.Solid,
         minimizedItemBorderColor: null,
         minimizedItemFillColor: null,
         minimizedItemOpacity: 1.0,
@@ -74,32 +74,32 @@
       cousinsIntervalMultiplier: 5,
 
       /* Connectors */
-      arrowsDirection: primitives.common.GroupByType.None,
+      arrowsDirection: primitives.GroupByType.None,
       showExtraArrows: false,
       extraArrowsMinimumSpace: 30,
-      connectorType: primitives.common.ConnectorType.Squared,
-      elbowType: primitives.common.ElbowType.None,
+      connectorType: primitives.ConnectorType.Squared,
+      elbowType: primitives.ElbowType.None,
       bevelSize: 4,
       elbowDotSize: 4,
-      linesType: primitives.common.LineType.Solid,
-      linesColor: primitives.common.Colors.Silver,
+      linesType: primitives.LineType.Solid,
+      linesColor: primitives.Colors.Silver,
       linesWidth: 1,
 
       /* Labels */
-      showLabels: primitives.common.Enabled.Auto,
-      labelSize: new primitives.common.Size(80, 8),
-      labelOrientation: primitives.text.TextOrientationType.Horizontal,
-      labelPlacement: primitives.common.PlacementType.Top,
+      showLabels: primitives.Enabled.Auto,
+      labelSize: new primitives.Size(80, 8),
+      labelOrientation: primitives.TextOrientationType.Horizontal,
+      labelPlacement: primitives.PlacementType.Top,
       labelOffset: 1,
       labelFontSize: "10px",
       labelFontFamily: "Arial",
-      labelColor: primitives.common.Colors.Black,
+      labelColor: primitives.Colors.Black,
       labelFontWeight: "normal",
       labelFontStyle: "normal",
 
       /* Callout */
-      calloutMaximumVisibility: primitives.common.Visibility.Dot,
-      showCallout: "true",
+      calloutMaximumVisibility: primitives.Visibility.Dot,
+      showCallout: true,
       calloutPlacementOffset: 100,
       calloutfillColor: "#000000",
       calloutBorderColor: null,
@@ -110,12 +110,12 @@
       calloutOpacity: 0.2,
 
       /* Interactivity */
-      navigationMode: primitives.common.NavigationMode.Default,
+      navigationMode: primitives.NavigationMode.Default,
       highlightGravityRadius: 40,
       enablePanning: true,
 
       /* Graphics */
-      graphicsType: primitives.common.GraphicsType.SVG,
+      graphicsType: primitives.GraphicsType.SVG,
       scale: 1.0,
       
       /* Frame */
@@ -127,13 +127,13 @@
       function () {
         var options = getOptions();
         control.setOptions(options);
-        control.update(primitives.common.UpdateMode.Recreate);
+        control.update(primitives.UpdateMode.Recreate);
       });
 
     document.addEventListener('DOMContentLoaded', function () {
       optionsRender.render(document.getElementById("westpanel"));
-      control = primitives.orgdiagram.Control(document.getElementById("centerpanel"),
-        primitives.common.mergeObjects(getOptions(), getUserData(data, options))
+      control = primitives.OrgDiagram(document.getElementById("centerpanel"),
+        primitives.mergeObjects(getOptions(), getUserData(data, options))
       );
 
       window.addEventListener('resize', function (event) {
@@ -145,7 +145,7 @@
       options = optionsRender.getValues();
 
       // User Event Handlers
-      primitives.common.mergeObjects(options,
+      primitives.mergeObjects(options,
         {
           onCursorChanging: onCursorChanging,
           onCursorChanged: onCursorChanged,
@@ -157,14 +157,8 @@
         });
 
       // Templates, User Buttons & related Event Handlers
-      primitives.common.mergeObjects(options, {
+      primitives.mergeObjects(options, {
         onButtonClick: onButtonClick,
-        buttons: [
-          new primitives.orgdiagram.ButtonConfig("delete", "ui-icon-close", "Delete"),
-          new primitives.orgdiagram.ButtonConfig("properties", "ui-icon-gear", "Info"),
-          new primitives.orgdiagram.ButtonConfig("add", "ui-icon-person", "Add")
-        ],
-
         onItemRender: onTemplateRender,
         templates: [getContactTemplate(options), getDefaultTemplate(options)],
         defaultTemplateName: "defaultTemplate"
@@ -189,23 +183,23 @@
     }
 
     function getDefaultTemplate(options) {
-      var result = new primitives.orgdiagram.TemplateConfig();
+      var result = new primitives.TemplateConfig();
       result.name = "defaultTemplate";
 
       // If we don't change anything in template then all its properties stays default
       // So we change only minimized item properties
-      primitives.common.mergeObjects(result, options.DefaultTemplateOptions);
+      primitives.mergeObjects(result, options.DefaultTemplateOptions);
 
       return result;
     }
 
     function getContactTemplate(options) {
-      var result = new primitives.orgdiagram.TemplateConfig();
+      var result = new primitives.TemplateConfig();
       result.name = "contactTemplate";
 
-      result.itemSize = new primitives.common.Size(220, 120);
+      result.itemSize = new primitives.Size(220, 120);
 
-      primitives.common.mergeObjects(result, options.DefaultTemplateOptions);
+      primitives.mergeObjects(result, options.DefaultTemplateOptions);
 
       /* the following example demonstrates JSONML template see http://http://www.jsonml.org/ for details: */
       result.itemTemplate = ["div",
@@ -315,7 +309,7 @@
         photo.alt = itemConfig.title;
 
         var titleBackground = element.firstChild;
-        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.common.Colors.RoyalBlue;
+        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
 
         var title = element.firstChild.firstChild;
         title.textContent = itemConfig.title;
@@ -331,14 +325,14 @@
         description.textContent = itemConfig.description;
 
         switch (data.renderingMode) {
-          case primitives.common.RenderingMode.Create:
+          case primitives.RenderingMode.Create:
             /* Initialize widgets here */
             email.addEventListener("click", function (e) {
               /* Block mouse click propagation in order to avoid layout updates before server postback*/
-              primitives.common.stopPropagation(e);
+              primitives.stopPropagation(e);
             });
             break;
-          case primitives.common.RenderingMode.Update:
+          case primitives.RenderingMode.Update:
             /* Update widgets here */
             break;
         }
@@ -386,8 +380,8 @@
       data.context.templateName = "contactTemplate";
 
       /* the following code disables callout for cursor item and enables it back when item is not cursor anymore*/
-      data.oldContext.showCallout = primitives.common.Enabled.Auto;
-      data.context.showCallout = primitives.common.Enabled.True;
+      data.oldContext.showCallout = primitives.Enabled.Auto;
+      data.context.showCallout = primitives.Enabled.True;
     }
 
     function onCursorChanged(e, data) {
@@ -411,14 +405,14 @@
     function onWindowResize() {
       if (timer == null) {
         timer = window.setTimeout(function () {
-          control.update(primitives.orgdiagram.UpdateMode.Refresh);
+          control.update(primitives.UpdateMode.Refresh);
           window.clearTimeout(timer);
           timer = null;
         }, 300);
       }
     }
   </script>
-  <!-- /header -->
+
 </head>
 
 <body>

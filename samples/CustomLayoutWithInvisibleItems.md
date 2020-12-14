@@ -6,15 +6,13 @@ Following example demonstrates how to use invisible items to display multiple gr
 See custom item types, children layout and inactive items samples as well. 
 
 [JavaScript](javascript.controls/CaseCustomLayoutWithInvisibleItems.html)
-[JQuery](jquery.widgets/CaseCustomLayoutWithInvisibleItems.html)
 
-![Screenshot](images/screenshots/CaseCustomLayoutWithInvisibleItems.png)
+![Screenshot](javascript.controls/__image_snapshots__/CaseCustomLayoutWithInvisibleItems-snap.png)
 
 ## Skipped Levels
 
-Invisible items can be used to skip levels in organizational chart. This is actually workaround, invisible items occupy space, so they can be used to shift children items down one level relative to their parents. See primitives.orgdiagram.ItemConfig.isVisible option.
+Invisible items can be used to skip levels in organizational chart. This is actually workaround, invisible items occupy space, so they can be used to shift children items down one level relative to their parents. See primitives.OrgItemConfig.isVisible option.
 
 [JavaScript](javascript.controls/CaseSkippedLevels.html)
-[JQuery](jquery.widgets/CaseSkippedLevels.html)
 
-![Screenshot](images/screenshots/CaseSkippedLevels.png)
+![Screenshot](javascript.controls/__image_snapshots__/CaseSkippedLevels-snap.png)

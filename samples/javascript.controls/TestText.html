@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <title>JavaScript Control Patents Inheritance Diagram Demo</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+	<link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../primitives.js"></script>
+  <script type="text/javascript" src="../../javascriptsamples.js"></script>
+  <script type="text/javascript" src="../../interactivetests.js"></script>
+  <link href="./css/styles.css" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type="text/javascript">
+    var control;
+    var parents = {};
+    var children = {};
+    var timer = null;
+    var { Point, Size, Rect } = primitives;
+    var { ValueType, Render, PanelConfig, ColorConfig, SizeConfig, CheckBoxConfig, RadioBoxConfig, RangeConfig, DropDownBoxConfig, CaptionConfig, DropDownBoxConfig } = javascriptsamples;
+    var { Shape, createGraphics, GraphicsType, PlacementType, Colors, LineType } = interactivetests;
+
+    var optionsRender = new Render([
+      new PanelConfig("Family Diagram Specific Options", [
+        new RadioBoxConfig("orientation", primitives.TextOrientationType.RotateRight, "Orientation", primitives.TextOrientationType, ValueType.Integer, onUpdate),
+        new RadioBoxConfig("verticalAlignment", primitives.VerticalAlignmentType.Middle, "Vertical Alignment", primitives.VerticalAlignmentType, ValueType.Integer, onUpdate),
+        new RadioBoxConfig("horizontalAlignment", primitives.HorizontalAlignmentType.Center, "Horizontal Alignment", primitives.HorizontalAlignmentType, ValueType.Integer, onUpdate),
+        new ColorConfig("fontColor", primitives.Colors.Black, "Font Color", false, onUpdate),
+        new DropDownBoxConfig("fontSize", 12, "Font Size", [10, 12, 14, 16, 18, 20, 24, 28, 32], ValueType.Integer, onUpdate),
+        new RadioBoxConfig("fontWeight", "normal", "Font Weight", ["normal", "bold"], ValueType.String, onUpdate),
+        new RadioBoxConfig("fontStyle", "normal", "Font Style", ["normal", "italic"], ValueType.String, onUpdate),
+        new DropDownBoxConfig("fontFamily", "Arial", "Font Style", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], ValueType.String, onUpdate)
+      ]),
+      new PanelConfig("Rendering", [
+        new CaptionConfig("By default widget preferes SVG graphics mode. Use this property to enforce graphics mode programmatically.", false),
+        new RadioBoxConfig("graphicsType", primitives.GraphicsType.SVG, "Graphics", primitives.GraphicsType, ValueType.Integer, onUpdate)
+      ])
+    ], {
+        orientation: primitives.TextOrientationType.RotateLeft,
+        verticalAlignment: primitives.VerticalAlignmentType.Middle,
+        horizontalAlignment: primitives.HorizontalAlignmentType.Center,
+        fontColor: primitives.Colors.Red,
+        fontSize: 28,
+        fontWeight: "normal",
+        fontStyle: "normal",
+        fontFamily: "Arial",
+        graphicsType: primitives.GraphicsType.SVG
+      });
+
+      var graphics;
+      document.addEventListener('DOMContentLoaded', function () {
+        optionsRender.render(document.getElementById("westpanel"));
+
+        graphics = createGraphics(GraphicsType.SVG, document.getElementById("placeholder"));
+
+        onUpdate();
+
+        window.addEventListener('resize', function (event) {
+          onWindowResize();
+        });
+      });
+
+      var position = new Rect(100, 100, 200, 300);
+      var dragStartPoint;
+      var resizeStartPoint;
+      var topLeftStartPoint;
+      var bottomRightStartPoint;
+      function allowDrop(event) {
+        event.preventDefault();
+      }
+
+      function drag(event) {
+        dragStartPoint = { x: event.clientX, y: event.clientY };
+        topLeftStartPoint = new Point(position);
+        event.dataTransfer.setData("name", event.target.id);
+      }
+
+      function dragresize(event) {
+        resizeStartPoint = { x: event.clientX, y: event.clientY };
+        bottomRightStartPoint = new Point(position.right(), position.bottom());
+        event.dataTransfer.setData("name", event.target.id);
+      }
+
+      function drop(event) {
+        event.preventDefault();
+        var endPoint = new Point(event.clientX, event.clientY);
+        var name = event.dataTransfer.getData("name");
+        switch(name) {
+          case "rect":
+            position.x = topLeftStartPoint.x + endPoint.x - dragStartPoint.x;
+            position.y = topLeftStartPoint.y + endPoint.y - dragStartPoint.y;
+            break;
+          case "resizer":
+            var bottomRight = new Point(bottomRightStartPoint.x + endPoint.x - resizeStartPoint.x, bottomRightStartPoint.y + endPoint.y - resizeStartPoint.y);
+            var topLeft = new Point(position);
+            position = new Rect(topLeft, bottomRight);
+            break;
+        }
+
+        onUpdate()
+      }
+
+      function LabelTemplate() {
+        var _template = ["div", {"border-style": "solid", "border-color": "black", "border-width": "1px"}];
+
+        function template() {
+          return _template;
+        }
+
+        function getHashCode() {
+          return "LabelTemplate";
+        }
+
+        function render(event, data) {
+          data.element.innerHTML = "";
+          var div = document.createElement("div");
+          div.style.borderWidth = "1px";
+          div.style.borderColor = "black";
+          div.style.borderStyle = "dotted";
+          div.style.width = "100%";
+          div.style.height = "100%";
+          div.appendChild(document.createTextNode(data.label));
+          data.element.appendChild(div);
+        }
+
+        return {
+          template: template,
+          getHashCode: getHashCode,
+          render: render
+        };
+      };
+      
+      function onUpdate() {
+        var rect = document.getElementById("rect");
+        rect.style.left = position.x + "px";
+        rect.style.top = position.y + "px";
+        rect.style.width = position.width + "px";
+        rect.style.height = position.height + "px";
+
+        var rect = document.getElementById("centerpanel");
+        var width = rect.offsetWidth;
+        var height = rect.offsetHeight;
+
+        var options = optionsRender.getValues();
+
+        var attr = {
+          "fontSize": options.fontSize + "px",
+          "fontFamily": options.fontFamily,
+          "fontStyle": options.fontStyle,
+          "fontWeight": options.fontWeight,
+          "fontColor": options.fontColor
+        };
+
+        graphics.begin();
+        graphics.activate("placeholder");
+        graphics.resize("placeholder", width, height);
+        graphics.text(position.x, position.y, position.width, position.height, "Graphics text\nSecond line\n3d Line", options.orientation, options.horizontalAlignment, options.verticalAlignment, attr);
+        graphics.end();
+      }
+
+      function onWindowResize() {
+        if (timer == null) {
+          timer = window.setTimeout(function () {
+            onUpdate();
+            window.clearTimeout(timer);
+            timer = null;
+          }, 300);
+        }
+      }
+  </script>
+</head>
+
+<body>
+	<div class="container-fluid">
+	  <div class="row">
+		<nav id="sidebarMenu" class="col-md-4 col-lg-2 d-md-block bg-light sidebar collapse" style="position: fixed; top: 0; bottom: 0px; overflow-y: auto; float: none;">
+		  <div class="position-sticky pt-3">
+			<div id="westpanel" class="flex-column">
+      </div>
+		  </div>
+		</nav>
+	
+		<main class="col-md-8 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Text Test</h1>
+        </div>
+        <div id="centerpanel" class="mediaPlaceholder my-2 w-100" ondrop="drop(event)" ondragover="allowDrop(event)" style="border-style: dotted; border-width: 1px;">
+          <div id="placeholder" style="overflow: hidden; position: relative; width: 100%; height: 100%;">
+            <div id="rect" style="position: absolute; z-index: 100; top: 300px; left: 300px; width: 200px; height: 100px; border-width: 1px; border-style: dotted;" draggable="true" ondragstart="drag(event)">Drag & Resize Rect
+              <div id="resizer" style="position: absolute; right: 0px; bottom: 0px; width: 16px; height: 8px; border-width: 1px; border-style: dotted;" draggable="true" ondragstart="dragresize(event)"></div>
+            </div>
+          </div>
+        </div>
+        <div id="southpanel" class="alert alert-primary" style="min-height: 60px;" role="alert">
+		  </div>
+		</main>
+	  </div>
+	</div>
+  </body>
+</html>

@@ -1,20 +1,20 @@
 # Algorithms
-## <a name="primitives.common.family" id="primitives.common.family">family</a>
+## <a name="Family" id="Family">Family</a>
 Creates a family object
 
- `primitives.common.family` 
+ `Family` 
 
 ### Constructor
 
- `family(source)` 
+ `Family(source)` 
 
 Creates a family object
 
- Returns: `family` - returns new instance of family structure
+ Returns: `Family` - returns new instance of family structure
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `source` | family | `undefined` | Reference to optional family object to clone properties from | 
+ | `source` | Family | `undefined` | Reference to optional family object to clone properties from | 
 
 ### Constants
 | Name | Type | Default | Description | 
@@ -445,10 +445,10 @@ Validates internal data structure consitency of the family.
 | --- | --- | --- | --- | 
  | `info` | object | `` | Optional validation object. | 
 
-## <a name="primitives.common.FamilyAlignment" id="primitives.common.FamilyAlignment">FamilyAlignment</a>
+## <a name="FamilyAlignment" id="FamilyAlignment">FamilyAlignment</a>
 Creates family alignment data structure. This structure aligns horizontaly planar family of nodes.
 
- `primitives.common.FamilyAlignment` 
+ `FamilyAlignment` 
 
 ### Constructor
 
@@ -477,10 +477,10 @@ Returns horizontal node offset from left margin of the family daigram
 | --- | --- | --- | --- | 
  | `nodeid` | string | `` | Family node id | 
 
-## <a name="primitives.common.FibonacciHeap" id="primitives.common.FibonacciHeap">FibonacciHeap</a>
+## <a name="FibonacciHeap" id="FibonacciHeap">FibonacciHeap</a>
 Creates Fibonacci Heap structure
 
- `primitives.common.FibonacciHeap` 
+ `FibonacciHeap` 
 
 ### Constructor
 
@@ -554,18 +554,18 @@ Validates internal structure consistency.
  Returns: `boolean` - returns true if structure pass data consistency check.
 
 
-## <a name="primitives.common.graph" id="primitives.common.graph">graph</a>
+## <a name="Graph" id="Graph">Graph</a>
 Creates graph structure
 
- `primitives.common.graph` 
+ `Graph` 
 
 ### Constructor
 
- `graph()` 
+ `Graph()` 
 
 Creates graph structure
 
- Returns: `graph` - returns graph object
+ Returns: `Graph` - returns graph object
 
 
 ### Functions
@@ -848,10 +848,10 @@ Callback function for iterating graphs nodes
 | --- | --- | --- | --- | 
  | `to` | string | `` | The next neighbouring node id | 
 
-## <a name="primitives.common.LCA" id="primitives.common.LCA">LCA</a>
+## <a name="LCA" id="LCA">LCA</a>
 Creates Lowest Common Ancestor Structure for the given tree
 
- `primitives.common.LCA` 
+ `LCA` 
 
 ### Constructor
 
@@ -863,7 +863,7 @@ Creates Lowest Common Ancestor Structure for the given tree
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `tree` | tree | `` | The tree structure | 
+ | `tree` | Tree | `` | The tree structure | 
 
 ### Functions
 
@@ -878,10 +878,10 @@ Returns lowest common ancestor for the given pair of tree nodes
  | `from` | string | `` | The first tree node id | 
  | `to` | string | `` | The second tree node id | 
 
-## <a name="primitives.common.LinkedHashItems" id="primitives.common.LinkedHashItems">LinkedHashItems</a>
+## <a name="LinkedHashItems" id="LinkedHashItems">LinkedHashItems</a>
 Creates linked hash list collection.
 
- `primitives.common.LinkedHashItems` 
+ `LinkedHashItems` 
 
 ### Constructor
 
@@ -1064,18 +1064,18 @@ Validates internal data consistensy of the structure
  Returns: `boolean` - returns true if it pass validation
 
 
-## <a name="primitives.common.pile" id="primitives.common.pile">pile</a>
+## <a name="Pile" id="Pile">Pile</a>
 Creates pile structure used to sort and stack segments on top of each other so they occupy minimum number of rows.
 
- `primitives.common.pile` 
+ `Pile` 
 
 ### Constructor
 
- `pile()` 
+ `Pile()` 
 
 Creates pile structure used to sort and stack segments on top of each other so they occupy minimum number of rows.
 
- Returns: `pile` - returns pile structure
+ Returns: `Pile` - returns pile structure
 
 
 ### Functions
@@ -1113,10 +1113,10 @@ Callback function or iterating result offsets of the pile items in the stack.
  | `context` | object | `` | The context of the pile item | 
  | `offset` | number | `` | Index of the pile item in the stack | 
 
-## <a name="primitives.common.QuadTree" id="primitives.common.QuadTree">QuadTree</a>
+## <a name="QuadTree" id="QuadTree">QuadTree</a>
 Creates Quad Tree data structure. It distributes points into equal quadrants. So it is equivalent to 2 dimensional binary search tree.
 
- `primitives.common.QuadTree` 
+ `QuadTree` 
 
 ### Constructor
 
@@ -1178,10 +1178,10 @@ Validates internal data consistency of quad tree data structure
  Returns: `boolean` - returns true if structure pass validation
 
 
-## <a name="primitives.common.RMQ" id="primitives.common.RMQ">RMQ</a>
+## <a name="RMQ" id="RMQ">RMQ</a>
 Creates range minimum query structure
 
- `primitives.common.RMQ` 
+ `RMQ` 
 
 ### Constructor
 
@@ -1189,7 +1189,7 @@ Creates range minimum query structure
 
 Creates range minimum query structure
 
- Returns: `rmq` - returns range minimum query structure
+ Returns: `RMQ` - returns range minimum query structure
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -1219,10 +1219,10 @@ Returns index of minimum item for the given range of items
  | `from` | number | `` | The left margin index | 
  | `to` | number | `` | The right margin index | 
 
-## <a name="primitives.common.SortedList" id="primitives.common.SortedList">SortedList</a>
+## <a name="SortedList" id="SortedList">SortedList</a>
 Creates self-balancing binary search tree structure.
 
- `primitives.common.SortedList` 
+ `SortedList` 
 
 ### Constructor
 
@@ -1334,19 +1334,22 @@ Validate internal data consistency of the self-balancing binary search tree stru
  Returns: `boolean` - returns true if structure pass validation
 
 
-## <a name="primitives.common.SpatialIndex" id="primitives.common.SpatialIndex">SpatialIndex</a>
+## <a name="SpatialIndex" id="SpatialIndex">SpatialIndex</a>
 Create spatial index structure. It uses collection of sizes to distribute rectangles into buckets of similar size elements. Elements of the same bucket are aproximated to points. The search of rectangles is transformed to search of points within given range plus offset for maximum linear rectangle size.
 
- `primitives.common.SpatialIndex` 
+ `SpatialIndex` 
 
 ### Constructor
 
- `SpatialIndex()` 
+ `SpatialIndex(sizes)` 
 
 Create spatial index structure. It uses collection of sizes to distribute rectangles into buckets of similar size elements. Elements of the same bucket are aproximated to points. The search of rectangles is transformed to search of points within given range plus offset for maximum linear rectangle size.
 
  Returns: `SpatialIndex` - returns spacial index data structure.
 
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `sizes` | Array | `` | Reference to optional collection of possible sizes of items we plan to store in the index | 
 
 ### Functions
 
@@ -1358,22 +1361,43 @@ Adds rectangle to spacial index
 | --- | --- | --- | --- | 
  | `rect` | Rect | `` | Rectangle | 
 
-## <a name="primitives.common.tree" id="primitives.common.tree">tree</a>
-Creates tree structure
+ `loopArea(thisArg, rect, onItem)` 
 
- `primitives.common.tree` 
-
-### Constructor
-
- `tree(source)` 
-
-Creates tree structure
-
- Returns: `tree` - returns new tree structure
+Loops rectangular area of spacial index
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `source` | tree | `` | A source tree structure to clone properties from | 
+ | `thisArg` | object | `` | The callback function invocation context | 
+ | `rect` | Rect | `` | Rectangular search area | 
+ | `onItem` | onSpatialIndexItemCallback | `` | Callback function to call for every rectangle intersecting given rectangular search area | 
+**Callbacks**
+
+ `onSpatialIndexItemCallback(rect)` 
+
+Callback function for iteration of spacial index rectangles
+
+ Returns: `boolean` - returns true to break iteration process.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `rect` | React | `` | Rectangle | 
+
+## <a name="Tree" id="Tree">Tree</a>
+Creates tree structure
+
+ `Tree` 
+
+### Constructor
+
+ `Tree(source)` 
+
+Creates tree structure
+
+ Returns: `Tree` - returns new tree structure
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `source` | Tree | `` | A source tree structure to clone properties from | 
 
 ### Constants
 | Name | Type | Default | Description | 
@@ -1790,10 +1814,10 @@ Callback function to return pairs of nodes
  | `secondNodeid` | string | `` | Second node id | 
  | `secondParentId` | string | `` | Parent id of the second node | 
 
-## <a name="primitives.common.TreeLevels" id="primitives.common.TreeLevels">TreeLevels</a>
+## <a name="TreeLevels" id="TreeLevels">TreeLevels</a>
 Creates Tree Levels structure. It is diagraming specific auxiliary structure that keeps tree nodes order level by level.
 
- `primitives.common.TreeLevels` 
+ `TreeLevels` 
 
 ### Constructor
 

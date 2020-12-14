@@ -3,8 +3,8 @@ Family Diagram supports multiple parents and children per node, so there is no d
 
 1. `relativeItem` - item position and placement type defined relative to this property referenced item
 2. `placementType` - item placement on the left or right side of relative item. Property has following values:
-    * `primitives.common.AdviserPlacementType.Left`
-    * `primitives.common.AdviserPlacementType.Right`
+    * `primitives.AdviserPlacementType.Left`
+    * `primitives.AdviserPlacementType.Right`
 3. `position` - if several items reference the same `relativeItem` and placement then this `position` property defines order of them.
 
 If item has no relative item defined then layout engine will try to find optimal placement for it based on its relations.
@@ -15,13 +15,13 @@ Family Items Ordering Sample
 
 [JavaScript](javascript.controls/CaseFamilyChartItemsOrdering.html)
 
-![Screenshot](images/screenshots/CaseFamilyChartItemsOrdering.png)
+![Screenshot](javascript.controls/__image_snapshots__/CaseFamilyChartItemsOrdering-snap.png)
 
 ## Multiple Families Ordering Sample
 
 [JavaScript](javascript.controls/CaseMultipleFamiliesOrdering.html)
 
-![Screenshot](images/screenshots/CaseMultipleFamiliesOrdering.png)
+![Screenshot](javascript.controls/__image_snapshots__/CaseMultipleFamiliesOrdering-snap.png)
 
 ## Primary Parent
 
@@ -31,4 +31,4 @@ If node has multiple parents and they belong to distinct branches of the diagram
 
 [JavaScript](javascript.controls/CaseFamilyChartPrimaryParent.html)
 
-![Screenshot](images/screenshots/CaseFamilyChartPrimaryParent.png)
+![Screenshot](javascript.controls/__image_snapshots__/CaseFamilyChartPrimaryParent-snap.png)

@@ -4,45 +4,45 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<title>Adviser And Assistant Item Types</title>
 
-	<!-- # include file="../../src.primitives/src.primitives.html"-->
-	<script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-	<link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+	
+	<script type="text/javascript" src="../../primitives.js"></script>
+	<link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
 	<script type='text/javascript'>
 		var control;
 
 		document.addEventListener('DOMContentLoaded', function () {
-			var options = new primitives.orgdiagram.Config();
+			var options = new primitives.OrgConfig();
 
 			var items = [
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 0,
 					parent: null,
 					title: "Scott Aasrud",
 					description: "Parent Item",
 					image: "../images/photos/a.png"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 1,
 					parent: 0,
-					itemType: primitives.orgdiagram.ItemType.Adviser,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+					itemType: primitives.ItemType.Adviser,
+					adviserPlacementType: primitives.AdviserPlacementType.Right,
 					title: "Robert Canon",
 					description: "Adviser item",
 					groupTitle: "Adviser",
 					image: "../images/photos/b.png"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 2,
 					parent: 0,
-					itemType: primitives.orgdiagram.ItemType.Assistant,
-					adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+					itemType: primitives.ItemType.Assistant,
+					adviserPlacementType: primitives.AdviserPlacementType.Right,
 					title: "Ted Lucas",
 					description: "Assitant Item",
 					groupTitle: "Assistant",
 					image: "../images/photos/c.png"
 				}),
-				new primitives.orgdiagram.ItemConfig({
+				new primitives.OrgItemConfig({
 					id: 3,
 					parent: 0,
 					title: "Fritz Stuger",
@@ -54,16 +54,18 @@
 
 			options.items = items;
 			options.cursorItem = 0;
-			options.hasSelectorCheckbox = primitives.common.Enabled.False;
-			options.pageFitMode = primitives.orgdiagram.PageFitMode.None;
-			options.arrowsDirection = primitives.common.GroupByType.Children;
+			options.hasSelectorCheckbox = primitives.Enabled.False;
+			options.pageFitMode = primitives.PageFitMode.AutoSize;
+			options.autoSizeMinimum = new primitives.Size(100, 100);
+			options.autoSizeMaximum = new primitives.Size(2000, 2000);
+			options.arrowsDirection = primitives.GroupByType.Children;
 
-			control = primitives.orgdiagram.Control(document.getElementById("basicdiagram"), options);
+			control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
 		});
 
 	</script>
 </head>
 <body>
-	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+	<div id="basicdiagram" style="border-style: dotted; border-width: 1px;"></div>
 </body>
 </html>

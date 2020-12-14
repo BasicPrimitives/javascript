@@ -3,22 +3,16 @@
 
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>First Organizational Chart</title>
-
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <!-- PDFkit & Libs -->
-  <script src="../../packages/pdfkit/pdfkit.js"></script>
-  <script src="../../packages/pdfkit/blob-stream.js"></script>
-
-  <!-- Demo Images -->
-  <script src="../data/photos.js"></script>
-
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <title>First Organizational Chart PDFKit Sample</title>
+  <script type="text/javascript" src="../../pdfkitsamples.js"></script>
+  <script type="text/javascript" src="../../primitives.js"></script>
 
   <script type='text/javascript'>
     var control;
     var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
 
     document.addEventListener('DOMContentLoaded', function () {
       // create a document and pipe to a blob
@@ -28,23 +22,23 @@
       doc.fontSize(25)
         .text('First Organizational Chart', 30, 30);
 
-      var firstOrganizationalChartSample = primitives.pdf.orgdiagram.Plugin({
+      var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
         items: [
-          new primitives.orgdiagram.ItemConfig({
+          new primitives.OrgItemConfig({
             id: 0,
             parent: null,
             title: "Scott Aasrud",
             description: "VP, Public Sector",
             image: photos.a
           }),
-          new primitives.orgdiagram.ItemConfig({
+          new primitives.OrgItemConfig({
             id: 1,
             parent: 0,
             title: "Ted Lucas",
             description: "VP, Human Resources",
             image: photos.b
           }),
-          new primitives.orgdiagram.ItemConfig({
+          new primitives.OrgItemConfig({
             id: 2,
             parent: 0,
             title: "Joao Stuger",
@@ -53,7 +47,7 @@
           })
         ],
         cursorItem: null,
-        hasSelectorCheckbox: primitives.common.Enabled.False
+        hasSelectorCheckbox: primitives.Enabled.False
       });
 
       var size = firstOrganizationalChartSample.draw(doc, 30, 60);

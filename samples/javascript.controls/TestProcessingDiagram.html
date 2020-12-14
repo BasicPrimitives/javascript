@@ -1,0 +1,369 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Diagram Data Processing & Rendering Diagram</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <script type="text/javascript" src="../../javascriptsamples.js"></script>
+  <script type="text/javascript" src="../../interactivetests.js"></script>
+  <link href="./css/styles.css" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type="text/javascript">
+    var control;
+    var timer = null;
+    var treeItems = {};
+    var { Render, PanelConfig, RadioBoxConfig, CaptionConfig, CheckBoxConfig, DropDownBoxConfig, ValueType } = javascriptsamples;
+
+    var optionsRender = new Render([
+      new PanelConfig("Component", [
+        new RadioBoxConfig("diagramType2", 1, "Select Control", { FamilyDiagram: "getFamTasksDiagram", OrganizationalChart: "getOrgTasksDiagram", FamilyDiagramPdfkit: "getFamPdfkitTasksDiagram", OrganizationalChartPdfkit: "getOrgPdfkitTasksDiagram" }, ValueType.String, onUpdate)
+      ]),
+      new PanelConfig("Options", [
+        new CaptionConfig("Page Fit Mode defines rule of fitting chart into available screen space. Set it to None if you want to disable it.", false),
+        new RadioBoxConfig("pageFitMode", primitives.PageFitMode.FitToPage, "Page Fit Mode", { None: 0, PageWidth: 1, PageHeight: 2, FitToPage: 3, SelectionOnly: 6 }, ValueType.Integer, onUpdate),
+        new RadioBoxConfig("neighboursSelectionMode", primitives.NeighboursSelectionMode.ParentsAndChildren, "Cursor Neighbours Selection Mode", primitives.NeighboursSelectionMode, ValueType.Integer, onUpdate),
+        new CheckBoxConfig("hideGrandParentsConnectors", true, "Hide direct relations to grand parents. It helps to reduce diagrams connectors layout complexity. This option should be used together with dynamic highlighting of connectors to grandparents via immidiate parents, so information is not lost.", onUpdate),
+      ])
+    ], {
+      diagramType2: "getFamTasksDiagram",
+      pageFitMode: primitives.PageFitMode.None,
+      neighboursSelectionMode: primitives.NeighboursSelectionMode.ParentsAndChildren,
+      hideGrandParentsConnectors: true
+    });
+
+    function onUpdate() {
+      if (control != null) {
+        control.setOptions(getOptions());
+        control.update(primitives.UpdateMode.Recreate);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      optionsRender.render(document.getElementById("westpanel"));
+      control = primitives.FamDiagram(document.getElementById("centerpanel"),
+        getOptions()
+      );
+
+      window.addEventListener('resize', function (event) {
+        onWindowResize();
+      });
+    });
+
+    function getOptions() {
+      var options = optionsRender.getValues();
+
+      var controlItems;
+      var viewOptions = {
+        'CursorItemTask': { primaryParent: 'CursorItemOptionTask' },
+        'DrawCursorTask': { primaryParent: 'CursorItemTask' },
+        'HighlightItemTask': { primaryParent: 'HighlightItemOptionTask' },
+        'DrawHighlightTask': { primaryParent: 'HighlightItemTask' },
+        'DrawBackgroundHighlightPathAnnotationTask': { primaryParent: 'ForegroundHighlightPathAnnotationOptionTask' },
+        'DrawForegroundHighlightPathAnnotationTask': { primaryParent: 'BackgroundHighlightPathAnnotationOptionTask' },
+        'DrawMinimizedItemsTask': { primaryParent: 'MinimizedItemsOptionTask' },
+        'DrawItemLabelsTask': { primaryParent: 'LabelsOptionTask' },
+        'DrawBackgroundAnnotationTask': { primaryParent: 'BackgroundAnnotationOptionTask' },
+        'DrawForegroundShapeAnnotationTask': { primaryParent: 'ForegroundShapeAnnotationOptionTask' },
+        'DrawBackgroundShapeAnnotationTask': { primaryParent: 'BackgroundShapeAnnotationOptionTask' },
+        'DrawForegroundConnectorAnnotationTask': { primaryParent: 'ForegroundConnectorAnnotationOptionTask' },
+        'DrawBackgroundConnectorAnnotationTask': { primaryParent: 'BackgroundConnectorAnnotationOptionTask' },
+        'ConnectionsGraphTask': { primaryParent: 'ConnectorsOptionTask' }
+      };
+      controlItems = interactivetests[options.diagramType2]();
+      switch (options.diagramType2) {
+        case "getOrgTasksDiagram":
+        case "getOrgPdfkitTasksDiagram":
+          primitives.mergeObjects(viewOptions, {
+            'VisualTreeTask': { primaryParent: 'OrgTreeTask' },
+            'VisualTreeLevelsTask': { primaryParent: 'VisualTreeTask' },
+            'ItemsPositionsTask': { primaryParent: 'VisualTreeLevelsTask' },
+            'AlignDiagramTask': { primaryParent: 'ItemsPositionsTask' },
+            'VisualTreeOptionTask': { relativeItem: 'ItemsOptionTask', placementType: primitives.AdviserPlacementType.Left, position: 1 },
+            'SelectionPathItemsTask': { primaryParent: 'CursorItemTask' },
+            'CursorNeighboursTask': { primaryParent: 'CursorItemTask' },
+          });
+          break;
+        default:
+          primitives.mergeObjects(viewOptions, {
+            'RemoveLoopsOptionTask': { relativeItem: 'ItemsOptionTask', placementType: primitives.AdviserPlacementType.Right, position: 1 },
+            'RemoveLoopsTask': { primaryParent: 'LogicalFamilyTask' },
+            'AddLabelAnnotationsTask': { primaryParent: 'RemoveLoopsTask' },
+            'AddSpousesTask': { primaryParent: 'AddLabelAnnotationsTask' },
+            'HideGrandParentsConnectorsTask': { primaryParent: 'AddSpousesTask' },
+            'NormalizeLogicalFamilyTask': { primaryParent: 'HideGrandParentsConnectorsTask' },
+            'OrderFamilyNodesTask': { primaryParent: 'NormalizeLogicalFamilyTask' },
+            'ItemsPositionsTask': { primaryParent: 'OrderFamilyNodesTask' },
+            'AlignDiagramTask': { primaryParent: 'ItemsPositionsTask' }
+          });
+          break;
+
+      }
+
+      var newItems = [];
+      for (var index = 0; index < controlItems.length; index += 1) {
+        var item = controlItems[index];
+        if (viewOptions[item.id] != null) {
+          primitives.mergeObjects(item, viewOptions[item.id]);
+        }
+      }
+
+      options.items = controlItems;
+
+      primitives.mergeObjects(options, {
+        linesPalette: [
+          new primitives.PaletteItemConfig({ lineColor: "#C6C6C6", lineWidth: 1, lineType: primitives.LineType.Solid }), //1
+          new primitives.PaletteItemConfig({ lineColor: "#A5A5A5", lineWidth: 1, lineType: primitives.LineType.Dashed }), //4
+          new primitives.PaletteItemConfig({ lineColor: "#848484", lineWidth: 1, lineType: primitives.LineType.Solid }), //7
+          new primitives.PaletteItemConfig({ lineColor: "#646464", lineWidth: 1, lineType: primitives.LineType.Dashed }), //10
+          new primitives.PaletteItemConfig({ lineColor: "#454545", lineWidth: 1, lineType: primitives.LineType.Solid }) //13
+        ],
+        orientationType: primitives.OrientationType.Left,
+        cursorItem: "OptionsTask",
+        linesWidth: 1,
+        linesColor: "black",
+        cousinsIntervalMultiplier: 1,
+        normalLevelShift: 20,
+        dotLevelShift: 20,
+        lineLevelShift: 20,
+        normalItemsInterval: 5,
+        dotItemsInterval: 10,
+        lineItemsInterval: 10,
+        templates: [getUnitTemplate(), getCalloutUnitTemplate()],
+        defaultTemplateName: "UnitTemplate",
+        defaultCalloutTemplateName: "CalloutUnitTemplate",
+        onItemRender: onTemplateRender,
+        arrowsDirection: primitives.GroupByType.Children,
+        selectCheckBoxLabel: "Pinned",
+        selectionPathMode: primitives.SelectionPathMode.None,
+        onCursorChanging: onCursorChanging,
+        groupByType: primitives.GroupByType.Parents
+      });
+
+      return options;
+    }
+
+    function onTemplateRender(event, data) {
+      var itemConfig = data.context,
+        element = data.element;
+
+      if (data.templateName == "UnitTemplate") {
+        var titleBackground = element.firstChild;
+        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
+
+        var title = element.childNodes[1];
+        title.textContent = itemConfig.title;
+      }
+
+      if (data.templateName == "CalloutUnitTemplate") {
+        var titleBackground = element.firstChild;
+        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
+
+        var title = element.childNodes[1];
+        title.textContent = itemConfig.title;
+
+        var description = element.childNodes[2];
+        description.textContent = itemConfig.description;
+      }
+    }
+
+    function getUnitTemplate() {
+      var result = new primitives.TemplateConfig();
+      result.name = "UnitTemplate";
+
+      result.itemSize = new primitives.Size(164, 40);
+      result.minimizedItemSize = new primitives.Size(8, 8);
+      result.minimizedItemCornerRadius = 4;
+      result.minimizedItemLineWidth = 1;
+      result.minimizedItemLineType = primitives.LineType.Solid;
+      result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
+      result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
+      result.minimizedItemOpacity = 0.7; // Shape background opacity
+
+      result.itemTemplate = ["div",
+        {
+          "style": {
+            width: result.itemSize.width + "px",
+            height: result.itemSize.height + "px"
+          },
+          "class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+        },
+        ["div",
+          {
+            "name": "titleBackground",
+            "class": ["bp-item", "bp-corner-all", "bp-title-frame"],
+            "style": {
+              top: "2px",
+              left: "2px",
+              width: "160px",
+              height: "4px"
+            }
+          }
+        ],
+        ["div",
+          {
+            "name": "title",
+            "class": "bp-item",
+            "style": {
+              top: "8px",
+              left: "2px",
+              width: "160px",
+              height: "30px",
+              fontSize: "10px"
+            }
+          }
+        ]
+      ];
+
+      return result;
+    }
+
+    function getCalloutUnitTemplate() {
+      var result = new primitives.TemplateConfig();
+      result.name = "CalloutUnitTemplate";
+
+      result.itemSize = new primitives.Size(320, 60);
+      result.minimizedItemSize = new primitives.Size(8, 8);
+      result.minimizedItemCornerRadius = 4;
+      result.minimizedItemLineWidth = 1;
+      result.minimizedItemLineType = primitives.LineType.Solid;
+      result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
+      result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
+      result.minimizedItemOpacity = 0.7; // Shape background opacity
+
+      result.itemTemplate = ["div",
+        {
+          "style": {
+            top: "2px",
+            left: "2px",
+            width: result.itemSize.width + "px",
+            height: result.itemSize.height + "px"
+          },
+          "class": ["bp-item", "bp-corner-all", "bt-item-frame"]
+        },
+        ["div",
+          {
+            "name": "titleBackground",
+            "style": {
+              top: "2px",
+              left: "2px",
+              width: "316px",
+              height: "4px"
+            },
+            "class": ["bp-item", "bp-corner-all", "bp-title-frame"]
+          }
+        ],
+        ["div",
+          {
+            name: "title",
+            "class": "bp-item",
+            "style": {
+              top: "8px",
+              left: "2px",
+              width: "312px",
+              height: "24px",
+              fontSize: "12px"
+            }
+          }
+        ],
+        ["div",
+          {
+            name: "description",
+            "class": "bp-item",
+            "style": {
+              top: "36px",
+              left: "4px",
+              width: "312px",
+              height: "36px",
+              fontSize: "10px"
+            }
+          }
+        ]
+      ];
+
+      return result;
+    }
+
+    function onCursorChanging(e, data) {
+      updateHighlightPathAnnotations(data);
+    }
+
+    function updateHighlightPathAnnotations(data) {
+      var annotations = control.getOption("annotations") || [];
+
+      var newAnnotations = [];
+      for (var index = 0, len = annotations.length; index < len; index += 1) {
+        var annotation = annotations[index];
+        if (annotation.annotationType != primitives.AnnotationType.HighlightPath) {
+          newAnnotations.push(annotation);
+        }
+      }
+
+      var items = [];
+      items = items.concat(data.parentItems);
+      items = items.concat(data.childrenItems);
+      for (index = 0, len = items.length; index < len; index += 1) {
+        var parent = items[index];
+        var highlightid = data.context.id;
+        var annotation = new primitives.HighlightPathAnnotationConfig({
+          items: [highlightid, parent.id],
+          color: primitives.Colors.Navy,
+          opacity: 0.4,
+          lineWidth: 6,
+          zOrderType: primitives.ZOrderType.Background,
+          showArrows: false
+        });
+        newAnnotations.push(annotation);
+      }
+      control.setOptions({ annotations: newAnnotations });
+    }
+
+    function onWindowResize() {
+      if (timer == null) {
+        timer = window.setTimeout(function () {
+          control.update(primitives.UpdateMode.Refresh);
+          window.clearTimeout(timer);
+          timer = null;
+        }, 300);
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <nav id="sidebarMenu" class="col-md-4 col-lg-2 d-md-block bg-light sidebar collapse" style="position: fixed; top: 0; bottom: 0px; overflow-y: auto; float: none;">
+        <div class="position-sticky pt-3">
+          <div id="westpanel" class="flex-column">
+          </div>
+        </div>
+      </nav>
+  
+      <main class="col-md-8 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Diagram Data Processing & Rendering Diagram</h1>
+        </div>
+        <div id="centerpanel" class="mediaPlaceholder my-2 w-100"></div>
+        <div id="southpanel" class="alert alert-primary" style="min-height: 60px;" role="alert"></div>
+        <p>Yes, we use our component to build our component!</p>
+        <p>This diagram will be helpfull to understand how changes in options trigger layout and rendering tasks. This
+          diagram helps to find right task for modification. It helps to eliminate excessive layout operations and 
+          optimize performance for various usage scenarious.</p>
+        <p>
+          Diagram rendering staged into options readers, transformation and rendering tasks. Options readers are statefull
+          and trigger dependent tasks processing if any API changes found.
+        </p>
+        <p>Tasks share only layout elements and graphics object, which is responsible for canvas specific drawing
+          functionality. Rendering tasks dont share layers, so every type of visual element is drawn on its own seperate layer.
+          Layers are reset and redrawn only inside of the task responsible for specified layer.</p>
+        <p>Take into account that any data required for task processing is taken only from source tasks and cannot be
+          modified inside of the task itself.</p>
+      </main>
+    </div>
+  </div>
+</body>
+
+</html>

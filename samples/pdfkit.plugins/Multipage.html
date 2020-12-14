@@ -3,22 +3,16 @@
 
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>Family Chart Multi-page Document</title>
-
-  <!-- # include file="../../src.primitives/src.primitives.html"-->
-  <!-- PDFkit & Libs -->
-  <script src="../../packages/pdfkit/pdfkit.js"></script>
-  <script src="../../packages/pdfkit/blob-stream.js"></script>
-
-  <!-- Demo Images -->
-  <script src="../data/photos.js"></script>
-
-  <script type="text/javascript" src="../../min/primitives.min.js?5100"></script>
-  <link href="../../min/primitives.latest.css?5100" media="screen" rel="stylesheet" type="text/css" />
+  <title>Multi-page PDFKit Document Sample</title>
+  <script src="../../pdfkitsamples.js"></script>
+  <script type="text/javascript" src="../../primitives.js"></script>
 
   <script type='text/javascript'>
     var control;
     var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
 
     document.addEventListener('DOMContentLoaded', function () {
       // create a document and pipe to a blob
@@ -51,23 +45,23 @@
       doc.fontSize(25)
         .text('First Organizational Chart :-)', 100, 280);
 
-      var firstOrganizationalChartSample = primitives.pdf.orgdiagram.Plugin({
+      var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
         items: [
-          new primitives.orgdiagram.ItemConfig({
+          new primitives.OrgItemConfig({
             id: 0,
             parent: null,
             title: "Scott Aasrud",
             description: "VP, Public Sector",
             image: photos.a
           }),
-          new primitives.orgdiagram.ItemConfig({
+          new primitives.OrgItemConfig({
             id: 1,
             parent: 0,
             title: "Ted Lucas",
             description: "VP, Human Resources",
             image: photos.b
           }),
-          new primitives.orgdiagram.ItemConfig({
+          new primitives.OrgItemConfig({
             id: 2,
             parent: 0,
             title: "Joao Stuger",
@@ -76,7 +70,7 @@
           })
         ],
         cursorItem: null,
-        hasSelectorCheckbox: primitives.common.Enabled.False
+        hasSelectorCheckbox: primitives.Enabled.False
       });
 
       var size = firstOrganizationalChartSample.draw(doc, 150, 300);
@@ -102,13 +96,13 @@
       doc.fontSize(25)
         .text('Annotations ...', 100, 50);
 
-      var shapeAnnotationsSample = primitives.pdf.orgdiagram.Plugin({
+      var shapeAnnotationsSample = primitives.OrgDiagramPdfkit({
         cursorItem: 1,
         highlightItem: 2,
-        hasSelectorCheckbox: primitives.common.Enabled.True,
+        hasSelectorCheckbox: primitives.Enabled.True,
         selectedItems: [1, 2],
         items: [
-          /* JSON noname objects equivalent to primitives.orgdiagram.ItemConfig */
+          /* JSON noname objects equivalent to primitives.OrgItemConfig */
           { id: 0, parent: null, title: "Scott Aasrud", description: "VP, Public Sector", image: photos.a },
           { id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: photos.b },
           { id: 2, parent: 0, title: "Joao Stuger", description: "Business Solutions, US", image: photos.c },
@@ -116,104 +110,104 @@
           { id: 4, parent: 3, title: "Best Friend", description: "Business Analyst, Mexico", image: photos.f }
         ],
         annotations: [
-          /* JSON noname object equivalent to primitives.orgdiagram.ConnectorAnnotationConfig */
+          /* JSON noname object equivalent to primitives.ConnectorAnnotationConfig */
           {
-            annotationType: primitives.common.AnnotationType.Shape,
+            annotationType: primitives.AnnotationType.Shape,
             items: [0],
             label: "Oval",
-            labelSize: new primitives.common.Size(50, 30),
-            labelPlacement: primitives.common.PlacementType.Right,
-            shapeType: primitives.common.ShapeType.Oval,
-            borderColor: primitives.common.Colors.Green,
-            offset: new primitives.common.Thickness(2, 2, 2, 2),
+            labelSize: new primitives.Size(50, 30),
+            labelPlacement: primitives.PlacementType.Right,
+            shapeType: primitives.ShapeType.Oval,
+            borderColor: primitives.Colors.Green,
+            offset: new primitives.Thickness(2, 2, 2, 2),
             lineWidth: 2,
             selectItems: true,
-            lineType: primitives.common.LineType.Dashed
+            lineType: primitives.LineType.Dashed
           },
-          /* JSON noname object equivalent to primitives.orgdiagram.ConnectorAnnotationConfig */
+          /* JSON noname object equivalent to primitives.ConnectorAnnotationConfig */
           {
-            annotationType: primitives.common.AnnotationType.Shape,
+            annotationType: primitives.AnnotationType.Shape,
             items: [2, 3],
             label: "Cross Out",
             labelSize: { width: 50, height: 30 },
-            labelPlacement: primitives.common.PlacementType.Right,
-            shapeType: primitives.common.ShapeType.CrossOut,
-            borderColor: primitives.common.Colors.Navy,
+            labelPlacement: primitives.PlacementType.Right,
+            shapeType: primitives.ShapeType.CrossOut,
+            borderColor: primitives.Colors.Navy,
             offset: { left: 2, top: 2, right: 2, bottom: 2 },
             lineWidth: 2,
             selectItems: true,
-            lineType: primitives.common.LineType.Dashed
+            lineType: primitives.LineType.Dashed
           },
           /* prototype based instantiation */
-          new primitives.orgdiagram.ShapeAnnotationConfig({
+          new primitives.ShapeAnnotationConfig({
             items: [1],
             label: "Triangle",
-            labelSize: new primitives.common.Size(70, 30),
-            labelPlacement: primitives.common.PlacementType.Bottom,
-            shapeType: primitives.common.ShapeType.Triangle,
-            borderColor: primitives.common.Colors.Red,
-            offset: new primitives.common.Thickness(2, 2, 2, 2),
+            labelSize: new primitives.Size(70, 30),
+            labelPlacement: primitives.PlacementType.Bottom,
+            shapeType: primitives.ShapeType.Triangle,
+            borderColor: primitives.Colors.Red,
+            offset: new primitives.Thickness(2, 2, 2, 2),
             lineWidth: 2,
             selectItems: true,
-            lineType: primitives.common.LineType.Dashed
+            lineType: primitives.LineType.Dashed
           })
           ,
-          new primitives.orgdiagram.BackgroundAnnotationConfig({
+          new primitives.BackgroundAnnotationConfig({
             items: [2, 3],
             borderColor: "#f8e5f9",
             fillColor: "#e5f9f8",
             lineWidth: 2,
             selectItems: true,
             includeChildren: true,
-            lineType: primitives.common.LineType.Dotted
+            lineType: primitives.LineType.Dotted
           })
         ],
         cursorItem: 0,
-        hasSelectorCheckbox: primitives.common.Enabled.True,
+        hasSelectorCheckbox: primitives.Enabled.True,
         normalItemsInterval: 40 /* defines padding around items of background annotations*/
       });
 
       size = shapeAnnotationsSample.draw(doc, 50, 70);
 
-      var connectorAnnotationsSample = primitives.pdf.orgdiagram.Plugin({
+      var connectorAnnotationsSample = primitives.OrgDiagramPdfkit({
         items: [
-          /* JSON noname objects equivalent to primitives.orgdiagram.ItemConfig */
+          /* JSON noname objects equivalent to primitives.OrgItemConfig */
           { id: 0, parent: null, title: "Scott Aasrud", description: "VP, Public Sector", image: photos.a },
           { id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: photos.b },
           { id: 2, parent: 0, title: "Joao Stuger", description: "Business Solutions, US", image: photos.c }
         ],
         annotations: [
-          /* JSON noname object equivalent to primitives.orgdiagram.ConnectorAnnotationConfig */
+          /* JSON noname object equivalent to primitives.ConnectorAnnotationConfig */
           {
-            annotationType: primitives.common.AnnotationType.Connector,
+            annotationType: primitives.AnnotationType.Connector,
             fromItem: 0,
             toItem: 2,
             label: "2",
             labelSize: { width: 80, height: 30 },
-            connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-            color: primitives.common.Colors.Green,
+            connectorShapeType: primitives.ConnectorShapeType.OneWay,
+            color: primitives.Colors.Green,
             offset: 0,
             lineWidth: 2,
-            lineType: primitives.common.LineType.Dashed,
+            lineType: primitives.LineType.Dashed,
             selectItems: false
           },
           /* prototype based instantiation */
-          new primitives.orgdiagram.ConnectorAnnotationConfig({
+          new primitives.ConnectorAnnotationConfig({
             fromItem: 0,
             toItem: 1,
             label: "1",
-            labelSize: new primitives.common.Size(80, 30),
-            connectorShapeType: primitives.common.ConnectorShapeType.OneWay,
-            color: primitives.common.Colors.Red,
+            labelSize: new primitives.Size(80, 30),
+            connectorShapeType: primitives.ConnectorShapeType.OneWay,
+            color: primitives.Colors.Red,
             offset: 0,
             lineWidth: 2,
-            lineType: primitives.common.LineType.Dashed,
+            lineType: primitives.LineType.Dashed,
             selectItems: false
           })
         ],
         cursorItem: 0,
-        hasSelectorCheckbox: primitives.common.Enabled.False,
-        arrowsDirection: primitives.common.GroupByType.Parents
+        hasSelectorCheckbox: primitives.Enabled.False,
+        arrowsDirection: primitives.GroupByType.Parents
       });
 
       connectorAnnotationsSample.draw(doc, 150, 50 + size.height);
@@ -223,40 +217,40 @@
       doc.fontSize(25)
         .text('Group title sample ...', 100, 50);
 
-      var groupTitleSample = primitives.pdf.orgdiagram.Plugin({
+      var groupTitleSample = primitives.OrgDiagramPdfkit({
         cursorItem: 1,
         highlightItem: 2,
-        hasSelectorCheckbox: primitives.common.Enabled.True,
+        hasSelectorCheckbox: primitives.Enabled.True,
         selectedItems: [1, 2],
         items: [
-          new primitives.orgdiagram.ItemConfig({
+          new primitives.OrgItemConfig({
             id: 0,
             parent: null,
             title: "Scott Aasrud",
             description: "Parent Item",
             image: photos.a
           }),
-          new primitives.orgdiagram.ItemConfig({
+          new primitives.OrgItemConfig({
             id: 1,
             parent: 0,
-            itemType: primitives.orgdiagram.ItemType.Adviser,
-            adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+            itemType: primitives.ItemType.Adviser,
+            adviserPlacementType: primitives.AdviserPlacementType.Right,
             title: "Robert Canon",
             description: "Adviser item",
             groupTitle: "Adviser",
             image: photos.b
           }),
-          new primitives.orgdiagram.ItemConfig({
+          new primitives.OrgItemConfig({
             id: 2,
             parent: 0,
-            itemType: primitives.orgdiagram.ItemType.Assistant,
-            adviserPlacementType: primitives.common.AdviserPlacementType.Right,
+            itemType: primitives.ItemType.Assistant,
+            adviserPlacementType: primitives.AdviserPlacementType.Right,
             title: "Ted Lucas",
             description: "Assitant Item",
             groupTitle: "Assistant",
             image: photos.c
           }),
-          new primitives.orgdiagram.ItemConfig({
+          new primitives.OrgItemConfig({
             id: 3,
             parent: 0,
             title: "Joao Stuger",

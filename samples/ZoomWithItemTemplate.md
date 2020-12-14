@@ -7,4 +7,3 @@ Usage of CSS scale transform produce ugly results in many browsers, so the best 
 See item template use case for more details about templates usage.
 
 [JavaScript](javascript.controls/CaseZoomWithItemTemplate.html)
-[JQuery](jquery.widgets/CaseZoomWithItemTemplate.html)

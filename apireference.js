@@ -256,6 +256,7 @@ function create_classes_md(title, classes) {
         agg += "\r\n| --- | --- | --- | --- | ";
         groups[group].filter(item => item.ignore == undefined).forEach(({ name, value, type, description }) => {
           type = replaceAll(type, "|", ", ");
+          value = replaceAll(value, type + ".", "");
           agg += "\r\n | `" + name + "` | " + type + " | `" + value + "` | " + (description || spaceCamelCaseName(name)) + " | ";
         });
         agg += "\r\n";

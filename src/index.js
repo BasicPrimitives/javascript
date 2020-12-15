@@ -54,3 +54,6 @@ export { default as OrgDiagram } from './OrgDiagram';
 export { default as FamDiagram } from './FamDiagram';
 export { default as OrgDiagramPdfkit } from './OrgDiagramPdfkit';
 export { default as FamDiagramPdfkit } from './FamDiagramPdfkit';
+
+export { default as FamTaskManagerFactory } from './FamTaskManagerFactory';
+export { default as OrgTaskManagerFactory } from './OrgTaskManagerFactory';

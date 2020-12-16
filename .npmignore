@@ -5,6 +5,14 @@ samples
 apireference.js
 apireference.json
 babel.config.js
-index.jtml
+index.html
 webpack.config.js
 yarn.lock
+dist/interactivetests.js
+dist/interactivetests.js.map
+dist/javascriptsamples.js
+dist/javascriptsamples.js.map
+dist/pdfkitsamples.js
+dist/pdfkitsamples.js.map
+__image_snapshots__
+

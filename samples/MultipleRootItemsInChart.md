@@ -13,7 +13,7 @@ This is another example of dealing with fragments of hierarchies. It is made as 
 
 In order to layout root items in form of matrix we have to create invisible root item and set its `childrenPlacementType` option to `primitives.ChildrenPlacementType.Matrix`.
 
-See [Children Layout example](./ChildrenPlacementType.md) for placing fragments as vertical or horizontal list.
+See [Children Layout example](./ChildrenPlacement.md) for placing fragments as vertical or horizontal list.
 
 [JavaScript](javascript.controls/CaseMatrixLayoutOfMultipleRootItemsInChart.html)
 

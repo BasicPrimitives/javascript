@@ -40,7 +40,7 @@ mkdir test1
 cd test1
 ```
 
-### Create [npm ](https://www.npmjs.com/get-npm) package.json having following configuration
+### Create [npm](https://www.npmjs.com/get-npm) package.json having following configuration
 
 ```javaScript
 {

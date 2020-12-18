@@ -4,16 +4,31 @@ Basic Primitives diagramming component library implemented in JavaScript without
 
 Basic Primitives controls use existing HTML elements as placeholders on the web page to draw diagrams. The only HTML element which can serve as a placeholder is div. When you resize placeholder chart will not update its content automatically, it will not shrink or expand in size, in order to have the chart adopt to the new placeholder size you have to explicitly call "update" method on its API. In order to create or update diagram you have to pass configuration object or set individual options on its API and then call "update" method to apply changes. The configuration object consists of options and collections of various objects like items, annotations, etc., the API objects are referenced by unique ids. For convenience, all configuration objects are based on their own JavaScript prototype, so you can instantiate them and browse their default properties. Since we are in JavaScript world, all configuration objects can be defined in form of regular JSON objects as well.
 
-## JavaScript
+## [NPM package](https://www.npmjs.com/package/basicprimitives)
 
-The following is the minimal set of files needed to use Basic Primitives components in application.
-
-```Javascript
-<link href="/primitives.latest.css" media="screen" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="/primitives.min.js"></script>
+```shell
+npm install basicprimitives
 ```
 
-The controls are state-full that means they keep internal state of the diagrams in order to minimize updates of visuals and avoid unnecessarily layout calculations. Library has two methods to construct instances of controls: use primitives.OrgDiagram for Organizational Diagrams and primitives.FamDiagram for Family Diagrams creation. The following code snippet creates organization chart inside empty div having "basicdiagram" id:
+or 
+
+```shell
+yarn add basicprimitives
+```
+
+```JavaScript
+import { OrgDiagram, OrgConfig, OrgItemConfig ... } from 'basicprimitives';
+import('basicprimitives/css/primitives.css');
+```
+
+```HTML
+<link href="primitives.css" media="screen" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="primitives.js"></script>
+```
+
+## JavaScript
+
+Library has two methods to construct instances of controls: use `OrgDiagram` for Organizational Diagrams and `FamDiagram `for Family Diagrams creation. The following code snippet creates organization chart inside empty div having "basicdiagram" id:
 
 ```Javascript
 var control = primitives.OrgDiagram(document.getElementById("basicdiagram"), {
@@ -54,12 +69,15 @@ or for individual option
 ```Javascript
 control.setOption("cursorItem", 0);
 ```
-every time we make changes to control API we need to call explicitly "update" method. This is needed in order to avoid expensive layout updates on every property change.
+every time we make changes to the control's API we need to call explicitly `update` method. This is needed in order to avoid triggering layout updates on every property change.
 
 ```Javascript
 control.update(primitives.UpdateMode.Refresh);
 ```
-Control is interactive component by design, so it needs to add event listeners to placeholder DIV element to handle mouse and keyboard events. So it should be properly destroyed in order to remove event listeners:
+
+The control is state-full it keeps internal state of the visualization for the purpose of performance optimization during updates. It avoids unnecessary layout calculations and elements rendering not relevant to the changed option. 
+
+The control is interactive component by design, so it needs to add event listeners to placeholder `div` element to handle mouse and keyboard events. So it should be properly destroyed in order to remove event listeners and avoid memory leaks in single page applications:
 
 ```Javascript
 control.destroy();

@@ -5,7 +5,8 @@ Basic Primitives diagramming component library implemented in JavaScript without
 Basic Primitives controls use existing HTML elements as placeholders on the web page to draw diagrams. The only HTML element which can serve as a placeholder is div. When you resize placeholder chart will not update its content automatically, it will not shrink or expand in size, in order to have the chart adopt to the new placeholder size you have to explicitly call "update" method on its API. In order to create or update diagram you have to pass configuration object or set individual options on its API and then call "update" method to apply changes. The configuration object consists of options and collections of various objects like items, annotations, etc., the API objects are referenced by unique ids. For convenience, all configuration objects are based on their own JavaScript prototype, so you can instantiate them and browse their default properties. Since we are in JavaScript world, all configuration objects can be defined in form of regular JSON objects as well.
 
 ## NPM package
-We publish our libraries into npm repository. The package name is [basicprimitives](https://www.npmjs.com/package/basicprimitives). It contains the same code packaed into [`umd` and `esm`](https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm) formats.
+Basic Primitives Diagrams for JavaScript [npm](https://www.npmjs.com) package name is [basicprimitives](https://www.npmjs.com/package/basicprimitives). The package contains transpiled [`UMD`](https://webpack.js.org/configuration/output/) and non-transpiled [`ES6`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) modules at the same time.
+
 
 ```shell
 npm install basicprimitives
@@ -26,235 +27,9 @@ import('basicprimitives/css/primitives.css');
 <script type="text/javascript" src="primitives.js"></script>
 <link href="primitives.css" media="screen" rel="stylesheet" type="text/css" />
 ```
-
-
-## Webpack walk through example
-
-The whole purpose of this example is to get working Basic Primitives diagram control inside regular web applicaion in the shortest number of steps. See [How to Bundle a Simple Static Site Using Webpack posted by James Hibbard](https://www.sitepoint.com/bundle-static-site-webpack/), it contains detailed explanation about Webpack configuration used in this example:
-
-### Create new empty folder first
-
-```shell
-mkdir test1
-
-cd test1
-```
-
-### Create [npm](https://www.npmjs.com/get-npm) package.json having following configuration
-
-```javaScript
-{
-  "name": "javascript",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "basicprimitives": "^6.0.3"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "babel-loader": "^8.2.2",
-    "css-loader": "^5.0.1",
-    "html-webpack-plugin": "^4.5.0",
-    "mini-css-extract-plugin": "^1.3.3",
-    "style-loader": "^2.0.0",
-    "url-loader": "^4.1.1",
-    "webpack": "^5.11.0",
-    "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0"
-  },
-  "description": ""
-}
-```
-
-Download packages
-
-```shell
-npm update
-```
-
-You should see `package-lock.json` and `node_modules` folder created
-
-```shell
-  node_modules
-  package.json
-  package-lock.json
-```
-
-### Add javascript sources
-
-``` shell
-mkdir src
-```
-
-Add following `index.js` into `src` folder
-
-```JavaScript
-import { OrgConfig, OrgItemConfig, Enabled, OrgDiagram } from 'basicprimitives';
-import('basicprimitives/css/primitives.css');
-
-var photos = {
-  a: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAA8CAIAAACrV36WAAAAAXNSR0IArs4c6QAAAARn' + 
-  'QU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGnSURBVGhD7dnBbQJBDAVQk1o2QjlQwKYGzpSwKQfq4IxIC' + 
-  'RTB9jLZHCJFwWv7/7EiDt6zmX2yPYMHNq01eb7n5flI36JiIXWpbFW2kAwgsdVblS0kA0hs9db/ZWs+vW/Wno9PxPE3dh' + 
-  'ls6Od+HI1XT1d64Sb8R5utEulwdbA8VY+LZ/kqkfF456pBHxDz5Xxze/p2vsxukBbAshTVOE0PO4B2cUlWKrgUTKsrV0e' + 
-  'ut3RVU/cm5aKKqPXVbjuIDPtDUh2JImq1+jmjkupIFNFStXadHncWXkecpb3393me4oJZnionXyjLV6W4QFZEleHCWNG+' + 
-  '0eKggQJiRVV6vhAXwoqrul0AC1H1uuIsTLUyukYH1jBL7WJ8lgq6oqwkVXSQDrLSVEFXjJWoirlCrFRVyBVhJasirgCr6' + 
-  '5tEv7a5A5jL0tcN7vNl9OVcHqtXRbocVr+Kc9k3H/3qPL69Ise7dh0SsS+2JmtFddgvdy/gGbY7Jdp2GRcyrlu1BfUjxt' + 
-  'iPRm/lqVbGHOMHnU39zQm0I/UbBLA+GVosJHGVrcoWkgEktnoLydYXkF/LiXG21MwAAAAASUVORK5CYII='
-};
-
-var control;
-var timer = null;
-
-document.addEventListener('DOMContentLoaded', function () {
-    var options = new OrgConfig();
-
-    var items = [
-        new OrgItemConfig({
-            id: 0,
-            parent: null,
-            title: "Scott Aasrud",
-            description: "VP, Public Sector",
-            image: photos.a
-        }),
-        new OrgItemConfig({
-            id: 1,
-            parent: 0,
-            title: "Ted Lucas",
-            description: "VP, Human Resources",
-            image: photos.a
-        }),
-        new OrgItemConfig({
-            id: 2,
-            parent: 0,
-            title: "Fritz Stuger",
-            description: "Business Solutions, US",
-            image: photos.a
-        })
-    ];
-
-    options.items = items;
-    options.cursorItem = 0;
-    options.hasSelectorCheckbox = Enabled.True;
-
-    control = OrgDiagram(document.getElementById("basicdiagram"), options);
-});
-```
-
-### Add `webpack` configuration
-
-Create `webpack.config.js`
-
-```javascript
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
-module.exports = {
-  entry: './src/index.js',
-  output: {
-	path: `${__dirname}/dist`,
-	filename: 'bundle.js',
-  },
-  devServer: {
-    port: 8080
-  },
-  plugins: [
-	 new MiniCssExtractPlugin()
-  ],
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-          },
-        },
-      },
-      {
-        test: /\.css$/,
-        use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader',
-          ],
-      },
-      {
-        test: /\.(svg|gif|png|eot|woff|ttf)$/,
-        use: [
-          'url-loader',
-        ],
-      },
-    ]
-  },
-};
-```
-
-You should have tte following folders structure
-
-```shell
-  node_modules
-    ...
-  src
-    index.js
-  package.json
-  package-lock.json
-  webpack.config.js
-```
-
-### Now we build 
-
-```shell
-webpack
-```
-
-You should get packed files in `dist` folder:
-``` shell
-  dist
-    bundle.js
-    344.css
-    344.bundle.js
-```
-
-### Add index.html
-
-As a matter of fact, it does not matter whether you add index.html before build or after, 
-but the main point is that `index.html` has reference to packed `bundle.js`
-
-```JavaScript
-<!DOCTYPE html> 
-<html>
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<title>First organization diagram</title>
-	<script type="text/javascript" src="/dist/bundle.js"></script>
-</head>
-<body>
-	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
-</body>
-</html>
-```
-
-### Serve the project
-
-```shell
-test1>webpack serve
-... Project is running at http://localhost:8080/
-...
-```
-
-### Open broser at `http://localhost:8080/` and you should see your first diagram.
-For more details see above mentioned blog post.
-
 ## JavaScript Controls
 
-Library has two methods to construct instances of controls: use `OrgDiagram` for Organizational Diagrams and `FamDiagram `for Family Diagrams creation. The following code snippet creates organization chart inside empty `div` having "basicdiagram" id:
+Library has two Controls `OrgDiagram` for Organizational Diagrams and `FamDiagram `for Family Diagrams creation. The following code snippet creates organization chart inside empty `div` having `basicdiagram` id:
 
 ```Javascript
 var control = primitives.OrgDiagram(document.getElementById("basicdiagram"), {
@@ -269,7 +44,7 @@ control.setOptions({"items", [
     new primitives.OrgItemConfig({
         id: 0,
         parent: null,
-        title: "Scott Aasrud",
+        title: "James Smith",
         description: "VP, Public Sector",
         image: "../images/photos/a.png"
     }),
@@ -313,11 +88,11 @@ control.destroy();
 
 Basic Primitives library provides plugins for [PDFkit](www.PDFkit.org) (MIT License) - it is JavaScript PDF generation library for NodeJS and client side rendering in browser.
 
-PDFKit library provides the most complete experience for rendering documents in PDF format. Basic Primitves library has two plugins for PDFkit to render Diagrams on PDF page:
+PDFKit library provides the most complete experience for rendering documents in PDF format. Basic Primitives library has two plugins for PDFkit to render Diagrams on PDF page:
 * OrgDiagramPdfkit - Organizational Chart PDFkit Plugin
 * FamDiagramPdfkit - Family Diagram PDFkit Plugin
 
-Basically PDFkit Plugins are stand alone products, they share many API options with Basic Primitives Controls, but they are completly deprived of interactivity and their rendering engine uses PDFkit's libarary vector graphics capabilities, see PDFkit site for reference.
+Basically PDFkit Plugins are stand alone products, they share many API options with Basic Primitives Controls, but they are completely deprived of interactivity and their rendering engine uses PDFkit's library vector graphics capabilities, see PDFkit site for reference.
 
 The following example is minimal code needed to create new empty PDF file on client side in browser using PDFkit library
 
@@ -353,7 +128,7 @@ var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
     new primitives.OrgItemConfig({
       id: 0,
       parent: null,
-      title: "Scott Aasrud",
+      title: "James Smith",
       description: "VP, Public Sector",
       image: photos.a
     }),
@@ -367,7 +142,7 @@ var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
     new primitives.OrgItemConfig({
       id: 2,
       parent: 0,
-      title: "Joao Stuger",
+      title: "Fritz Stuger",
       description: "Business Solutions, US",
       image: photos.c
     })
@@ -381,13 +156,13 @@ var size = firstOrganizationalChartSample.draw(doc, 100, 150);
 
 Pay attention that `draw` method returns actual `size` of the rendered diagram. It is needed to calculate offset in order to place other elements of PDF document underneath of it. 
 
-PDF document is very easy to scale to make it fit to paper size or split it into multiple pages. So we don't need to make PDF page fit into some fixed predefined paper size, but in order to avoid diagram being cut by PDF page boundaries we have to measure its size first and then create PDF page of approapriate size.
+PDF document is very easy to scale to make it fit to paper size or split it into multiple pages. So we don't need to make PDF page fit into some fixed predefined paper size, but in order to avoid diagram being cut by PDF page boundaries we have to measure its size first and then create PDF page of appropriate size.
 
 ```JavaScript
-var sampleSize = firstOrganizationalChartSampleple3.getSize();
+var sampleSize = firstOrganizationalChartSample3.getSize();
 ```
 
-`getSize` method returns diagram size, so we can create new PDF document big enough to accomodate our diagram:
+`getSize` method returns diagram size, so we can create new PDF document big enough to accommodate our diagram:
 
 ```JavaScript
 var doc = new PDFDocument({ size: [sampleSize.width + 100, sampleSize.height + 150] });

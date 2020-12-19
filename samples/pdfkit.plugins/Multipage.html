@@ -50,7 +50,7 @@
           new primitives.OrgItemConfig({
             id: 0,
             parent: null,
-            title: "Scott Aasrud",
+            title: "James Smith",
             description: "VP, Public Sector",
             image: photos.a
           }),
@@ -64,7 +64,7 @@
           new primitives.OrgItemConfig({
             id: 2,
             parent: 0,
-            title: "Joao Stuger",
+            title: "Fritz Stuger",
             description: "Business Solutions, US",
             image: photos.c
           })
@@ -103,9 +103,9 @@
         selectedItems: [1, 2],
         items: [
           /* JSON noname objects equivalent to primitives.OrgItemConfig */
-          { id: 0, parent: null, title: "Scott Aasrud", description: "VP, Public Sector", image: photos.a },
+          { id: 0, parent: null, title: "James Smith", description: "VP, Public Sector", image: photos.a },
           { id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: photos.b },
-          { id: 2, parent: 0, title: "Joao Stuger", description: "Business Solutions, US", image: photos.c },
+          { id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: photos.c },
           { id: 3, parent: 0, title: "Mike Wazowski", description: "Business Analyst, Canada", image: photos.o },
           { id: 4, parent: 3, title: "Best Friend", description: "Business Analyst, Mexico", image: photos.f }
         ],
@@ -172,9 +172,9 @@
       var connectorAnnotationsSample = primitives.OrgDiagramPdfkit({
         items: [
           /* JSON noname objects equivalent to primitives.OrgItemConfig */
-          { id: 0, parent: null, title: "Scott Aasrud", description: "VP, Public Sector", image: photos.a },
+          { id: 0, parent: null, title: "James Smith", description: "VP, Public Sector", image: photos.a },
           { id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: photos.b },
-          { id: 2, parent: 0, title: "Joao Stuger", description: "Business Solutions, US", image: photos.c }
+          { id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: photos.c }
         ],
         annotations: [
           /* JSON noname object equivalent to primitives.ConnectorAnnotationConfig */
@@ -226,7 +226,7 @@
           new primitives.OrgItemConfig({
             id: 0,
             parent: null,
-            title: "Scott Aasrud",
+            title: "James Smith",
             description: "Parent Item",
             image: photos.a
           }),
@@ -253,7 +253,7 @@
           new primitives.OrgItemConfig({
             id: 3,
             parent: 0,
-            title: "Joao Stuger",
+            title: "Fritz Stuger",
             description: "Regular Item",
             groupTitle: "Regular",
             image: photos.d

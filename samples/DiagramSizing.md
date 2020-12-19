@@ -5,7 +5,7 @@ Like any other Data Visualization component it combines scalable and non-scalabl
 ## Chart sizing is applications responsibility
 We don't try to refresh control ourselves for the following reasons: 
 
-* Chart does not add any event listeners outside of placeholder. There is no cross browser possibility to notify widget on `<div>` size change. The only workaround is to handle window resize event, but it creates unavoidable conflicts with host application. 
+* Chart does not add any event listeners outside of placeholder. There is no cross browser possibility to notify control on `<div>` size change. The only workaround is to handle window resize event, but it creates unavoidable conflicts with host application. 
 * Chart does not update itself without explicit call of "update" method or end user mouse or keyboard action.
 
 ## Pixel alignment
@@ -17,14 +17,14 @@ In the following example we show how to listen to window size change event and u
 
 ## Auto Size Diagram in Article
 
-In order to place diagram inside page article and make it auto expand to accommodate all nodes of diagram use AutoSize option of pageFitMode in Config class. Widget in this mode will auto size its placeholder div element to show all nodes of diagram. 
+In order to place diagram inside page article and make it auto expand to accommodate all nodes of diagram use `AutoSize` option of `pageFitMode` in config class. The control in this mode will auto size its placeholder `div` element to show all nodes of diagram. 
 
-Use following options to constrain widget auto size:
+Use following options to constrain control auto size:
 
 * `autoSizeMinimum` - it limits minimal size of diagram, so if it is empty then you are going to see empty area of this size.
-* `autoSizeMaximum` - does not allow to grow widget beyond this size. Set maximum size to some value if you need to avoid humongous diagram on your page.
+* `autoSizeMaximum` - does not allow to grow control beyond this size. Set maximum size to some value if you need to avoid humongous diagram on your page.
 
-for example following code sets widget's minimal size:
+for example following code sets control's minimal size:
 
 ``` JavaScript
 autoSizeMinimum = new primitives.Size(800, 600);

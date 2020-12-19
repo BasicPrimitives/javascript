@@ -35,8 +35,8 @@ Family Chart configuration object. Use this object as a reference for available 
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `alignBylevels` | boolean | `true` | This option keeps items at the same levels after connections bundling. | 
- | `autoSizeMaximum` | Size | `{1024, 768}` | Sets maximum size the diagram can expand itself in autosize mode. See `pageFitMode` property. In the auto size mode diagram controls its placeholder size itself, it sets its size to accomodate all nodes and render them normally. | 
- | `autoSizeMinimum` | Size | `{800, 600}` | Sets minimum size the diagram can shrink itself in autosize mode. See `pageFitMode` property. In the auto size mode diagram controls its placeholder size itself, it sets its size to accomodate all nodes and render them normally. | 
+ | `autoSizeMaximum` | Size | `{1024, 768}` | Sets maximum size the diagram can expand itself in autosize mode. See `pageFitMode` property. In the auto size mode diagram controls its placeholder size itself, it sets its size to accommodate all nodes and render them normally. | 
+ | `autoSizeMinimum` | Size | `{800, 600}` | Sets minimum size the diagram can shrink itself in autosize mode. See `pageFitMode` property. In the auto size mode diagram controls its placeholder size itself, it sets its size to accommodate all nodes and render them normally. | 
  | `enableMatrixLayout` | boolean | `false` | This option enables automatic layout of nodes sharing the same set of parents and children in form of matrix. | 
  | `groupByType` | GroupByType | `Children` | This property sets loose nodes alignment between rows. Nodes can be placed close towards parents or children. | 
  | `hideGrandParentsConnectors` | boolean | `false` | Set this property to enable hiding of direct connectors to grand parents. It helps to reduce diagrams connectors layout complexity. | 

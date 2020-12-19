@@ -21,7 +21,7 @@
         new primitives.OrgItemConfig({
           id: 0,
           parent: null,
-          title: "Scott Aasrud",
+          title: "James Smith",
           description: "Root",
           phone: "1 (416) 001-4567",
           email: "scott.aasrud@mail.com",
@@ -258,7 +258,7 @@
 
             switch (data.renderingMode) {
               case primitives.RenderingMode.Create:
-                /* Initialize widgets here */
+                /* Initialize template content here */
                 var itemScope = scope.$new();
                 itemScope.itemConfig = itemConfig;
                 $compile(data.element)(itemScope);
@@ -268,7 +268,7 @@
                 itemScopes.push(itemScope);
                 break;
               case primitives.RenderingMode.Update:
-                /* Update widgets here */
+                /* Update template content here */
                 var itemScope = angular.element(data.element).scope();
                 itemScope.itemConfig = itemConfig;
                 $compile(data.element)(itemScope);

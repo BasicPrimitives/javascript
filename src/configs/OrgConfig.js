@@ -960,7 +960,7 @@ export default function OrgConfig(name) {
   /**
    * Sets minimum size the diagram can shrink itself in autosize mode. See `pageFitMode` property.
    * In the auto size mode diagram controls its placeholder size itself,
-   * it sets its size to accomodate all nodes and render them normally.
+   * it sets its size to accommodate all nodes and render them normally.
    * 
    * @group Auto Layout
    * @type {Size}
@@ -970,7 +970,7 @@ export default function OrgConfig(name) {
   /**
    * Sets maximum size the diagram can expand itself in autosize mode. See `pageFitMode` property.
    * In the auto size mode diagram controls its placeholder size itself,
-   * it sets its size to accomodate all nodes and render them normally.
+   * it sets its size to accommodate all nodes and render them normally.
    * 
    * @group Auto Layout
    * @type {Size}

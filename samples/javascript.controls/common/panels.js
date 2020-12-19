@@ -193,7 +193,7 @@ function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
   ]));
   
   result.push(new PanelConfig("Rendering", [
-    new CaptionConfig("By default widget preferes SVG graphics mode. Use this property to enforce graphics mode programmatically.", false),
+    new CaptionConfig("By default control uses SVG graphics mode. Use this property to switch graphics mode programmatically into Canvas.", false),
     new RadioBoxConfig("graphicsType", GraphicsType.SVG, "Graphics", GraphicsType, ValueType.Integer, onUpdate),
     new CaptionConfig("In order to achive better greacefull degradation of your diagram use item templates of various sizes instead of CSS scale.", false),
     new DropDownBoxConfig("scale", 1.0, "CSS Scale", { "50%": 0.5, "60%": 0.6, "70%": 0.7, "80%": 0.8, "90%": 0.9, "100%": 1.0, "110%": 1.1, "120%": 1.2, "130%": 1.3, "140%": 1.4, "150%": 1.5, "160%": 1.6, "170%": 1.7, "180%": 1.8, "190%": 1.9, "200%": 2.0 }, ValueType.Number, onUpdate)

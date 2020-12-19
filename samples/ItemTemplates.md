@@ -82,10 +82,10 @@ Templates should be populated with items content when rendered, so for this purp
 function onTemplateRender(event, data) {
     switch (data.renderingMode) {
         case primitives.RenderingMode.Create:
-            /* Initialize widgets here */
+            /* Initialize template content here */
             break;
         case primitives.RenderingMode.Update:
-            /* Update widgets here */
+            /* Update template content here */
             break;
     }
  

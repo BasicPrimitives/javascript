@@ -326,14 +326,14 @@
 
         switch (data.renderingMode) {
           case primitives.RenderingMode.Create:
-            /* Initialize widgets here */
+            /* Initialize template content here */
             email.addEventListener("click", function (e) {
               /* Block mouse click propagation in order to avoid layout updates before server postback*/
               primitives.stopPropagation(e);
             });
             break;
           case primitives.RenderingMode.Update:
-            /* Update widgets here */
+            /* Update template content here */
             break;
         }
       }

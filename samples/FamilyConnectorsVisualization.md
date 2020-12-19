@@ -3,13 +3,13 @@ The core difference between Family diagram and Organizational Chart it is suppor
 
 ![Complete Bipartite Graph](images/cbp88.png)
 
-This is definitely extreme example of family relations, but the fact that famDiagram supports multiple parents, makes this usage scenario possible. In order to eliminate this connection lines mass and make relations more understandable the widget automatically groups connectors into bundles so it produces following set of relations: 
+This is definitely extreme example of family relations, but the fact that famDiagram supports multiple parents, makes this usage scenario possible. In order to eliminate this connection lines mass and make relations more understandable the control automatically groups connectors into bundles so it produces following set of relations: 
 
 [JavaScript](javascript.controls/CaseFamilyChartRelations.html)
 
 ![Screenshot](javascript.controls/__image_snapshots__/CaseFamilyChartRelations-snap.png)
 
-This visualization is better, but it shows another problem. The big number of parent and children elements does not let to see them together, so in order to make diagram more compact widget API supports clustering of nodes into matrix, so that way they occupy least space possible. In order to enable this layout option set `enableMatrixLayout` to `true`.
+This visualization is better, but it shows another problem. The big number of parent and children elements does not let to see them together, so in order to make diagram more compact control API supports clustering of nodes into matrix, so that way they occupy least space possible. In order to enable this layout option set `enableMatrixLayout` to `true`.
 
 [JavaScript](javascript.controls/CaseFamilyChartMatrixLayout.html)
 [PDFKit](pdfkit.plugins/FamilyMatrix.html)

@@ -35,7 +35,7 @@
         new RangeConfig("lineWidth",2, "Line width", 0, 10, 1, onUpdate)
       ]),
       new PanelConfig("Rendering", [
-        new CaptionConfig("By default widget preferes SVG graphics mode. Use this property to enforce graphics mode programmatically.", false),
+        new CaptionConfig("By default control uses SVG graphics mode. Use this property to switch graphics mode programmatically into Canvas.", false),
         new RadioBoxConfig("graphicsType", primitives.GraphicsType.SVG, "Graphics", primitives.GraphicsType, ValueType.Integer, onUpdate)
       ])
     ], {

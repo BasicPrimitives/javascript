@@ -35,7 +35,7 @@
         new RangeConfig("opacity", 1.0, "Opacity", 0, 1, 0.1, onUpdate)
       ]),
       new PanelConfig("Rendering", [
-        new CaptionConfig("By default widget preferes SVG graphics mode. Use this property to enforce graphics mode programmatically.", false),
+        new CaptionConfig("By default control uses SVG graphics mode. Use this property to change graphics mode programmatically into Canvas.", false),
         new RadioBoxConfig("graphicsType", primitives.GraphicsType.SVG, "Graphics", primitives.GraphicsType, ValueType.Integer, onUpdate)
       ])
     ], {

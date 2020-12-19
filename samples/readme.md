@@ -1,5 +1,6 @@
 # How To Use
 ## Create &amp; Update Use Cases
+* [Webpack Static Application](WebpackOrgDiagram.md.md)
 * [First Organizational Chart](FirstOrganizationalChart.md)
 * [First Family Chart](FirstFamilyChart.md)
 * [Adding new items at runtime](AddingNewItemsToChartAtRuntime.md)

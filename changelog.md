@@ -19,16 +19,16 @@
 * Refactored `jUnit` tests into `Jest`.
 * Refactored samples framework into [Bootstrap](https://getbootstrap.com/)
 #### Version 5.9.1
-* Fixed frame placeholdder size
+* Fixed frame placeholder size
 #### Version 5.9.0
 * Added `showFrame`, `fameInnerPadding`, `frameOuterPadding` properties to `primitives.orgdiagram.Config` & `primitives.famdiagram.Config`
-* Modified callout annotation palacement for minimized nodes placed outside view port.
+* Modified callout annotation placement for minimized nodes placed outside view port.
 * Fixed exception when `selectedItems` collection contains non existing items.
 * Fixed center on cursor in AutoSize mode
 #### Version 5.8.2
 * Fixed `selectionPathMode` in Family Diagram.
 #### Version 5.8.1
-* Fixed perfromance bug in loops layout optimization
+* Fixed performance bug in loops layout optimization
 #### Version 5.8.0
 * Added `loopsLayoutMode` property to `primitives.famdiagram.Config`. Property sets loops layout optimization mode in Family Diagram. See `Loops Layout Optimization` use case.
 * Added extra arrows to vertical segments of loops in family diagram
@@ -50,7 +50,7 @@
 * Added IntelliSense API annotations to code
 * Added API annotations conversion into markdown
 #### Version 5.4.15
-* Fixed minimised items highlight alignment in React
+* Fixed minimized items highlight alignment in React
 #### Version 5.4.14
 * Fixed objects comparison for React JSX 
 #### Version 5.4.12
@@ -59,7 +59,7 @@
 * Added OrgDiagram & FamDiagram React components and samples.
 * Extracted platform specific functionality out of core.
 * Added onButtonsRender event to TemplateConfig.
-* Added support of cycles in objects defenitions of labels.
+* Added support of cycles in objects definitions of labels.
 * Fixed CSS scale bugs.
 * Removed jQuery UI Widget Organizational Chart Editor.
 * Removed PHP samples.

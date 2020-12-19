@@ -245,7 +245,7 @@
 * Added spouses option to primitives.famdiagram.ItemConfig. See first family chart use case.
 * Fixed group title alignment.
 #### Version 2.0.18
-* Added LabelAnotationConfig option class and defaulLabelAnnotationTemplate to primitives.famdiagram.Config. See financial ownership diagram demo.
+* Added LabelAnotationConfig option class and defaultLabelAnnotationTemplate to primitives.famdiagram.Config. See financial ownership diagram demo.
 * Fixed context buttons usage in templates.
 #### Version 2.0.17
 * Added isActive option to primitives.orgdiagram.ItemConfig, primitives.famdiagram.ItemConfig, primitives.orgdiagram.TemplateConfig and primitives.famdiagram.TemplateConfig. See inactive items example.

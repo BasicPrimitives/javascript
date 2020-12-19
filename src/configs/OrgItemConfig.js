@@ -70,7 +70,7 @@ export default function OrgItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.itemTitleColor = Colors.RoyalBlue;
 
   /**
-   * Marker type. The shape of the marker when node is minimized by autofit. The control supports auto fit of diagram into available screen space.
+   * Marker type. The shape of the marker when node is minimized by auto fit. The control supports auto fit of diagram into available screen space.
    * When diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
    * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
    * So this option sets marker shape for individual node.
@@ -99,7 +99,7 @@ export default function OrgItemConfig(arg0, arg1, arg2, arg3, arg4) {
 
   /**
    * If `false` it makes item invisible in the layout. If item has no visible parents then its connections are hidden as well.
-   * From navigation perspetive invisible items make all their children to be children of their parents.
+   * From navigation perspective invisible items make all their children to be children of their parents.
    * 
    * @type {boolean}
    */
@@ -145,8 +145,8 @@ export default function OrgItemConfig(arg0, arg1, arg2, arg3, arg4) {
    * Item type. This property defines child node placement relative to its parent node. By default all children that belong 
    * to a parent node are of the same rank and status between each other and due to that, are always aligned below
    * the parent and are organized in the same way. However for special cases were the end user wishes to have a child
-   * that is seperate from the rest of it's siblings, we provide custom child types that the end user can use to
-   * place diffrent ranking nodes anywhere around the parent node. These placement options give a lot of space for
+   * that is separate from the rest of it's siblings, we provide custom child types that the end user can use to
+   * place different ranking nodes anywhere around the parent node. These placement options give a lot of space for
    * the creation of roles such as an Assistant, Adviser, various Partners and co-heads that may be in the organization.
    * Additionally, by default `Regular` children are always placed in a horizontal line below the parent node.
    * 
@@ -173,7 +173,7 @@ export default function OrgItemConfig(arg0, arg1, arg2, arg3, arg4) {
    * Defines shape of children formation. By default a node's children are always placed in a horizontal line 
    * below the parent node. On a large scale this may result in the end user having to scroll screens 
    * in order to view all of the nodes. To compensate for this, we provide the option of placing all 
-   * of the children of a parent node in a sqaure/matrix formation. This will reduce sideways screen 
+   * of the children of a parent node in a square/matrix formation. This will reduce sideways screen 
    * scrolling by compacting the child nodes into a much smaller area on the screen.
    *  
    * @type {ChildrenPlacementType}
@@ -182,7 +182,7 @@ export default function OrgItemConfig(arg0, arg1, arg2, arg3, arg4) {
 
   /**
    * Sets default placement of assistants hierarchies relative to the regular children of the node.
-   * If assitant node has its own children then control adds extra levels, so assistants children are placed
+   * If assistant node has its own children then control adds extra levels, so assistants children are placed
    * above level of the regular children.
    * 
    * @type {Enabled}
@@ -252,7 +252,7 @@ export default function OrgItemConfig(arg0, arg1, arg2, arg3, arg4) {
    * into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels.
    * 
    * Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict
-   * resoltion to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
+   * resolution to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
    * is going to stay visible.
    * 
    * Auto - displays label only when it has space to be rendered.

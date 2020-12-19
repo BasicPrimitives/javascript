@@ -10,7 +10,7 @@ import FamilyMargins from './FamilyMargins';
  */
 
 /**
- * Creates family alignment data structure. This structure aligns horizontaly planar family of nodes.
+ * Creates family alignment data structure. This structure aligns horizontally planar family of nodes.
  * @class FamilyAlignment
  * 
  * @param {Object} thisArg The callback function invocation context
@@ -222,7 +222,7 @@ export default function FamilyAlignment(thisArg, family, treeLevels, onItemSize)
   }
 
   /**
-   * Returns horizontal node offset from left margin of the family daigram
+   * Returns horizontal node offset from left margin of the family diagram
    * 
    * @param {string} nodeid Family node id
    * @returns {number} Node offset

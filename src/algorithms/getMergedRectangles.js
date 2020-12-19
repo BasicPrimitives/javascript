@@ -2,11 +2,11 @@ import Point from '../graphics/structs/Point';
 import Vector from '../graphics/structs/Vector';
 import LinkedHashItems from './LinkedHashItems';
 /**
- * Callback function to itterate over result shapes
+ * Callback function to iterate over result shapes
  * 
  * @callback onMergedRectangleItemCallback
- * @param {Point[]} points Collection of points tracing marging around result area formed via merge of rectangles.
- * The outer shape margin has clock wise sequance of data ponts. Internal holes inside of the shape are formed by counterclock wise 
+ * @param {Point[]} points Collection of points tracing margin around result area formed via merge of rectangles.
+ * The outer shape margin has clock wise sequence of data points. Internal holes inside of the shape are formed by counter clock wise 
  * sequence of data points.
  */
 

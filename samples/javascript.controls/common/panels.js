@@ -46,8 +46,8 @@ function getFamDiagramOptionsPanels(onUpdate) {
       new RadioBoxConfig("neighboursSelectionMode", NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses, "Neighbours Selection Modes", NeighboursSelectionMode, ValueType.Integer, onUpdate),
       new RadioBoxConfig("groupByType", GroupByType.Children, "Group by option defines node placement in layout close to its parents or children when node is linked across multiple levels in hierarchy. See \"alignment\" data set.", { Children: 2, Parents: 1 }, ValueType.Integer, onUpdate),
       new CheckBoxConfig("alignBylevels", true, "Keep items at the same levels after connections bundling", onUpdate),
-      new CheckBoxConfig("hideGrandParentsConnectors", true, "Hide direct relations to grand parents. It helps to reduce diagrams connectors layout complexity. This option should be used together with dynamic highlighting of connectors to grandparents via immidiate parents, so information is not lost.", onUpdate),
-      new CheckBoxConfig("enableMatrixLayout", false, "Enables matrix layout in family diagram. Nodes having the same set of parents and children are grouped into square shaped matrix in order to keep them visualy together.", onUpdate),
+      new CheckBoxConfig("hideGrandParentsConnectors", true, "Hide direct relations to grand parents. It helps to reduce diagrams connectors layout complexity. This option should be used together with dynamic highlighting of connectors to grandparents via immediate parents, so information is not lost.", onUpdate),
+      new CheckBoxConfig("enableMatrixLayout", false, "Enables matrix layout in family diagram. Nodes having the same set of parents and children are grouped into square shaped matrix in order to keep them visually together.", onUpdate),
       new RangeConfig("minimumMatrixSize", null, "Minimum number of nodes needed in order to be formed into matrix layout", 2, 10, 1, onUpdate),
       new RangeConfig("maximumColumnsInMatrix", null, "Maximum columns number in matrix nodes layout", 1, 20, 1, onUpdate)
     ])
@@ -114,14 +114,14 @@ function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
   if (showDefaultTemplateOptions) {
     result.push(new PanelConfig("Markers", [
       new CaptionConfig("These options are defined per item template. So if you need to show individual markers per item, you have to define template for every marker type and assign it to items. Template is some sort of named property bag.", false),
-      new CaptionConfig("By default marker has color of itemTitleColor property, download demos and check samples source data. If item has no title color set, then be sure that you set border line width and color for markers having no fill, othewise you are not going to see them.", false),
+      new CaptionConfig("By default marker has color of itemTitleColor property, download demos and check samples source data. If item has no title color set, then be sure that you set border line width and color for markers having no fill, otherwise you are not going to see them.", false),
       new SizeConfig("minimizedItemSize", new Size(4, 4), "Marker size", 1, 40, 1, onUpdate),
       new DropDownBoxConfig("minimizedItemCornerRadius", null, "Corner Radius", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20], ValueType.Number, onUpdate),
       new DropDownBoxConfig("highlightPadding", 2, "Highlight border padding around marker", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], ValueType.Thickness, onUpdate),
       new RadioBoxConfig("minimizedItemShapeType", ShapeType.None, "Marker Shape", ShapeType, ValueType.Integer, onUpdate),
       new RangeConfig("minimizedItemLineWidth", 1, "Marker border line width", 0, 10, 1, onUpdate),
       new RadioBoxConfig("minimizedItemLineType", LineType.Solid, "Marker border line type", LineType, ValueType.Integer, onUpdate),
-      new CaptionConfig("Following Border and Fill colors properties work only for items having no title color property set. See Parners & Annotations Demo to try them.", false),
+      new CaptionConfig("Following Border and Fill colors properties work only for items having no title color property set. See Partners & Annotations Demo to try them.", false),
       new ColorConfig("minimizedItemBorderColor", null, "Marker border line color", true, onUpdate),
       new ColorConfig("minimizedItemFillColor", null, "Marker fill color", true, onUpdate),
       new RangeConfig("minimizedItemOpacity", 1.0, "Opacity", 0, 1, 0.1, onUpdate)
@@ -157,7 +157,7 @@ function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
   ]));
 
   result.push(new PanelConfig("Labels", [
-    new CaptionConfig("Label property should be defined for every item first, otherwise chart has nothiong to show. Labels are visible only for markers. If you need to add labels to normal size items you have to modify default item template and place text outside item boundaries.", false),
+    new CaptionConfig("Label property should be defined for every item first, otherwise chart has nothing to show. Labels are visible only for markers. If you need to add labels to normal size items you have to modify default item template and place text outside item boundaries.", false),
     new RadioBoxConfig("showLabels", Enabled.Auto, "Show labels", Enabled, ValueType.Integer, onUpdate),
     new SizeConfig("labelSize", new Size(80, 24), "Size: Use this property to define labels bounding rectangle. Labels placed relative to markers(dots), so when they overlap in auto show mode one of them would be hidden. Set appropriate intervals between levels of markers in order to fit and make all labels visible.", 1, 400, 1, onUpdate),
     new RangeConfig("labelOffset", 1, "Offset", 0, 30, 1, onUpdate),
@@ -173,7 +173,7 @@ function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
   result.push(new PanelConfig("Callout", [
     new CaptionConfig("By default callout displays item content, but it can be redefined with custom callout template.", false),
     new RadioBoxConfig("calloutMaximumVisibility", Visibility.Dot, "Maximum node type visibility", { Normal: 1, Dot: 2, Line: 3 }, ValueType.Integer, onUpdate),
-    new CheckBoxConfig("showCallout", true, "This option controls callout visibility for minimized items and it can be ovewritten per item", onUpdate),
+    new CheckBoxConfig("showCallout", true, "This option controls callout visibility for minimized items and it can be overwritten per item", onUpdate),
     new RangeConfig("calloutPlacementOffset", 100, "Call out placement offset", 10, 300, 10, onUpdate),
     new ColorConfig("calloutfillColor", "#000000", "Fill color", true, onUpdate),
     new ColorConfig("calloutBorderColor", "#000000", "Border line color", true, onUpdate),
@@ -195,7 +195,7 @@ function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
   result.push(new PanelConfig("Rendering", [
     new CaptionConfig("By default control uses SVG graphics mode. Use this property to switch graphics mode programmatically into Canvas.", false),
     new RadioBoxConfig("graphicsType", GraphicsType.SVG, "Graphics", GraphicsType, ValueType.Integer, onUpdate),
-    new CaptionConfig("In order to achive better greacefull degradation of your diagram use item templates of various sizes instead of CSS scale.", false),
+    new CaptionConfig("In order to achieve better graceful degradation of your diagram use item templates of various sizes instead of CSS scale.", false),
     new DropDownBoxConfig("scale", 1.0, "CSS Scale", { "50%": 0.5, "60%": 0.6, "70%": 0.7, "80%": 0.8, "90%": 0.9, "100%": 1.0, "110%": 1.1, "120%": 1.2, "130%": 1.3, "140%": 1.4, "150%": 1.5, "160%": 1.6, "170%": 1.7, "180%": 1.8, "190%": 1.9, "200%": 2.0 }, ValueType.Number, onUpdate)
   ]));
 

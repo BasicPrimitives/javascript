@@ -234,7 +234,7 @@ Returns rectangle location and size in form of CSS style object.
 
  `getProjectionPoint(point)` 
 
-Find intersection point between rectangle's permiter and line connecting the given point and center of the rectangle
+Find intersection point between rectangle's perimeter and line connecting the given point and center of the rectangle
 
  Returns: `Point` - returns point or null if point is inside rectangle.
 
@@ -312,7 +312,7 @@ Checks if the rectangle overlaps the specified rectangle
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `rect` | Rect | `` | The rectangle to check overlaping for. | 
+ | `rect` | Rect | `` | The rectangle to check overlapping for. | 
 
  `right()` 
 
@@ -548,7 +548,7 @@ Maximum thickness.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `thickness` | Thickness | `` | The thickness to compaire with. | 
+ | `thickness` | Thickness | `` | The thickness to compare with. | 
 
  `scale(scale)` 
 

@@ -64,7 +64,7 @@ Thickness.prototype.isEmpty = function () {
 /**
  * Maximum thickness.
  * 
- * @param {Thickness} thickness The thickness to compaire with.
+ * @param {Thickness} thickness The thickness to compare with.
  * @returns {Thickness} Returns reference to the current thickness object
  */
 Thickness.prototype.maxThickness = function (thickness) {

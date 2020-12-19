@@ -61,7 +61,7 @@ export default function Graph() {
    * Callback for iterating edges of the graph's node
    * 
    * @callback onEdgeCallback
-   * @param {string} to The neighbouring node id
+   * @param {string} to The neighboring node id
    * @param {Object} edge The edge's context object
    */
 
@@ -90,7 +90,7 @@ export default function Graph() {
    * Callback function for iterating graphs nodes
    * 
    * @callback onNodeCallback
-   * @param {string} to The next neighbouring node id
+   * @param {string} to The next neighboring node id
    * @returns {boolean} Returns true to break loop
    */
 
@@ -100,7 +100,7 @@ export default function Graph() {
    * @param {object} thisArg The callback function invocation context
    * @param {string} [itemid=undefined] The optional start node id. If start node is undefined, 
    * function loops graphs node starting from first available node
-   * @param {onNodeCallback} onItem A callback function to be called for every neighbouring node
+   * @param {onNodeCallback} onItem A callback function to be called for every neighboring node
    */
   function loopNodes(thisArg, startNode, onItem) {
     var processed = {};
@@ -162,9 +162,9 @@ export default function Graph() {
    */
 
   /**
-   * Get maximum spanning tree. Graph may have disconnected sub graphs, so start node is nessasary.
+   * Get maximum spanning tree. Graph may have disconnected sub graphs, so start node is necessary.
    * 
-   * @param {string} startNode The node to start searching for maximum spanning tree. Graph is not nessasary connected
+   * @param {string} startNode The node to start searching for maximum spanning tree. Graph is not necessary connected
    * @param {getGraphEdgeWeightCallback} getWeightFunc Callback function to get weight of an edge.
    * @returns {tree} Returns tree structure containing maximum spanning tree of the graph
    */
@@ -559,7 +559,7 @@ export default function Graph() {
       margin = newMargin;
     }
 
-    // Create level graph, copy exisitng edges to the new graph
+    // Create level graph, copy existing edges to the new graph
   var levelGraph = Graph();
     for (currentNode in _edges) {
       if (level.hasOwnProperty(currentNode)) {
@@ -585,7 +585,7 @@ export default function Graph() {
    * @param {object} thisArg The callback function invocation context
    * @param {string} startNode The start node id 
    * @param {onPathEdgeCallback} onEdge A callback function to call for every edge of the graph
-   * @param {onNodeCallback} onNode A callback function to be called for every neighbouring node
+   * @param {onNodeCallback} onNode A callback function to be called for every neighboring node
    */
   function dfsLoop(thisArg, startNode, onEdge, onNode) {
     var margin = [],

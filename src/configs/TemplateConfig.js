@@ -45,7 +45,7 @@ export default function TemplateConfig() {
 
   /**
    * Border width. We use archaic method to layout cursor and highlight frames around nodes, so we need to know border
-   * width in order measure gaps between them proeprly.
+   * width in order measure gaps between them properly.
    * 
    * @type {number}
    */
@@ -57,7 +57,7 @@ export default function TemplateConfig() {
    * at https://developer.mozilla.org web site for more details. The modern way is to use JSON ML library that is our recommended
    * solution for templates definition, see following web site for more details http://www.jsonml.org/. This is only 3d party
    * MIT licensed code included into our code base, everything else is 100% authentic. We adopted it with minor modifications,
-   * it generaly works according to its original design.
+   * it generally works according to its original design.
    * 
    * The control calls `onItemRender` callback function when specific node cursor needs to be rendered with this template.
    * 
@@ -66,7 +66,7 @@ export default function TemplateConfig() {
   this.itemTemplate = null;
 
   /**
-   * Marker type. The shape of the marker when node is minimized by autofit. The control supports auto fit of the diagram into available screen space.
+   * Marker type. The shape of the marker when node is minimized by auto fit. The control supports auto fit of the diagram into available screen space.
    * When diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
    * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
    * So this option sets marker shape for nodes templated with this template.

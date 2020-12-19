@@ -154,7 +154,7 @@ test('addInverted - Add inverted polyline segments function test', () => {
   expect(result4).toEqual(expected4);
 });
 
-test('getOffsetPolyine - Offset closed square perimiter. It should keep start and end point of the result offset polyline together', () => {
+test('getOffsetPolyine - Offset closed square perimeter. It should keep start and end point of the result offset polyline together', () => {
   var polyline = new Polyline();
   polyline.addSegment(new MoveSegment(20, 20));
   polyline.addSegment(new LineSegment(100, 20));
@@ -319,7 +319,7 @@ test('getOffsetPolyine - Offset polyline having internal loop formed with move s
   expect(result5).toEqual(expected5);
 });
 
-test('getOffsetPolyine - Offset closed rombus perimiter', () => {
+test('getOffsetPolyine - Offset closed rombus perimeter', () => {
   var polyline6 = new Polyline();
   polyline6.addSegment(new MoveSegment(100, 50));
   polyline6.addSegment(new LineSegment(50, 100));

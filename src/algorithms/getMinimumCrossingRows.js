@@ -6,7 +6,7 @@
  */
 
 /**
- * Finds minimum number of horizontal lines crossing all reactngles
+ * Finds minimum number of horizontal lines crossing all rectangles
  * 
  * @param {Object} thisArg The callback function invocation context
  * @param {React[]} rectangles Collection of rectangles

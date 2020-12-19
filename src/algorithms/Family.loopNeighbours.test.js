@@ -17,7 +17,7 @@ const items = [
     { id: 16, parents: [12, 13] }, { id: 17, parents: [13] }, { id: 18, parents: [14] }, { id: 19, parents: [14] }
 ];
 
-test('loopNeighbours -  Loop neighbouring parents & children', () => {
+test('loopNeighbours -  Loop neighboring parents & children', () => {
     const family = getFamily(items);
 
     var result = [];
@@ -30,7 +30,7 @@ test('loopNeighbours -  Loop neighbouring parents & children', () => {
     expect(result).toEqual(["13", "9", "10", "11", "14", "6", "7"]);
 });
 
-test('loopNeighbours -  Loop neighbouring parents & children', () => {
+test('loopNeighbours -  Loop neighboring parents & children', () => {
     const family = getFamily(items);
 
     var result = [];

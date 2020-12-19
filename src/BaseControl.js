@@ -44,7 +44,7 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
    * after all options are set in order to update controls contents.
    * 
    * @param {UpdateMode} updateMode 
-   * @param {bollean} forceCenterOnCursor 
+   * @param {boolean} forceCenterOnCursor 
    */
   function update(updateMode, forceCenterOnCursor) {
     if (forceCenterOnCursor == null) {
@@ -64,7 +64,7 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
   }
 
   /**
-   * Removes all elements control added to DOM incluidng event listeners.
+   * Removes all elements control added to DOM including event listeners.
    */
   function destroy() {
     unbind(_data.layout);
@@ -234,7 +234,7 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
     JsonML.applyStyles(layout.placeholder, mergeObjects(scaleProperties, layoutOptions.contentSize.getCSS()));
 
     if (layoutOptions.autoSize) {
-      /* resize element to fit placeholder if control in autosize mode */
+      /* resize element to fit placeholder if control in auto size mode */
       JsonML.applyStyles(layout.element, layoutOptions.controlSize.getCSS());
     }
 

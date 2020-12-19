@@ -40,7 +40,7 @@ export default function TreeLevels(source) {
   }
 
   /**
-   * Chckes if structure has elements.
+   * Checks if structure has elements.
    * 
    * @returns {boolean} Returns true if structure has elements.
    */
@@ -375,12 +375,12 @@ export default function TreeLevels(source) {
    *
    * @callback onTreeLevelDistanceCallback
    * @param {number} itemid Element id
-   * @param {object} item Conext object
+   * @param {object} item Context object
    * @returns {number} Returns distance for the element
    */
 
   /**
-   * Searchs element at level using binary search
+   * Searches element at level using binary search
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {number} levelIndex Level index to search element at
@@ -405,7 +405,7 @@ export default function TreeLevels(source) {
    *
    * @callback onTreeLevelItemWeightCallback
    * @param {number} itemid Element id
-   * @param {object} item Conext object
+   * @param {object} item Context object
    * @returns {number} Returns distance for the element
    */
 
@@ -414,7 +414,7 @@ export default function TreeLevels(source) {
    *
    * @callback onTreeLevelMergedItemCallback
    * @param {number} itemid Element id
-   * @param {object} item Conext object
+   * @param {object} item Context object
    * @returns {number} Returns true to break iteration process.
    */
 
@@ -456,7 +456,7 @@ export default function TreeLevels(source) {
    * 
    * @param {Object} thisArg The callback function invocation context
    * @param {string} itemid Start element id
-   * @param {boolean} isLeft If true thenmethod loops leftward
+   * @param {boolean} isLeft If true then method loops leftward
    * @param {onTreeLevelMergedItemCallback} onItem Callback function to call for every item
    * @param {number} level Level index
    */

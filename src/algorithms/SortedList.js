@@ -127,7 +127,7 @@ export default function SortedList() {
    * Callback function to notify about duplicate values
    * 
    * @callback onSortedListDuplicateCallback
-   * @param {objct} context The context object of the duplicate value
+   * @param {object} context The context object of the duplicate value
    */
 
   /**

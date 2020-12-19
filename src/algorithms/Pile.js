@@ -36,7 +36,7 @@ export default function Pile () {
   /**
    * Sorts and stack segments on top of each other so they occupy minimum number of rows.
    * 
-   * @param {objct} thisArg A context object of the callback function invocation.
+   * @param {object} thisArg A context object of the callback function invocation.
    * @param {onPileItemCallback} onItem Callback function for setting segments offsets in the pile.
    * @returns {number} Number of stacked rows in pile.
    */

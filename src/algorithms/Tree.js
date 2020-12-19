@@ -397,7 +397,7 @@ export default function Tree(source) {
     }
   
     /**
-     * Callback function to loop theough range of children for the given node
+     * Callback function to loop through range of children for the given node
      * 
      * @callback onTreeNodeWithIndexItemCallback
      * @param {string} nodeid Child node id
@@ -569,8 +569,8 @@ export default function Tree(source) {
     }
   
     /**
-     * Inserts bundle node into the tree structure. The new budnle node becomes only child node of the parent node.
-     * All imediate children of the parent node become children of the inserted bundle node.
+     * Inserts bundle node into the tree structure. The new bundle node becomes only child node of the parent node.
+     * All immediate children of the parent node become children of the inserted bundle node.
      * 
      * @param {string} nodeid Parent node id
      * @param {string} bundleid New bundle node id
@@ -766,7 +766,7 @@ export default function Tree(source) {
     }
   
     /**
-     * Returns context obect
+     * Returns context object
      * @param {string} nodeid Node id
      * @returns {object} Context object of the node
      */

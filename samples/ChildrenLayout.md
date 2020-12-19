@@ -12,4 +12,4 @@ Children Placement Layout can be defined individually per item or globally for a
 # Placing children into multiple horizontal levels
 Children nodes can be placed into multiple rows with `levelOffset` property. Child nodes would be grouped by that property and placed in rows. Only the last row of children is effected by `childrenPlacementType` property setting their formation.
 
-[JavaScript](javascript.controls/CaseChildrenAndAssitantsLevelOffset.html)
+[JavaScript](javascript.controls/CaseChildrenAndAssistantsLevelOffset.html)

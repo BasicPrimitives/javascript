@@ -1,9 +1,9 @@
 import {AnnotationType, Colors } from '../enums';
 /**
  * @class LabelAnnotationConfig
- * @classdesc In-layout label annotation. Label anntations are placed in layout between nodes, they preserve
- * space between nodes, so they don't overlap neighbouring nodes. Label annotations are designed 
- * for autoplacement and bundling of connection lines between nodes when needed.
+ * @classdesc In-layout label annotation. Label annotations are placed in layout between nodes, they preserve
+ * space between nodes, so they don't overlap neighboring nodes. Label annotations are designed 
+ * for auto placement and bundling of connection lines between nodes when needed.
  *
  * @param {object} arg0 Object properties.
  */
@@ -12,7 +12,7 @@ export default function LabelAnnotationConfig(arg0, arg1) {
 
   /**
    * Annotation type. All types of annotations objects are added to `annotations` collection property of the control.
-   * This property is needed to distiguish them when they are defined as JSON objects.
+   * This property is needed to distinguish them when they are defined as JSON objects.
    * 
    * @type {AnnotationType}
    */
@@ -25,8 +25,8 @@ export default function LabelAnnotationConfig(arg0, arg1) {
   this.fromItem = null;
 
   /**
-   * This collection should contain only child or parent items of the annotated item. It cannot conatain children and parents at the same time.
-   * If it contain sub set of children then annotaion label bundles children into subset and annotations form cascades 
+   * This collection should contain only child or parent items of the annotated item. It cannot contain children and parents at the same time.
+   * If it contain sub set of children then annotation label bundles children into subset and annotations form cascades 
    * of labels over connection lines in the diagram.
    * 
    * @type {string[]}

@@ -21,7 +21,7 @@ Creates JavaScript Organizational Chart Control
 
  `destroy()` 
 
-Removes all elements control added to DOM incluidng event listeners.
+Removes all elements control added to DOM including event listeners.
 
 
  `getOption(option)` 
@@ -63,7 +63,7 @@ Performs full redraw of the diagram contents via reevaluating all API options. T
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `updateMode` | UpdateMode | `` | update Mode | 
- | `forceCenterOnCursor` | bollean | `` | force Center On Cursor | 
+ | `forceCenterOnCursor` | boolean | `` | force Center On Cursor | 
 
 ## <a name="FamDiagram" id="FamDiagram">FamDiagram</a>
 Creates JavaScript Family Diagram Control
@@ -87,7 +87,7 @@ Creates JavaScript Family Diagram Control
 
  `destroy()` 
 
-Removes all elements control added to DOM incluidng event listeners.
+Removes all elements control added to DOM including event listeners.
 
 
  `getOption(option)` 
@@ -129,4 +129,4 @@ Performs full redraw of the diagram contents via reevaluating all API options. T
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `updateMode` | UpdateMode | `` | update Mode | 
- | `forceCenterOnCursor` | bollean | `` | force Center On Cursor | 
+ | `forceCenterOnCursor` | boolean | `` | force Center On Cursor | 

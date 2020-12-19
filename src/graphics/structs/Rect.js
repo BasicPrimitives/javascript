@@ -321,7 +321,7 @@ Rect.prototype.cropByRect = function (rect) {
 /**
  * Checks if the rectangle overlaps the specified rectangle
  * 
- * @param {Rect} rect The rectangle to check overlaping for.
+ * @param {Rect} rect The rectangle to check overlapping for.
  * @returns {boolean} Returns true if two rectangles overlap each other.
  */
 Rect.prototype.overlaps = function (rect) {
@@ -464,7 +464,7 @@ Rect.prototype.equalTo = function (rect) {
 };
 
 /**
- * Find intersection point between rectangle's permiter and line connecting the given point and center of the rectangle
+ * Find intersection point between rectangle's perimeter and line connecting the given point and center of the rectangle
  * 
  * @param {Point} point Point to project
  * @returns {Point} Returns point or null if point is inside rectangle.

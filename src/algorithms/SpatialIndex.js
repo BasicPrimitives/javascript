@@ -4,7 +4,7 @@ import Rect from '../graphics/structs/Rect';
 /**
  * Create spatial index structure. It uses collection of sizes to distribute 
  * rectangles into buckets of similar size elements. Elements of the same bucket 
- * are aproximated to points. The search of rectangles is transformed to search of points 
+ * are approximated to points. The search of rectangles is transformed to search of points 
  * within given range plus offset for maximum linear rectangle size.
  * 
  * @class SpatialIndex
@@ -122,7 +122,7 @@ export default function SpatialIndex(sizes) {
   }
 
   /**
-   * Returns collection of quadrands created in spacial index
+   * Returns collection of quadrants created in spacial index
    * Quadrants exists only when elements exists in them.
    * This method is used for visual debugging of the structure.
    * 

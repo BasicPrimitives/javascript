@@ -1,6 +1,6 @@
 # Enumerations
 ## <a name="AdviserPlacementType" id="AdviserPlacementType">AdviserPlacementType</a>
-Defines leftward or rightward item placement relative to the referenced item. In case of assitants and advisers the referenced item is their imediate parent. In case of family diagram the referenced item is spouse or sibling in the row.
+Defines leftward or rightward item placement relative to the referenced item. In case of assistants and advisers the referenced item is their immediate parent. In case of family diagram the referenced item is spouse or sibling in the row.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
@@ -13,14 +13,14 @@ Defines type of on-screen and in-layout annotation object. Annotations are geome
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `Background` | number | `4` | Background annotation highlights nodes via drawing rectangular shape in background. If shapes overlap the same style neighbouring shapes they are merged into one continuous shape. | 
- | `Connector` | number | `0` | Connector lines between two nodes of the diagram. They are drawn on top of existing diagram layout and they don't affect nodes placement. So it is users responsibility to prserve space between nodes for them. | 
+ | `Background` | number | `4` | Background annotation highlights nodes via drawing rectangular shape in background. If shapes overlap the same style neighboring shapes they are merged into one continuous shape. | 
+ | `Connector` | number | `0` | Connector lines between two nodes of the diagram. They are drawn on top of existing diagram layout and they don't affect nodes placement. So it is users responsibility to preserve space between nodes for them. | 
  | `HighlightPath` | number | `2` | Highlight path annotation traces path between given sequence of nodes over existing connector lines in the diagram. | 
- | `Label` | number | `3` | In-layout label annotation. Label anntations are placed in layout between nodes, they preserve space between nodes, so they don't overlap neighbouring nodes. Label annotations are designed for autoplacement and bundling of connection lines between nodes when needed. | 
+ | `Label` | number | `3` | In-layout label annotation. Label annotations are placed in layout between nodes, they preserve space between nodes, so they don't overlap neighboring nodes. Label annotations are designed for auto placement and bundling of connection lines between nodes when needed. | 
  | `Shape` | number | `1` | Shape annotation is a possibility to draw some geometrical shapes over several nodes of the diagram. | 
 
 ## <a name="ChildrenPlacementType" id="ChildrenPlacementType">ChildrenPlacementType</a>
-Defines shape of children formation. By default a node's children are always placed in a horizontal line below the parent node. On a large scale this may result in the end user having to scroll screens in order to view all of the nodes. To compensate for this, we provide the option of placing all of the children of a parent node in a sqaure/matrix formation. This will reduce sideways screen scrolling by compacting the child nodes into a much smaller area on the screen.
+Defines shape of children formation. By default a node's children are always placed in a horizontal line below the parent node. On a large scale this may result in the end user having to scroll screens in order to view all of the nodes. To compensate for this, we provide the option of placing all of the children of a parent node in a square/matrix formation. This will reduce sideways screen scrolling by compacting the child nodes into a much smaller area on the screen.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
@@ -110,18 +110,18 @@ Horizontal alignment
  | `Right` | number | `2` | Right | 
 
 ## <a name="ItemType" id="ItemType">ItemType</a>
-This enumeration defines child node placement relative to its parent node. By default all children that belong to a parent node are of the same rank and status between each other and due to that, are always aligned below the parent and are organized in the same way. However for special cases were the end user wishes to have a child that is seperate from the rest of it's siblings, we provide custom child types that the end user can use to place diffrent ranking nodes anywhere around the parent node. These placement options give a lot of space for the creation of roles such as an Assistant, Adviser, various Partners and co-heads that may be in the organization. Additionally, by default a node's regular children are always placed in a horizontal line below the parent node. See children placement type options for regular children layout.
+This enumeration defines child node placement relative to its parent node. By default all children that belong to a parent node are of the same rank and status between each other and due to that, are always aligned below the parent and are organized in the same way. However for special cases were the end user wishes to have a child that is separate from the rest of it's siblings, we provide custom child types that the end user can use to place different ranking nodes anywhere around the parent node. These placement options give a lot of space for the creation of roles such as an Assistant, Adviser, various Partners and co-heads that may be in the organization. Additionally, by default a node's regular children are always placed in a horizontal line below the parent node. See children placement type options for regular children layout.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
  | `Adviser` | number | `2` | Adviser is drawn at the same row as parent node on the left or right side and connected horizontally to it. | 
  | `AdviserPartner` | number | `8` | Adviser partner is a variation of limited partner. The only difference is that it has an extra connection line to its parent. | 
- | `Assistant` | number | `1` | Assitant node is drawn at row in between parent and child rows and connected horizontally to connection line going from parent to the regualr children | 
- | `GeneralPartner` | number | `6` | General partner is immitation of multiple inheritance in the oraganizational chart hierarchy. General partner node is drawn side by side with its parent and remaining regular children are visually connected to both of them like they are their parents. Another layout feature of the general partner is that it is connected to parents of its immediate logical parent as well, so visually it becomes a child of its grand parent. | 
- | `LimitedPartner` | number | `7` | Limited partner is variation of general partner. The only difference is that is is not conencte to its logical grand parent. | 
+ | `Assistant` | number | `1` | Assistant node is drawn at row in between parent and child rows and connected horizontally to connection line going from parent to the regular children | 
+ | `GeneralPartner` | number | `6` | General partner is imitation of multiple inheritance in the organizational chart hierarchy. General partner node is drawn side by side with its parent and remaining regular children are visually connected to both of them like they are their parents. Another layout feature of the general partner is that it is connected to parents of its immediate logical parent as well, so visually it becomes a child of its grand parent. | 
+ | `LimitedPartner` | number | `7` | Limited partner is variation of general partner. The only difference is that is is not connected to its logical grand parent. | 
  | `Regular` | number | `0` | Regular node is a default placement of child nodes in form of horizontal row. | 
  | `SubAdviser` | number | `5` | Sub adviser is variation of adviser node type. It has the same placement but it is connected by the top side of the node to the connector line going to the parent node. | 
- | `SubAssistant` | number | `4` | Sub assitant is variation of assitant node type. It has the same placement but it is connected by the top side of the node to the connector line going to the parent node. | 
+ | `SubAssistant` | number | `4` | Sub assistant is variation of assistant node type. It has the same placement but it is connected by the top side of the node to the connector line going to the parent node. | 
 
 ## <a name="LineType" id="LineType">LineType</a>
 Line style of connection lines.
@@ -141,7 +141,7 @@ Loops layout mode. Configuration may contain loop references between items, so c
  | `Optimized` | number | `0` | Optimized. Control searches for layout producing minimal number of feedback loops in the diagram. | 
 
 ## <a name="NavigationMode" id="NavigationMode">NavigationMode</a>
-Interactivity mode. Control implements standard behaivour of classic desktop UI controls. It supports single selected node - cursor. It supports on mouse over node visual feedback - highlight. It supports selection of group of nodes - selected items. All that functionality can be disabled depending on your application requirements.
+Interactivity mode. Control implements standard behavior of classic desktop UI controls. It supports single selected node - cursor. It supports on mouse over node visual feedback - highlight. It supports selection of group of nodes - selected items. All that functionality can be disabled depending on your application requirements.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
@@ -170,12 +170,12 @@ Controls diagram layout orientation. The control can be rotated in any direction
  | `Top` | number | `0` | Top | 
 
 ## <a name="PageFitMode" id="PageFitMode">PageFitMode</a>
-Fits diagram into available screen space. When diagram size significantly larger that available screen space, its scrolling and navigation becomes problematic, so we support automatic diagram fit into the screen space via rendering some of its nodes in form of small markers. Control supports several page fit mode options which can match your requirements depending on diagram layout, orientation and number of nodes. Autosize - this option is opposite to auto fit. It lets you expand control size to fit all diagram nodes full size without scrollbars.
+Fits diagram into available screen space. When diagram size significantly larger that available screen space, its scrolling and navigation becomes problematic, so we support automatic diagram fit into the screen space via rendering some of its nodes in form of small markers. Control supports several page fit mode options which can match your requirements depending on diagram layout, orientation and number of nodes. Autosize - this option is opposite to auto fit. It lets you expand control size to fit all diagram nodes full size without scroll bars.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
  | `AutoSize` | number | `5` | This is opposite mode to auto fit. In this mode diagram controls its size, it sets its size to fit all nodes and render them full size using templates. | 
- | `FitToPage` | number | `3` | Fits diagram into the view so it has no scrollbars. | 
+ | `FitToPage` | number | `3` | Fits diagram into the view so it has no scroll bars. | 
  | `None` | number | `0` | Disabled. All nodes are being rendered using their templates. | 
  | `PageHeight` | number | `2` | Fits diagram into the view hight, so it has no vertical scrollbar. | 
  | `PageWidth` | number | `1` | Fits diagram into the view width, so it has no horizontal scrollbar. | 
@@ -280,11 +280,11 @@ Minimal nodes visibility in the diagram. If auto fit of diagram into current pag
  | `Auto` | number | `0` | Selects best visibility mode. | 
  | `Dot` | number | `2` | Diagram draws nodes in form of markers | 
  | `Invisible` | number | `4` | Makes node invisible in layout. If node has no parents then its connection lines are hidden as well. | 
- | `Line` | number | `3` | Diagram only draws connection lines and hides actuall nodes. | 
+ | `Line` | number | `3` | Diagram only draws connection lines and hides actual nodes. | 
  | `Normal` | number | `1` | Regular template based diagram nodes | 
 
 ## <a name="ZOrderType" id="ZOrderType">ZOrderType</a>
-Option to draw annotation in the foreground or in the backgound of diagram nodes.
+Option to draw annotation in the foreground or in the background of diagram nodes.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 

@@ -42,7 +42,7 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
    * In case when multiple items use the same relative item then their order can be customized with position property.
    * 
    * If this property set to null, family layout algorithm will try to choose elements order via placing connected 
-   * nodes as close to each other as posible.
+   * nodes as close to each other as possible.
    * 
    * @group Order
    * @type {string}
@@ -115,7 +115,7 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.itemTitleColor = Colors.RoyalBlue;
 
   /**
-   * Marker type. The shape of the marker when node is minimized by autofit. The control supports auto fit of diagram into available screen space.
+   * Marker type. The shape of the marker when node is minimized by auto fit. The control supports auto fit of diagram into available screen space.
    * When diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
    * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
    * So this option sets marker shape for individual node.
@@ -232,7 +232,7 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
    * into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels.
    * 
    * Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict
-   * resoltion to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
+   * resolution to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
    * is going to stay visible.
    * 
    * Auto - displays label only when it has space to be rendered.

@@ -24,7 +24,7 @@ UserDefinedNodesOrder.prototype.getUserDefinedPositions = function (items) {
     }
   }
 
-  /* convert items relations into tree, it is not nessasary to be a single root tree */
+  /* convert items relations into tree, it is not necessary to be a single root tree */
   for (index = 0, len = items.length; index < len; index += 1) {
     userItem = items[index];
     if (referencedItems.hasOwnProperty(userItem.id)) {

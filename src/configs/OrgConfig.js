@@ -31,7 +31,7 @@ export default function OrgConfig(name) {
   this.navigationMode = NavigationMode.Default;
 
   /**
-   * Sets prefered rendering technology. If selected graphics type is not supported on the device,
+   * Sets preferred rendering technology. If selected graphics type is not supported on the device,
    * then control will auto fallback to the first available one.
    * 
    * @type {GraphicsType}
@@ -41,7 +41,7 @@ export default function OrgConfig(name) {
   /**
    * Page fit mode. Minimizing nodes into markers and labels. This option provides a special mode that renders the diagram
    * nodes in the form of markers. This is a highly scalable form that is capable of rendering large numbers of nodes
-   * while not affecting the rendering performance. With this, huge diagrams can be fit into avaialable screen space.
+   * while not affecting the rendering performance. With this, huge diagrams can be fit into available screen space.
    * 
    * When using a graphics editor to manually draw your diagrams, it is common place to have large gaps between the nodes.
    * This can make the diagram/chart unreadable, hard to edit and navigate. On top of that, on a large scale the diagram could have screen size
@@ -172,7 +172,7 @@ export default function OrgConfig(name) {
    * Annotations. Annotations are API elements that are attached to the diagram nodes.
    * We draw our annotations either in front of the nodes or in the background. The annotations 
    * don't affect the nodes placement in any way. As a result the control redraws them 
-   * instantaneously without rerendering or recalculating the actual diagram layout.
+   * instantaneously without rendering or recalculating the actual diagram layout.
    * 
    * @type {Array.<(ShapeAnnotationConfig | BackgroundAnnotationConfig | ConnectorAnnotationConfig | HighlightPathAnnotationConfig)>}
    */
@@ -189,7 +189,7 @@ export default function OrgConfig(name) {
    * zoom in the chart hierarchy. User navigates around chart via clicking and moving
    * cursor item around and zooming into data around new cursor item.
    * 
-   * The control notifies about this property chnges with `onHighlightChanging` and `onHighlightChanged` events.
+   * The control notifies about this property changes with `onHighlightChanging` and `onHighlightChanged` events.
    * 
    * If `null` then no cursor item selected in the diagram.
    * 
@@ -199,10 +199,10 @@ export default function OrgConfig(name) {
 
   /**
    * Highlighted item. Shows highlight and callout annotation for given item id. It does not trigger diagram
-   * layout or scrolling so it can be used to syncronize mouse over feedback of the diagram nodes with other
+   * layout or scrolling so it can be used to synchronize mouse over feedback of the diagram nodes with other
    * collection controls or UI elements. 
    * 
-   * The control notifies about this property chnges with `onHighlightChanging` and `onHighlightChanged` events.
+   * The control notifies about this property changes with `onHighlightChanging` and `onHighlightChanged` events.
    * 
    * If `null` then no highlight shown on the diagram.
    * 
@@ -237,7 +237,7 @@ export default function OrgConfig(name) {
   * 
   * `Auto` - visible for cursor item only
   * `True` - visible
-  * `False` - hiddens
+  * `False` - hidden
   * 
   * See `selectedItems` property. All items listed in this property are going to have checked selection checkboxes.
   * Checkbox can be added to item template, in that case it should be named="checkbox", so control can use it as built in checkbox element.
@@ -336,11 +336,11 @@ export default function OrgConfig(name) {
   /**
    * This callback function is called before `onHighlightChanged` event. See `highlightItem` property.
    * Use this event to modify diagram elements not affecting diagram layout. For example on-screen connector annotations added 
-   * in this event handler to diagram configuration whould be rendered together with highlight.
+   * in this event handler to diagram configuration would be rendered together with highlight.
    *
    * @callback
    * @param {Object} event Mouse event
-   * @param {EventArgs} data Context information. Use properties of this argument to stop event propogate and further diagram layout and rendering.
+   * @param {EventArgs} data Context information. Use properties of this argument to stop event propagate and further diagram layout and rendering.
    */
   this.onHighlightChanging = null;
 
@@ -355,7 +355,7 @@ export default function OrgConfig(name) {
 
   /**
    * On cursor item being changed event. See `cursorItem` property. This callback function is called before `onCursorChanged` event.
-   * Use this callabck function to stop event propogation. See `EventArgs` for details.
+   * Use this callback function to stop event propagation. See `EventArgs` for details.
    *
    * @callback
    * @param {Object} event Mouse event
@@ -421,7 +421,7 @@ export default function OrgConfig(name) {
    * Callback function for rendering content of the diagram nodes. This callback is only 
    * called when custom item template is defined in the template object configuration.
    * This callback receives reference to DOM element and context object of the rendered item.
-   * The control reuses exisitng elements in the DOM, so it is applications responsibility 
+   * The control reuses existing elements in the DOM, so it is applications responsibility 
    * to properly update their content.
    *
    * @callback
@@ -510,7 +510,7 @@ export default function OrgConfig(name) {
   /**
    * The first font color of the title.
    * 
-   * The title background color is designed to be one of the avalaible dimensitions to group nodes in the diagram,
+   * The title background color is designed to be one of the available dimensions to group nodes in the diagram,
    * so title can be unreadable if its color matches its background color. This property is created to auto resolve this issue
    * via automatic switch between two available font title colors.
    * 
@@ -528,7 +528,7 @@ export default function OrgConfig(name) {
   this.itemTitleSecondFontColor = Colors.Navy;
 
   /**
-   * Markers. The shape of the markers when nodes are minimized by autofit. The control supports auto fit of the diagram into available screen space.
+   * Markers. The shape of the markers when nodes are minimized by auto fit. The control supports auto fit of the diagram into available screen space.
    * When the diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
    * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
    * So this option sets default marker shape for nodes. It can be set individually per node in items configurations.
@@ -683,7 +683,7 @@ export default function OrgConfig(name) {
    * Sets default formation of child nodes. By default all children that belong to a parent node are always aligned 
    * below and placed in a horizontal line. On a large scale this may result in the end user having to scroll screens
    * in order to view all of the nodes. To compensate for this, we provide the option of placing all of the children
-   * of a parent node in a sqaure/matrix formation. This will reduce sideways screen scrolling by compacting the child
+   * of a parent node in a square/matrix formation. This will reduce sideways screen scrolling by compacting the child
    * nodes into a much smaller area on the screen.
    * 
    * @group Auto Layout
@@ -701,7 +701,7 @@ export default function OrgConfig(name) {
 
   /**
    * Sets default placement of assistants hierarchies relative to the regular children of the parent node.
-   * If assitant node has its own children then control adds extra levels, so assistants children are placed
+   * If assistant node has its own children then control adds extra levels, so assistants children are placed
    * above level of the parent node children.
    * 
    * @group Auto Layout
@@ -833,7 +833,7 @@ export default function OrgConfig(name) {
   /**
    * CSS3 scale transform. Control supports content scaling using CSS scale transform. It scales everything except scroll bars.
    * It properly handles mouse event coordinates. The CSS scale transform produces unreadable text and corrupted lines in desktop browsers,
-   * it looks good only in mobile browsers, so our recomendation is to use zoom with collection of item templates of various sizes.
+   * it looks good only in mobile browsers, so our recommendation is to use zoom with collection of item templates of various sizes.
    * Templates gives you better control over quality of your content at various zoom levels.
    * 
    * @type {number}
@@ -863,7 +863,7 @@ export default function OrgConfig(name) {
    * into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels.
    * 
    * Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict
-   * resoltion to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
+   * resolution to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
    * is going to stay visible.
    * 
    * Auto - displays label only when it has space to be rendered.
@@ -885,7 +885,7 @@ export default function OrgConfig(name) {
   this.labelSize = new Size(80, 24);
 
   /**
-   * Sets labels offset from the merkers bounding rectangles.
+   * Sets labels offset from the markers bounding rectangles.
    * 
    * @group Labels
    * @type {number}
@@ -958,7 +958,7 @@ export default function OrgConfig(name) {
   this.enablePanning = true;
 
   /**
-   * Sets minimum size the diagram can shrink itself in autosize mode. See `pageFitMode` property.
+   * Sets minimum size the diagram can shrink itself in auto size mode. See `pageFitMode` property.
    * In the auto size mode diagram controls its placeholder size itself,
    * it sets its size to accommodate all nodes and render them normally.
    * 
@@ -968,7 +968,7 @@ export default function OrgConfig(name) {
   this.autoSizeMinimum = new Size(800, 600);
 
   /**
-   * Sets maximum size the diagram can expand itself in autosize mode. See `pageFitMode` property.
+   * Sets maximum size the diagram can expand itself in auto size mode. See `pageFitMode` property.
    * In the auto size mode diagram controls its placeholder size itself,
    * it sets its size to accommodate all nodes and render them normally.
    * 

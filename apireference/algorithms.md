@@ -45,7 +45,7 @@ Makes node to be a child of every parent in the collection of parents
 
  `bundleChildren(parent, children, bundleItemId, bundleItem)` 
 
-Adds extra budnle item in between parent and its children. The parent node becomes parent of the bundle node, and bundle becomes parent of the children. Existing parent child relations are removed.
+Adds extra bundle item in between parent and its children. The parent node becomes parent of the bundle node, and bundle becomes parent of the children. Existing parent child relations are removed.
 
  Returns: `boolean` - returns true if nodes bundle is valid
 
@@ -58,7 +58,7 @@ Adds extra budnle item in between parent and its children. The parent node becom
 
  `bundleParents(child, parents, bundleItemId, bundleItem)` 
 
-Adds extra budnle item in between child node and its parents. The child node becomes child of the bundle node, and bundle becomes child of the parents. Existing parent child relations are removed.
+Adds extra bundle item in between child node and its parents. The child node becomes child of the bundle node, and bundle becomes child of the parents. Existing parent child relations are removed.
 
  Returns: `boolean` - returns true if the bundle is valid
 
@@ -107,14 +107,14 @@ Eliminates many to many relations in family structure It is needed to simplify l
 
  `onNewFamilyNodeCallback()` 
 
-Callback function for cretion of new family nodes
+Callback function for creation of new family nodes
 
  Returns: `object` - returns new family node.
 
 
  `findLargestRoot()` 
 
-Finds root node having largest number of nodes in its hierachy
+Finds root node having largest number of nodes in its hierarchy
 
  Returns: `string` - returns largest sub-hierarchy root node id.
 
@@ -393,7 +393,7 @@ Returns family node by id
 
  `optimizeReferences(onNewBundleItem)` 
 
-Optimizes references between family members. It creates bundles eliminating excessive intersecions between nodes relations.
+Optimizes references between family members. It creates bundles eliminating excessive intersections between nodes relations.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -402,7 +402,7 @@ Optimizes references between family members. It creates bundles eliminating exce
 
  `onNewFamilyNodeCallback()` 
 
-Callback function for cretion of new family nodes
+Callback function for creation of new family nodes
 
  Returns: `object` - returns new family node.
 
@@ -439,14 +439,14 @@ Removes first available parent child or child parent relation
 
  `validate(info)` 
 
-Validates internal data structure consitency of the family.
+Validates internal data structure consistency of the family.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `info` | object | `` | Optional validation object. | 
 
 ## <a name="FamilyAlignment" id="FamilyAlignment">FamilyAlignment</a>
-Creates family alignment data structure. This structure aligns horizontaly planar family of nodes.
+Creates family alignment data structure. This structure aligns horizontally planar family of nodes.
 
  `FamilyAlignment` 
 
@@ -454,7 +454,7 @@ Creates family alignment data structure. This structure aligns horizontaly plana
 
  `FamilyAlignment(thisArg, family, treeLevels, onItemSize)` 
 
-Creates family alignment data structure. This structure aligns horizontaly planar family of nodes.
+Creates family alignment data structure. This structure aligns horizontally planar family of nodes.
 
  Returns: `FamilyAlignment` - returns family alignment structure
 
@@ -469,7 +469,7 @@ Creates family alignment data structure. This structure aligns horizontaly plana
 
  `getOffset(nodeid)` 
 
-Returns horizontal node offset from left margin of the family daigram
+Returns horizontal node offset from left margin of the family diagram
 
  Returns: `number` - node offset
 
@@ -589,7 +589,7 @@ Depth first search loop
  | `thisArg` | object | `` | The callback function invocation context | 
  | `startNode` | string | `` | The start node id | 
  | `onEdge` | onPathEdgeCallback | `` | A callback function to call for every edge of the graph | 
- | `onNode` | onNodeCallback | `` | A callback function to be called for every neighbouring node | 
+ | `onNode` | onNodeCallback | `` | A callback function to be called for every neighboring node | 
 **Callbacks**
 
  `onPathEdgeCallback(from, to, edge)` 
@@ -612,7 +612,7 @@ Callback function for iterating graphs nodes
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `to` | string | `` | The next neighbouring node id | 
+ | `to` | string | `` | The next neighboring node id | 
 
  `dfsPath(thisArg, startNode, endNode, onEdge)` 
 
@@ -704,7 +704,7 @@ Callback function for iterating graphs nodes
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `to` | string | `` | The next neighbouring node id | 
+ | `to` | string | `` | The next neighboring node id | 
 
  `getShortestPath(thisArg, startNode, endNodes, getWeightFunc, onPathFound)` 
 
@@ -742,13 +742,13 @@ Callback for returning optimal connection path for every end node.
 
  `getSpanningTree(startNode, getWeightFunc)` 
 
-Get maximum spanning tree. Graph may have disconnected sub graphs, so start node is nessasary.
+Get maximum spanning tree. Graph may have disconnected sub graphs, so start node is necessary.
 
  Returns: `tree` - returns tree structure containing maximum spanning tree of the graph
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `startNode` | string | `` | The node to start searching for maximum spanning tree. Graph is not nessasary connected | 
+ | `startNode` | string | `` | The node to start searching for maximum spanning tree. Graph is not necessary connected | 
  | `getWeightFunc` | getGraphEdgeWeightCallback | `` | Callback function to get weight of an edge. | 
 **Callbacks**
 
@@ -795,7 +795,7 @@ Callback function for iterating graphs nodes
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `to` | string | `` | The next neighbouring node id | 
+ | `to` | string | `` | The next neighboring node id | 
 
  `hasNode(from)` 
 
@@ -824,7 +824,7 @@ Callback for iterating edges of the graph's node
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `to` | string | `` | The neighbouring node id | 
+ | `to` | string | `` | The neighboring node id | 
  | `edge` | Object | `` | The edge's context object | 
 
  `loopNodes(thisArg, startNode, onItem)` 
@@ -835,7 +835,7 @@ Loop nodes of the graph
 | --- | --- | --- | --- | 
  | `thisArg` | object | `` | The callback function invocation context | 
  | `itemid` | string | `undefined` | The optional start node id. If start node is undefined, function loops graphs node starting from first available node | 
- | `onItem` | onNodeCallback | `` | A callback function to be called for every neighbouring node | 
+ | `onItem` | onNodeCallback | `` | A callback function to be called for every neighboring node | 
 **Callbacks**
 
  `onNodeCallback(to)` 
@@ -846,7 +846,7 @@ Callback function for iterating graphs nodes
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `to` | string | `` | The next neighbouring node id | 
+ | `to` | string | `` | The next neighboring node id | 
 
 ## <a name="LCA" id="LCA">LCA</a>
 Creates Lowest Common Ancestor Structure for the given tree
@@ -1059,7 +1059,7 @@ Adds new item to the head of the list
 
  `validate(info)` 
 
-Validates internal data consistensy of the structure
+Validates internal data consistency of the structure
 
  Returns: `boolean` - returns true if it pass validation
 
@@ -1098,7 +1098,7 @@ Sorts and stack segments on top of each other so they occupy minimum number of r
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `thisArg` | objct | `` | A context object of the callback function invocation. | 
+ | `thisArg` | object | `` | A context object of the callback function invocation. | 
  | `onItem` | onPileItemCallback | `` | Callback function for setting segments offsets in the pile. | 
 **Callbacks**
 
@@ -1142,7 +1142,7 @@ Adds point
 
  `getPositions(selection)` 
 
-Returns collection of quadrands created in the data structure Quadrants exists only when elements exists in them. This method is used for visual debugging of the structure.
+Returns collection of quadrants created in the data structure Quadrants exists only when elements exists in them. This method is used for visual debugging of the structure.
 
  Returns: `Rect[]` - returns collection of available quadrants. quadrants containing points within selection area have context.highlight property set to true.
 
@@ -1253,7 +1253,7 @@ Callback function to notify about duplicate values
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `context` | objct | `` | The context object of the duplicate value | 
+ | `context` | object | `` | The context object of the duplicate value | 
 
  `loopBackward(thisArg, fromValue, onItem)` 
 
@@ -1335,7 +1335,7 @@ Validate internal data consistency of the self-balancing binary search tree stru
 
 
 ## <a name="SpatialIndex" id="SpatialIndex">SpatialIndex</a>
-Create spatial index structure. It uses collection of sizes to distribute rectangles into buckets of similar size elements. Elements of the same bucket are aproximated to points. The search of rectangles is transformed to search of points within given range plus offset for maximum linear rectangle size.
+Create spatial index structure. It uses collection of sizes to distribute rectangles into buckets of similar size elements. Elements of the same bucket are approximated to points. The search of rectangles is transformed to search of points within given range plus offset for maximum linear rectangle size.
 
  `SpatialIndex` 
 
@@ -1343,7 +1343,7 @@ Create spatial index structure. It uses collection of sizes to distribute rectan
 
  `SpatialIndex(sizes)` 
 
-Create spatial index structure. It uses collection of sizes to distribute rectangles into buckets of similar size elements. Elements of the same bucket are aproximated to points. The search of rectangles is transformed to search of points within given range plus offset for maximum linear rectangle size.
+Create spatial index structure. It uses collection of sizes to distribute rectangles into buckets of similar size elements. Elements of the same bucket are approximated to points. The search of rectangles is transformed to search of points within given range plus offset for maximum linear rectangle size.
 
  Returns: `SpatialIndex` - returns spacial index data structure.
 
@@ -1503,7 +1503,7 @@ Returns index of the node in the children's collection
 
  `insert(nodeid, bundleid, bundle)` 
 
-Inserts bundle node into the tree structure. The new budnle node becomes only child node of the parent node. All imediate children of the parent node become children of the inserted bundle node.
+Inserts bundle node into the tree structure. The new bundle node becomes only child node of the parent node. All immediate children of the parent node become children of the inserted bundle node.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -1571,7 +1571,7 @@ Loops range of immediate children of the given node. Breaks iteration if callbac
 
  `onTreeNodeWithIndexItemCallback(nodeid, node, index)` 
 
-Callback function to loop theough range of children for the given node
+Callback function to loop through range of children for the given node
 
  Returns: `boolean` - returns true to break the iteration of nodes and exit.
 
@@ -1754,7 +1754,7 @@ Moves children form one node to another.
 
  `node(nodeid)` 
 
-Returns context obect
+Returns context object
 
  Returns: `object` - context object of the node
 
@@ -1854,7 +1854,7 @@ Adds new level. Structure keeps levels sorted by their indexes. The level index 
 
  `binarySearch(thisArg, levelIndex, onGetDistance)` 
 
-Searchs element at level using binary search
+Searches element at level using binary search
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -1872,7 +1872,7 @@ Callback for finding distance for element
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `itemid` | number | `` | Element id | 
- | `item` | object | `` | Conext object | 
+ | `item` | object | `` | Context object | 
 
  `clone()` 
 
@@ -1997,7 +1997,7 @@ Checks if structure contains level
 
  `isEmpty()` 
 
-Chckes if structure has elements.
+Checks if structure has elements.
 
  Returns: `boolean` - returns true if structure has elements.
 
@@ -2017,7 +2017,7 @@ Loops level elements starting with the given item
 | --- | --- | --- | --- | 
  | `thisArg` | Object | `` | The callback function invocation context | 
  | `itemid` | string | `` | Start element id | 
- | `isLeft` | boolean | `` | If true thenmethod loops leftward | 
+ | `isLeft` | boolean | `` | If true then method loops leftward | 
  | `onItem` | onTreeLevelMergedItemCallback | `` | Callback function to call for every item | 
  | `level` | number | `` | Level index | 
 **Callbacks**
@@ -2031,7 +2031,7 @@ Callback for iterating items
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `itemid` | number | `` | Element id | 
- | `item` | object | `` | Conext object | 
+ | `item` | object | `` | Context object | 
 
  `loopItems(thisArg, onItem)` 
 
@@ -2165,7 +2165,7 @@ Callback for finding weight of element
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `itemid` | number | `` | Element id | 
- | `item` | object | `` | Conext object | 
+ | `item` | object | `` | Context object | 
 
  `onTreeLevelMergedItemCallback(itemid, item)` 
 
@@ -2176,4 +2176,4 @@ Callback for iterating items
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `itemid` | number | `` | Element id | 
- | `item` | object | `` | Conext object | 
+ | `item` | object | `` | Context object | 

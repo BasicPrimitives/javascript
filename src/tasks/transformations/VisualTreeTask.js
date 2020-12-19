@@ -368,7 +368,7 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
           }
 
           if (extendChildren) {
-            depth = getAssitantsDepth(visualTree, logicalParentItem);
+            depth = getAssistantsDepth(visualTree, logicalParentItem);
             if (depth > 0) {
               logicalParentItem.visualDepth = depth + 1;
               if (logicalParentItem.visualAggregatorId !== null) {
@@ -580,7 +580,7 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
     return result;
   }
 
-  function getAssitantsDepth(visualTree, treeItem) {
+  function getAssistantsDepth(visualTree, treeItem) {
     var result = 0;
     if (treeItem.visualAggregatorId != null) {
       visualTree.loopLevels(this, treeItem.id, function (childItemId, childItem, level) {

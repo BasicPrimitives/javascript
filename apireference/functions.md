@@ -102,7 +102,7 @@ Finds pairs of crossing rectangles.
 
  `onCrossingRectanglesItemCallback(rect1, rect2)` 
 
-Callback function to iterate over pairs of crosssing rectangles
+Callback function to iterate over pairs of crossing rectangles
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -133,7 +133,7 @@ Gets green value of HEX color string.
 
 Breaks collection of values into 3 intervals, so values stay close to each other within interval.
 
- Returns: `number[]` - returns array conaining 3 indexes. the first 2 break values into 3 intervals, the last index is actuall index of the last element in the values collection.
+ Returns: `number[]` - returns array containing 3 indexes. the first 2 break values into 3 intervals, the last index is actual index of the last element in the values collection.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -152,15 +152,15 @@ Merges collection of rectangles into shapes. Calls callback function to pass res
 
  `onMergedRectangleItemCallback(points)` 
 
-Callback function to itterate over result shapes
+Callback function to iterate over result shapes
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `points` | Point[] | `` | Collection of points tracing marging around result area formed via merge of rectangles. The outer shape margin has clock wise sequance of data ponts. Internal holes inside of the shape are formed by counterclock wise sequence of data points. | 
+ | `points` | Point[] | `` | Collection of points tracing margin around result area formed via merge of rectangles. The outer shape margin has clock wise sequence of data points. Internal holes inside of the shape are formed by counter clock wise sequence of data points. | 
 
 ## <a name="getMinimumCrossingRows" id="getMinimumCrossingRows">getMinimumCrossingRows</a>
 
-Finds minimum number of horizontal lines crossing all reactngles
+Finds minimum number of horizontal lines crossing all rectangles
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 

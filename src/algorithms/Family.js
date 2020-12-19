@@ -779,7 +779,7 @@ export default function Family(source) {
   }
 
   /**
-   * Finds root node having largest number of nodes in its hierachy
+   * Finds root node having largest number of nodes in its hierarchy
    * 
    * @returns {string} Returns largest sub-hierarchy root node id.  
    */
@@ -962,7 +962,7 @@ export default function Family(source) {
   }
 
   /**
-   * Adds extra budnle item in between parent and its children. The parent node becomes parent of the bundle node,
+   * Adds extra bundle item in between parent and its children. The parent node becomes parent of the bundle node,
    * and bundle becomes parent of the children. Existing parent child relations are removed.
    * @param {string} parent The parent node id
    * @param {string[]} children The collection of child nodes ids
@@ -975,7 +975,7 @@ export default function Family(source) {
   }
 
   /**
-   * Adds extra budnle item in between child node and its parents. The child node becomes child of the bundle node,
+   * Adds extra bundle item in between child node and its parents. The child node becomes child of the bundle node,
    * and bundle becomes child of the parents. Existing parent child relations are removed.
    * @param {string} child The parent node id
    * @param {string[]} parents The collection of child nodes ids
@@ -1053,7 +1053,7 @@ export default function Family(source) {
   }
 
   /**
-   * Callback function for cretion of new family nodes
+   * Callback function for creation of new family nodes
    * 
    * @callback onNewFamilyNodeCallback
    * @returns {object} Returns new family node.
@@ -1061,7 +1061,7 @@ export default function Family(source) {
 
   /**
    * Optimizes references between family members.
-   * It creates bundles eliminating excessive intersecions between nodes relations.
+   * It creates bundles eliminating excessive intersections between nodes relations.
    * 
    * @param {onNewFamilyNodeCallback} onNewBundleItem Callback function to create a new family node context object. 
    */
@@ -1286,7 +1286,7 @@ export default function Family(source) {
                 sequence.insertAfter(itemPosition, childPosition, [familyEdge]);
                 return true;
               } else if (itemPosition == childPosition) {
-                // add new link to exisitng sequenceItem and exit
+                // add new link to existing sequenceItem and exit
                 sequenceItem.push(familyEdge);
                 return true;
               } else {
@@ -1642,7 +1642,7 @@ export default function Family(source) {
   }
 
   /**
-   * Validates internal data structure consitency of the family.
+   * Validates internal data structure consistency of the family.
    * @param {object} info Optional validation object. 
    */
   function validate(info) {

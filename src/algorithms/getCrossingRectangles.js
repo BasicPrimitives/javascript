@@ -1,6 +1,6 @@
 import SortedList from './SortedList';
 /**
- * Callback function to iterate over pairs of crosssing rectangles
+ * Callback function to iterate over pairs of crossing rectangles
  * 
  * @callback onCrossingRectanglesItemCallback
  * @param {Rect} rect1 First rectangle
@@ -109,7 +109,7 @@ export default function getCrossingRectangles(thisArg, rectangles, onCrossing) {
           }
         }
 
-        // Search for intersections of the right side of rectangle with exisitng horizontal segments
+        // Search for intersections of the right side of rectangle with existing horizontal segments
         _findCrossedRectangles(buffer, actionLevels[0], actionLevels[1], action.index, action.rect);
       }
     }

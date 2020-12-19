@@ -5,7 +5,7 @@
 
 /**
  * Defines leftward or rightward item placement relative to the referenced item.
- * In case of assitants and advisers the referenced item is their imediate parent.
+ * In case of assistants and advisers the referenced item is their immediate parent.
  * In case of family diagram the referenced item is spouse or sibling in the row. 
  *  
  * @enum {AdviserPlacementType}
@@ -40,7 +40,7 @@ export const AnnotationType = {
     /**
      * Connector lines between two nodes of the diagram. They are drawn on top of existing
      * diagram layout and they don't affect nodes placement. So it is users responsibility to
-     * prserve space between nodes for them.
+     * preserve space between nodes for them.
      */
     Connector: 0,
     /**
@@ -54,15 +54,15 @@ export const AnnotationType = {
      */
     HighlightPath: 2,
     /**
-     * In-layout label annotation. Label anntations are placed in layout between nodes,
-     * they preserve space between nodes, so they don't overlap neighbouring nodes.
-     * Label annotations are designed for autoplacement and bundling of connection lines between 
+     * In-layout label annotation. Label annotations are placed in layout between nodes,
+     * they preserve space between nodes, so they don't overlap neighboring nodes.
+     * Label annotations are designed for auto placement and bundling of connection lines between 
      * nodes when needed.
      */
     Label: 3,
     /**
      * Background annotation highlights nodes via drawing rectangular shape in background.
-     * If shapes overlap the same style neighbouring shapes they are merged into one continuous shape. 
+     * If shapes overlap the same style neighboring shapes they are merged into one continuous shape. 
      */
     Background: 4
 };
@@ -76,7 +76,7 @@ export const AnnotationType = {
  * Defines shape of children formation. By default a node's children are always placed in a horizontal line 
  * below the parent node. On a large scale this may result in the end user having to scroll screens 
  * in order to view all of the nodes. To compensate for this, we provide the option of placing all 
- * of the children of a parent node in a sqaure/matrix formation. This will reduce sideways screen 
+ * of the children of a parent node in a square/matrix formation. This will reduce sideways screen 
  * scrolling by compacting the child nodes into a much smaller area on the screen.
  *  
  * @enum {ChildrenPlacementType}
@@ -492,8 +492,8 @@ export const HorizontalAlignmentType = {
  * This enumeration defines child node placement relative to its parent node. By default all children that belong 
  * to a parent node are of the same rank and status between each other and due to that, are always aligned below
  * the parent and are organized in the same way. However for special cases were the end user wishes to have a child
- * that is seperate from the rest of it's siblings, we provide custom child types that the end user can use to
- * place diffrent ranking nodes anywhere around the parent node. These placement options give a lot of space for
+ * that is separate from the rest of it's siblings, we provide custom child types that the end user can use to
+ * place different ranking nodes anywhere around the parent node. These placement options give a lot of space for
  * the creation of roles such as an Assistant, Adviser, various Partners and co-heads that may be in the organization.
  * Additionally, by default a node's regular children are always placed in a horizontal line below the parent node. See children
  * placement type options for regular children layout.
@@ -510,12 +510,12 @@ export const ItemType = {
      */
     Adviser: 2,
     /**
-     * Assitant node is drawn at row in between parent and child rows and connected horizontally
-     * to connection line going from parent to the regualr children
+     * Assistant node is drawn at row in between parent and child rows and connected horizontally
+     * to connection line going from parent to the regular children
      */
     Assistant: 1,
     /**
-     * Sub assitant is variation of assitant node type.
+     * Sub assistant is variation of assistant node type.
      * It has the same placement but it is connected by the top side of the node to the connector line going to the parent node.
      */
     SubAssistant: 4,
@@ -525,7 +525,7 @@ export const ItemType = {
      */
     SubAdviser: 5,
     /**
-     * General partner is immitation of multiple inheritance in the oraganizational chart hierarchy.
+     * General partner is imitation of multiple inheritance in the organizational chart hierarchy.
      * General partner node is drawn side by side with its parent and remaining regular children
      * are visually connected to both of them like they are their parents.
      * Another layout feature of the general partner is that it is connected to parents of its immediate logical parent as well,
@@ -533,7 +533,7 @@ export const ItemType = {
      */
     GeneralPartner: 6,
     /**
-     * Limited partner is variation of general partner. The only difference is that is is not conencte to its logical grand parent.
+     * Limited partner is variation of general partner. The only difference is that is is not connected to its logical grand parent.
      */
     LimitedPartner: 7,
     /**
@@ -613,7 +613,7 @@ export const LoopsLayoutMode = {
  **/
 
 /**
- * Interactivity mode. Control implements standard behaivour of classic desktop UI controls. It supports single selected node - cursor.
+ * Interactivity mode. Control implements standard behavior of classic desktop UI controls. It supports single selected node - cursor.
  * It supports on mouse over node visual feedback - highlight. It supports selection of group of nodes - selected items. 
  * All that functionality can be disabled depending on your application requirements.
  *  
@@ -689,7 +689,7 @@ export const OrientationType = {
  * becomes problematic, so we support automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
  * Control supports several page fit mode options which can match your requirements depending on diagram layout, orientation and number of nodes.
  * 
- * Autosize - this option is opposite to auto fit. It lets you expand control size to fit all diagram nodes full size without scrollbars.
+ * Autosize - this option is opposite to auto fit. It lets you expand control size to fit all diagram nodes full size without scroll bars.
  *  
  * @enum {PageFitMode}
  */
@@ -707,7 +707,7 @@ export const PageFitMode = {
      */
     PageHeight: 2,
     /**
-     * Fits diagram into the view so it has no scrollbars.
+     * Fits diagram into the view so it has no scroll bars.
      */
     FitToPage: 3,
     /**
@@ -945,7 +945,7 @@ export const Visibility = {
      */
     Dot: 2,
     /**
-     * Diagram only draws connection lines and hides actuall nodes.
+     * Diagram only draws connection lines and hides actual nodes.
      */
     Line: 3,
     /**
@@ -962,7 +962,7 @@ export const Visibility = {
  **/
 
 /**
- * Option to draw annotation in the foreground or in the backgound of diagram nodes.
+ * Option to draw annotation in the foreground or in the background of diagram nodes.
  *  
  * @enum {ZOrderType}
  */

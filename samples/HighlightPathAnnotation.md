@@ -15,7 +15,7 @@ PERT chart critical path visualization with Highlight Path Annotation. Chart doe
 
 ## Routing Highlight Path Annotation for hidden grand parents connections
 
-Connection lines are hard to visualy trace on the screen, they make sence for paper form diagrams, but bring no value for interactive diagrams, so the main point of this option is to remove redundent connection lines giving no visual value and show connected grand parents by other means, i.e. highlight path annotations and custom item templates.
+Connection lines are hard to visually trace on the screen, they make sense for paper form diagrams, but bring no value for interactive diagrams, so the main point of this option is to remove redundant connection lines giving no visual value and show connected grand parents by other means, i.e. highlight path annotations and custom item templates.
 
 [JavaScript](javascript.controls/CaseFamilyHideGrandParentsConnections.html)
 

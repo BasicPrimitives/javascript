@@ -265,7 +265,7 @@ export default function LinkedHashItems() {
   }
 
   /**
-   * Validates internal data consistensy of the structure
+   * Validates internal data consistency of the structure
    * @returns {boolean} Returns true if it pass validation
    */
   function validate(info) {

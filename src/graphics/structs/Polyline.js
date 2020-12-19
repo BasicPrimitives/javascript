@@ -146,7 +146,7 @@ export default function Polyline(newPaletteItem) {
     var result = new Polyline(arrowPaletteItem),
       index, len,
       point, x, y,
-      perimiter = [new Point(length, -width / 2),
+      perimeter = [new Point(length, -width / 2),
       new Point(0, 0),
       new Point(length, width / 2),
       new Point(length / 4 * 3, 0)
@@ -154,8 +154,8 @@ export default function Polyline(newPaletteItem) {
       angle = Math.atan2((fromY - toY), (fromX - toX));
 
     /* rotate and translate points */
-    for (index = 0, len = perimiter.length; index < len; index += 1) {
-      point = perimiter[index];
+    for (index = 0, len = perimeter.length; index < len; index += 1) {
+      point = perimeter[index];
       x = point.x * Math.cos(angle) - point.y * Math.sin(angle);
       y = point.x * Math.sin(angle) + point.y * Math.cos(angle);
       point.x = x + toX;
@@ -163,10 +163,10 @@ export default function Polyline(newPaletteItem) {
     }
 
     /* create arrow shape*/
-    result.addSegment(new MoveSegment(perimiter[0].x, perimiter[0].y));
-    result.addSegment(new LineSegment(perimiter[1].x, perimiter[1].y));
-    result.addSegment(new LineSegment(perimiter[2].x, perimiter[2].y));
-    result.addSegment(new QuadraticArcSegment(perimiter[3].x, perimiter[3].y, perimiter[0].x, perimiter[0].y));
+    result.addSegment(new MoveSegment(perimeter[0].x, perimeter[0].y));
+    result.addSegment(new LineSegment(perimeter[1].x, perimeter[1].y));
+    result.addSegment(new LineSegment(perimeter[2].x, perimeter[2].y));
+    result.addSegment(new QuadraticArcSegment(perimeter[3].x, perimeter[3].y, perimeter[0].x, perimeter[0].y));
 
     return result;
   }
@@ -438,7 +438,7 @@ export default function Polyline(newPaletteItem) {
 
             switch (vectorStack.length) {
               case 1:
-                /* first Vector in stack we add to start Vectors collection for possible join into perimiter*/
+                /* first Vector in stack we add to start Vectors collection for possible join into perimeter*/
                 current = vectorStack[0];
                 closurePoint = current.from.toString();
                 startVectors[closurePoint] = current;

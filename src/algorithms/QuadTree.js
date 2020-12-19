@@ -209,7 +209,7 @@ export default function QuadTree(minimalSize) {
   }
 
   /**
-   * Returns collection of quadrands created in the data structure
+   * Returns collection of quadrants created in the data structure
    * Quadrants exists only when elements exists in them.
    * This method is used for visual debugging of the structure.
    * 

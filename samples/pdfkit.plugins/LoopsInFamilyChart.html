@@ -5,23 +5,17 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Family Chart Hiding Grand Parents Relations</title>
 
-  
-  <!-- PDFkit & Libs -->
-  <script src="../../packages/pdfkit/pdfkit.js"></script>
-  <script src="../../packages/pdfkit/blob-stream.js"></script>
-
-  <!-- Demo Images -->
-  <script src="../data/photos.js"></script>
-
+  <script src="../../pdfkitsamples.js"></script>
   <script type="text/javascript" src="../../primitives.js"></script>
-  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type='text/javascript'>
     var control;
     var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
 
     document.addEventListener('DOMContentLoaded', function () {
-      // create a document and pipe to a blob
       var doc = new PDFDocument();
       var stream = doc.pipe(blobStream());
 

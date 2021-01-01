@@ -10,7 +10,7 @@ export function getElementsByName(thisArg, parent, name, onNode) {
   }
 };
 
-export function getFixOfPixelALignment(element) {
+export function getFixOfPixelAlignment(element) {
   var elementClientRectangle = element.getBoundingClientRect(),
     top = elementClientRectangle.top + document.body.scrollTop,
     left = elementClientRectangle.left + document.body.scrollLeft;

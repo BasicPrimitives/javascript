@@ -5,7 +5,8 @@ import BackgroundAnnotationConfig from './configs/BackgroundAnnotationConfig';
 import ConnectorAnnotationConfig from './configs/ConnectorAnnotationConfig';
 import HighlightPathAnnotationConfig from './configs/HighlightPathAnnotationConfig';
 import ShapeAnnotationConfig from './configs/ShapeAnnotationConfig';
-
+import LevelAnnotationConfig from './configs/LevelAnnotationConfig';
+ 
 import { ZOrderType, Colors } from './enums';
 
 import OptionsTask from './tasks/options/OptionsTask';
@@ -25,7 +26,11 @@ import ShapeAnnotationOptionTask from './tasks/options/annotations/ShapeAnnotati
 import HighlightPathAnnotationOptionTask from './tasks/options/annotations/HighlightPathAnnotationOptionTask';
 import ConnectorAnnotationOptionTask from './tasks/options/annotations/ConnectorAnnotationOptionTask';
 import BackgroundAnnotationOptionTask from './tasks/options/annotations/BackgroundAnnotationOptionTask';
+import LevelAnnotationOptionTask from './tasks/options/annotations/LevelAnnotationOptionTask';
 import ScaleOptionTask from './tasks/options/ScaleOptionTask';
+import FrameOptionTask from './tasks/options/FrameOptionTask';
+import LevelTitlePlacementOptionTask from './tasks/options/LevelTitlePlacementOptionTask';
+import LevelTitleTemplateOptionTask from './tasks/options/LevelTitleTemplateOptionTask';
 
 import CombinedContextsTask from './tasks/transformations/CombinedContextsTask';
 import OrgTreeTask from './tasks/transformations/OrgTreeTask';
@@ -36,6 +41,8 @@ import GroupTitleTemplatePdfTask from './tasks/templates/pdf/GroupTitleTemplateP
 import CheckBoxTemplatePdfTask from './tasks/templates/pdf/CheckBoxTemplatePdfTask';
 import DummyButtonsTemplatePdfTask from './tasks/templates/pdf/DummyButtonsTemplatePdfTask';
 import AnnotationLabelTemplatePdfTask from './tasks/templates/pdf/AnnotationLabelTemplatePdfTask';
+import LevelAnnotationTemplateTask from './tasks/templates/LevelAnnotationTemplateTask';
+
 import VisualTreeTask from './tasks/transformations/VisualTreeTask';
 import VisualTreeLevelsTask from './tasks/transformations/VisualTreeLevelsTask';
 import ConnectionsGraphTask from './tasks/transformations/ConnectionsGraphTask';
@@ -45,11 +52,20 @@ import SelectedItemsTask from './tasks/transformations/selection/SelectedItemsTa
 
 import DummyCombinedNormalVisibilityItemsTask from './tasks/transformations/selection/DummyCombinedNormalVisibilityItemsTask';
 
+import FrameSizeTask from './tasks/layout/FrameSizeTask';
+import LevelTitleSizeTask from './tasks/layout/LevelTitleSizeTask';
+import ApplyLayoutChangesTask from './tasks/layout/ApplyLayoutChangesTask';
 import DummyCurrentControlSizeTask from './tasks/layout/DummyCurrentControlSizeTask';
 import OrgItemsPositionsTask from './tasks/transformations/OrgItemsPositionsTask';
 import AlignDiagramTask from './tasks/layout/AlignDiagramTask';
 import CreateTransformTask from './tasks/layout/CreateTransformTask';
 import PaletteManagerTask from './tasks/transformations/PaletteManagerTask';
+
+import ViewPortPlacementTask from './tasks/layout/ViewPortPlacementTask';
+import VerticalOffsetTask from './tasks/layout/VerticalOffsetTask';
+
+import OrgLogicalLevelsPlacementTask from './tasks/layout/OrgLogicalLevelsPlacementTask';
+import MergeLevelIntervalsTask from './tasks/layout/MergeLevelIntervalsTask';
 
 import DrawBackgroundAnnotationTask from './tasks/renders/DrawBackgroundAnnotationTask';
 import DrawHighlightPathAnnotationTask from './tasks/renders/DrawHighlightPathAnnotationTask';
@@ -59,15 +75,19 @@ import DrawCursorTask from './tasks/renders/DrawCursorTask';
 import DrawHighlightTask from './tasks/renders/DrawHighlightTask';
 import DrawTreeItemsTask from './tasks/renders/DrawTreeItemsTask';
 import DrawConnectorsTask from './tasks/renders/DrawConnectorsTask';
+import DrawLevelAnnotationTitlesTask from './tasks/renders/DrawLevelAnnotationTitlesTask';
+import DrawLevelAnnotationBackgroundTask from './tasks/renders/DrawLevelAnnotationBackgroundTask';
 
 import TaskManager from './managers/TaskManager';
 
-export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics) {
+export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics, setLayout, templates) {
   var tasks = new TaskManager();
 
   // Dependencies
   tasks.addDependency('options', getOptions);
   tasks.addDependency('graphics', getGraphics);
+  tasks.addDependency('setLayout', setLayout);
+  tasks.addDependency('templates', templates);
 
   tasks.addDependency('defaultConfig', new OrgConfig());
   tasks.addDependency('defaultItemConfig', new OrgItemConfig());
@@ -77,6 +97,7 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics) {
   tasks.addDependency('defaultConnectorAnnotationConfig', new ConnectorAnnotationConfig());
   tasks.addDependency('defaultHighlightPathAnnotationConfig', new HighlightPathAnnotationConfig());
   tasks.addDependency('defaultShapeAnnotationConfig', new ShapeAnnotationConfig());
+  tasks.addDependency('defaultLevelAnnotationConfig', new LevelAnnotationConfig());
 
   tasks.addDependency('isFamilyChartMode', false);
   tasks.addDependency('showElbowDots', false);
@@ -108,8 +129,12 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics) {
   tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], ConnectorAnnotationOptionTask, Colors.Navy);
   tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], ConnectorAnnotationOptionTask, Colors.Navy);
   tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], BackgroundAnnotationOptionTask, Colors.Navy);
+  tasks.addTask('LevelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultLevelAnnotationConfig'], LevelAnnotationOptionTask, Colors.Navy)
 
   tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], ScaleOptionTask, Colors.Navy);
+  tasks.addTask('FrameOptionTask', ['OptionsTask', 'defaultConfig'], FrameOptionTask, Colors.Navy);
+  tasks.addTask('LevelTitlePlacementOptionTask', ['OptionsTask', 'defaultConfig'], LevelTitlePlacementOptionTask, Colors.Navy);
+  tasks.addTask('LevelTitleTemplateOptionTask', ['OptionsTask', 'defaultConfig'], LevelTitleTemplateOptionTask, Colors.Navy);
 
   // Transformations
   tasks.addTask('CombinedContextsTask', ['ItemsOptionTask'], CombinedContextsTask, Colors.Cyan);
@@ -123,7 +148,8 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics) {
   tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask'], CheckBoxTemplatePdfTask, Colors.Cyan);
   tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask'], DummyButtonsTemplatePdfTask, Colors.Cyan);
   tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask'], AnnotationLabelTemplatePdfTask, Colors.Cyan);
-
+  tasks.addTask('LevelAnnotationTemplateTask', ['OrientationOptionTask', 'LevelTitleTemplateOptionTask', 'templates'], LevelAnnotationTemplateTask, Colors.Cyan);
+  
   tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'null', 'VisualTreeOptionTask', 'isFamilyChartMode'], VisualTreeTask, Colors.Red);
   tasks.addTask('VisualTreeLevelsTask', ['VisualTreeTask', 'ItemTemplateParamsTask'], VisualTreeLevelsTask, Colors.Red);
 
@@ -136,6 +162,8 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics) {
   tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask', 'ItemsOptionTask'], SelectedItemsTask, Colors.Cyan);
   tasks.addTask('CombinedNormalVisibilityItemsTask', ['OptionsTask'], DummyCombinedNormalVisibilityItemsTask, Colors.Cyan);
 
+  tasks.addTask('FrameSizeTask', ['FrameOptionTask', 'ReadTemplatesTask', 'ScaleOptionTask'], FrameSizeTask, Colors.Navy);
+  tasks.addTask('LevelTitleSizeTask', ['LevelTitlePlacementOptionTask', 'LevelAnnotationOptionTask', 'OrientationOptionTask', 'ScaleOptionTask'], LevelTitleSizeTask, Colors.Navy);
   tasks.addTask('CurrentControlSizeTask', ['OptionsTask'], DummyCurrentControlSizeTask, Colors.Cyan);
   tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'VisualTreeOptionTask',
     'VisualTreeTask', 'VisualTreeLevelsTask',
@@ -147,6 +175,13 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics) {
 
   // Managers
   tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'null'], PaletteManagerTask, Colors.Cyan);
+
+  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask', 'FrameSizeTask', 'LevelTitleSizeTask'], ApplyLayoutChangesTask, Colors.Green);
+  tasks.addTask('ViewPortPlacementTask', ['ScaleOptionTask', 'CenterOnCursorTask', 'CreateTransformTask', 'ApplyLayoutChangesTask'], ViewPortPlacementTask, Colors.Green);  
+  tasks.addTask('VerticalOffsetTask', ['ViewPortPlacementTask'], VerticalOffsetTask, Colors.Green);  
+
+  tasks.addTask('LogicalLevelsPlacementTask', ['OrgTreeTask', 'AlignDiagramTask'], OrgLogicalLevelsPlacementTask, Colors.Green);
+  tasks.addTask('MergeLevelIntervalsTask', ['LevelAnnotationOptionTask', 'LogicalLevelsPlacementTask'], MergeLevelIntervalsTask, Colors.Green); 
 
   // Renders
   tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'VisualTreeTask', 'AlignDiagramTask'], DrawBackgroundAnnotationTask, Colors.Green);
@@ -173,6 +208,9 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics) {
 
   tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawForegroundConnectorAnnotationTask'], DrawCursorTask, Colors.Green);
   tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawCursorTask'], DrawHighlightTask, Colors.Green);
+
+  tasks.addTask('DrawLevelAnnotationBackgroundTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask'], DrawLevelAnnotationBackgroundTask, Colors.Green);
+  tasks.addTask('DrawLevelAnnotationTitlesTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask', 'LevelTitlePlacementOptionTask'], DrawLevelAnnotationTitlesTask, Colors.Green);
 
   return tasks;
 }

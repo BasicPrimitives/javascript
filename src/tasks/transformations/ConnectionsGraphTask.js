@@ -1,7 +1,7 @@
 ﻿import { Layers } from '../../enums';
 import Graph from '../../algorithms/Graph';
 
-export default function ConnectionsGraphTask(getGraphics, createTranfromTask, connectorsOptionTask, visualTreeLevelsTask, alignDiagramTask, removeLoopsTask) {
+export default function ConnectionsGraphTask(getGraphics, createTransformTask, connectorsOptionTask, visualTreeLevelsTask, alignDiagramTask, removeLoopsTask) {
   var _data = {
     graph: null,
     nodeid: 0
@@ -24,7 +24,7 @@ export default function ConnectionsGraphTask(getGraphics, createTranfromTask, co
     var params = {
       treeItemsPositions: alignDiagramTask.getItemsPositions(),
       nestedLayoutBottomConnectorIds: nestedLayoutBottomConnectorIds,
-      transform: createTranfromTask.getTransform(),
+      transform: createTransformTask.getTransform(),
       hasGraphics: panel.hasGraphics
     };
 

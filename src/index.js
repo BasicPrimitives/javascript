@@ -9,6 +9,7 @@ export { default as Rect } from './graphics/structs/Rect';
 export { default as Matrix } from './graphics/structs/Matrix';
 export { default as Thickness } from './graphics/structs/Thickness';
 export { default as Vector } from './graphics/structs/Vector';
+export { default as Interval } from './graphics/structs/Interval';
 
 export { default as binarySearch } from './algorithms/binarySearch';
 export { default as getCrossingRectangles } from './algorithms/getCrossingRectangles';
@@ -18,6 +19,7 @@ export { default as getLiniarBreaks } from './algorithms/getLiniarBreaks';
 export { default as getMergedRectangles } from './algorithms/getMergedRectangles';
 export { default as getMinimumCrossingRows } from './algorithms/getMinimumCrossingRows';
 export { default as mergeSort } from './algorithms/mergeSort';
+export { default as getMergedIntervals } from './algorithms/getMergedIntervals';
 export { default as Family } from './algorithms/Family';
 export { default as FamilyAlignment } from './algorithms/FamilyAlignment';
 export { default as FamilyMargins } from './algorithms/FamilyMargins';
@@ -48,6 +50,7 @@ export { default as HighlightPathAnnotationConfig } from './configs/HighlightPat
 export { default as LabelAnnotationConfig } from './configs/LabelAnnotationConfig';
 export { default as PaletteItemConfig } from './configs/PaletteItemConfig';
 export { default as ShapeAnnotationConfig } from './configs/ShapeAnnotationConfig';
+export { default as LevelAnnotationConfig } from './configs/LevelAnnotationConfig';
 export { default as TemplateConfig } from './configs/TemplateConfig';
 
 export { default as OrgDiagram } from './OrgDiagram';

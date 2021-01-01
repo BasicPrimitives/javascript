@@ -26,7 +26,7 @@ export default function OrgItem(options) {
   /* org tree balancing properties */
   this.childIndex = null; // Item index in array of parent's children
 
-  // Folowing properties we copy from user's item config to new OrgItem instance
+  // Following properties we copy from user's item config to new OrgItem instance
   // If user's property is undefined we take default value from OrgItemConfig
   var properties = [
     'id', 'parent', 'isVisible', 'isActive',

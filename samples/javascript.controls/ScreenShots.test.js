@@ -116,6 +116,13 @@ describe("Screen Shots", () => {
     })
   });
 
+  it('CaseLevelAnnotation', async () => {
+    await testByTemplate({
+      url: "http://localhost:8080/samples/javascript.controls/CaseLevelAnnotation.html",
+      imageName: "CaseLevelAnnotation"
+    })
+  });
+
   it('CaseCursorTemplate', async () => {
     await testByTemplate({
       url: "http://localhost:8080/samples/javascript.controls/CaseCursorTemplate.html",

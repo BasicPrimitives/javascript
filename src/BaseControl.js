@@ -4,7 +4,7 @@ import Rect from './graphics/structs/Rect';
 import { UpdateMode, OrientationType } from './enums';
 import { isNullOrEmpty } from './common';
 import createGraphics, { isChrome } from './graphics/createGraphics';
-import { getFixOfPixelALignment, getInnerSize, getElementOffset, hasClass } from './graphics/dom';
+import { getFixOfPixelAlignment, getInnerSize, getElementOffset } from './graphics/dom';
 import JsonML from './common/jsonml-html';
 import { mergeObjects } from './common';
 
@@ -24,6 +24,8 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
       controlPanel: null,
       frameMousePanel: null,
       framePlaceholder: null,
+      titlesMousePanel: null,
+      titlesPlaceholder: null,
       scrollPanel: null,
       mousePanel: null,
       placeholder: null,
@@ -119,7 +121,7 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
     //});
 
     /* fix pixel alignment */
-    var pixelAlignmentFix = getFixOfPixelALignment(_data.layout.element);
+    var pixelAlignmentFix = getFixOfPixelAlignment(_data.layout.element);
     JsonML.applyStyles(_data.layout.scrollPanel, {
       "marginBottom": "0px",
       "marginRight": "0px",
@@ -211,55 +213,51 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
 
   function setLayout(layoutOptions) {
     var layout = _data.layout,
-      pixelAlignmentFix = getFixOfPixelALignment(layout.element);
+      pixelAlignmentFix = getFixOfPixelAlignment(layout.element);
 
     JsonML.applyStyles(layout.controlPanel, {
       "marginLeft": pixelAlignmentFix.width + "px", /* fixes div pixel alignment */
       "marginTop": pixelAlignmentFix.height + "px"
     });
 
+    /* set scroll panel position */
+    JsonML.applyStyles(layout.scrollPanel, layoutOptions.scrollPanelRect.getCSS());
+
     /* set scaled content panel for tracking mouse events without scaling */
-    JsonML.applyStyles(layout.mousePanel, layoutOptions.scaledContentSize.getCSS());
+    JsonML.applyStyles(layout.mousePanel, layoutOptions.mousePanelSize.getCSS());
 
     /* set size and scale of content panel */
-    var scaletext = "scale(" + layoutOptions.scale + "," + layoutOptions.scale + ")";
+    var scaleText = "scale(" + layoutOptions.scale + "," + layoutOptions.scale + ")";
     var scaleProperties = {
       "transform-origin": "0 0",
-      "transform": scaletext,
-      "-ms-transform": scaletext, /* IE 9 */
-      "-webkit-transform": scaletext, /* Safari and Chrome */
-      "-o-transform": scaletext, /* Opera */
-      "-moz-transform": scaletext /* Firefox */
+      "transform": scaleText,
+      "-ms-transform": scaleText, /* IE 9 */
+      "-webkit-transform": scaleText, /* Safari and Chrome */
+      "-o-transform": scaleText, /* Opera */
+      "-moz-transform": scaleText /* Firefox */
     };
-    JsonML.applyStyles(layout.placeholder, mergeObjects(scaleProperties, layoutOptions.contentSize.getCSS()));
+    JsonML.applyStyles(layout.placeholder, mergeObjects(scaleProperties, layoutOptions.placeholderSize.getCSS()));
 
     if (layoutOptions.autoSize) {
       /* resize element to fit placeholder if control in auto size mode */
       JsonML.applyStyles(layout.element, layoutOptions.controlSize.getCSS());
     }
 
+    /* set titles panel scale and size */
+    JsonML.applyStyles(layout.titlesMousePanel, layoutOptions.titlesMousePanelRect.getCSS());
+    JsonML.applyStyles(layout.titlesPlaceholder, mergeObjects(scaleProperties, layoutOptions.titlesPlaceholderSize.getCSS()));
+
     /* set frame panel scale and size */
+    JsonML.applyStyles(layout.frameMousePanel, layoutOptions.frameMousePanelRect.getCSS());
     JsonML.applyStyles(layout.framePlaceholder, mergeObjects(scaleProperties, layoutOptions.framePlaceholderSize.getCSS()));
-
-    /* set mouse frame panel size  */
-    JsonML.applyStyles(layout.frameMousePanel, layoutOptions.controlSize.getCSS());
-
-    /* set scroll panel position */
-    var frameThickness = new Thickness(layoutOptions.frameThickness);
-    JsonML.applyStyles(layout.scrollPanel, mergeObjects({
-      left: frameThickness.left + "px",
-      top: frameThickness.top + "px"
-    },
-      layoutOptions.viewportSize.getCSS())
-    );
-
-    layout.scrollPanel.setAttribute("class", (frameThickness.isEmpty() ? name : "bp-scrollframe " + name))
+    
+    layout.scrollPanel.setAttribute("class", layoutOptions.scrollPanelRect.left > 0 ? name : "bp-scrollframe " + name);
   }
 
   function createLayout(layout, name) {
     var viewportSize = getInnerSize(layout.element),
       viewportRect = new Rect(0, 0, viewportSize.width, viewportSize.height),
-      pixelAlignmentFix = getFixOfPixelALignment(element);
+      pixelAlignmentFix = getFixOfPixelAlignment(element);
 
 
     JsonML.appendDOM(layout.element, JsonML.toHTML(
@@ -304,6 +302,30 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
               "name": "framePlaceholder",
               "class": ["frameplaceholder", name],
               "$": function (element) { layout.framePlaceholder = element; }
+            }
+          ]
+        ],
+        ["div", /* titlesMousePanel - titles mouse tracking events panel */
+          {
+            "style": mergeObjects({
+              position: "absolute",
+              overflow: "hidden"
+            },
+              viewportRect.getCSS()),
+            "name": "titlesMousePanel",
+            "class": ["bp-titles-frame", name],
+            "$": function (element) { layout.titlesMousePanel = element; }
+          },
+          ["div", /* titlesplaceholder - contents scalable panel */
+            {
+              "style": mergeObjects({
+                position: "absolute",
+                overflow: "hidden"
+              },
+                viewportRect.getCSS()),
+              "name": "titlesPlaceholder",
+              "class": ["titlesplaceholder", name],
+              "$": function (element) { layout.titlesPlaceholder = element; }
             }
           ]
         ],
@@ -426,8 +448,8 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
   function onFrameMouseMove(event) {
     var placeholderOffset = getElementOffset(_data.layout.frameMousePanel),
       x = event.pageX - placeholderOffset.left,
-      y = event.pageY - placeholderOffset.top,
-      projectItemsToFrameTask = _data.tasks.getTask("ProjectItemsToFrameTask"),
+      y = event.pageY - placeholderOffset.top;
+    var projectItemsToFrameTask = _data.tasks.getTask("ProjectItemsToFrameTask"),
       highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
       itemId;
 
@@ -513,17 +535,16 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
       highlightItemOptionTask = _data.tasks.getTask("HighlightItemOptionTask"),
       newCursorItemId = createTransformTask.getTreeItemForMousePosition(x, y, highlightItemOptionTask.getGravityRadius()),
       target,
-      button,
-      buttonname,
+      buttonName,
       eventArgs;
     target = event.target;
     if (newCursorItemId !== null) {
-      var buttonname = target.getAttribute("data-buttonname");
-      if(isNullOrEmpty(buttonname)) {
-        buttonname = target.parentNode && target.parentNode.getAttribute("data-buttonname");
+      var buttonName = target.getAttribute("data-buttonname");
+      if(isNullOrEmpty(buttonName)) {
+        buttonName = target.parentNode && target.parentNode.getAttribute("data-buttonname");
       };
-      if (!isNullOrEmpty(buttonname)) {
-        eventArgs = getEventArgs(null, newCursorItemId, buttonname);
+      if (!isNullOrEmpty(buttonName)) {
+        eventArgs = getEventArgs(null, newCursorItemId, buttonName);
         trigger("onButtonClick", event, eventArgs);
       }
       else if (target.getAttribute("name") === "checkbox" || target.getAttribute("name") === "selectiontext") { //ignore jslint

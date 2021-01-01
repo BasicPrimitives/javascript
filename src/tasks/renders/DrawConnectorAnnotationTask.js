@@ -10,7 +10,7 @@ import ConnectorOffbeat from '../../graphics/shapes/ConnectorOffbeat';
 import { isNullOrEmpty } from '../../common';
 
 
-export default function DrawConnectorAnnotationTask(getGraphics, createTranfromTask, applyLayoutChangesTask,
+export default function DrawConnectorAnnotationTask(getGraphics, createTransformTask, applyLayoutChangesTask,
   orientationOptionTask, connectorAnnotationOptionTask, alignDiagramTask, annotationLabelTemplateTask, zOrderType) {
   var _graphics,
     _transform,
@@ -22,7 +22,7 @@ export default function DrawConnectorAnnotationTask(getGraphics, createTranfromT
 
     _graphics = getGraphics();
 
-    _transform = createTranfromTask.getTransform();
+    _transform = createTransformTask.getTransform();
     _orientationOptions = orientationOptionTask.getOptions();
 
     _annotationLabelTemplate = annotationLabelTemplateTask.getTemplate();

@@ -5,7 +5,8 @@ import RenderEventArgs from '../events/RenderEventArgs';
 
 export default function PdfGraphics(doc) {
   this._doc = doc,
-    this._context = this._doc;
+  this._context = this._doc;
+ 
   this._dummyPlaceholder = new Placeholder();
 };
 

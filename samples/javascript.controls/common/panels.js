@@ -111,6 +111,22 @@ function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
     new DropDownBoxConfig("groupTitleFontFamily", "Arial", "Font Style", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], ValueType.String, onUpdate)
   ]));
 
+  result.push(new PanelConfig("Level Titles", [
+    new CheckBoxConfig("addLevelAnnotations", true, "Add level annotations.", onUpdate),
+    new RadioBoxConfig("levelTitlePlacementType", AdviserPlacementType.Left, "Placement", AdviserPlacementType, ValueType.Integer, onUpdate),
+    new CheckBoxConfig("levelTitlePlaceInside", true, "Place level titles inside view port", onUpdate),
+    new RangeConfig("levelTitlePanelSize", 24, "Panel width", 10, 1000, 2, onUpdate),
+    new RadioBoxConfig("levelTitleOrientation", TextOrientationType.RotateRight, "Orientation", TextOrientationType, ValueType.Integer, onUpdate),
+    new RadioBoxConfig("levelTitleVerticalAlignment", VerticalAlignmentType.Middle, "Vertical Alignment", VerticalAlignmentType, ValueType.Integer, onUpdate),
+    new RadioBoxConfig("levelTitleHorizontalAlignment", HorizontalAlignmentType.Center, "Horizontal Alignment", HorizontalAlignmentType, ValueType.Integer, onUpdate),
+    new ColorConfig("levelTitleFontColor", Colors.White, "Font Color", false, onUpdate),
+    new ColorConfig("levelTitleColor", Colors.Black, "Title Background Color", false, onUpdate),
+    new DropDownBoxConfig("levelTitleFontSize", "12px", "Font size", ["8px", "10px", "12px", "14px", "16px", "18px", "20px", "30px", "40px", "50px"], ValueType.String, onUpdate),
+    new RadioBoxConfig("levelTitleFontWeight", "normal", "Font Weight", ["normal", "bold"], ValueType.String, onUpdate),
+    new RadioBoxConfig("levelTitleFontStyle", "normal", "Font Style", ["normal", "italic"], ValueType.String, onUpdate),
+    new DropDownBoxConfig("levelTitleFontFamily", "Arial", "Font Style", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], ValueType.String, onUpdate)
+  ]));
+
   if (showDefaultTemplateOptions) {
     result.push(new PanelConfig("Markers", [
       new CaptionConfig("These options are defined per item template. So if you need to show individual markers per item, you have to define template for every marker type and assign it to items. Template is some sort of named property bag.", false),
@@ -202,8 +218,8 @@ function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
   result.push(new PanelConfig("Frame", [
     new CaptionConfig("Displays selected items outside view port area.", false),
     new CheckBoxConfig("showFrame", true, "Show Frame", onUpdate),
-    new RangeConfig("frameInnerPadding", 2, "Frame inner padding", 0, 10, 1, onUpdate),
-    new RangeConfig("frameOuterPadding", 2, "Frame outer padding", 0, 10, 1, onUpdate)
+    new RangeConfig("frameInnerPadding", 2, "Frame inner padding", 0, 20, 1, onUpdate),
+    new RangeConfig("frameOuterPadding", 2, "Frame outer padding", 0, 20, 1, onUpdate)
   ]));
   return result;
 };

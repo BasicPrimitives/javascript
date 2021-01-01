@@ -79,6 +79,20 @@
       groupTitleFontWeight: "normal",
       groupTitleFontStyle: "normal",
 
+      /* level title options */
+      levelTitlePlacementType: primitives.AdviserPlacementType.Left,
+      levelTitlePanelSize: 24,
+      levelTitlePlaceInside: false,
+      levelTitleOrientation: primitives.TextOrientationType.Auto,
+      levelTitleVerticalAlignment: primitives.VerticalAlignmentType.Middle,
+      levelTitleHorizontalAlignment: primitives.HorizontalAlignmentType.Center,
+      levelTitleFontSize: "12px",
+      levelTitleFontFamily: "Arial",
+      levelTitleFontColor: primitives.Colors.White,
+      levelTitleColor: primitives.Colors.RoyalBlue,
+      levelTitleFontWeight: "normal",
+      levelTitleFontStyle: "normal",
+
       /* Template */
       DefaultTemplateOptions: {
         minimizedItemCornerRadius: 12,
@@ -193,22 +207,7 @@
 
       var data = window[options.dataSet]; // See famdata.js for definitions
 
-      // find first connector annotation and keep reference to it
-      connectorAnnotation = null;
-      if (data.annotations != null) {
-        for (var index = 0; index < data.annotations.length; index += 1) {
-          var annotation = data.annotations[index];
-          if (annotation.annotationType == primitives.AnnotationType.Connector) {
-            connectorAnnotation = annotation;
-            fromItem = annotation.fromItem;
-            toItem = annotation.toItem;
-
-            primitives.mergeObjects(connectorAnnotation, options.AnnotationOptions);
-
-            break;
-          }
-        }
-      }
+      var annotations = data.annotations.slice();
 
       primitives.mergeObjects(options, data);
 
@@ -221,6 +220,37 @@
           { lineColor: "#454545", lineWidth: 1, lineType: primitives.LineType.Solid } //13
         ]
       });
+
+      // find first connector annotation and keep reference to it
+      connectorAnnotation = null;
+      if (annotations != null) {
+        for (var index = 0; index < annotations.length; index += 1) {
+          var annotation = annotations[index];
+          if (annotation.annotationType == primitives.AnnotationType.Connector) {
+            connectorAnnotation = annotation;
+            fromItem = annotation.fromItem;
+            toItem = annotation.toItem;
+
+            primitives.mergeObjects(connectorAnnotation, options.AnnotationOptions);
+
+            break;
+          }
+        }
+      }
+
+      if(options.addLevelAnnotations) {
+        for(index = 0; index < 10; index+=1) {
+          annotations.push({
+            annotationType: primitives.AnnotationType.Level,
+            levels: [index],
+            title: "Level " + index,
+            offset: new primitives.Thickness(0, -1, 0, -1),
+            opacity: (index % 2 > 0 ? 0.2 : 0)
+          })
+        }
+      }
+
+      options.annotations = annotations;
 
       return options;
     }

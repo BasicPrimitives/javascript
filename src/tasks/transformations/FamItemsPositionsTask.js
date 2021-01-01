@@ -1,6 +1,7 @@
 import FamilyLayout from './layouts/FamilyLayout';
 import MatrixLayout from './layouts/MatrixLayout';
 import Rect from '../../graphics/structs/Rect';
+import Size from '../../graphics/structs/Size';
 
 export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientationOptionTask, itemsSizesOptionTask, connectorsOptionTask,
   normalizeOptionTask, normalizeLogicalFamilyTask,
@@ -47,8 +48,9 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
     };
 
     /* calculate panel size */
-    var panelSize = currentControlSizeTask.getOptimalPanelSize();
-    var scale = scaleOptionTask.getOptions().scale;
+    var { optimalPanelSize } = currentControlSizeTask.getOptions();
+    var panelSize = new Size(optimalPanelSize);
+    var { scale } = scaleOptionTask.getOptions();
     panelSize.scale(1.0 / scale);
     var panelRect = new Rect(0, 0, panelSize.width, panelSize.height);
 

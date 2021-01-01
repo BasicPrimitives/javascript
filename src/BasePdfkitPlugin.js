@@ -9,7 +9,7 @@ import { PageFitMode, Enabled } from './enums';
  * 
  * @returns {BasePdfkitPlugin} Returns reference to PDFKit Plugin instance.
  */
-export default function BasePdfkitPlugin(options, createTaskManager) {
+export default function BasePdfkitPlugin(options, createTaskManager, templates) {
   var _data = {
     doc: null,
     options: options,
@@ -25,6 +25,10 @@ export default function BasePdfkitPlugin(options, createTaskManager) {
 
   function getGraphics() {
     return _data.graphics;
+  }
+
+  function setLayout(options) {
+
   }
 
   function _disableNotAvailableFunctionality() {
@@ -45,7 +49,7 @@ export default function BasePdfkitPlugin(options, createTaskManager) {
   function draw(doc, positionX, positionY) {
     _data.doc = doc;
 
-    _data.tasks = createTaskManager(getOptions, getGraphics);
+    _data.tasks = createTaskManager(getOptions, getGraphics, setLayout, templates);
     _data.graphics = new PdfGraphics(_data.doc);
     _data.graphics.debug = _debug;
 
@@ -70,7 +74,7 @@ export default function BasePdfkitPlugin(options, createTaskManager) {
    * @returns {Size} Returns size of the diagram
    */
   function getSize() {
-    _data.tasks = createTaskManager(getOptions, getGraphics);
+    _data.tasks = createTaskManager(getOptions, getGraphics, setLayout, templates);
 
     _disableNotAvailableFunctionality();
 

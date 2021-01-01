@@ -7,7 +7,7 @@ import { Layers, Visibility, Enabled, PlacementType, OrientationType } from '../
 import Callout from '../../graphics/shapes/Callout';
 import { isNullOrEmpty } from '../../common';
 
-export default function DrawHighlightAnnotationTask(getGraphics, createTranfromTask, applyLayoutChangesTask, scaleOptionTask,
+export default function DrawHighlightAnnotationTask(getGraphics, createTransformTask, applyLayoutChangesTask, scaleOptionTask,
   combinedContextsTask,
   calloutOptionTask,
   readTemplatesTask,
@@ -25,7 +25,7 @@ export default function DrawHighlightAnnotationTask(getGraphics, createTranfromT
     _graphics.reset("calloutplaceholder", Layers.Annotation);
 
     if (treeItemId !== null) {
-      _transform = createTranfromTask.getTransform();
+      _transform = createTransformTask.getTransform();
       _options = calloutOptionTask.getOptions();
 
       drawHighlightAnnotation(treeItemId);
@@ -71,14 +71,14 @@ export default function DrawHighlightAnnotationTask(getGraphics, createTranfromT
             this, function (x, y, width, height) {
               var snapRect = new Rect(x, y, width, height),
                 snapPoint = new Point(snapRect.centerPoint()),
-                viewPortPosition = getFrameMedianPosition(),
-                projectionPoint = viewPortPosition.getProjectionPoint(snapRect.centerPoint());
+                { medianRect, viewPortRect } = getFrameMedianPosition(),
+                projectionPoint = medianRect.getProjectionPoint(snapRect.centerPoint());
 
               if(projectionPoint == null) {
                 /* snapPoint is inside viewport, no need to project */
                 projectionPoint = snapPoint;
               }
-              if ((treeItemPosition.actualVisibility >= _options.calloutMaximumVisibility && treeItemPosition.actualVisibility != Visibility.Invisible) || !viewPortPosition.overlaps(snapRect)) {
+              if ((treeItemPosition.actualVisibility >= _options.calloutMaximumVisibility && treeItemPosition.actualVisibility != Visibility.Invisible) || !medianRect.overlaps(snapRect)) {
 
                 calloutTemplateName = !isNullOrEmpty(itemConfig.calloutTemplateName) ? itemConfig.calloutTemplateName :
                   !isNullOrEmpty(itemConfig.templateName) ? itemConfig.templateName :
@@ -87,7 +87,7 @@ export default function DrawHighlightAnnotationTask(getGraphics, createTranfromT
 
                 calloutTemplate = readTemplatesTask.getTemplate(calloutTemplateName, readTemplatesTask.DefaultWidgetTemplateName);
 
-                position = getAnnotationPosition(projectionPoint, viewPortPosition, calloutTemplate.templateConfig.itemSize);
+                position = getAnnotationPosition(projectionPoint, viewPortRect, calloutTemplate.templateConfig.itemSize);
 
                 /* position callout div placeholder */
                 calloutPanelPosition = new Rect(position);
@@ -153,19 +153,24 @@ export default function DrawHighlightAnnotationTask(getGraphics, createTranfromT
       scale = scaleOptions.scale,
       placeholderOffset = new Point(centerOnCursorTask.getPlaceholderOffset()),
       scrollPanelSize = new Size(applyLayoutChangesTask.getScrollPanelSize()),
-      frameThickness = new Thickness(applyLayoutChangesTask.getFrameThickness()),
+      frameBaseOffset = new Thickness(applyLayoutChangesTask.getFrameOffset()),
       medianThickness = new Thickness(frameSizeTask.getMedian());
 
     
     placeholderOffset.scale(1.0 / scale);
-    frameThickness.scale(1.0 / scale);
+    frameBaseOffset.scale(1.0 / scale);
     scrollPanelSize.scale(1.0 / scale);
     medianThickness.scale(1.0 / scale);
 
-    var medianRect = new Rect(placeholderOffset.x, placeholderOffset.y, scrollPanelSize.width, scrollPanelSize.height);
+    var viewPortRect = new Rect(placeholderOffset.x, placeholderOffset.y, scrollPanelSize.width, scrollPanelSize.height);
+    var medianRect = new Rect(viewPortRect);
+    medianRect.offset(frameBaseOffset);
     medianRect.offset(medianThickness);
 
-    return medianRect;
+    return { 
+      medianRect: medianRect,
+      viewPortRect: viewPortRect
+    };
   }
 
   function getAnnotationPosition(snapPoint, panelRect, itemSize) {

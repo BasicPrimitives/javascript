@@ -45,5 +45,6 @@
 ## Annotations
 * [On-screen Connector Annotation](ConnectorAnnotation.md)
 * [Shape & Background Annotations](ShapeAndBackgroundAnnotations.md)
+* [Level Annotation](LevelAnnotation.md)
 * [Highlight Path Annotation](HighlightPathAnnotation.md)
 * [Labels cascades in Family Chart](LabelsCascadesInFamilyChart.md)

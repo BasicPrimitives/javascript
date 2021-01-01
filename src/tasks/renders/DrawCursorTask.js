@@ -2,7 +2,7 @@ import Rect from '../../graphics/structs/Rect';
 import RenderEventArgs from '../../events/RenderEventArgs';
 import { Layers } from '../../enums';
 
-export default function DrawCursorTask(getGraphics, createTranfromTask, applyLayoutChangesTask,
+export default function DrawCursorTask(getGraphics, createTransformTask, applyLayoutChangesTask,
   combinedContextsTask,
   alignDiagramTask, itemTemplateParamsTask,
   cursorItemTask, selectedItemsTask) {
@@ -16,7 +16,7 @@ export default function DrawCursorTask(getGraphics, createTranfromTask, applyLay
     _graphics.reset("placeholder", Layers.Cursor);
 
     if (treeItemId != null) {
-      _transform = createTranfromTask.getTransform();
+      _transform = createTransformTask.getTransform();
 
       drawCursor(treeItemId);
     }

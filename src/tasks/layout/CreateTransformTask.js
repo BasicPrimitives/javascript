@@ -34,6 +34,6 @@ export default function CreateTransformTask(orientationOptionTask, alignDiagramT
     process: process,
     getTransform: getTransform,
     getTreeItemForMousePosition: getTreeItemForMousePosition,
-    description: "Create oordiante system tranfromation object."
+    description: "Create coordinate system transformation object."
   };
 };

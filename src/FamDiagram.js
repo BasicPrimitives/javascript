@@ -7,6 +7,8 @@ import GroupTitleTemplate from './templates/html/GroupTitleTemplate';
 import HighlightTemplate from './templates/html/HighlightTemplate';
 import ItemTemplate from './templates/html/ItemTemplate';
 import UserTemplate from './templates/html/UserTemplate';
+import LevelTitleTemplate from './templates/html/LevelTitleTemplate';
+import LevelBackgroundTemplate from './templates/html/LevelBackgroundTemplate';
 import LabelAnnotationTemplate from './templates/html/LabelAnnotationTemplate';
 
 import BaseControl from './BaseControl';
@@ -33,6 +35,8 @@ export default function FamDiagram(element, options, templates) {
     HighlightTemplate,
     ItemTemplate,
     UserTemplate,
+    LevelTitleTemplate,
+    LevelBackgroundTemplate,
     /* FamDiagram specific templates */
     LabelAnnotationTemplate,
     ...templates

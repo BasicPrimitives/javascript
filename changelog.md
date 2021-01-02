@@ -2,6 +2,8 @@
 * Added LevelAnnotationConfig
 * Added level annotation options to OrgConfig and FamConfig
 * Fixed frame auto hiding for small control size
+* Fixed group title options in PDFKit plugins.
+* Fixed shapes opacity in PDFKit plugins.
 #### Version 6.0.0
 **Warning**: Non-backward compatible API changes!
 * Refactored library into [ES6 Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).

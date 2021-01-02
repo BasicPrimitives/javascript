@@ -41,6 +41,7 @@ export default function BasePdfkitPlugin(options, createTaskManager, templates) 
   function _disableNotAvailableFunctionality() {
     /* disable functionality not available in PDF */
     _data.options.scale = 1;
+    _data.options.showFrame = false;
     _data.options.hasButtons = Enabled.False;
     _data.options.pageFitMode = PageFitMode.AutoSize;
     _data.options.autoSizeMinimum = new Size(0, 0);

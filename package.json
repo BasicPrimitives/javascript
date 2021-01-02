@@ -1,6 +1,8 @@
 {
+  "name": "basicprimitives",
+  "sideEffects": false,
   "homepage": "https://www.basicprimitives.com/",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "author": "Basic Primitives Inc. <support@basicprimitives.com> (https://www.basicprimitives.com)",
   "description": "Basic Primitives Diagrams for JavaScript - data visualization components library that implements organizational chart and multi-parent dependency diagrams, contains implementations of JavaScript Controls and PDF rendering plugins.",
   "repository": {
@@ -9,7 +11,7 @@
   },
   "license": "SEE LICENSE IN license.pdf",
   "main": "dist/primitives.js",
-  "module": "./src/index.js",
+  "module": "src/index.js",
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/preset-env": "^7.12.7",
@@ -42,5 +44,45 @@
   },
   "jest": {
     "testEnvironment": "jsdom"
-  }
+  },
+  "keywords": [
+    "data analytics",
+    "data visualization",
+    "visualization",
+    "diagrams",
+    "diagram layout",
+    "chart",
+    "charting library",
+    "diagram",
+    "diagrams visualization",
+    "diagram editor",
+    "diagram generator",
+    "tree",
+    "hierarchy",
+    "organizational chart",
+    "multiple inheritance visualization",
+    "family tree",
+    "dependency diagram",
+    "dependencies diagram",
+    "PERT",
+    "financial ownership diagram",
+    "DAG",
+    "directed acyclic graph",
+    "ui",
+    "input",
+    "multiselect",
+    "treeview",
+    "treeselect",
+    "control",
+    "component",
+    "react",
+    "javascript",
+    "component library",
+    "react component",
+    "javascript control",
+    "PDF",
+    "PDFKit",
+    "pdfkit plugin",
+    "pdf generation"
+  ]
 }

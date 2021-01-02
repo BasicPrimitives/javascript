@@ -14,15 +14,7 @@
     var PDFDocument = pdfkitsamples.PDFDocument;
     var blobStream = pdfkitsamples.blobStream;
 
-    document.addEventListener('DOMContentLoaded', function () {
-      // create a document and pipe to a blob
-      var doc = new PDFDocument();
-      var stream = doc.pipe(blobStream());
-
-      doc.fontSize(25)
-        .text('Level Annotation', 30, 30);
-
-      var sampleChart = primitives.OrgDiagramPdfkit({
+    var config = {
         items: [
           new primitives.OrgItemConfig({
             id: 0,
@@ -44,6 +36,13 @@
             title: "Fritz Stuger",
             description: "Business Solutions, US",
             image: photos.c
+          }),
+          new primitives.OrgItemConfig({
+            id: 3,
+            parent: 2,
+            title: "Robert Canon",
+            description: "Operations, US",
+            image: photos.r
           })
         ],
         annotations: [
@@ -54,11 +53,11 @@
             title: "Level 0",
             titleColor: primitives.Colors.RoyalBlue,
             offset: new primitives.Thickness(0, 0, 0, -1),
-            lineWidth: new primitives.Thickness(0, 0, 0, 0),
-            opacity: 0,
-            borderColor: primitives.Colors.Gray,
-            fillColor: primitives.Colors.Gray,
-            lineType: primitives.LineType.Dotted
+            lineWidth: new primitives.Thickness(0, 0, 0, 1),
+            opacity: 0.05,
+            borderColor: primitives.Colors.Black,
+            fillColor: primitives.Colors.Yellow,
+            lineType: primitives.LineType.Dashed            
           },
           new primitives.LevelAnnotationConfig({
             annotationType: primitives.AnnotationType.Level,
@@ -66,21 +65,79 @@
             title: "Level 1",
             titleColor: primitives.Colors.Green,
             offset: new primitives.Thickness(0, 0, 0, -1),
-            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            lineWidth: new primitives.Thickness(0, 0, 0, 1),
             opacity: 0.1,
-            borderColor: primitives.Colors.Gray,
+            borderColor: primitives.Colors.Black,
             fillColor: primitives.Colors.Gray,
             lineType: primitives.LineType.Dotted
-          })
+          }),
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [2],
+            title: "Level 2",
+            titleColor: primitives.Colors.Red,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 1),
+            opacity: 0.05,
+            borderColor: primitives.Colors.Red,
+            fillColor: primitives.Colors.Red,
+            lineType: primitives.LineType.Solid
+          },
         ],
         cursorItem: null,
         hasSelectorCheckbox: primitives.Enabled.False,
-        orientationType: primitives.OrientationType.Left
-      });
+        levelTitleHorizontalAlignment: primitives.HorizontalAlignmentType.Right
+      };
 
-      var size = sampleChart.draw(doc, 30, 60);
+    document.addEventListener('DOMContentLoaded', function () {
+      // create a document and pipe to a blob
+      var doc = new PDFDocument();
+      var stream = doc.pipe(blobStream());
 
-      doc.restore();
+      doc.fontSize(25)
+        .text('Level Annotation', 30, 30);
+
+      var offset = 60;
+      for(var index = 0; index < 4; index+=1) {
+        var label;
+        switch(index) {
+          case 0:
+            label = "Left, Auto";
+            config.orientationType = primitives.OrientationType.Left;
+            config.levelTitlePlacementType = primitives.AdviserPlacementType.Auto;
+            config.levelTitleHorizontalAlignment = primitives.HorizontalAlignmentType.Left;
+            break;
+          case 1:
+            label = "Top, Auto";
+            config.orientationType = primitives.OrientationType.Top;
+            config.levelTitlePlacementType = primitives.AdviserPlacementType.Auto;
+            config.levelTitleHorizontalAlignment = primitives.HorizontalAlignmentType.Center;
+            break;
+          case 2:
+            label = "Right, Auto";
+            config.orientationType = primitives.OrientationType.Right;
+            config.levelTitlePlacementType = primitives.AdviserPlacementType.Auto;
+            config.levelTitleHorizontalAlignment = primitives.HorizontalAlignmentType.Right;
+            break;
+          case 3:
+            label = "Bottom, Right";
+            config.orientationType = primitives.OrientationType.Bottom;
+            config.levelTitlePlacementType = primitives.AdviserPlacementType.Right;
+            config.levelTitleHorizontalAlignment = primitives.HorizontalAlignmentType.Center;
+            break;
+        }
+        doc.fontSize(15)
+          .text(label, 30, offset);
+        offset+= 20;
+        var sampleChart = primitives.OrgDiagramPdfkit(config);
+        var size = sampleChart.draw(doc, 30, offset);
+        offset += size.height + 10;
+
+        if(index == 1) {
+          doc.addPage();
+          offset = 30;
+        }
+      }
 
       doc.end();
 

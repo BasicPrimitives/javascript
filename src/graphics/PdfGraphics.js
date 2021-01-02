@@ -147,8 +147,9 @@ PdfGraphics.prototype.polyline = function (polylineData) {
   if (attr.lineWidth !== undefined && attr.fillColor !== undefined) {
     doc
       .lineWidth(attr.lineWidth)
-      .fillOpacity(attr.opacity)
-      .fillAndStroke(attr.fillColor, attr.borderColor);
+      .fillColor(attr.fillColor, attr.opacity)
+      .strokeColor(attr.borderColor)
+      .fillAndStroke();
   }
   else if (attr.lineWidth !== undefined) {
     doc
@@ -156,9 +157,7 @@ PdfGraphics.prototype.polyline = function (polylineData) {
       .stroke(attr.borderColor);
   }
   else if (attr.fillColor !== undefined) {
-    doc
-      .fillOpacity(attr.opacity)
-      .fillColor(attr.fillColor);
+    doc.fillColor(attr.fillColor, attr.opacity);
   }
   doc.restore();
 };

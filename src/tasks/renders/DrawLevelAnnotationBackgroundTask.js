@@ -54,7 +54,7 @@ export default function DrawLevelAnnotationBackgroundTask(getGraphics, verticalO
           if(verticalInterval.overlaps(verticalOffset)) {
             var uiHash = new RenderEventArgs();
             uiHash.context = annotationConfig;
-            mergeObjects(uiHash.context, { lineWidth: lineWidth.toString() });
+            mergeObjects(uiHash.context, { lineWidth });
     
             _transform.transformRect(position.x, position.y, position.width, position.height, true,
               this, function (x, y, width, height) {

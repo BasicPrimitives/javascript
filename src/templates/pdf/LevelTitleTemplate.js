@@ -1,5 +1,8 @@
+import { TextOrientationType, OrientationType } from '../../enums';
+import { renderRotatedText } from './RotatedText';
+
 export default function LevelTitleTemplate(options, orientation) {
-  var {levelTitleFontSize: fontSize, 
+  var {levelTitleFontSize, 
     levelTitleFontFamily: fontFamily,
     levelTitleFontWeight: fontWeight,
     levelTitleFontStyle: fontStyle,
@@ -24,26 +27,23 @@ export default function LevelTitleTemplate(options, orientation) {
       label = config.title,
       fontColor = config.titleFontColor || levelTitleFontColor;
 
-    /* title background */
-    doc.save();
-    doc.translate(position.width, 0)
-      .rotate(90, {
-        origin: [position.x, position.y]
-      });
-    doc.fillColor(titleColor)
-      .roundedRect(position.x, position.y, position.height - 2, position.width, 4)
-      .fill();
+    if(textOrientation == TextOrientationType.Auto) {
+      switch (orientation) {
+        case OrientationType.Top:
+          textOrientation = TextOrientationType.RotateRight;
+          break;
+        case OrientationType.Bottom:
+          textOrientation = TextOrientationType.RotateLeft;
+          break;
+        case OrientationType.Left:
+        case OrientationType.Right:
+          break;
+      }
+    }
 
-    /* title */
-    doc.fillColor(fontColor)
-      .font('Helvetica', parseInt(fontSize, 10))
-      .text(label, position.x + 4, position.y + 6, {
-        ellipsis: true,
-        width: (position.height - 4),
-        height: position.width - 4,
-        align: 'center'
-      });
-    doc.restore();
+    var fontSize = parseInt(levelTitleFontSize, 10);
+
+    renderRotatedText({doc, textOrientation, label, fontSize, fontColor, position, titleColor, horizontalAlignment, verticalAlignment });
   }
 
   return {

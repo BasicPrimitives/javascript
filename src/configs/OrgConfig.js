@@ -855,7 +855,7 @@ export default function OrgConfig(name) {
    * @group Level Titles
    * @type {TextOrientationType}
    */
-  this.levelTitleOrientation = TextOrientationType.RotateRight;
+  this.levelTitleOrientation = TextOrientationType.Auto;
 
   /**
    * Level titles vertical alignment.

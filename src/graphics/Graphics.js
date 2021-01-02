@@ -498,6 +498,7 @@ Graphics.prototype.template = function (x, y, width, height, contentx, contenty,
 
   if (attr !== null) {
     if (attr.borderWidth !== undefined) {
+      attr.borderWidth = attr.borderWidth.toString();
       gap = this.getPxSize(attr.borderWidth);
     }
   }

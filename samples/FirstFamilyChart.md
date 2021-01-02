@@ -2,7 +2,7 @@
 
 Family diagram shares a lot of common features with organizational chart diagram. See following organizational chart samples for details:
 
-* "First Organizational Chart" - describes how to create, update and destroy widgets.
+* "First Organizational Chart" - describes how to create, update and destroy controls.
 * "Adding new items at run time" - explains how to add new items to diagram without full recreation of layout.
 * "Placement and auto sizing" - explains how to size diagram on page resize
 etc.

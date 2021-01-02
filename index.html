@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" style="margin: 0; padding: 0; height: 100%; overflow: hidden;">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 <head>
   <title>Basic Primitives Diagrams</title>
   <script>
@@ -9,7 +9,7 @@
       "javascript": "JavaScript",
       "pdfkit": "PDFkit"
     };
-    var preferedFramework = "javascript";
+    var preferredFramework = "javascript";
     var activeFile;
     var samplesHash = {};
     var files = [
@@ -240,7 +240,8 @@
           {
             label: "Item and group title colors",
             frameworks: {
-              javascript: "samples/javascript.controls/CaseItemAndGroupTitleColors.html"
+              javascript: "samples/javascript.controls/CaseItemAndGroupTitleColors.html",
+              pdfkit: "samples/pdfkit.plugins/ItemAndGroupTitleColors.html"
             }
           }
         ]
@@ -255,9 +256,9 @@
             }
           },
           {
-            label: "Children & Assitants Levels",
+            label: "Children & Assistants Levels",
             frameworks: {
-              javascript: "samples/javascript.controls/CaseChildrenAndAssitantsLevelOffset.html"
+              javascript: "samples/javascript.controls/CaseChildrenAndAssistantsLevelOffset.html"
             }
           },
           {
@@ -474,7 +475,15 @@
           {
             label: "Shape & Background Annotations",
             frameworks: {
-              javascript: "samples/javascript.controls/CaseShapeAnnotation.html"
+              javascript: "samples/javascript.controls/CaseShapeAnnotation.html",
+              pdfkit: "samples/pdfkit.plugins/ShapeAnnotation.html"
+            }
+          },
+          {
+            label: "Level Annotation",
+            frameworks: {
+              javascript: "samples/javascript.controls/CaseLevelAnnotation.html",
+              pdfkit: "samples/pdfkit.plugins/LevelAnnotation.html"
             }
           },
           {
@@ -568,7 +577,7 @@
       }
 
       updateFiles(activeFile);
-      preferedFramework = updateFrameworks(activeFile.frameworks, preferedFramework);
+      preferredFramework = updateFrameworks(activeFile.frameworks, preferredFramework);
       resizeWindow();
       Update();
 
@@ -576,21 +585,21 @@
       filesElement.addEventListener("change", function (event) {
         var filesElement = document.getElementById("files");
         activeFile = samplesHash[filesElement.options[filesElement.selectedIndex].getAttribute("data-key")];
-        preferedFramework = updateFrameworks(activeFile.frameworks, preferedFramework);
+        preferredFramework = updateFrameworks(activeFile.frameworks, preferredFramework);
         Update();
       });
       
 
       var frameworksElement =  document.getElementById("frameworks");
       frameworksElement.addEventListener("click", function(event) {
-        preferedFramework = event.target.getAttribute("id");
-        preferedFramework = updateFrameworks(activeFile.frameworks, preferedFramework);
+        preferredFramework = event.target.getAttribute("id");
+        preferredFramework = updateFrameworks(activeFile.frameworks, preferredFramework);
         Update();
       });
 
       var openUrlElement = document.getElementById("openURL");
       openUrlElement.addEventListener("click", function(event) {
-        var frameworkUrl = activeFile.frameworks[preferedFramework];
+        var frameworkUrl = activeFile.frameworks[preferredFramework];
         window.location.href = frameworkUrl;
       });
 
@@ -607,7 +616,7 @@
     }
 
     function Update() {
-      var frameworkUrl = activeFile.frameworks[preferedFramework];
+      var frameworkUrl = activeFile.frameworks[preferredFramework];
       var contentElement = document.getElementById("content");
       contentElement.setAttribute('src', frameworkUrl);
     }
@@ -633,12 +642,12 @@
       }
     }
 
-    function updateFrameworks(frameworks, preferedFramework) {
-      if(!frameworks.hasOwnProperty(preferedFramework)) {
+    function updateFrameworks(frameworks, preferredFramework) {
+      if(!frameworks.hasOwnProperty(preferredFramework)) {
         for(var index=0; index < frameworksOrder.length; index+=1) {
           var framework = frameworksOrder[index];
           if(frameworks[framework] !== undefined) {
-            preferedFramework = framework;
+            preferredFramework = framework;
           }
         }
       }
@@ -652,7 +661,7 @@
         frameworkElement.setAttribute('id', framework);
         frameworkElement.setAttribute('value', framework);
         var hrefElement = document.createElement('a');
-        hrefElement.setAttribute('class', "nav-link" + (framework === preferedFramework ? " active" : "") + (frameworks[framework] === undefined ? " disabled" : ""));
+        hrefElement.setAttribute('class', "nav-link" + (framework === preferredFramework ? " active" : "") + (frameworks[framework] === undefined ? " disabled" : ""));
         hrefElement.setAttribute('id', framework);
         hrefElement.setAttribute('value', framework);
         hrefElement.setAttribute('href', "#");
@@ -660,7 +669,7 @@
         frameworkElement.appendChild(hrefElement);
         frameworksElement.appendChild(frameworkElement);
       }
-      return preferedFramework;
+      return preferredFramework;
     }
   </script>
 </head>

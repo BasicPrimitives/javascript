@@ -19,7 +19,7 @@
         new primitives.OrgItemConfig({
           id: 0,
           parent: null,
-          title: "Scott Aasrud",
+          title: "James Smith",
           description: "VP, Public Sector",
           image: "../images/photos/a.png",
           phone: "(123) 456-78-90",
@@ -91,7 +91,7 @@
 
           switch (data.renderingMode) {
             case primitives.RenderingMode.Create:
-              /* Initialize widgets here */
+              /* Initialize template content here */
               readmore.addEventListener("click", function (e) {
                 /* Block mouse click propagation in order to avoid layout updates before server postback*/
                 primitives.stopPropagation(e);
@@ -102,7 +102,7 @@
               });
               break;
             case primitives.RenderingMode.Update:
-              /* Update widgets here */
+              /* Update template content here */
               break;
           }
         }

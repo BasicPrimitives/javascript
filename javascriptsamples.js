@@ -1095,7 +1095,7 @@ function getFamDiagramOptionsPanels(onUpdate) {
   return [new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Family layout", [new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("neighboursSelectionMode", _src_enums__WEBPACK_IMPORTED_MODULE_10__["NeighboursSelectionMode"].ParentsChildrenSiblingsAndSpouses, "Neighbours Selection Modes", _src_enums__WEBPACK_IMPORTED_MODULE_10__["NeighboursSelectionMode"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupByType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["GroupByType"].Children, "Group by option defines node placement in layout close to its parents or children when node is linked across multiple levels in hierarchy. See \"alignment\" data set.", {
     Children: 2,
     Parents: 1
-  }, _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("alignBylevels", true, "Keep items at the same levels after connections bundling", onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("hideGrandParentsConnectors", true, "Hide direct relations to grand parents. It helps to reduce diagrams connectors layout complexity. This option should be used together with dynamic highlighting of connectors to grandparents via immidiate parents, so information is not lost.", onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("enableMatrixLayout", false, "Enables matrix layout in family diagram. Nodes having the same set of parents and children are grouped into square shaped matrix in order to keep them visualy together.", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("minimumMatrixSize", null, "Minimum number of nodes needed in order to be formed into matrix layout", 2, 10, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("maximumColumnsInMatrix", null, "Maximum columns number in matrix nodes layout", 1, 20, 1, onUpdate)])];
+  }, _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("alignBylevels", true, "Keep items at the same levels after connections bundling", onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("hideGrandParentsConnectors", true, "Hide direct relations to grand parents. It helps to reduce diagrams connectors layout complexity. This option should be used together with dynamic highlighting of connectors to grandparents via immediate parents, so information is not lost.", onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("enableMatrixLayout", false, "Enables matrix layout in family diagram. Nodes having the same set of parents and children are grouped into square shaped matrix in order to keep them visually together.", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("minimumMatrixSize", null, "Minimum number of nodes needed in order to be formed into matrix layout", 2, 10, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("maximumColumnsInMatrix", null, "Maximum columns number in matrix nodes layout", 1, 20, 1, onUpdate)])];
 }
 
 ;
@@ -1117,21 +1117,22 @@ function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
   }, _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("orientationType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["OrientationType"].Top, "Orientation Type", _src_enums__WEBPACK_IMPORTED_MODULE_10__["OrientationType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("verticalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["VerticalAlignmentType"].Middle, "Items Vertical Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["VerticalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("horizontalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["HorizontalAlignmentType"].Center, "Items Horizontal Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["HorizontalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("childrenPlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ChildrenPlacementType"].Horizontal, "Children placement", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ChildrenPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("leavesPlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ChildrenPlacementType"].Horizontal, "Leaves placement defines layout shape for items having no children", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ChildrenPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("placeAdvisersAboveChildren", true, "Place children of advisers above their parent node children", onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("placeAssistantsAboveChildren", true, "Place children of assistants above their parent node children", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("maximumColumnsInMatrix", null, "Maximum columns number in matrix children layout", 1, 20, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("minimalVisibility", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Visibility"].Dot, "Minimal nodes visibility", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Visibility"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("selectionPathMode", _src_enums__WEBPACK_IMPORTED_MODULE_10__["SelectionPathMode"].FullStack, "Selection Path Mode sets visibility of items between cursor item and root", _src_enums__WEBPACK_IMPORTED_MODULE_10__["SelectionPathMode"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate)]));
   result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Default Template", [new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("hasButtons", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Enabled"].Auto, "Show user buttons", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Enabled"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("hasSelectorCheckbox", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Enabled"].True, "Show selection check box", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Enabled"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("selectCheckBoxLabel", "Selected", "Selection checkbox label", ["Selected", "Included", "Pinned", "Any label"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Default chart item template tries to select the best matching font color for current title background.", false), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("itemTitleFirstFontColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].White, "Title first font color", false, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("itemTitleSecondFontColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].White, "Title second font color", false, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("buttonsPanelSize", 28, "Buttons panel size", 10, 100, 2, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("checkBoxPanelSize", 24, "Checkbox panel size", 2, 100, 2, onUpdate)]));
   result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Group Titles", [new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitlePlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["AdviserPlacementType"].Left, "Placement", _src_enums__WEBPACK_IMPORTED_MODULE_10__["AdviserPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("groupTitlePanelSize", 24, "Group title panel width", 10, 72, 2, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleOrientation", _src_enums__WEBPACK_IMPORTED_MODULE_10__["TextOrientationType"].RotateRight, "Orientation", _src_enums__WEBPACK_IMPORTED_MODULE_10__["TextOrientationType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleVerticalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["VerticalAlignmentType"].Middle, "Vertical Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["VerticalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleHorizontalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["HorizontalAlignmentType"].Center, "Horizontal Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["HorizontalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("groupTitleColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black, "Background Color", false, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("For group title color, see title first and second font colors in default template options.", false), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("groupTitleFontSize", "12px", "Font size", ["8px", "10px", "12px", "14px", "16px", "18px", "20px"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleFontWeight", "normal", "Font Weight", ["normal", "bold"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleFontStyle", "normal", "Font Style", ["normal", "italic"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("groupTitleFontFamily", "Arial", "Font Style", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate)]));
+  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Level Titles", [new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("addLevelAnnotations", true, "Add level annotations.", onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitlePlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["AdviserPlacementType"].Left, "Placement", _src_enums__WEBPACK_IMPORTED_MODULE_10__["AdviserPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("levelTitlePlaceInside", true, "Place level titles inside view port", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("levelTitlePanelSize", 24, "Panel width", 10, 1000, 2, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleOrientation", _src_enums__WEBPACK_IMPORTED_MODULE_10__["TextOrientationType"].RotateRight, "Orientation", _src_enums__WEBPACK_IMPORTED_MODULE_10__["TextOrientationType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleVerticalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["VerticalAlignmentType"].Middle, "Vertical Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["VerticalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleHorizontalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["HorizontalAlignmentType"].Center, "Horizontal Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["HorizontalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("levelTitleFontColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].White, "Font Color", false, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("levelTitleColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black, "Title Background Color", false, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("levelTitleFontSize", "12px", "Font size", ["8px", "10px", "12px", "14px", "16px", "18px", "20px", "30px", "40px", "50px"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleFontWeight", "normal", "Font Weight", ["normal", "bold"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleFontStyle", "normal", "Font Style", ["normal", "italic"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("levelTitleFontFamily", "Arial", "Font Style", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate)]));
 
   if (showDefaultTemplateOptions) {
-    result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Markers", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("These options are defined per item template. So if you need to show individual markers per item, you have to define template for every marker type and assign it to items. Template is some sort of named property bag.", false), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("By default marker has color of itemTitleColor property, download demos and check samples source data. If item has no title color set, then be sure that you set border line width and color for markers having no fill, othewise you are not going to see them.", false), new _Size__WEBPACK_IMPORTED_MODULE_6__["SizeConfig"]("minimizedItemSize", new _src_graphics_structs_Size__WEBPACK_IMPORTED_MODULE_11__["default"](4, 4), "Marker size", 1, 40, 1, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("minimizedItemCornerRadius", null, "Corner Radius", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Number, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("highlightPadding", 2, "Highlight border padding around marker", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Thickness, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("minimizedItemShapeType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ShapeType"].None, "Marker Shape", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ShapeType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("minimizedItemLineWidth", 1, "Marker border line width", 0, 10, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("minimizedItemLineType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["LineType"].Solid, "Marker border line type", _src_enums__WEBPACK_IMPORTED_MODULE_10__["LineType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Following Border and Fill colors properties work only for items having no title color property set. See Parners & Annotations Demo to try them.", false), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("minimizedItemBorderColor", null, "Marker border line color", true, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("minimizedItemFillColor", null, "Marker fill color", true, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("minimizedItemOpacity", 1.0, "Opacity", 0, 1, 0.1, onUpdate)], "DefaultTemplateOptions"));
+    result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Markers", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("These options are defined per item template. So if you need to show individual markers per item, you have to define template for every marker type and assign it to items. Template is some sort of named property bag.", false), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("By default marker has color of itemTitleColor property, download demos and check samples source data. If item has no title color set, then be sure that you set border line width and color for markers having no fill, otherwise you are not going to see them.", false), new _Size__WEBPACK_IMPORTED_MODULE_6__["SizeConfig"]("minimizedItemSize", new _src_graphics_structs_Size__WEBPACK_IMPORTED_MODULE_11__["default"](4, 4), "Marker size", 1, 40, 1, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("minimizedItemCornerRadius", null, "Corner Radius", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Number, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("highlightPadding", 2, "Highlight border padding around marker", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Thickness, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("minimizedItemShapeType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ShapeType"].None, "Marker Shape", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ShapeType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("minimizedItemLineWidth", 1, "Marker border line width", 0, 10, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("minimizedItemLineType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["LineType"].Solid, "Marker border line type", _src_enums__WEBPACK_IMPORTED_MODULE_10__["LineType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Following Border and Fill colors properties work only for items having no title color property set. See Partners & Annotations Demo to try them.", false), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("minimizedItemBorderColor", null, "Marker border line color", true, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("minimizedItemFillColor", null, "Marker fill color", true, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("minimizedItemOpacity", 1.0, "Opacity", 0, 1, 0.1, onUpdate)], "DefaultTemplateOptions"));
   }
 
   result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Intervals", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Vertical Intervals Between Rows", true), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("normalLevelShift", 20, "Normal", 1, 40, 1, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("If you enable labels for dots, use the following interval to fit them between levels.", false), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("dotLevelShift", 20, "Dotted", 1, 320, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("lineLevelShift", 10, "Lined", 1, 320, 1, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Horizontal Intervals Between Items in Row", true), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("normalItemsInterval", 10, "Normal", 1, 40, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("dotItemsInterval", 2, "Dotted", 1, 40, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("lineItemsInterval", 2, "Lined", 1, 40, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("cousinsIntervalMultiplier", 5, "Additional interval multiplier between cousins, it creates extra space between hierarchies", 1, 40, 1, onUpdate)]));
   result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Connectors", [new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("arrowsDirection", _src_enums__WEBPACK_IMPORTED_MODULE_10__["GroupByType"].None, "Arrows Direction", _src_enums__WEBPACK_IMPORTED_MODULE_10__["GroupByType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("connectorType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ConnectorType"].Squared, "Connectors", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ConnectorType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("elbowType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ElbowType"].None, "Elbows Type", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ElbowType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("bevelSize", 4, "Bevel Size", 1, 10, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("elbowDotSize", 4, "Elbow dot Size", 1, 10, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("linesType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["LineType"].Solid, "Line type", _src_enums__WEBPACK_IMPORTED_MODULE_10__["LineType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("linesColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Silver, "Color", false, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("linesWidth", 1, "Line width", 1, 10, 1, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("showExtraArrows", true, "Show extra horizontal arrows on top of connectors for easy navigation between parents and children through connector lines", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("extraArrowsMinimumSpace", 30, "Available minimum space to show horizontal arrow", 1, 200, 1, onUpdate)]));
-  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Labels", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Label property should be defined for every item first, otherwise chart has nothiong to show. Labels are visible only for markers. If you need to add labels to normal size items you have to modify default item template and place text outside item boundaries.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("showLabels", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Enabled"].Auto, "Show labels", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Enabled"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Size__WEBPACK_IMPORTED_MODULE_6__["SizeConfig"]("labelSize", new _src_graphics_structs_Size__WEBPACK_IMPORTED_MODULE_11__["default"](80, 24), "Size: Use this property to define labels bounding rectangle. Labels placed relative to markers(dots), so when they overlap in auto show mode one of them would be hidden. Set appropriate intervals between levels of markers in order to fit and make all labels visible.", 1, 400, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("labelOffset", 1, "Offset", 0, 30, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelOrientation", _src_enums__WEBPACK_IMPORTED_MODULE_10__["TextOrientationType"].Horizontal, "Label Orientation", _src_enums__WEBPACK_IMPORTED_MODULE_10__["TextOrientationType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelPlacement", _src_enums__WEBPACK_IMPORTED_MODULE_10__["PlacementType"].Top, "Label Placement", _src_enums__WEBPACK_IMPORTED_MODULE_10__["PlacementType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("labelFontSize", "10px", "Font size", ["8px", "10px", "12px", "14px", "16px", "18px", "20px"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("labelFontFamily", "Arial", "Font Name", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("labelColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black, "Font Color", false, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelFontWeight", "normal", "Font Weight", ["normal", "bold"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelFontStyle", "normal", "Font Style", ["normal", "italic"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate)]));
+  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Labels", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Label property should be defined for every item first, otherwise chart has nothing to show. Labels are visible only for markers. If you need to add labels to normal size items you have to modify default item template and place text outside item boundaries.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("showLabels", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Enabled"].Auto, "Show labels", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Enabled"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Size__WEBPACK_IMPORTED_MODULE_6__["SizeConfig"]("labelSize", new _src_graphics_structs_Size__WEBPACK_IMPORTED_MODULE_11__["default"](80, 24), "Size: Use this property to define labels bounding rectangle. Labels placed relative to markers(dots), so when they overlap in auto show mode one of them would be hidden. Set appropriate intervals between levels of markers in order to fit and make all labels visible.", 1, 400, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("labelOffset", 1, "Offset", 0, 30, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelOrientation", _src_enums__WEBPACK_IMPORTED_MODULE_10__["TextOrientationType"].Horizontal, "Label Orientation", _src_enums__WEBPACK_IMPORTED_MODULE_10__["TextOrientationType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelPlacement", _src_enums__WEBPACK_IMPORTED_MODULE_10__["PlacementType"].Top, "Label Placement", _src_enums__WEBPACK_IMPORTED_MODULE_10__["PlacementType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("labelFontSize", "10px", "Font size", ["8px", "10px", "12px", "14px", "16px", "18px", "20px"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("labelFontFamily", "Arial", "Font Name", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("labelColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black, "Font Color", false, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelFontWeight", "normal", "Font Weight", ["normal", "bold"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelFontStyle", "normal", "Font Style", ["normal", "italic"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate)]));
   result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Callout", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("By default callout displays item content, but it can be redefined with custom callout template.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("calloutMaximumVisibility", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Visibility"].Dot, "Maximum node type visibility", {
     Normal: 1,
     Dot: 2,
     Line: 3
-  }, _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("showCallout", true, "This option controls callout visibility for minimized items and it can be ovewritten per item", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutPlacementOffset", 100, "Call out placement offset", 10, 300, 10, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("calloutfillColor", "#000000", "Fill color", true, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("calloutBorderColor", "#000000", "Border line color", true, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutOffset", 1, "Offset", 0, 30, 1, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("calloutCornerRadius", 4, "Corner Radius", ["0%", "5%", "10%", "20%", 0, 1, 2, 3, 4, 5, 10, 20, 30], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("calloutPointerWidth", "10%", "Pointer Base Width", ["0%", "5%", "10%", "20%", 0, 5, 10, 20, 50], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutLineWidth", 1, "Line width", 0, 10, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutOpacity", 0.2, "Opacity", 0, 1, 0.1, onUpdate)]));
+  }, _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("showCallout", true, "This option controls callout visibility for minimized items and it can be overwritten per item", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutPlacementOffset", 100, "Call out placement offset", 10, 300, 10, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("calloutfillColor", "#000000", "Fill color", true, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("calloutBorderColor", "#000000", "Border line color", true, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutOffset", 1, "Offset", 0, 30, 1, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("calloutCornerRadius", 4, "Corner Radius", ["0%", "5%", "10%", "20%", 0, 1, 2, 3, 4, 5, 10, 20, 30], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("calloutPointerWidth", "10%", "Pointer Base Width", ["0%", "5%", "10%", "20%", 0, 5, 10, 20, 50], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutLineWidth", 1, "Line width", 0, 10, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutOpacity", 0.2, "Opacity", 0, 1, 0.1, onUpdate)]));
   result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Interactivity", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Use this option to disable mouse highlight on touch devices.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("navigationMode", _src_enums__WEBPACK_IMPORTED_MODULE_10__["NavigationMode"].Default, "Navigation mode", _src_enums__WEBPACK_IMPORTED_MODULE_10__["NavigationMode"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("This option defines highlight gravity radius, so minimized item gets highlighted when mouse pointer does not overlap marker but it is within gravity radius of its boundaries.", false), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("highlightGravityRadius", 40, "Gravity radius", 0, 100, 1, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("enablePanning", true, "Enable Panning", onUpdate)]));
-  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Rendering", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("By default widget preferes SVG graphics mode. Use this property to enforce graphics mode programmatically.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("graphicsType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["GraphicsType"].SVG, "Graphics", _src_enums__WEBPACK_IMPORTED_MODULE_10__["GraphicsType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("In order to achive better greacefull degradation of your diagram use item templates of various sizes instead of CSS scale.", false), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("scale", 1.0, "CSS Scale", {
+  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Rendering", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("By default control uses SVG graphics mode. Use this property to switch graphics mode programmatically into Canvas.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("graphicsType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["GraphicsType"].SVG, "Graphics", _src_enums__WEBPACK_IMPORTED_MODULE_10__["GraphicsType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("In order to achieve better graceful degradation of your diagram use item templates of various sizes instead of CSS scale.", false), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("scale", 1.0, "CSS Scale", {
     "50%": 0.5,
     "60%": 0.6,
     "70%": 0.7,
@@ -1149,7 +1150,7 @@ function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
     "190%": 1.9,
     "200%": 2.0
   }, _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Number, onUpdate)]));
-  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Frame", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Displays selected items outside view port area.", false), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("showFrame", true, "Show Frame", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("frameInnerPadding", 2, "Frame inner padding", 0, 10, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("frameOuterPadding", 2, "Frame outer padding", 0, 10, 1, onUpdate)]));
+  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Frame", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Displays selected items outside view port area.", false), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("showFrame", true, "Show Frame", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("frameInnerPadding", 2, "Frame inner padding", 0, 20, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("frameOuterPadding", 2, "Frame outer padding", 0, 20, 1, onUpdate)]));
   return result;
 }
 
@@ -2330,7 +2331,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * Defines leftward or rightward item placement relative to the referenced item.
- * In case of assitants and advisers the referenced item is their imediate parent.
+ * In case of assistants and advisers the referenced item is their immediate parent.
  * In case of family diagram the referenced item is spouse or sibling in the row. 
  *  
  * @enum {AdviserPlacementType}
@@ -2366,7 +2367,7 @@ var AnnotationType = {
   /**
    * Connector lines between two nodes of the diagram. They are drawn on top of existing
    * diagram layout and they don't affect nodes placement. So it is users responsibility to
-   * prserve space between nodes for them.
+   * preserve space between nodes for them.
    */
   Connector: 0,
 
@@ -2383,18 +2384,26 @@ var AnnotationType = {
   HighlightPath: 2,
 
   /**
-   * In-layout label annotation. Label anntations are placed in layout between nodes,
-   * they preserve space between nodes, so they don't overlap neighbouring nodes.
-   * Label annotations are designed for autoplacement and bundling of connection lines between 
+   * In-layout label annotation. Label annotations are placed in layout between nodes,
+   * they preserve space between nodes, so they don't overlap neighboring nodes.
+   * Label annotations are designed for auto placement and bundling of connection lines between 
    * nodes when needed.
    */
   Label: 3,
 
   /**
-   * Background annotation highlights nodes via drawing rectangular shape in background.
-   * If shapes overlap the same style neighbouring shapes they are merged into one continuous shape. 
+   * Background annotation highlights nodes via drawing rectangular shape in the background.
+   * If shapes overlap the same style neighboring shapes they are merged into one continuous shape. 
    */
-  Background: 4
+  Background: 4,
+
+  /**
+   * Stripe annotation highlights same level nodes of the diagram via drawing continuous rectangular shape 
+   * from side to side in their background. Stripe has optional title on the side of the diagram view area.
+   * Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the 
+   * background and does not occupy space. 
+   */
+  Level: 5
 };
 /**
  * @typedef {number} ChildrenPlacementType
@@ -2404,7 +2413,7 @@ var AnnotationType = {
  * Defines shape of children formation. By default a node's children are always placed in a horizontal line 
  * below the parent node. On a large scale this may result in the end user having to scroll screens 
  * in order to view all of the nodes. To compensate for this, we provide the option of placing all 
- * of the children of a parent node in a sqaure/matrix formation. This will reduce sideways screen 
+ * of the children of a parent node in a square/matrix formation. This will reduce sideways screen 
  * scrolling by compacting the child nodes into a much smaller area on the screen.
  *  
  * @enum {ChildrenPlacementType}
@@ -2810,8 +2819,8 @@ var HorizontalAlignmentType = {
  * This enumeration defines child node placement relative to its parent node. By default all children that belong 
  * to a parent node are of the same rank and status between each other and due to that, are always aligned below
  * the parent and are organized in the same way. However for special cases were the end user wishes to have a child
- * that is seperate from the rest of it's siblings, we provide custom child types that the end user can use to
- * place diffrent ranking nodes anywhere around the parent node. These placement options give a lot of space for
+ * that is separate from the rest of it's siblings, we provide custom child types that the end user can use to
+ * place different ranking nodes anywhere around the parent node. These placement options give a lot of space for
  * the creation of roles such as an Assistant, Adviser, various Partners and co-heads that may be in the organization.
  * Additionally, by default a node's regular children are always placed in a horizontal line below the parent node. See children
  * placement type options for regular children layout.
@@ -2831,13 +2840,13 @@ var ItemType = {
   Adviser: 2,
 
   /**
-   * Assitant node is drawn at row in between parent and child rows and connected horizontally
-   * to connection line going from parent to the regualr children
+   * Assistant node is drawn at row in between parent and child rows and connected horizontally
+   * to connection line going from parent to the regular children
    */
   Assistant: 1,
 
   /**
-   * Sub assitant is variation of assitant node type.
+   * Sub assistant is variation of assistant node type.
    * It has the same placement but it is connected by the top side of the node to the connector line going to the parent node.
    */
   SubAssistant: 4,
@@ -2849,7 +2858,7 @@ var ItemType = {
   SubAdviser: 5,
 
   /**
-   * General partner is immitation of multiple inheritance in the oraganizational chart hierarchy.
+   * General partner is imitation of multiple inheritance in the organizational chart hierarchy.
    * General partner node is drawn side by side with its parent and remaining regular children
    * are visually connected to both of them like they are their parents.
    * Another layout feature of the general partner is that it is connected to parents of its immediate logical parent as well,
@@ -2858,7 +2867,7 @@ var ItemType = {
   GeneralPartner: 6,
 
   /**
-   * Limited partner is variation of general partner. The only difference is that is is not conencte to its logical grand parent.
+   * Limited partner is variation of general partner. The only difference is that is is not connected to its logical grand parent.
    */
   LimitedPartner: 7,
 
@@ -2874,6 +2883,7 @@ var LabelType = {
   None: 3
 };
 var Layers = {
+  LevelAnnotation: 1,
   BackgroundAnnotation: 2,
   BackgroundAnnotations: 3,
   BackgroundConnectorAnnotation: 4,
@@ -2935,7 +2945,7 @@ var LoopsLayoutMode = {
  **/
 
 /**
- * Interactivity mode. Control implements standard behaivour of classic desktop UI controls. It supports single selected node - cursor.
+ * Interactivity mode. Control implements standard behavior of classic desktop UI controls. It supports single selected node - cursor.
  * It supports on mouse over node visual feedback - highlight. It supports selection of group of nodes - selected items. 
  * All that functionality can be disabled depending on your application requirements.
  *  
@@ -3015,7 +3025,7 @@ var OrientationType = {
  * becomes problematic, so we support automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
  * Control supports several page fit mode options which can match your requirements depending on diagram layout, orientation and number of nodes.
  * 
- * Autosize - this option is opposite to auto fit. It lets you expand control size to fit all diagram nodes full size without scrollbars.
+ * Autosize - this option is opposite to auto fit. It lets you expand control size to fit all diagram nodes full size without scroll bars.
  *  
  * @enum {PageFitMode}
  */
@@ -3037,7 +3047,7 @@ var PageFitMode = {
   PageHeight: 2,
 
   /**
-   * Fits diagram into the view so it has no scrollbars.
+   * Fits diagram into the view so it has no scroll bars.
    */
   FitToPage: 3,
 
@@ -3283,7 +3293,7 @@ var Visibility = {
   Dot: 2,
 
   /**
-   * Diagram only draws connection lines and hides actuall nodes.
+   * Diagram only draws connection lines and hides actual nodes.
    */
   Line: 3,
 
@@ -3300,7 +3310,7 @@ var Visibility = {
  **/
 
 /**
- * Option to draw annotation in the foreground or in the backgound of diagram nodes.
+ * Option to draw annotation in the foreground or in the background of diagram nodes.
  *  
  * @enum {ZOrderType}
  */
@@ -3569,9 +3579,29 @@ Thickness.prototype.isEmpty = function () {
   return this.left === 0 && this.top === 0 && this.right === 0 && this.bottom === 0;
 };
 /**
+ * Checks if at least one side is positive
+ * 
+ * @returns {boolean} Returns true if any of its sides is positive
+ */
+
+
+Thickness.prototype.isPositive = function () {
+  return this.left > 0 || this.top > 0 || this.right > 0 || this.bottom > 0;
+};
+/**
+ * Checks if at least one side is negative
+ * 
+ * @returns {boolean} Returns true if any of its sides is negative
+ */
+
+
+Thickness.prototype.isNegative = function () {
+  return this.left < 0 || this.top < 0 || this.right < 0 || this.bottom < 0;
+};
+/**
  * Maximum thickness.
  * 
- * @param {Thickness} thickness The thickness to compaire with.
+ * @param {Thickness} thickness The thickness to compare with.
  * @returns {Thickness} Returns reference to the current thickness object
  */
 
@@ -3643,7 +3673,7 @@ Thickness.prototype.scale = function (scale) {
 
 Thickness.prototype.toString = function (units) {
   units = units !== undefined ? units : "px";
-  return this.left + units + ", " + this.top + units + ", " + this.right + units + ", " + this.bottom + units;
+  return this.top + units + " " + this.right + units + " " + this.bottom + units + " " + this.left + units;
 };
 
 /***/ })

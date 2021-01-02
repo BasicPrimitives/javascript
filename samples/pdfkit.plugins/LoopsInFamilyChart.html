@@ -5,30 +5,24 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Family Chart Hiding Grand Parents Relations</title>
 
-  
-  <!-- PDFkit & Libs -->
-  <script src="../../packages/pdfkit/pdfkit.js"></script>
-  <script src="../../packages/pdfkit/blob-stream.js"></script>
-
-  <!-- Demo Images -->
-  <script src="../data/photos.js"></script>
-
+  <script src="../../pdfkitsamples.js"></script>
   <script type="text/javascript" src="../../primitives.js"></script>
-  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type='text/javascript'>
     var control;
     var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
 
     document.addEventListener('DOMContentLoaded', function () {
-      // create a document and pipe to a blob
       var doc = new PDFDocument();
       var stream = doc.pipe(blobStream());
 
       doc.fontSize(25)
         .text('Loops In Family Diagram', 30, 30);
 
-      var firstOrganizationalChartSample = primitives.FamDiagramPdfkit({
+      var sampleChart = primitives.FamDiagramPdfkit({
         items: [
           { id: 1, parents: [3, 5, 6, 7], title: "James", label: "James", description: "James is First and he is child of Brad, Sara & Lynette", image: photos.j },
           { id: 2, parents: [1], title: "Brad", label: "Brad", description: "", image: photos.b },
@@ -52,7 +46,7 @@
         arrowsDirection: primitives.GroupByType.Parents
       });
 
-      var size = firstOrganizationalChartSample.draw(doc, 30, 60);
+      var size = sampleChart.draw(doc, 30, 60);
 
       doc.restore();
 

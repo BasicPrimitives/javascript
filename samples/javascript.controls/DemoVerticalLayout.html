@@ -49,6 +49,21 @@
         groupTitleFontWeight: "normal",
         groupTitleFontStyle: "normal",
 
+        /* level title options */
+        addLevelAnnotations: true,
+        levelTitlePlacementType: primitives.AdviserPlacementType.Left,
+        levelTitlePanelSize: 24,
+        levelTitlePlaceInside: false,
+        levelTitleOrientation: primitives.TextOrientationType.Auto,
+        levelTitleVerticalAlignment: primitives.VerticalAlignmentType.Middle,
+        levelTitleHorizontalAlignment: primitives.HorizontalAlignmentType.Center,
+        levelTitleFontSize: "12px",
+        levelTitleFontFamily: "Arial",
+        levelTitleFontColor: primitives.Colors.White,
+        levelTitleColor: primitives.Colors.RoyalBlue,
+        levelTitleFontWeight: "normal",
+        levelTitleFontStyle: "normal",
+
         /* Template */
         DefaultTemplateOptions: {
           minimizedItemCornerRadius: null,
@@ -162,6 +177,48 @@
         defaultTemplateName: "defaultTemplate"
       })
 
+      options.annotations = [];
+      if(options.addLevelAnnotations) {
+        options.annotations = [
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [0],
+            title: "CEO",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [1],
+            title: "Management",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0.08,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [2],
+            title: "Members",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          }
+        ];
+      }
+
       return options;
     }
 
@@ -173,7 +230,7 @@
         { id: 0, parent: null, isVisible: true, description: "Description A", email: "mail@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/a.png", phone: "1-900-800-70-60", title: "Title A", templateName: "managerTemplate", labelSize: new primitives.Size(300, 14), labelPlacement: primitives.PlacementType.Right },
         { id: 1, parent: 0, isVisible: true, description: "Adviser Description", groupTitleColor: "#4169e1", image: "../images/photos/z.png", title: "Adviser 1", label: "Adviser 1", itemType: primitives.ItemType.Adviser },
         { id: 2, parent: 0, isVisible: true, description: "Adviser Description", groupTitleColor: "#4169e1", image: "../images/photos/z.png", title: "Adviser 2", label: "Adviser 2", itemType: primitives.ItemType.Adviser },
-        { id: 3, parent: 0, isVisible: true, description: "Assitant Description", groupTitleColor: "#4169e1", image: "../images/photos/y.png", title: "Assistant 1", label: "Assistant 1", itemType: primitives.ItemType.Assistant, labelSize: new primitives.Size(300, 14), labelPlacement: primitives.PlacementType.Right },
+        { id: 3, parent: 0, isVisible: true, description: "Assistant Description", groupTitleColor: "#4169e1", image: "../images/photos/y.png", title: "Assistant 1", label: "Assistant 1", itemType: primitives.ItemType.Assistant, labelSize: new primitives.Size(300, 14), labelPlacement: primitives.PlacementType.Right },
         /* managers */
         { id: 4, parent: 0, isVisible: true, description: "Managers E description ", email: "mail1@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/e.png", phone: "1-900-800-70-15", title: "Manager E", label: "Manager E", templateName: "managerTemplate", labelSize: new primitives.Size(300, 14), labelPlacement: primitives.PlacementType.Right },
         { id: 20, parent: 0, isVisible: true, description: "Managers V description ", email: "mail2@mail.com", groupTitleColor: "#4169e1", image: "../images/photos/v.png", phone: "1-900-800-70-17", title: "Manager V", label: "Manager V", templateName: "managerTemplate", labelSize: new primitives.Size(300, 14), labelPlacement: primitives.PlacementType.Right },
@@ -434,14 +491,14 @@
 
         switch (data.renderingMode) {
           case primitives.RenderingMode.Create:
-            /* Initialize widgets here */
+            /* Initialize template content here */
             email.addEventListener("click", function (e) {
               /* Block mouse click propagation in order to avoid layout updates before server postback*/
               primitives.stopPropagation(e);
             });
             break;
           case primitives.RenderingMode.Update:
-            /* Update widgets here */
+            /* Update template content here */
             break;
         }
       }

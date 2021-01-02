@@ -50,6 +50,20 @@
       groupTitleFontWeight: "normal",
       groupTitleFontStyle: "normal",
 
+      /* level title options */
+      levelTitlePlacementType: primitives.AdviserPlacementType.Left,
+      levelTitlePanelSize: 24,
+      levelTitlePlaceInside: false,
+      levelTitleOrientation: primitives.TextOrientationType.Auto,
+      levelTitleVerticalAlignment: primitives.VerticalAlignmentType.Middle,
+      levelTitleHorizontalAlignment: primitives.HorizontalAlignmentType.Center,
+      levelTitleFontSize: "12px",
+      levelTitleFontFamily: "Arial",
+      levelTitleFontColor: primitives.Colors.White,
+      levelTitleColor: primitives.Colors.RoyalBlue,
+      levelTitleFontWeight: "normal",
+      levelTitleFontStyle: "normal",
+
       /* Template */
       DefaultTemplateOptions: {
         minimizedItemCornerRadius: null,
@@ -163,6 +177,48 @@
         templates: [getContactTemplate(options), getDefaultTemplate(options)],
         defaultTemplateName: "defaultTemplate"
       })
+
+      options.annotations = [];
+      if(options.addLevelAnnotations) {
+        options.annotations = [
+        {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [0],
+            title: "CEO",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -5),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [1],
+            title: "Management",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 4, 0, -15),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0.08,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [2],
+            title: "Members",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 14, 0, -5),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          }
+        ];
+      }
 
       return options;
     }
@@ -326,14 +382,14 @@
 
         switch (data.renderingMode) {
           case primitives.RenderingMode.Create:
-            /* Initialize widgets here */
+            /* Initialize template content here */
             email.addEventListener("click", function (e) {
               /* Block mouse click propagation in order to avoid layout updates before server postback*/
               primitives.stopPropagation(e);
             });
             break;
           case primitives.RenderingMode.Update:
-            /* Update widgets here */
+            /* Update template content here */
             break;
         }
       }

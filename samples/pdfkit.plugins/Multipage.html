@@ -45,12 +45,12 @@
       doc.fontSize(25)
         .text('First Organizational Chart :-)', 100, 280);
 
-      var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
+      var sampleChart = primitives.OrgDiagramPdfkit({
         items: [
           new primitives.OrgItemConfig({
             id: 0,
             parent: null,
-            title: "Scott Aasrud",
+            title: "James Smith",
             description: "VP, Public Sector",
             image: photos.a
           }),
@@ -64,7 +64,7 @@
           new primitives.OrgItemConfig({
             id: 2,
             parent: 0,
-            title: "Joao Stuger",
+            title: "Fritz Stuger",
             description: "Business Solutions, US",
             image: photos.c
           })
@@ -73,7 +73,7 @@
         hasSelectorCheckbox: primitives.Enabled.False
       });
 
-      var size = firstOrganizationalChartSample.draw(doc, 150, 300);
+      var size = sampleChart.draw(doc, 150, 300);
 
       var lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam in suscipit purus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vivamus nec hendrerit felis. Morbi aliquam facilisis risus eu lacinia. Sed eu leo in turpis fringilla hendrerit. Ut nec accumsan nisl. Suspendisse rhoncus nisl posuere tortor tempus et dapibus elit porta. Cras leo neque, elementum a rhoncus ut, vestibulum non nibh. Phasellus pretium justo turpis. Etiam vulputate, odio vitae tincidunt ultricies, eros odio dapibus nisi, ut tincidunt lacus arcu eu elit. Aenean velit erat, vehicula eget lacinia ut, dignissim non tellus. Aliquam nec lacus mi, sed vestibulum nunc. Suspendisse potenti. Curabitur vitae sem turpis. Vestibulum sed neque eget dolor dapibus porttitor at sit amet sem. Fusce a turpis lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;\nMauris at ante tellus. Vestibulum a metus lectus. Praesent tempor purus a lacus blandit eget gravida ante hendrerit. Cras et eros metus. Sed commodo malesuada eros, vitae interdum augue semper quis. Fusce id magna nunc. Curabitur sollicitudin placerat semper. Cras et mi neque, a dignissim risus. Nulla venenatis porta lacus, vel rhoncus lectus tempor vitae. Duis sagittis venenatis rutrum. Curabitur tempor massa tortor.';
 
@@ -103,9 +103,9 @@
         selectedItems: [1, 2],
         items: [
           /* JSON noname objects equivalent to primitives.OrgItemConfig */
-          { id: 0, parent: null, title: "Scott Aasrud", description: "VP, Public Sector", image: photos.a },
+          { id: 0, parent: null, title: "James Smith", description: "VP, Public Sector", image: photos.a },
           { id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: photos.b },
-          { id: 2, parent: 0, title: "Joao Stuger", description: "Business Solutions, US", image: photos.c },
+          { id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: photos.c },
           { id: 3, parent: 0, title: "Mike Wazowski", description: "Business Analyst, Canada", image: photos.o },
           { id: 4, parent: 3, title: "Best Friend", description: "Business Analyst, Mexico", image: photos.f }
         ],
@@ -172,9 +172,9 @@
       var connectorAnnotationsSample = primitives.OrgDiagramPdfkit({
         items: [
           /* JSON noname objects equivalent to primitives.OrgItemConfig */
-          { id: 0, parent: null, title: "Scott Aasrud", description: "VP, Public Sector", image: photos.a },
+          { id: 0, parent: null, title: "James Smith", description: "VP, Public Sector", image: photos.a },
           { id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: photos.b },
-          { id: 2, parent: 0, title: "Joao Stuger", description: "Business Solutions, US", image: photos.c }
+          { id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: photos.c }
         ],
         annotations: [
           /* JSON noname object equivalent to primitives.ConnectorAnnotationConfig */
@@ -226,7 +226,7 @@
           new primitives.OrgItemConfig({
             id: 0,
             parent: null,
-            title: "Scott Aasrud",
+            title: "James Smith",
             description: "Parent Item",
             image: photos.a
           }),
@@ -246,14 +246,14 @@
             itemType: primitives.ItemType.Assistant,
             adviserPlacementType: primitives.AdviserPlacementType.Right,
             title: "Ted Lucas",
-            description: "Assitant Item",
+            description: "Assistant Item",
             groupTitle: "Assistant",
             image: photos.c
           }),
           new primitives.OrgItemConfig({
             id: 3,
             parent: 0,
-            title: "Joao Stuger",
+            title: "Fritz Stuger",
             description: "Regular Item",
             groupTitle: "Regular",
             image: photos.d

@@ -32,7 +32,7 @@
         new DropDownBoxConfig("fontFamily", "Arial", "Font Style", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], ValueType.String, onUpdate)
       ]),
       new PanelConfig("Rendering", [
-        new CaptionConfig("By default widget preferes SVG graphics mode. Use this property to enforce graphics mode programmatically.", false),
+        new CaptionConfig("By default control uses SVG graphics mode. Use this property to switch graphics mode programmatically into Canvas.", false),
         new RadioBoxConfig("graphicsType", primitives.GraphicsType.SVG, "Graphics", primitives.GraphicsType, ValueType.Integer, onUpdate)
       ])
     ], {

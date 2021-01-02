@@ -41,7 +41,7 @@
         new SizeConfig("labelSize", new Size(4, 4), "Size", 1, 200, 1, onUpdate),
       ]),
       new javascriptsamples.PanelConfig("Rendering", [
-        new javascriptsamples.CaptionConfig("By default widget preferes SVG graphics mode. Use this property to enforce graphics mode programmatically.", false),
+        new javascriptsamples.CaptionConfig("By default control uses SVG graphics mode. Use this property to switch graphics mode programmatically into Canvas.", false),
         new javascriptsamples.RadioBoxConfig("graphicsType", primitives.GraphicsType.SVG, "Graphics", primitives.GraphicsType, ValueType.Integer, onUpdate)
       ])
     ], {

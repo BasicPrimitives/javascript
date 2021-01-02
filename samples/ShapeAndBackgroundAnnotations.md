@@ -14,5 +14,6 @@ If you define multiple items then it is drawn as a one large shape on top of the
 This visual is regular background area having border line and fill color. When we draw the same annotation for multiple items, control automatically blends them into single shape object. It helps to minimize clutter in diagram. Use `includeChildren` option to expand background around item and all of its descendants. 
 
 [JavaScript](javascript.controls/CaseShapeAnnotation.html)
+[PDFKit](pdfkit.plugins/ShapeAnnotation.html)
 
 ![Screenshot](javascript.controls/__image_snapshots__/CaseShapeAnnotation-snap.png)

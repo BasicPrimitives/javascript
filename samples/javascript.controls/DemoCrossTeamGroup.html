@@ -50,6 +50,21 @@
         groupTitleFontWeight: "normal",
         groupTitleFontStyle: "normal",
 
+        /* level title options */
+        addLevelAnnotations: true, /* this option does not exists in control */
+        levelTitlePlacementType: primitives.AdviserPlacementType.Left,
+        levelTitlePanelSize: 24,
+        levelTitlePlaceInside: false,
+        levelTitleOrientation: primitives.TextOrientationType.Auto,
+        levelTitleVerticalAlignment: primitives.VerticalAlignmentType.Middle,
+        levelTitleHorizontalAlignment: primitives.HorizontalAlignmentType.Center,
+        levelTitleFontSize: "12px",
+        levelTitleFontFamily: "Arial",
+        levelTitleFontColor: primitives.Colors.White,
+        levelTitleColor: primitives.Colors.RoyalBlue,
+        levelTitleFontWeight: "normal",
+        levelTitleFontStyle: "normal",
+
         /* Template */
         DefaultTemplateOptions: {
           minimizedItemCornerRadius: null,
@@ -163,6 +178,26 @@
         templates: [getDefaultTemplate(options), getContactTemplate(options)],
         defaultTemplateName: "defaultTemplate"
       })
+
+      var annotations = [];
+      if(options.addLevelAnnotations) {
+        for(index = 0; index < 10; index+=1) {
+          annotations.push({
+            annotationType: primitives.AnnotationType.Level,
+            levels: [index],
+            title: "Level " + index,
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 4, 0, -5),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: (index % 2 > 0 ? 0.08 : 0),
+            borderColor: primitives.Colors.Black,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          })
+        }
+      }
+
+      options.annotations = annotations;
 
       return options;
     }
@@ -352,14 +387,14 @@
 
         switch (data.renderingMode) {
           case primitives.RenderingMode.Create:
-            /* Initialize widgets here */
+            /* Initialize template content here */
             email.addEventListener("click", function (e) {
               /* Block mouse click propagation in order to avoid layout updates before server postback*/
               primitives.stopPropagation(e);
             });
             break;
           case primitives.RenderingMode.Update:
-            /* Update widgets here */
+            /* Update template content here */
             break;
         }
       }

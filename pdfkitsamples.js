@@ -42540,7 +42540,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * Defines leftward or rightward item placement relative to the referenced item.
- * In case of assitants and advisers the referenced item is their imediate parent.
+ * In case of assistants and advisers the referenced item is their immediate parent.
  * In case of family diagram the referenced item is spouse or sibling in the row. 
  *  
  * @enum {AdviserPlacementType}
@@ -42576,7 +42576,7 @@ var AnnotationType = {
   /**
    * Connector lines between two nodes of the diagram. They are drawn on top of existing
    * diagram layout and they don't affect nodes placement. So it is users responsibility to
-   * prserve space between nodes for them.
+   * preserve space between nodes for them.
    */
   Connector: 0,
 
@@ -42593,18 +42593,26 @@ var AnnotationType = {
   HighlightPath: 2,
 
   /**
-   * In-layout label annotation. Label anntations are placed in layout between nodes,
-   * they preserve space between nodes, so they don't overlap neighbouring nodes.
-   * Label annotations are designed for autoplacement and bundling of connection lines between 
+   * In-layout label annotation. Label annotations are placed in layout between nodes,
+   * they preserve space between nodes, so they don't overlap neighboring nodes.
+   * Label annotations are designed for auto placement and bundling of connection lines between 
    * nodes when needed.
    */
   Label: 3,
 
   /**
-   * Background annotation highlights nodes via drawing rectangular shape in background.
-   * If shapes overlap the same style neighbouring shapes they are merged into one continuous shape. 
+   * Background annotation highlights nodes via drawing rectangular shape in the background.
+   * If shapes overlap the same style neighboring shapes they are merged into one continuous shape. 
    */
-  Background: 4
+  Background: 4,
+
+  /**
+   * Stripe annotation highlights same level nodes of the diagram via drawing continuous rectangular shape 
+   * from side to side in their background. Stripe has optional title on the side of the diagram view area.
+   * Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the 
+   * background and does not occupy space. 
+   */
+  Level: 5
 };
 /**
  * @typedef {number} ChildrenPlacementType
@@ -42614,7 +42622,7 @@ var AnnotationType = {
  * Defines shape of children formation. By default a node's children are always placed in a horizontal line 
  * below the parent node. On a large scale this may result in the end user having to scroll screens 
  * in order to view all of the nodes. To compensate for this, we provide the option of placing all 
- * of the children of a parent node in a sqaure/matrix formation. This will reduce sideways screen 
+ * of the children of a parent node in a square/matrix formation. This will reduce sideways screen 
  * scrolling by compacting the child nodes into a much smaller area on the screen.
  *  
  * @enum {ChildrenPlacementType}
@@ -43020,8 +43028,8 @@ var HorizontalAlignmentType = {
  * This enumeration defines child node placement relative to its parent node. By default all children that belong 
  * to a parent node are of the same rank and status between each other and due to that, are always aligned below
  * the parent and are organized in the same way. However for special cases were the end user wishes to have a child
- * that is seperate from the rest of it's siblings, we provide custom child types that the end user can use to
- * place diffrent ranking nodes anywhere around the parent node. These placement options give a lot of space for
+ * that is separate from the rest of it's siblings, we provide custom child types that the end user can use to
+ * place different ranking nodes anywhere around the parent node. These placement options give a lot of space for
  * the creation of roles such as an Assistant, Adviser, various Partners and co-heads that may be in the organization.
  * Additionally, by default a node's regular children are always placed in a horizontal line below the parent node. See children
  * placement type options for regular children layout.
@@ -43041,13 +43049,13 @@ var ItemType = {
   Adviser: 2,
 
   /**
-   * Assitant node is drawn at row in between parent and child rows and connected horizontally
-   * to connection line going from parent to the regualr children
+   * Assistant node is drawn at row in between parent and child rows and connected horizontally
+   * to connection line going from parent to the regular children
    */
   Assistant: 1,
 
   /**
-   * Sub assitant is variation of assitant node type.
+   * Sub assistant is variation of assistant node type.
    * It has the same placement but it is connected by the top side of the node to the connector line going to the parent node.
    */
   SubAssistant: 4,
@@ -43059,7 +43067,7 @@ var ItemType = {
   SubAdviser: 5,
 
   /**
-   * General partner is immitation of multiple inheritance in the oraganizational chart hierarchy.
+   * General partner is imitation of multiple inheritance in the organizational chart hierarchy.
    * General partner node is drawn side by side with its parent and remaining regular children
    * are visually connected to both of them like they are their parents.
    * Another layout feature of the general partner is that it is connected to parents of its immediate logical parent as well,
@@ -43068,7 +43076,7 @@ var ItemType = {
   GeneralPartner: 6,
 
   /**
-   * Limited partner is variation of general partner. The only difference is that is is not conencte to its logical grand parent.
+   * Limited partner is variation of general partner. The only difference is that is is not connected to its logical grand parent.
    */
   LimitedPartner: 7,
 
@@ -43084,6 +43092,7 @@ var LabelType = {
   None: 3
 };
 var Layers = {
+  LevelAnnotation: 1,
   BackgroundAnnotation: 2,
   BackgroundAnnotations: 3,
   BackgroundConnectorAnnotation: 4,
@@ -43145,7 +43154,7 @@ var LoopsLayoutMode = {
  **/
 
 /**
- * Interactivity mode. Control implements standard behaivour of classic desktop UI controls. It supports single selected node - cursor.
+ * Interactivity mode. Control implements standard behavior of classic desktop UI controls. It supports single selected node - cursor.
  * It supports on mouse over node visual feedback - highlight. It supports selection of group of nodes - selected items. 
  * All that functionality can be disabled depending on your application requirements.
  *  
@@ -43225,7 +43234,7 @@ var OrientationType = {
  * becomes problematic, so we support automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
  * Control supports several page fit mode options which can match your requirements depending on diagram layout, orientation and number of nodes.
  * 
- * Autosize - this option is opposite to auto fit. It lets you expand control size to fit all diagram nodes full size without scrollbars.
+ * Autosize - this option is opposite to auto fit. It lets you expand control size to fit all diagram nodes full size without scroll bars.
  *  
  * @enum {PageFitMode}
  */
@@ -43247,7 +43256,7 @@ var PageFitMode = {
   PageHeight: 2,
 
   /**
-   * Fits diagram into the view so it has no scrollbars.
+   * Fits diagram into the view so it has no scroll bars.
    */
   FitToPage: 3,
 
@@ -43493,7 +43502,7 @@ var Visibility = {
   Dot: 2,
 
   /**
-   * Diagram only draws connection lines and hides actuall nodes.
+   * Diagram only draws connection lines and hides actual nodes.
    */
   Line: 3,
 
@@ -43510,7 +43519,7 @@ var Visibility = {
  **/
 
 /**
- * Option to draw annotation in the foreground or in the backgound of diagram nodes.
+ * Option to draw annotation in the foreground or in the background of diagram nodes.
  *  
  * @enum {ZOrderType}
  */
@@ -43608,20 +43617,50 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Placeholder__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Placeholder */ "./src/graphics/Placeholder.js");
 /* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../enums */ "./src/enums.js");
 /* harmony import */ var _structs_Rect__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./structs/Rect */ "./src/graphics/structs/Rect.js");
-/* harmony import */ var _events_RenderEventArgs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../events/RenderEventArgs */ "./src/events/RenderEventArgs.js");
+/* harmony import */ var _structs_Size__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./structs/Size */ "./src/graphics/structs/Size.js");
+/* harmony import */ var _events_RenderEventArgs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../events/RenderEventArgs */ "./src/events/RenderEventArgs.js");
+
 
 
 
 
 function PdfGraphics(doc) {
   this._doc = doc, this._context = this._doc;
-  this._dummyPlaceholder = new _Placeholder__WEBPACK_IMPORTED_MODULE_0__["default"]();
+  this.m_placeholders = {};
+  this.m_activePlaceholder = null;
+  this.saveCounter = 0;
 }
 ;
 
-PdfGraphics.prototype.clean = function () {};
+PdfGraphics.prototype.clean = function () {
+  while (this.saveCounter) {
+    this.saveCounter--;
 
-PdfGraphics.prototype.resize = function (name, width, height) {};
+    this._doc.restore();
+  }
+};
+
+PdfGraphics.prototype.resize = function (name, width, height) {
+  var placeholder = this.m_placeholders[name];
+
+  if (!placeholder) {
+    placeholder = new _Placeholder__WEBPACK_IMPORTED_MODULE_0__["default"](name);
+    ;
+    placeholder.size = new _structs_Size__WEBPACK_IMPORTED_MODULE_3__["default"](0, 0);
+    placeholder.rect = new _structs_Rect__WEBPACK_IMPORTED_MODULE_2__["default"](0, 0, 0, 0);
+    this.m_placeholders[name] = placeholder;
+  }
+
+  placeholder.size = new _structs_Size__WEBPACK_IMPORTED_MODULE_3__["default"](width, height);
+  placeholder.rect = new _structs_Rect__WEBPACK_IMPORTED_MODULE_2__["default"](placeholder.rect.x, placeholder.rect.y, width, height);
+};
+
+PdfGraphics.prototype.position = function (name, left, top, width, height) {
+  this.resize(name, width, height);
+  var placeholder = this.m_placeholders[name];
+  placeholder.rect.x = left;
+  placeholder.rect.y = top;
+};
 
 PdfGraphics.prototype.begin = function () {};
 
@@ -43629,8 +43668,29 @@ PdfGraphics.prototype.end = function () {};
 
 PdfGraphics.prototype.reset = function (arg0, arg1) {};
 
-PdfGraphics.prototype.activate = function (arg0, arg1) {
-  return this._dummyPlaceholder;
+PdfGraphics.prototype.activate = function (name, layer) {
+  if (!this.m_placeholders[name]) {
+    this.resize(name, 0, 0);
+  }
+
+  this.m_activePlaceholder = this.m_placeholders[name];
+  var _this$m_activePlaceho = this.m_activePlaceholder.rect,
+      x = _this$m_activePlaceho.x,
+      y = _this$m_activePlaceho.y;
+
+  while (this.saveCounter) {
+    this.saveCounter--;
+
+    this._doc.restore();
+  }
+
+  this._doc.save();
+
+  this.saveCounter++;
+
+  this._doc.translate(x, y);
+
+  return this.m_activePlaceholder;
 };
 
 PdfGraphics.prototype.text = function (x, y, width, height, label, orientation, horizontalAlignment, verticalAlignment, attr) {};
@@ -43708,11 +43768,11 @@ PdfGraphics.prototype.polyline = function (polylineData) {
   }
 
   if (attr.lineWidth !== undefined && attr.fillColor !== undefined) {
-    doc.lineWidth(attr.lineWidth).fillOpacity(attr.opacity).fillAndStroke(attr.fillColor, attr.borderColor);
+    doc.lineWidth(attr.lineWidth).fillColor(attr.fillColor, attr.opacity).strokeColor(attr.borderColor).fillAndStroke();
   } else if (attr.lineWidth !== undefined) {
     doc.lineWidth(attr.lineWidth).stroke(attr.borderColor);
   } else if (attr.fillColor !== undefined) {
-    doc.fillOpacity(attr.opacity).fillColor(attr.fillColor);
+    doc.fillColor(attr.fillColor, attr.opacity);
   }
 
   doc.restore();
@@ -43733,7 +43793,7 @@ PdfGraphics.prototype.template = function (x, y, width, height, contentx, conten
   var position = new _structs_Rect__WEBPACK_IMPORTED_MODULE_2__["default"](x + contentx, y + contenty, contentWidth - gap, contentHeight - gap);
 
   if (uiHash == null) {
-    uiHash = new _events_RenderEventArgs__WEBPACK_IMPORTED_MODULE_3__["default"]();
+    uiHash = new _events_RenderEventArgs__WEBPACK_IMPORTED_MODULE_4__["default"]();
   }
 
   if (onRenderTemplate !== null) {
@@ -44038,6 +44098,127 @@ CubicArcSegment.prototype.offsetPoint = function (x, y, cpX1, cpY1, cpX2, cpY2, 
 
 /***/ }),
 
+/***/ "./src/graphics/structs/Interval.js":
+/*!******************************************!*\
+  !*** ./src/graphics/structs/Interval.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Interval; });
+/**
+ * @class Interval
+ * @classdesc Class represents interval defined by two values.
+ * 
+ * @param {Interval} arg0 Interval object to clone.
+ * 
+ * @param {number} arg0 The from value.
+ * @param {number} arg1 The to value.
+ */
+function Interval(arg0, arg1, arg2) {
+  /**
+   * The from value
+   * @type {number}
+   */
+  this.from = null;
+  /**
+   * The to value
+   * @type {number}
+   */
+
+  this.to = null;
+  /**
+   * Reference to the context object associated with this Interval.
+   * @type {object}
+   */
+
+  this.context = null;
+
+  switch (arguments.length) {
+    case 1:
+      this.from = arg0.from;
+      this.to = arg0.to;
+      this.context = arg0.context;
+      break;
+
+    case 2:
+      this.from = arg0;
+      this.to = arg1;
+      break;
+
+    case 3:
+      this.from = arg0;
+      this.to = arg1;
+      this.context = arg2;
+      break;
+
+    default:
+      break;
+  }
+}
+;
+/**
+ * Width
+ * 
+ * @returns {number} Returns interval width
+ */
+
+Interval.prototype.width = function () {
+  return this.to - this.from;
+};
+/**
+ * Checks if intervals are equal
+ * 
+ * @param {Interval} interval Interval
+ * @returns {boolean} Returns true if intervals are equal.
+ */
+
+
+Interval.prototype.equalTo = function (interval) {
+  return this.from == interval.from && this.to == interval.to;
+};
+/**
+ * Clones the interval
+ * 
+ * @returns {Interval} Returns copy of the interval.
+ */
+
+
+Interval.prototype.clone = function () {
+  return new Interval(this);
+};
+/**
+ * Returns interval in form of user friendly string 
+ * 
+ * @returns {string} Returns string interval representation.
+ */
+
+
+Interval.prototype.toString = function () {
+  return this.from + ", " + this.to;
+};
+/**
+ * Checks if the interval overlaps the specified interval
+ * 
+ * @param {Interval} interval The interval to check overlapping for.
+ * @returns {boolean} Returns true if two intervals overlap each other.
+ */
+
+
+Interval.prototype.overlaps = function (interval) {
+  var result = true;
+
+  if (this.to < interval.from || interval.to < this.from) {
+    result = false;
+  }
+
+  return result;
+};
+
+/***/ }),
+
 /***/ "./src/graphics/structs/LineSegment.js":
 /*!*********************************************!*\
   !*** ./src/graphics/structs/LineSegment.js ***!
@@ -44280,7 +44461,7 @@ __webpack_require__.r(__webpack_exports__);
  * @class Point
  * @classdesc Class represents pair of x and y coordinates that define a point in 2D plane.
  * 
- * @param {Size} arg0 Point object to clone.
+ * @param {Point} arg0 Point object to clone.
  * 
  * @param {number} arg0 The x coordinate.
  * @param {number} arg1 The y coordinate.
@@ -44618,12 +44799,12 @@ function Polyline(newPaletteItem) {
         point,
         x,
         y,
-        perimiter = [new _Point__WEBPACK_IMPORTED_MODULE_4__["default"](length, -width / 2), new _Point__WEBPACK_IMPORTED_MODULE_4__["default"](0, 0), new _Point__WEBPACK_IMPORTED_MODULE_4__["default"](length, width / 2), new _Point__WEBPACK_IMPORTED_MODULE_4__["default"](length / 4 * 3, 0)],
+        perimeter = [new _Point__WEBPACK_IMPORTED_MODULE_4__["default"](length, -width / 2), new _Point__WEBPACK_IMPORTED_MODULE_4__["default"](0, 0), new _Point__WEBPACK_IMPORTED_MODULE_4__["default"](length, width / 2), new _Point__WEBPACK_IMPORTED_MODULE_4__["default"](length / 4 * 3, 0)],
         angle = Math.atan2(fromY - toY, fromX - toX);
     /* rotate and translate points */
 
-    for (index = 0, len = perimiter.length; index < len; index += 1) {
-      point = perimiter[index];
+    for (index = 0, len = perimeter.length; index < len; index += 1) {
+      point = perimeter[index];
       x = point.x * Math.cos(angle) - point.y * Math.sin(angle);
       y = point.x * Math.sin(angle) + point.y * Math.cos(angle);
       point.x = x + toX;
@@ -44632,10 +44813,10 @@ function Polyline(newPaletteItem) {
     /* create arrow shape*/
 
 
-    result.addSegment(new _MoveSegment__WEBPACK_IMPORTED_MODULE_1__["default"](perimiter[0].x, perimiter[0].y));
-    result.addSegment(new _LineSegment__WEBPACK_IMPORTED_MODULE_2__["default"](perimiter[1].x, perimiter[1].y));
-    result.addSegment(new _LineSegment__WEBPACK_IMPORTED_MODULE_2__["default"](perimiter[2].x, perimiter[2].y));
-    result.addSegment(new _QuadraticArcSegment__WEBPACK_IMPORTED_MODULE_3__["default"](perimiter[3].x, perimiter[3].y, perimiter[0].x, perimiter[0].y));
+    result.addSegment(new _MoveSegment__WEBPACK_IMPORTED_MODULE_1__["default"](perimeter[0].x, perimeter[0].y));
+    result.addSegment(new _LineSegment__WEBPACK_IMPORTED_MODULE_2__["default"](perimeter[1].x, perimeter[1].y));
+    result.addSegment(new _LineSegment__WEBPACK_IMPORTED_MODULE_2__["default"](perimeter[2].x, perimeter[2].y));
+    result.addSegment(new _QuadraticArcSegment__WEBPACK_IMPORTED_MODULE_3__["default"](perimeter[3].x, perimeter[3].y, perimeter[0].x, perimeter[0].y));
     return result;
   }
 
@@ -44935,7 +45116,7 @@ function Polyline(newPaletteItem) {
 
             switch (vectorStack.length) {
               case 1:
-                /* first Vector in stack we add to start Vectors collection for possible join into perimiter*/
+                /* first Vector in stack we add to start Vectors collection for possible join into perimeter*/
                 current = vectorStack[0];
                 closurePoint = current.from.toString();
                 startVectors[closurePoint] = current;
@@ -45204,8 +45385,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Rect; });
 /* harmony import */ var _Point__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Point */ "./src/graphics/structs/Point.js");
 /* harmony import */ var _Vector__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Vector */ "./src/graphics/structs/Vector.js");
-/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../enums */ "./src/enums.js");
+/* harmony import */ var _Interval__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Interval */ "./src/graphics/structs/Interval.js");
+/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../enums */ "./src/enums.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 
 
 
@@ -45466,7 +45649,7 @@ Rect.prototype.invert = function () {
 Rect.prototype.loopEdges = function (callback) {
   // function(vector, placementType) {}
   var vertexes = [new _Point__WEBPACK_IMPORTED_MODULE_0__["default"](this.left(), this.top()), new _Point__WEBPACK_IMPORTED_MODULE_0__["default"](this.right(), this.top()), new _Point__WEBPACK_IMPORTED_MODULE_0__["default"](this.right(), this.bottom()), new _Point__WEBPACK_IMPORTED_MODULE_0__["default"](this.left(), this.bottom())],
-      placements = [_enums__WEBPACK_IMPORTED_MODULE_2__["PlacementType"].Top, _enums__WEBPACK_IMPORTED_MODULE_2__["PlacementType"].Right, _enums__WEBPACK_IMPORTED_MODULE_2__["PlacementType"].Bottom, _enums__WEBPACK_IMPORTED_MODULE_2__["PlacementType"].Left];
+      placements = [_enums__WEBPACK_IMPORTED_MODULE_3__["PlacementType"].Top, _enums__WEBPACK_IMPORTED_MODULE_3__["PlacementType"].Right, _enums__WEBPACK_IMPORTED_MODULE_3__["PlacementType"].Bottom, _enums__WEBPACK_IMPORTED_MODULE_3__["PlacementType"].Left];
   vertexes.push(vertexes[0]);
 
   if (callback != null) {
@@ -45541,7 +45724,7 @@ Rect.prototype.cropByRect = function (rect) {
 /**
  * Checks if the rectangle overlaps the specified rectangle
  * 
- * @param {Rect} rect The rectangle to check overlaping for.
+ * @param {Rect} rect The rectangle to check overlapping for.
  * @returns {boolean} Returns true if two rectangles overlap each other.
  */
 
@@ -45687,7 +45870,7 @@ Rect.prototype.equalTo = function (rect) {
   return this.x == rect.x && this.y == rect.y && this.width == rect.width && this.height == rect.height;
 };
 /**
- * Find intersection point between rectangle's permiter and line connecting the given point and center of the rectangle
+ * Find intersection point between rectangle's perimeter and line connecting the given point and center of the rectangle
  * 
  * @param {Point} point Point to project
  * @returns {Point} Returns point or null if point is inside rectangle.
@@ -45706,6 +45889,182 @@ Rect.prototype.getProjectionPoint = function (point) {
   }
 
   return result;
+};
+/**
+ * Vertical Interval
+ * 
+ * @returns {Interval} Returns vertical interval of the rectangle
+ */
+
+
+Rect.prototype.verticalInterval = function () {
+  return new _Interval__WEBPACK_IMPORTED_MODULE_2__["default"](this.y, this.bottom());
+};
+
+/***/ }),
+
+/***/ "./src/graphics/structs/Size.js":
+/*!**************************************!*\
+  !*** ./src/graphics/structs/Size.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Size; });
+/**
+ * @class Size
+ * @classdesc Size object defines width and height.
+ * 
+ * @param {Size} arg0 Size object to clone.
+ * 
+ * @param {number} arg0 Width.
+ * @param {number} arg1 Height.
+ */
+function Size(arg0, arg1) {
+  /**
+   * The width
+   * @type {number}
+   */
+  this.width = 0;
+  /**
+   * The height
+   * @type {number}
+   */
+
+  this.height = 0;
+
+  switch (arguments.length) {
+    case 1:
+      this.width = arg0.width;
+      this.height = arg0.height;
+      break;
+
+    case 2:
+      this.width = arg0;
+      this.height = arg1;
+      break;
+
+    default:
+      break;
+  }
+}
+;
+/**
+ * Inverts size dimensions
+ * 
+ * @returns {Size} Returns reference to the current size.
+ */
+
+Size.prototype.invert = function () {
+  var width = this.width;
+  this.width = this.height;
+  this.height = width;
+  return this;
+};
+/**
+ * Scales the size by the specified value
+ * 
+ * @param {number} scale
+ * @returns {Size} Returns reference to the current size.
+ */
+
+
+Size.prototype.scale = function (scale) {
+  this.width = this.width * scale;
+  this.height = this.height * scale;
+  return this;
+};
+/**
+ * Returns square size
+ * 
+ * @returns {number} Returns square size.
+ */
+
+
+Size.prototype.space = function () {
+  return this.width * this.height;
+};
+/**
+ * Returns size in form of CSS style object.
+ * 
+ * @param {string} [units="px"] The string name of units.
+ * @returns {object} CSS style object
+ */
+
+
+Size.prototype.getCSS = function (units) {
+  units = units !== undefined ? units : "px";
+  var result = {
+    width: this.width + units,
+    height: this.height + units
+  };
+  return result;
+};
+/**
+ * Crops the size by the other size object.
+ * 
+ * @param {Size} size The size to use as the crop boundaries.
+ * @returns {Size} Returns reference to the current size object
+ */
+
+
+Size.prototype.cropBySize = function (size) {
+  this.width = Math.min(this.width, size.width);
+  this.height = Math.min(this.height, size.height);
+  return this;
+};
+/**
+ * Extends the current size by the other size.
+ * 
+ * @param {Size} size The size to use as extension.
+ * @returns {Size} Returns reference to the current size object
+ */
+
+
+Size.prototype.maxSize = function (size) {
+  this.width = Math.max(this.width, size.width);
+  this.height = Math.max(this.height, size.height);
+  return this;
+};
+/**
+ * Expands the current size by the thickness object.
+ * 
+ * @param {Thickness} thickness The thickness to use for expansion.
+ * @returns {Size} Returns reference to the current size object
+ */
+
+
+Size.prototype.addThickness = function (thickness) {
+  this.width = Math.max(0, this.width + thickness.left + thickness.right);
+  this.height = Math.max(0, this.height + thickness.top + thickness.bottom);
+  return this;
+};
+/**
+ * Shrinks the current size by the thickness object.
+ * 
+ * @param {Thickness} thickness The thickness to use for contraction.
+ * @returns {Size} Returns reference to the current size object
+ */
+
+
+Size.prototype.removeThickness = function (thickness) {
+  this.width = Math.max(0, this.width - thickness.left - thickness.right);
+  this.height = Math.max(0, this.height - thickness.top - thickness.bottom);
+  return this;
+};
+/**
+ * Validates size properties
+ * 
+ * @returns {boolean} Returns true if size properties are valid.
+ */
+
+
+Size.prototype.validate = function () {
+  if (isNaN(this.width) || isNaN(this.height)) {
+    throw "Invalid size.";
+  }
 };
 
 /***/ }),

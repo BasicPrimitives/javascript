@@ -47,7 +47,7 @@
 
       var items = [
         { id: 1, title: "Family Ownership", label: "Family Ownership", description: "1, Chaiman Name", itemTitleColor: primitives.Colors.Black, labels: { "20": "1.4%", "30": "4.7%", "3": "46.0%", "10": "20.8%", "23": "5.9%", "34": "19.1" } },
-        { id: 2, title: "KCC", label: "KCC", description: "1, KCC", itemTitleColor: primitives.Colors.Grey },
+        { id: 2, title: "KCC", label: "KCC", description: "1, KCC", itemTitleColor: primitives.Colors.Gray },
         { id: 3, parents: [1, 2, 12, 20, 31, 32], title: "Samsung Everland", label: "Samsung Everland", description: "3, Samsung Everland", itemTitleColor: primitives.Colors.Gray, labels: { "10": "19.3%", "40": "100%" } },
 
         { id: 10, parents: [1, 3], title: "Samsung Life Insurance", label: "Samsung Life Insurance", description: "10, Samsung Life Insurance", itemTitleColor: primitives.Colors.Blue, labels: { "30": "7.2%", "12": "34.4%", "13": "11.1%", "14": "100%", "41": "5.3%", "42": "7.3%", "21": "3.4%" } },
@@ -106,7 +106,7 @@
 
 
       options.defaultTemplateName = "UnitTemplate";
-      options.defaulLabelAnnotationTemplate = "LabelAnnotationTemplate";
+      options.defaultLabelAnnotationTemplate = "LabelAnnotationTemplate";
       options.items = items;
       options.cursorItem = 1;
       options.linesWidth = 1;

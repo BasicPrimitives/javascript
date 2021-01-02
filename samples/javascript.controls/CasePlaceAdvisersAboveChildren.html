@@ -19,7 +19,7 @@
         new primitives.OrgItemConfig({
           id: 0,
           parent: null,
-          title: "Scott Aasrud",
+          title: "James Smith",
           description: "Parent Item",
           image: "../images/photos/a.png"
         }),
@@ -72,7 +72,7 @@
 			options.autoSizeMinimum = new primitives.Size(100, 100);
 			options.autoSizeMaximum = new primitives.Size(2000, 2000);
       options.arrowsDirection = primitives.GroupByType.Children;
-      options.placeAdvisersAboveChildren = true;
+      options.placeAdvisersAboveChildren = false;
 
       control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
     });
@@ -98,8 +98,8 @@
 <body>
   <p>
     Place advisers children above parent's regular children:
-    <label><input onclick="Update()" name="placeAdvisersAboveChildren" type="radio" value="1" checked="">Yes</label>
-    <label><input onclick="Update()" name="placeAdvisersAboveChildren" type="radio" value="0">No</label>
+    <label><input onclick="Update()" name="placeAdvisersAboveChildren" type="radio" value="1">Yes</label>
+    <label><input onclick="Update()" name="placeAdvisersAboveChildren" type="radio" value="0" checked="">No</label>
   </p>
   <div id="basicdiagram" style="border-style: dotted; border-width: 1px;"></div>
 </body>

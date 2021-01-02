@@ -4,16 +4,32 @@ Basic Primitives diagramming component library implemented in JavaScript without
 
 Basic Primitives controls use existing HTML elements as placeholders on the web page to draw diagrams. The only HTML element which can serve as a placeholder is div. When you resize placeholder chart will not update its content automatically, it will not shrink or expand in size, in order to have the chart adopt to the new placeholder size you have to explicitly call "update" method on its API. In order to create or update diagram you have to pass configuration object or set individual options on its API and then call "update" method to apply changes. The configuration object consists of options and collections of various objects like items, annotations, etc., the API objects are referenced by unique ids. For convenience, all configuration objects are based on their own JavaScript prototype, so you can instantiate them and browse their default properties. Since we are in JavaScript world, all configuration objects can be defined in form of regular JSON objects as well.
 
-## JavaScript
+## NPM package
+Basic Primitives Diagrams for JavaScript [npm](https://www.npmjs.com) package name is [basicprimitives](https://www.npmjs.com/package/basicprimitives). The package contains transpiled [`UMD`](https://webpack.js.org/configuration/output/) and non-transpiled [`ES6`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) modules at the same time.
 
-The following is the minimal set of files needed to use Basic Primitives components in application.
 
-```Javascript
-<link href="/primitives.latest.css" media="screen" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="/primitives.min.js"></script>
+```shell
+npm install basicprimitives
 ```
 
-The controls are state-full that means they keep internal state of the diagrams in order to minimize updates of visuals and avoid unnecessarily layout calculations. Library has two methods to construct instances of controls: use primitives.OrgDiagram for Organizational Diagrams and primitives.FamDiagram for Family Diagrams creation. The following code snippet creates organization chart inside empty div having "basicdiagram" id:
+or 
+
+```shell
+yarn add basicprimitives
+```
+
+```JavaScript
+import { OrgDiagram, OrgConfig, OrgItemConfig ... } from 'basicprimitives';
+import('basicprimitives/css/primitives.css');
+```
+
+```HTML
+<script type="text/javascript" src="primitives.js"></script>
+<link href="primitives.css" media="screen" rel="stylesheet" type="text/css" />
+```
+## JavaScript Controls
+
+Library has two Controls `OrgDiagram` for Organizational Diagrams and `FamDiagram `for Family Diagrams creation. The following code snippet creates organization chart inside empty `div` having `basicdiagram` id:
 
 ```Javascript
 var control = primitives.OrgDiagram(document.getElementById("basicdiagram"), {
@@ -28,7 +44,7 @@ control.setOptions({"items", [
     new primitives.OrgItemConfig({
         id: 0,
         parent: null,
-        title: "Scott Aasrud",
+        title: "James Smith",
         description: "VP, Public Sector",
         image: "../images/photos/a.png"
     }),
@@ -54,12 +70,15 @@ or for individual option
 ```Javascript
 control.setOption("cursorItem", 0);
 ```
-every time we make changes to control API we need to call explicitly "update" method. This is needed in order to avoid expensive layout updates on every property change.
+every time we make changes to the control's API we need to call explicitly `update` method. This is needed in order to avoid triggering layout updates on every property change.
 
 ```Javascript
 control.update(primitives.UpdateMode.Refresh);
 ```
-Control is interactive component by design, so it needs to add event listeners to placeholder DIV element to handle mouse and keyboard events. So it should be properly destroyed in order to remove event listeners:
+
+The control is state-full it keeps internal state of the visualization for the purpose of performance optimization during updates. It avoids unnecessary layout calculations and elements rendering not relevant to the changed option. 
+
+The control is interactive component by design, so it needs to add event listeners to placeholder `div` element to handle mouse and keyboard events. So it should be properly destroyed in order to remove event listeners and avoid memory leaks in single page applications:
 
 ```Javascript
 control.destroy();
@@ -69,11 +88,11 @@ control.destroy();
 
 Basic Primitives library provides plugins for [PDFkit](www.PDFkit.org) (MIT License) - it is JavaScript PDF generation library for NodeJS and client side rendering in browser.
 
-PDFKit library provides the most complete experience for rendering documents PDF format. Basic Primitves library implements additional plugins for PDFkit to render Diagrams on PDF page:
-* primitives.OrgDiagramPdfkit - Organizational Chart PDFkit Plugin
-* primitives.FamDiagramPdfkit - Family Diagram PDFkit Plugin
+PDFKit library provides the most complete experience for rendering documents in PDF format. Basic Primitives library has two plugins for PDFkit to render Diagrams on PDF page:
+* OrgDiagramPdfkit - Organizational Chart PDFkit Plugin
+* FamDiagramPdfkit - Family Diagram PDFkit Plugin
 
-Basically PDFkit Plugins are stand alone products, they share many API options with Basic Primitives Controls, but they are completly deprived of interactivity and their rendering engine uses regular vector graphics and text elements of PDFkit libarary API, see PDFkit site for reference.
+Basically PDFkit Plugins are stand alone products, they share many API options with Basic Primitives Controls, but they are completely deprived of interactivity and their rendering engine uses PDFkit's library vector graphics capabilities, see PDFkit site for reference.
 
 The following example is minimal code needed to create new empty PDF file on client side in browser using PDFkit library
 
@@ -104,12 +123,12 @@ stream.on('finish', function() {
 Basic Primitives Organizational Chart PDFkit plugin is just a rendering function, which renders diagram using PDFkit API methods:
 
 ``` JavaScript
-var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
+var sampleChart = primitives.OrgDiagramPdfkit({
   items: [
     new primitives.OrgItemConfig({
       id: 0,
       parent: null,
-      title: "Scott Aasrud",
+      title: "James Smith",
       description: "VP, Public Sector",
       image: photos.a
     }),
@@ -123,7 +142,7 @@ var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
     new primitives.OrgItemConfig({
       id: 2,
       parent: 0,
-      title: "Joao Stuger",
+      title: "Fritz Stuger",
       description: "Business Solutions, US",
       image: photos.c
     })
@@ -132,18 +151,18 @@ var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
   hasSelectorCheckbox: primitives.Enabled.False
 });
 
-var size = firstOrganizationalChartSample.draw(doc, 100, 150);
+var size = sampleChart.draw(doc, 100, 150);
 ```
 
 Pay attention that `draw` method returns actual `size` of the rendered diagram. It is needed to calculate offset in order to place other elements of PDF document underneath of it. 
 
-PDF document is very easy to scale to make it fit to paper size or split it into multiple pages. So we don't need to make PDF page fit into some fixed predefined paper size, but in order to avoid diagram being cut by PDF page boundaries we have to measure its size first and then create PDF page of approapriate size.
+PDF document is very easy to scale to make it fit to paper size or split it into multiple pages. So we don't need to make PDF page fit into some fixed predefined paper size, but in order to avoid diagram being cut by PDF page boundaries we have to measure its size first and then create PDF page of appropriate size.
 
 ```JavaScript
-var sampleSize = samfirstOrganizationalChartSampleple3.getSize();
+var sampleSize = firstOrganizationalChartSample3.getSize();
 ```
 
-`getSize` method returns diagram size, so we can create new PDF document big enough to accomodate our diagram:
+`getSize` method returns diagram size, so we can create new PDF document big enough to accommodate our diagram:
 
 ```JavaScript
 var doc = new PDFDocument({ size: [sampleSize.width + 100, sampleSize.height + 150] });

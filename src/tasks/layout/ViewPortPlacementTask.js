@@ -42,23 +42,20 @@ export default function ViewPortPlacementTask(scaleOptionTask, centerOnCursorTas
   }
 
   function getPosition() {
-    var result = null;
-    if (centerOnCursorTask != null) {
-      var scaleOptions = scaleOptionTask.getOptions(),
-        scale = scaleOptions.scale,
-        placeholderOffset = new Point(centerOnCursorTask.getPlaceholderOffset()),
-        optimalPanelSize = new Size(applyLayoutChangesTask.getOptimalPanelSize());
+    var scaleOptions = scaleOptionTask.getOptions(),
+      scale = scaleOptions.scale,
+      placeholderOffset = centerOnCursorTask ? new Point(centerOnCursorTask.getPlaceholderOffset()) : new Point(0, 0),
+      optimalPanelSize = new Size(applyLayoutChangesTask.getOptimalPanelSize());
 
-      placeholderOffset.scale(1.0 / scale);
-      optimalPanelSize.scale(1.0 / scale);
+    placeholderOffset.scale(1.0 / scale);
+    optimalPanelSize.scale(1.0 / scale);
 
-      result = new Rect(
-        placeholderOffset.x,
-        placeholderOffset.y,
-        optimalPanelSize.width,
-        optimalPanelSize.height
-      );
-    }
+    var result = new Rect(
+      placeholderOffset.x,
+      placeholderOffset.y,
+      optimalPanelSize.width,
+      optimalPanelSize.height
+    );
     return result;
   }
 

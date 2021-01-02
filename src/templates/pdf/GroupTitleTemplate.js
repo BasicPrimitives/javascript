@@ -1,7 +1,7 @@
 import { highestContrast } from '../../common/colors';
 import { Colors }  from '../../enums';
 
-export default function GroupTitleTemplate(itemTitleFirstFontColor, itemTitleSecondFontColor) {
+export default function GroupTitleTemplate({itemTitleFirstFontColor, itemTitleSecondFontColor}) {
   function template() {
     return {};
   }

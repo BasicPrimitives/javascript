@@ -65,13 +65,13 @@
           image: photos[imageName]
         })
       }
-      var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
+      var sampleChart = primitives.OrgDiagramPdfkit({
         items: newItems,
         cursorItem: null,
         hasSelectorCheckbox: primitives.Enabled.False
       });
 
-      var size = firstOrganizationalChartSample.draw(doc, 30, 60);
+      var size = sampleChart.draw(doc, 30, 60);
 
       doc.restore();
 

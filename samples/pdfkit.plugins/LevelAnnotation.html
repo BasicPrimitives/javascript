@@ -22,7 +22,7 @@
       doc.fontSize(25)
         .text('Level Annotation', 30, 30);
 
-      var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
+      var sampleChart = primitives.OrgDiagramPdfkit({
         items: [
           new primitives.OrgItemConfig({
             id: 0,
@@ -47,7 +47,7 @@
           })
         ],
         annotations: [
-          /* JSON noname object equivalent to primitives.ConnectorAnnotationConfig */
+          /* JSON object equivalent to primitives.LevelAnnotationConfig */
           {
             annotationType: primitives.AnnotationType.Level,
             levels: [0],
@@ -67,17 +67,18 @@
             titleColor: primitives.Colors.Green,
             offset: new primitives.Thickness(0, 0, 0, -1),
             lineWidth: new primitives.Thickness(0, 0, 0, 0),
-            opacity: 0.08,
+            opacity: 0.1,
             borderColor: primitives.Colors.Gray,
             fillColor: primitives.Colors.Gray,
             lineType: primitives.LineType.Dotted
           })
         ],
         cursorItem: null,
-        hasSelectorCheckbox: primitives.Enabled.False
+        hasSelectorCheckbox: primitives.Enabled.False,
+        orientationType: primitives.OrientationType.Left
       });
 
-      var size = firstOrganizationalChartSample.draw(doc, 30, 60);
+      var size = sampleChart.draw(doc, 30, 60);
 
       doc.restore();
 

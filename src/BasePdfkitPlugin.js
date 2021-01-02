@@ -14,9 +14,9 @@ export default function BasePdfkitPlugin(options, createTaskManager, templates) 
     doc: null,
     options: options,
     tasks: null,
-    graphics: null
+    graphics: null,
+    controlSize: null,
   },
-    _scale,
     _debug = false;
 
   function getOptions() {
@@ -28,14 +28,23 @@ export default function BasePdfkitPlugin(options, createTaskManager, templates) 
   }
 
   function setLayout(options) {
+    var { graphics } = _data,
+      { frameMousePanelRect, titlesMousePanelRect, scrollPanelRect, controlSize } = options;
 
+    graphics.position("frameplaceholder", frameMousePanelRect.x, frameMousePanelRect.y, frameMousePanelRect.width, frameMousePanelRect.height );
+    graphics.position("titlesplaceholder", titlesMousePanelRect.x, titlesMousePanelRect.y, titlesMousePanelRect.width, titlesMousePanelRect.height );
+    graphics.position("placeholder", scrollPanelRect.x, scrollPanelRect.y, scrollPanelRect.width, scrollPanelRect.height);
+
+    _data.controlSize = controlSize;
   }
 
   function _disableNotAvailableFunctionality() {
     /* disable functionality not available in PDF */
+    _data.options.scale = 1;
     _data.options.hasButtons = Enabled.False;
     _data.options.pageFitMode = PageFitMode.AutoSize;
-    _data.options.autoSizeMaximum = new Size(100000, 100000);
+    _data.options.autoSizeMinimum = new Size(0, 0);
+    _data.options.autoSizeMaximum = new Size(1000000, 1000000);
   }
 
   /**
@@ -60,12 +69,11 @@ export default function BasePdfkitPlugin(options, createTaskManager, templates) 
     _data.doc.translate(positionX, positionY);
 
     _data.tasks.process('OptionsTask', null, _debug);
+    _data.graphics.clean();
 
     _data.doc.restore();
 
-    var alignDiagramTask = _data.tasks.getTask("AlignDiagramTask");
-
-    return new Size(alignDiagramTask.getContentSize());
+    return new Size(_data.controlSize);
   }
 
   /**
@@ -75,14 +83,15 @@ export default function BasePdfkitPlugin(options, createTaskManager, templates) 
    */
   function getSize() {
     _data.tasks = createTaskManager(getOptions, getGraphics, setLayout, templates);
+    _data.graphics = new PdfGraphics(_data.doc);
+    _data.graphics.debug = _debug;
 
     _disableNotAvailableFunctionality();
 
-    _data.tasks.process('OptionsTask', 'AlignDiagramTask', _debug);
-
-    var alignDiagramTask = _data.tasks.getTask("AlignDiagramTask");
-
-    return new Size(alignDiagramTask.getContentSize());
+    _data.tasks.process('OptionsTask', 'ApplyLayoutChangesTask', _debug);
+    _data.graphics.clean();
+    
+    return new Size(_data.controlSize);
   }
 
   return {

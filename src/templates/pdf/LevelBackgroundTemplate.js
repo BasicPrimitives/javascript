@@ -19,7 +19,8 @@ export default function LevelBackgroundTemplate(options, levelAnnotationConfig) 
 
     /* item border */
     doc.rect(position.x, position.y, position.width, position.height, 0)
-      .fill(annotationConfig.fillColor);
+      .fillColor(annotationConfig.fillColor, annotationConfig.opacity)
+      .fill();
   }
 
   return {

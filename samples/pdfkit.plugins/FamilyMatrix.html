@@ -22,7 +22,7 @@
       doc.fontSize(25)
         .text('Family Diagram Matrix Layout', 30, 30);
 
-      var firstOrganizationalChartSample = primitives.FamDiagramPdfkit({
+      var sampleChart = primitives.FamDiagramPdfkit({
         items: [
           { id: 1, title: "Roger Dalton", label: "David Dalton", description: "1, Chief Executive Officer (CEO)", phone: "352-206-7599", email: "davidalt@name.com", image: photos.q, itemTitleColor: "#4169e1" },
           { id: 2, parents: [1], title: "Bill Dalton", label: "David Dalton", description: "1, Chief Executive Officer (CEO)", phone: "352-206-7599", email: "davidalt@name.com", image: photos.q, itemTitleColor: "#4169e1" },
@@ -48,7 +48,7 @@
         maximumColumnsInMatrix: 4
       });
 
-      var size = firstOrganizationalChartSample.draw(doc, 30, 60);
+      var size = sampleChart.draw(doc, 30, 60);
 
       doc.restore();
 

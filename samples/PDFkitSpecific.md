@@ -28,7 +28,7 @@ Plugins don't support auto sizing of diagram in PDF Document for a reason. First
 PDF documents are supposed to be conventional printable files having content deliberately split into pages for convenient printing. So in order to add content below diagram we need to know size of the diagram, so we can properly offset elements:
 
 ``` JavaScript
-var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
+var sampleChart = primitives.OrgDiagramPdfkit({
 	items: [
 		new primitives.OrgItemConfig({
 			id: 0,
@@ -56,7 +56,7 @@ var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
 	hasSelectorCheckbox: primitives.Enabled.False
 });
 
-var size = firstOrganizationalChartSample.draw(doc, 100, 150);
+var size = sampleChart.draw(doc, 100, 150);
 ```
 
 Pay attention that `draw` method returns actual `size` of the rendered diagram. It is needed to calculate offset in order to place other elements of PDF document below it. 

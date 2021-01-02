@@ -22,7 +22,7 @@
       doc.fontSize(25)
         .text('First Family Chart Plugin', 30, 30);
 
-      var firstOrganizationalChartSample = primitives.FamDiagramPdfkit({
+      var sampleChart = primitives.FamDiagramPdfkit({
         items: [
           { id: 1, spouses: [2], title: "Thomas Williams", label: "Thomas Williams", description: "1, 1st husband", image: photos.t },
           { id: 2, spouses: [], title: "Mary Spencer", label: "Mary Spencer", description: "2, The Mary", image: photos.m },
@@ -46,7 +46,7 @@
         arrowsDirection: primitives.GroupByType.Parents
       });
 
-      var size = firstOrganizationalChartSample.draw(doc, 30, 60);
+      var size = sampleChart.draw(doc, 30, 60);
 
       doc.restore();
 

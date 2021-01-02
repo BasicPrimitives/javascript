@@ -35,12 +35,12 @@ import LevelTitleTemplateOptionTask from './tasks/options/LevelTitleTemplateOpti
 import CombinedContextsTask from './tasks/transformations/CombinedContextsTask';
 import OrgTreeTask from './tasks/transformations/OrgTreeTask';
 
-import ReadTemplatesPdfTask from './tasks/templates/pdf/ReadTemplatesPdfTask';
+import ReadTemplatesTask from './tasks/templates/ReadTemplatesTask';
 import ItemTemplateParamsTask from './tasks/templates/ItemTemplateParamsTask';
-import GroupTitleTemplatePdfTask from './tasks/templates/pdf/GroupTitleTemplatePdfTask';
-import CheckBoxTemplatePdfTask from './tasks/templates/pdf/CheckBoxTemplatePdfTask';
-import DummyButtonsTemplatePdfTask from './tasks/templates/pdf/DummyButtonsTemplatePdfTask';
-import AnnotationLabelTemplatePdfTask from './tasks/templates/pdf/AnnotationLabelTemplatePdfTask';
+import GroupTitleTemplateTask from './tasks/templates/GroupTitleTemplateTask';
+import CheckBoxTemplateTask from './tasks/templates/CheckBoxTemplateTask';
+import ButtonsTemplateTask from './tasks/templates/ButtonsTemplateTask';
+import AnnotationLabelTemplateTask from './tasks/templates/AnnotationLabelTemplateTask';
 import LevelAnnotationTemplateTask from './tasks/templates/LevelAnnotationTemplateTask';
 
 import VisualTreeTask from './tasks/transformations/VisualTreeTask';
@@ -141,13 +141,13 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics, set
   tasks.addTask('OrgTreeTask', ['ItemsOptionTask'], OrgTreeTask, Colors.Red);
 
   // Transformations / Templates
-  tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask'], ReadTemplatesPdfTask, Colors.Cyan);
+  tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask', 'templates'], ReadTemplatesTask, Colors.Cyan);
   // TODO: Add jsPDF templates
   tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], ItemTemplateParamsTask, Colors.Cyan);
-  tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask'], GroupTitleTemplatePdfTask, Colors.Cyan);
-  tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask'], CheckBoxTemplatePdfTask, Colors.Cyan);
-  tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask'], DummyButtonsTemplatePdfTask, Colors.Cyan);
-  tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask'], AnnotationLabelTemplatePdfTask, Colors.Cyan);
+  tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask', 'templates'], GroupTitleTemplateTask, Colors.Cyan);
+  tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask', 'templates'], CheckBoxTemplateTask, Colors.Cyan);
+  tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask', 'templates'], ButtonsTemplateTask, Colors.Cyan);
+  tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask', 'templates'], AnnotationLabelTemplateTask, Colors.Cyan);
   tasks.addTask('LevelAnnotationTemplateTask', ['OrientationOptionTask', 'LevelTitleTemplateOptionTask', 'templates'], LevelAnnotationTemplateTask, Colors.Cyan);
   
   tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'null', 'VisualTreeOptionTask', 'isFamilyChartMode'], VisualTreeTask, Colors.Red);

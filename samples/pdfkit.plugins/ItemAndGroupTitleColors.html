@@ -3,7 +3,7 @@
 
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>First Organizational Chart PDFKit Sample</title>
+  <title>Item and group titles colors PDFKit Sample</title>
   <script type="text/javascript" src="../../pdfkitsamples.js"></script>
   <script type="text/javascript" src="../../primitives.js"></script>
 
@@ -20,34 +20,44 @@
       var stream = doc.pipe(blobStream());
 
       doc.fontSize(25)
-        .text('First Organizational Chart', 30, 30);
+        .text('Item and group titles colors', 30, 30);
 
-      var sampleChart = primitives.OrgDiagramPdfkit({
+        var sampleChart = primitives.OrgDiagramPdfkit({
         items: [
           new primitives.OrgItemConfig({
             id: 0,
             parent: null,
             title: "James Smith",
             description: "VP, Public Sector",
-            image: photos.a
+            groupTitle: "Group 1",
+            image: photos.a,
+            itemTitleColor: primitives.Colors.Black
           }),
           new primitives.OrgItemConfig({
             id: 1,
             parent: 0,
             title: "Ted Lucas",
             description: "VP, Human Resources",
-            image: photos.b
+            image: photos.b,
+            itemTitleColor: primitives.Colors.Green,
+            groupTitle: "Group 2",
+            groupTitleColor: primitives.Colors.Gray
           }),
           new primitives.OrgItemConfig({
             id: 2,
             parent: 0,
             title: "Fritz Stuger",
             description: "Business Solutions, US",
-            image: photos.c
+            image: photos.c,
+            itemTitleColor: primitives.Colors.Yellow,
+            groupTitle: "Group 2"
           })
         ],
         cursorItem: null,
-        hasSelectorCheckbox: primitives.Enabled.False
+        hasSelectorCheckbox: primitives.Enabled.False,
+        itemTitleFirstFontColor: primitives.Colors.Yellow,
+			  itemTitleSecondFontColor: primitives.Colors.Blue,
+        groupTitleOrientation: primitives.TextOrientationType.RotateRight
       });
 
       var size = sampleChart.draw(doc, 30, 60);

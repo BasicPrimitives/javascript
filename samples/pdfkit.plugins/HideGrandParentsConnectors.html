@@ -22,7 +22,7 @@
       doc.fontSize(25)
         .text('Family Diagram Having Hidden Grand Parent Connections', 30, 30);
 
-      var firstOrganizationalChartSample = primitives.FamDiagramPdfkit({
+      var sampleChart = primitives.FamDiagramPdfkit({
         items: [
           { id: 1, title: "David Dalton", groupTitle: "1", label: "David Dalton", description: "1, Chief Executive Officer (CEO)", phone: "352-206-7599", email: "davidalt@name.com", image: photos.q, itemTitleColor: "#4169e1" },
           { id: 2, parents: [1], title: "Steven Lacombe", groupTitle: "2", label: "Steven Lacombe", description: "2, GM, Platform Strategy", phone: "805-800-7397", email: "stevlaco@name.com", image: photos.a, itemTitleColor: "#4b0082" },
@@ -43,7 +43,7 @@
         arrowsDirection: primitives.GroupByType.Parents
       });
 
-      var size = firstOrganizationalChartSample.draw(doc, 30, 60);
+      var size = sampleChart.draw(doc, 30, 60);
 
       doc.restore();
 

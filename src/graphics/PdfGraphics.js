@@ -1,21 +1,42 @@
 import Placeholder from './Placeholder';
 import { SegmentType, LineType } from '../enums';
 import Rect from './structs/Rect';
+import Size from './structs/Size';
 import RenderEventArgs from '../events/RenderEventArgs';
 
 export default function PdfGraphics(doc) {
   this._doc = doc,
   this._context = this._doc;
- 
-  this._dummyPlaceholder = new Placeholder();
+  this.m_placeholders = {};
+  this.m_activePlaceholder = null;
+  this.saveCounter = 0;
 };
 
 PdfGraphics.prototype.clean = function () {
-
+  while(this.saveCounter) {
+    this.saveCounter--;
+    this._doc.restore();
+  }
 };
 
 PdfGraphics.prototype.resize = function (name, width, height) {
+  var placeholder = this.m_placeholders[name];
+  if(!placeholder) {
+    placeholder = new Placeholder(name);;
+    placeholder.size = new Size(0, 0);
+    placeholder.rect = new Rect(0, 0, 0, 0);
+    this.m_placeholders[name] = placeholder;
+  }
+  placeholder.size = new Size(width, height);
+  placeholder.rect = new Rect(placeholder.rect.x, placeholder.rect.y, width, height);
+};
 
+PdfGraphics.prototype.position = function (name, left, top, width, height) {
+  this.resize(name, width, height);
+
+  var placeholder = this.m_placeholders[name];
+  placeholder.rect.x = left;
+  placeholder.rect.y = top;
 };
 
 PdfGraphics.prototype.begin = function () {
@@ -30,8 +51,22 @@ PdfGraphics.prototype.reset = function (arg0, arg1) {
 
 };
 
-PdfGraphics.prototype.activate = function (arg0, arg1) {
-  return this._dummyPlaceholder;
+PdfGraphics.prototype.activate = function (name, layer) {
+  if(!this.m_placeholders[name]) {
+    this.resize(name, 0, 0);
+  }
+  this.m_activePlaceholder = this.m_placeholders[name];
+
+  var { x, y } = this.m_activePlaceholder.rect;
+  while(this.saveCounter) {
+    this.saveCounter--;
+    this._doc.restore();
+  }
+  this._doc.save();
+  this.saveCounter++;
+  this._doc.translate(x, y);
+
+  return this.m_activePlaceholder;
 };
 
 PdfGraphics.prototype.text = function (x, y, width, height, label, orientation, horizontalAlignment, verticalAlignment, attr) {

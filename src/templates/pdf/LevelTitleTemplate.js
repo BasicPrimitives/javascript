@@ -36,7 +36,7 @@ export default function LevelTitleTemplate(options, orientation) {
 
     /* title */
     doc.fillColor(fontColor)
-      .font(fontFamily, fontSize)
+      .font('Helvetica', parseInt(fontSize, 10))
       .text(label, position.x + 4, position.y + 6, {
         ellipsis: true,
         width: (position.height - 4),

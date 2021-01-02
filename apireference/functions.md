@@ -139,6 +139,26 @@ Breaks collection of values into 3 intervals, so values stay close to each other
 | --- | --- | --- | --- | 
  | `values` | number[] | `` | Array of values | 
 
+## <a name="getMergedIntervals" id="getMergedIntervals">getMergedIntervals</a>
+
+Merges collection of overlapping intervals into continuous group of intervals. Calls callback function to pass result interval per group of overlapping intervals.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `items` | Interval[] | `` | Collection of intervals. | 
+ | `onItem` | onMergedIntervalItemCallback | `` | Callback function to pass result group of merged intervals. | 
+**Callbacks**
+
+ `onMergedIntervalItemCallback(interval, context)` 
+
+Callback function to iterate over result intervals
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `interval` | Interval | `` | Merged interval | 
+ | `context` | Object | `` | First interval context. | 
+
 ## <a name="getMergedRectangles" id="getMergedRectangles">getMergedRectangles</a>
 
 Merges collection of rectangles into shapes. Calls callback function to pass result sequences of data points.

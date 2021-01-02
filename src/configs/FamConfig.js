@@ -879,6 +879,7 @@ export default function FamConfig(name) {
   /**
    * If this property is true then level titles are placed inside of the diagram's view port above or below diagram nodes.
    * 
+   * @group Level Titles
    * @type {boolean}
    */
   this.levelTitlePlaceInside = false;

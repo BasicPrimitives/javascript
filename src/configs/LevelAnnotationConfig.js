@@ -38,7 +38,6 @@ export default function LevelAnnotationConfig(arg0) {
   /**
    * Title font color.
    * 
-   * @group Level Titles
    * @type {string}
    */
   this.titleFontColor = null;

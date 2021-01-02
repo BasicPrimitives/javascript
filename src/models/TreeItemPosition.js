@@ -1,7 +1,6 @@
 import Rect from '../graphics/structs/Rect';
 import { Visibility } from '../enums';
 
-/* This is model class used to define visual structure of chart */
 export default function TreeItemPosition(source) {
   this.partnerConnectorOffset = 0;
 

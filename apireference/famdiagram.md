@@ -110,6 +110,22 @@ Family Chart configuration object. Use this object as a reference for available 
  | `labelSize` | Size | `{80, 24}` | Label size. Sets labels placeholders `div`s size. It is needed to resolve labels overlapping. If one label overlaps another label the or item it will be hidden. | 
  | `showLabels` | Enabled | `Auto` | Sets labels visibility for nodes when they are minimized into markers by page auto fit. See `pageFitMode` property. The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels. Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict resolution to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them is going to stay visible. Auto - displays label only when it has space to be rendered. True - shows label regardless, even if it overlaps other labels and nodes. False - hidden. | 
 
+### Level Titles Properties
+| Name | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `levelTitleColor` | string | `Colors.RoyalBlue` | Level titles color. | 
+ | `levelTitleFontColor` | string | `Colors.White` | Level titles font color. | 
+ | `levelTitleFontFamily` | string | `"Arial"` | Level titles font family. | 
+ | `levelTitleFontSize` | number | `"12px"` | Level titles font size. | 
+ | `levelTitleFontStyle` | string | `"normal"` | Level titles font style: normal, italic | 
+ | `levelTitleFontWeight` | string | `"normal"` | Level titles font weight: normal, bold | 
+ | `levelTitleHorizontalAlignment` | HorizontalAlignmentType | `Center` | Level titles horizontal alignment. | 
+ | `levelTitleOrientation` | TextOrientationType | `Auto` | Group titles orientation. | 
+ | `levelTitlePanelSize` | number | `24` | The size of the panel containing level titles. | 
+ | `levelTitlePlaceInside` | boolean | `false` | If this property is true then level titles are placed inside of the diagram's view port above or below diagram nodes. | 
+ | `levelTitlePlacementType` | AdviserPlacementType | `Left` | Level titles placement. Defines level title panel position relative to the diagram. | 
+ | `levelTitleVerticalAlignment` | VerticalAlignmentType | `Middle` | Level titles vertical alignment. | 
+
 ### Relation Lines Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 

@@ -7,6 +7,7 @@ import ConnectorAnnotationConfig from './configs/ConnectorAnnotationConfig';
 import HighlightPathAnnotationConfig from './configs/HighlightPathAnnotationConfig';
 import ShapeAnnotationConfig from './configs/ShapeAnnotationConfig';
 import LabelAnnotationConfig from './configs/LabelAnnotationConfig';
+import LevelAnnotationConfig from './configs/LevelAnnotationConfig';
 
 import { ZOrderType, Colors } from './enums';
 
@@ -29,8 +30,13 @@ import ShapeAnnotationOptionTask from './tasks/options/annotations/ShapeAnnotati
 import HighlightPathAnnotationOptionTask from './tasks/options/annotations/HighlightPathAnnotationOptionTask';
 import ConnectorAnnotationOptionTask from './tasks/options/annotations/ConnectorAnnotationOptionTask';
 import BackgroundAnnotationOptionTask from './tasks/options/annotations/BackgroundAnnotationOptionTask';
+import LevelAnnotationOptionTask from './tasks/options/annotations/LevelAnnotationOptionTask';
+
 import ScaleOptionTask from './tasks/options/ScaleOptionTask';
 import FrameOptionTask from './tasks/options/FrameOptionTask';
+import LevelTitlePlacementOptionTask from './tasks/options/LevelTitlePlacementOptionTask';
+import LevelTitleTemplateOptionTask from './tasks/options/LevelTitleTemplateOptionTask';
+
 import CombinedContextsTask from './tasks/transformations/CombinedContextsTask';
 import ReadTemplatesTask from './tasks/templates/ReadTemplatesTask';
 import ActiveItemsTask from './tasks/templates/ActiveItemsTask';
@@ -39,6 +45,7 @@ import GroupTitleTemplateTask from './tasks/templates/GroupTitleTemplateTask';
 import CheckBoxTemplateTask from './tasks/templates/CheckBoxTemplateTask';
 import ButtonsTemplateTask from './tasks/templates/ButtonsTemplateTask';
 import AnnotationLabelTemplateTask from './tasks/templates/AnnotationLabelTemplateTask';
+import LevelAnnotationTemplateTask from './tasks/templates/LevelAnnotationTemplateTask';
 import ConnectionsGraphTask from './tasks/transformations/ConnectionsGraphTask';
 import HighlightItemTask from './tasks/transformations/selection/HighlightItemTask';
 import CursorItemTask from './tasks/transformations/selection/CursorItemTask';
@@ -47,6 +54,7 @@ import NormalVisibilityItemsByAnnotationTask from './tasks/transformations/selec
 import NormalVisibilityItemsByConnectorAnnotationTask from './tasks/transformations/selection/NormalVisibilityItemsByConnectorAnnotationTask';
 import CombinedNormalVisibilityItemsTask from './tasks/transformations/selection/CombinedNormalVisibilityItemsTask';
 import FrameSizeTask from './tasks/layout/FrameSizeTask';
+import LevelTitleSizeTask from './tasks/layout/LevelTitleSizeTask';
 import LayoutOptionsTask from './tasks/options/LayoutOptionsTask';
 import CurrentControlSizeTask from './tasks/layout/CurrentControlSizeTask';
 import CurrentScrollPositionTask from './tasks/layout/CurrentScrollPositionTask';
@@ -57,6 +65,11 @@ import ApplyLayoutChangesTask from './tasks/layout/ApplyLayoutChangesTask';
 import CenterOnCursorTask from './tasks/layout/CenterOnCursorTask';
 import ProjectItemsToFrameTask from './tasks/layout/ProjectItemsToFrameTask';
 import DrawHighlightPathAnnotationTask from './tasks/renders/DrawHighlightPathAnnotationTask';
+import ViewPortPlacementTask from './tasks/layout/ViewPortPlacementTask';
+import VerticalOffsetTask from './tasks/layout/VerticalOffsetTask';
+
+import FamLogicalLevelsPlacementTask from './tasks/layout/FamLogicalLevelsPlacementTask';
+import MergeLevelIntervalsTask from './tasks/layout/MergeLevelIntervalsTask';
 import DrawBackgroundAnnotationTask from './tasks/renders/DrawBackgroundAnnotationTask';
 import DrawConnectorAnnotationTask from './tasks/renders/DrawConnectorAnnotationTask';
 import DrawShapeAnnotationTask from './tasks/renders/DrawShapeAnnotationTask';
@@ -69,6 +82,8 @@ import DrawConnectorsTask from './tasks/renders/DrawConnectorsTask';
 import DrawItemLabelsTask from './tasks/renders/DrawItemLabelsTask';
 import DrawFrameItemsTask from './tasks/renders/DrawFrameItemsTask';
 import DrawFrameHighlightTask from './tasks/renders/DrawFrameHighlightTask';
+import DrawLevelAnnotationTitlesTask from './tasks/renders/DrawLevelAnnotationTitlesTask';
+import DrawLevelAnnotationBackgroundTask from './tasks/renders/DrawLevelAnnotationBackgroundTask';
 
 
 // family diagram specific tasks
@@ -121,6 +136,7 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
   tasks.addDependency('defaultHighlightPathAnnotationConfig', new HighlightPathAnnotationConfig());
   tasks.addDependency('defaultShapeAnnotationConfig', new ShapeAnnotationConfig());
   tasks.addDependency('defaultLabelAnnotationConfig', new LabelAnnotationConfig());
+  tasks.addDependency('defaultLevelAnnotationConfig', new LevelAnnotationConfig());
 
   tasks.addDependency('isFamilyChartMode', true);/* in regular org diagram we hide branch if it contains only invisible nodes, 
     in the family chart we use invisible items to draw connectors across multiple levels */
@@ -165,9 +181,12 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
   tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], ConnectorAnnotationOptionTask, Colors.Navy);
   tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], ConnectorAnnotationOptionTask, Colors.Navy);
   tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], BackgroundAnnotationOptionTask, Colors.Navy);
+  tasks.addTask('LevelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultLevelAnnotationConfig'], LevelAnnotationOptionTask, Colors.Navy);
 
   tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], ScaleOptionTask, Colors.Navy);
   tasks.addTask('FrameOptionTask', ['OptionsTask', 'defaultConfig'], FrameOptionTask, Colors.Navy);
+  tasks.addTask('LevelTitlePlacementOptionTask', ['OptionsTask', 'defaultConfig'], LevelTitlePlacementOptionTask, Colors.Navy);
+  tasks.addTask('LevelTitleTemplateOptionTask', ['OptionsTask', 'defaultConfig'], LevelTitleTemplateOptionTask, Colors.Navy);
 
   // Transformations
   tasks.addTask('UserDefinedNodesOrderTask', ['OrderFamilyNodesOptionTask', 'defaultItemConfig'], UserDefinedNodesOrderTask, Colors.Red);
@@ -198,6 +217,7 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
   tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask', 'templates'], CheckBoxTemplateTask, Colors.Cyan);
   tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask', 'templates'], ButtonsTemplateTask, Colors.Cyan);
   tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask', 'templates'], AnnotationLabelTemplateTask, Colors.Cyan);
+  tasks.addTask('LevelAnnotationTemplateTask', ['OrientationOptionTask', 'LevelTitleTemplateOptionTask', 'templates'], LevelAnnotationTemplateTask, Colors.Cyan);
 
   tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'OrderFamilyNodesTask', 'AlignDiagramTask', 'RemoveLoopsTask'], ConnectionsGraphTask, Colors.Cyan);
 
@@ -232,8 +252,9 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
 
   // Layout
   tasks.addTask('FrameSizeTask', ['FrameOptionTask', 'ReadTemplatesTask', 'ScaleOptionTask'], FrameSizeTask, Colors.Navy);
+  tasks.addTask('LevelTitleSizeTask', ['LevelTitlePlacementOptionTask', 'LevelAnnotationOptionTask', 'OrientationOptionTask', 'ScaleOptionTask'], LevelTitleSizeTask, Colors.Navy);
   tasks.addTask('LayoutOptionsTask', ['getLayout', 'OptionsTask'], LayoutOptionsTask, Colors.Black);
-  tasks.addTask('CurrentControlSizeTask', ['LayoutOptionsTask', 'ItemsSizesOptionTask', 'FrameSizeTask'], CurrentControlSizeTask, Colors.Black);
+  tasks.addTask('CurrentControlSizeTask', ['LayoutOptionsTask', 'ItemsSizesOptionTask', 'FrameSizeTask', 'LevelTitleSizeTask'], CurrentControlSizeTask, Colors.Black);
   tasks.addTask('CurrentScrollPositionTask', ['LayoutOptionsTask'], CurrentScrollPositionTask, Colors.Black);
 
   tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask',
@@ -248,13 +269,18 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
   tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'LinePaletteOptionTask'], PaletteManagerTask, Colors.Cyan);
 
   // Apply Layout Changes
-  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask', 'FrameSizeTask'], ApplyLayoutChangesTask, Colors.Cyan);
+  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask', 'FrameSizeTask', 'LevelTitleSizeTask'], ApplyLayoutChangesTask, Colors.Cyan);
   tasks.addTask('CenterOnCursorTask', ['LayoutOptionsTask', 'ApplyLayoutChangesTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], CenterOnCursorTask, Colors.Cyan);
   tasks.addTask('ProjectItemsToFrameTask', ['CreateTransformTask', 'FrameSizeTask',
     'ApplyLayoutChangesTask', 'ScaleOptionTask',
     'AlignDiagramTask', 'CenterOnCursorTask',
     'ItemTemplateParamsTask',
     'SelectedItemsTask'], ProjectItemsToFrameTask, Colors.Cyan);  
+  tasks.addTask('ViewPortPlacementTask', ['ScaleOptionTask', 'CenterOnCursorTask', 'CreateTransformTask', 'ApplyLayoutChangesTask'], ViewPortPlacementTask, Colors.Green);  
+  tasks.addTask('VerticalOffsetTask', ['ViewPortPlacementTask'], VerticalOffsetTask, Colors.Green);  
+
+  tasks.addTask('LogicalLevelsPlacementTask', ['OrderFamilyNodesTask', 'AlignDiagramTask'], FamLogicalLevelsPlacementTask, Colors.Green);
+  tasks.addTask('MergeLevelIntervalsTask', ['LevelAnnotationOptionTask', 'LogicalLevelsPlacementTask'], MergeLevelIntervalsTask, Colors.Green); 
 
   // Renders
   tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground'], DrawHighlightPathAnnotationTask, Colors.Cyan);
@@ -286,6 +312,8 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
 
   tasks.addTask('DrawFrameItemsTask', ['graphics', 'ApplyLayoutChangesTask', 'ProjectItemsToFrameTask', 'ItemTemplateParamsTask', 'MinimizedItemsOptionTask'], DrawFrameItemsTask, Colors.Green);
   tasks.addTask('DrawFrameHighlightTask', ['graphics', 'ProjectItemsToFrameTask', 'CombinedContextsTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask'], DrawFrameHighlightTask, Colors.Green);
-  
+
+  tasks.addTask('DrawLevelAnnotationBackgroundTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask'], DrawLevelAnnotationBackgroundTask, Colors.Green);
+  tasks.addTask('DrawLevelAnnotationTitlesTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask', 'LevelTitlePlacementOptionTask'], DrawLevelAnnotationTitlesTask, Colors.Green);
   return tasks;
 };

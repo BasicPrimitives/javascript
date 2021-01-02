@@ -23,13 +23,13 @@ export default function OrgItemsPositionsTask(currentControlSizeTask, scaleOptio
     _connectorsOptions,
     _visualTreeOptions,
     _itemsSizesOptions,
-    _scaleOptions,
     _intervals;
 
   function process() {
-    var panelSize,
+    var { optimalPanelSize } = currentControlSizeTask.getOptions(),
+      panelSize = new Size(optimalPanelSize),
       panelRect,
-      scale;
+      { scale } = scaleOptionTask.getOptions();
 
     _itemsSizesOptions = itemsSizesOptionTask.getOptions();
     _intervals = getIntervals(_itemsSizesOptions);
@@ -46,9 +46,6 @@ export default function OrgItemsPositionsTask(currentControlSizeTask, scaleOptio
 
     _data.treeItemsPositions = {};
 
-    panelSize = currentControlSizeTask.getOptimalPanelSize();
-    _scaleOptions = scaleOptionTask.getOptions();
-    scale = _scaleOptions.scale;
     panelSize.scale(1.0 / scale);
     panelRect = new Rect(0, 0, panelSize.width, panelSize.height);
     _data.panelSize = positionTreeItems(panelRect);
@@ -63,13 +60,10 @@ export default function OrgItemsPositionsTask(currentControlSizeTask, scaleOptio
     var placeholderSize = new Rect(0, 0, 0, 0),
       levelVisibilities,
       visibilities,
-      level,
-      index,
       minimalPlaceholderSize,
       leftMargin,
       rightMargin,
-      cursorIndex,
-      pageSize;
+      cursorIndex;
 
     switch (_orientationOptions.orientationType) {
       case OrientationType.Left:

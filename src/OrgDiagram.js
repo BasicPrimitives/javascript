@@ -8,6 +8,8 @@ import HighlightTemplate from './templates/html/HighlightTemplate';
 import ItemTemplate from './templates/html/ItemTemplate';
 import UserTemplate from './templates/html/UserTemplate';
 import LabelAnnotationTemplate from './templates/html/LabelAnnotationTemplate';
+import LevelTitleTemplate from './templates/html/LevelTitleTemplate';
+import LevelBackgroundTemplate from './templates/html/LevelBackgroundTemplate';
 
 import OrgTaskManagerFactory from './OrgTaskManagerFactory';
 import OrgEventArgsFactory from './OrgEventArgsFactory';
@@ -33,6 +35,8 @@ export default function OrgDiagram(element, options, templates) {
     HighlightTemplate,
     ItemTemplate,
     UserTemplate,
+    LevelTitleTemplate,
+    LevelBackgroundTemplate,
     /* FamDiagram specific templates */
     LabelAnnotationTemplate,
     ...templates

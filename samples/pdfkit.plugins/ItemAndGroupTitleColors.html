@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html style="height: 95%">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Item and group titles colors PDFKit Sample</title>
+  <script type="text/javascript" src="../../pdfkitsamples.js"></script>
+  <script type="text/javascript" src="../../primitives.js"></script>
+
+  <script type='text/javascript'>
+    var control;
+    var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // create a document and pipe to a blob
+      var doc = new PDFDocument();
+      var stream = doc.pipe(blobStream());
+
+      doc.fontSize(25)
+        .text('Item and group titles colors', 30, 30);
+
+        var sampleChart = primitives.OrgDiagramPdfkit({
+        items: [
+          new primitives.OrgItemConfig({
+            id: 0,
+            parent: null,
+            title: "James Smith",
+            description: "VP, Public Sector",
+            groupTitle: "Group 1",
+            image: photos.a,
+            itemTitleColor: primitives.Colors.Black
+          }),
+          new primitives.OrgItemConfig({
+            id: 1,
+            parent: 0,
+            title: "Ted Lucas",
+            description: "VP, Human Resources",
+            image: photos.b,
+            itemTitleColor: primitives.Colors.Green,
+            groupTitle: "Group 2",
+            groupTitleColor: primitives.Colors.Gray
+          }),
+          new primitives.OrgItemConfig({
+            id: 2,
+            parent: 0,
+            title: "Fritz Stuger",
+            description: "Business Solutions, US",
+            image: photos.c,
+            itemTitleColor: primitives.Colors.Yellow,
+            groupTitle: "Group 2"
+          })
+        ],
+        cursorItem: null,
+        hasSelectorCheckbox: primitives.Enabled.False,
+        itemTitleFirstFontColor: primitives.Colors.Yellow,
+			  itemTitleSecondFontColor: primitives.Colors.Blue,
+        groupTitleOrientation: primitives.TextOrientationType.RotateRight
+      });
+
+      var size = sampleChart.draw(doc, 30, 60);
+
+      doc.restore();
+
+      doc.end();
+
+      stream.on('finish', function () {
+        var string = stream.toBlobURL('application/pdf');
+        document.getElementById("previewpanel").setAttribute("src", string);
+      });
+    });
+
+  </script>
+</head>
+
+<body style="height: 100%">
+  <div id="basicdiagram" style="width: 100%; height: 100%; border-style: none; border-width: 0px;">
+    <iframe id="previewpanel" type="application/pdf" width="100%" height="100%" frameborder="0"
+      style="position:relative;z-index:999">
+    </iframe>
+  </div>
+</body>
+
+</html>

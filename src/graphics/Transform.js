@@ -1,4 +1,5 @@
 import { OrientationType } from '../enums';
+import Thickness from './structs/Thickness';
 
 export default function Transform() {
   this.invertArea = false;
@@ -223,4 +224,44 @@ Transform.prototype.transformRect = function (x, y, width, height, forward, self
   }
 
   func.call(self, x, y, width, height);
+};
+
+Transform.prototype.transformThickness = function (thickness, forward) {
+  var value,
+    {left, right, top, bottom } = thickness;
+
+  if (forward) {
+    if (this.invertArea) {
+      value = left;
+      left = top;
+      top = value;
+      value = right;
+      right = bottom;
+      bottom = value;
+    }
+  }
+
+  if (this.invertHorizontally) {
+    value = left;
+    left = right;
+    right = value;
+  }
+  if (this.invertVertically) {
+    value = top;
+    top = bottom;
+    bottom = value;
+  }
+
+  if (!forward) {
+    if (this.invertArea) {
+      value = left;
+      left = top;
+      top = value;
+      value = right;
+      right = bottom;
+      bottom = value;
+    }
+  }
+
+  return new Thickness(left, top, right, bottom);
 };

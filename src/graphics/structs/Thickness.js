@@ -62,6 +62,24 @@ Thickness.prototype.isEmpty = function () {
 };
 
 /**
+ * Checks if at least one side is positive
+ * 
+ * @returns {boolean} Returns true if any of its sides is positive
+ */
+Thickness.prototype.isPositive = function () {
+  return this.left > 0 || this.top > 0 || this.right > 0 || this.bottom > 0;
+};
+
+/**
+ * Checks if at least one side is negative
+ * 
+ * @returns {boolean} Returns true if any of its sides is negative
+ */
+Thickness.prototype.isNegative = function () {
+  return this.left < 0 || this.top < 0 || this.right < 0 || this.bottom < 0;
+};
+
+/**
  * Maximum thickness.
  * 
  * @param {Thickness} thickness The thickness to compare with.
@@ -131,5 +149,5 @@ Thickness.prototype.scale = function (scale) {
 Thickness.prototype.toString = function (units) {
   units = (units !== undefined) ? units : "px";
 
-  return this.left + units + ", " + this.top + units + ", " + this.right + units + ", " + this.bottom + units;
+  return this.top + units + " " + this.right + units + " " + this.bottom + units + " " + this.left + units;
 };

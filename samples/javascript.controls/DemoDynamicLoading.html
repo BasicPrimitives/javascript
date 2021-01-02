@@ -90,6 +90,20 @@
       groupTitleFontWeight: "normal",
       groupTitleFontStyle: "normal",
 
+      /* level title options */
+      levelTitlePlacementType: primitives.AdviserPlacementType.Left,
+      levelTitlePanelSize: 24,
+      levelTitlePlaceInside: false,
+      levelTitleOrientation: primitives.TextOrientationType.Auto,
+      levelTitleVerticalAlignment: primitives.VerticalAlignmentType.Middle,
+      levelTitleHorizontalAlignment: primitives.HorizontalAlignmentType.Center,
+      levelTitleFontSize: "12px",
+      levelTitleFontFamily: "Arial",
+      levelTitleFontColor: primitives.Colors.White,
+      levelTitleColor: primitives.Colors.RoyalBlue,
+      levelTitleFontWeight: "normal",
+      levelTitleFontStyle: "normal",
+
       /* Template */
       DefaultTemplateOptions: {
         minimizedItemCornerRadius: 16,
@@ -270,6 +284,21 @@
         onItemRender: onTemplateRender,
         onHighlightRender: onHighlightRender
       });
+
+      var annotations = [];
+      if(options.addLevelAnnotations) {
+        for(index = 0; index < 10; index+=1) {
+          annotations.push({
+            annotationType: primitives.AnnotationType.Level,
+            levels: [index],
+            title: "Level " + index,
+            offset: new primitives.Thickness(0, -1, 0, -1),
+            opacity: (index % 2 > 0 ? 0.2 : 0)
+          })
+        }
+      }
+
+      options.annotations = annotations;
 
       return options;
     }

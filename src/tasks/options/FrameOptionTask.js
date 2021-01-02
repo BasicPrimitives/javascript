@@ -38,6 +38,6 @@ export default function FrameOptionTask(optionsTask, defaultConfig) {
   return {
     process: process,
     getOptions: getOptions,
-    description: "Checks control scale options."
+    description: "Checks frame options."
   };
 };

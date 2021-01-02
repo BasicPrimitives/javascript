@@ -24,7 +24,7 @@ cd test1
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "basicprimitives": "^6.0.3"
+    "basicprimitives": "^6.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

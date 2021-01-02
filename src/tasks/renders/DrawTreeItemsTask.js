@@ -4,7 +4,7 @@ import Rect from '../../graphics/structs/Rect';
 import RenderEventArgs from '../../events/RenderEventArgs';
 import { Layers, Visibility, AdviserPlacementType } from '../../enums';
 
-export default function DrawTreeItemsTask(getGraphics, createTranfromTask, applyLayoutChangesTask, scaleOptionTask,
+export default function DrawTreeItemsTask(getGraphics, createTransformTask, applyLayoutChangesTask, scaleOptionTask,
   itemsSizesOptionTask,
   combinedContextsTask,
   alignDiagramTask, centerOnCursorTask,
@@ -26,7 +26,7 @@ export default function DrawTreeItemsTask(getGraphics, createTranfromTask, apply
 
     _itemsSizesOptions = itemsSizesOptionTask.getOptions();
     _positions = alignDiagramTask.getItemsPositions();
-    _transform = createTranfromTask.getTransform();
+    _transform = createTransformTask.getTransform();
 
     _buttonsTemplate = buttonsTemplateTask.getTemplate();
     _checkBoxTemplate = checkBoxTemplateTask.getTemplate();

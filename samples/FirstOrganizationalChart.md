@@ -123,7 +123,7 @@ stream.on('finish', function() {
 Basic Primitives Organizational Chart PDFkit plugin is just a rendering function, which renders diagram using PDFkit API methods:
 
 ``` JavaScript
-var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
+var sampleChart = primitives.OrgDiagramPdfkit({
   items: [
     new primitives.OrgItemConfig({
       id: 0,
@@ -151,7 +151,7 @@ var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
   hasSelectorCheckbox: primitives.Enabled.False
 });
 
-var size = firstOrganizationalChartSample.draw(doc, 100, 150);
+var size = sampleChart.draw(doc, 100, 150);
 ```
 
 Pay attention that `draw` method returns actual `size` of the rendered diagram. It is needed to calculate offset in order to place other elements of PDF document underneath of it. 

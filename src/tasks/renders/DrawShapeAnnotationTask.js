@@ -36,20 +36,15 @@ export default function DrawShapeAnnotationTask(getGraphics, createTransformTask
 
   function _drawAnnotations(annotations, getItemPosition) {
     var panel,
-      layer = Layers.ForegroundAnnotations,
       index, len,
       index2, len2,
       index3, len3,
-      fromItem,
-      toItem,
       shape,
       defaultConfig,
-      items, itemsHash, itemPosition, position,
+      itemPosition, position,
       properties, property,
       annotationConfig,
-      uiHash,
-      backgroundManager,
-      perimeters, treeItem;
+      uiHash;
 
 
     switch (zOrderType) {

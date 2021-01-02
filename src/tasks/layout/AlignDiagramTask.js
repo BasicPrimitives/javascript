@@ -24,7 +24,8 @@ export default function AlignDiagramTask(orientationOptionTask, itemsSizesOption
 
   function process() {
     var placeholderSize = new Size(itemsPositionsTask.getContentSize()),
-      panelSize = new Size(currentControlSizeTask.getOptimalPanelSize());
+      { optimalPanelSize } = currentControlSizeTask.getOptions(),
+      panelSize = new Size(optimalPanelSize);
 
     _spatialIndex = null;
     _keyboardNavigationManager = null;

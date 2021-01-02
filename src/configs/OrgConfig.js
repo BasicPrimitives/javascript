@@ -752,7 +752,7 @@ export default function OrgConfig(name) {
   this.checkBoxPanelSize = 24;
 
   /**
-   * Group titles placement. Defines group title and buttons panel position relative to the node. By default it is on the left.
+   * Group titles placement. Defines group title and buttons panel position relative to the node.
    * The group title on the side of the diagram node is one of controls default easy to use features. It gives extra dimension 
    * for nodes visual grouping in the diagram.
    * 
@@ -824,6 +824,103 @@ export default function OrgConfig(name) {
    * @type {string}
    */
   this.groupTitleFontStyle = "normal";
+
+
+  /**
+   * The size of the panel containing level titles.
+   * 
+   * @group Level Titles
+   * @type {number}
+   */
+  this.levelTitlePanelSize = 24;
+
+  /**
+   * Level titles placement. Defines level title panel position relative to the diagram.
+   * 
+   * @group Level Titles
+   * @type {AdviserPlacementType}
+   */
+  this.levelTitlePlacementType = AdviserPlacementType.Left;
+
+  /**
+   * If this property is true then level titles are placed inside of the diagram's view port above or below diagram nodes.
+   * 
+   * @group Level Titles
+   * @type {boolean}
+   */
+  this.levelTitlePlaceInside = false;
+
+  /**
+   * Group titles orientation.
+   * 
+   * @group Level Titles
+   * @type {TextOrientationType}
+   */
+  this.levelTitleOrientation = TextOrientationType.Auto;
+
+  /**
+   * Level titles vertical alignment.
+   * 
+   * @group Level Titles
+   * @type {VerticalAlignmentType}
+   */
+  this.levelTitleVerticalAlignment = VerticalAlignmentType.Middle;
+
+  /**
+   * Level titles horizontal alignment.
+   * 
+   * @group Level Titles
+   * @type {HorizontalAlignmentType}
+   */
+  this.levelTitleHorizontalAlignment = HorizontalAlignmentType.Center;
+
+  /**
+   * Level titles font size.
+   * 
+   * @group Level Titles
+   * @type {number}
+   */
+  this.levelTitleFontSize = "12px";
+
+  /**
+   * Level titles font family.
+   * 
+   * @group Level Titles
+   * @type {string}
+   */
+  this.levelTitleFontFamily = "Arial";
+
+  /**
+   * Level titles font color.
+   * 
+   * @group Level Titles
+   * @type {string}
+   */
+  this.levelTitleFontColor = Colors.White;
+
+  /**
+   * Level titles color.
+   * 
+   * @group Level Titles
+   * @type {string}
+   */
+  this.levelTitleColor = Colors.RoyalBlue;
+
+  /**
+   * Level titles font weight: normal, bold
+   * 
+   * @group Level Titles
+   * @type {string}
+   */
+  this.levelTitleFontWeight = "normal";
+
+  /**
+   * Level titles font style: normal, italic
+   * 
+   * @group Level Titles
+   * @type {string}
+   */
+  this.levelTitleFontStyle = "normal";
 
   /**
    * @ignore

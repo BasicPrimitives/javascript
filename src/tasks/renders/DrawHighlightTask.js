@@ -2,7 +2,7 @@ import Rect from '../../graphics/structs/Rect';
 import RenderEventArgs from '../../events/RenderEventArgs';
 import { Layers, Visibility } from '../../enums';
 
-export default function DrawHighlightTask(getGraphics, createTranfromTask, applyLayoutChangesTask,
+export default function DrawHighlightTask(getGraphics, createTransformTask, applyLayoutChangesTask,
   combinedContextsTask,
   alignDiagramTask, itemTemplateParamsTask,
   highlightItemTask, cursorItemTask, selectedItemsTask) {
@@ -16,7 +16,7 @@ export default function DrawHighlightTask(getGraphics, createTranfromTask, apply
     _graphics.reset("placeholder", Layers.Highlight);
 
     if (treeItemId != null) {
-      _transform = createTranfromTask.getTransform();
+      _transform = createTransformTask.getTransform();
       drawHighlight(treeItemId);
     }
 

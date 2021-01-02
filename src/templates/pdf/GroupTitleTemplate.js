@@ -1,7 +1,19 @@
 import { highestContrast } from '../../common/colors';
-import { Colors }  from '../../enums';
+import { renderRotatedText } from './RotatedText';
 
-export default function GroupTitleTemplate(itemTitleFirstFontColor, itemTitleSecondFontColor) {
+export default function GroupTitleTemplate(options) {
+  var {
+    groupTitleFontSize, 
+    groupTitleFontFamily: fontFamily,
+    groupTitleFontWeight: fontWeight,
+    groupTitleFontStyle: fontStyle,
+    groupTitleOrientation: textOrientation,
+    groupTitleHorizontalAlignment: horizontalAlignment,
+    groupTitleVerticalAlignment: verticalAlignment,
+    groupTitleColor, 
+    itemTitleFirstFontColor, 
+    itemTitleSecondFontColor
+  } = options;
   function template() {
     return {};
   }
@@ -12,29 +24,13 @@ export default function GroupTitleTemplate(itemTitleFirstFontColor, itemTitleSec
 
   function render(doc, position, data) {
     var itemConfig = data.context,
-      groupTitleColor = itemConfig.groupTitleColor || Colors.RoyalBlue,
-      color = highestContrast(groupTitleColor, itemTitleSecondFontColor, itemTitleFirstFontColor);
+      titleColor = itemConfig.groupTitleColor || groupTitleColor,
+      fontColor = highestContrast(titleColor, itemTitleSecondFontColor, itemTitleFirstFontColor),
+      label = itemConfig.groupTitle;
 
-    /* title background */
-    doc.save();
-    doc.translate(position.width, 0)
-      .rotate(90, {
-        origin: [position.x, position.y]
-      });
-    doc.fillColor(groupTitleColor)
-      .roundedRect(position.x, position.y, position.height - 2, position.width, 4)
-      .fill();
+    var fontSize = parseInt(groupTitleFontSize, 10);
 
-    /* title */
-    doc.fillColor(color)
-      .font('Helvetica', 12)
-      .text(itemConfig.groupTitle, position.x + 4, position.y + 6, {
-        ellipsis: true,
-        width: (position.height - 4),
-        height: position.width - 4,
-        align: 'center'
-      });
-    doc.restore();
+    renderRotatedText({doc, textOrientation, label, fontSize, fontColor, position, titleColor, horizontalAlignment, verticalAlignment });
   }
 
   return {

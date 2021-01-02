@@ -1,5 +1,6 @@
 import Point from './Point';
 import Vector from './Vector';
+import Interval from './Interval';
 import { PlacementType } from '../../enums'
 
 /**
@@ -479,4 +480,13 @@ Rect.prototype.getProjectionPoint = function (point) {
     });
   }
   return result;
+};
+
+/**
+ * Vertical Interval
+ * 
+ * @returns {Interval} Returns vertical interval of the rectangle
+ */
+Rect.prototype.verticalInterval = function () {
+  return new Interval( this.y, this.bottom() );
 };

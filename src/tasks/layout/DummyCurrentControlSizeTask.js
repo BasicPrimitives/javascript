@@ -5,17 +5,17 @@ export default function DummyCurrentControlSizeTask(optionsTask) {
     return true;
   }
 
-  function getScrollPanelSize() {
-    return new Size(800, 600);
-  }
-
-  function getOptimalPanelSize() {
-    return new Size(800 - 25, 600 - 25);
+  function getOptions() {
+    return {
+      scrollPanelSize: new Size(800, 600),
+      optimalPanelSize: new Size(800 - 25, 600 - 25),
+      hasFrame: true,
+      hasLevelTitles: true
+    }
   }
 
   return {
     process: process,
-    getScrollPanelSize: getScrollPanelSize,
-    getOptimalPanelSize: getOptimalPanelSize
+    getOptions: getOptions
   };
 };

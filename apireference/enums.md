@@ -13,10 +13,11 @@ Defines type of on-screen and in-layout annotation object. Annotations are geome
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `Background` | number | `4` | Background annotation highlights nodes via drawing rectangular shape in background. If shapes overlap the same style neighboring shapes they are merged into one continuous shape. | 
+ | `Background` | number | `4` | Background annotation highlights nodes via drawing rectangular shape in the background. If shapes overlap the same style neighboring shapes they are merged into one continuous shape. | 
  | `Connector` | number | `0` | Connector lines between two nodes of the diagram. They are drawn on top of existing diagram layout and they don't affect nodes placement. So it is users responsibility to preserve space between nodes for them. | 
  | `HighlightPath` | number | `2` | Highlight path annotation traces path between given sequence of nodes over existing connector lines in the diagram. | 
  | `Label` | number | `3` | In-layout label annotation. Label annotations are placed in layout between nodes, they preserve space between nodes, so they don't overlap neighboring nodes. Label annotations are designed for auto placement and bundling of connection lines between nodes when needed. | 
+ | `Level` | number | `5` | Stripe annotation highlights same level nodes of the diagram via drawing continuous rectangular shape from side to side in their background. Stripe has optional title on the side of the diagram view area. Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the background and does not occupy space. | 
  | `Shape` | number | `1` | Shape annotation is a possibility to draw some geometrical shapes over several nodes of the diagram. | 
 
 ## <a name="ChildrenPlacementType" id="ChildrenPlacementType">ChildrenPlacementType</a>

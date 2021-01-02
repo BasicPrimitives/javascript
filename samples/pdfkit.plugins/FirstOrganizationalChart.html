@@ -22,7 +22,7 @@
       doc.fontSize(25)
         .text('First Organizational Chart', 30, 30);
 
-      var firstOrganizationalChartSample = primitives.OrgDiagramPdfkit({
+      var sampleChart = primitives.OrgDiagramPdfkit({
         items: [
           new primitives.OrgItemConfig({
             id: 0,
@@ -50,7 +50,7 @@
         hasSelectorCheckbox: primitives.Enabled.False
       });
 
-      var size = firstOrganizationalChartSample.draw(doc, 30, 60);
+      var size = sampleChart.draw(doc, 30, 60);
 
       doc.restore();
 

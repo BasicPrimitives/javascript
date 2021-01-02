@@ -22,7 +22,7 @@
       doc.fontSize(25)
         .text('Family Diagram Items Order', 30, 30);
 
-      var firstOrganizationalChartSample = primitives.FamDiagramPdfkit({
+      var sampleChart = primitives.FamDiagramPdfkit({
         items: [
           { id: 2, title: "Steven Lacombe", label: "Steven Lacombe", description: "Id: 2", image: photos.b, itemTitleColor: "#4b0082" },
           { id: 10, relativeItem: 2, placementType: primitives.AdviserPlacementType.Left, position: 1, title: "Roger Dalton", label: "Roger Dalton", description: "Id: 10", image: photos.a, itemTitleColor: "#4169e1" },
@@ -51,7 +51,7 @@
         maximumColumnsInMatrix: 4
       });
 
-      var size = firstOrganizationalChartSample.draw(doc, 30, 60);
+      var size = sampleChart.draw(doc, 30, 60);
 
       doc.restore();
 

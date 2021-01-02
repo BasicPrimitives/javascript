@@ -2,7 +2,7 @@
  * @class Point
  * @classdesc Class represents pair of x and y coordinates that define a point in 2D plane.
  * 
- * @param {Size} arg0 Point object to clone.
+ * @param {Point} arg0 Point object to clone.
  * 
  * @param {number} arg0 The x coordinate.
  * @param {number} arg1 The y coordinate.

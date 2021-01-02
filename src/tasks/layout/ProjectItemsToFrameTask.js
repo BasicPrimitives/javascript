@@ -4,7 +4,7 @@ import Size from '../../graphics/structs/Size';
 import Point from '../../graphics/structs/Point';
 import Rect from '../../graphics/structs/Rect';
 
-export default function ProjectItemsToFrameTask(createTranformTask, frameSizeTask,
+export default function ProjectItemsToFrameTask(createTransformTask, frameSizeTask,
   applyLayoutChangesTask, scaleOptionTask,
   alignDiagramTask, centerOnCursorTask,
   itemTemplateParamsTask,
@@ -18,7 +18,7 @@ export default function ProjectItemsToFrameTask(createTranformTask, frameSizeTas
 
   function process() {
     var positions = alignDiagramTask.getItemsPositions(),
-      transform = createTranformTask.getTransform();
+      transform = createTransformTask.getTransform();
 
     _scaleOptions = scaleOptionTask.getOptions(),
     _spatialIndex = null;
@@ -66,18 +66,20 @@ export default function ProjectItemsToFrameTask(createTranformTask, frameSizeTas
         placeholderOffset = new Point(centerOnCursorTask.getPlaceholderOffset()),
         scrollPanelSize = new Size(applyLayoutChangesTask.getScrollPanelSize()),
         frameThickness = new Thickness(applyLayoutChangesTask.getFrameThickness()),
+        frameBaseOffset = new Thickness(applyLayoutChangesTask.getFrameOffset()),
         medianThickness = new Thickness(frameSizeTask.getMedian());
 
       if(!frameThickness.isEmpty()) {
         placeholderOffset.scale(1.0 / scale);
         frameThickness.scale(1.0 / scale);
+        frameBaseOffset.scale(1.0 / scale);
         scrollPanelSize.scale(1.0 / scale);
         medianThickness.scale(1.0 / scale);
 
-
-        var frameOffset = new Point(placeholderOffset.x - frameThickness.left, placeholderOffset.y - frameThickness.top);
+        var frameOffset = new Point(placeholderOffset.x - frameBaseOffset.left - frameThickness.left, placeholderOffset.y - frameBaseOffset.top - frameThickness.top);
 
         var medianRect = new Rect(placeholderOffset.x, placeholderOffset.y, scrollPanelSize.width, scrollPanelSize.height);
+        medianRect.offset(frameBaseOffset);
         medianRect.offset(medianThickness);
 
         result = {

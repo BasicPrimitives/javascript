@@ -204,6 +204,57 @@
 
       options.arrowsDirection = primitives.GroupByType.Children;
 
+      options.annotations = [
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [0],
+            title: "CEO",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [1],
+            title: "Children 1",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0.08,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [2],
+            title: "Children 2",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [3],
+            title: "Members",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0.08,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          }
+        ];
+
       control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
 
       window.addEventListener('resize', function (event) {

@@ -4,7 +4,7 @@ import Label from '../../graphics/structs/Label';
 import { isNullOrEmpty } from '../../common';
 import getCrossingRectangles from '../../algorithms/getCrossingRectangles';
 
-export default function DrawItemLabelsTask(getGraphics, createTranfromTask, applyLayoutChangesTask,
+export default function DrawItemLabelsTask(getGraphics, createTransformTask, applyLayoutChangesTask,
   labelsOptionTask,
   alignDiagramTask) {
 
@@ -13,7 +13,7 @@ export default function DrawItemLabelsTask(getGraphics, createTranfromTask, appl
 
     var params = {
       graphics: getGraphics(),
-      transform: createTranfromTask.getTransform(),
+      transform: createTransformTask.getTransform(),
       treeItemsPositions: alignDiagramTask.getItemsPositions()
     };
 

@@ -61,10 +61,17 @@ export const AnnotationType = {
      */
     Label: 3,
     /**
-     * Background annotation highlights nodes via drawing rectangular shape in background.
+     * Background annotation highlights nodes via drawing rectangular shape in the background.
      * If shapes overlap the same style neighboring shapes they are merged into one continuous shape. 
      */
-    Background: 4
+    Background: 4,
+    /**
+     * Stripe annotation highlights same level nodes of the diagram via drawing continuous rectangular shape 
+     * from side to side in their background. Stripe has optional title on the side of the diagram view area.
+     * Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the 
+     * background and does not occupy space. 
+     */
+    Level: 5
 };
 
 /**
@@ -552,6 +559,7 @@ export const LabelType =
 
 export const Layers =
 {
+  LevelAnnotation: 1,
   BackgroundAnnotation: 2,
   BackgroundAnnotations: 3,
   BackgroundConnectorAnnotation: 4,

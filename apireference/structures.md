@@ -9,6 +9,73 @@ Heap result object
 
  `HeapResult` 
 
+## <a name="Interval" id="Interval">Interval</a>
+Class represents interval defined by two values.
+
+ `Interval` 
+
+### Constructor
+
+ `Interval(arg0, arg1)` 
+
+Class represents interval defined by two values.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `arg0` | Interval | `` | Interval object to clone. | 
+ | `arg0` | number | `` | The from value. | 
+ | `arg1` | number | `` | The to value. | 
+
+### Properties
+| Name | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `context` | object | `null` | Reference to the context object associated with this Interval. | 
+ | `from` | number | `null` | The from value | 
+ | `to` | number | `null` | The to value | 
+
+### Functions
+
+ `clone()` 
+
+Clones the interval
+
+ Returns: `Interval` - returns copy of the interval.
+
+
+ `equalTo(interval)` 
+
+Checks if intervals are equal
+
+ Returns: `boolean` - returns true if intervals are equal.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `interval` | Interval | `` | Interval | 
+
+ `overlaps(interval)` 
+
+Checks if the interval overlaps the specified interval
+
+ Returns: `boolean` - returns true if two intervals overlap each other.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `interval` | Interval | `` | The interval to check overlapping for. | 
+
+ `toString()` 
+
+Returns interval in form of user friendly string
+
+ Returns: `string` - returns string interval representation.
+
+
+ `width()` 
+
+Width
+
+ Returns: `number` - returns interval width
+
+
 ## <a name="Matrix" id="Matrix">Matrix</a>
 Square matrix having 2 rows and 2 columns.
 
@@ -50,7 +117,7 @@ Class represents pair of x and y coordinates that define a point in 2D plane.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `arg0` | Size | `` | Point object to clone. | 
+ | `arg0` | Point | `` | Point object to clone. | 
  | `arg0` | number | `` | The x coordinate. | 
  | `arg1` | number | `` | The y coordinate. | 
 
@@ -373,6 +440,13 @@ Vertical center
  Returns: `number` - returns y-axis coordinate of the center point of the rectangle.
 
 
+ `verticalInterval()` 
+
+Vertical Interval
+
+ Returns: `Interval` - returns vertical interval of the rectangle
+
+
 ## <a name="RenderEventArgs" id="RenderEventArgs">RenderEventArgs</a>
 This is object parameter of rendering callback function
 
@@ -538,6 +612,20 @@ Add thickness.
 Checks object is empty
 
  Returns: `boolean` - returns true if object has no thickness defined for any of its sides
+
+
+ `isNegative()` 
+
+Checks if at least one side is negative
+
+ Returns: `boolean` - returns true if any of its sides is negative
+
+
+ `isPositive()` 
+
+Checks if at least one side is positive
+
+ Returns: `boolean` - returns true if any of its sides is positive
 
 
  `maxThickness(thickness)` 

@@ -5,7 +5,7 @@ import DotSegment from '../../graphics/structs/DotSegment';
 import PaletteItem from '../../graphics/structs/PaletteItem';
 import Marker from '../../graphics/shapes/Marker';
 
-export default function DrawMinimizedItemsTask(getGraphics, createTranfromTask, applyLayoutChangesTask,
+export default function DrawMinimizedItemsTask(getGraphics, createTransformTask, applyLayoutChangesTask,
   minimizedItemsOptionTask, itemTemplateParamsTask, alignDiagramTask) {
   var _graphics,
     _transform,
@@ -17,7 +17,7 @@ export default function DrawMinimizedItemsTask(getGraphics, createTranfromTask, 
 
     _graphics = getGraphics();
 
-    _transform = createTranfromTask.getTransform();
+    _transform = createTransformTask.getTransform();
     _options = minimizedItemsOptionTask.getOptions();
     _positions = alignDiagramTask.getItemsPositions();
 

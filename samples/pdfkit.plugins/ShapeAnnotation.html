@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html style="height: 95%">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Shape Annotation PDFKit Sample</title>
+  <script type="text/javascript" src="../../pdfkitsamples.js"></script>
+  <script type="text/javascript" src="../../primitives.js"></script>
+
+  <script type='text/javascript'>
+    var control;
+    var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // create a document and pipe to a blob
+      var doc = new PDFDocument();
+      var stream = doc.pipe(blobStream());
+
+      doc.fontSize(25)
+        .text('Shape Annotation', 30, 30);
+
+      var sampleChart = primitives.OrgDiagramPdfkit({
+				items: [
+					/* JSON noname objects equivalent to OrgItemConfig */
+					{ id: 0, parent: null, title: "James Smith", description: "VP, Public Sector", image: photos.a },
+					{ id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: photos.b },
+					{ id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: photos.c },
+					{ id: 3, parent: 0, title: "Mike Wazowski", description: "Business Analyst, Canada", image: photos.o },
+					{ id: 4, parent: 3, title: "Best Friend", description: "Business Analyst, Mexico", image: photos.f }
+				],
+				annotations: [
+					/* JSON noname object equivalent to ShapeAnnotationConfig */
+					{
+						annotationType: primitives.AnnotationType.Shape,
+						items: [0],
+						label: " Oval",
+						labelSize: new primitives.Size(50, 30),
+						labelPlacement: primitives.PlacementType.Right,
+						shapeType: primitives.ShapeType.Oval,
+						borderColor: primitives.Colors.Green,
+						offset: new primitives.Thickness(2, 2, 2, 2),
+						lineWidth: 2,
+						selectItems: true,
+						lineType: primitives.LineType.Dashed
+					},
+					/* JSON noname object equivalent to ShapeAnnotationConfig */
+					{
+						annotationType: primitives.AnnotationType.Shape,
+						items: [2,3],
+						label: "Cross Out",
+						labelSize: { width: 50, height: 50 },
+						labelPlacement: primitives.PlacementType.Right,
+						shapeType: primitives.ShapeType.CrossOut,
+						borderColor: primitives.Colors.Navy,
+						offset: { left: 2, top: 2, right: 2, bottom: 2 },
+						lineWidth: 2,
+						selectItems: true,
+						lineType: primitives.LineType.Dashed
+					},
+					/* prototype based instantiation */
+					new primitives.ShapeAnnotationConfig({
+						items: [1],
+						label: "Triangle",
+						labelSize: new primitives.Size(50, 50),
+						labelPlacement: primitives.PlacementType.Bottom,
+						shapeType: primitives.ShapeType.Triangle,
+						borderColor: primitives.Colors.Red,
+						offset: new primitives.Thickness(2, 2, 2, 2),
+						lineWidth: 2,
+						selectItems: true,
+						lineType: primitives.LineType.Dashed
+					})
+					,
+					new primitives.BackgroundAnnotationConfig({
+						items: [2,3],
+						borderColor: "#f8e5f9",
+						fillColor: "#e5f9f8",
+						lineWidth: 2,
+						selectItems: true,
+						includeChildren: true,
+						lineType: primitives.LineType.Dotted,
+						offset: new primitives.Thickness(20, 20, 20, 20)
+					})
+				],
+				cursorItem: 0,
+				hasSelectorCheckbox: primitives.Enabled.True,
+				normalItemsInterval: 40 /* defines padding around items of background annotations*/
+      });
+
+      var size = sampleChart.draw(doc, 30, 60);
+
+      doc.restore();
+
+      doc.end();
+
+      stream.on('finish', function () {
+        var string = stream.toBlobURL('application/pdf');
+        document.getElementById("previewpanel").setAttribute("src", string);
+      });
+    });
+
+  </script>
+</head>
+
+<body style="height: 100%">
+  <div id="basicdiagram" style="width: 100%; height: 100%; border-style: none; border-width: 0px;">
+    <iframe id="previewpanel" type="application/pdf" width="100%" height="100%" frameborder="0"
+      style="position:relative;z-index:999">
+    </iframe>
+  </div>
+</body>
+
+</html>

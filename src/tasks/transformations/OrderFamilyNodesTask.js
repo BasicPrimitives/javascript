@@ -1,5 +1,5 @@
 ﻿/*  Balance family tree so parents sharing the most children stay close to each other 
-    Account for users position and primnaryParent options
+    Account for users position and primaryParent options
 */
 import FamilyBalance from './familyTransformations/FamilyBalance';
 import FamilyMatrixesExtractor from './familyTransformations/FamilyMatrixesExtractor';

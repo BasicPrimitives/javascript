@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html style="height: 95%">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Level Annotation PDFKit Sample</title>
+  <script type="text/javascript" src="../../pdfkitsamples.js"></script>
+  <script type="text/javascript" src="../../primitives.js"></script>
+
+  <script type='text/javascript'>
+    var control;
+    var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
+
+    var annotations = [
+      /* JSON object equivalent to primitives.LevelAnnotationConfig */
+      {
+        annotationType: primitives.AnnotationType.Level,
+        levels: [0],
+        title: "Level 0",
+        titleColor: primitives.Colors.RoyalBlue,
+        offset: new primitives.Thickness(0, 0, 0, -1),
+        lineWidth: new primitives.Thickness(0, 0, 0, 1),
+        opacity: 0.05,
+        borderColor: primitives.Colors.Black,
+        fillColor: primitives.Colors.Yellow,
+        lineType: primitives.LineType.Dashed            
+      },
+      new primitives.LevelAnnotationConfig({
+        annotationType: primitives.AnnotationType.Level,
+        levels: [1],
+        title: "Level 1",
+        titleColor: primitives.Colors.Green,
+        offset: new primitives.Thickness(0, 0, 0, -1),
+        lineWidth: new primitives.Thickness(0, 0, 0, 1),
+        opacity: 0.1,
+        borderColor: primitives.Colors.Black,
+        fillColor: primitives.Colors.Gray,
+        lineType: primitives.LineType.Dotted
+      }),
+      {
+        annotationType: primitives.AnnotationType.Level,
+        levels: [2],
+        title: "Level 2",
+        titleColor: primitives.Colors.Red,
+        offset: new primitives.Thickness(0, 0, 0, -1),
+        lineWidth: new primitives.Thickness(0, 0, 0, 1),
+        opacity: 0.05,
+        borderColor: primitives.Colors.Red,
+        fillColor: primitives.Colors.Red,
+        lineType: primitives.LineType.Solid
+      },
+    ];
+
+    var orgItems = [
+      new primitives.OrgItemConfig({
+        id: 0,
+        parent: null,
+        title: "James Smith",
+        description: "VP, Public Sector",
+        image: photos.a
+      }),
+      new primitives.OrgItemConfig({
+        id: 1,
+        parent: 0,
+        title: "Ted Lucas",
+        description: "VP, Human Resources",
+        image: photos.b
+      }),
+      new primitives.OrgItemConfig({
+        id: 2,
+        parent: 0,
+        title: "Fritz Stuger",
+        description: "Business Solutions, US",
+        image: photos.c
+      }),
+      new primitives.OrgItemConfig({
+        id: 3,
+        parent: 2,
+        title: "Robert Canon",
+        description: "Operations, US",
+        image: photos.r
+      })
+    ];
+
+    var famItems = [
+      new primitives.OrgItemConfig({
+        id: 0,
+        parents: null,
+        title: "James Smith",
+        description: "VP, Public Sector",
+        image: photos.a
+      }),
+      new primitives.OrgItemConfig({
+        id: 1,
+        parents: [0],
+        title: "Ted Lucas",
+        description: "VP, Human Resources",
+        image: photos.b
+      }),
+      new primitives.OrgItemConfig({
+        id: 2,
+        parents: [0],
+        title: "Fritz Stuger",
+        description: "Business Solutions, US",
+        image: photos.c
+      }),
+      new primitives.OrgItemConfig({
+        id: 3,
+        parents: [1, 2],
+        title: "Robert Canon",
+        description: "Operations, US",
+        image: photos.r
+      })
+    ];
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // create a document and pipe to a blob
+      var doc = new PDFDocument();
+      var stream = doc.pipe(blobStream());
+
+      for(var index = 0; index < 4; index+=1) {
+        var config = {
+          cursorItem: null,
+          hasSelectorCheckbox: primitives.Enabled.False,
+          levelTitleHorizontalAlignment: primitives.HorizontalAlignmentType.Right,
+          annotations: annotations
+        };
+
+        var label;
+        switch(index) {
+          case 0:
+            label = "Left, Auto";
+            config.orientationType = primitives.OrientationType.Left;
+            config.levelTitlePlacementType = primitives.AdviserPlacementType.Auto;
+            config.levelTitleHorizontalAlignment = primitives.HorizontalAlignmentType.Left;
+            break;
+          case 1:
+            label = "Top, Auto";
+            config.orientationType = primitives.OrientationType.Top;
+            config.levelTitlePlacementType = primitives.AdviserPlacementType.Auto;
+            config.levelTitleHorizontalAlignment = primitives.HorizontalAlignmentType.Center;
+            break;
+          case 2:
+            label = "Right, Auto";
+            config.orientationType = primitives.OrientationType.Right;
+            config.levelTitlePlacementType = primitives.AdviserPlacementType.Auto;
+            config.levelTitleHorizontalAlignment = primitives.HorizontalAlignmentType.Right;
+            break;
+          case 3:
+            label = "Bottom, Right";
+            config.orientationType = primitives.OrientationType.Bottom;
+            config.levelTitlePlacementType = primitives.AdviserPlacementType.Right;
+            config.levelTitleHorizontalAlignment = primitives.HorizontalAlignmentType.Center;
+            break;
+        }
+        doc.fontSize(25)
+          .text('Level Annotation', 30, 30);
+        doc.fontSize(15)
+          .text(label, 30, 60);
+        config.items = orgItems;
+        var sampleChart = primitives.OrgDiagramPdfkit(config);
+        var size = sampleChart.draw(doc, 30, 80);
+        doc.addPage();
+
+        doc.fontSize(25)
+          .text('Level Annotation', 30, 30);
+        doc.fontSize(15)
+          .text(label, 30, 60);
+        config.items = famItems;
+        var sampleChart = primitives.FamDiagramPdfkit(config);
+        var size = sampleChart.draw(doc, 30, 80);
+        doc.addPage();
+
+      }
+
+      doc.end();
+
+      stream.on('finish', function () {
+        var string = stream.toBlobURL('application/pdf');
+        document.getElementById("previewpanel").setAttribute("src", string);
+      });
+    });
+
+  </script>
+</head>
+
+<body style="height: 100%">
+  <div id="basicdiagram" style="width: 100%; height: 100%; border-style: none; border-width: 0px;">
+    <iframe id="previewpanel" type="application/pdf" width="100%" height="100%" frameborder="0"
+      style="position:relative;z-index:999">
+    </iframe>
+  </div>
+</body>
+
+</html>

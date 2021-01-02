@@ -20,8 +20,6 @@ export default function OrgTreeTask(itemsOptionTask) {
       orgItemRoot,
       userItem,
       index, len,
-      index2, len2,
-      property,
       maximumId = 0,
       parsedId,
       // Organizational chart definition 
@@ -40,7 +38,7 @@ export default function OrgTreeTask(itemsOptionTask) {
         */
         orgItem = new OrgItem(userItem);
 
-        // OrgItem id coinsides with OrgItemConfig id since we don't add any new org items to user's org chart definition
+        // OrgItem id coincides with OrgItemConfig id since we don't add any new org items to user's org chart definition
         parsedId = parseInt(userItem.id, 10);
         maximumId = Math.max(isNaN(parsedId) ? 0 : parsedId, maximumId);
 

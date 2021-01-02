@@ -1,7 +1,7 @@
 import Cache from './Cache';
 import { Layers } from '../enums';
 import { loop, getHashCode, mergeObjects } from '../common';
-import { TextOrientationType, VerticalAlignmentType, HorizontalAlignmentType, SegmentType, RenderingMode } from '../enums';
+import { TextOrientationType, VerticalAlignmentType, SegmentType, RenderingMode } from '../enums';
 import JsonML from '../common/jsonml-html';
 import Size from './structs/Size';
 import Rect from './structs/Rect';
@@ -9,6 +9,7 @@ import Placeholder from './Placeholder';
 import Layer from './Layer';
 import { getInnerSize } from './dom';
 import RenderEventArgs from '../events/RenderEventArgs';
+import { getTextAlign, getVerticalAlignment } from './EnumValues';
 
 export default function Graphics(element) {
   this.m_element = element;
@@ -264,7 +265,7 @@ Graphics.prototype.text = function (x, y, width, height, label, orientation, hor
       "position": "absolute",
       "padding": 0,
       "margin": 0,
-      "textAlign": this._getTextAlign(horizontalAlignment),
+      "textAlign": getTextAlign(horizontalAlignment),
       "fontSize": attr.fontSize,
       "fontFamily": attr.fontFamily,
       "fontWeight": attr.fontWeight,
@@ -341,7 +342,7 @@ Graphics.prototype.text = function (x, y, width, height, label, orientation, hor
     default:
       style.borderCollapse = "collapse";
       tdstyle = {
-        "verticalAlign": this._getVerticalAlignment(verticalAlignment),
+        "verticalAlign": getVerticalAlignment(verticalAlignment),
         "padding": 0
       };
       if (this.debug) {
@@ -375,38 +376,6 @@ Graphics.prototype.text = function (x, y, width, height, label, orientation, hor
       }
       break;
   }
-};
-
-Graphics.prototype._getTextAlign = function (alignment) {
-  var result = null;
-  switch (alignment) {
-    case HorizontalAlignmentType.Center:
-      result = "center";
-      break;
-    case HorizontalAlignmentType.Left:
-      result = "left";
-      break;
-    case HorizontalAlignmentType.Right:
-      result = "right";
-      break;
-  }
-  return result;
-};
-
-Graphics.prototype._getVerticalAlignment = function (alignment) {
-  var result = null;
-  switch (alignment) {
-    case VerticalAlignmentType.Middle:
-      result = "middle";
-      break;
-    case VerticalAlignmentType.Top:
-      result = "top";
-      break;
-    case VerticalAlignmentType.Bottom:
-      result = "bottom";
-      break;
-  }
-  return result;
 };
 
 Graphics.prototype.polylinesBuffer = function (buffer) {
@@ -529,6 +498,7 @@ Graphics.prototype.template = function (x, y, width, height, contentx, contenty,
 
   if (attr !== null) {
     if (attr.borderWidth !== undefined) {
+      attr.borderWidth = attr.borderWidth.toString();
       gap = this.getPxSize(attr.borderWidth);
     }
   }

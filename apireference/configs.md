@@ -115,6 +115,36 @@ In-layout label annotation. Label annotations are placed in layout between nodes
  | `title` | string | `null` | Title. Annotation label text, it is styled with css class name "bp-connector-label". | 
  | `toItems` | string[] | `[]` | This collection should contain only child or parent items of the annotated item. It cannot contain children and parents at the same time. If it contain sub set of children then annotation label bundles children into subset and annotations form cascades of labels over connection lines in the diagram. | 
 
+## <a name="LevelAnnotationConfig" id="LevelAnnotationConfig">LevelAnnotationConfig</a>
+Level annotation highlights same level nodes of the diagram via drawing continuous rectangular shape from side to side in their background. Stripe has optional title on the side of the diagram view area. Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the background and does not occupy space.
+
+ `LevelAnnotationConfig` 
+
+### Constructor
+
+ `LevelAnnotationConfig(arg0)` 
+
+Level annotation highlights same level nodes of the diagram via drawing continuous rectangular shape from side to side in their background. Stripe has optional title on the side of the diagram view area. Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the background and does not occupy space.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `arg0` | object | `` | Object properties. | 
+
+### Properties
+| Name | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `annotationType` | AnnotationType | `Level` | Annotation type. All types of annotations objects are added to `annotations` collection property of the control. This property is needed to distinguish them when they are defined as a type less JSON objects. | 
+ | `borderColor` | string | `null` | Background stripe border line color | 
+ | `fillColor` | string | `"#D4D4D4"` | Background stripe fill Color. | 
+ | `levels` | string[] | `[]` | Collection of levels this level annotation is drawn for. | 
+ | `lineType` | LineType | `Solid` | Background stripe border line type | 
+ | `lineWidth` | Thickness | `{0, 0, 0, 0}` | Background stripe border line width. Use {Thickness} to set border width individually per side. | 
+ | `offset` | Thickness | `{0, 0, 0, 0}` | Sets background offset relative to default position. | 
+ | `opacity` | number | `1` | Background color opacity. | 
+ | `title` | string | `null` | Level Title. | 
+ | `titleColor` | string | `null` | The level title background color. | 
+ | `titleFontColor` | string | `null` | Title font color. | 
+
 ## <a name="PaletteItemConfig" id="PaletteItemConfig">PaletteItemConfig</a>
 Palette Item configuration object defines cross family connections lines styles. Multi-parent diagrams have cross hierarchy relation lines, so in order to make their visual tracing more easy on diagram every connection line can be styled differently. (This is the same approach as for visualization of regular classic line charts. If we have multiple lines in chart area it makes sense to style every line individually.)
 

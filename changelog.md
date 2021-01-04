@@ -1,3 +1,5 @@
+#### Version 6.1.1
+* Fixed levelOffset property to work regardless of empty levels
 #### Version 6.1.0
 * Added LevelAnnotationConfig
 * Added level annotation options to OrgConfig and FamConfig

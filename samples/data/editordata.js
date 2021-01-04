@@ -247,9 +247,16 @@ function getMatrixedLeaves() {
   }));
 
   var counter = 8;
-  var groups = { "E": 25, "V": 57, "U": 37, "O": 12, "P": 24, "L": 18 };
+  var groups = { 
+    "E": { levels: [0, 0, 6, 2, 25] }, 
+    "V": { levels: [14, 12, 8, 8, 56]},
+    "U": { levels: [2, 4, 6, 8, 37] }, 
+    "O": { levels: [0, 0, 0, 0, 12] },
+    "P": { levels: [1, 10, 0, 1, 24] },
+    "L": { levels: [1, 5, 0, 2, 18] }
+  };
   for (var groupKey in groups) {
-    var groupSize = groups[groupKey];
+    var group = groups[groupKey];
     counter++;
     var manager = new primitives.OrgItemConfig({
       id: counter,
@@ -263,19 +270,23 @@ function getMatrixedLeaves() {
     });
     items.push(manager);
 
-    for (var index = 0; index < groupSize; index += 1) {
-      counter++;
-      var memberItem = new primitives.OrgItemConfig({
-        id: counter,
-        parent: manager.id,
-        title: GetNextName(),
-        description: "Description of #" + index.toString() + " member of group " + groupKey,
-        image: "../images/photos/" + groupKey.toLowerCase() + ".png",
-        email: GetRandomEmail(index.toString() + " member of " + groupKey),
-        phone: GetRandomPhone(),
-        label: index.toString()
-      });
-      items.push(memberItem);
+    for (var levelIndex = 0; levelIndex < group.levels.length; levelIndex += 1) {
+      var levelSize = group.levels[levelIndex];
+      for (var index = 0; index < levelSize; index += 1) {
+        counter++;
+        var memberItem = new primitives.OrgItemConfig({
+          id: counter,
+          parent: manager.id,
+          title: GetNextName(),
+          description: "Description of #" + counter.toString() + " member of group " + groupKey,
+          image: "../images/photos/" + groupKey.toLowerCase() + ".png",
+          email: GetRandomEmail(counter.toString() + " member of " + groupKey),
+          phone: GetRandomPhone(),
+          label: counter.toString(),
+          levelOffset: levelIndex
+        });
+        items.push(memberItem);
+      }
     }
   }
 

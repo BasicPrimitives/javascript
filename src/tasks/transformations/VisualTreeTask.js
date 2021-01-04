@@ -293,7 +293,7 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
       if (regularChildrenLevels.length > 0) {
         visualParent = getLastVisualAggregator(visualTree, logicalParentItem);
         for (var indexLevel = 0; indexLevel < regularChildrenLevels.length - 1; indexLevel += 1) {
-          var regularChildrenLevel = regularChildrenLevels[indexLevel];
+          var regularChildrenLevel = regularChildrenLevels[indexLevel] || [];
           if (regularChildrenLevel != null) {
             var hideChildConnector = (logicalParentItem.visibility == Visibility.Invisible) && (logicalParentItem.connectorPlacement === 0);
             var nextVisualParent = createNewVisualAggregator(visualTree, visualParent, hideChildConnector);
@@ -411,8 +411,10 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
         for (index = 0, len = itemRowChildren.length; index < len; index += 1) {
           children = itemRowChildren[index];
           rowDepths[index] = 0;
-          for (childIndex = 0, childrenLen = children.length; childIndex < childrenLen; childIndex += 1) {
-            rowDepths[index] = Math.max(rowDepths[index], getItemDepth(visualTree, children[childIndex]));
+          if(children != null) {
+            for (childIndex = 0, childrenLen = children.length; childIndex < childrenLen; childIndex += 1) {
+              rowDepths[index] = Math.max(rowDepths[index], getItemDepth(visualTree, children[childIndex]));
+            }
           }
         }
 

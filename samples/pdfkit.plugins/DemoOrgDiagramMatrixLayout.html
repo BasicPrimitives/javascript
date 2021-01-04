@@ -28,6 +28,92 @@
     document.addEventListener('DOMContentLoaded', function () {
       var sample3 = primitives.OrgDiagramPdfkit({
         items: (getUserData(data)),
+        annotations: [
+        {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [0],
+            title: "CEO",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -5),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [1],
+            title: "Management",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 4, 0, -15),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0.08,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [2],
+            title: "Grade 1",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 14, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [3],
+            title: "Grade 2",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0.08,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [4],
+            title: "Grade 3",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [5],
+            title: "Grade 4",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0.08,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [6],
+            title: "Regular Members",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          }
+        ],
         cursorItem: null,
         hasSelectorCheckbox: primitives.Enabled.False,
         /* Layout */

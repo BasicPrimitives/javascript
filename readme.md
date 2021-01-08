@@ -103,7 +103,6 @@ Do you want to use a Basic Primitives diagram for a personal website, a school s
 
 ## Compatibility:
 * Works in AngularJS directive
-* Works in jQuery UI widgets
 
 ## Performance:
 Through a full API you can add, remove and modify individual items and their properties. The component will only update visual elements affected by the API changes. We put in a lot of effort in order to make it happen!

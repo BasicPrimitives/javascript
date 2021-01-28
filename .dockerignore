@@ -1,0 +1,8 @@
+.git
+.vscode
+.npmignore
+.gitignore
+.dockerignore
+node_modules
+build
+yarn-error.log

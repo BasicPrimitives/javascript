@@ -1,6 +1,6 @@
-# Multiple root items in chart
+# Multiple root items in the chart
 
-Multiple root items are convenient to display multiple hierarchy fragments side by side. For example if our organizational data is incomplete and several nodes reference null parent, chart will show organization structure as it is in form of several disconnected hierarchies placed altogether in diagram.
+Multiple root items are convenient to display tree structure having missing parent relations for some nodes. The control would render such hierarchy using multiple tree fragments placed side by side in the diagram.
 
 Following example shows two disconnected hierarchies: 
 
@@ -9,11 +9,12 @@ Following example shows two disconnected hierarchies:
 ![Screenshot](javascript.controls/__image_snapshots__/CaseMultipleRootItemsInChart-snap.png)
 
 ## Matrix layout of multiple root items
-This is another example of dealing with fragments of hierarchies. It is made as nice 3 by 3 array on purpose, but in general if we are in situation when we need to connect broken peaces of diagram having hundreds of disconnected items the matrix representation of them can be way more convenient than long horizontal of vertical stripe of nodes. It is especially true when we need to support drag and drop, since in that case our nodes are going to be relatively close to each other.
+It is an extreme example when nodes don't have parent relations at all. So the control displays them in the form of a long horizontal list of nodes. It isn't easy to scroll and manage them. The suggested solution is to shape root items into the matrixed formation, so our fragments take less space and fit into the available screen space.
+The matrixed formation works best when we use drag and drop to merge nodes back to the tree structure, so we need to place our nodes close to each other.
+In the following example, we create an invisible root item and use it as a parent node for all our parentless nodes in the structure. Then we set its `childrenPlacementType` option to `primitives.ChildrenPlacementType.Matrix`, so our nine nodes form compact 3 * 3 matrix formation.  
 
-In order to layout root items in form of matrix we have to create invisible root item and set its `childrenPlacementType` option to `primitives.ChildrenPlacementType.Matrix`.
 
-See [Children Layout example](./ChildrenLayout.md) for placing fragments as vertical or horizontal list.
+See Children Layout example to place fragments vertically or horizontally.
 
 [JavaScript](javascript.controls/CaseMatrixLayoutOfMultipleRootItemsInChart.html)
 

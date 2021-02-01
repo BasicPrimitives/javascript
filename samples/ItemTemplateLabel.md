@@ -1,9 +1,18 @@
 # Labels
-Chart provides options to draw labels for minimized items only. The following options on diagram Config class used to control labels rendering: `showLabels`, `labelSize`, `labelOffset`, `labelOrientation`, `labelPlacement` and etc. `ItemConfig` has property `label`, `showLabel` and etc. as well to customize labels per item. This is needed because dotted representation of item has no template to place HTML fragment for label inside.
+The chart provides options to draw labels for nodes. It draws them for minimized nodes into markers only. Use the following options on the diagram configuration object to control labels styling and placement:
+* `showLabels`
+* `labelSize`
+* `labelOffset`
+* `labelOrientation`
+* `labelPlacement`
 
-If we need labels for regular items we can draw them using templates. Regular items are rendered as regular HTML fragments. So in order to place label over connection lines we have to place it outside of item boundaries. By default CSS class bp-item has overflow attribute set to hidden and HTML elements placed outside of item boundaries are invisible. In order to draw label we have to override bp-item class or directly edit primitives.latest.css and change overflow hidden to visible.
+See the reference for more details.
 
-Following example demonstrates how to add an extra property "percent" to items and render it as a label over item connection line.
+The `ItemConfig` configuration object has properties `label`,  `showLabel` etc. They let you customize labels per item. That is needed because markers have no templates for labels customization.
+
+If we need labels for the regular visible items, we can add them to the custom template. The templates consist of HTML fragments, so it possible to place labels outside node boundaries. For that, you need to override the default CSS `overflow` attribute from `hidden` to `visible`.  See `bp-item` class in the `primitives.css` file. 
+
+The following example demonstrates how to add an extra property showing percent value over nodes connection lines.
 
 [JavaScript](javascript.controls/CaseItemTemplateLabel.html)
 

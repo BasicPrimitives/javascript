@@ -1,19 +1,18 @@
-# Inactive items in layout
-Inactive items are regular items excluded from navigation. For example they can be used to add departments titles into hierarchy or terminator items indicating number of available items for dynamic download and unfolding sub hierarchy.
+# Inactive items
+Inactive items are regular items excluded from the navigation and deprived of interactivity. For example, we can add department titles into hierarchy or terminator items, indicating the number of available items for dynamic adding into the structure.
 
-Chart's API provides two ways to set inactive items. The first one is isActive option of ItemConfig options class and the second way is via template configuration. In majority of scenarios inactive items are supposed to have custom item template, so deactivating user interaction via item template is the most appropriate for application design. 
+Chart's API provides two ways to set make items inactive. The first one is the `isActive` option of the ItemConfig options class and the second way is via template configuration. In most scenarios, the inactive items are supposed to have a custom item template, so deactivating user interaction via template is the most appropriate for application design. 
 
 See following configuration classes:
 
-* `primitives.OrgItemConfig`
-* `primitives.FamItemConfig`
-* `primitives.TemplateConfig`
-* `primitives.TemplateConfig`
+* `OrgItemConfig`
+* `TemplateConfig`
 
+They have the following option:
 
-They have following option:
+* `isActive` - Setting it to false makes items inactive in diagram layout, so they become irresponsive to mouse and keyboard navigation events. 
 
-`isActive` - If it is true then item having this template is selectable in hierarchy and it has mouse over highlight.
+If you need to disable controls interactivity, it provides global scope options to disable mouse highlights and cursor navigation.
 
 [JavaScript](javascript.controls/CaseInactiveItems.html)
 

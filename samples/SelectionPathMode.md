@@ -1,11 +1,9 @@
 # Selection Path Mode
-If total square size of items exceeds available screen size, there is no possibility to show all of them and chart should use various strategies to show the most important information. By default organizational chart always shows `primitives.OrgConfig.cursorItem` and all its children and parents up to the rootItem in hierarchy in maximized template form. The same rule applies to selected items. For all other less important items chart is allowed by default to fold them into dots or lines.
+Suppose the total square size of items exceeds the available screen size. There is no possibility to show all of them, and the chart should use various strategies to display the essential information. By default organizational chart shows the current cursor item and all its children and parents up to the root of the hierarchy. The same rule applies to the list of selected items. All other less essential nodes, chart is allowed to display in the form of markers and lines.
 
-Selection path is items between root item and selected item. Selected item defined with `primitives.OrgConfig.selectedItems` collection. User can force to show selection path with option `primitives.OrgConfig.selectionPathMode` set to `primitives.SelectionPathMode.FullStack` or permit layout manager to collapse it to dots or lines with `primitives.SelectionPathMode.None`.
+The selection path is a collection of parents between any node and the root of the hierarchy. The control can show the selection path for the current cursor node and selected nodes as well. If you need to show selection path nodes, set the option `primitives.OrgConfig.selectionPathMode` to `primitives.SelectionPathMode.FullStack` or hide them to markers with `primitives.SelectionPathMode.None` option.
 
-When we need to compare two or three selected items location in Organizational chart it is important to show selection path items for them. In case of large number of selected items it is better to hide selection paths in order to save as much space as possible and fit chart into screen.
-
-Pay attention that org chart always shows selection path for cursor item. So in case when selected item is cursor item  the setting `primitives.OrgConfig.selectionPathMode` to `primitives.SelectionPathMode.None` is ignored.
+When we need to compare two or three selected items in the organizational chart, it is essential to show their selection paths. It gives you context for nodes comparison:  immediate managers,  departments, and relative levels in the organization. In the case of many selected items, it is better to hide selection paths to save valuable space and fit the chart into the screen.
 
 [JavaScript](javascript.controls/CaseSelectionPathMode.html)
 

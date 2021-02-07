@@ -1,5 +1,4 @@
 import Point from './graphics/structs/Point';
-import Thickness from './graphics/structs/Thickness';
 import Rect from './graphics/structs/Rect';
 import { UpdateMode, OrientationType } from './enums';
 import { isNullOrEmpty } from './common';
@@ -83,7 +82,7 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
     createLayout(_data.layout, _data.name);
     bind(_data.layout);
     _data.tasks = taskManagerFactory(getOptions, getGraphics, getLayout, setLayout, templates);
-    _data.graphics = createGraphics(_data.options.graphicsType, _data.layout.element);
+    _data.graphics = createGraphics(_data.layout.element);
     _data.graphics.debug = _debug;
 
     refresh(true, _debug);

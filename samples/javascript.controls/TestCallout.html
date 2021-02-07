@@ -18,7 +18,7 @@
     var timer = null;
     var { Point, Rect } = primitives;
     var { ValueType, Render, PanelConfig, ColorConfig, RadioBoxConfig, RangeConfig, DropDownBoxConfig, CaptionConfig, DropDownBoxConfig } = javascriptsamples;
-    var { Callout, createGraphics, GraphicsType, PlacementType, Colors, LineType } = interactivetests;
+    var { Callout, createGraphics, PlacementType, Colors, LineType } = interactivetests;
 
     var optionsRender = new Render([
       new PanelConfig("Layout Options", [
@@ -33,10 +33,6 @@
         new RangeConfig("lineWidth",2, "Line width", 0, 10, 1, onUpdate),
         new ColorConfig("fillColor", primitives.Colors.LightGray, "Fill Color", false, onUpdate),
         new RangeConfig("opacity", 1.0, "Opacity", 0, 1, 0.1, onUpdate)
-      ]),
-      new PanelConfig("Rendering", [
-        new CaptionConfig("By default control uses SVG graphics mode. Use this property to change graphics mode programmatically into Canvas.", false),
-        new RadioBoxConfig("graphicsType", primitives.GraphicsType.SVG, "Graphics", primitives.GraphicsType, ValueType.Integer, onUpdate)
       ])
     ], {
         pointerPlacement: primitives.PlacementType.Auto,
@@ -49,8 +45,6 @@
         lineWidth: 2,
         fillColor: primitives.Colors.LightGray,
         opacity: 1.0,
-
-        graphicsType: primitives.GraphicsType.SVG
       });
 
       var graphics;
@@ -58,7 +52,7 @@
       document.addEventListener('DOMContentLoaded', function () {
         optionsRender.render(document.getElementById("westpanel"));
 
-        graphics = createGraphics(GraphicsType.SVG, document.getElementById("placeholder"));
+        graphics = createGraphics(document.getElementById("placeholder"));
         callout = new Callout(graphics);
 
         onUpdate();

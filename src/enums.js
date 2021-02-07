@@ -438,26 +438,6 @@ export const Enabled = {
 };
   
 /**
- * @typedef {number} GraphicsType
- **/
-
-/**
- * Graphics elements rendering mode
- *  
- * @enum {GraphicsType}
- */
-export const GraphicsType = {
-    /**
-     * Scalable Vector Graphics
-     */
-    SVG: 0,
-    /**
-     * HTML Canvas
-     */
-    Canvas: 1
-};
-
-/**
  * @typedef {number} GroupByType
  **/
 

@@ -348,19 +348,6 @@
         </div>
         <div id="centerpanel" class="mediaPlaceholder my-2 w-100"></div>
         <div id="southpanel" class="alert alert-primary" style="min-height: 60px;" role="alert"></div>
-        <p>Yes, we use our component to build our component!</p>
-        <p>This diagram will be helpfull to understand how changes in options trigger layout and rendering tasks. This
-          diagram helps to find right task for modification. It helps to eliminate excessive layout operations and 
-          optimize performance for various usage scenarious.</p>
-        <p>
-          Diagram rendering staged into options readers, transformation and rendering tasks. Options readers are statefull
-          and trigger dependent tasks processing if any API changes found.
-        </p>
-        <p>Tasks share only layout elements and graphics object, which is responsible for canvas specific drawing
-          functionality. Rendering tasks dont share layers, so every type of visual element is drawn on its own separate layer.
-          Layers are reset and redrawn only inside of the task responsible for specified layer.</p>
-        <p>Take into account that any data required for task processing is taken only from source tasks and cannot be
-          modified inside of the task itself.</p>
       </main>
     </div>
   </div>

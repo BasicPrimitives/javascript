@@ -1,6 +1,6 @@
 # Shape & Background Annotations
 ## Shape
-Diagrams support on-screen annotations for visualization of non - hierarchical relations between nodes. Components use SVG or Canvas to render geometrical figures depending on user options. If you need some specific custom shapes, you have to make changes to the source code or use images and custom items templates. Shape annotation supports the following figures:
+Diagrams support on-screen annotations for visualization of non - hierarchical relations between nodes. Components use SVG elements to render geometrical figures. If you need some specific custom shapes, you have to make changes to the source code or use images and custom items templates. Shape annotation supports the following figures:
 * Rounded Rectangle
 * Oval
 * Triangle

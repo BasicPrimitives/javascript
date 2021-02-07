@@ -18,7 +18,7 @@
     var timer = null;
     var { Point, Size, Rect } = primitives;
     var { ValueType, Render, PanelConfig, ColorConfig, SizeConfig, CheckBoxConfig, RadioBoxConfig, RangeConfig, DropDownBoxConfig, CaptionConfig, DropDownBoxConfig } = javascriptsamples;
-    var { Shape, createGraphics, GraphicsType, PlacementType, Colors, LineType } = interactivetests;
+    var { Shape, createGraphics, PlacementType, Colors, LineType } = interactivetests;
 
     var optionsRender = new Render([
       new PanelConfig("Family Diagram Specific Options", [
@@ -30,10 +30,6 @@
         new RadioBoxConfig("fontWeight", "normal", "Font Weight", ["normal", "bold"], ValueType.String, onUpdate),
         new RadioBoxConfig("fontStyle", "normal", "Font Style", ["normal", "italic"], ValueType.String, onUpdate),
         new DropDownBoxConfig("fontFamily", "Arial", "Font Style", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], ValueType.String, onUpdate)
-      ]),
-      new PanelConfig("Rendering", [
-        new CaptionConfig("By default control uses SVG graphics mode. Use this property to switch graphics mode programmatically into Canvas.", false),
-        new RadioBoxConfig("graphicsType", primitives.GraphicsType.SVG, "Graphics", primitives.GraphicsType, ValueType.Integer, onUpdate)
       ])
     ], {
         orientation: primitives.TextOrientationType.RotateLeft,
@@ -43,15 +39,14 @@
         fontSize: 28,
         fontWeight: "normal",
         fontStyle: "normal",
-        fontFamily: "Arial",
-        graphicsType: primitives.GraphicsType.SVG
+        fontFamily: "Arial"
       });
 
       var graphics;
       document.addEventListener('DOMContentLoaded', function () {
         optionsRender.render(document.getElementById("westpanel"));
 
-        graphics = createGraphics(GraphicsType.SVG, document.getElementById("placeholder"));
+        graphics = createGraphics(document.getElementById("placeholder"));
 
         onUpdate();
 

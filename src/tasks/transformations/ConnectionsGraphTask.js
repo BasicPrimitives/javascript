@@ -1,5 +1,4 @@
-﻿import { Layers } from '../../enums';
-import Graph from '../../algorithms/Graph';
+﻿import Graph from '../../algorithms/Graph';
 
 export default function ConnectionsGraphTask(getGraphics, createTransformTask, connectorsOptionTask, visualTreeLevelsTask, alignDiagramTask, removeLoopsTask) {
   var _data = {
@@ -8,9 +7,7 @@ export default function ConnectionsGraphTask(getGraphics, createTransformTask, c
   };
 
   function process() {
-    var graphics = getGraphics(),
-      panel = graphics.activate("placeholder", Layers.Connector),
-      bundles = visualTreeLevelsTask.getBundles(),
+    var bundles = visualTreeLevelsTask.getBundles(),
       nestedLayoutBottomConnectorIds = visualTreeLevelsTask.getNestedLayoutBottomConnectorIds(),
       connectorsOptions = connectorsOptionTask.getOptions(),
       loops = removeLoopsTask != null ? removeLoopsTask.getLoops() : [];
@@ -24,8 +21,7 @@ export default function ConnectionsGraphTask(getGraphics, createTransformTask, c
     var params = {
       treeItemsPositions: alignDiagramTask.getItemsPositions(),
       nestedLayoutBottomConnectorIds: nestedLayoutBottomConnectorIds,
-      transform: createTransformTask.getTransform(),
-      hasGraphics: panel.hasGraphics
+      transform: createTransformTask.getTransform()
     };
 
     var options = {

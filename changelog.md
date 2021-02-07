@@ -1,3 +1,7 @@
+#### Version 6.2.1
+* Removed Canvas support.
+* Removed GraphicsType enumeration.
+* Removed graphicsType from OrgConfig and FamConfig
 #### Version 6.1.1
 * Fixed levelOffset property to work regardless of empty levels
 #### Version 6.1.0

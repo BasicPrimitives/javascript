@@ -13,7 +13,6 @@ Data visualization diagramming components library for dependencies visualization
 ### Basic Primitives Diagrams for JavaScript
 * 100% client side JavaScript layout and rendering.
 * No dependencies on 3rd party libraries.
-* [SVG](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics) and [Canvas](https://en.wikipedia.org/wiki/Canvas_element) support.
 * Webpack [Tree Shaking](https://webpack.js.org/guides/tree-shaking/) support
 
 ### Basic Primitives Diagrams for [React](https://reactjs.org/)

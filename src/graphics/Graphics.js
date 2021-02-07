@@ -1,7 +1,7 @@
 import Cache from './Cache';
 import { Layers } from '../enums';
 import { loop, getHashCode, mergeObjects } from '../common';
-import { TextOrientationType, VerticalAlignmentType, SegmentType, RenderingMode } from '../enums';
+import { TextOrientationType, VerticalAlignmentType, RenderingMode } from '../enums';
 import JsonML from '../common/jsonml-html';
 import Size from './structs/Size';
 import Rect from './structs/Rect';
@@ -19,8 +19,6 @@ export default function Graphics(element) {
 
   this.m_cache = new Cache();
 
-  this.graphicsType = null;
-  this.hasGraphics = false;
   this.debug = false;
   this.layerNames = {};
 
@@ -386,106 +384,6 @@ Graphics.prototype.polylinesBuffer = function (buffer) {
   });
 };
 
-Graphics.prototype.polyline = function (polylineData) {
-  var fromX = null,
-    fromY = null,
-    attr = polylineData.paletteItem.toAttr();
-
-  polylineData.loop(this, function (segment) {
-    switch (segment.segmentType) {
-      case SegmentType.Move:
-        fromX = Math.round(segment.x) + 0.5;
-        fromY = Math.round(segment.y) + 0.5;
-        break;
-      case SegmentType.Line:
-        this.rightAngleLine(fromX, fromY, Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5, attr);
-        fromX = Math.round(segment.x) + 0.5;
-        fromY = Math.round(segment.y) + 0.5;
-        break;
-      case SegmentType.Dot:
-        this.dot(segment.x, segment.y, segment.width, segment.height, segment.cornerRadius, attr);
-        break;
-    }
-  });
-};
-
-Graphics.prototype.dot = function (cx, cy, width, height, cornerRadius, attr) {
-  var placeholder = this.m_activePlaceholder,
-    element = this.m_cache.get(placeholder.name, placeholder.activeLayer.name, "dot"),
-    hasBorder = (attr.lineWidth !== undefined && attr.borderColor !== undefined),
-    style = {
-      "position": "absolute",
-      "width": (width - (hasBorder ? 1 : 0)),
-      "top": Math.round(cy),
-      "left": Math.round(cx),
-      "padding": 0,
-      "margin": 0,
-      "lineHeight": "0px",
-      "overflow": "hidden",
-      "height": (height - (hasBorder ? 1 : 0)),
-      "background": attr.fillColor,
-      "MozBorderRadius": cornerRadius,
-      "WebkitBorderRadius": cornerRadius,
-      "-khtml-border-radius": cornerRadius,
-      "borderRadius": cornerRadius,
-      "fontSize": "0px",
-      "borderStyle": (hasBorder ? "Solid" : "None"),
-      "borderWidth": (hasBorder ? "1px" : "0px"),
-      "borderColor": (hasBorder ? attr.borderColor : "")
-    };
-
-  if (element === null) {
-    element = JsonML.toHTML(["div",
-      {
-        "style": style
-      }
-    ]);
-    placeholder.activeLayer.canvas.appendChild(element);
-    this.m_cache.put(placeholder.name, placeholder.activeLayer.name, "dot", element);
-  } else {
-    JsonML.applyStyles(element, style);
-  }
-};
-
-Graphics.prototype.rightAngleLine = function (fromX, fromY, toX, toY, attr) {
-  var placeholder = this.m_activePlaceholder,
-    isVertical = Math.abs(toY - fromY) > Math.abs(toX - fromX),
-    lineWidth = attr.lineWidth,
-    style = {
-      "position": "absolute",
-      "top": Math.round(Math.min(fromY, toY) - ((isVertical) ? 0 : lineWidth / 2.0)),
-      "left": Math.round(Math.min(fromX, toX) - ((isVertical) ? lineWidth / 2.0 : 0)),
-      "padding": 0,
-      "margin": 0,
-      "opacity": 0.5,
-      "lineHeight": "0px",
-      "overflow": "hidden",
-      "background": attr.borderColor,
-      "fontSize": "0px"
-    },
-    element;
-
-  if (isVertical) {
-    style.width = lineWidth;
-    style.height = Math.abs(Math.round(toY - fromY));
-  } else {
-    style.width = Math.abs(Math.round(toX - fromX));
-    style.height = lineWidth;
-  }
-
-  element = this.m_cache.get(placeholder.name, placeholder.activeLayer.name, "rect");
-  if (element === null) {
-    element = JsonML.toHTML(["div",
-      {
-        "style": style
-      }
-    ]);
-    placeholder.activeLayer.canvas.appendChild(element);
-    this.m_cache.put(placeholder.name, placeholder.activeLayer.name, "rect", element);
-  } else {
-    JsonML.applyStyles(element, style);
-  }
-};
 
 Graphics.prototype.template = function (x, y, width, height, contentx, contenty, contentWidth, contentHeight, template, hashCode, onRenderTemplate, uiHash, attr) { //ignore jslint
   var placeholder = this.m_activePlaceholder,

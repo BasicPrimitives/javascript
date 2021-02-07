@@ -4,7 +4,7 @@ import PaletteItem from '../graphics/structs/PaletteItem';
 import Polyline from '../graphics/structs/Polyline';
 import MoveSegment from '../graphics/structs/MoveSegment';
 import LineSegment from '../graphics/structs/LineSegment';
-import { GraphicsType, LineType } from '../enums';
+import { LineType } from '../enums';
 import getMergedRectangles from './getMergedRectangles';
 import puppeteer from 'puppeteer';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
@@ -51,7 +51,7 @@ function showLayout(visualization, polyline, width, height, title) {
   graphicsDiv.append(placeholder);
   visualization.append(graphicsDiv);
 
-  var graphics = createGraphics(GraphicsType.SVG, placeholder);
+  var graphics = createGraphics(placeholder);
   graphics.begin();
   graphics.resize("placeholder", width, height);
   graphics.activate("placeholder");

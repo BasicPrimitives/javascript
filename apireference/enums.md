@@ -84,14 +84,6 @@ Defines option state.
  | `False` | number | `2` | Disabled | 
  | `True` | number | `1` | Enabled | 
 
-## <a name="GraphicsType" id="GraphicsType">GraphicsType</a>
-Graphics elements rendering mode
-
-| Name | Type | Value | Description | 
-| --- | --- | --- | --- | 
- | `Canvas` | number | `1` | HTML Canvas | 
- | `SVG` | number | `0` | Scalable Vector Graphics | 
-
 ## <a name="GroupByType" id="GroupByType">GroupByType</a>
 This enumeration defines objects gravity in the chart relative to parents and children. For example connection lines can be drawn with arrows, so this enumeration controls direction of arrows up towards parents or down towards children in the hierarchy. The other example is nodes placement close to their immediate parents or immediate children in case when parents and children are offset from them by multiple levels in hierarchy.
 

@@ -21,8 +21,7 @@ BaseConnectorBundle.prototype.trace = function (data, params, options) {
 
   //var params = {
   //  treeItemsPositions: [],
-  //  transform: null,
-  //  hasGraphics: true
+  //  transform: null
   //};
 
   //var options = {
@@ -138,19 +137,17 @@ BaseConnectorBundle.prototype.traceFork = function (data, params, options, paren
         bevelSize = 0;
       }
 
-      if (params.hasGraphics) {
-        switch (options.elbowType) {
-          case ElbowType.Bevel:
-          case ElbowType.Round:
-            if (bevelSize > 0 && Math.abs(parentPoint.x - connectorPoint.x) > bevelSize && Math.abs(parentPoint.y - connectorPoint.y) > bevelSize) {
-              connectorPoint.hasElbow = true;
-              connectorPoint.elbowPoint1 = new Point(connectorPoint.x, parentPoint.y + (parentPoint.y > connectorPoint.y ? -bevelSize : bevelSize));
-              connectorPoint.elbowPoint2 = new Point(connectorPoint.x + (parentPoint.x > connectorPoint.x ? bevelSize : -bevelSize), parentPoint.y);
-            }
-            break;
-          default:
-            break;
-        }
+      switch (options.elbowType) {
+        case ElbowType.Bevel:
+        case ElbowType.Round:
+          if (bevelSize > 0 && Math.abs(parentPoint.x - connectorPoint.x) > bevelSize && Math.abs(parentPoint.y - connectorPoint.y) > bevelSize) {
+            connectorPoint.hasElbow = true;
+            connectorPoint.elbowPoint1 = new Point(connectorPoint.x, parentPoint.y + (parentPoint.y > connectorPoint.y ? -bevelSize : bevelSize));
+            connectorPoint.elbowPoint2 = new Point(connectorPoint.x + (parentPoint.x > connectorPoint.x ? bevelSize : -bevelSize), parentPoint.y);
+          }
+          break;
+        default:
+          break;
       }
 
       /* draw vertical segment */

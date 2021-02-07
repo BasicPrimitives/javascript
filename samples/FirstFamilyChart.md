@@ -1,4 +1,4 @@
-# First Family Chart
+# First Family Chart for JavaScript
 
 First of all, the Family diagram is not the best name for the control. It is a layered dependencies visualization component, supporting multiple parents and loops in nodes relations. 
 The family diagram shares a lot of features with the organizational chart diagram. See the organizational chart specific samples:

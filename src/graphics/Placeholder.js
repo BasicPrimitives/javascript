@@ -8,6 +8,4 @@ export default function Placeholder(name) {
   this.rect = null;
 
   this.div = null;
-
-  this.hasGraphics = true;
 };

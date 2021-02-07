@@ -9,7 +9,7 @@ The control does not update itself when the application changes the control's pl
 * Chart does not update itself without the explicit call of "update" method or end-user mouse or keyboard action.
 
 ## Pixel alignment
-When we draw SVG and Canvas lines, it is essential to have them pixel aligned; otherwise, they become blurred. When we call the `update` method, the control aligns placeholder position within pixel range via adding additional margins to the div's left and top edges. Pixel rounded lines matching the monitor's physical pixels look sharp and clean. 
+When we draw SVG elements, it is essential to have them pixel aligned; otherwise, they become blurred. When we call the `update` method, the control aligns placeholder position within pixel range via adding additional margins to the div's left and top edges. Pixel rounded lines matching the monitor's physical pixels look sharp and clean. 
 
 In the following example, we show how to handle the window size change event and use `Timer` to throttle excessive updates so our application stays responsive.
 

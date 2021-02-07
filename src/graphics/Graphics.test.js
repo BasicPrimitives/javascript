@@ -6,7 +6,7 @@ import Polyline from './structs/Polyline';
 import MoveSegment from './structs/MoveSegment';
 import LineSegment from './structs/LineSegment';
 import QuadraticArcSegment from './structs/QuadraticArcSegment';
-import { GraphicsType, LineType } from '../enums';
+import { LineType } from '../enums';
 import puppeteer from 'puppeteer';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
@@ -52,7 +52,7 @@ function showLayout(visualization, polyline, width, height, title) {
   graphicsDiv.append(placeholder);
   visualization.append(graphicsDiv);
 
-  var graphics = createGraphics(GraphicsType.SVG, placeholder);
+  var graphics = createGraphics(placeholder);
   graphics.begin();
   graphics.resize("placeholder", width, height);
   graphics.activate("placeholder");

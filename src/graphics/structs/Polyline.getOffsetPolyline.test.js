@@ -1,6 +1,5 @@
 ﻿import createGraphics from '../createGraphics';
 import Rect from './Rect';
-import Size from './Size';
 import PaletteItem from './PaletteItem';
 import Polyline from './Polyline';
 import MoveSegment from './MoveSegment';
@@ -8,7 +7,7 @@ import LineSegment from './LineSegment';
 import QuadraticArcSegment from './QuadraticArcSegment';
 import CubicArcSegment from './CubicArcSegment';
 
-import { GraphicsType, LineType } from '../../enums';
+import { LineType } from '../../enums';
 import puppeteer from 'puppeteer';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
@@ -54,7 +53,7 @@ function showLayout(visualization, width, height, title, onDraw) {
   graphicsDiv.append(placeholder);
   visualization.append(graphicsDiv);
 
-  var graphics = createGraphics(GraphicsType.SVG, placeholder);
+  var graphics = createGraphics(placeholder);
   graphics.begin();
   graphics.resize("placeholder", width, height);
   graphics.activate("placeholder");

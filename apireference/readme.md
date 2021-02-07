@@ -33,7 +33,6 @@
 * [ConnectorType](enums.md#ConnectorType)
 * [ElbowType](enums.md#ElbowType)
 * [Enabled](enums.md#Enabled)
-* [GraphicsType](enums.md#GraphicsType)
 * [GroupByType](enums.md#GroupByType)
 * [HorizontalAlignmentType](enums.md#HorizontalAlignmentType)
 * [ItemType](enums.md#ItemType)

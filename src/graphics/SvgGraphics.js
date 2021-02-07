@@ -1,6 +1,6 @@
 import Graphics from './Graphics';
 import Element from './Element';
-import { GraphicsType, LineType, SegmentType } from '../enums';
+import { LineType, SegmentType } from '../enums';
 import JsonML from '../common/jsonml-html';
 
 export default function SvgGraphics(element) {
@@ -9,10 +9,6 @@ export default function SvgGraphics(element) {
   this.parent.constructor.apply(this, arguments);
 
   this._svgxmlns = "http://www.w3.org/2000/svg";
-
-  this.graphicsType = GraphicsType.SVG;
-
-  this.hasGraphics = true;
 };
 
 SvgGraphics.prototype = new Graphics();

@@ -3,7 +3,7 @@ import createGraphics from '../createGraphics';
 import Rect from '../structs/Rect';
 import Size from '../structs/Size';
 import Transform from '../Transform';
-import { GraphicsType, OrientationType, LineType } from '../../enums';
+import { OrientationType, LineType } from '../../enums';
 import puppeteer from 'puppeteer';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
@@ -49,7 +49,7 @@ function showLayout(visualization, width, height, title, onDraw) {
   graphicsDiv.append(placeholder);
   visualization.append(graphicsDiv);
 
-  var graphics = createGraphics(GraphicsType.SVG, placeholder);
+  var graphics = createGraphics(placeholder);
   graphics.begin();
   graphics.resize("placeholder", width, height);
   graphics.activate("placeholder");

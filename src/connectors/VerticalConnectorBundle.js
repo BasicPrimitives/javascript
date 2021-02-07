@@ -62,13 +62,11 @@ VerticalConnectorBundle.prototype.trace = function (data, params, options) {
       treeItemPosition = params.treeItemsPositions[treeItemId];
 
       isSquared = true;
-      if (params.hasGraphics) {
-        switch (treeItemPosition.actualVisibility) {
-          case Visibility.Dot:
-          case Visibility.Line:
-            isSquared = chartHasSquaredConnectors;
-            break;
-        }
+      switch (treeItemPosition.actualVisibility) {
+        case Visibility.Dot:
+        case Visibility.Line:
+          isSquared = chartHasSquaredConnectors;
+          break;
       }
       connectorStep = 0;
       connectorPoint = new this.ConnectorDestination({

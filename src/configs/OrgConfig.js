@@ -1,4 +1,4 @@
-import {NavigationMode, GraphicsType, PageFitMode, Visibility, OrientationType, VerticalAlignmentType,
+import {NavigationMode, PageFitMode, Visibility, OrientationType, VerticalAlignmentType,
   ConnectorType, GroupByType, ElbowType, Enabled, SelectionPathMode,
   Colors, ShapeType, LineType, AdviserPlacementType, TextOrientationType, HorizontalAlignmentType,
   PlacementType, ChildrenPlacementType
@@ -29,14 +29,6 @@ export default function OrgConfig(name) {
    * @type {NavigationMode}
    */
   this.navigationMode = NavigationMode.Default;
-
-  /**
-   * Sets preferred rendering technology. If selected graphics type is not supported on the device,
-   * then control will auto fallback to the first available one.
-   * 
-   * @type {GraphicsType}
-   */
-  this.graphicsType = GraphicsType.SVG;
 
   /**
    * Page fit mode. Minimizing nodes into markers and labels. This option provides a special mode that renders the diagram

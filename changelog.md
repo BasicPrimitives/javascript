@@ -1,3 +1,5 @@
+#### Version 6.2.2
+* Fixed Family Relations Optimizer
 #### Version 6.2.1
 * Removed Canvas support.
 * Removed GraphicsType enumeration.

@@ -1126,6 +1126,7 @@ export default function Family(source) {
                   currentItems[child].processed = true;
 
                   if (relation.weight > 1) {
+                    relation.items.sort();
                     key = relation.items.join(',');
 
                     if (!sharedItemsByKey.hasOwnProperty(key)) {

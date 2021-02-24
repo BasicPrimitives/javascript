@@ -1,17 +1,17 @@
 # Partner Item Types
-In organizational structure we have situations when people share responsibilities, it is situation of co-CEO's.  So in order to show such org structure in regular hierarchy we add our second CEO item as child and set its type to Partner. Partner item shares its parent's children, so parent and partner have horizontal line connecting them visually into one group and their children connected to it.
+In the organizational structures, we have many exceptions from traditional tree structure visualization. The partner item types allow elevating child nodes to the level of their parents. So visually, they non-distinguishable from their parents and displayed side by side with them.  For example, we can use partner item types when we need to show co-CEOs.  We add our second CEO item as a child item of the first CEO and set its item type to Partner. Partner item is placed at the same level as its logical parent and shares its parent's children, so visually, children equally belong to both of them. Optionally the parent node and its partner child have a horizontal line connecting them visually into one group.
 
-Chart supports 3 types of partner types:
+Chart supports three types of partner types:
 
 * GeneralPartner
 * LimitedPartner
 * AdviserPartner
 
-They all share children and the difference is how they are connected to each other. The following example shows GeneralPartner which is connected to parent of its parent, so visually they are 100% equal on org chart.
+They all share their parents' children, and the difference is in how they connect to their logical parent. The following example shows GeneralPartner, which shares children and parents of the logical parent, so visually, they are 100% equal on the org chart.
 
-For the sake of simplicity Partner restricted off having its own children by design, so if user defines children for partner, they auto converted into partner's assistants. 
+For the sake of simplicity, the Partner node can not have its logical children by design, so if you add children to the partner node, they would be auto-converted into partner's assistants. 
 
-Use ItemConfig.adviserPlacementType option to place partners to the left or right side of their parent;
+Use ItemConfig.adviserPlacementType option to place partners to the left or right side of their logical parent;
 
 ## General Partner
 
@@ -21,8 +21,7 @@ Use ItemConfig.adviserPlacementType option to place partners to the left or righ
 
 ## Limited Partner
 
-Limited Partner is variation of GeneralPartner having no connection to its parent. It is only connected to shared with its parent children.
-It can be placed on the left or right side of parent hierarchy. 
+Limited Partner is a variation of GeneralPartner having no connection to the parent of the logical parent. Limited Partner shares children of the logical parent, but it does not share its parents. 
 
 [JavaScript](javascript.controls/CaseLimitedPartnerItemType.html)
 
@@ -30,7 +29,7 @@ It can be placed on the left or right side of parent hierarchy.
 
 ## Adviser Partner
 
-Adviser Partner item type is a combination of Partner and Adviser types. It is horizontally connected to its parent like Adviser and at the same time it shares children of its parent like Partner.
+Adviser Partner item type is a combination of Partner and Adviser types. It has an in-row horizontal connection to its logical parent, it shares children of the logical parent, but it has no links to its parents.
 
 [JavaScript](javascript.controls/CaseAdviserPartnerItemType.html)
 

@@ -51,6 +51,7 @@
       groupTitleFontStyle: "normal",
 
       /* level title options */
+      addLevelAnnotations: true,
       levelTitlePlacementType: primitives.AdviserPlacementType.Left,
       levelTitlePanelSize: 24,
       levelTitlePlaceInside: false,
@@ -126,9 +127,6 @@
       navigationMode: primitives.NavigationMode.Default,
       highlightGravityRadius: 40,
       enablePanning: true,
-
-      /* Graphics */
-      graphicsType: primitives.GraphicsType.SVG,
       scale: 1.0,
       
       /* Frame */
@@ -208,9 +206,57 @@
           {
             annotationType: primitives.AnnotationType.Level,
             levels: [2],
-            title: "Members",
+            title: "Grade 1",
             titleColor: primitives.Colors.RoyalBlue,
-            offset: new primitives.Thickness(0, 14, 0, -5),
+            offset: new primitives.Thickness(0, 14, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [3],
+            title: "Grade 2",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0.08,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [4],
+            title: "Grade 3",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [5],
+            title: "Grade 4",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0.08,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [6],
+            title: "Regular Members",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
             lineWidth: new primitives.Thickness(0, 0, 0, 0),
             opacity: 0,
             borderColor: primitives.Colors.Gray,

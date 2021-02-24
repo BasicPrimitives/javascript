@@ -17,7 +17,7 @@ var result.itemTemplate =
 + '<div name="description"></div>'
 + '</div>'
 ```
-We use internally across our library JSON ML that is recommended solution for templates definition, see following web site for more details http://www.jsonml.org/. This is only 3d party MIT licensed code included into our code base, everything else is 100% authentic. We adopted it with minor modifications, it general works by original design. The following code snipped demonstrate usage of JSON ML in code. It is definitely less compact then previous approach, but it provide more normalized and probably more secure approach to templates definition:
+We use JSON ML to define and render default built-in templates. It is a convenient alternative to the above mentioned string-based templates. See the following website for more details http://www.jsonml.org/. That is only 3d party MIT licensed code included in our code base. Everything else is 100% authentic. We use it with minor modifications. The following code snippet demonstrates the usage of JSON ML in code. It is less compact than the previous approach, but it provides a more normalized and more secure implementation for templates definition:
 
 ```JavaScript
 result.itemTemplate = ["div",
@@ -63,20 +63,28 @@ result.itemTemplate = ["div",
 ```
 
 ## Configuration Classes
-When we define node templates we can define Content Template, Cursor Template and Highlight Templates in one configuration object. This make sense since if we decide to customize cursor or highlight templates most likely we are going to make them item template specific. At the same time control does not require all 3 of them to be defined. If cursor or highlight templates properties are not set in template configuration object then control uses internal default template for all of them. Generally all 3 templates can be set to null, so default templates are going to be used by control. See template configuration properties in the following classes:
+We can define node content, cursor, and highlight templates in one configuration object. See TemplateConfig object reference for more details.  That makes sense since if we decide to customize cursor or highlight templates, most likely, we are going to make them per node template. The control does not require all 3 of them to be defined. If cursor or highlight templates properties equal null in the template configuration object, the control uses built-in templates instead. See the following configuration objects for template related properties:
 
-* `primitives.OrgItemConfig`
-* `primitives.FamConfig`
-* `primitives.OrgConfig`
-* `primitives.TemplateConfig`
+* `OrgItemConfig`
+* `FamConfig`
+* `OrgConfig`
+* `TemplateConfig`
 
 ## Size
-Control deals with fixed size layout, it makes no guesses about content and size of nodes. So we don't support in any form nodes auto sizing. In order to support such feature control should measure content of every node before rendering cycle. Taking into account that nodes visibility depends on available space it is going to be infinite loop of diagram layout and nodes measure iterations. The more space we provide to nodes the less number of diagram nodes is going to be visible. So control expect that node size is hard valued in template configuration. 
+The diagram layout engine works only with fixed-size nodes. So we don't support in any form nodes auto-sizing. Such feature implementation would require control to measure the content of every node before the rendering cycle. Considering that node's visibility depends on available space and space depends on node visibility, we will have an infinite loop of diagram layout and nodes measure iterations. So control expects that node size is hardcoded in the template configuration. 
 
 ## Content population
-Templates should be populated with items content when rendered, so for this purpose control provides call back function on the API which is being called for every node during rendering cycle. The call back function provide context arguments to reference template instance in DOM - see: data.element argument, context item being rendered - see: data.context argument and template state property indicating whether template is new or being reused - see data.templateName. Please, note that control does not eliminate created template instances from DOM, but reuses them between rendering cycle. So you have to always populate elements with some values whether they null or not, otherwise you will see orphan values in templates. If no call back function provided then default built in function will use name attributes of template elements to find them and populate with default item properties values. 
+Templates should be populated with items content when rendered, so for this purpose, the control has a callback `onTemplateRender` function on the API. The component calls it for every visible node during the rendering cycle. The callback function provides context arguments to the application:
+ * `data.element` - is  template instance in the DOM
+ * `data.context` - is rendered context item
+*  `data.renderingMode` - is `RenderingMode` enumeration. It indicates the state of the template. If rendering mode is `Update`, control reuses the existing node template in the DOM. So you always have to populate elements with null values to override existing values in the template.  
+* `data.templateName` - is template name.
 
-## The root element of template should be DIV.
+The control uses a built-in template rendering function if the application does not provide its own. The built-in function will use name attributes of template elements to find them and populate them with default item properties values. 
+
+The ReactJS component uses templates only to set node sizes. ReactJS renders its templates and content itself so that you can do the same. You can define the item template as a regular empty `div'  and populate it with the `onTemplateRender` callback function.
+
+## The root element of the template should be DIV.
 
 ```JavaScript
 function onTemplateRender(event, data) {
@@ -115,9 +123,11 @@ function onTemplateRender(event, data) {
 ```
 
 ## Names
-Every template configuration object has name property, it is being used to reference templates from items. This name is used to as an argument of call back rendering function as well. If item has not template name set it uses default template for rendering.
+Every template configuration object has a unique name. See the `name` property of `TemplateConfig` configuration class. The diagram items use that name to set custom templates for nodes.
+The `onTemplateRender` callback function handler receives template name as the option of `data.templateName` argument. If the diagram item has no template name set, it uses the default template for rendering.
+If you need to override the default template for all nodes of your diagram, then use the `defaultTemplateName` property of the control configuration object.
 
-See following example of templates usage:
+See the following examples of templates usage:
 
 ## PDF Templates
 
@@ -129,9 +139,9 @@ PDFKit Plugins use the same template objects with one major exception. All rende
 
 See [PDFKit](http://pdfkit.org/) site for more details.
 
-Basic Primitives PDFkit Plugins have no HTML or browsers specific dependencies, they share API options with their complimentary UI controls. The major API difference is that they have no UI events and rendering mechanism refit to use PDFkit document API methods. The following sample shows usage of `onTemplateRender` event handler, which receives `doc` reference to PDFkit `PDFDocument` instance and node `position` in PDF document coordinates:
+Basic Primitives PDFkit Plugins have no HTML or browsers specific dependencies. They share API options with their coupled UI controls. The primary API difference is that they have no UI events and rendering mechanism refit to use PDFkit document API methods. The following sample shows usage of the `onTemplateRender` event handler, which receives the `doc` reference to PDFkit `PDFDocument` instance and the node `position` in the PDF document coordinates:
 
-Basically developer is free to render any content in node's position, the following sample renders frame, photo, title and PDF specific link annotation, which is clickable in PDF.
+The developer is free to render any content in the node's position. The following sample draws a frame, photo, title and creates PDF specific link annotation, which is clickable in PDF.
 
 ```JavaScript
 function onTemplateRender(doc, position, data) {
@@ -199,7 +209,7 @@ function onTemplateRender(doc, position, data) {
 ![Screenshot](javascript.controls/__image_snapshots__/CaseItemTemplate-snap.png)
 
 ## Adding link to Item Template
-In order to avoid diagram cursor positioning and layout when user clicks on reference add 'stopPropagation' to mouse click event handler of the reference's label.
+To avoid diagram cursor positioning and layout, when the end-user clicks on the web link, add 'stopPropagation' to the mouse click event handler.
 
 ```JavaScript
   readmore.addEventListener("click", function (e) {
@@ -213,7 +223,7 @@ In order to avoid diagram cursor positioning and layout when user clicks on refe
 ![Screenshot](javascript.controls/__image_snapshots__/CaseAddingLinkToItemTemplate-snap.png)
 
 ## Adding selection checkbox to Item Template
-Chart supports selected items collection on its API, so checkbox element is necessary part of control's functionality. If you want to place it inside of item template instead of having it shown outside as decorator of element boundaries, you have to add `bp-selectioncheckbox` to your checkbox `class` style property.
+Chart supports selected items collection on its API, so the checkbox element is necessary for the control's functionality. Suppose you want to place it inside the item template instead of having it shown outside as a decorator of element boundaries. In that case, you have to add `bp-selectioncheckbox` class name to your checkbox element.
 
 [JavaScript](javascript.controls/CaseSelectionCheckboxInItemTemplate.html)
 

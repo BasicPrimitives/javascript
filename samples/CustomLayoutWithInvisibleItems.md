@@ -1,9 +1,9 @@
 # Custom layout with Invisible items
-Chart navigation is defined by parent-children relations between items. When we select cursor item, all its children and parents displayed in full size, so user can continue navigation further down or up in hierarchy. When child or parent are invisible we display children of child or parents of parent in full size as well. This feature combined with custom item types and children layouts provides great flexibility for children layout.
+The logical parent-children relations between items define chart navigation. When we select the new cursor item, all its children and parents become visible in the diagram so that the user can continue navigation further down or up in the hierarchy. When children or parents are invisible, we display children of children and parents of parents. This feature, combined with custom item types and children layouts, provides excellent flexibility for the custom children's configurations.
 
-Following example demonstrates how to use invisible items to display multiple groups of children attached to one parent item. It has two rows of assistants and two levels of children. In order to implement this layout we create two invisible items of regular item type and make them invisible with setting option isVisible to false. Children of invisible items logically belong to their parent in our case it is root item of organizational chart, so when cursor is set to root item all items in chart become selected and displayed in full size, so user may navigate to any of them directly.
+The following example demonstrates how to use invisible items to arrange children attached to one parent item into multiple groups. It has two rows of assistants and two levels of children. To implement this layout, we create two hidden nodes of the regular item type. Set the `isVisible` property of the item configuration object to false to make the node invisible.  Children of invisible items logically belong to their parents. In our case, it is the organizational chart's root item. When we set the cursor to the root node, all items in the diagram become logical children of the root node and visible. So the end-user may move the cursor to them directly.
 
-See custom item types, children layout and inactive items samples as well. 
+See custom item types, children layout, and inactive items samples as well. 
 
 [JavaScript](javascript.controls/CaseCustomLayoutWithInvisibleItems.html)
 
@@ -11,7 +11,9 @@ See custom item types, children layout and inactive items samples as well.
 
 ## Skipped Levels
 
-Invisible items can be used to skip levels in organizational chart. This is actually workaround, invisible items occupy space, so they can be used to shift children items down one level relative to their parents. See primitives.OrgItemConfig.isVisible option.
+We can use hidden items to skip levels in the organizational chart as well. The hidden nodes occupy space, so we can use them to shift child items down one row relative to their parents. 
+
+Use the `levelOffset` option of the item configuration object to arrange regular children into rows.
 
 [JavaScript](javascript.controls/CaseSkippedLevels.html)
 

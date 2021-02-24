@@ -1,16 +1,23 @@
 # Cursor template controls
-The general idea about cursor template is to provide convenient API to place context control panel as close to the cursor node as possible. The conventional approach is to place control panel on the side of the diagram and change its content as user selects new cursor item, this approach takes a cut of screen space out of the diagram layout. The similar approach is to draw context menu panel on top of the diagram on the side of the selected node, but this will obstruct view of other diagram nodes. The compromise design is to expand space around cursor node and place context controls into that space, so cursor template provides padding option to preserve that required space around cursor node.
+The cursor template's general idea is to provide a convenient API to place the context control panel as close to the current cursor node as possible. The conventional approach is to put the control panel on the diagram's side and change its content as the user selects a new cursor item. That approach cutoff screen space out of the diagram layout. A similar approach is to draw a context menu panel on top of the diagram on the selected node's side, but this will obstruct other diagram nodes' view. The compromise design expands space around the cursor node and places context controls into that space, so the cursor template provides a padding option to preserve that required space around the cursor node.
 
-User controls in cursor item template plays a role of in-layout annotation, non-blocking neighboring items in chart. In case when every normal item is supposed to have UI controls then item template should be customized instead. Use z-index style attribute to layer controls properly.
+User controls inside the cursor item template serve as the in-layout annotation, non-blocking neighboring items in the chart. If you consider adding the same UI elements into every visible node, then you need to customize the item template instead. 
 
-Every time we change cursor node control recalculates layout, so this slows down rendering of large diagram. Our design view on this problem is to limit number of simultaneously shown nodes in diagram. Control provides default mechanism to reduce nodes into dots, but general approach is to replace groups of diagram nodes with single node and expand them as user moves cursor close to them. This kind of design approach is implemented in Dynamic Data Loading demo.
+Use the z-index style attribute to layer controls properly so other diagram visuals do not block them.
+
+Every time we select a cursor node, the control recalculates the layout, which takes time. The component has many optimizations in this regard. If nothing helps, use dynamic nodes loading, limiting the total number of simultaneously layout nodes.  See the Dynamic Data Loading demo. We permanently show only the top three levels or the diagram and dynamically load and discard nodes in all other rows as the end-user enters and leaves them.
 
 ## Custom cursor template border
-This example demonstrates how to create custom cursor border color and tag element.
+This example demonstrates how to create custom cursor border color and the Tag UI element.
 
-Control defines templates in object of type: `primitives.TemplateConfig`, this object provides options to customize separately item contents, item cursor & item highlight using following options: itemTemplate, highlightTemplate, cursorTemplate. If option is not defined chart uses default template and render for it. Every template object is referenced by its name option, it should be unique string value. Use templateName option of ItemConfig to change template name for individual item. In order to make some template object default for all items in your chart you have to set its name to defaultTemplateName options of chart config.  So again every template objects provides separate HTML fragments and renders to customize item contents, highlight and cursor.
+The component defines templates with the `TemplateConfig` configuration object. This object provides options to customize item content, cursor & highlight templates separately. 
+* `itemTemplate`
+* `highlightTemplate`
+* `cursorTemplate`
 
-The following example demonstrates how to create custom cursor template:
+If you don't define some of these options, the chart uses a built-in default template and a rendering function instead. Every template object must have the `name` property set. It should be a unique string value across all templates used in the component. Use the `templateName` option of the ItemConfig configuration object to change the template name for an individual item. To make some template default for all items in your chart, you have to set its name to the `defaultTemplateName` option of the chart configuration object.  Again, every template object provides separate HTML fragments and rendering functions to customize item contents, highlight, and cursor.
+
+The following example demonstrates how to create the custom cursor template:
 
 [JavaScript](javascript.controls/CaseCursorTemplate.html)
 

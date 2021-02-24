@@ -1,7 +1,9 @@
 # Labels cascades over connection lines in family chart
-Family chart control provides connection lines labels binding multiple nodes together. In the following example we create cascade of labels from common parent down to its children. If two labels create mutually exclusive bundles the first label wins.
+Label annotations are family diagram specific annotations. Label annotations are placed inside the diagram layout between nodes so they don't overlap nodes, can occupy relatively large space. Still, they require the control to rerender nodes when we add label annotations to the diagram. 
 
-See primitives.LabelAnnotationConfig for details. By default labels display regular text label, but they can be styled the same way as regular items of chart. See templateName option of LabelAnnotationConfig and  defaultLabelAnnotationTemplate of primitives.FamConfig class.
+Label annotations can bind multiple nodes together, so visually label annotation can define aggregate value for several nodes bundled together.  In the following example, we create a cascade of labels from the common parent down to its children. If two labels create mutually exclusive bundles, the first label wins.
+
+See primitives.LabelAnnotationConfig for details. By default, label annotations display regular text labels, but we can use node templates to define their content. So from this perspective, they are regular diagram nodes, having complex placement logic in the diagram. See templateName option of LabelAnnotationConfig and defaultLabelAnnotationTemplate of primitives.FamConfig class.
 
 [JavaScript](javascript.controls/CaseLabelsCascadesInFamilyChart.html)
 

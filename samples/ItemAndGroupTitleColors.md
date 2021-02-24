@@ -1,6 +1,6 @@
 # Item & group title colors
 
-Item's title background color may be used for grouping items in diagram and may vary in wide range of colors. at the same time title font color should be always readable on every background. So taking these considerations into account, the control allows to customize title background color for every Item with itemTitleColor property and provides means to choose the best title font color out of two options: itemTitleFirstFontColor and itemTitleSecondFontColor. The control uses `highestContrast` function to choose font color having highest contrast on item's title background. See reference.
+Item's title background color may be used for indicating the group of nodes in the diagram and may vary in a wide range of colors. At the same time, the title font color should always be readable on every background. So taking these considerations into account, the control has two options setting font color for node titles: `itemTitleFirstFontColor` and `itemTitleSecondFontColor`. The control selects the most readable font color using the `highestContrast` function.  It returns the highest contrast color from two on the given background color. See functions reference.
 
 [JavaScript](javascript.controls/CaseItemAndGroupTitleColors.html)
 [PDFKit](pdfkit.plugins/ItemAndGroupTitleColors.html)

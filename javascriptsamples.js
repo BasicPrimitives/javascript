@@ -1131,8 +1131,7 @@ function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
     Dot: 2,
     Line: 3
   }, _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("showCallout", true, "This option controls callout visibility for minimized items and it can be overwritten per item", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutPlacementOffset", 100, "Call out placement offset", 10, 300, 10, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("calloutfillColor", "#000000", "Fill color", true, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("calloutBorderColor", "#000000", "Border line color", true, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutOffset", 1, "Offset", 0, 30, 1, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("calloutCornerRadius", 4, "Corner Radius", ["0%", "5%", "10%", "20%", 0, 1, 2, 3, 4, 5, 10, 20, 30], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("calloutPointerWidth", "10%", "Pointer Base Width", ["0%", "5%", "10%", "20%", 0, 5, 10, 20, 50], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutLineWidth", 1, "Line width", 0, 10, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutOpacity", 0.2, "Opacity", 0, 1, 0.1, onUpdate)]));
-  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Interactivity", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Use this option to disable mouse highlight on touch devices.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("navigationMode", _src_enums__WEBPACK_IMPORTED_MODULE_10__["NavigationMode"].Default, "Navigation mode", _src_enums__WEBPACK_IMPORTED_MODULE_10__["NavigationMode"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("This option defines highlight gravity radius, so minimized item gets highlighted when mouse pointer does not overlap marker but it is within gravity radius of its boundaries.", false), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("highlightGravityRadius", 40, "Gravity radius", 0, 100, 1, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("enablePanning", true, "Enable Panning", onUpdate)]));
-  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Rendering", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("By default control uses SVG graphics mode. Use this property to switch graphics mode programmatically into Canvas.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("graphicsType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["GraphicsType"].SVG, "Graphics", _src_enums__WEBPACK_IMPORTED_MODULE_10__["GraphicsType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("In order to achieve better graceful degradation of your diagram use item templates of various sizes instead of CSS scale.", false), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("scale", 1.0, "CSS Scale", {
+  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Interactivity", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Use this option to disable mouse highlight on touch devices.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("navigationMode", _src_enums__WEBPACK_IMPORTED_MODULE_10__["NavigationMode"].Default, "Navigation mode", _src_enums__WEBPACK_IMPORTED_MODULE_10__["NavigationMode"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("This option defines highlight gravity radius, so minimized item gets highlighted when mouse pointer does not overlap marker but it is within gravity radius of its boundaries.", false), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("highlightGravityRadius", 40, "Gravity radius", 0, 100, 1, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("enablePanning", true, "Enable Panning", onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("In order to achieve better graceful degradation of your diagram use item templates of various sizes instead of CSS scale.", false), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("scale", 1.0, "CSS Scale", {
     "50%": 0.5,
     "60%": 0.6,
     "70%": 0.7,
@@ -2285,7 +2284,7 @@ if (typeof document !== 'undefined') {
 /*!**********************!*\
   !*** ./src/enums.js ***!
   \**********************/
-/*! exports provided: AdviserPlacementType, AnnotationType, ChildrenPlacementType, Colors, ConnectorLabelPlacementType, ConnectorPlacementType, ConnectorShapeType, ConnectorStyleType, ConnectorType, ElbowType, Enabled, GraphicsType, GroupByType, HorizontalAlignmentType, ItemType, LabelType, Layers, LineType, LoopsLayoutMode, NavigationMode, NeighboursSelectionMode, OrientationType, PageFitMode, PlacementType, RenderingMode, SegmentType, SelectionPathMode, ShapeType, SideFlag, TextOrientationType, UpdateMode, VectorRelationType, VerticalAlignmentType, Visibility, ZOrderType */
+/*! exports provided: AdviserPlacementType, AnnotationType, ChildrenPlacementType, Colors, ConnectorLabelPlacementType, ConnectorPlacementType, ConnectorShapeType, ConnectorStyleType, ConnectorType, ElbowType, Enabled, GroupByType, HorizontalAlignmentType, ItemType, LabelType, Layers, LineType, LoopsLayoutMode, NavigationMode, NeighboursSelectionMode, OrientationType, PageFitMode, PlacementType, RenderingMode, SegmentType, SelectionPathMode, ShapeType, SideFlag, TextOrientationType, UpdateMode, VectorRelationType, VerticalAlignmentType, Visibility, ZOrderType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2301,7 +2300,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConnectorType", function() { return ConnectorType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElbowType", function() { return ElbowType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Enabled", function() { return Enabled; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GraphicsType", function() { return GraphicsType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GroupByType", function() { return GroupByType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HorizontalAlignmentType", function() { return HorizontalAlignmentType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ItemType", function() { return ItemType; });
@@ -2755,27 +2753,6 @@ var Enabled = {
    * Disabled
    */
   False: 2
-};
-/**
- * @typedef {number} GraphicsType
- **/
-
-/**
- * Graphics elements rendering mode
- *  
- * @enum {GraphicsType}
- */
-
-var GraphicsType = {
-  /**
-   * Scalable Vector Graphics
-   */
-  SVG: 0,
-
-  /**
-   * HTML Canvas
-   */
-  Canvas: 1
 };
 /**
  * @typedef {number} GroupByType

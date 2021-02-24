@@ -18,7 +18,7 @@
     var timer = null;
     var { Point, Rect, Size, Layers } = primitives;
     var { ValueType, Render, PanelConfig, SizeConfig, ColorConfig, RadioBoxConfig, RangeConfig, DropDownBoxConfig, CaptionConfig, DropDownBoxConfig } = javascriptsamples;
-    var { RenderEventArgs, Callout, createGraphics, GraphicsType, PaletteItem, PlacementType, Colors, LineType, PolylinesBuffer, ConnectorOffbeat, ConnectorStraight, ConnectorAnnotationOffsetResolver } = interactivetests;
+    var { RenderEventArgs, Callout, createGraphics, PaletteItem, PlacementType, Colors, LineType, PolylinesBuffer, ConnectorOffbeat, ConnectorStraight, ConnectorAnnotationOffsetResolver } = interactivetests;
 
     var optionsRender = new Render([
       new PanelConfig("Layout & Shape Options", [
@@ -33,10 +33,6 @@
         new RadioBoxConfig("lineType", primitives.LineType.Solid, "Line Type", primitives.LineType, ValueType.Integer, onUpdate),
         new ColorConfig("lineColor", primitives.Colors.Black, "Color", false, onUpdate),
         new RangeConfig("lineWidth",2, "Line width", 0, 10, 1, onUpdate)
-      ]),
-      new PanelConfig("Rendering", [
-        new CaptionConfig("By default control uses SVG graphics mode. Use this property to switch graphics mode programmatically into Canvas.", false),
-        new RadioBoxConfig("graphicsType", primitives.GraphicsType.SVG, "Graphics", primitives.GraphicsType, ValueType.Integer, onUpdate)
       ])
     ], {
         connectorPlacementType: primitives.ConnectorPlacementType.Offbeat,
@@ -48,10 +44,7 @@
 
         lineType: primitives.LineType.Solid,
         lineColor: primitives.Colors.Black,
-        lineWidth: 2,
-        
-
-        graphicsType: primitives.GraphicsType.SVG
+        lineWidth: 2
       });
 
       var graphics;
@@ -59,7 +52,7 @@
       document.addEventListener('DOMContentLoaded', function () {
         optionsRender.render(document.getElementById("westpanel"));
 
-        graphics = createGraphics(GraphicsType.SVG, document.getElementById("placeholder"));
+        graphics = createGraphics(document.getElementById("placeholder"));
 
         onUpdate();
 

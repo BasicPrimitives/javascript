@@ -1,5 +1,5 @@
 ## Organizational Chart inside Bootstrap [Popup](https://getbootstrap.com/docs/4.0/components/modal/) Dialog
 
-This is general compatibility test on how control works inside Bootstrap Popup dialog. The example demonstrates how to select items in organizational chat placed inside Bootstrap Popup Dialog and return them back to host application. 
+This sample is a general compatibility test on how the control works inside the Bootstrap Popup dialog. The example demonstrates selecting multiple organizational chat items inside Bootstrap Popup Dialog and returning them to the application. 
 
 [JavaScript](javascript.controls/CasePopupDialog.html)

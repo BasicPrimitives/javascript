@@ -1,9 +1,9 @@
 # Webpack Static Application Example
 
-The whole purpose of this example is to get working Basic Primitives diagram control inside regular web application in the shortest number of steps. See [How to Bundle a Simple Static Site Using Webpack posted by James Hibbard](https://www.sitepoint.com/bundle-static-site-webpack/), it contains detailed explanation about Webpack configuration used here:
+The whole purpose of this example is to get working Basic Primitives diagram control inside a regular web application in the shortest number of steps. See [How to Bundle a Simple Static Site Using Webpack posted by James Hibbard](https://www.sitepoint.com/bundle-static-site-webpack/). It contains a detailed explanation about Webpack configuration used here:
 
 
-### Create new empty folder first
+### Create a new empty folder first
 
 ```shell
 mkdir test1
@@ -49,7 +49,7 @@ Download packages
 npm update
 ```
 
-You should see `package-lock.json` and `node_modules` folder created
+You should see the `package-lock.json` file and `node_modules` folder created.
 
 ```shell
   node_modules
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 ### Add `webpack` configuration
 
-Create `webpack.config.js`
+Create `webpack.config.js` file
 
 ```javascript
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -128,14 +128,14 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = {
   entry: './src/index.js',
   output: {
-	path: `${__dirname}/dist`,
-	filename: 'bundle.js',
+  path: `${__dirname}/dist`,
+  filename: 'bundle.js',
   },
   devServer: {
     port: 8080
   },
   plugins: [
-	 new MiniCssExtractPlugin()
+   new MiniCssExtractPlugin()
   ],
   module: {
     rules: [
@@ -167,7 +167,7 @@ module.exports = {
 };
 ```
 
-You should have tte following folders structure
+You should have the following folders structure.
 
 ```shell
   node_modules
@@ -195,24 +195,24 @@ You should get packed files in `dist` folder:
 
 ### Add index.html
 
-As a matter of fact, it does not matter whether you add index.html before build or after, 
-but the main point is that `index.html` has reference to packed `bundle.js`
+It does not matter whether you add index.html before build or after, 
+but the main point is that `index.html` has reference to the packed `bundle.js` file.
 
 ```JavaScript
 <!DOCTYPE html> 
 <html>
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<title>First organization diagram</title>
-	<script type="text/javascript" src="/dist/bundle.js"></script>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>First organization diagram</title>
+  <script type="text/javascript" src="/dist/bundle.js"></script>
 </head>
 <body>
-	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
 </body>
 </html>
 ```
 
-### Serve the project
+### Start the development webserver
 
 ```shell
 test1>webpack serve
@@ -220,5 +220,5 @@ test1>webpack serve
 ...
 ```
 
-### Open browser at `http://localhost:8080/` and you should see your first diagram.
-For more details see above mentioned blog post.
+### Open browser at `http://localhost:8080/`, and you should see your first diagram.
+For more details, see the blog post mentioned above.

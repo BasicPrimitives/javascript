@@ -18,7 +18,7 @@
     var timer = null;
     var { Point, Size, Rect } = primitives;
     var { ValueType, Render, PanelConfig, ColorConfig, SizeConfig, CheckBoxConfig, RadioBoxConfig, RangeConfig, DropDownBoxConfig, CaptionConfig, DropDownBoxConfig } = javascriptsamples;
-    var { Shape, createGraphics, GraphicsType, PlacementType, Colors, LineType } = interactivetests;
+    var { Shape, createGraphics, PlacementType, Colors, LineType } = interactivetests;
 
     var optionsRender = new Render([
       new javascriptsamples.PanelConfig("Layout & Shape", [
@@ -39,10 +39,6 @@
         new CheckBoxConfig("hasLabel", true, "Show", onUpdate),
         new RangeConfig("labelOffset", 3, "Offset", 0, 100, 1, onUpdate),
         new SizeConfig("labelSize", new Size(4, 4), "Size", 1, 200, 1, onUpdate),
-      ]),
-      new javascriptsamples.PanelConfig("Rendering", [
-        new javascriptsamples.CaptionConfig("By default control uses SVG graphics mode. Use this property to switch graphics mode programmatically into Canvas.", false),
-        new javascriptsamples.RadioBoxConfig("graphicsType", primitives.GraphicsType.SVG, "Graphics", primitives.GraphicsType, ValueType.Integer, onUpdate)
       ])
     ], {
         shapeType: primitives.ShapeType.Rectangle,
@@ -59,9 +55,7 @@
 
         hasLabel: true,
         labelOffset: 4,
-        labelSize: new Size(60, 30),
-
-        graphicsType: primitives.GraphicsType.SVG
+        labelSize: new Size(60, 30)
       });
 
       var graphics;
@@ -69,7 +63,7 @@
       document.addEventListener('DOMContentLoaded', function () {
         optionsRender.render(document.getElementById("westpanel"));
 
-        graphics = createGraphics(GraphicsType.SVG, document.getElementById("placeholder"));
+        graphics = createGraphics(document.getElementById("placeholder"));
 
         onUpdate();
 

@@ -1,15 +1,15 @@
 # Family Items Ordering
-Family Diagram supports multiple parents and children per node, so there is no deterministic way to define groups of items and their order in group, so Family diagram provides non-deterministic API to order items. That means if items expected to be in one layout group then user can use following properties to guide layout engine about user preferred relative order of items:
+The family diagram supports multiple parents and children per node, so there is no way to define groups of items and their order in the group. The family diagram provides API options helping to guide the layout engine to order nodes. That means if items expected to be in one layout group, then the developer can use the following properties to guide the layout engine about user preferred relative order of items:
 
-1. `relativeItem` - item position and placement type defined relative to this property referenced item
-2. `placementType` - item placement on the left or right side of relative item. Property has following values:
+* `relativeItem` - item position and placement type defined relative to the node referenced by this  property
+* `placementType` - this property defines placement on the left or right side of the relative item. The property has the following values:
     * `primitives.AdviserPlacementType.Left`
     * `primitives.AdviserPlacementType.Right`
-3. `position` - if several items reference the same `relativeItem` and placement then this `position` property defines order of them.
+* `position` - if several items reference the same relative item and relative offset, then this property defines the order of them.
 
-If item has no relative item defined then layout engine will try to find optimal placement for it based on its relations.
+If the item has no relative node defined, then the layout engine will try to find optimal placement based on its relations.
 
-Please, pay attention that loops in references are completely ignored, so don't create mutual references between items.
+Please, pay attention that control ignores looped references between nodes, so it is the developer's responsibility to avoid them.
 
 Family Items Ordering Sample
 
@@ -25,9 +25,9 @@ Family Items Ordering Sample
 
 ## Primary Parent
 
-If node has multiple parents and they belong to distinct branches of the diagram then `primaryParent` property can give higher priority to one of them. So child node will be placed into hierarchy of that primary parent node.
+If a node has multiple parents and belongs to distant branches of the diagram, then the `primaryParent` property can give higher priority to one of them. So the control would place the node to the hierarchy of that primary parent.
 
-`primaryParent` - control placed node to the hierarchy of the primary parent, this property is ignored if parent does not exists.
+* `primaryParent` - defines the primary parent of the node. The control would place the node into the hierarchy of the primary node.  If there is no parent found, then the layout engine will ignore it. 
 
 [JavaScript](javascript.controls/CaseFamilyChartPrimaryParent.html)
 

@@ -107,14 +107,12 @@ return /******/ (function(modules) { // webpackBootstrap
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return BaseControl; });
 /* harmony import */ var _graphics_structs_Point__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./graphics/structs/Point */ "./src/graphics/structs/Point.js");
-/* harmony import */ var _graphics_structs_Thickness__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./graphics/structs/Thickness */ "./src/graphics/structs/Thickness.js");
-/* harmony import */ var _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./graphics/structs/Rect */ "./src/graphics/structs/Rect.js");
-/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./enums */ "./src/enums.js");
-/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./common */ "./src/common/index.js");
-/* harmony import */ var _graphics_createGraphics__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./graphics/createGraphics */ "./src/graphics/createGraphics.js");
-/* harmony import */ var _graphics_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./graphics/dom */ "./src/graphics/dom.js");
-/* harmony import */ var _common_jsonml_html__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./common/jsonml-html */ "./src/common/jsonml-html.js");
-
+/* harmony import */ var _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./graphics/structs/Rect */ "./src/graphics/structs/Rect.js");
+/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./enums */ "./src/enums.js");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./common */ "./src/common/index.js");
+/* harmony import */ var _graphics_createGraphics__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./graphics/createGraphics */ "./src/graphics/createGraphics.js");
+/* harmony import */ var _graphics_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./graphics/dom */ "./src/graphics/dom.js");
+/* harmony import */ var _common_jsonml_html__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./common/jsonml-html */ "./src/common/jsonml-html.js");
 
 
 
@@ -171,11 +169,11 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
     }
 
     switch (updateMode) {
-      case _enums__WEBPACK_IMPORTED_MODULE_3__["UpdateMode"].Refresh:
+      case _enums__WEBPACK_IMPORTED_MODULE_2__["UpdateMode"].Refresh:
         refresh(forceCenterOnCursor, _debug);
         break;
 
-      case _enums__WEBPACK_IMPORTED_MODULE_3__["UpdateMode"].PositonHighlight:
+      case _enums__WEBPACK_IMPORTED_MODULE_2__["UpdateMode"].PositonHighlight:
         positionHighlight(_debug);
         break;
 
@@ -202,7 +200,7 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
     createLayout(_data.layout, _data.name);
     bind(_data.layout);
     _data.tasks = taskManagerFactory(getOptions, getGraphics, getLayout, setLayout, templates);
-    _data.graphics = Object(_graphics_createGraphics__WEBPACK_IMPORTED_MODULE_5__["default"])(_data.options.graphicsType, _data.layout.element);
+    _data.graphics = Object(_graphics_createGraphics__WEBPACK_IMPORTED_MODULE_4__["default"])(_data.layout.element);
     _data.graphics.debug = _debug;
     refresh(true, _debug);
   }
@@ -236,8 +234,8 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
     /* fix pixel alignment */
 
 
-    var pixelAlignmentFix = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_6__["getFixOfPixelAlignment"])(_data.layout.element);
-    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_7__["default"].applyStyles(_data.layout.scrollPanel, {
+    var pixelAlignmentFix = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_5__["getFixOfPixelAlignment"])(_data.layout.element);
+    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_6__["default"].applyStyles(_data.layout.scrollPanel, {
       "marginBottom": "0px",
       "marginRight": "0px",
       "marginLeft": pixelAlignmentFix.width + "px",
@@ -325,7 +323,7 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
 
   function getLayout() {
     var layout = _data.layout,
-        scrollPanelSize = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_6__["getInnerSize"])(layout.controlPanel),
+        scrollPanelSize = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_5__["getInnerSize"])(layout.controlPanel),
         placeholderOffset = new _graphics_structs_Point__WEBPACK_IMPORTED_MODULE_0__["default"](layout.scrollPanel.scrollLeft, layout.scrollPanel.scrollTop);
     return {
       forceCenterOnCursor: layout.forceCenterOnCursor,
@@ -336,8 +334,8 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
 
   function setLayout(layoutOptions) {
     var layout = _data.layout,
-        pixelAlignmentFix = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_6__["getFixOfPixelAlignment"])(layout.element);
-    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_7__["default"].applyStyles(layout.controlPanel, {
+        pixelAlignmentFix = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_5__["getFixOfPixelAlignment"])(layout.element);
+    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_6__["default"].applyStyles(layout.controlPanel, {
       "marginLeft": pixelAlignmentFix.width + "px",
 
       /* fixes div pixel alignment */
@@ -345,10 +343,10 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
     });
     /* set scroll panel position */
 
-    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_7__["default"].applyStyles(layout.scrollPanel, layoutOptions.scrollPanelRect.getCSS());
+    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_6__["default"].applyStyles(layout.scrollPanel, layoutOptions.scrollPanelRect.getCSS());
     /* set scaled content panel for tracking mouse events without scaling */
 
-    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_7__["default"].applyStyles(layout.mousePanel, layoutOptions.mousePanelSize.getCSS());
+    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_6__["default"].applyStyles(layout.mousePanel, layoutOptions.mousePanelSize.getCSS());
     /* set size and scale of content panel */
 
     var scaleText = "scale(" + layoutOptions.scale + "," + layoutOptions.scale + ")";
@@ -368,29 +366,29 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
       /* Firefox */
 
     };
-    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_7__["default"].applyStyles(layout.placeholder, Object(_common__WEBPACK_IMPORTED_MODULE_4__["mergeObjects"])(scaleProperties, layoutOptions.placeholderSize.getCSS()));
+    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_6__["default"].applyStyles(layout.placeholder, Object(_common__WEBPACK_IMPORTED_MODULE_3__["mergeObjects"])(scaleProperties, layoutOptions.placeholderSize.getCSS()));
 
     if (layoutOptions.autoSize) {
       /* resize element to fit placeholder if control in auto size mode */
-      _common_jsonml_html__WEBPACK_IMPORTED_MODULE_7__["default"].applyStyles(layout.element, layoutOptions.controlSize.getCSS());
+      _common_jsonml_html__WEBPACK_IMPORTED_MODULE_6__["default"].applyStyles(layout.element, layoutOptions.controlSize.getCSS());
     }
     /* set titles panel scale and size */
 
 
-    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_7__["default"].applyStyles(layout.titlesMousePanel, layoutOptions.titlesMousePanelRect.getCSS());
-    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_7__["default"].applyStyles(layout.titlesPlaceholder, Object(_common__WEBPACK_IMPORTED_MODULE_4__["mergeObjects"])(scaleProperties, layoutOptions.titlesPlaceholderSize.getCSS()));
+    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_6__["default"].applyStyles(layout.titlesMousePanel, layoutOptions.titlesMousePanelRect.getCSS());
+    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_6__["default"].applyStyles(layout.titlesPlaceholder, Object(_common__WEBPACK_IMPORTED_MODULE_3__["mergeObjects"])(scaleProperties, layoutOptions.titlesPlaceholderSize.getCSS()));
     /* set frame panel scale and size */
 
-    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_7__["default"].applyStyles(layout.frameMousePanel, layoutOptions.frameMousePanelRect.getCSS());
-    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_7__["default"].applyStyles(layout.framePlaceholder, Object(_common__WEBPACK_IMPORTED_MODULE_4__["mergeObjects"])(scaleProperties, layoutOptions.framePlaceholderSize.getCSS()));
+    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_6__["default"].applyStyles(layout.frameMousePanel, layoutOptions.frameMousePanelRect.getCSS());
+    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_6__["default"].applyStyles(layout.framePlaceholder, Object(_common__WEBPACK_IMPORTED_MODULE_3__["mergeObjects"])(scaleProperties, layoutOptions.framePlaceholderSize.getCSS()));
     layout.scrollPanel.setAttribute("class", layoutOptions.scrollPanelRect.left > 0 ? name : "bp-scrollframe " + name);
   }
 
   function createLayout(layout, name) {
-    var viewportSize = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_6__["getInnerSize"])(layout.element),
-        viewportRect = new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_2__["default"](0, 0, viewportSize.width, viewportSize.height),
-        pixelAlignmentFix = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_6__["getFixOfPixelAlignment"])(element);
-    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_7__["default"].appendDOM(layout.element, _common_jsonml_html__WEBPACK_IMPORTED_MODULE_7__["default"].toHTML(["div",
+    var viewportSize = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_5__["getInnerSize"])(layout.element),
+        viewportRect = new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_1__["default"](0, 0, viewportSize.width, viewportSize.height),
+        pixelAlignmentFix = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_5__["getFixOfPixelAlignment"])(element);
+    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_6__["default"].appendDOM(layout.element, _common_jsonml_html__WEBPACK_IMPORTED_MODULE_6__["default"].toHTML(["div",
     /* root control panel */
     {
       "tabindex": 0,
@@ -417,7 +415,7 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
     }, ["div",
     /* frameMousePanel - frame mouse tracking events panel */
     {
-      "style": Object(_common__WEBPACK_IMPORTED_MODULE_4__["mergeObjects"])({
+      "style": Object(_common__WEBPACK_IMPORTED_MODULE_3__["mergeObjects"])({
         position: "absolute",
         overflow: "hidden"
       }, viewportRect.getCSS()),
@@ -429,7 +427,7 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
     }, ["div",
     /* frameplaceholder - contents scalable panel */
     {
-      "style": Object(_common__WEBPACK_IMPORTED_MODULE_4__["mergeObjects"])({
+      "style": Object(_common__WEBPACK_IMPORTED_MODULE_3__["mergeObjects"])({
         position: "absolute",
         overflow: "hidden"
       }, viewportRect.getCSS()),
@@ -441,7 +439,7 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
     }]], ["div",
     /* titlesMousePanel - titles mouse tracking events panel */
     {
-      "style": Object(_common__WEBPACK_IMPORTED_MODULE_4__["mergeObjects"])({
+      "style": Object(_common__WEBPACK_IMPORTED_MODULE_3__["mergeObjects"])({
         position: "absolute",
         overflow: "hidden"
       }, viewportRect.getCSS()),
@@ -453,7 +451,7 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
     }, ["div",
     /* titlesplaceholder - contents scalable panel */
     {
-      "style": Object(_common__WEBPACK_IMPORTED_MODULE_4__["mergeObjects"])({
+      "style": Object(_common__WEBPACK_IMPORTED_MODULE_3__["mergeObjects"])({
         position: "absolute",
         overflow: "hidden"
       }, viewportRect.getCSS()),
@@ -465,7 +463,7 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
     }]], ["div",
     /* scrollPanel - root scroll panel */
     {
-      "style": Object(_common__WEBPACK_IMPORTED_MODULE_4__["mergeObjects"])({
+      "style": Object(_common__WEBPACK_IMPORTED_MODULE_3__["mergeObjects"])({
         position: "absolute",
         "overflow": "auto",
         "-webkit-overflow-scrolling": "touch",
@@ -482,7 +480,7 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
     }, ["div",
     /* mousePanel - mouse tracking events panel */
     {
-      "style": Object(_common__WEBPACK_IMPORTED_MODULE_4__["mergeObjects"])({
+      "style": Object(_common__WEBPACK_IMPORTED_MODULE_3__["mergeObjects"])({
         position: "absolute",
         overflow: "visible"
       }, viewportRect.getCSS()),
@@ -494,7 +492,7 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
     }, ["div",
     /* placeholder - contents scalable panel */
     {
-      "style": Object(_common__WEBPACK_IMPORTED_MODULE_4__["mergeObjects"])({
+      "style": Object(_common__WEBPACK_IMPORTED_MODULE_3__["mergeObjects"])({
         position: "absolute",
         overflow: "hidden"
       }, viewportRect.getCSS()),
@@ -542,7 +540,7 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
     layout.element.addEventListener('keydown', onKeyDown);
     layout.scrollPanel.addEventListener('scroll', onScroll);
 
-    if (_data.options.enablePanning && Object(_graphics_createGraphics__WEBPACK_IMPORTED_MODULE_5__["isChrome"])()) {
+    if (_data.options.enablePanning && Object(_graphics_createGraphics__WEBPACK_IMPORTED_MODULE_4__["isChrome"])()) {
       layout.scrollPanel.draggable = true;
       layout.scrollPanel.addEventListener('dragstart', onDragStart);
       layout.scrollPanel.addEventListener('drag', onDragScroll);
@@ -581,7 +579,7 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
   }
 
   function onFrameMouseMove(event) {
-    var placeholderOffset = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_6__["getElementOffset"])(_data.layout.frameMousePanel),
+    var placeholderOffset = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_5__["getElementOffset"])(_data.layout.frameMousePanel),
         x = event.pageX - placeholderOffset.left,
         y = event.pageY - placeholderOffset.top;
 
@@ -596,7 +594,7 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
   }
 
   function onFrameMouseClick(event) {
-    var placeholderOffset = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_6__["getElementOffset"])(_data.layout.frameMousePanel),
+    var placeholderOffset = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_5__["getElementOffset"])(_data.layout.frameMousePanel),
         x = event.pageX - placeholderOffset.left,
         y = event.pageY - placeholderOffset.top,
         projectItemsToFrameTask = _data.tasks.getTask("ProjectItemsToFrameTask"),
@@ -623,7 +621,7 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
   }
 
   function onMouseMove(event) {
-    var placeholderOffset = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_6__["getElementOffset"])(_data.layout.mousePanel),
+    var placeholderOffset = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_5__["getElementOffset"])(_data.layout.mousePanel),
         x = event.pageX - placeholderOffset.left,
         y = event.pageY - placeholderOffset.top,
         createTransformTask = _data.tasks.getTask("CreateTransformTask"),
@@ -670,7 +668,7 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
   }
 
   function onMouseClick(event) {
-    var placeholderOffset = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_6__["getElementOffset"])(_data.layout.mousePanel),
+    var placeholderOffset = Object(_graphics_dom__WEBPACK_IMPORTED_MODULE_5__["getElementOffset"])(_data.layout.mousePanel),
         x = event.pageX - placeholderOffset.left,
         y = event.pageY - placeholderOffset.top,
         createTransformTask = _data.tasks.getTask("CreateTransformTask"),
@@ -686,13 +684,13 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
     if (newCursorItemId !== null) {
       var buttonName = target.getAttribute("data-buttonname");
 
-      if (Object(_common__WEBPACK_IMPORTED_MODULE_4__["isNullOrEmpty"])(buttonName)) {
+      if (Object(_common__WEBPACK_IMPORTED_MODULE_3__["isNullOrEmpty"])(buttonName)) {
         buttonName = target.parentNode && target.parentNode.getAttribute("data-buttonname");
       }
 
       ;
 
-      if (!Object(_common__WEBPACK_IMPORTED_MODULE_4__["isNullOrEmpty"])(buttonName)) {
+      if (!Object(_common__WEBPACK_IMPORTED_MODULE_3__["isNullOrEmpty"])(buttonName)) {
         eventArgs = getEventArgs(null, newCursorItemId, buttonName);
         trigger("onButtonClick", event, eventArgs);
       } else if (target.getAttribute("name") === "checkbox" || target.getAttribute("name") === "selectiontext") {//ignore jslint
@@ -762,22 +760,22 @@ function BaseControl(element, options, taskManagerFactory, eventArgsFactory, tem
 
         case 40:
           /*Down*/
-          direction = _enums__WEBPACK_IMPORTED_MODULE_3__["OrientationType"].Bottom;
+          direction = _enums__WEBPACK_IMPORTED_MODULE_2__["OrientationType"].Bottom;
           break;
 
         case 38:
           /*Up*/
-          direction = _enums__WEBPACK_IMPORTED_MODULE_3__["OrientationType"].Top;
+          direction = _enums__WEBPACK_IMPORTED_MODULE_2__["OrientationType"].Top;
           break;
 
         case 37:
           /*Left*/
-          direction = _enums__WEBPACK_IMPORTED_MODULE_3__["OrientationType"].Left;
+          direction = _enums__WEBPACK_IMPORTED_MODULE_2__["OrientationType"].Left;
           break;
 
         case 39:
           /*Right*/
-          direction = _enums__WEBPACK_IMPORTED_MODULE_3__["OrientationType"].Right;
+          direction = _enums__WEBPACK_IMPORTED_MODULE_2__["OrientationType"].Right;
           break;
       }
 
@@ -1460,7 +1458,7 @@ function FamPdfkitTaskManagerFactory(getOptions, getGraphics, setLayout, templat
 
   tasks.addDependency('showElbowDots', true);
   /* in regular org chart we don;t have situations when connector lines cross, but we have such situations in 
-  family tree so we need extra visual attribute to distinguish intersections betwen connectors */
+  family tree so we need extra visual attribute to distinguish intersections between connectors */
 
   tasks.addDependency('null', null);
   tasks.addDependency('foreground', _enums__WEBPACK_IMPORTED_MODULE_10__["ZOrderType"].Foreground);
@@ -3979,6 +3977,7 @@ function Family(source) {
                   currentItems[child].processed = true;
 
                   if (relation.weight > 1) {
+                    relation.items.sort();
                     key = relation.items.join(',');
 
                     if (!sharedItemsByKey.hasOwnProperty(key)) {
@@ -12809,14 +12808,6 @@ function FamConfig(name) {
 
   this.navigationMode = _enums__WEBPACK_IMPORTED_MODULE_0__["NavigationMode"].Default;
   /**
-   * Sets preferred rendering technology. If selected graphics type is not supported on the device,
-   * then control will auto fallback to the first available one.
-   * 
-   * @type {GraphicsType}
-   */
-
-  this.graphicsType = _enums__WEBPACK_IMPORTED_MODULE_0__["GraphicsType"].SVG;
-  /**
    * Page fit mode. Minimizing nodes into markers and labels. This option provides a special mode that renders the diagram
    * nodes in the form of markers. This is a highly scalable form that is capable of rendering large numbers of nodes
    * while not affecting the rendering performance. With this, huge diagrams can be fit into available screen space.
@@ -14565,14 +14556,6 @@ function OrgConfig(name) {
    */
 
   this.navigationMode = _enums__WEBPACK_IMPORTED_MODULE_0__["NavigationMode"].Default;
-  /**
-   * Sets preferred rendering technology. If selected graphics type is not supported on the device,
-   * then control will auto fallback to the first available one.
-   * 
-   * @type {GraphicsType}
-   */
-
-  this.graphicsType = _enums__WEBPACK_IMPORTED_MODULE_0__["GraphicsType"].SVG;
   /**
    * Page fit mode. Minimizing nodes into markers and labels. This option provides a special mode that renders the diagram
    * nodes in the form of markers. This is a highly scalable form that is capable of rendering large numbers of nodes
@@ -16425,8 +16408,7 @@ BaseConnectorBundle.prototype.trace = function (data, params, options) {//var da
   //};
   //var params = {
   //  treeItemsPositions: [],
-  //  transform: null,
-  //  hasGraphics: true
+  //  transform: null
   //};
   //var options = {
   //  connectorType: ConnectorType.Squared,
@@ -16555,21 +16537,19 @@ BaseConnectorBundle.prototype.traceFork = function (data, params, options, paren
         bevelSize = 0;
       }
 
-      if (params.hasGraphics) {
-        switch (options.elbowType) {
-          case _enums__WEBPACK_IMPORTED_MODULE_0__["ElbowType"].Bevel:
-          case _enums__WEBPACK_IMPORTED_MODULE_0__["ElbowType"].Round:
-            if (bevelSize > 0 && Math.abs(parentPoint.x - connectorPoint.x) > bevelSize && Math.abs(parentPoint.y - connectorPoint.y) > bevelSize) {
-              connectorPoint.hasElbow = true;
-              connectorPoint.elbowPoint1 = new _graphics_structs_Point__WEBPACK_IMPORTED_MODULE_2__["default"](connectorPoint.x, parentPoint.y + (parentPoint.y > connectorPoint.y ? -bevelSize : bevelSize));
-              connectorPoint.elbowPoint2 = new _graphics_structs_Point__WEBPACK_IMPORTED_MODULE_2__["default"](connectorPoint.x + (parentPoint.x > connectorPoint.x ? bevelSize : -bevelSize), parentPoint.y);
-            }
+      switch (options.elbowType) {
+        case _enums__WEBPACK_IMPORTED_MODULE_0__["ElbowType"].Bevel:
+        case _enums__WEBPACK_IMPORTED_MODULE_0__["ElbowType"].Round:
+          if (bevelSize > 0 && Math.abs(parentPoint.x - connectorPoint.x) > bevelSize && Math.abs(parentPoint.y - connectorPoint.y) > bevelSize) {
+            connectorPoint.hasElbow = true;
+            connectorPoint.elbowPoint1 = new _graphics_structs_Point__WEBPACK_IMPORTED_MODULE_2__["default"](connectorPoint.x, parentPoint.y + (parentPoint.y > connectorPoint.y ? -bevelSize : bevelSize));
+            connectorPoint.elbowPoint2 = new _graphics_structs_Point__WEBPACK_IMPORTED_MODULE_2__["default"](connectorPoint.x + (parentPoint.x > connectorPoint.x ? bevelSize : -bevelSize), parentPoint.y);
+          }
 
-            break;
+          break;
 
-          default:
-            break;
-        }
+        default:
+          break;
       }
       /* draw vertical segment */
 
@@ -17139,13 +17119,11 @@ VerticalConnectorBundle.prototype.trace = function (data, params, options) {
       treeItemPosition = params.treeItemsPositions[treeItemId];
       isSquared = true;
 
-      if (params.hasGraphics) {
-        switch (treeItemPosition.actualVisibility) {
-          case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Dot:
-          case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Line:
-            isSquared = chartHasSquaredConnectors;
-            break;
-        }
+      switch (treeItemPosition.actualVisibility) {
+        case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Dot:
+        case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Line:
+          isSquared = chartHasSquaredConnectors;
+          break;
       }
 
       connectorStep = 0;
@@ -17230,7 +17208,7 @@ VerticalConnectorBundle.prototype.trace = function (data, params, options) {
 /*!**********************!*\
   !*** ./src/enums.js ***!
   \**********************/
-/*! exports provided: AdviserPlacementType, AnnotationType, ChildrenPlacementType, Colors, ConnectorLabelPlacementType, ConnectorPlacementType, ConnectorShapeType, ConnectorStyleType, ConnectorType, ElbowType, Enabled, GraphicsType, GroupByType, HorizontalAlignmentType, ItemType, LabelType, Layers, LineType, LoopsLayoutMode, NavigationMode, NeighboursSelectionMode, OrientationType, PageFitMode, PlacementType, RenderingMode, SegmentType, SelectionPathMode, ShapeType, SideFlag, TextOrientationType, UpdateMode, VectorRelationType, VerticalAlignmentType, Visibility, ZOrderType */
+/*! exports provided: AdviserPlacementType, AnnotationType, ChildrenPlacementType, Colors, ConnectorLabelPlacementType, ConnectorPlacementType, ConnectorShapeType, ConnectorStyleType, ConnectorType, ElbowType, Enabled, GroupByType, HorizontalAlignmentType, ItemType, LabelType, Layers, LineType, LoopsLayoutMode, NavigationMode, NeighboursSelectionMode, OrientationType, PageFitMode, PlacementType, RenderingMode, SegmentType, SelectionPathMode, ShapeType, SideFlag, TextOrientationType, UpdateMode, VectorRelationType, VerticalAlignmentType, Visibility, ZOrderType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17246,7 +17224,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConnectorType", function() { return ConnectorType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElbowType", function() { return ElbowType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Enabled", function() { return Enabled; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GraphicsType", function() { return GraphicsType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GroupByType", function() { return GroupByType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HorizontalAlignmentType", function() { return HorizontalAlignmentType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ItemType", function() { return ItemType; });
@@ -17700,27 +17677,6 @@ var Enabled = {
    * Disabled
    */
   False: 2
-};
-/**
- * @typedef {number} GraphicsType
- **/
-
-/**
- * Graphics elements rendering mode
- *  
- * @enum {GraphicsType}
- */
-
-var GraphicsType = {
-  /**
-   * Scalable Vector Graphics
-   */
-  SVG: 0,
-
-  /**
-   * HTML Canvas
-   */
-  Canvas: 1
 };
 /**
  * @typedef {number} GroupByType
@@ -18603,280 +18559,6 @@ Cache.prototype.put = function (placeholder, layer, type, control) {
 
 /***/ }),
 
-/***/ "./src/graphics/CanvasGraphics.js":
-/*!****************************************!*\
-  !*** ./src/graphics/CanvasGraphics.js ***!
-  \****************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return CanvasGraphics; });
-/* harmony import */ var _Graphics__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Graphics */ "./src/graphics/Graphics.js");
-/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../enums */ "./src/enums.js");
-
-
-function CanvasGraphics(element) {
-  this.parent = _Graphics__WEBPACK_IMPORTED_MODULE_0__["default"].prototype;
-  this.parent.constructor.apply(this, arguments);
-  this.graphicsType = _enums__WEBPACK_IMPORTED_MODULE_1__["GraphicsType"].Canvas;
-  this.m_maximum = 8000; // Search for maximum size of canvas element
-}
-;
-CanvasGraphics.prototype = new _Graphics__WEBPACK_IMPORTED_MODULE_0__["default"]();
-
-CanvasGraphics.prototype.clean = function () {
-  var key, placeholder, layerKey, layer;
-
-  for (key in this.m_placeholders) {
-    if (this.m_placeholders.hasOwnProperty(key)) {
-      placeholder = this.m_placeholders[key];
-
-      for (layerKey in placeholder.layers) {
-        if (placeholder.layers.hasOwnProperty(layerKey)) {
-          layer = placeholder.layers[layerKey];
-
-          if (layer.canvascanvas !== null) {
-            layer.canvascanvas.parentNode.removeChild(layer.canvascanvas);
-            layer.canvascanvas = null;
-          }
-        }
-      }
-    }
-  }
-
-  this.parent.clean.apply(this, arguments);
-};
-
-CanvasGraphics.prototype._activatePlaceholder = function (placeholderName) {
-  var placeholder, width, height;
-
-  this.parent._activatePlaceholder.apply(this, arguments);
-
-  placeholder = this.m_activePlaceholder;
-  width = placeholder.size.width;
-  height = placeholder.size.height;
-
-  if (width > this.m_maximum || height > this.m_maximum) {
-    placeholder.hasGraphics = false;
-  } else {
-    placeholder.hasGraphics = true;
-  }
-
-  return placeholder;
-};
-
-CanvasGraphics.prototype.resizePlaceholder = function (placeholder, left, top, width, height) {
-  var layerKey, layer;
-  this.parent.resizePlaceholder.apply(this, arguments);
-
-  for (layerKey in placeholder.layers) {
-    if (placeholder.layers.hasOwnProperty(layerKey)) {
-      layer = placeholder.layers[layerKey];
-
-      if (layer.canvascanvas !== null) {
-        layer.canvascanvas.width = width;
-        layer.canvascanvas.height = height;
-      }
-    }
-  }
-};
-
-CanvasGraphics.prototype.begin = function () {
-  var key, placeholder, layerKey, layer, width, height;
-  this.parent.begin.apply(this);
-
-  for (key in this.m_placeholders) {
-    if (this.m_placeholders.hasOwnProperty(key)) {
-      placeholder = this.m_placeholders[key];
-      width = placeholder.size.width;
-      height = placeholder.size.height;
-
-      for (layerKey in placeholder.layers) {
-        if (placeholder.layers.hasOwnProperty(layerKey)) {
-          layer = placeholder.layers[layerKey];
-
-          if (layer.canvascanvas !== null) {
-            layer.canvascontext.clearRect(0, 0, width, height);
-          }
-        }
-      }
-    }
-  }
-};
-
-CanvasGraphics.prototype._getContext = function (placeholder, layer) {
-  var width = placeholder.size.width,
-      height = placeholder.size.height;
-
-  if (layer.canvascanvas === null) {
-    layer.canvascanvas = document.createElement('canvas');
-    layer.canvascanvas.width = width;
-    layer.canvascanvas.height = height;
-    this.prepend(placeholder.activeLayer.canvas, layer.canvascanvas);
-    layer.canvascontext = layer.canvascanvas.getContext('2d');
-  }
-
-  return layer.canvascontext;
-};
-
-CanvasGraphics.prototype.reset = function (arg0, arg1) {
-  var placeholderName = "none",
-      layerName = -1,
-      placeholder,
-      layer,
-      width,
-      height;
-
-  switch (arguments.length) {
-    case 1:
-      if (typeof arg0 === "string") {
-        placeholderName = arg0;
-      } else {
-        layerName = arg0;
-      }
-
-      break;
-
-    case 2:
-      placeholderName = arg0;
-      layerName = arg1;
-      break;
-  }
-
-  this.parent.reset.apply(this, arguments);
-  placeholder = this.m_placeholders[placeholderName];
-
-  if (placeholder !== undefined) {
-    width = placeholder.size.width;
-    height = placeholder.size.height;
-    layer = placeholder.layers[layerName];
-
-    if (layer !== undefined && layer.canvascanvas !== null) {
-      layer.canvascontext.clearRect(0, 0, width, height);
-    }
-  }
-};
-
-CanvasGraphics.prototype.polyline = function (polylineData) {
-  var placeholder = this.m_activePlaceholder,
-      layer,
-      context,
-      attr = polylineData.paletteItem.toAttr(),
-      dashes,
-      step,
-      cornerRadius;
-
-  if (!placeholder.hasGraphics) {
-    this.parent.polyline.apply(this, arguments);
-  } else {
-    layer = placeholder.activeLayer;
-    context = this._getContext(placeholder, layer);
-    context.save();
-
-    if (attr.lineWidth !== undefined && attr.borderColor !== undefined) {
-      context.strokeStyle = attr.borderColor;
-      context.lineWidth = attr.lineWidth;
-    } else {
-      context.lineWidth = 0;
-      context.strokeStyle = "Transparent";
-    }
-
-    if (attr.lineType != null) {
-      step = Math.round(attr.lineWidth) || 1;
-
-      switch (attr.lineType) {
-        case _enums__WEBPACK_IMPORTED_MODULE_1__["LineType"].Solid:
-          dashes = [];
-          break;
-
-        case _enums__WEBPACK_IMPORTED_MODULE_1__["LineType"].Dotted:
-          dashes = [step, step];
-          break;
-
-        case _enums__WEBPACK_IMPORTED_MODULE_1__["LineType"].Dashed:
-          dashes = [step * 5, step * 3];
-          break;
-      }
-
-      if (context.setLineDash !== undefined) {
-        context.setLineDash(dashes);
-      } else if (context.webkitLineDash !== undefined) {
-        context.webkitLineDash = dashes;
-      } else if (context.mozDash !== undefined) {
-        context.mozDash = dashes;
-      }
-    }
-
-    context.beginPath();
-    polylineData.loop(this, function (segment) {
-      switch (segment.segmentType) {
-        case _enums__WEBPACK_IMPORTED_MODULE_1__["SegmentType"].Move:
-          context.moveTo(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
-          break;
-
-        case _enums__WEBPACK_IMPORTED_MODULE_1__["SegmentType"].Line:
-          context.lineTo(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
-          break;
-
-        case _enums__WEBPACK_IMPORTED_MODULE_1__["SegmentType"].Dot:
-          if (segment.width == segment.height && segment.width / 2.0 <= segment.cornerRadius) {
-            // circle dot
-            context.moveTo(Math.round(segment.x) + segment.width + 0.5, Math.round(segment.y) + segment.height / 2.0 + 0.5);
-            context.arc(Math.round(segment.x) + segment.width / 2.0 + 0.5, Math.round(segment.y) + segment.height / 2.0 + 0.5, Math.round(segment.width / 2.0), 0, 2 * Math.PI, false);
-          } else if (segment.cornerRadius === 0) {
-            // square
-            context.moveTo(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
-            context.lineTo(Math.round(segment.x + segment.width) + 0.5, Math.round(segment.y) + 0.5);
-            context.lineTo(Math.round(segment.x + segment.width) + 0.5, Math.round(segment.y + segment.height) + 0.5);
-            context.lineTo(Math.round(segment.x) + 0.5, Math.round(segment.y + segment.height) + 0.5);
-            context.lineTo(Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
-          } else {
-            // rounded corners rectangle
-            cornerRadius = Math.min(segment.cornerRadius, Math.min(segment.width / 2.0, segment.height / 2.0));
-            context.moveTo(Math.round(segment.x) + 0.5, Math.round(segment.y + cornerRadius) + 0.5);
-            context.arc(Math.round(segment.x + cornerRadius) + 0.5, Math.round(segment.y + cornerRadius) + 0.5, Math.round(cornerRadius), Math.PI, -Math.PI / 2.0, false);
-            context.lineTo(Math.round(segment.x + segment.width - cornerRadius) + 0.5, Math.round(segment.y) + 0.5);
-            context.arc(Math.round(segment.x + segment.width - cornerRadius) + 0.5, Math.round(segment.y + cornerRadius) + 0.5, Math.round(cornerRadius), -Math.PI / 2.0, 0, false);
-            context.lineTo(Math.round(segment.x + segment.width) + 0.5, Math.round(segment.y + segment.height - cornerRadius) + 0.5);
-            context.arc(Math.round(segment.x + segment.width - cornerRadius) + 0.5, Math.round(segment.y + segment.height - cornerRadius) + 0.5, Math.round(cornerRadius), 0, Math.PI / 2.0, false);
-            context.lineTo(Math.round(segment.x + cornerRadius) + 0.5, Math.round(segment.y + segment.height) + 0.5);
-            context.arc(Math.round(segment.x + cornerRadius) + 0.5, Math.round(segment.y + segment.height - cornerRadius) + 0.5, Math.round(cornerRadius), Math.PI / 2.0, Math.PI, false);
-            context.lineTo(Math.round(segment.x) + 0.5, Math.round(segment.y + cornerRadius) + 0.5);
-          }
-
-          break;
-
-        case _enums__WEBPACK_IMPORTED_MODULE_1__["SegmentType"].QuadraticArc:
-          context.quadraticCurveTo(Math.round(segment.cpX) + 0.5, Math.round(segment.cpY) + 0.5, Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
-          break;
-
-        case _enums__WEBPACK_IMPORTED_MODULE_1__["SegmentType"].CubicArc:
-          context.bezierCurveTo(Math.round(segment.cpX1) + 0.5, Math.round(segment.cpY1) + 0.5, Math.round(segment.cpX2) + 0.5, Math.round(segment.cpY2) + 0.5, Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5);
-          break;
-      }
-    });
-
-    if (attr.opacity != null) {
-      context.globalAlpha = attr.opacity;
-    }
-
-    if (attr.lineWidth !== undefined) {
-      context.stroke();
-    }
-
-    if (attr.fillColor !== undefined) {
-      context.fillStyle = attr.fillColor;
-      context.fill();
-    }
-
-    context.restore();
-  }
-};
-
-/***/ }),
-
 /***/ "./src/graphics/Element.js":
 /*!*********************************!*\
   !*** ./src/graphics/Element.js ***!
@@ -19121,8 +18803,6 @@ function Graphics(element) {
   this.m_placeholders = {};
   this.m_activePlaceholder = null;
   this.m_cache = new _Cache__WEBPACK_IMPORTED_MODULE_0__["default"]();
-  this.graphicsType = null;
-  this.hasGraphics = false;
   this.debug = false;
   this.layerNames = {};
   Object(_common__WEBPACK_IMPORTED_MODULE_2__["loop"])(this, _enums__WEBPACK_IMPORTED_MODULE_1__["Layers"], function (key, value) {
@@ -19500,105 +19180,6 @@ Graphics.prototype.polylinesBuffer = function (buffer) {
   });
 };
 
-Graphics.prototype.polyline = function (polylineData) {
-  var fromX = null,
-      fromY = null,
-      attr = polylineData.paletteItem.toAttr();
-  polylineData.loop(this, function (segment) {
-    switch (segment.segmentType) {
-      case _enums__WEBPACK_IMPORTED_MODULE_1__["SegmentType"].Move:
-        fromX = Math.round(segment.x) + 0.5;
-        fromY = Math.round(segment.y) + 0.5;
-        break;
-
-      case _enums__WEBPACK_IMPORTED_MODULE_1__["SegmentType"].Line:
-        this.rightAngleLine(fromX, fromY, Math.round(segment.x) + 0.5, Math.round(segment.y) + 0.5, attr);
-        fromX = Math.round(segment.x) + 0.5;
-        fromY = Math.round(segment.y) + 0.5;
-        break;
-
-      case _enums__WEBPACK_IMPORTED_MODULE_1__["SegmentType"].Dot:
-        this.dot(segment.x, segment.y, segment.width, segment.height, segment.cornerRadius, attr);
-        break;
-    }
-  });
-};
-
-Graphics.prototype.dot = function (cx, cy, width, height, cornerRadius, attr) {
-  var placeholder = this.m_activePlaceholder,
-      element = this.m_cache.get(placeholder.name, placeholder.activeLayer.name, "dot"),
-      hasBorder = attr.lineWidth !== undefined && attr.borderColor !== undefined,
-      style = {
-    "position": "absolute",
-    "width": width - (hasBorder ? 1 : 0),
-    "top": Math.round(cy),
-    "left": Math.round(cx),
-    "padding": 0,
-    "margin": 0,
-    "lineHeight": "0px",
-    "overflow": "hidden",
-    "height": height - (hasBorder ? 1 : 0),
-    "background": attr.fillColor,
-    "MozBorderRadius": cornerRadius,
-    "WebkitBorderRadius": cornerRadius,
-    "-khtml-border-radius": cornerRadius,
-    "borderRadius": cornerRadius,
-    "fontSize": "0px",
-    "borderStyle": hasBorder ? "Solid" : "None",
-    "borderWidth": hasBorder ? "1px" : "0px",
-    "borderColor": hasBorder ? attr.borderColor : ""
-  };
-
-  if (element === null) {
-    element = _common_jsonml_html__WEBPACK_IMPORTED_MODULE_3__["default"].toHTML(["div", {
-      "style": style
-    }]);
-    placeholder.activeLayer.canvas.appendChild(element);
-    this.m_cache.put(placeholder.name, placeholder.activeLayer.name, "dot", element);
-  } else {
-    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_3__["default"].applyStyles(element, style);
-  }
-};
-
-Graphics.prototype.rightAngleLine = function (fromX, fromY, toX, toY, attr) {
-  var placeholder = this.m_activePlaceholder,
-      isVertical = Math.abs(toY - fromY) > Math.abs(toX - fromX),
-      lineWidth = attr.lineWidth,
-      style = {
-    "position": "absolute",
-    "top": Math.round(Math.min(fromY, toY) - (isVertical ? 0 : lineWidth / 2.0)),
-    "left": Math.round(Math.min(fromX, toX) - (isVertical ? lineWidth / 2.0 : 0)),
-    "padding": 0,
-    "margin": 0,
-    "opacity": 0.5,
-    "lineHeight": "0px",
-    "overflow": "hidden",
-    "background": attr.borderColor,
-    "fontSize": "0px"
-  },
-      element;
-
-  if (isVertical) {
-    style.width = lineWidth;
-    style.height = Math.abs(Math.round(toY - fromY));
-  } else {
-    style.width = Math.abs(Math.round(toX - fromX));
-    style.height = lineWidth;
-  }
-
-  element = this.m_cache.get(placeholder.name, placeholder.activeLayer.name, "rect");
-
-  if (element === null) {
-    element = _common_jsonml_html__WEBPACK_IMPORTED_MODULE_3__["default"].toHTML(["div", {
-      "style": style
-    }]);
-    placeholder.activeLayer.canvas.appendChild(element);
-    this.m_cache.put(placeholder.name, placeholder.activeLayer.name, "rect", element);
-  } else {
-    _common_jsonml_html__WEBPACK_IMPORTED_MODULE_3__["default"].applyStyles(element, style);
-  }
-};
-
 Graphics.prototype.template = function (x, y, width, height, contentx, contenty, contentWidth, contentHeight, template, hashCode, onRenderTemplate, uiHash, attr) {
   //ignore jslint
   var placeholder = this.m_activePlaceholder,
@@ -19707,7 +19288,6 @@ __webpack_require__.r(__webpack_exports__);
 function Layer(name) {
   this.name = name;
   this.canvas = null;
-  this.canvascanvas = null;
   this.svgcanvas = null;
 }
 ;
@@ -19946,7 +19526,6 @@ function Placeholder(name) {
   this.size = null;
   this.rect = null;
   this.div = null;
-  this.hasGraphics = true;
 }
 ;
 
@@ -19974,8 +19553,6 @@ function SvgGraphics(element) {
   this.parent = _Graphics__WEBPACK_IMPORTED_MODULE_0__["default"].prototype;
   this.parent.constructor.apply(this, arguments);
   this._svgxmlns = "http://www.w3.org/2000/svg";
-  this.graphicsType = _enums__WEBPACK_IMPORTED_MODULE_2__["GraphicsType"].SVG;
-  this.hasGraphics = true;
 }
 ;
 SvgGraphics.prototype = new _Graphics__WEBPACK_IMPORTED_MODULE_0__["default"]();
@@ -20457,53 +20034,15 @@ Transform.prototype.transformThickness = function (thickness, forward) {
 /*!****************************************!*\
   !*** ./src/graphics/createGraphics.js ***!
   \****************************************/
-/*! exports provided: supportsSVG, supportsCanvas, isChrome, default */
+/*! exports provided: isChrome, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "supportsSVG", function() { return supportsSVG; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "supportsCanvas", function() { return supportsCanvas; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isChrome", function() { return isChrome; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return createGraphics; });
-/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../enums */ "./src/enums.js");
-/* harmony import */ var _SvgGraphics__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SvgGraphics */ "./src/graphics/SvgGraphics.js");
-/* harmony import */ var _CanvasGraphics__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CanvasGraphics */ "./src/graphics/CanvasGraphics.js");
+/* harmony import */ var _SvgGraphics__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SvgGraphics */ "./src/graphics/SvgGraphics.js");
 
-
-
-var _supportsSVG = null;
-/**
- * Checks if browser supports HTML SVG graphics.
- * 
- * @returns {boolean} Returns true if browser supports SVG canvas graphics.
- * @ignore
- */
-
-function supportsSVG() {
-  if (_supportsSVG === null) {
-    _supportsSVG = document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1") || document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.0");
-  }
-
-  return _supportsSVG;
-}
-;
-var _supportsCanvas = null;
-/**
- * Checks if browser supports HTML Canvas graphics.
- * 
- * @ignore
- * @returns {boolean} Returns true if browser supports HTML canvas graphics.
- */
-
-function supportsCanvas() {
-  if (_supportsCanvas === null) {
-    _supportsCanvas = !!window.HTMLCanvasElement;
-  }
-
-  return _supportsCanvas;
-}
-;
 /**
  * Checks if browser is Chrome.
  * 
@@ -20523,44 +20062,13 @@ function isChrome() {
 /**
  * Creates graphics object for chart rendering
  * 
- * @param {GraphicsType} preferred Preferred graphics type by user
  * @param {object} element Reference to dom element the graphics object is created for
  * @returns {Graphics} Returns graphics object
  * @ignore
  */
 
-function createGraphics(preferred, element) {
-  var result = null,
-      modes,
-      key,
-      index;
-  modes = [preferred];
-
-  for (key in _enums__WEBPACK_IMPORTED_MODULE_0__["GraphicsType"]) {
-    if (_enums__WEBPACK_IMPORTED_MODULE_0__["GraphicsType"].hasOwnProperty(key)) {
-      modes.push(_enums__WEBPACK_IMPORTED_MODULE_0__["GraphicsType"][key]);
-    }
-  }
-
-  for (index = 0; result === null && index < modes.length; index += 1) {
-    switch (modes[index]) {
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["GraphicsType"].SVG:
-        if (supportsSVG()) {
-          result = new _SvgGraphics__WEBPACK_IMPORTED_MODULE_1__["default"](element);
-        }
-
-        break;
-
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["GraphicsType"].Canvas:
-        if (supportsCanvas()) {
-          result = new _CanvasGraphics__WEBPACK_IMPORTED_MODULE_2__["default"](element);
-        }
-
-        break;
-    }
-  }
-
-  return result;
+function createGraphics(element) {
+  return new _SvgGraphics__WEBPACK_IMPORTED_MODULE_0__["default"](element);
 }
 ;
 
@@ -24337,7 +23845,7 @@ Vector.prototype._contains = function (x, y, rounding) {
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: AdviserPlacementType, AnnotationType, ChildrenPlacementType, Colors, ConnectorLabelPlacementType, ConnectorPlacementType, ConnectorShapeType, ConnectorStyleType, ConnectorType, ElbowType, Enabled, GraphicsType, GroupByType, HorizontalAlignmentType, ItemType, LabelType, Layers, LineType, LoopsLayoutMode, NavigationMode, NeighboursSelectionMode, OrientationType, PageFitMode, PlacementType, RenderingMode, SegmentType, SelectionPathMode, ShapeType, SideFlag, TextOrientationType, UpdateMode, VectorRelationType, VerticalAlignmentType, Visibility, ZOrderType, isEven, isNullOrEmpty, loop, splitCamelCaseName, isObject, isEmptyObject, cloneObject, mergeObjects, getHashCode, compareArrays, getColorHexValue, getColorName, getRed, getGreen, getBlue, beforeOpacity, highestContrast, luminosity, getElementsByName, getFixOfPixelAlignment, getElementOffset, hasClass, stopPropagation, getInnerSize, JsonML, Point, Size, Rect, Matrix, Thickness, Vector, Interval, binarySearch, getCrossingRectangles, getFamilyLoops, getFamilyUnits, getLiniarBreaks, getMergedRectangles, getMinimumCrossingRows, mergeSort, getMergedIntervals, Family, FamilyAlignment, FamilyMargins, FibonacciHeap, HeapResult, Graph, LCA, LinkedHashItems, Pile, QuadTree, RMQ, SortedList, SpatialIndex, Tree, TreeLevels, OrgConfig, OrgItemConfig, OrgEventArgs, FamConfig, FamItemConfig, FamEventArgs, BackgroundAnnotationConfig, ConnectorAnnotationConfig, HighlightPathAnnotationConfig, LabelAnnotationConfig, PaletteItemConfig, ShapeAnnotationConfig, LevelAnnotationConfig, TemplateConfig, OrgDiagram, FamDiagram, OrgDiagramPdfkit, FamDiagramPdfkit, FamTaskManagerFactory, OrgTaskManagerFactory */
+/*! exports provided: AdviserPlacementType, AnnotationType, ChildrenPlacementType, Colors, ConnectorLabelPlacementType, ConnectorPlacementType, ConnectorShapeType, ConnectorStyleType, ConnectorType, ElbowType, Enabled, GroupByType, HorizontalAlignmentType, ItemType, LabelType, Layers, LineType, LoopsLayoutMode, NavigationMode, NeighboursSelectionMode, OrientationType, PageFitMode, PlacementType, RenderingMode, SegmentType, SelectionPathMode, ShapeType, SideFlag, TextOrientationType, UpdateMode, VectorRelationType, VerticalAlignmentType, Visibility, ZOrderType, isEven, isNullOrEmpty, loop, splitCamelCaseName, isObject, isEmptyObject, cloneObject, mergeObjects, getHashCode, compareArrays, getColorHexValue, getColorName, getRed, getGreen, getBlue, beforeOpacity, highestContrast, luminosity, getElementsByName, getFixOfPixelAlignment, getElementOffset, hasClass, stopPropagation, getInnerSize, JsonML, Point, Size, Rect, Matrix, Thickness, Vector, Interval, binarySearch, getCrossingRectangles, getFamilyLoops, getFamilyUnits, getLiniarBreaks, getMergedRectangles, getMinimumCrossingRows, mergeSort, getMergedIntervals, Family, FamilyAlignment, FamilyMargins, FibonacciHeap, HeapResult, Graph, LCA, LinkedHashItems, Pile, QuadTree, RMQ, SortedList, SpatialIndex, Tree, TreeLevels, OrgConfig, OrgItemConfig, OrgEventArgs, FamConfig, FamItemConfig, FamEventArgs, BackgroundAnnotationConfig, ConnectorAnnotationConfig, HighlightPathAnnotationConfig, LabelAnnotationConfig, PaletteItemConfig, ShapeAnnotationConfig, LevelAnnotationConfig, TemplateConfig, OrgDiagram, FamDiagram, OrgDiagramPdfkit, FamDiagramPdfkit, FamTaskManagerFactory, OrgTaskManagerFactory */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24364,8 +23872,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ElbowType", function() { return _enums__WEBPACK_IMPORTED_MODULE_0__["ElbowType"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Enabled", function() { return _enums__WEBPACK_IMPORTED_MODULE_0__["Enabled"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GraphicsType", function() { return _enums__WEBPACK_IMPORTED_MODULE_0__["GraphicsType"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GroupByType", function() { return _enums__WEBPACK_IMPORTED_MODULE_0__["GroupByType"]; });
 
@@ -32859,9 +32365,7 @@ function CombinedContextsTask(task1, task2) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ConnectionsGraphTask; });
-/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../enums */ "./src/enums.js");
-/* harmony import */ var _algorithms_Graph__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../algorithms/Graph */ "./src/algorithms/Graph.js");
-
+/* harmony import */ var _algorithms_Graph__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../algorithms/Graph */ "./src/algorithms/Graph.js");
 
 function ConnectionsGraphTask(getGraphics, createTransformTask, connectorsOptionTask, visualTreeLevelsTask, alignDiagramTask, removeLoopsTask) {
   var _data = {
@@ -32870,21 +32374,18 @@ function ConnectionsGraphTask(getGraphics, createTransformTask, connectorsOption
   };
 
   function process() {
-    var graphics = getGraphics(),
-        panel = graphics.activate("placeholder", _enums__WEBPACK_IMPORTED_MODULE_0__["Layers"].Connector),
-        bundles = visualTreeLevelsTask.getBundles(),
+    var bundles = visualTreeLevelsTask.getBundles(),
         nestedLayoutBottomConnectorIds = visualTreeLevelsTask.getNestedLayoutBottomConnectorIds(),
         connectorsOptions = connectorsOptionTask.getOptions(),
         loops = removeLoopsTask != null ? removeLoopsTask.getLoops() : [];
     var data = {
-      graph: Object(_algorithms_Graph__WEBPACK_IMPORTED_MODULE_1__["default"])(),
+      graph: Object(_algorithms_Graph__WEBPACK_IMPORTED_MODULE_0__["default"])(),
       nodeid: 0
     };
     var params = {
       treeItemsPositions: alignDiagramTask.getItemsPositions(),
       nestedLayoutBottomConnectorIds: nestedLayoutBottomConnectorIds,
-      transform: createTransformTask.getTransform(),
-      hasGraphics: panel.hasGraphics
+      transform: createTransformTask.getTransform()
     };
     var options = {
       connectorType: connectorsOptions.connectorType,
@@ -35173,7 +34674,7 @@ function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeOptionTask, isFa
         visualParent = getLastVisualAggregator(visualTree, logicalParentItem);
 
         for (var indexLevel = 0; indexLevel < regularChildrenLevels.length - 1; indexLevel += 1) {
-          var regularChildrenLevel = regularChildrenLevels[indexLevel];
+          var regularChildrenLevel = regularChildrenLevels[indexLevel] || [];
 
           if (regularChildrenLevel != null) {
             var hideChildConnector = logicalParentItem.visibility == _enums__WEBPACK_IMPORTED_MODULE_2__["Visibility"].Invisible && logicalParentItem.connectorPlacement === 0;
@@ -35311,8 +34812,10 @@ function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeOptionTask, isFa
           children = itemRowChildren[index];
           rowDepths[index] = 0;
 
-          for (childIndex = 0, childrenLen = children.length; childIndex < childrenLen; childIndex += 1) {
-            rowDepths[index] = Math.max(rowDepths[index], getItemDepth(visualTree, children[childIndex]));
+          if (children != null) {
+            for (childIndex = 0, childrenLen = children.length; childIndex < childrenLen; childIndex += 1) {
+              rowDepths[index] = Math.max(rowDepths[index], getItemDepth(visualTree, children[childIndex]));
+            }
           }
         }
 

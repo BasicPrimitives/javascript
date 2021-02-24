@@ -1,11 +1,16 @@
-# Selected items & Check boxes
-Selected items is collection of item id's having checked their check boxes. Chart always shows selected items in full size form.  So this can be convenient for navigation as well in order to keep interesting items in full size. 
+# Selected items & Checkboxes
+Selected items property is the standard UI control option for multi-select of items in collection control. The selected items property is a collection of item ids:
 
-Selected items can be used when we need to display cross functional working group in organization hierarchy or visualize large mail recipients list in organization by groups and seniority. Usually when number of people exceeds 10 it is hard to say who is enlisted in subscription except active participants.
+```JavaScript
+options.selectedItems = [1, 2, 3, 4];
+```
+The control displays selected items with checked checkboxes and in the full-size form. So this can be convenient for navigation. Users can browse diagram and checkmark nodes, so they stay pinned and visible. 
+
+Use selected items property when you need to display cross-functional working groups in the organization hierarchy or visualize extensive mail recipients list in the organization by groups and seniority. Usually, when the number of people exceeds ten, it is hard to say who is in the subscription except for active participants.
 
 Collection of `OrgConfig.selectedItems` contains item id's. The control notifies about changes in this collection with `OrgConfig.onSelectionChanged` event.
 
-Following example demonstrates how to programmatically select items in organizational chart  and get notified about changes in selection.
+The following example demonstrates how to programmatically select items in the organizational chart and be notified about selection changes.
 
 [JavaScript](javascript.controls/CaseSelectedItems.html)
 
@@ -13,7 +18,7 @@ Following example demonstrates how to programmatically select items in organizat
 
 # Showing selected items on the frame
 
-Control displays selected items placed outside control's view area on the frame around around control in form of markers. Control uses the same marker properties defined by item templates for markers in the diagram. Markers placement on the frame indicates direction towards selected item outside control view area. Frame takes as much space as the largest marker in the diagram. Use `fameInnerPadding` and `frameOuterPadding` `Config` properties to add extra padding around frame markers.
+The control displays selected items invisible in the current viewport on the control's frame as markers. The control uses the same marker properties defined by item templates for markers in the diagram. Marker's placement on the frame indicates the direction towards the selected item outside the control view area. The frame takes as much space as the largest marker in the diagram. Use `fameInnerPadding` and `frameOuterPadding` configuration properties to add extra padding around frame markers.
 
 [JavaScript](javascript.controls/CaseShowFrame.html)
 

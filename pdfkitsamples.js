@@ -42494,7 +42494,7 @@ function compareArrays(array1, array2, getKeyFunc) {
 /*!**********************!*\
   !*** ./src/enums.js ***!
   \**********************/
-/*! exports provided: AdviserPlacementType, AnnotationType, ChildrenPlacementType, Colors, ConnectorLabelPlacementType, ConnectorPlacementType, ConnectorShapeType, ConnectorStyleType, ConnectorType, ElbowType, Enabled, GraphicsType, GroupByType, HorizontalAlignmentType, ItemType, LabelType, Layers, LineType, LoopsLayoutMode, NavigationMode, NeighboursSelectionMode, OrientationType, PageFitMode, PlacementType, RenderingMode, SegmentType, SelectionPathMode, ShapeType, SideFlag, TextOrientationType, UpdateMode, VectorRelationType, VerticalAlignmentType, Visibility, ZOrderType */
+/*! exports provided: AdviserPlacementType, AnnotationType, ChildrenPlacementType, Colors, ConnectorLabelPlacementType, ConnectorPlacementType, ConnectorShapeType, ConnectorStyleType, ConnectorType, ElbowType, Enabled, GroupByType, HorizontalAlignmentType, ItemType, LabelType, Layers, LineType, LoopsLayoutMode, NavigationMode, NeighboursSelectionMode, OrientationType, PageFitMode, PlacementType, RenderingMode, SegmentType, SelectionPathMode, ShapeType, SideFlag, TextOrientationType, UpdateMode, VectorRelationType, VerticalAlignmentType, Visibility, ZOrderType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42510,7 +42510,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConnectorType", function() { return ConnectorType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElbowType", function() { return ElbowType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Enabled", function() { return Enabled; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GraphicsType", function() { return GraphicsType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GroupByType", function() { return GroupByType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HorizontalAlignmentType", function() { return HorizontalAlignmentType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ItemType", function() { return ItemType; });
@@ -42964,27 +42963,6 @@ var Enabled = {
    * Disabled
    */
   False: 2
-};
-/**
- * @typedef {number} GraphicsType
- **/
-
-/**
- * Graphics elements rendering mode
- *  
- * @enum {GraphicsType}
- */
-
-var GraphicsType = {
-  /**
-   * Scalable Vector Graphics
-   */
-  SVG: 0,
-
-  /**
-   * HTML Canvas
-   */
-  Canvas: 1
 };
 /**
  * @typedef {number} GroupByType
@@ -43836,7 +43814,6 @@ function Placeholder(name) {
   this.size = null;
   this.rect = null;
   this.div = null;
-  this.hasGraphics = true;
 }
 ;
 

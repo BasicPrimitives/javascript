@@ -19,6 +19,8 @@ export default function OrderFamilyNodesOptionTask(optionsTask, defaultConfig, d
         relativeItem: new ValueReader(["string", "number"], true),
         placementType: new EnumerationReader(AdviserPlacementType, false, defaultItemConfig.placementType),
         primaryParent: new ValueReader(["string", "number"], true),
+        matrixId: new ValueReader(["string", "number"], false, defaultItemConfig.matrixId),
+        addToMatrix: new ValueReader(["boolean"], false, defaultItemConfig.addToMatrix),
       }),
       true,
       "id"
@@ -40,8 +42,13 @@ export default function OrderFamilyNodesOptionTask(optionsTask, defaultConfig, d
     return _data;
   }
 
+  function getConfig(itemId) {
+    return _hash["options-items"][itemId];
+  }
+
   return {
     process: process,
-    getOptions: getOptions
+    getOptions: getOptions,
+    getConfig: getConfig
   };
 };

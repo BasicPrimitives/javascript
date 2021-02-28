@@ -89,10 +89,9 @@
         default:
           primitives.mergeObjects(viewOptions, {
             'RemoveLoopsOptionTask': { relativeItem: 'ItemsOptionTask', placementType: primitives.AdviserPlacementType.Right, position: 1 },
-            'RemoveLoopsTask': { primaryParent: 'LogicalFamilyTask' },
-            'AddLabelAnnotationsTask': { primaryParent: 'RemoveLoopsTask' },
-            'AddSpousesTask': { primaryParent: 'AddLabelAnnotationsTask' },
-            'HideGrandParentsConnectorsTask': { primaryParent: 'AddSpousesTask' },
+            'RemoveLoopsTask': { primaryParent: 'AddLabelAnnotationsTask' },
+            'AddLabelAnnotationsTask': { primaryParent: 'LogicalFamilyTask' },
+            'HideGrandParentsConnectorsTask': { primaryParent: 'RemoveLoopsTask' },
             'NormalizeLogicalFamilyTask': { primaryParent: 'HideGrandParentsConnectorsTask' },
             'OrderFamilyNodesTask': { primaryParent: 'NormalizeLogicalFamilyTask' },
             'ItemsPositionsTask': { primaryParent: 'OrderFamilyNodesTask' },

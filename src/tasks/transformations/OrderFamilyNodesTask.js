@@ -23,10 +23,7 @@ export default function OrderFamilyNodesTask(orderFamilyNodesOptionTask, userDef
 
   function process(debug) {
     var logicalFamily = normalizeLogicalFamilyTask.getLogicalFamily(),
-      maximumId = normalizeLogicalFamilyTask.getMaximumId(),
-      matrixes = {},
-      nestedLayoutBottomConnectorIds = {},
-      bundles = [];
+      maximumId = normalizeLogicalFamilyTask.getMaximumId();
 
     var orderFamilyNodesOptions = orderFamilyNodesOptionTask.getOptions();
 
@@ -37,7 +34,7 @@ export default function OrderFamilyNodesTask(orderFamilyNodesOptionTask, userDef
     };
 
     logicalFamily = logicalFamily.clone();
-    maximumId = _familyMatrixesExtractor.extract(options, logicalFamily, matrixes, nestedLayoutBottomConnectorIds, bundles, maximumId);
+    var { maximumId, matrixes, nestedLayoutBottomConnectorIds, bundles } = _familyMatrixesExtractor.extract(options, orderFamilyNodesOptionTask.getConfig, logicalFamily, maximumId);
 
     _data.logicalFamily = logicalFamily;
     _data.matrixes = matrixes;

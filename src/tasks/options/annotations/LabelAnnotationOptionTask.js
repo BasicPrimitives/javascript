@@ -4,7 +4,7 @@ import ObjectReader from '../../../readers/ObjectReader';
 import EnumerationReader from '../../../readers/EnumerationReader';
 import {ZOrderType, AnnotationType} from '../../../enums';
 
-export default function LabelAnnotationOptionTask(splitAnnotationsOptionTask, removeLoopsTask, defaultLabelAnnotationConfig) {
+export default function LabelAnnotationOptionTask(splitAnnotationsOptionTask, logicalFamilyTask, defaultLabelAnnotationConfig) {
   var _data = {
     annotations: [],
     configs: {},
@@ -38,7 +38,7 @@ export default function LabelAnnotationOptionTask(splitAnnotationsOptionTask, re
       hash: _hash,
       sourceHash: {}
     },
-      maximumId = removeLoopsTask.getMaximumId(),
+      maximumId = logicalFamilyTask.getMaximumId(),
       index, len, annotation;
 
     _data.annotations = _dataTemplate.read(_data.annotations, splitAnnotationsOptionTask.getAnnotations(AnnotationType.Label), "annotations", context);

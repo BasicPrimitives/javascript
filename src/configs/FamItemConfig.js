@@ -29,14 +29,6 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.parents = [];
 
   /**
-   * Spouses items ids. The nodes of this collection create fake invisible child node, 
-   * so all of them are being connected with common child connection line.
-   * 
-   * @type {string[]}
-   */
-  this.spouses = [];
-
-  /**
    * Relative item id. This property is used to control items mutual placement in order to keep consistent ordering within levels. Relative item is used 
    * for placing given item in diagram. We can place item on left or right side of relative item via setting placementType type property.
    * In case when multiple items use the same relative item then their order can be customized with position property.
@@ -141,6 +133,21 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
    * @type {string}
    */
   this.groupTitleColor = Colors.RoyalBlue;
+
+  /**
+   * Matrix id defines grouping of multiple nodes into individual matrixes. By default all applicable nodes grouped into a single matrix.
+   * Use this property to split nodes into multiple matrixes.
+   * 
+   * @type {string}
+   */
+  this.matrixId = null;
+
+  /**
+   * Add to matrix property allows node to be grouped with other nodes into matrix. It is true by default.
+   * 
+   * @type {boolean}
+   */
+  this.addToMatrix = true;
 
   /**
    * If true it makes item inactive in the diagram layout. Inactive items are regular items excluded from navigation, that means 

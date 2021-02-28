@@ -89,7 +89,6 @@ import DrawLevelAnnotationBackgroundTask from './tasks/renders/DrawLevelAnnotati
 // family diagram specific tasks
 import OptionsTask from './tasks/options/OptionsTask';
 import RemoveLoopsOptionTask from './tasks/options/RemoveLoopsOptionTask';
-import SpousesOptionTask from './tasks/options/SpousesOptionTask';
 import FamVisualTreeOptionTask from './tasks/options/FamVisualTreeOptionTask';
 import HideGrandParentsConnectorsOptionTask from './tasks/options/HideGrandParentsConnectorsOptionTask';
 import NormalizeOptionTask from './tasks/options/NormalizeOptionTask';
@@ -104,7 +103,6 @@ import LabelAnnotationTemplateOptionTask from './tasks/options/annotations/Label
 import LabelAnnotationPlacementOptionTask from './tasks/options/annotations/LabelAnnotationPlacementOptionTask';
 
 import AddLabelAnnotationsTask from './tasks/transformations/AddLabelAnnotationsTask';
-import AddSpousesTask from './tasks/transformations/AddSpousesTask';
 import HideGrandParentsConnectorsTask from './tasks/transformations/HideGrandParentsConnectorsTask';
 import NormalizeLogicalFamilyTask from './tasks/transformations/NormalizeLogicalFamilyTask';
 import OrderFamilyNodesTask from './tasks/transformations/OrderFamilyNodesTask';
@@ -154,7 +152,6 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
   tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], FamItemsOptionTask, Colors.Navy);
   tasks.addTask('ItemsContentOptionTask', ['OptionsTask', 'defaultItemConfig'], ItemsContentOptionTask, Colors.Navy);
   tasks.addTask('RemoveLoopsOptionTask', ['OptionsTask', 'defaultConfig'], RemoveLoopsOptionTask, Colors.Navy);
-  tasks.addTask('SpousesOptionTask', ['OptionsTask', 'defaultItemConfig'], SpousesOptionTask, Colors.Navy);
   tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], ItemsSizesOptionTask, Colors.Navy);
   tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], LabelsOptionTask, Colors.Navy);
   tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultTemplateConfig'], TemplatesOptionTask, Colors.Navy);
@@ -192,17 +189,16 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
   tasks.addTask('UserDefinedNodesOrderTask', ['OrderFamilyNodesOptionTask', 'defaultItemConfig'], UserDefinedNodesOrderTask, Colors.Red);
 
   tasks.addTask('LogicalFamilyTask', ['ItemsOptionTask'], LogicalFamilyTask, Colors.Cyan);
-  tasks.addTask('RemoveLoopsTask', ['ItemsOptionTask', 'RemoveLoopsOptionTask', 'LogicalFamilyTask'], RemoveLoopsTask, Colors.Red);
 
-  tasks.addTask('LabelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'RemoveLoopsTask', 'defaultLabelAnnotationConfig'], LabelAnnotationOptionTask, Colors.Navy);
+  tasks.addTask('LabelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'LogicalFamilyTask', 'defaultLabelAnnotationConfig'], LabelAnnotationOptionTask, Colors.Navy);
   tasks.addTask('LabelAnnotationTemplateOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], LabelAnnotationTemplateOptionTask, Colors.Navy);
   tasks.addTask('LabelAnnotationPlacementOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], LabelAnnotationPlacementOptionTask, Colors.Navy);
 
   tasks.addTask('CombinedContextsTask', ['ItemsContentOptionTask', 'LabelAnnotationOptionTask'], CombinedContextsTask, Colors.Cyan);
 
-  tasks.addTask('AddLabelAnnotationsTask', ['LabelAnnotationPlacementOptionTask', 'RemoveLoopsTask'], AddLabelAnnotationsTask, Colors.Red);
-  tasks.addTask('AddSpousesTask', ['SpousesOptionTask', 'AddLabelAnnotationsTask'], AddSpousesTask, Colors.Red);
-  tasks.addTask('HideGrandParentsConnectorsTask', ['HideGrandParentsConnectorsOptionTask', 'AddSpousesTask'], HideGrandParentsConnectorsTask, Colors.Red);
+  tasks.addTask('AddLabelAnnotationsTask', ['LabelAnnotationPlacementOptionTask', 'LogicalFamilyTask'], AddLabelAnnotationsTask, Colors.Red);
+  tasks.addTask('RemoveLoopsTask', ['ItemsOptionTask', 'RemoveLoopsOptionTask', 'AddLabelAnnotationsTask'], RemoveLoopsTask, Colors.Red);
+  tasks.addTask('HideGrandParentsConnectorsTask', ['HideGrandParentsConnectorsOptionTask', 'RemoveLoopsTask'], HideGrandParentsConnectorsTask, Colors.Red);
   tasks.addTask('NormalizeLogicalFamilyTask', ['NormalizeOptionTask', 'HideGrandParentsConnectorsTask'], NormalizeLogicalFamilyTask, Colors.Red);
   tasks.addTask('OrderFamilyNodesTask', ['OrderFamilyNodesOptionTask', 'UserDefinedNodesOrderTask', 'NormalizeLogicalFamilyTask'], OrderFamilyNodesTask, Colors.Red);
 
@@ -225,9 +221,9 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
   tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'ActiveItemsTask'], HighlightItemTask, Colors.Cyan);
 
   tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], CursorItemTask, Colors.Cyan);
-  tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'NeighboursSelectionModeOptionTask', 'AddSpousesTask', 'ActiveItemsTask'], FamCursorNeighboursTask, Colors.Cyan);
+  tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'NeighboursSelectionModeOptionTask', 'AddLabelAnnotationsTask', 'ActiveItemsTask'], FamCursorNeighboursTask, Colors.Cyan);
   tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask', 'ItemsOptionTask'], SelectedItemsTask, Colors.Cyan);
-  tasks.addTask('SelectionPathItemsTask', ['AddSpousesTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], FamSelectionPathItemsTask, Colors.Cyan);
+  tasks.addTask('SelectionPathItemsTask', ['RemoveLoopsTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], FamSelectionPathItemsTask, Colors.Cyan);
 
   tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], NormalVisibilityItemsByAnnotationTask, Colors.Cyan);
   tasks.addTask('NormalVisibilityItemsByBackgroundShapeAnnotationTask', ['BackgroundShapeAnnotationOptionTask'], NormalVisibilityItemsByAnnotationTask, Colors.Cyan);

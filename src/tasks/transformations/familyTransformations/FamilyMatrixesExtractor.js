@@ -10,7 +10,10 @@ export default function FamilyMatrixesExtractor(debug) {
 
 FamilyMatrixesExtractor.prototype = new BaseTransformer();
 
-FamilyMatrixesExtractor.prototype.extract = function (options, logicalFamily, matrixes, matrixBottomConnectorsIds, bundles, maximumId) {
+FamilyMatrixesExtractor.prototype.extract = function (options, getConfig, logicalFamily, maximumId) {
+  var matrixes = {},
+      nestedLayoutBottomConnectorIds = {},
+      bundles = []
   if (logicalFamily.hasNodes() > 0) {
     /* find nodes having the same parent and child nodes and replace them with matrix placeholder node */
     if (options.enableMatrixLayout) {
@@ -33,7 +36,7 @@ FamilyMatrixesExtractor.prototype.extract = function (options, logicalFamily, ma
           hideChildrenConnection: true
         });
 
-        matrixBottomConnectorsIds[id] = id2; /* id2 is needed for connectors graph */
+        nestedLayoutBottomConnectorIds[id] = id2; /* id2 is needed for connectors graph */
 
         for (var index = 0, len = ids.length; index < len; index += 1) {
           var nodeid = ids[index];
@@ -55,11 +58,22 @@ FamilyMatrixesExtractor.prototype.extract = function (options, logicalFamily, ma
         }
 
         matrixes[id] = nodes;
-      } //ignore jslint
+      }, function(itemId) {
+        var result = null;
+        var itemConfig = getConfig(itemId);
+        if(itemConfig != null) {
+          if(itemConfig.addToMatrix) {
+            result = itemConfig.matrixId;
+          } else {
+            result = -1;
+          }
+        }
+        return result;
+      }
       );
     }
   }
-  return maximumId;
+  return { maximumId, nestedLayoutBottomConnectorIds, matrixes, bundles };
 };
 
 FamilyMatrixesExtractor.prototype.getMatrixWidth = function (maximumColumnsInMatrix, len) {

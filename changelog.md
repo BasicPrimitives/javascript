@@ -1,3 +1,6 @@
+#### Version 6.3.0
+* Added matrixId and addToMatrix properties to FamItemConfig
+* Removed spouses property from FamItemConfig
 #### Version 6.2.2
 * Fixed Family Relations Optimizer
 #### Version 6.2.1

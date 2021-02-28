@@ -204,29 +204,30 @@ export default function FamConfig(name) {
   this.items = [];
 
   /**
-   * Annotations. Annotations are API elements that are attached to the diagram nodes.
-   * We draw our annotations either in front of the nodes or in the background. The annotations 
-   * don't affect the nodes placement in any way. As a result the control redraws them 
-   * instantaneously without rendering or recalculating the actual diagram layout.
+   * Annotations. Annotations are API elements attached to the diagram nodes 
+   * and designed to highlight some nodes or relations. We draw our annotations 
+   * either in front of the nodes or in the background. The annotations don't affect 
+   * the placement of the nodes in any way. We have some exceptions. As a result, the control 
+   * redraws them instantaneously without rendering or recalculating the actual diagram layout. 
    * 
    * @type {Array.<(ShapeAnnotationConfig | BackgroundAnnotationConfig | ConnectorAnnotationConfig | HighlightPathAnnotationConfig)>}
    */
   this.annotations = [];
 
   /**
-   * Cursor item. Family Chart control has API options equivalent to regular UI controls.
-   * The cursor item is used to select single item in the hierarchy with mouse click, 
-   * highlight item provides visual feed back on mouse over. Selected items collection 
+   * Cursor item. Family Chart control has API options equivalent to standard UI controls.
+   * The cursor item is used to select a single item in the hierarchy with a mouse click, and 
+   * the highlighted item provides visual feedback on the mouse over. Selected items collection 
    * is equivalent to checked items in ListView or TreeView controls.
    * 
-   * Chart navigation depends on current cursor item, chart shows cursor and its neighbours 
-   * in full size regardless of enabled page fit mode. So cursor item plays a role of local 
-   * zoom in the chart hierarchy. User navigates around chart via clicking and moving
-   * cursor item around and zooming into data around new cursor item.
+   * The chart's navigation work around the current cursor item. The component shows 
+   * the cursor and its neighbors regardless of page fit mode. So cursor item plays the role 
+   * of local zoom in the chart hierarchy. The user navigates around the chart via clicking 
+   * and selecting cursor items and zooming into data around the new cursor item. 
    * 
-   * The control notifies about this property changes with `onHighlightChanging` and `onHighlightChanged` events.
+   * The control notifies about this property changes with `onCursorChanging` and `onCursorChanged` events.
    * 
-   * If `null` then no cursor item selected in the diagram.
+   * If the cursor item is set to null, then no cursor item is selected in the diagram.
    * 
    * @type {string}
    */

@@ -179,6 +179,38 @@ Eliminates crossing parent child relations between nodes based of nodes order in
 | --- | --- | --- | --- | 
  | `treeLevels` | treeLevels | `` | Tree levels structure keeps orders of nodes level by level. | 
 
+ `groupBy(thisArg, size, onGroup, onItem)` 
+
+Creates graph structure out of the family structure.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `thisArg` | Object | `` | The callback function invocation context | 
+ | `onGroup` | onFamilyGroupCallback | `` | A callback function to call for every new group of nodes found | 
+ | `onGroup` | onFamilyGroupItemCallback | `` | A callback function to call for every new group of nodes found | 
+**Callbacks**
+
+ `onFamilyGroupCallback(parent, child, nodes)` 
+
+Callback for grouping nodes having common single parent and child
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `parent` | string | `` | The common parent node id | 
+ | `child` | string | `` | The common child node id | 
+ | `nodes` | Array.<string> | `` | Collection of grouped nodes ids | 
+ | `nodes` | Array.<Object> | `` | Collection of grouped items | 
+
+ `onFamilyGroupItemCallback(itemid)` 
+
+Callback for getting group id for individual nodes
+
+ Returns: `string` - returns group id or null. null adds node to default group. return -1 to disable node grouping.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `itemid` | string | `` | The item id | 
+
  `hasCommonChild(parents)` 
 
 Checks whether parents share a child node. Common child should belong only to the given collection of parents, if child's parents don't match given collection of parents, it is not considered as common child.

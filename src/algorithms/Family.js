@@ -1564,6 +1564,7 @@ export default function Family(source) {
       });
     }
   }
+
   /**
    * Callback for getting default edge value
    * 
@@ -1611,7 +1612,32 @@ export default function Family(source) {
   }
 
 
-  function groupBy(thisArg, size, onGroup) { //function onGroup(parent, child, nodes)
+  /**
+   * Callback for grouping nodes having common single parent and child
+   * 
+   * @callback onFamilyGroupCallback
+   * @param {string} parent The common parent node id
+   * @param {string} child The common child node id
+   * @param {Array.<string>} nodes Collection of grouped nodes ids
+   * @param {Array.<Object>} nodes Collection of grouped items
+   */
+
+  /**
+   * Callback for getting group id for individual nodes
+   * 
+   * @callback onFamilyGroupItemCallback
+   * @param {string} itemid The item id
+   * @returns {string} Returns group id or null. Null adds node to default group. Return -1 to disable node grouping.
+  */
+
+  /**
+   * Creates graph structure out of the family structure.
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onFamilyGroupCallback} onGroup A callback function to call for every new group of nodes found
+   * @param {onFamilyGroupItemCallback} onGroup A callback function to call for every new group of nodes found
+   */
+  function groupBy(thisArg, size, onGroup, onItem) {
     if (onGroup != null) {
       var groups = {};
       for (var nodeid in _nodes) {
@@ -1620,12 +1646,21 @@ export default function Family(source) {
         if (parentsCount <= 1 && childrenCount <= 1) {
           var parentid = firstParent(nodeid);
           var childid = firstChild(nodeid);
-          var key = parentid + " * " + childid;
-          if (!groups.hasOwnProperty(key)) {
-            groups[key] = new GroupBy(parentid, childid);
+          var groupId = null;
+          if(onItem != null) {
+            groupId = onItem.call(thisArg, nodeid);
           }
-          groups[key].ids.push(nodeid);
-          groups[key].nodes.push(_nodes[nodeid]);
+          if(groupId !== -1) {
+            var key = parentid + " * " + childid;
+            if(groupId !== null) {
+              key += " * " + groupId;
+            }
+            if (!groups.hasOwnProperty(key)) {
+              groups[key] = new GroupBy(parentid, childid);
+            }
+            groups[key].ids.push(nodeid);
+            groups[key].nodes.push(_nodes[nodeid]);
+          }
         }
       }
 

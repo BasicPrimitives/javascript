@@ -354,11 +354,4 @@ describe("Screen Shots", () => {
       imageName: "CaseShapeAnnotation"
     })
   });
-
-  it('CaseSpousesInFamilyLayout', async () => {
-    await testByTemplate({
-      url: "http://localhost:8080/samples/javascript.controls/CaseSpousesInFamilyLayout.html",
-      imageName: "CaseSpousesInFamilyLayout"
-    })
-  });
 });

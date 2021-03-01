@@ -882,8 +882,8 @@ var dataSetNames = {
   "Simple Family": "simpleFamily",
   "Matrix": "matrixLayout",
   "Lables on Loop": "famdata2NodesLoopTest",
-  "Groups of Matrix": "matrixGroups",
+  "Splitting Matrixes": "matrixGroups",
   "Matrix and Labels": "matrixNLabels"
 };
 
-var defaultDataSetName = dataSetNames["Matrix and Labels"];
+var defaultDataSetName = dataSetNames["Splitting Matrixes"];

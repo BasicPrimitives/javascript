@@ -1640,26 +1640,53 @@ export default function Family(source) {
   function groupBy(thisArg, size, onGroup, onItem) {
     if (onGroup != null) {
       var groups = {};
+      var processed = {};
       for (var nodeid in _nodes) {
-        var parentsCount = _parentsCount[nodeid] || 0;
-        var childrenCount = _childrenCount[nodeid] || 0;
-        if (parentsCount <= 1 && childrenCount <= 1) {
-          var parentid = firstParent(nodeid);
-          var childid = firstChild(nodeid);
-          var groupId = null;
-          if(onItem != null) {
-            groupId = onItem.call(thisArg, nodeid);
-          }
-          if(groupId !== -1) {
-            var key = parentid + " * " + childid;
-            if(groupId !== null) {
-              key += " * " + groupId;
+        if(!processed.hasOwnProperty(nodeid)) {
+          processed[nodeid] = true;
+          if ((_parentsCount[nodeid] || 0) <= 1 && (_childrenCount[nodeid] || 0) <= 1) {
+            var ids = [nodeid];
+            var nodes = [_nodes[nodeid]];
+            var parentid = firstParent(nodeid);
+            while((_parentsCount[parentid] || 0) <= 1 &&  (_childrenCount[parentid] || 0) == 1) {
+              ids.unshift(parentid);
+              nodes.unshift(_nodes[parentid]);
+              parentid = firstParent(parentid);
+              processed[parentid] = true;
             }
-            if (!groups.hasOwnProperty(key)) {
-              groups[key] = new GroupBy(parentid, childid);
+            var childid = firstChild(nodeid);
+            while((_parentsCount[childid] || 0) == 1 &&  (_childrenCount[childid] || 0) <= 1) {
+              ids.push(childid);
+              nodes.push(_nodes[childid]);
+              childid = firstChild(childid);
+              processed[childid] = true;
             }
-            groups[key].ids.push(nodeid);
-            groups[key].nodes.push(_nodes[nodeid]);
+
+            var groupId = null;
+            for(var index = 0; index < ids.length; index+=1) {
+              var id = ids[index];
+              if(onItem != null) {
+                var itemGroupId = onItem.call(thisArg, id);
+                if(itemGroupId == -1) {
+                  groupId = itemGroupId;
+                  break;
+                }
+                if(itemGroupId != null) {
+                  groupId = itemGroupId;
+                }
+              }
+            }
+            if(groupId !== -1) {
+              var key = parentid + " * " + childid;
+              if(groupId !== null) {
+                key += " * " + groupId;
+              }
+              if (!groups.hasOwnProperty(key)) {
+                groups[key] = new GroupBy(parentid, childid);
+              }
+              groups[key].ids.push(ids);
+              groups[key].nodes.push(nodes);
+            }
           }
         }
       }

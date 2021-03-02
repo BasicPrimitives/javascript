@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html style="height: 95%">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Children Placement PDFKit Sample</title>
+  <script type="text/javascript" src="../../pdfkitsamples.js"></script>
+  <script type="text/javascript" src="../../primitives.js"></script>
+
+  <script type='text/javascript'>
+    var control;
+    var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // create a document and pipe to a blob
+      // create a document and pipe to a blob
+      var doc = new PDFDocument({ size: [800, 600] });
+      var stream = doc.pipe(blobStream());
+
+      doc.fontSize(25)
+        .text('Children Placement', 30, 30);
+
+      var sampleChart = primitives.OrgDiagramPdfkit({
+        leavesPlacementType: primitives.ChildrenPlacementType.Vertical,
+        items: [
+          /* matrix layout example */
+          new primitives.OrgItemConfig({
+            id: 1,
+            parent: null,
+            title: "Matrix Layout",
+            childrenPlacementType: primitives.ChildrenPlacementType.Matrix
+          }),
+          new primitives.OrgItemConfig({ id: 2, parent: 1, title: "Child 1" }),
+          new primitives.OrgItemConfig({ id: 3, parent: 1, title: "Child 2" }),
+          new primitives.OrgItemConfig({ id: 4, parent: 1, title: "Child 3" }),
+          new primitives.OrgItemConfig({ id: 5, parent: 1, title: "Child 4" }),
+          new primitives.OrgItemConfig({ id: 6, parent: 1, title: "Child 5" }),
+          new primitives.OrgItemConfig({ id: 7, parent: 1, title: "Child 6" }),
+          new primitives.OrgItemConfig({ id: 8, parent: 1, title: "Child 7" }),
+          new primitives.OrgItemConfig({ id: 9, parent: 1, title: "Child 8" }),
+
+          /* vertical layout example */
+          new primitives.OrgItemConfig({
+            id: 101,
+            parent: null,
+            title: "Vertical Layout",
+            childrenPlacementType: primitives.ChildrenPlacementType.Vertical
+          }),
+          new primitives.OrgItemConfig({ id: 102, parent: 101, title: "Child 1" }),
+          new primitives.OrgItemConfig({ id: 103, parent: 101, title: "Child 2", childrenPlacementType: primitives.ChildrenPlacementType.Vertical }),
+            new primitives.OrgItemConfig({ id: 104, parent: 103, title: "Sub Child 3" }),
+            new primitives.OrgItemConfig({ id: 105, parent: 103, title: "Sub Child 4" }),
+          new primitives.OrgItemConfig({ id: 106, parent: 101, title: "Child 5" }),
+          new primitives.OrgItemConfig({ id: 107, parent: 101, title: "Child 6" }),
+
+          /* horizontal layout example */
+          new primitives.OrgItemConfig({
+            id: 201,
+            parent: null,
+            title: "Horizontal Layout",
+            childrenPlacementType: primitives.ChildrenPlacementType.Horizontal
+          }),
+          new primitives.OrgItemConfig({ id: 202, parent: 201, title: "Child 1" }),
+          new primitives.OrgItemConfig({ id: 203, parent: 201, title: "Child 2" }),
+          new primitives.OrgItemConfig({ id: 204, parent: 201, title: "Child 3" }),
+
+          new primitives.OrgItemConfig({ id: 205, parent: 204, title: "Leaf 1" }),
+          new primitives.OrgItemConfig({ id: 206, parent: 204, title: "Leaf 2" }),
+          new primitives.OrgItemConfig({ id: 207, parent: 204, title: "Leaf 3" }),
+
+          new primitives.OrgItemConfig({ id: 208, parent: 9, title: "Leaf 4" }),
+          new primitives.OrgItemConfig({ id: 209, parent: 9, title: "Leaf 5" }),
+          new primitives.OrgItemConfig({ id: 210, parent: 9, title: "Leaf 6" })
+        ],
+        cursorItem: null,
+        hasSelectorCheckbox: primitives.Enabled.False,
+        defaultTemplateName: "info",
+        templates: [getContactTemplate()],
+        onItemRender: onTemplateRender
+      });
+
+      function getContactTemplate() {
+        var result = new primitives.TemplateConfig();
+        result.name = "info";
+        result.itemTemplate = "Use onItemRener method.";
+        result.itemSize = new primitives.Size(80, 36);
+        result.highlightPadding = new primitives.Thickness(2, 2, 2, 2);
+        return result;
+      }
+
+      function onTemplateRender(doc, position, data) {
+        var itemConfig = data.context;
+
+        if (data.templateName == "info") {
+          var contentSize = new primitives.Size(80, 36);
+
+          contentSize.width -= 2;
+          contentSize.height -= 2;
+
+          doc.save();
+
+          /* item border */
+          doc.roundedRect(position.x, position.y, position.width, position.height, 0)
+            .lineWidth(1)
+            .stroke('#dddddd');
+
+          /* title */
+          doc.fillColor('Black')
+            .font('Helvetica', 12)
+            .text(itemConfig.title, position.x +5, position.y + 7, {
+              ellipsis: true,
+              width: (contentSize.width - 4),
+              height: 16,
+              align: 'center'
+            });
+          doc.restore();
+        }
+      }
+
+      var size = sampleChart.draw(doc, 30, 60);
+
+      doc.restore();
+
+      doc.end();
+
+      stream.on('finish', function () {
+        var string = stream.toBlobURL('application/pdf');
+        document.getElementById("previewpanel").setAttribute("src", string);
+      });
+    });
+
+  </script>
+</head>
+
+<body style="height: 100%">
+  <div id="basicdiagram" style="width: 100%; height: 100%; border-style: none; border-width: 0px;">
+    <iframe id="previewpanel" type="application/pdf" width="100%" height="100%" frameborder="0"
+      style="position:relative;z-index:999">
+    </iframe>
+  </div>
+</body>
+
+</html>

@@ -1,6 +1,9 @@
 #### Version 6.3.0
-* Added matrixId and addToMatrix properties to FamItemConfig
-* Removed spouses property from FamItemConfig
+* Added `matrixId` and `addToMatrix` properties to `FamItemConfig`.
+* Fixed label annotations placement for nodes having matrix layout.
+* Fixed horizontal arrows for assistants and adviser item types.
+* Removed `spouses` property from `FamItemConfig`.
+* Removed `loopsLayoutMode` property from `FamConfig`.
 #### Version 6.2.2
 * Fixed Family Relations Optimizer
 #### Version 6.2.1

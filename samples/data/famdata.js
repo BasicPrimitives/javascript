@@ -831,9 +831,6 @@ var matrixGroups = {
 var matrixNLabels = {
   cursorItem: 1,
   enableMatrixLayout: true,
-  //normalItemsInterval: 30,
-  //dotItemsInterval: 20,
-  //lineItemsInterval: 10,
   annotations: [
     { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [2], title: "1->2" },
     { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [3], title: "1->3" },
@@ -847,8 +844,8 @@ var matrixNLabels = {
     { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [4], title: "33->4" },
     { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [6], title: "33->6" },
     { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [7], title: "33->7" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [8], title: "33->8" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [10], title: "33->10" }
+    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [8], title: "33->8" }
+    //{ annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [10], title: "33->10" }
   ],
   items: [
     { id: 1, parents: [], title: "1", label: "1", description: "", image: "../images/photos/z.png", itemTitleColor: "#ff0000" },
@@ -886,4 +883,4 @@ var dataSetNames = {
   "Matrix and Labels": "matrixNLabels"
 };
 
-var defaultDataSetName = dataSetNames["Splitting Matrixes"];
+var defaultDataSetName = dataSetNames["2 Cross Relations"];

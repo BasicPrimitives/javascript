@@ -1,6 +1,6 @@
 ﻿import Graph from '../../algorithms/Graph';
 
-export default function ConnectionsGraphTask(getGraphics, createTransformTask, connectorsOptionTask, visualTreeLevelsTask, alignDiagramTask, removeLoopsTask) {
+export default function ConnectionsGraphTask(getGraphics, createTransformTask, connectorsOptionTask, visualTreeLevelsTask, extractNestedLayoutsTask, alignDiagramTask, removeLoopsTask) {
   var _data = {
     graph: null,
     nodeid: 0
@@ -8,10 +8,13 @@ export default function ConnectionsGraphTask(getGraphics, createTransformTask, c
 
   function process() {
     var bundles = visualTreeLevelsTask.getBundles(),
-      nestedLayoutBottomConnectorIds = visualTreeLevelsTask.getNestedLayoutBottomConnectorIds(),
+      bundles2 = extractNestedLayoutsTask.getBundles(),
+      nestedLayoutParentConnectorIds = extractNestedLayoutsTask.getNestedLayoutParentConnectorIds(),
+      nestedLayoutBottomConnectorIds = extractNestedLayoutsTask.getNestedLayoutBottomConnectorIds(),
       connectorsOptions = connectorsOptionTask.getOptions(),
       loops = removeLoopsTask != null ? removeLoopsTask.getLoops() : [];
 
+    bundles = bundles.concat(bundles2);
 
     var data = {
       graph: Graph(),
@@ -20,6 +23,7 @@ export default function ConnectionsGraphTask(getGraphics, createTransformTask, c
 
     var params = {
       treeItemsPositions: alignDiagramTask.getItemsPositions(),
+      nestedLayoutParentConnectorIds: nestedLayoutParentConnectorIds,
       nestedLayoutBottomConnectorIds: nestedLayoutBottomConnectorIds,
       transform: createTransformTask.getTransform()
     };

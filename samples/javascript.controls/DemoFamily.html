@@ -188,8 +188,10 @@
       var options = optionsRender.getValues();
 
       primitives.mergeObjects(options, {
-        templates: [getDefaultTemplate(options)],
-        defaultTemplateName: "defaultTemplate"
+        templates: [getDefaultTemplate(options), getLabelAnnotationTemplate()],
+        defaultTemplateName: "defaultTemplate",
+        defaultLabelAnnotationTemplate: "LabelAnnotationTemplate",
+        onItemRender: onTemplateRender
       })
 
       primitives.mergeObjects(options, {
@@ -262,6 +264,50 @@
 
       return result;
     }
+
+		function onTemplateRender(event, data) {
+			var itemConfig = data.context,
+				element = data.element;
+
+			if (data.templateName == "LabelAnnotationTemplate") {
+				var title = element.firstChild;
+				title.textContent = itemConfig.title;
+			}
+		}
+
+		function getLabelAnnotationTemplate() {
+			var result = new primitives.TemplateConfig();
+			result.name = "LabelAnnotationTemplate";
+
+			result.itemSize = new primitives.Size(60, 20);
+			result.minimizedItemSize = new primitives.Size(3, 3);
+
+			result.itemTemplate = ["div",
+				{
+					"style": {
+						width: result.itemSize.width + "px",
+						height: result.itemSize.height + "px"
+					},
+					"class": "bp-item"
+				},
+				["div",
+					{
+						"name": "title",
+						"style": {
+							top: "0px",
+							left: "0px",
+							width: "60px",
+							height: "20px",
+							fontSize: "16px",
+							textAlign: "center"
+						},
+						"class": ["bp-item"]
+					}
+				]
+			];
+
+			return result;
+		}
 
     function getParentsList(data) {
       var message = "",

@@ -33,10 +33,13 @@ HorizontalConnectorBundle.prototype.trace = function (data, params, options) {
   }
   var toItemIsVisible = toItemPosition.actualVisibility !== Visibility.Invisible;
   var fromItemIsVisible = fromItemPosition.actualVisibility !== Visibility.Invisible;
+
   data.graph.addEdge(fromItemId, toItemId, new this.ConnectorEdge(fromItemId, toItemId, polyline,
     toItemIsVisible ? toItemId : null,
     fromItemIsVisible ? fromItemId : null,
-    (toItemIsVisible || fromItemIsVisible) ? this.NORMAL_ITEM_WEIGHT : this.LINE_ITEM_WEIGHT), null, null, null,
-    true
+    null,
+    (toItemIsVisible || fromItemIsVisible) ? this.NORMAL_ITEM_WEIGHT : this.LINE_ITEM_WEIGHT, 
+    null, null, null,
+    true)
   );
 };

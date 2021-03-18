@@ -8,7 +8,7 @@ import HorizontalConnectorBundle from '../../connectors/HorizontalConnectorBundl
 /* Read visual tree
     populate treeLevels array of type TreeLevel
       TreeLevel object contains ordered list of all its items 
-      plus when items added to that collection we store level & levelPosition in item
+      plus when items added to that collection we store level in item
 */
 export default function VisualTreeLevelsTask(visualTreeTask, itemTemplateParamsTask) {
   var _data = {
@@ -127,6 +127,10 @@ export default function VisualTreeLevelsTask(visualTreeTask, itemTemplateParamsT
     return _data.bundles;
   }
 
+  function getNestedLayoutParentConnectorIds() {
+    return {}; /* org chart does not support nested layouts */
+  }
+
   function getNestedLayoutBottomConnectorIds() {
     return {}; /* org chart does not support nested layouts */
   }
@@ -140,6 +144,7 @@ export default function VisualTreeLevelsTask(visualTreeTask, itemTemplateParamsT
     getTreeLevels: getTreeLevels,
     getBundles: getBundles,
     getConnectorsStacksSizes: getConnectorsStacksSizes,
+    getNestedLayoutParentConnectorIds: getNestedLayoutParentConnectorIds,
     getNestedLayoutBottomConnectorIds: getNestedLayoutBottomConnectorIds
   };
 };

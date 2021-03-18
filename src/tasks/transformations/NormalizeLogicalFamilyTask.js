@@ -8,7 +8,7 @@
 
 import FamilyNormalizer from './familyTransformations/FamilyNormalizer';
 
-export default function NormalizeLogicalFamilyTask(normalizeOptionTask, hideGrandParentsConnectorsTask) {
+export default function NormalizeLogicalFamilyTask(normalizeOptionTask, extractNestedLayoutsTask) {
   var _data = {
     maximumId: null, /* maximum of OrgItem.id */
     logicalFamily: null
@@ -16,8 +16,8 @@ export default function NormalizeLogicalFamilyTask(normalizeOptionTask, hideGran
     _familyNormalizer = new FamilyNormalizer(false);
 
   function process(debug) {
-    var logicalFamily = hideGrandParentsConnectorsTask.getLogicalFamily(),
-      maximumId = hideGrandParentsConnectorsTask.getMaximumId(),
+    var logicalFamily = extractNestedLayoutsTask.getLogicalFamily(),
+      maximumId = extractNestedLayoutsTask.getMaximumId(),
       normalizeOptions = normalizeOptionTask.getOptions();
 
     var options = {

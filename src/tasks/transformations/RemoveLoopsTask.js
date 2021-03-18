@@ -1,9 +1,8 @@
-﻿import { LoopsLayoutMode } from '../../enums';
-import getFamilyLoops from '../../algorithms/getFamilyLoops';
+﻿import getFamilyLoops from '../../algorithms/getFamilyLoops';
 import FamilyItem from '../../models/FamilyItem';
 import { GroupByType } from '../../enums';
 
-export default function RemoveLoopsTask(itemsOptionTask, removeLoopsOptionTask, logicalFamilyTask) {
+export default function RemoveLoopsTask(itemsOptionTask, logicalFamilyTask) {
   var _data = {
     logicalFamily: null,
     maximumId: null,
@@ -13,11 +12,9 @@ export default function RemoveLoopsTask(itemsOptionTask, removeLoopsOptionTask, 
   function process(debug) {
     var logicalFamily = logicalFamilyTask.getLogicalFamily(),
       maximumId = logicalFamilyTask.getMaximumId(),
-      items = itemsOptionTask.getItems(),
-      options = removeLoopsOptionTask.getOptions(),
-      loopsLayoutMode = options.loopsLayoutMode;
+      items = itemsOptionTask.getItems();
 
-    var result = removeLoops(loopsLayoutMode, items, logicalFamily, maximumId, debug);
+    var result = removeLoops(items, logicalFamily, maximumId, debug);
 
     _data.logicalFamily = result.logicalFamily;
     _data.maximumId = result.maximumId;
@@ -30,14 +27,14 @@ export default function RemoveLoopsTask(itemsOptionTask, removeLoopsOptionTask, 
     return true;
   }
 
-  function removeLoops(loopsLayoutMode, items, logicalFamily, maximumId, debug) {
+  function removeLoops(items, logicalFamily, maximumId, debug) {
     var fakeChild, fakeParent,
       index, len,
       index2, len2,
       edgesToReverse = getInOrderLoops(items, logicalFamily),
       fakePairs = [];
 
-    if (edgesToReverse.length > 1 && loopsLayoutMode == LoopsLayoutMode.Optimized) {
+    if (edgesToReverse.length > 1) {
       edgesToReverse = getFamilyLoops(logicalFamily, debug);
     }
 

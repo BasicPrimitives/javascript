@@ -1604,13 +1604,13 @@ export default function Family(source) {
     return result;
   }
 
+
+
   function GroupBy(parentid, childid) {
     this.parentid = parentid;
     this.childid = childid;
-    this.ids = [];
     this.nodes = [];
   }
-
 
   /**
    * Callback for grouping nodes having common single parent and child
@@ -1645,28 +1645,26 @@ export default function Family(source) {
         if(!processed.hasOwnProperty(nodeid)) {
           processed[nodeid] = true;
           if ((_parentsCount[nodeid] || 0) <= 1 && (_childrenCount[nodeid] || 0) <= 1) {
-            var ids = [nodeid];
-            var nodes = [_nodes[nodeid]];
+            var nodes = [{id: nodeid, node: _nodes[nodeid]}];
             var parentid = firstParent(nodeid);
             while((_parentsCount[parentid] || 0) <= 1 &&  (_childrenCount[parentid] || 0) == 1) {
-              ids.unshift(parentid);
-              nodes.unshift(_nodes[parentid]);
-              parentid = firstParent(parentid);
+              nodes.unshift({id: parentid, node: _nodes[parentid]});
               processed[parentid] = true;
+              parentid = firstParent(parentid);
             }
             var childid = firstChild(nodeid);
             while((_parentsCount[childid] || 0) == 1 &&  (_childrenCount[childid] || 0) <= 1) {
-              ids.push(childid);
-              nodes.push(_nodes[childid]);
-              childid = firstChild(childid);
+              nodes.push({ id: childid, node: _nodes[childid]});
               processed[childid] = true;
+              childid = firstChild(childid);
             }
 
+            /* find group id*/
             var groupId = null;
-            for(var index = 0; index < ids.length; index+=1) {
-              var id = ids[index];
+            for(var index = 0; index < nodes.length; index+=1) {
+              var node = nodes[index];
               if(onItem != null) {
-                var itemGroupId = onItem.call(thisArg, id);
+                var itemGroupId = onItem.call(thisArg, node.id);
                 if(itemGroupId == -1) {
                   groupId = itemGroupId;
                   break;
@@ -1676,6 +1674,7 @@ export default function Family(source) {
                 }
               }
             }
+            /* add node or list of nodes to group */
             if(groupId !== -1) {
               var key = parentid + " * " + childid;
               if(groupId !== null) {
@@ -1684,7 +1683,6 @@ export default function Family(source) {
               if (!groups.hasOwnProperty(key)) {
                 groups[key] = new GroupBy(parentid, childid);
               }
-              groups[key].ids.push(ids);
               groups[key].nodes.push(nodes);
             }
           }
@@ -1694,8 +1692,8 @@ export default function Family(source) {
       for (key in groups) {
         if (groups.hasOwnProperty(key)) {
           var group = groups[key];
-          if (group.ids.length >= size) {
-            if (onGroup.call(thisArg, group.parentid, group.childid, group.ids, group.nodes)) {
+          if (group.nodes.length >= size) {
+            if (onGroup.call(thisArg, group.parentid, group.childid, group.nodes)) {
               break;
             }
           }

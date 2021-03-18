@@ -35,6 +35,15 @@ export default function Size(arg0, arg1) {
 };
 
 /**
+ * Checks if size is empty. Size is empty if one of its dimensions is undefined or less than zero.
+ * 
+ * @returns {boolean} Returns true if size is empty.
+ */
+ Size.prototype.isEmpty = function () {
+  return this.width === null || this.height === null || this.width < 0 || this.height < 0;
+};
+
+/**
  * Inverts size dimensions
  * 
  * @returns {Size} Returns reference to the current size.

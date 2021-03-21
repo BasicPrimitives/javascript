@@ -3,8 +3,8 @@
   annotations: [],
   items: [
     { id: 1, title: "David Dalton", groupTitle: "1", label: "David Dalton", description: "1, Chief Executive Officer (CEO)", phone: "352-206-7599", email: "davidalt@name.com", image: "../images/photos/q.png", itemTitleColor: "#4169e1" },
-    { id: 2, parents: [1], title: "Steven Lacombe", groupTitle: "2", label: "Steven Lacombe", description: "2, GM, Platform Strategy", phone: "805-800-7397", email: "stevlaco@name.com", image: "../images/photos/a.png", itemTitleColor: "#4b0082" },
-    { id: 3, parents: [1], title: "Nancy Smith", label: "Nancy Smith", description: "3, GM, Strategic Marketing and Communications", phone: "631-787-3495", email: "nancsmit@name.com", image: "../images/photos/s.png", itemTitleColor: "#4b0082" },
+    { id: 2, parents: [1, 101, 102, 103], title: "Steven Lacombe", groupTitle: "2", label: "Steven Lacombe", description: "2, GM, Platform Strategy", phone: "805-800-7397", email: "stevlaco@name.com", image: "../images/photos/a.png", itemTitleColor: "#4b0082" },
+    { id: 3, parents: [1, 101, 102, 103], title: "Nancy Smith", label: "Nancy Smith", description: "3, GM, Strategic Marketing and Communications", phone: "631-787-3495", email: "nancsmit@name.com", image: "../images/photos/s.png", itemTitleColor: "#4b0082" },
     { id: 4, parents: [2, 3], title: "Ann Smith", label: "Nancy Smith", description: "4, GM, Strategic Marketing and Communications", phone: "631-787-3495", email: "nancsmit@name.com", image: "../images/photos/s.png", itemTitleColor: "#4b0082" }
   ]
 };
@@ -401,9 +401,9 @@ var crossShape = {
   items: [
     { id: 1, title: "1", description: "1", image: "../images/photos/t.png" },
     { id: 2, title: "2", description: "2", image: "../images/photos/t.png" },
-    { id: 3, parents: [1], title: "3", description: "3", image: "../images/photos/t.png" },
-    { id: 4, parents: [1], title: "4", description: "4", image: "../images/photos/t.png" },
-    { id: 5, parents: [1], title: "5", description: "5", image: "../images/photos/t.png" },
+    { id: 3, parents: [1, 101, 102, 103], title: "3", description: "3", image: "../images/photos/t.png" },
+    { id: 4, parents: [1, 101, 102, 103], title: "4", description: "4", image: "../images/photos/t.png" },
+    { id: 5, parents: [1, 101, 102, 103], title: "5", description: "5", image: "../images/photos/t.png" },
     { id: 6, parents: [2], title: "6", description: "6", image: "../images/photos/t.png" },
     { id: 7, parents: [2], title: "7", description: "7", image: "../images/photos/t.png" },
     { id: 8, parents: [2], title: "8", description: "8", image: "../images/photos/t.png" },
@@ -432,8 +432,8 @@ var rombusShape = {
   ],
   items: [
     { id: 1, title: "1", description: "1", image: "../images/photos/t.png" },
-    { id: 2, parents: [1], title: "2", description: "2", image: "../images/photos/t.png" },
-    { id: 3, parents: [1], title: "3", description: "3", image: "../images/photos/t.png" },
+    { id: 2, parents: [1, 101, 102, 103], title: "2", description: "2", image: "../images/photos/t.png" },
+    { id: 3, parents: [1, 101, 102, 103], title: "3", description: "3", image: "../images/photos/t.png" },
     { id: 4, parents: [2], title: "4", description: "4", image: "../images/photos/t.png" },
     { id: 5, parents: [2], title: "5", description: "5", image: "../images/photos/t.png" },
     { id: 6, parents: [3], title: "6", description: "6", image: "../images/photos/t.png" },
@@ -569,11 +569,11 @@ var alignmentData = {
   ],
   items: [
     { id: 1, title: "James Holt", label: "James Holt", description: "1, Sr. VP, Server & Tools Division", phone: "262-215-7998", email: "jameholt@name.com", image: "../images/photos/e.png", itemTitleColor: "#4b0082" },
-    { id: 2, parents: [1], title: "Brad Whitt", label: "Brad Whitt", description: "2, GM, Application Platform and Development Marketing", phone: "502-528-6379", email: "bradwhit@name.com", image: "../images/photos/f.png", itemTitleColor: "#4b0082" },
+    { id: 2, parents: [1, 101, 102, 103], title: "Brad Whitt", label: "Brad Whitt", description: "2, GM, Application Platform and Development Marketing", phone: "502-528-6379", email: "bradwhit@name.com", image: "../images/photos/f.png", itemTitleColor: "#4b0082" },
     { id: 3, parents: [2], title: "Thomas Williams", label: "Thomas Williams", description: "3, VP, Server & Tools Marketing and Solutions", phone: "904-547-5342", email: "thomwill@name.com", image: "../images/photos/r.png", itemTitleColor: "#4b0082" },
     { id: 4, parents: [3], title: "David Kirby", label: "David Kirby", description: "4, AGM, Infrastructure Server and IT Pro Audience Marketing", phone: "614-395-7238", email: "davikirb@name.com", image: "../images/photos/t.png", itemTitleColor: "#4b0082" },
     { id: 5, parents: [4], title: "Lynette Maloney", label: "Lynette Maloney", description: "5, GM, Name.com Experience Platforms and Solutions", phone: "540-822-3862", email: "lynemalo@name.com", image: "../images/photos/y.png", itemTitleColor: "#4b0082" },
-    { id: 6, parents: [1], title: "Aligned Item", label: "Aligned Item", description: "Use GroupBy Parents/Children option to align this item", phone: "620-368-3620", email: "heatsimm@name.com", image: "../images/photos/p.png", itemTitleColor: "#ff0000" },
+    { id: 6, parents: [1, 101, 102, 103], title: "Aligned Item", label: "Aligned Item", description: "Use GroupBy Parents/Children option to align this item", phone: "620-368-3620", email: "heatsimm@name.com", image: "../images/photos/p.png", itemTitleColor: "#ff0000" },
     { id: 7, parents: [5, 6], title: "Steven Lacombe", label: "Steven Lacombe", description: "10, GM, Platform Strategy", phone: "805-800-7397", email: "stevlaco@name.com", image: "../images/photos/a.png", itemTitleColor: "#4b0082" }
   ]
 };
@@ -626,7 +626,7 @@ var famdataWorld = {
   ],
   items: [
     { id: 1, parents: [], title: "S1", label: "S1", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
-    { id: 2, parents: [1], title: "2", label: "2", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
+    { id: 2, parents: [1, 101, 102, 103], title: "2", label: "2", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
     { id: 3, parents: [2], title: "3", label: "3", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
     { id: 4, parents: [3, 11, 26, 38, 42], title: "4", label: "4", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
     { id: 5, parents: [4], title: "5", label: "5", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
@@ -634,7 +634,7 @@ var famdataWorld = {
     { id: 7, parents: [6], title: "7", label: "7", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
     { id: 8, parents: [], title: "S8", label: "S8", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
     { id: 9, parents: [8], title: "9", label: "9", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
-    { id: 10, parents: [1], title: "10", label: "10", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
+    { id: 10, parents: [1, 101, 102, 103], title: "10", label: "10", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
     { id: 11, parents: [10], title: "11", label: "11", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
     { id: 12, parents: [10], title: "12", label: "12", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
     { id: 13, parents: [10], title: "13", label: "13", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
@@ -679,10 +679,10 @@ var famdataWorld = {
 var famdata2NodesLoopTest = {
   cursorItem: 2,
   annotations: [
-    { annotationType: primitives.AnnotationType.Label, fromItem: 2, toItems: [1], title: "2->1" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 2, toItems: [1, 101, 102, 103], title: "2->1" },
     { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [2], title: "1->2" },
     new primitives.BackgroundAnnotationConfig({
-      items: [1],
+      items: [1, 101, 102, 103],
       borderColor: "#f8e5f9",
       fillColor: "#e5f9f8",
       lineWidth: 2,
@@ -694,7 +694,7 @@ var famdata2NodesLoopTest = {
   ],
   items: [
     { id: 1, parents: [2], title: "1", label: "1", description: "1", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
-    { id: 2, parents: [1], title: "2", label: "2", description: "2", image: "../images/photos/b.png", itemTitleColor: "#4b0082" },
+    { id: 2, parents: [1, 101, 102, 103], title: "2", label: "2", description: "2", image: "../images/photos/b.png", itemTitleColor: "#4b0082" },
   ]
 };
 
@@ -769,25 +769,28 @@ var matrixLayout = {
   ],
   items: [
     { id: 1, parents: [], title: "1", label: "1", description: "", image: "../images/photos/z.png", itemTitleColor: "#ff0000" },
-    { id: 2, parents: [1], title: "2", label: "2", description: "", image: "../images/photos/a.png", itemTitleColor: "#ff0000" },
-    { id: 3, parents: [1], title: "3", label: "3", description: "", image: "../images/photos/b.png", itemTitleColor: "#ff0000" },
-    { id: 4, parents: [1], title: "4", label: "4", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" },
-    { id: 5, parents: [1], title: "5", label: "5", description: "", image: "../images/photos/d.png", itemTitleColor: "#ff0000" },
-    { id: 6, parents: [1], title: "6", label: "6", description: "", image: "../images/photos/e.png", itemTitleColor: "#ff0000" },
-    { id: 7, parents: [1], title: "7", label: "7", description: "", image: "../images/photos/f.png", itemTitleColor: "#ff0000" },
-    { id: 8, parents: [1], title: "8", label: "8", description: "", image: "../images/photos/g.png", itemTitleColor: "#ff0000" },
-    { id: 9, parents: [1], title: "9", label: "9", description: "", image: "../images/photos/h.png", itemTitleColor: "#ff0000" },
-    { id: 10, parents: [1], title: "10", label: "10", description: "", image: "../images/photos/i.png", itemTitleColor: "#ff0000" },
-    { id: 11, parents: [1], title: "11", label: "11", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
-    { id: 12, parents: [1], title: "12", label: "12", description: "", image: "../images/photos/k.png", itemTitleColor: "#ff0000" },
-    { id: 13, parents: [1], title: "13", label: "13", description: "", image: "../images/photos/l.png", itemTitleColor: "#ff0000" },
-    { id: 14, parents: [1], title: "14", label: "14", description: "", image: "../images/photos/m.png", itemTitleColor: "#ff0000" },
-    { id: 15, parents: [1], title: "15", label: "15", description: "", image: "../images/photos/n.png", itemTitleColor: "#ff0000" },
-    { id: 16, parents: [1], title: "16", label: "16", description: "", image: "../images/photos/o.png", itemTitleColor: "#ff0000" },
-    { id: 17, parents: [1], title: "17", label: "17", description: "", image: "../images/photos/p.png", itemTitleColor: "#ff0000" },
-    { id: 18, parents: [1], title: "18", label: "18", description: "", image: "../images/photos/q.png", itemTitleColor: "#ff0000" },
-    { id: 19, parents: [1], title: "19", label: "19", description: "", image: "../images/photos/r.png", itemTitleColor: "#ff0000" },
-    { id: 20, parents: [1], title: "20", label: "20", description: "", image: "../images/photos/s.png", itemTitleColor: "#4b0082" },
+    { id: 101, parents: [], title: "1", label: "1", description: "", image: "../images/photos/z.png", itemTitleColor: "#ff0000" },
+    { id: 102, parents: [], title: "1", label: "1", description: "", image: "../images/photos/z.png", itemTitleColor: "#ff0000" },
+    { id: 103, parents: [], title: "1", label: "1", description: "", image: "../images/photos/z.png", itemTitleColor: "#ff0000" },
+    { id: 2, parents: [1, 101, 102, 103], title: "2", label: "2", description: "", image: "../images/photos/a.png", itemTitleColor: "#ff0000" },
+    { id: 3, parents: [1, 101, 102, 103], title: "3", label: "3", description: "", image: "../images/photos/b.png", itemTitleColor: "#ff0000" },
+    { id: 4, parents: [1, 101, 102, 103], title: "4", label: "4", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" },
+    { id: 5, parents: [1, 101, 102, 103], title: "5", label: "5", description: "", image: "../images/photos/d.png", itemTitleColor: "#ff0000" },
+    { id: 6, parents: [1, 101, 102, 103], title: "6", label: "6", description: "", image: "../images/photos/e.png", itemTitleColor: "#ff0000" },
+    { id: 7, parents: [1, 101, 102, 103], title: "7", label: "7", description: "", image: "../images/photos/f.png", itemTitleColor: "#ff0000" },
+    { id: 8, parents: [1, 101, 102, 103], title: "8", label: "8", description: "", image: "../images/photos/g.png", itemTitleColor: "#ff0000" },
+    { id: 9, parents: [1, 101, 102, 103], title: "9", label: "9", description: "", image: "../images/photos/h.png", itemTitleColor: "#ff0000" },
+    { id: 10, parents: [1, 101, 102, 103], title: "10", label: "10", description: "", image: "../images/photos/i.png", itemTitleColor: "#ff0000" },
+    { id: 11, parents: [1, 101, 102, 103], title: "11", label: "11", description: "", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
+    { id: 12, parents: [1, 101, 102, 103], title: "12", label: "12", description: "", image: "../images/photos/k.png", itemTitleColor: "#ff0000" },
+    { id: 13, parents: [1, 101, 102, 103], title: "13", label: "13", description: "", image: "../images/photos/l.png", itemTitleColor: "#ff0000" },
+    { id: 14, parents: [1, 101, 102, 103], title: "14", label: "14", description: "", image: "../images/photos/m.png", itemTitleColor: "#ff0000" },
+    { id: 15, parents: [1, 101, 102, 103], title: "15", label: "15", description: "", image: "../images/photos/n.png", itemTitleColor: "#ff0000" },
+    { id: 16, parents: [1, 101, 102, 103], title: "16", label: "16", description: "", image: "../images/photos/o.png", itemTitleColor: "#ff0000" },
+    { id: 17, parents: [1, 101, 102, 103], title: "17", label: "17", description: "", image: "../images/photos/p.png", itemTitleColor: "#ff0000" },
+    { id: 18, parents: [1, 101, 102, 103], title: "18", label: "18", description: "", image: "../images/photos/q.png", itemTitleColor: "#ff0000" },
+    { id: 19, parents: [1, 101, 102, 103], title: "19", label: "19", description: "", image: "../images/photos/r.png", itemTitleColor: "#ff0000" },
+    { id: 20, parents: [1, 101, 102, 103], title: "20", label: "20", description: "", image: "../images/photos/s.png", itemTitleColor: "#4b0082" },
 
     { id: 21, parents: [5], title: "D1", label: "D1", description: "", image: "../images/photos/d.png", itemTitleColor: "#4b0082" },
     { id: 22, parents: [5], title: "D2", label: "D2", description: "", image: "../images/photos/d.png", itemTitleColor: "#4b0082" },
@@ -797,66 +800,13 @@ var matrixLayout = {
     { id: 26, parents: [5], title: "D6", label: "D6", description: "", image: "../images/photos/d.png", itemTitleColor: "#4b0082" },
 
     { id: 27, parents: [26], title: "D61", label: "D61", description: "", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
-    { id: 28, parents: [26], title: "D62", label: "D62", description: "", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
+    { id: 28, parents: [26], addToMatrix: false, title: "D62", label: "D62", description: "", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
     { id: 29, parents: [26], title: "D63", label: "D63", description: "", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
     { id: 30, parents: [26], title: "D64", label: "D64", description: "", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
     { id: 31, parents: [26, 9], title: "D65", label: "D65", description: "", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
     { id: 32, parents: [27, 28, 29, 30], title: "E1", label: "E1", description: "", image: "../images/photos/e.png", itemTitleColor: "#4b0082" },
 
     { id: 33, parents: [2, 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], title: "M1", label: "M1", description: "", image: "../images/photos/m.png", itemTitleColor: "#4b0082" }
-  ]
-};
-
-var matrixGroups = {
-  cursorItem: 1,
-  enableMatrixLayout: true,
-  annotations: [
-  ],
-  items: [
-    { id: 1, parents: [], title: "1", label: "1", description: "", image: "../images/photos/z.png", itemTitleColor: "#ff0000" },
-    { id: 2, parents: [1], title: "2", label: "2", description: "", image: "../images/photos/a.png", itemTitleColor: "#ff0000" },
-    { id: 3, parents: [1], title: "3", label: "3", description: "", image: "../images/photos/b.png", itemTitleColor: "#ff0000" },
-    { id: 4, parents: [1], title: "4", label: "4", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" },
-    { id: 5, parents: [1], title: "5", label: "5", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" },
-    { id: 6, parents: [1], matrixId: "2", title: "6", label: "6", description: "", image: "../images/photos/e.png", itemTitleColor: "#ff0000" },
-    { id: 7, parents: [1], matrixId: "2", title: "7", label: "7", description: "", image: "../images/photos/f.png", itemTitleColor: "#ff0000" },
-    { id: 8, parents: [1], matrixId: "2", title: "8", label: "8", description: "", image: "../images/photos/g.png", itemTitleColor: "#ff0000" },
-    { id: 9, parents: [1], matrixId: "2", title: "10", label: "10", description: "", image: "../images/photos/i.png", itemTitleColor: "#ff0000" },
-    { id: 10, parents: [1], addToMatrix: false,  title: "10", label: "10", description: "", image: "../images/photos/i.png", itemTitleColor: "#ff0000" },
-    { id: 33, parents: [2, 3, 4, 5, 6, 7, 8, 9, 10], title: "33", label: "33", description: "", image: "../images/photos/m.png", itemTitleColor: "#4b0082" }
-  ]
-};
-
-
-var matrixNLabels = {
-  cursorItem: 1,
-  enableMatrixLayout: true,
-  annotations: [
-    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [2], title: "1->2" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [3], title: "1->3" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [4], title: "1->4" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [6], title: "1->6" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [7], title: "1->7" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [8], title: "1->8" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [10], title: "1->10" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [2], title: "33->2" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [3], title: "33->3" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [4], title: "33->4" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [6], title: "33->6" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [7], title: "33->7" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [8], title: "33->8" }
-    //{ annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [10], title: "33->10" }
-  ],
-  items: [
-    { id: 1, parents: [], title: "1", label: "1", description: "", image: "../images/photos/z.png", itemTitleColor: "#ff0000" },
-    { id: 2, parents: [1], title: "2", label: "2", description: "", image: "../images/photos/a.png", itemTitleColor: "#ff0000" },
-    { id: 3, parents: [1], title: "3", label: "3", description: "", image: "../images/photos/b.png", itemTitleColor: "#ff0000" },
-    { id: 4, parents: [1], title: "4", label: "4", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" },
-    { id: 6, parents: [1], title: "6", label: "6", description: "", image: "../images/photos/e.png", itemTitleColor: "#ff0000" },
-    { id: 7, parents: [1], title: "7", label: "7", description: "", image: "../images/photos/f.png", itemTitleColor: "#ff0000" },
-    { id: 8, parents: [1], title: "8", label: "8", description: "", image: "../images/photos/g.png", itemTitleColor: "#ff0000" },
-    { id: 10, parents: [1], title: "10", label: "10", description: "", image: "../images/photos/i.png", itemTitleColor: "#ff0000" },
-    { id: 33, parents: [2, 3, 4, 6, 7, 8, 10], title: "33", label: "33", description: "", image: "../images/photos/m.png", itemTitleColor: "#4b0082" }
   ]
 };
 
@@ -878,9 +828,7 @@ var dataSetNames = {
   "W Shape Family": "wFamily",
   "Simple Family": "simpleFamily",
   "Matrix": "matrixLayout",
-  "Lables on Loop": "famdata2NodesLoopTest",
-  "Splitting Matrixes": "matrixGroups",
-  "Matrix and Labels": "matrixNLabels"
+  "Lables on Loop": "famdata2NodesLoopTest"
 };
 
-var defaultDataSetName = dataSetNames["2 Cross Relations"];
+var defaultDataSetName = dataSetNames["Mix"];

@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Matrix Groups In Family Chart</title>
+
+  
+
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+    var control;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var options = new primitives.FamConfig();
+
+      options.items = [
+        { id: 1, parents: [], title: "1", label: "1", description: "", image: "../images/photos/z.png", itemTitleColor: "#ff0000" },
+        { id: 2, parents: [1, 101, 102, 103], title: "2", label: "2", description: "", image: "../images/photos/a.png", itemTitleColor: "#ff0000" },
+        { id: 3, parents: [1, 101, 102, 103], title: "3", label: "3", description: "", image: "../images/photos/b.png", itemTitleColor: "#ff0000" },
+        { id: 4, parents: [1, 101, 102, 103], title: "4", label: "4", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" },
+        { id: 5, parents: [1, 101, 102, 103], title: "5", label: "5", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" },
+        { id: 6, parents: [1, 101, 102, 103], matrixId: "2", title: "6", label: "6", description: "", image: "../images/photos/e.png", itemTitleColor: "#ff0000" },
+        { id: 7, parents: [1, 101, 102, 103], matrixId: "2", title: "7", label: "7", description: "", image: "../images/photos/f.png", itemTitleColor: "#ff0000" },
+        { id: 8, parents: [1, 101, 102, 103], matrixId: "2", title: "8", label: "8", description: "", image: "../images/photos/g.png", itemTitleColor: "#ff0000" },
+        { id: 9, parents: [1, 101, 102, 103], matrixId: "2", title: "10", label: "10", description: "", image: "../images/photos/i.png", itemTitleColor: "#ff0000" },
+        { id: 10, parents: [1, 101, 102, 103], addToMatrix: false,  title: "10", label: "10", description: "", image: "../images/photos/i.png", itemTitleColor: "#ff0000" },
+        { id: 33, parents: [2, 3, 4, 5, 6, 7, 8, 9, 10], title: "33", label: "33", description: "", image: "../images/photos/m.png", itemTitleColor: "#4b0082" }
+      ];
+
+
+      options.cursorItem = 1;
+      options.enableMatrixLayout = true;
+      options.minimumMatrixSize = 3;
+      options.hasSelectorCheckbox = primitives.Enabled.False;
+      options.arrowsDirection = primitives.GroupByType.Children;
+      options.pageFitMode = primitives.PageFitMode.None;
+
+      /* Intervals */
+      options.normalLevelShift = 20;
+      options.dotLevelShift = 16;
+      options.lineLevelShift = 10;
+      options.normalItemsInterval = 20;
+      options.dotItemsInterval = 10;
+      options.lineItemsInterval = 5;
+      options.cousinsIntervalMultiplier = 5;
+
+      control = primitives.FamDiagram(document.getElementById('basicdiagram'), options);
+    });
+
+  </script>
+</head>
+
+<body>
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
+</body>
+
+</html>

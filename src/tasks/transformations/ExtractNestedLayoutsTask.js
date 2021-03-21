@@ -1,6 +1,6 @@
 ﻿import FamilyMatrixesExtractor from './familyTransformations/FamilyMatrixesExtractor';
 
-export default function ExtractNestedLayoutsTask(extractNestedLayoutsOptionTask, hideGrandParentsConnectorsTask) {
+export default function ExtractNestedLayoutsTask(extractNestedLayoutsOptionTask, bindFamilyConnectorsTask) {
   var _data = {
     maximumId: null, /* maximum of OrgItem.id */
     logicalFamily: null
@@ -8,8 +8,8 @@ export default function ExtractNestedLayoutsTask(extractNestedLayoutsOptionTask,
   _familyMatrixesExtractor = new FamilyMatrixesExtractor(false);
 
   function process(debug) {
-    var logicalFamily = hideGrandParentsConnectorsTask.getLogicalFamily(),
-      maximumId = hideGrandParentsConnectorsTask.getMaximumId(),
+    var logicalFamily = bindFamilyConnectorsTask.getLogicalFamily(),
+      maximumId = bindFamilyConnectorsTask.getMaximumId(),
       extractNestedLayoutsOptions = extractNestedLayoutsOptionTask.getOptions();
 
     var options = {

@@ -23,16 +23,16 @@ test('groupBy - Function groups nodes having single common parent and child', ()
   ]);
 
   var result = [];
-  family.groupBy(this, 2, function (parentid, childid, nodes) {
+  family.groupBy(this, 2, function (parents, children, nodes) {
     result.push({
-      parent: parentid,
-      child: childid,
-      nodes: nodes
+      parents,
+      children,
+      nodes: nodes.map(items => items[0].id)
     })
   });
 
   var expectedResult = [
-    { parent: "1", child: null, nodes: ["2", "3", "4", "5", "6", "7", "8"] }
+    { parents: ["1"], children: [], nodes: ["2", "3", "4", "5", "6", "7", "8"] }
   ];
   expect(result).toEqual(expectedResult);
 });
@@ -51,16 +51,16 @@ test('groupBy - Function should group nodes sharing the same child together', ()
   ]);
 
   var result = [];
-  family.groupBy(this, 2, function (parentid, childid, nodes) {
+  family.groupBy(this, 2, function (parents, children, nodes) {
     result.push({
-      parent: parentid,
-      child: childid,
-      nodes: nodes
+      parents,
+      children,
+      nodes: nodes.map(items => items[0].id)
     })
   });
 
   var expectedResult = [
-    { parent: null, child: "8", nodes: ["1", "2", "3", "4", "5", "6", "7"] }
+    { parents: [], children: ["8"], nodes: ["1", "2", "3", "4", "5", "6", "7"] }
   ];
   expect(result).toEqual(expectedResult);
 });
@@ -81,16 +81,16 @@ test('groupBy - Function should group nodes sharing the same parent and child to
   ]);
 
   var result = [];
-  family.groupBy(this, 2, function (parentid, childid, nodes) {
+  family.groupBy(this, 2, function (parents, children, nodes) {
     result.push({
-      parent: parentid,
-      child: childid,
-      nodes: nodes
+      parents,
+      children,
+      nodes: nodes.map(items => items[0].id)
     })
   });
 
   var expectedResult = [
-    { parent: "1", child: "9", nodes: ["2", "3", "4", "5", "6", "7", "8"] }
+    { parents: ["1"], children: ["9"], nodes: ["2", "3", "4", "5", "6", "7", "8"] }
   ];
   expect(result).toEqual(expectedResult);
 });
@@ -134,18 +134,18 @@ test('groupBy - General case test', () => {
   ]);
 
   var result = [];
-  family.groupBy(this, 2, function (parentid, childid, nodes) {
+  family.groupBy(this, 2, function (parents, children, nodes) {
     result.push({
-      parent: parentid,
-      child: childid,
-      nodes: nodes
+      parents,
+      children,
+      nodes: nodes.map(items => items[0].id)
     })
   });
 
   var expectedResult = [
-    { parent: "1", child: null, nodes: ["2", "3", "4", "6", "7", "8", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"] },
-    { parent: "5", child: null, nodes: ["21", "22", "23", "24", "25"] },
-    { parent: "26", child: null, nodes: ["27", "28", "29", "30"] }
+    { parents: ["1"], children: [], nodes: ["2", "3", "4", "6", "7", "8", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"] },
+    { parents: ["5"], children: [], nodes: ["21", "22", "23", "24", "25"] },
+    { parents: ["26"], children: [], nodes: ["27", "28", "29", "30"] }
   ];
   expect(result).toEqual(expectedResult);
 });

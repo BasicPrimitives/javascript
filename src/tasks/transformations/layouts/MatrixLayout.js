@@ -18,7 +18,7 @@ MatrixLayout.prototype.loop = function (thisArg, onItem) {
     for(var index = 0, len = this.items.length; index < len; index+=1) {
       var item = this.items[index];
 
-      onItem.call(thisArg, item);
+      onItem.call(thisArg, item, 0);
     }
   }
 };

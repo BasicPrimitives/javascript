@@ -22,7 +22,7 @@ FamilyMatrixesExtractor.prototype.extract = function (options, getConfig, logica
   if (logicalFamily.hasNodes() > 0) {
     /* find nodes having the same parent and child nodes and replace them with matrix placeholder node */
     if (options.enableMatrixLayout) {
-      logicalFamily.groupBy(this, Math.max(2, options.minimumMatrixSize), function (parentid, childid, groups) {
+      logicalFamily.groupBy(this, Math.max(2, options.minimumMatrixSize), function (parentIds, childIds, groups) {
 
         var nodes = [];
         for(var groupIndex = 0; groupIndex < groups.length; groupIndex+=1) {
@@ -36,15 +36,11 @@ FamilyMatrixesExtractor.prototype.extract = function (options, getConfig, logica
             maximumId += 1;
             var id2 = maximumId;
 
-            var firstNode = logicalFamily.node(group[0].id);
-
             var horizontalNode = new FamilyItem({
               id: id,
-              level: null,
               isVisible: false,
               isActive: false,
               itemConfig: { title: "dummy #" + id, description: "This is item used as aggregator of horizontally grouped nodes." },
-              levelGravity: GroupByType.Parents,
               hideParentConnection: true,
               hideChildrenConnection: true
             });     
@@ -64,15 +60,17 @@ FamilyMatrixesExtractor.prototype.extract = function (options, getConfig, logica
             }
 
             var ids = nodes.map(node => node.id);
-            if (parentid != null) {
-              logicalFamily.add([parentid], id, horizontalNode);
+            if (parentIds.length > 0) {
+              logicalFamily.add(parentIds, id, horizontalNode);
               horizontalNode.hideParentConnection = false;
             } else {
               logicalFamily.add(null, id, horizontalNode);
             }
     
-            if (childid != null) {
-              logicalFamily.adopt([id], childid);
+            if (childIds.length > 0) {
+              for(var index = 0; index < childIds.length; index+=1) {
+                logicalFamily.adopt([id], childIds[index]);
+              }
               horizontalNode.hideChildrenConnection = false;
             }            
 
@@ -82,8 +80,6 @@ FamilyMatrixesExtractor.prototype.extract = function (options, getConfig, logica
           }
         }
 
-        var firstNode = logicalFamily.node(nodes[0].id);
-
         maximumId += 1;
         var id = maximumId;
         maximumId += 1;
@@ -91,11 +87,9 @@ FamilyMatrixesExtractor.prototype.extract = function (options, getConfig, logica
 
         var matrixNode = new FamilyItem({
           id: id,
-          level: null,
           isVisible: false,
           isActive: false,
           itemConfig: { title: "dummy #" + id, description: "This is item used as aggregator of matrixed nodes." },
-          levelGravity: GroupByType.Parents,
           hideParentConnection: true,
           hideChildrenConnection: true
         });
@@ -108,29 +102,44 @@ FamilyMatrixesExtractor.prototype.extract = function (options, getConfig, logica
         }
 
         var ids = nodes.map(node => node.id);
-        if (parentid != null) {
-          logicalFamily.add([parentid], id, matrixNode);
+        if (parentIds.length > 0 ) {
+          logicalFamily.add(parentIds, id, matrixNode);
           matrixNode.hideParentConnection = false;
           bundles.push(new MatrixConnectorBundle(true, ids, id, id, this.getMatrixWidth(options.maximumColumnsInMatrix, ids.length)));
         } else {
           logicalFamily.add(null, id, matrixNode);
         }
 
-        if (childid != null) {
-          logicalFamily.adopt([id], childid);
+        if (childIds.length > 0) {
+          for(var index = 0; index < childIds.length; index+=1) {
+            logicalFamily.adopt([id], childIds[index]);
+          }
           matrixNode.hideChildrenConnection = false;
           bundles.push(new MatrixConnectorBundle(false, ids, id, id2, this.getMatrixWidth(options.maximumColumnsInMatrix, ids.length)));
         }
         layouts[id] = new MatrixLayout(nodes, matrixNode.hideParentConnection, matrixNode.hideChildrenConnection);
-      }, function(itemId) {
+      }, function(items) {
         var result = null;
-        var itemConfig = getConfig(itemId);
-        if(itemConfig != null) {
-          if(itemConfig.addToMatrix) {
-            result = itemConfig.matrixId;
-          } else {
-            result = -1;
+        var count = 0;
+        for(var index = 0; index < items.length; index+=1) {
+          var item = items[index];
+          var itemConfig = getConfig(item.id);
+          if(itemConfig != null) {
+            if(count > 0) {
+              result = -1;
+              break;                
+            }
+            count++;
+            if(itemConfig.addToMatrix) {
+              result = itemConfig.matrixId;
+            } else {
+              result = -1;
+              break;
+            }
           }
+        }
+        if(count == 0) {
+          result = -1;
         }
         return result;
       }

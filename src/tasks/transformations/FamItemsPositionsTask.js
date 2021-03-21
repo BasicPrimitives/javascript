@@ -1,8 +1,5 @@
-import FamilyLayout from './layouts/FamilyLayout';
-import ItemLayout from './layouts/ItemLayout';
 import Rect from '../../graphics/structs/Rect';
 import Size from '../../graphics/structs/Size';
-import Tree from '../../algorithms/Tree';
 import { OrientationType, PageFitMode, Visibility } from '../../enums';
 
 function LevelVisibility(level, visibility) {
@@ -11,7 +8,7 @@ function LevelVisibility(level, visibility) {
 };
 
 export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientationOptionTask, itemsSizesOptionTask, connectorsOptionTask,
-  normalizeOptionTask, normalizeLogicalFamilyTask, extractNestedLayoutsTask,
+  normalizeOptionTask, createLayoutsTreeTask,
   itemTemplateParamsTask,
   cursorItemTask, combinedNormalVisibilityItemsTask) {
 
@@ -28,10 +25,6 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
     var { maximumColumnsInMatrix } = normalizeOptionTask.getOptions();
     var { orientationType } = orientationOptionTask.getOptions();
 
-    var logicalFamily = normalizeLogicalFamilyTask.getLogicalFamily();
-    var treeLevels = normalizeLogicalFamilyTask.getTreeLevels();
-    var maximumId = normalizeLogicalFamilyTask.getMaximumId();
-    var getConnectorsStacksSizes = normalizeLogicalFamilyTask.getConnectorsStacksSizes;
     var isItemSelected = combinedNormalVisibilityItemsTask.isItemSelected;
     var cursorItemId = cursorItemTask.getCursorTreeItem();
     var getTemplateParams = itemTemplateParamsTask.getTemplateParams;
@@ -41,48 +34,33 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
     var panelSize = new Size(optimalPanelSize);
     var { scale } = scaleOptionTask.getOptions();
     panelSize.scale(1.0 / scale);
-    var panelRect = new Rect(0, 0, panelSize.width, panelSize.height);
 
-    /* create layouts tree */
-    var layouts = extractNestedLayoutsTask.getLayouts();
-    var rootLayout = new FamilyLayout(logicalFamily, treeLevels, getConnectorsStacksSizes);
-    var layoutsTree = Tree();
-    maximumId++;
-    layoutsTree.add(null, maximumId, rootLayout);
+    var layoutsTree = createLayoutsTreeTask.getLayoutsTree();
+    
+    /* find root layout id */
+    var rootLayoutId = null;
+    layoutsTree.loopLevels(this, function(nodeId, node, levelIndex) {
+      rootLayoutId = nodeId;
+      return layoutsTree.BREAK;
+    })
 
+    /* enumerate items level indexes */
     var levelIndexes = {};
-    var levelLayouts = [];
-    treeLevels.loopLevels(this, function (levelIndex) {
-      treeLevels.loopLevelItems(this, levelIndex, function (treeItemId, treeItem) {
-        levelIndexes[treeItemId] = levelIndex;
-        var itemLayout = layouts[treeItemId];
-        if(!itemLayout) {
-          itemLayout = new ItemLayout(treeItem);
-        } else {
-          levelLayouts.push({id: treeItemId, levelLayout: itemLayout, levelIndex: levelIndex});
-        }
-        layoutsTree.add(maximumId, treeItemId, itemLayout);
-      });
-    });
+    var maximumLevelIndex = 0;
+    var hasNodes = false;
+    layoutsTree.loopLevels(this, function(layoutId, layout, levelIndex) {
+      if(layout.loop != null) {
+        var parentId = layoutsTree.parentid(layoutId);
+        var parentLevelIndex = levelIndexes[parentId] || 0;
 
-    while(levelLayouts.length > 0) {
-      var nextLevelLayouts = [];
-      for(var index = 0; index < levelLayouts.length; index+=1) {
-        var { id, levelLayout, levelIndex } = levelLayouts[index];
-        levelLayout.loop(this, function(treeItem) {
-          var treeItemId = treeItem.id;
-          var itemLayout = layouts[treeItemId];
-          if(!itemLayout) {
-            itemLayout = new ItemLayout(treeItem);
-          } else {
-            nextLevelLayouts.push({id: treeItemId, levelLayout: itemLayout, levelIndex: levelIndex});
-          }
-          levelIndexes[treeItemId] = levelIndex;
-          layoutsTree.add(id, treeItemId, itemLayout);
+        layout.loop(this, function(treeItem, levelIndex) {
+          var itemLevelIndex = parentLevelIndex + levelIndex;
+          levelIndexes[treeItem.id] = itemLevelIndex;
+          maximumLevelIndex = Math.max(maximumLevelIndex, itemLevelIndex);
+          hasNodes = true;
         })
       }
-      levelLayouts = nextLevelLayouts;
-    }
+    })
 
     var options = {
       verticalAlignment,
@@ -101,14 +79,16 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
     };
 
     /* find optimal panel size */
+    _data.treeItemsPositions = {};
     _data.size = panelSize;
-    var { treeItemsPositions, size } = autoFitDiagramToPageSize(panelSize, treeLevels, maximumId, layoutsTree, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options);
-    if(treeItemsPositions != null) {
+
+    if(hasNodes) {
+      var {treeItemsPositions, size} = autoFitDiagramToPageSize(panelSize, maximumLevelIndex, rootLayoutId, layoutsTree, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options);
       _data.treeItemsPositions = treeItemsPositions;
       _data.size = size;
 
       /* arrange items positions */
-      var treeItemPosition = _data.treeItemsPositions[maximumId];
+      var treeItemPosition = _data.treeItemsPositions[rootLayoutId];
       treeItemPosition.actualPosition = new Rect(0, 0, _data.size.width, _data.size.height);
 
       var layoutsDirections = {};
@@ -124,8 +104,8 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
     return true;
   }
 
-  function autoFitDiagramToPageSize(panelSize, treeLevels, rootLayoutId, layoutsTree, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options) {
-    var result = {},
+  function autoFitDiagramToPageSize(panelSize, maximumLevelIndex, rootLayoutId, layoutsTree, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options) {
+    var result,
       possibleLevelVisibilities,
       enabledLevelVisibilities;
 
@@ -137,35 +117,33 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
         panelSize.invert();
         break;
     }
-    if (!treeLevels.isEmpty()) {
-      switch (pageFitMode) {
-        case PageFitMode.None:
-        case PageFitMode.AutoSize:
-          possibleLevelVisibilities = [new LevelVisibility(0, Visibility.Normal)];
-          enabledLevelVisibilities = getLevelVisibilities(treeLevels, possibleLevelVisibilities, 0);
-          result = measureLayout(rootLayoutId, layoutsTree, enabledLevelVisibilities, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options);
-          break;
-        default:
-          possibleLevelVisibilities = getPossibleLevelVisibilities(treeLevels, minimalVisibility);
-          enabledLevelVisibilities = getLevelVisibilities(treeLevels, possibleLevelVisibilities, possibleLevelVisibilities.length - 1);
+    switch (pageFitMode) {
+      case PageFitMode.None:
+      case PageFitMode.AutoSize:
+        possibleLevelVisibilities = [new LevelVisibility(0, Visibility.Normal)];
+        enabledLevelVisibilities = getLevelVisibilities(maximumLevelIndex, possibleLevelVisibilities, 0);
+        result = measureLayout(rootLayoutId, layoutsTree, enabledLevelVisibilities, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options);
+        break;
+      default:
+        possibleLevelVisibilities = getPossibleLevelVisibilities(maximumLevelIndex, minimalVisibility);
+        enabledLevelVisibilities = getLevelVisibilities(maximumLevelIndex, possibleLevelVisibilities, possibleLevelVisibilities.length - 1);
 
-          // Find minimal placeholder size to hold completely folded diagram
-          result = measureLayout(rootLayoutId, layoutsTree, enabledLevelVisibilities, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options);
-          if (checkDiagramSize(result.size, panelSize, pageFitMode)) {
-            // Find optimal diagram size
-            var minimalPlaceholderSize = new Rect(0, 0, result.size.width, result.size.height);
-            minimalPlaceholderSize.addRect(0, 0, panelSize.width, panelSize.height);
-            minimalPlaceholderSize.offset(0, 0, 5, 5);
-            findOptimalSize(this, possibleLevelVisibilities.length - 1, function (index) {
-              enabledLevelVisibilities = getLevelVisibilities(treeLevels, possibleLevelVisibilities, index);
-              result = measureLayout(rootLayoutId, layoutsTree, enabledLevelVisibilities, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options);
+        // Find minimal placeholder size to hold completely folded diagram
+        result = measureLayout(rootLayoutId, layoutsTree, enabledLevelVisibilities, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options);
+        if (checkDiagramSize(result.size, panelSize, pageFitMode)) {
+          // Find optimal diagram size
+          var minimalPlaceholderSize = new Rect(0, 0, result.size.width, result.size.height);
+          minimalPlaceholderSize.addRect(0, 0, panelSize.width, panelSize.height);
+          minimalPlaceholderSize.offset(0, 0, 5, 5);
+          findOptimalSize(this, possibleLevelVisibilities.length - 1, function (index) {
+            enabledLevelVisibilities = getLevelVisibilities(maximumLevelIndex, possibleLevelVisibilities, index);
+            result = measureLayout(rootLayoutId, layoutsTree, enabledLevelVisibilities, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options);
 
-              /* compare root layout to the available panel space */
-              return checkDiagramSize(result.size, minimalPlaceholderSize, options.pageFitMode);
-            });
-          }
-          break;
-      }
+            /* compare root layout to the available panel space */
+            return checkDiagramSize(result.size, minimalPlaceholderSize, options.pageFitMode);
+          });
+        }
+        break;
     }
 
     return result;
@@ -213,15 +191,14 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
     }
   };
 
-  function getLevelVisibilities(treeLevels, possibleLevelVisibilities, cursorIndex) {
+  function getLevelVisibilities(maximumLevelIndex, possibleLevelVisibilities, cursorIndex) {
     var index,
       levelVisibility;
 
-     
     var result = [];
-    treeLevels.loopLevels(this, function () {
+    for(var levelIndex = 0; levelIndex <= maximumLevelIndex; levelIndex+=1 ) {
       result.push(Visibility.Normal);
-    });
+    };
 
     /* set levels visibility */ 
     for (index = 0; index <= cursorIndex; index += 1) {
@@ -231,7 +208,7 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
     return result;
   }
 
-  function getPossibleLevelVisibilities(treeLevels, minimalVisibility) {
+  function getPossibleLevelVisibilities(maximumLevelIndex, minimalVisibility) {
     var result = [new LevelVisibility(0, Visibility.Normal)];
   
     var visibilities = [];
@@ -249,11 +226,11 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
         break;
     }
   
-    treeLevels.loopLevelsReversed(this, function (level, levelContext) {
+    for(var levelIndex = maximumLevelIndex; levelIndex >= 0; levelIndex-=1) {
       for (var index = 0; index < visibilities.length; index += 1) {
-        result.push(new LevelVisibility(level, visibilities[index]));
+        result.push(new LevelVisibility(levelIndex, visibilities[index]));
       }
-    });
+    };
   
     return result;
   };

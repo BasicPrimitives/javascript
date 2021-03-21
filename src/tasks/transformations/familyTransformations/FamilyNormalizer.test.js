@@ -36,30 +36,6 @@ function normalizeLogicalFamilyTask(items) {
   return getLevels(family);
 }
 
-test("Function should bundle cross relations into single node", () => {
-  var items = [
-    { id: 1, name: "1" },
-    { id: 2, name: "2" },
-    { id: 3, parents: [1, 2], name: "3" },
-    { id: 4, parents: [1, 2], name: "4" },
-    { id: 5, parents: [1, 2], name: "5" },
-    { id: 6, parents: [1, 2], name: "6" }
-  ];
-
-  var levels = normalizeLogicalFamilyTask(items);
-
-  var expectedLevels = [{ "id": "1", "children": ["101"] },
-  { "id": "2", "children": ["101"] },
-  { "id": "101", "children": ["3", "4", "5", "6"] },
-  { "id": "3" },
-  { "id": "4" },
-  { "id": "5" },
-  { "id": "6" }
-  ];
-
-  expect(levels).toEqual(expectedLevels);
-});
-
 test("Function should add extra invisible items between nodes having gaps between levels", () => {
   var items = [
     { id: 1, name: "1" },
@@ -84,27 +60,6 @@ test("Function should add extra invisible items between nodes having gaps betwee
     { "id": "5", "children": ["6"] },
     { "id": "101", "children": ["6"] },
     { "id": "6" }
-  ];
-
-  expect(levels).toEqual(expectedLevels);
-});
-
-test("Function eliminates many to many relations between nodes", () => {
-  var items = [
-    { id: 1, name: "1" },
-    { id: 2, parents: [1], name: "2" },
-    { id: 3, parents: [1, 4], name: "3" },
-    { id: 4, name: "4" }
-  ];
-
-  var levels = normalizeLogicalFamilyTask(items);
-
-  var expectedLevels = [
-    { "id": "1", "children": ["2", "101"] },
-    { "id": "2" },
-    { "id": "101", "children": ["3"] },
-    { "id": "4", "children": ["3"] },
-    { "id": "3" }
   ];
 
   expect(levels).toEqual(expectedLevels);

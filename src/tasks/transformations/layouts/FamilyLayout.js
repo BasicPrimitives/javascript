@@ -19,6 +19,19 @@ export default function FamilyLayout(logicalFamily, treeLevels, getConnectorsSta
   this.childLayoutsPositions = {};
 };
 
+FamilyLayout.prototype.loop = function (thisArg, onItem) {
+  if(onItem != null) {
+    var zeroBasedLevelIndex = 0;
+    this.treeLevels.loopLevels(this, function (levelIndex) {
+      this.treeLevels.loopLevelItems(this, levelIndex, function (treeItemId, treeItem) {
+        onItem.call(thisArg, treeItem, zeroBasedLevelIndex);
+      });
+      zeroBasedLevelIndex+=1;
+    });
+  }
+};
+
+
 FamilyLayout.prototype.measure = function (levelVisibility, isCursor, isSelected, treeItemTemplate, treeItemsPositions, options) {
   this.treeLevelsPositions = [];
 

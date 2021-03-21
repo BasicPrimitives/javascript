@@ -2,7 +2,7 @@
 import FamilyItem from '../../models/FamilyItem';
 import { GroupByType } from '../../enums';
 
-export default function RemoveLoopsTask(itemsOptionTask, logicalFamilyTask) {
+export default function RemoveLoopsTask(logicalFamilyTask) {
   var _data = {
     logicalFamily: null,
     maximumId: null,
@@ -11,10 +11,9 @@ export default function RemoveLoopsTask(itemsOptionTask, logicalFamilyTask) {
 
   function process(debug) {
     var logicalFamily = logicalFamilyTask.getLogicalFamily(),
-      maximumId = logicalFamilyTask.getMaximumId(),
-      items = itemsOptionTask.getItems();
+      maximumId = logicalFamilyTask.getMaximumId();
 
-    var result = removeLoops(items, logicalFamily, maximumId, debug);
+    var result = removeLoops(logicalFamily, maximumId, debug);
 
     _data.logicalFamily = result.logicalFamily;
     _data.maximumId = result.maximumId;
@@ -27,16 +26,12 @@ export default function RemoveLoopsTask(itemsOptionTask, logicalFamilyTask) {
     return true;
   }
 
-  function removeLoops(items, logicalFamily, maximumId, debug) {
+  function removeLoops(logicalFamily, maximumId, debug) {
     var fakeChild, fakeParent,
       index, len,
       index2, len2,
-      edgesToReverse = getInOrderLoops(items, logicalFamily),
+      edgesToReverse = getFamilyLoops(logicalFamily, debug),
       fakePairs = [];
-
-    if (edgesToReverse.length > 1) {
-      edgesToReverse = getFamilyLoops(logicalFamily, debug);
-    }
 
     // group edges by child node
     var loops = [];
@@ -79,7 +74,7 @@ export default function RemoveLoopsTask(itemsOptionTask, logicalFamilyTask) {
           id: (maximumId),
           isVisible: false,
           isActive: false,
-          isLevelNeutral: true,
+          isLevelNeutral: false,
           hideParentConnection: isConnectionsVisible,
           hideChildrenConnection: isConnectionsVisible,
           levelGravity: GroupByType.Children,
@@ -101,7 +96,7 @@ export default function RemoveLoopsTask(itemsOptionTask, logicalFamilyTask) {
               id: (maximumId),
               isVisible: false,
               isActive: false,
-              isLevelNeutral: true,
+              isLevelNeutral: false,
               hideParentConnection: true,
               hideChildrenConnection: true,
               levelGravity: GroupByType.Parents,
@@ -134,53 +129,6 @@ export default function RemoveLoopsTask(itemsOptionTask, logicalFamilyTask) {
       logicalFamily: logicalFamily,
       loops: fakePairs
     }
-  }
-
-  function getInOrderLoops(items, logicalFamily) {
-    var tempFamily,
-      index, len,
-      index2, len2,
-      nodesToRemove,
-      parents,
-      userItem,
-      result = [];
-
-    tempFamily = logicalFamily.clone();
-    logicalFamily.loopTopo(this, function (itemid, item, levelIndex) {
-      tempFamily.removeNode(itemid);
-    });
-
-    if (tempFamily.hasNodes()) {
-      /* remove parents of the first remaining item in user order*/
-      for (index = 0, len = items.length; index < len; index += 1) {
-        userItem = items[index];
-
-        if (tempFamily.node(userItem.id) != null) {
-
-          parents = [];
-          tempFamily.loopParents(this, userItem.id, function (parentid, parent, level) {
-            parents.push(parentid);
-            result.push({ from: parentid, to: userItem.id });
-            return tempFamily.SKIP;
-          }); //ignore jslint
-
-          for (index2 = 0, len2 = parents.length; index2 < len2; index2 += 1) {
-            /* remove relation in temp structure */
-            tempFamily.removeRelation(parents[index2], userItem.id);
-          }
-
-          /* loop is broken, so continue items removal in topological order */
-          nodesToRemove = [];
-          tempFamily.loopTopo(this, function (itemid, item, levelIndex) {
-            nodesToRemove.push(itemid);
-          }); //ignore jslint
-          for (index2 = 0, len2 = nodesToRemove.length; index2 < len2; index2 += 1) {
-            tempFamily.removeNode(nodesToRemove[index2]);
-          }
-        }
-      }
-    }
-    return result;
   }
 
   function getLogicalFamily() {

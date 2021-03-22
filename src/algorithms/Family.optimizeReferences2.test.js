@@ -59,6 +59,7 @@ test('optimizeReferences - Test for loops created by references optimizer.', () 
            "CalloutOptionTask",
            "ConnectorsOptionTask",
            "ItemsOptionTask",
+           "RemoveLoopsOptionTask",
            "SpousesOptionTask",
            "ItemsSizesOptionTask",
            "TemplatesOptionTask",
@@ -85,6 +86,9 @@ test('optimizeReferences - Test for loops created by references optimizer.', () 
            "AnnotationLabelTemplateTask",
            "SelectedItemsTask",
            "CombinedContextsTask"
+        ],
+        "RemoveLoopsOptionTask":[
+           "RemoveLoopsTask"
         ],
         "SplitAnnotationsOptionTask":[
            "ForegroundShapeAnnotationOptionTask",

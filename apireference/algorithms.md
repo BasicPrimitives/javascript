@@ -179,7 +179,7 @@ Eliminates crossing parent child relations between nodes based of nodes order in
 | --- | --- | --- | --- | 
  | `treeLevels` | treeLevels | `` | Tree levels structure keeps orders of nodes level by level. | 
 
- `groupBy(thisArg, size, onGroup, onItem)` 
+ `groupBy(thisArg, size, onGroup, onGroupId)` 
 
 Creates graph structure out of the family structure.
 
@@ -187,7 +187,7 @@ Creates graph structure out of the family structure.
 | --- | --- | --- | --- | 
  | `thisArg` | Object | `` | The callback function invocation context | 
  | `onGroup` | onFamilyGroupCallback | `` | A callback function to call for every new group of nodes found | 
- | `onGroup` | onFamilyGroupItemCallback | `` | A callback function to call for every new group of nodes found | 
+ | `onGroupId` | onFamilyGroupIdCallback | `` | A callback function to call for every new group of nodes found | 
 **Callbacks**
 
  `onFamilyGroupCallback(parent, child, nodes)` 
@@ -198,18 +198,17 @@ Callback for grouping nodes having common single parent and child
 | --- | --- | --- | --- | 
  | `parent` | string | `` | The common parent node id | 
  | `child` | string | `` | The common child node id | 
- | `nodes` | Array.<string> | `` | Collection of grouped nodes ids | 
- | `nodes` | Array.<Object> | `` | Collection of grouped items | 
+ | `nodes` | Array.<Array.<FamilyNode>> | `` | Collection of collections of grouped items | 
 
- `onFamilyGroupItemCallback(itemid)` 
+ `onFamilyGroupIdCallback(nodes)` 
 
-Callback for getting group id for individual nodes
+Callback for getting group id for group of nodes
 
- Returns: `string` - returns group id or null. null adds node to default group. return -1 to disable node grouping.
+ Returns: `string` - returns group id or null. null adds node to default group. return -1 to disable grouping.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `itemid` | string | `` | The item id | 
+ | `nodes` | Array.<FamilyNode> | `` | Collection of nodes to get group id for. | 
 
  `hasCommonChild(parents)` 
 

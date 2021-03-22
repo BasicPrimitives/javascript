@@ -52,6 +52,7 @@ import LevelAnnotationTemplateTask from './tasks/templates/LevelAnnotationTempla
 
 import VisualTreeTask from './tasks/transformations/VisualTreeTask';
 import VisualTreeLevelsTask from './tasks/transformations/VisualTreeLevelsTask';
+import OrgExtractNestedLayoutsTask from './tasks/transformations/OrgExtractNestedLayoutsTask';
 import ConnectionsGraphTask from './tasks/transformations/ConnectionsGraphTask';
 import HighlightItemTask from './tasks/transformations/selection/HighlightItemTask';
 import CursorItemTask from './tasks/transformations/selection/CursorItemTask';
@@ -178,7 +179,8 @@ export default function TaskManagerFactory(getOptions, getGraphics, getLayout, s
   tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'ActiveItemsTask', 'VisualTreeOptionTask', 'isFamilyChartMode'], VisualTreeTask, Colors.Red);
   tasks.addTask('VisualTreeLevelsTask', ['VisualTreeTask', 'ItemTemplateParamsTask'], VisualTreeLevelsTask, Colors.Red);
 
-  tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'VisualTreeLevelsTask', 'VisualTreeLevelsTask', 'AlignDiagramTask'], ConnectionsGraphTask, Colors.Cyan);
+  tasks.addTask('OrgExtractNestedLayoutsTask', ['OptionsTask'], OrgExtractNestedLayoutsTask, Colors.Cyan);
+  tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'VisualTreeLevelsTask', 'OrgExtractNestedLayoutsTask', 'AlignDiagramTask'], ConnectionsGraphTask, Colors.Cyan);
 
   // Transformations/Selections
   tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'ActiveItemsTask'], HighlightItemTask, Colors.Cyan);

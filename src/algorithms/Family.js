@@ -1,6 +1,17 @@
 import { isObject, cloneObject, isEmptyObject } from '../common';
 import Graph from './Graph';
 import LinkedHashItems from './LinkedHashItems';
+  /**
+  * Family node
+  * @class FamilyNode
+  * @property {string} id Id
+  * @property {object} node Node
+  */
+   function FamilyNode(id, node) {
+    this.id = id;
+    this.node = node;
+  }
+
 /**
  * Creates a family object
  * 
@@ -1610,17 +1621,6 @@ export default function Family(source) {
     this.parents = parents;
     this.children = children;
     this.nodes = [];
-  }
-
-  /**
-  * Family node
-  * @class FamilyNode
-  * @property {string} id Id
-  * @property {object} node Node
-  */
-  function FamilyNode(id, node) {
-    this.id = id;
-    this.node = node;
   }
 
   /**

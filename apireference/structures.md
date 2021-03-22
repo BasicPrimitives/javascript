@@ -4,6 +4,11 @@ Graph edge structure
 
  `Edge` 
 
+## <a name="FamilyNode" id="FamilyNode">FamilyNode</a>
+Family node
+
+ `FamilyNode` 
+
 ## <a name="HeapResult" id="HeapResult">HeapResult</a>
 Heap result object
 
@@ -523,6 +528,13 @@ Returns size in form of CSS style object.
 Inverts size dimensions
 
  Returns: `Size` - returns reference to the current size.
+
+
+ `isEmpty()` 
+
+Checks if size is empty. Size is empty if one of its dimensions is undefined or less than zero.
+
+ Returns: `boolean` - returns true if size is empty.
 
 
  `maxSize(size)` 

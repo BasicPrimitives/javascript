@@ -1654,54 +1654,56 @@ export default function Family(source) {
       for (var nodeid in _nodes) {
         if(!processed.hasOwnProperty(nodeid) ) {
           processed[nodeid] = true;
-          var nodes = [new FamilyNode(nodeid, _nodes[nodeid])];
-          loopChainParents(this, nodeid, (parentId) => {
-            processed[parentId] = true;
-            nodes.unshift({id: parentId, node: _nodes[parentId]});
-          });
-          loopChainChildren(this, nodeid, (childId) => {
-            processed[childId] = true;
-            nodes.push(new FamilyNode(childId, _nodes[childId]));
-          });
-
-          /* find group id*/
-          var groupId = null;
-          if(onGroupId != null) {
-            groupId = onGroupId.call(thisArg, nodes);
-          }
-          
-          /* add node or list of nodes to group */
-          if(groupId !== -1) {
-
-            var parents = [];
-            loopParents(this, nodes[0].id, function(parentId, parent, levelIndex) {
-              if(levelIndex == 0) {
-                parents.push(parentId);
-                return;
-              }
-              return BREAK;
+          if ((_parentsCount[nodeid] || 0) <= 1 && (_childrenCount[nodeid] || 0) <= 1) {
+            var nodes = [new FamilyNode(nodeid, _nodes[nodeid])];
+            loopChainParents(this, nodeid, (parentId) => {
+              processed[parentId] = true;
+              nodes.unshift({id: parentId, node: _nodes[parentId]});
             });
-            parents.sort();
-
-            var children = [];
-            loopChildren(this, nodes[nodes.length-1].id, function(childId, child, levelIndex) {
-              if(levelIndex == 0) {
-                children.push(childId);
-                return;
-              }
-              return BREAK;
+            loopChainChildren(this, nodeid, (childId) => {
+              processed[childId] = true;
+              nodes.push(new FamilyNode(childId, _nodes[childId]));
             });
-            children.sort();
 
-            var key = parents.join(",") + " * " + children.join(",");
+            /* find group id*/
+            var groupId = null;
+            if(onGroupId != null) {
+              groupId = onGroupId.call(thisArg, nodes);
+            }
+            
+            /* add node or list of nodes to group */
+            if(groupId !== -1) {
 
-            if(groupId !== null) {
-              key += " * " + groupId;
+              var parents = [];
+              loopParents(this, nodes[0].id, function(parentId, parent, levelIndex) {
+                if(levelIndex == 0) {
+                  parents.push(parentId);
+                  return;
+                }
+                return BREAK;
+              });
+              parents.sort();
+
+              var children = [];
+              loopChildren(this, nodes[nodes.length-1].id, function(childId, child, levelIndex) {
+                if(levelIndex == 0) {
+                  children.push(childId);
+                  return;
+                }
+                return BREAK;
+              });
+              children.sort();
+
+              var key = parents.join(",") + " * " + children.join(",");
+
+              if(groupId !== null) {
+                key += " * " + groupId;
+              }
+              if (!groups.hasOwnProperty(key)) {
+                groups[key] = new GroupBy(parents, children);
+              }
+              groups[key].nodes.push(nodes);
             }
-            if (!groups.hasOwnProperty(key)) {
-              groups[key] = new GroupBy(parents, children);
-            }
-            groups[key].nodes.push(nodes);
           }
         }
       }

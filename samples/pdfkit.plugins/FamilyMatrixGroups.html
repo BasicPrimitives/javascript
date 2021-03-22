@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html style="height: 95%">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Family Chart Matrix Groups</title>
+  <script type="text/javascript" src="../../pdfkitsamples.js"></script>
+  <script type="text/javascript" src="../../primitives.js"></script>
+
+  <script type='text/javascript'>
+    var control;
+    var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var sampleChart = primitives.FamDiagramPdfkit({
+        items: [
+          { id: 1, parents: [], title: "1", label: "1", description: "", image: photos.z, itemTitleColor: "#ff0000" },
+          { id: 2, parents: [1, 101, 102, 103], title: "2", label: "2", description: "", image: photos.a, itemTitleColor: "#ff0000" },
+          { id: 3, parents: [1, 101, 102, 103], title: "3", label: "3", description: "", image: photos.b, itemTitleColor: "#ff0000" },
+          { id: 4, parents: [1, 101, 102, 103], title: "4", label: "4", description: "", image: photos.c, itemTitleColor: "#ff0000" },
+          { id: 5, parents: [1, 101, 102, 103], title: "5", label: "5", description: "", image: photos.c, itemTitleColor: "#ff0000" },
+          { id: 6, parents: [1, 101, 102, 103], matrixId: "2", title: "6", label: "6", description: "", image: photos.e, itemTitleColor: "#ff0000" },
+          { id: 7, parents: [1, 101, 102, 103], matrixId: "2", title: "7", label: "7", description: "", image: photos.f, itemTitleColor: "#ff0000" },
+          { id: 8, parents: [1, 101, 102, 103], matrixId: "2", title: "8", label: "8", description: "", image: photos.g, itemTitleColor: "#ff0000" },
+          { id: 9, parents: [1, 101, 102, 103], matrixId: "2", title: "10", label: "10", description: "", image: photos.i, itemTitleColor: "#ff0000" },
+          { id: 10, parents: [1, 101, 102, 103], addToMatrix: false,  title: "10", label: "10", description: "", image: photos.i, itemTitleColor: "#ff0000" },
+          { id: 33, parents: [2, 3, 4, 5, 6, 7, 8, 9, 10], title: "33", label: "33", description: "", image: photos.m, itemTitleColor: "#4b0082" }
+        ],
+        cursorItem: 1,
+        linesWidth: 1,
+        linesColor: "black",
+        hasSelectorCheckbox: primitives.Enabled.False,
+        hideGrandParentsConnectors: true,
+        normalLevelShift: 20,
+        dotLevelShift: 20,
+        lineLevelShift: 20,
+        normalItemsInterval: 10,
+        dotItemsInterval: 10,
+        lineItemsInterval: 10,
+        arrowsDirection: primitives.GroupByType.Parents,
+        enableMatrixLayout: true,
+        minimumMatrixSize: 2,
+        maximumColumnsInMatrix: 4
+      });
+
+      // create a document and pipe to a blob
+      var sampleSize = sampleChart.getSize();
+
+      var doc = new PDFDocument({ size: [sampleSize.width + 100, sampleSize.height + 150] });
+      
+      var stream = doc.pipe(blobStream());
+
+      doc.fontSize(25)
+        .text('Family Diagram Matrix Layout', 30, 30);
+
+      var size = sampleChart.draw(doc, 30, 60);
+
+      doc.restore();
+
+      doc.end();
+      stream.on('finish', function () {
+        var string = stream.toBlobURL('application/pdf');
+        document.getElementById("previewpanel").setAttribute("src", string);
+      });
+    });
+
+  </script>
+</head>
+
+<body style="height: 100%">
+  <div id="basicdiagram" style="width: 100%; height: 100%; border-style: none; border-width: 0px;">
+    <iframe id="previewpanel" type="application/pdf" width="100%" height="100%" frameborder="0"
+      style="position:relative;z-index:999">
+    </iframe>
+  </div>
+</body>
+
+</html>

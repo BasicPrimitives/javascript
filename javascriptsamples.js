@@ -2284,7 +2284,7 @@ if (typeof document !== 'undefined') {
 /*!**********************!*\
   !*** ./src/enums.js ***!
   \**********************/
-/*! exports provided: AdviserPlacementType, AnnotationType, ChildrenPlacementType, Colors, ConnectorLabelPlacementType, ConnectorPlacementType, ConnectorShapeType, ConnectorStyleType, ConnectorType, ElbowType, Enabled, GroupByType, HorizontalAlignmentType, ItemType, LabelType, Layers, LineType, LoopsLayoutMode, NavigationMode, NeighboursSelectionMode, OrientationType, PageFitMode, PlacementType, RenderingMode, SegmentType, SelectionPathMode, ShapeType, SideFlag, TextOrientationType, UpdateMode, VectorRelationType, VerticalAlignmentType, Visibility, ZOrderType */
+/*! exports provided: AdviserPlacementType, AnnotationType, ChildrenPlacementType, Colors, ConnectorLabelPlacementType, ConnectorPlacementType, ConnectorShapeType, ConnectorStyleType, ConnectorType, ElbowType, Enabled, GroupByType, HorizontalAlignmentType, ItemType, LabelType, Layers, LineType, NavigationMode, NeighboursSelectionMode, OrientationType, PageFitMode, PlacementType, RenderingMode, SegmentType, SelectionPathMode, ShapeType, SideFlag, TextOrientationType, UpdateMode, VectorRelationType, VerticalAlignmentType, Visibility, ZOrderType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2306,7 +2306,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LabelType", function() { return LabelType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Layers", function() { return Layers; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LineType", function() { return LineType; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LoopsLayoutMode", function() { return LoopsLayoutMode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NavigationMode", function() { return NavigationMode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NeighboursSelectionMode", function() { return NeighboursSelectionMode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OrientationType", function() { return OrientationType; });
@@ -2893,31 +2892,6 @@ var LineType = {
   Dashed: 2
 };
 /**
- * @typedef {number} LoopsLayoutMode
- **/
-
-/**
- * Loops layout mode. Configuration may contain loop references between items, so control tries to find layout minimizing number of loops between levels, 
- * so majority of references ideally should go in one direction. This option disables optimization and 
- * forces items levels order to match their order in `items` collection. For example if you have two nodes `A` and `B` referencing each other as a parent, 
- * then it is not defined which one is going to be on the top of the diagram. Set this option to `KeepItemsOrder`, if you need the first item in your collection to be
- * on the top, otherwise control will optimize loops layout in order to minimize number of loops in diagram.
- *  
- * @enum {LoopsLayoutMode}
- */
-
-var LoopsLayoutMode = {
-  /**
-   * Optimized. Control searches for layout producing minimal number of feedback loops in the diagram.
-   */
-  Optimized: 0,
-
-  /**
-   * Keeps order of items on levels, the same as in `items` collection property.
-   */
-  KeepItemsOrder: 1
-};
-/**
  * @typedef {number} NavigationMode
  **/
 
@@ -2959,7 +2933,7 @@ var NavigationMode = {
  * So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items
  * of the diagram in full size and draw all other as markers.
  *
- * This enumeration controls visibility of neighbours of the cursor node in the auto fit mode. It allows to draw 
+ * This enumeration controls visibility of neighbors of the cursor node in the auto fit mode. It allows to draw 
  * them in full size regardless of available space.
  *
  * @enum {NavigationMode}
@@ -2972,7 +2946,7 @@ var NeighboursSelectionMode = {
   ParentsAndChildren: 0,
 
   /**
-   * Selects parents, children, spouses and siblings of the cursor item.
+   * Selects parents, children, and siblings of the cursor item.
    */
   ParentsChildrenSiblingsAndSpouses: 1
 };
@@ -3360,10 +3334,20 @@ function Size(arg0, arg1) {
 }
 ;
 /**
+ * Checks if size is empty. Size is empty if one of its dimensions is undefined or less than zero.
+ * 
+ * @returns {boolean} Returns true if size is empty.
+ */
+
+Size.prototype.isEmpty = function () {
+  return this.width === null || this.height === null || this.width < 0 || this.height < 0;
+};
+/**
  * Inverts size dimensions
  * 
  * @returns {Size} Returns reference to the current size.
  */
+
 
 Size.prototype.invert = function () {
   var width = this.width;

@@ -285,6 +285,13 @@ describe("Screen Shots", () => {
     })
   });
 
+  it('CaseLabelsNMatrixInFamilyChart', async () => {
+    await testByTemplate({
+      url: "http://localhost:8080/samples/javascript.controls/CaseLabelsNMatrixInFamilyChart.html",
+      imageName: "CaseLabelsNMatrixInFamilyChart"
+    })
+  });
+
   it('CaseLabelsCascadesInFamilyChart', async () => {
     await testByTemplate({
       url: "http://localhost:8080/samples/javascript.controls/CaseMultipleRootItemsInChart.html",
@@ -355,10 +362,18 @@ describe("Screen Shots", () => {
     })
   });
 
-  it('CaseSpousesInFamilyLayout', async () => {
+  it('CaseMatrixLayoutInFamilyChart', async () => {
     await testByTemplate({
-      url: "http://localhost:8080/samples/javascript.controls/CaseSpousesInFamilyLayout.html",
-      imageName: "CaseSpousesInFamilyLayout"
+      url: "http://localhost:8080/samples/javascript.controls/CaseMatrixLayoutInFamilyChart.html",
+      imageName: "CaseMatrixLayoutInFamilyChart"
     })
   });
+
+  it('CaseMatrixGroupsInFamilyChart', async () => {
+    await testByTemplate({
+      url: "http://localhost:8080/samples/javascript.controls/CaseMatrixGroupsInFamilyChart.html",
+      imageName: "CaseMatrixGroupsInFamilyChart"
+    })
+  });
+
 });

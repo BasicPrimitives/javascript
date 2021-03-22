@@ -22,12 +22,10 @@
         new javascriptsamples.CaptionConfig("Page Fit Mode defines rule of fitting chart into available screen space. Set it to None if you want to disable it.", false),
         new javascriptsamples.RadioBoxConfig("pageFitMode", primitives.PageFitMode.FitToPage, "Page Fit Mode", { None: 0, PageWidth: 1, PageHeight: 2, FitToPage: 3, SelectionOnly: 6 }, javascriptsamples.ValueType.Integer, onUpdate),
         new javascriptsamples.CaptionConfig("Loops layout optimization finds parent/child items order having minimul number of loops between level. Control renders loops with extra arrows along vertical segments.", false),
-        new javascriptsamples.RadioBoxConfig("loopsLayoutMode", primitives.LoopsLayoutMode.Optimized, "Loops Layout Mode", primitives.LoopsLayoutMode, javascriptsamples.ValueType.Integer, onUpdate),
         new javascriptsamples.RadioBoxConfig("hideGrandParentsConnectors", true, "The hideGrandParentsConnectors option hides direct connectors to grand parents. It helps to reduce diagrams connectors layout complexity. This option should be used together with dynamic highlighting of connectors to grandparents via immidiate parents, so information is not lost.", { Hide: true, Show: false }, javascriptsamples.ValueType.Boolean, onUpdate),
       ])
     ], {
       pageFitMode: primitives.PageFitMode.FitToPage,
-      loopsLayoutMode: primitives.LoopsLayoutMode.Optimized,
       hideGrandParentsConnectors: true
     });
 
@@ -141,7 +139,6 @@
       options.onItemRender = onTemplateRender;
 
       options.pageFitMode = primitives.PageFitMode.FitToPage;
-      options.loopsLayoutMode = primitives.LoopsLayoutMode.Optimized;
       options.hideGrandParentsConnectors = true;
 
       options.arrowsDirection = primitives.GroupByType.Children;

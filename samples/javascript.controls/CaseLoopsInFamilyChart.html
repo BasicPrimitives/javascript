@@ -3,7 +3,7 @@
 
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>Selection Path Mode</title>
+  <title>Loops in family diagram references</title>
   
   <script type="text/javascript" src="../../primitives.js"></script>
   <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
@@ -24,12 +24,12 @@
         { annotationType: primitives.AnnotationType.Label, fromItem: 2, toItems: [1], title: "100%" }
       ];
       options.items = [
+        { id: 5, parents: [4], title: "Lynette", label: "Lynette", description: "", image: "../images/photos/l.png" },
+        { id: 6, parents: [4], title: "Sara", label: "Sara", description: "", image: "../images/photos/s.png" },
         { id: 1, parents: [3, 5, 6, 7], title: "James", label: "James", description: "James is First and he is child of Brad, Sara & Lynette", image: "../images/photos/j.png" },
         { id: 2, parents: [1], title: "Brad", label: "Brad", description: "", image: "../images/photos/b.png" },
         { id: 3, parents: [2], title: "Thomas", label: "Thomas", description: "", image: "../images/photos/t.png" },
         { id: 4, parents: [3], title: "David", label: "David", description: "", image: "../images/photos/d.png" },
-        { id: 5, parents: [4], title: "Lynette", label: "Lynette", description: "", image: "../images/photos/l.png" },
-        { id: 6, parents: [4], title: "Sara", label: "Sara", description: "", image: "../images/photos/s.png" },
         { id: 7, title: "Parent", label: "Parent", description: "Parent node of James", image: "../images/photos/j.png" }
       ]
 
@@ -55,7 +55,7 @@
       options.lineItemsInterval = 10;
 
       options.cursorItem = 1;
-      options.pageFitMode = primitives.PageFitMode.AutoSize;
+      options.pageFitMode = primitives.PageFitMode.AutoFit;
       options.autoSizeMinimum = new primitives.Size(100, 100);
       options.autoSizeMaximum = new primitives.Size(2000, 2000);
       options.hasSelectorCheckbox = primitives.Enabled.True;
@@ -63,24 +63,6 @@
       control = primitives.FamDiagram(document.getElementById("basicdiagram"), options);
 
     });
-
-    function Update() {
-      var loopsLayoutMode = parseInt(getRadioValue("loopsLayoutMode"));
-      control.setOptions({
-        "loopsLayoutMode": loopsLayoutMode
-      });
-      control.update(primitives.UpdateMode.Refresh);
-    }
-
-    function getRadioValue(name) {
-      var radios = document.getElementsByName(name);
-      for (var i = 0; i < radios.length; i++) {
-        if (radios[i].checked) {
-          return radios[i].value;
-        }
-      }
-      return result;
-    }
   </script>
 
 
@@ -88,14 +70,7 @@
 
 <body>
   <div>
-    <p>
-      Loops Layout Mode:
-      <br><label><input onclick="Update()" name="loopsLayoutMode" type="radio" value="0" checked="">Optimized - 1 looped
-        relation</label>
-      <br><label><input onclick="Update()" name="loopsLayoutMode" type="radio" value="1">Keep Items Order - 3 looped
-        relations</label>
-    </p>
-    <div id="basicdiagram" style="border-style: dotted; border-width: 1px;"></div>
+    <div id="basicdiagram" style="width: 800px; height: 800px; border-style: dotted; border-width: 1px;"></div>
   </div>
 </body>
 

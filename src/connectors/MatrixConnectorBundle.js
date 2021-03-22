@@ -73,7 +73,7 @@ MatrixConnectorBundle.prototype.traceChildrenLayout = function (data, params, op
             var polyline = new Polyline();
             polyline.addSegment(new MoveSegment(fromX, fromY));
             polyline.addSegment(new LineSegment(toX, toY));
-
+            leftNodeId = params.nestedLayoutParentConnectorIds[leftNodeId] || leftNodeId;
             data.graph.addEdge(leftNodeId, medianPoint.id, new this.ConnectorEdge(leftNodeId, medianPoint.id, polyline,
               null,
               leftNodeId,
@@ -89,7 +89,7 @@ MatrixConnectorBundle.prototype.traceChildrenLayout = function (data, params, op
             var polyline = new Polyline();
             polyline.addSegment(new MoveSegment(fromX, fromY));
             polyline.addSegment(new LineSegment(toX, toY));
-
+            rightNodeId = params.nestedLayoutParentConnectorIds[rightNodeId] || rightNodeId;
             data.graph.addEdge(rightNodeId, medianPoint.id, new this.ConnectorEdge(rightNodeId, medianPoint.id, polyline,
               null,
               rightNodeId,
@@ -186,7 +186,7 @@ MatrixConnectorBundle.prototype.traceParentsLayout = function (data, params, opt
             var polyline = new Polyline();
             polyline.addSegment(new MoveSegment(fromX, fromY));
             polyline.addSegment(new LineSegment(toX, toY));
-
+            leftNodeId = params.nestedLayoutBottomConnectorIds[leftNodeId] || leftNodeId;
             data.graph.addEdge(leftNodeId, medianPoint.id, new this.ConnectorEdge(leftNodeId, medianPoint.id, polyline,
               leftNodeId,
               null,
@@ -203,6 +203,7 @@ MatrixConnectorBundle.prototype.traceParentsLayout = function (data, params, opt
             polyline.addSegment(new MoveSegment(fromX, fromY));
             polyline.addSegment(new LineSegment(toX, toY));
 
+            rightNodeId = params.nestedLayoutBottomConnectorIds[rightNodeId] || rightNodeId;
             data.graph.addEdge(rightNodeId, medianPoint.id, new this.ConnectorEdge(rightNodeId, medianPoint.id, polyline,
               rightNodeId,
               null,

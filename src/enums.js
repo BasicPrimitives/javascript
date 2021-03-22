@@ -573,30 +573,6 @@ export const LineType = {
 };
 
 /**
- * @typedef {number} LoopsLayoutMode
- **/
-
-/**
- * Loops layout mode. Configuration may contain loop references between items, so control tries to find layout minimizing number of loops between levels, 
- * so majority of references ideally should go in one direction. This option disables optimization and 
- * forces items levels order to match their order in `items` collection. For example if you have two nodes `A` and `B` referencing each other as a parent, 
- * then it is not defined which one is going to be on the top of the diagram. Set this option to `KeepItemsOrder`, if you need the first item in your collection to be
- * on the top, otherwise control will optimize loops layout in order to minimize number of loops in diagram.
- *  
- * @enum {LoopsLayoutMode}
- */
-export const LoopsLayoutMode = {
-    /**
-     * Optimized. Control searches for layout producing minimal number of feedback loops in the diagram.
-     */
-    Optimized: 0,
-    /**
-     * Keeps order of items on levels, the same as in `items` collection property.
-     */
-    KeepItemsOrder: 1
-};
-
-/**
  * @typedef {number} NavigationMode
  **/
 
@@ -635,7 +611,7 @@ export const NavigationMode = {
  * So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items
  * of the diagram in full size and draw all other as markers.
  *
- * This enumeration controls visibility of neighbours of the cursor node in the auto fit mode. It allows to draw 
+ * This enumeration controls visibility of neighbors of the cursor node in the auto fit mode. It allows to draw 
  * them in full size regardless of available space.
  *
  * @enum {NavigationMode}
@@ -646,7 +622,7 @@ export const NeighboursSelectionMode = {
      */
     ParentsAndChildren: 0,
     /**
-     * Selects parents, children, spouses and siblings of the cursor item.
+     * Selects parents, children, and siblings of the cursor item.
      */
     ParentsChildrenSiblingsAndSpouses: 1
 };

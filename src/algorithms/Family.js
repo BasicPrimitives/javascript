@@ -1,6 +1,17 @@
 import { isObject, cloneObject, isEmptyObject } from '../common';
 import Graph from './Graph';
 import LinkedHashItems from './LinkedHashItems';
+  /**
+  * Family node
+  * @class FamilyNode
+  * @property {string} id Id
+  * @property {object} node Node
+  */
+   function FamilyNode(id, node) {
+    this.id = id;
+    this.node = node;
+  }
+
 /**
  * Creates a family object
  * 
@@ -1564,6 +1575,7 @@ export default function Family(source) {
       });
     }
   }
+
   /**
    * Callback for getting default edge value
    * 
@@ -1603,41 +1615,132 @@ export default function Family(source) {
     return result;
   }
 
-  function GroupBy(parentid, childid) {
-    this.parentid = parentid;
-    this.childid = childid;
-    this.ids = [];
+
+
+  function GroupBy(parents, children) {
+    this.parents = parents;
+    this.children = children;
     this.nodes = [];
   }
 
+  /**
+   * Callback for grouping nodes having common single parent and child
+   * 
+   * @callback onFamilyGroupCallback
+   * @param {string} parent The common parent node id
+   * @param {string} child The common child node id
+   * @param {Array.<Array.<FamilyNode>>} nodes Collection of collections of grouped items
+   */
 
-  function groupBy(thisArg, size, onGroup) { //function onGroup(parent, child, nodes)
+  /**
+   * Callback for getting group id for group of nodes
+   * 
+   * @callback onFamilyGroupIdCallback
+   * @param {Array.<FamilyNode>} nodes Collection of nodes to get group id for.
+   * @returns {string} Returns group id or null. Null adds node to default group. Return -1 to disable grouping.
+  */
+
+  /**
+   * Creates graph structure out of the family structure.
+   * 
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onFamilyGroupCallback} onGroup A callback function to call for every new group of nodes found
+   * @param {onFamilyGroupIdCallback} onGroupId A callback function to call for every new group of nodes found
+   */
+  function groupBy(thisArg, size, onGroup, onGroupId) {
     if (onGroup != null) {
       var groups = {};
+      var processed = {};
       for (var nodeid in _nodes) {
-        var parentsCount = _parentsCount[nodeid] || 0;
-        var childrenCount = _childrenCount[nodeid] || 0;
-        if (parentsCount <= 1 && childrenCount <= 1) {
-          var parentid = firstParent(nodeid);
-          var childid = firstChild(nodeid);
-          var key = parentid + " * " + childid;
-          if (!groups.hasOwnProperty(key)) {
-            groups[key] = new GroupBy(parentid, childid);
+        if(!processed.hasOwnProperty(nodeid) ) {
+          processed[nodeid] = true;
+          if ((_parentsCount[nodeid] || 0) <= 1 && (_childrenCount[nodeid] || 0) <= 1) {
+            var nodes = [new FamilyNode(nodeid, _nodes[nodeid])];
+            loopChainParents(this, nodeid, (parentId) => {
+              processed[parentId] = true;
+              nodes.unshift({id: parentId, node: _nodes[parentId]});
+            });
+            loopChainChildren(this, nodeid, (childId) => {
+              processed[childId] = true;
+              nodes.push(new FamilyNode(childId, _nodes[childId]));
+            });
+
+            /* find group id*/
+            var groupId = null;
+            if(onGroupId != null) {
+              groupId = onGroupId.call(thisArg, nodes);
+            }
+            
+            /* add node or list of nodes to group */
+            if(groupId !== -1) {
+
+              var parents = [];
+              loopParents(this, nodes[0].id, function(parentId, parent, levelIndex) {
+                if(levelIndex == 0) {
+                  parents.push(parentId);
+                  return;
+                }
+                return BREAK;
+              });
+              parents.sort();
+
+              var children = [];
+              loopChildren(this, nodes[nodes.length-1].id, function(childId, child, levelIndex) {
+                if(levelIndex == 0) {
+                  children.push(childId);
+                  return;
+                }
+                return BREAK;
+              });
+              children.sort();
+
+              var key = parents.join(",") + " * " + children.join(",");
+
+              if(groupId !== null) {
+                key += " * " + groupId;
+              }
+              if (!groups.hasOwnProperty(key)) {
+                groups[key] = new GroupBy(parents, children);
+              }
+              groups[key].nodes.push(nodes);
+            }
           }
-          groups[key].ids.push(nodeid);
-          groups[key].nodes.push(_nodes[nodeid]);
         }
       }
 
       for (key in groups) {
         if (groups.hasOwnProperty(key)) {
           var group = groups[key];
-          if (group.ids.length >= size) {
-            if (onGroup.call(thisArg, group.parentid, group.childid, group.ids, group.nodes)) {
+          if (group.nodes.length >= size) {
+            if (onGroup.call(thisArg, group.parents, group.children, group.nodes)) {
               break;
             }
           }
         }
+      }
+    }
+  }
+
+  function loopChainParents(thisArg, nodeid, onItem) {
+    while(_parentsCount[nodeid] === 1) {
+      var parentId = firstParent(nodeid);
+      if(_childrenCount[parentId] === 1) {
+        onItem.call(thisArg, parentId);
+        nodeid = parentId;
+      } else {
+        break;
+      }      
+    }
+  }
+
+  function loopChainChildren(thisArg, nodeid, onItem) {
+    while(_childrenCount[nodeid] === 1) {
+      var childId = firstChild(nodeid);
+      if(_parentsCount[childId] === 1) {
+        onItem.call(thisArg, childId);
+        nodeid = childId;
+      } else {
+        break;
       }
     }
   }

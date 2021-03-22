@@ -169,7 +169,7 @@ export default function DrawItemLabelsTask(getGraphics, createTransformTask, app
 
       switch (labelType) {
         case LabelType.Regular:
-          weight = treeItemPosition.leftPadding + treeItemPosition.rightPadding;
+          weight = treeItemPosition.actualSize.width + treeItemPosition.actualSize.height;
           break;
         case LabelType.Fixed:
           weight = 10000;

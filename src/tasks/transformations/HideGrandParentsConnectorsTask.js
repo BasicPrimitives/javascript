@@ -1,13 +1,13 @@
 ﻿/*  This task optionally eliminates direct connections to grand parents */
-export default function HideGrandParentsConnectorsTask(hideGrandParentsConnectorsOptionTask, addSpousesTask) {
+export default function HideGrandParentsConnectorsTask(hideGrandParentsConnectorsOptionTask, removeLoopsTask) {
   var _data = {
     maximumId: null, /* maximum of OrgItem.id */
     logicalFamily: null
   }
 
   function process(debug) {
-    var logicalFamily = addSpousesTask.getLogicalFamily(),
-      maximumId = addSpousesTask.getMaximumId();
+    var logicalFamily = removeLoopsTask.getLogicalFamily(),
+      maximumId = removeLoopsTask.getMaximumId();
 
     var options = hideGrandParentsConnectorsOptionTask.getOptions();
 

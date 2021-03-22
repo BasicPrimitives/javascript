@@ -1,53 +1,34 @@
-﻿import BaseLayout from './BaseLayout';
-import Rect from '../../../graphics/structs/Rect';
-import { VerticalAlignmentType, Visibility, OrientationType, GroupByType, AdviserPlacementType } from '../../../enums';
+﻿import Rect from '../../../graphics/structs/Rect';
+import { VerticalAlignmentType, Visibility, GroupByType, AdviserPlacementType } from '../../../enums';
 import TreeItemPosition from '../../../models/TreeItemPosition';
 
-export default function MatrixLayout(params, options) {
-  this.params = {
-    items: [], // OrgItem used properties: isVisible
-    isItemSelected: null,
-    cursorItemId: null,
-    getTemplateParams: null, //TemplateParams
-    hideParentConnection: false,
-    hideChildrenConnection: false
-  };
-
-  this.options = {
-    verticalAlignment: VerticalAlignmentType.Middle,
-    orientationType: OrientationType.Top,
-    arrowsDirection: GroupByType.None,
-    linesWidth: 1,
-    checkBoxPanelSize: 24,
-    buttonsPanelSize: 32,
-    groupTitlePanelSize: 24,
-    groupTitlePlacementType: AdviserPlacementType.Left,
-    normalLevelShift: 20,
-    dotLevelShift: 20,
-    lineLevelShift: 20,
-    normalItemsInterval: 10,
-    dotItemsInterval: 1,
-    lineItemsInterval: 2,
-    maximumColumnsInMatrix: 6
-  };
+export default function MatrixLayout(items, hideParentConnection, hideChildrenConnection) {
+  this.items = items;
+  this.hideParentConnection = hideParentConnection;
+  this.hideChildrenConnection = hideChildrenConnection;
 
   this.data = {
-    treeItemsPositions: {},
     columns: [],
     rows: []
   };
-
-  this.parent = BaseLayout.prototype;
-  this.parent.constructor.apply(this, arguments);
 };
 
-MatrixLayout.prototype = new BaseLayout();
+MatrixLayout.prototype.loop = function (thisArg, onItem) {
+  if(onItem != null) {
+    for(var index = 0, len = this.items.length; index < len; index+=1) {
+      var item = this.items[index];
+
+      onItem.call(thisArg, item, 0);
+    }
+  }
+};
 
 MatrixLayout.prototype.Column = function () {
   this.depth = 0;
   this.offset = 0;
   this.leftPadding = 0;
   this.rightPadding = 0;
+  this.layoutDirection = AdviserPlacementType.Left;
 };
 
 MatrixLayout.prototype.Row = function () {
@@ -62,61 +43,42 @@ MatrixLayout.prototype.getMatrixWidth = function (maximumColumnsInMatrix, len) {
   return Math.min(maximumColumnsInMatrix, Math.ceil(Math.sqrt(len)));
 };
 
-MatrixLayout.prototype.measure = function (visibility) {
+MatrixLayout.prototype.measure = function (levelVisibility, isCursor, isSelected, treeItemTemplate, treeItemsPositions, options) {
   var data = {
-    treeItemsPositions: {},
     columns: [],
     rows: []
   };
 
-  this.measureItems(data, this.params, this.options, visibility);
-  this.measureColumns(data, this.params, this.options);
-  this.measureRows(data, this.params, this.options);
+  this.measureColumns(data, this.items, treeItemsPositions, options);
+  this.measureRows(data, this.items, treeItemsPositions, options);
 
   this.data = data;
 
-  return this.getLayoutSize(data);
+  var treeItemPosition = new TreeItemPosition();
+  treeItemPosition.actualVisibility = Visibility.Invisible;
+  treeItemPosition.actualSize = this.getLayoutSize(data);
+  return treeItemPosition;
 };
 
-MatrixLayout.prototype.measureItems = function (data, params, options, visibility) {
-  for (var index = 0, len = params.items.length; index < len; index += 1) {
-    var treeItem = params.items[index];
-    var treeItemId = treeItem.id;
-    var treeItemPosition = new TreeItemPosition();
-
-    var treeItemVisibility = params.isItemSelected(treeItemId) ? Visibility.Normal : (!treeItem.isVisible ? Visibility.Invisible : Visibility.Auto),
-      treeItemtemplate = params.getTemplateParams(treeItemId);
-
-    var actualVisibility = (treeItemVisibility === Visibility.Auto) ? visibility : treeItemVisibility;
-    var size = this.getItemSize(actualVisibility, params.cursorItemId == treeItemId, treeItemtemplate, options);
-    treeItemPosition.actualVisibility = actualVisibility;
-    treeItemPosition.actualSize = size.actualSize;
-    treeItemPosition.contentPosition = size.contentPosition;
-
-    data.treeItemsPositions[treeItemId] = treeItemPosition;
-  }
-};
-
-MatrixLayout.prototype.measureColumns = function (data, params, options) {
+MatrixLayout.prototype.measureColumns = function (data, items, treeItemsPositions, options) {
   var column,
     index, len,
-    maximumColumns = this.getMatrixWidth(options.maximumColumnsInMatrix, params.items.length);
-  for (index = 0, len = params.items.length; index < len; index += 1) {
-    var treeItem = params.items[index];
+    maximumColumns = this.getMatrixWidth(options.maximumColumnsInMatrix, items.length);
+  for (index = 0, len = items.length; index < len; index += 1) {
+    var treeItem = items[index];
     var treeItemId = treeItem.id;
-    var treeItemPosition = data.treeItemsPositions[treeItemId];
+    var treeItemPosition = treeItemsPositions[treeItemId];
 
     var horizontalPadding = options.intervals[treeItemPosition.actualVisibility] / 2;
-    treeItemPosition.leftPadding = horizontalPadding;
-    treeItemPosition.rightPadding = horizontalPadding;
 
     var columnIndex = index % maximumColumns;
     column = data.columns[columnIndex];
     if (column == null) {
       column = new this.Column();
+      column.layoutDirection = columnIndex % 2 ? AdviserPlacementType.Right : AdviserPlacementType.Left;
       data.columns[columnIndex] = column;
     }
-    var itemWidth = treeItemPosition.leftPadding + treeItemPosition.actualSize.width + treeItemPosition.rightPadding;
+    var itemWidth = horizontalPadding + treeItemPosition.actualSize.width + horizontalPadding;
     column.depth = Math.max(column.depth, itemWidth);
   }
 
@@ -131,22 +93,22 @@ MatrixLayout.prototype.measureColumns = function (data, params, options) {
     if (index % 2 == 0) {
       switch (options.arrowsDirection) {
         case GroupByType.Parents:
-          column.leftPadding = params.hideChildrenConnection ? 0 : arrowTipLength;
+          column.leftPadding = this.hideChildrenConnection ? 0 : arrowTipLength;
           column.rightPadding = 0;
           break;
         case GroupByType.Children:
           column.leftPadding = 0;
-          column.rightPadding = params.hideParentConnection ? 0 : arrowTipLength;
+          column.rightPadding = this.hideParentConnection ? 0 : arrowTipLength;
           break;
       }
     } else {
       switch (options.arrowsDirection) {
         case GroupByType.Parents:
           column.leftPadding = 0;
-          column.rightPadding = params.hideChildrenConnection ? 0 : arrowTipLength;
+          column.rightPadding = this.hideChildrenConnection ? 0 : arrowTipLength;
           break;
         case GroupByType.Children:
-          column.leftPadding = params.hideParentConnection ? 0 : arrowTipLength;
+          column.leftPadding = this.hideParentConnection ? 0 : arrowTipLength;
           column.rightPadding = 0;
           break;
       }
@@ -158,14 +120,14 @@ MatrixLayout.prototype.measureColumns = function (data, params, options) {
   }
 };
 
-MatrixLayout.prototype.measureRows = function (data, params, options) {
+MatrixLayout.prototype.measureRows = function (data, items, treeItemsPositions, options) {
   var index, len,
     row,
-    maximumColumns = this.getMatrixWidth(options.maximumColumnsInMatrix, params.items.length);
-  for (index = 0, len = params.items.length; index < len; index += 1) {
-    var treeItem = params.items[index];
+    maximumColumns = this.getMatrixWidth(options.maximumColumnsInMatrix, items.length);
+  for (index = 0, len = items.length; index < len; index += 1) {
+    var treeItem = items[index];
     var treeItemId = treeItem.id;
-    var treeItemPosition = data.treeItemsPositions[treeItemId];
+    var treeItemPosition = treeItemsPositions[treeItemId];
 
     var rowIndex = Math.floor(index / maximumColumns);
     var verticalPadding = options.shifts[treeItemPosition.actualVisibility] / 2;
@@ -241,11 +203,11 @@ MatrixLayout.prototype.getLayoutHeight = function (data) {
   return result;
 };
 
-MatrixLayout.prototype.arrange = function (thisArg, parentPosition, onItemPositioned) {
+MatrixLayout.prototype.arrange = function (thisArg, parentPosition, layoutDirection, treeItemsPositions, options, onItemPositioned) {
   if (onItemPositioned != null) {
-    var maximumColumns = this.getMatrixWidth(this.options.maximumColumnsInMatrix, this.params.items.length);
-    for (var index = 0, len = this.params.items.length; index < len; index += 1) {
-      var treeItem = this.params.items[index],
+    var maximumColumns = this.getMatrixWidth(options.maximumColumnsInMatrix, this.items.length);
+    for (var index = 0, len = this.items.length; index < len; index += 1) {
+      var treeItem = this.items[index],
         treeItemId = treeItem.id;
 
       var columnIndex = index % maximumColumns;
@@ -254,29 +216,32 @@ MatrixLayout.prototype.arrange = function (thisArg, parentPosition, onItemPositi
       var rowIndex = Math.floor(index / maximumColumns);
       var row = this.data.rows[rowIndex];
 
-      var treeItemPosition = this.data.treeItemsPositions[treeItemId];
+      var treeItemPosition = treeItemsPositions[treeItemId];
 
-      var actualPosition = this.getItemPosition(treeItemPosition.actualVisibility, column, row, treeItemPosition.actualSize, this.options);
+      var actualPosition = this.getItemPosition(treeItemPosition.actualVisibility, column, row, treeItemPosition.actualSize, options.verticalAlignment);
       actualPosition.translate(parentPosition.x, parentPosition.y);
 
-      treeItemPosition.actualPosition = actualPosition;
-      treeItemPosition.horizontalConnectorsShift = parentPosition.y + row.offset - row.depth / 2 + row.horizontalConnectorsDepth,
-        treeItemPosition.leftMedianOffset = column.depth / 2 + column.leftPadding;
-      treeItemPosition.rightMedianOffset = column.depth / 2 + column.rightPadding;
-      treeItemPosition.topConnectorShift = row.depth / 2;
-      treeItemPosition.bottomConnectorShift = row.depth / 2;
+      treeItemPosition = {
+        ...treeItemPosition,
+        actualPosition,
+        horizontalConnectorsShift: parentPosition.y + row.offset - row.depth / 2 + row.horizontalConnectorsDepth,
+        leftMedianOffset: column.depth / 2 + column.leftPadding,
+        rightMedianOffset: column.depth / 2 + column.rightPadding,
+        topConnectorShift: row.depth / 2,
+        bottomConnectorShift: row.depth / 2
+      };      
 
-      onItemPositioned.call(thisArg, treeItemId, treeItemPosition);
+      onItemPositioned.call(thisArg, treeItemId, treeItemPosition, column.layoutDirection);
     }
   }
 };
 
-MatrixLayout.prototype.getItemPosition = function (visibility, column, row, size, options) {
+MatrixLayout.prototype.getItemPosition = function (visibility, column, row, size, verticalAlignment) {
   var itemShift = 0;
 
   switch (visibility) {
     case Visibility.Normal:
-      switch (options.verticalAlignment) {
+      switch (verticalAlignment) {
         case VerticalAlignmentType.Top:
           itemShift = 0;
           break;

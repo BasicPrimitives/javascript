@@ -13,55 +13,54 @@ FamilyNormalizer.prototype = new BaseTransformer();
 FamilyNormalizer.prototype.normalize = function (options, logicalFamily, maximumId) {
   if (logicalFamily.hasNodes() > 0) {
 
-    /* Distribute FamilyItem-s by levels. Item levels aligned to bottom. */
-    logicalFamily.loopLevels(this, options.groupByType == GroupByType.Parents, function (itemid, item, levelIndex) {
+    /* create temp family without labels and invisible node used to bind connections and eliminate many to many relations */
+    var toBeRemoved = [];
+    logicalFamily.loop(this, function(itemId, item) {
+      if(item.isLevelNeutral) {
+        toBeRemoved.push(itemId);
+      }
+    })
+    var logicalFamily2 = logicalFamily;
+    if(toBeRemoved.length > 0) {
+      logicalFamily2 = logicalFamily.clone();
+      for(var index = 0; index < toBeRemoved.length; index+=1) {
+        var itemId = toBeRemoved[index];
+        var parents = [];
+        logicalFamily2.loopParents(this, itemId, function(parentId, parent, levelIndex) {
+          if(levelIndex == 0) {
+            parents.push(parentId);
+            return;
+          }
+          return true;
+        });
+        var children = [];
+        if(parents.length > 0) {
+          logicalFamily2.loopChildren(this, itemId, function(childId, child, levelIndex) {
+            if(levelIndex == 0) {
+              children.push(childId);
+              return;
+            }
+            return true;
+          });
+        }
+        logicalFamily2.removeNode(itemId);
+
+        if(children.length > 0) {
+          for(var childIndex = 0; childIndex < children.length; childIndex+=1) {
+            var childId = children[childIndex];
+            logicalFamily2.adopt(parents, childId);
+          }
+        }
+      }
+    }
+
+    /* Distribute Temp Family nodes by levels. Item levels aligned to bottom. */
+    logicalFamily2.loopLevels(this, options.groupByType == GroupByType.Parents, function (itemId, item, levelIndex) {
       item.level = levelIndex;
     });
 
-    /* Optimize family references. Bundle connectors where it is possible */
-    logicalFamily.optimizeReferences(function () {
-      maximumId += 1;
-
-      return new FamilyItem({
-        id: maximumId,
-        isVisible: false,
-        isActive: false,
-        itemConfig: { title: "bundle #" + maximumId, description: " This item was created by references optimizer." },
-        levelGravity: GroupByType.Children
-      });
-    }); //ignore jslint
-
-    if (this.debug && !logicalFamily.validate()) {
-      throw "References are broken in family structure!";
-    }
-    if (this.debug && logicalFamily.hasLoops()) {
-      throw "Structure has loops!";
-    }
-
-    /* eliminate many to many connections in chart, every connection should be ether child or parent relation. */
-    logicalFamily.eliminateManyToMany(function () {
-      maximumId += 1;
-
-      return new FamilyItem({
-        id: maximumId,
-        isVisible: false,
-        isActive: false,
-        itemConfig: { title: "dummy #" + maximumId, description: "This is item used to eliminate M:M relations." },
-        levelGravity: GroupByType.Children,
-        hideParentConnection: false,
-        hideChildrenConnection: false
-      });
-    } //ignore jslint
-    );
-
-    if (this.debug && !logicalFamily.validate()) {
-      throw "References are broken in family structure!";
-    }
-
-    /* enumerate */
-
     if (options.alignBylevels) {
-      /* Distribute FamilyItem-s by levels. The original family items visible to user should keep their levels after all transformations */
+      /* Distribute optimized FamilyItem-s by levels. The original family items visible to user should keep their levels after all transformations */
       this.resortItemsBylevels(logicalFamily);
     } else {
       logicalFamily.loopLevels(this, options.groupByType == GroupByType.Parents, function (itemid, item, levelIndex) {

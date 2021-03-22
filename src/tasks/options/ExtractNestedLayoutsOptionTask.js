@@ -1,10 +1,8 @@
 import ValueReader from '../../readers/ValueReader';
 import ObjectReader from '../../readers/ObjectReader';
 import ArrayReader from '../../readers/ArrayReader';
-import EnumerationReader from '../../readers/EnumerationReader';
-import { AdviserPlacementType } from '../../enums';
 
-export default function OrderFamilyNodesOptionTask(optionsTask, defaultConfig, defaultItemConfig) {
+export default function ExtractNestedLayoutsOptionTask(optionsTask, defaultConfig, defaultItemConfig) {
   var _data = {},
     _hash = {};
 
@@ -15,10 +13,6 @@ export default function OrderFamilyNodesOptionTask(optionsTask, defaultConfig, d
     items: new ArrayReader(
       new ObjectReader({
         id: new ValueReader(["string", "number"], true),
-        position: new ValueReader(["number"], true),
-        relativeItem: new ValueReader(["string", "number"], true),
-        placementType: new EnumerationReader(AdviserPlacementType, false, defaultItemConfig.placementType),
-        primaryParent: new ValueReader(["string", "number"], true),
         matrixId: new ValueReader(["string", "number"], false, defaultItemConfig.matrixId),
         addToMatrix: new ValueReader(["boolean"], false, defaultItemConfig.addToMatrix),
       }),

@@ -2,16 +2,12 @@ import Rect from '../graphics/structs/Rect';
 import { Visibility } from '../enums';
 
 export default function TreeItemPosition(source) {
-  this.partnerConnectorOffset = 0;
-
   this.level = null;
-  this.levelPosition = null;
   this.offset = 0;
   this.leftPadding = 0;
   this.rightPadding = 0;
 
   this.actualVisibility = Visibility.Normal;
-
   this.actualSize = null;
   this.actualPosition = null;
   this.contentPosition = null;

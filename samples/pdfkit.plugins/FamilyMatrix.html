@@ -15,23 +15,25 @@
     var blobStream = pdfkitsamples.blobStream;
 
     document.addEventListener('DOMContentLoaded', function () {
-      // create a document and pipe to a blob
-      var doc = new PDFDocument();
-      var stream = doc.pipe(blobStream());
-
-      doc.fontSize(25)
-        .text('Family Diagram Matrix Layout', 30, 30);
-
       var sampleChart = primitives.FamDiagramPdfkit({
         items: [
-          { id: 1, title: "Roger Dalton", label: "David Dalton", description: "1, Chief Executive Officer (CEO)", phone: "352-206-7599", email: "davidalt@name.com", image: photos.q, itemTitleColor: "#4169e1" },
-          { id: 2, parents: [1], title: "Bill Dalton", label: "David Dalton", description: "1, Chief Executive Officer (CEO)", phone: "352-206-7599", email: "davidalt@name.com", image: photos.q, itemTitleColor: "#4169e1" },
-          { id: 3, parents: [1], title: "David Dalton", label: "David Dalton", description: "1, Chief Executive Officer (CEO)", phone: "352-206-7599", email: "davidalt@name.com", image: photos.q, itemTitleColor: "#4169e1" },
-          { id: 4, parents: [1], title: "Steven Lacombe", label: "Steven Lacombe", description: "2, GM, Platform Strategy", phone: "805-800-7397", email: "stevlaco@name.com", image: photos.a, itemTitleColor: "#4b0082" },
-          { id: 5, parents: [1], title: "Ann Smith", label: "Ann Smith", description: "3, GM, Strategic Marketing and Communications", phone: "631-787-3495", email: "nancsmit@name.com", image: photos.s, itemTitleColor: "#4b0082" },
-          { id: 6, parents: [2, 3, 4, 5], title: "Sally Smith", label: "Ann Smith", description: "7, GM, Strategic Marketing and Communications", phone: "631-787-3495", email: "nancsmit@name.com", image: photos.s, itemTitleColor: "#4b0082" }
+          { id: 1, parents: [], title: "Corp 1", label: "Corp 1", description: "Parent 1", image: photos.p },
+          { id: 2, parents: [], title: "Corp 2", label: "Corp 2", description: "Parent 2", image: photos.p },
+          { id: 101, parents: [], title: "Corp 3", label: "Corp 3", description: "Parent 3", image: photos.p },
+          { id: 102, parents: [], title: "Corp 4", label: "Corp 4", description: "Parent 4", image: photos.p },
+          { id: 3, parents: [1, 2, 101, 102], title: "Sibling 1", label: "Sibling 1", description: "Sibling 1", image: photos.s },
+          { id: 4, parents: [1, 2, 101, 102], title: "Sibling 2", label: "Sibling 2", description: "Sibling 2", image: photos.s },
+          { id: 5, parents: [1, 2, 101, 102], title: "Sibling 3", label: "Sibling 3", description: "Sibling 3", image: photos.s },
+          { id: 6, parents: [1, 2, 101, 102], title: "Sibling 4", label: "Sibling 4", description: "Sibling 4", image: photos.s },
+          { id: 7, parents: [1, 2, 101, 102], title: "Sibling 5", label: "Sibling 5", description: "Sibling 5", image: photos.s },
+          { id: 8, parents: [1, 2, 101, 102], title: "Sibling 6", label: "Sibling 6", description: "Sibling 6", image: photos.s },
+          { id: 9, parents: [1, 2, 101, 102], title: "Sibling 7", label: "Sibling 7", description: "Sibling 7", image: photos.s },
+          { id: 10, parents: [3, 4, 5, 6, 7, 8, 9], title: "Grand Child 1", label: "Grand Child 1", description: "Grand Child 1", image: photos.c },
+          { id: 11, parents: [3, 4, 5, 6, 7, 8, 9], title: "Grand Child 2", label: "Grand Child 2", description: "Grand Child 2", image: photos.c },
+          { id: 12, parents: [3, 4, 5, 6, 7, 8, 9], title: "Grand Child 3", label: "Grand Child 3", description: "Grand Child 3", image: photos.c },
+          { id: 13, parents: [3, 4, 5, 6, 7, 8, 9], title: "Grand Child 4", label: "Grand Child 4", description: "Grand Child 4", image: photos.c }
         ],
-        cursorItem: 2,
+        cursorItem: 1,
         linesWidth: 1,
         linesColor: "black",
         hasSelectorCheckbox: primitives.Enabled.False,
@@ -47,6 +49,16 @@
         minimumMatrixSize: 2,
         maximumColumnsInMatrix: 4
       });
+
+      // create a document and pipe to a blob
+      var sampleSize = sampleChart.getSize();
+
+      var doc = new PDFDocument({ size: [sampleSize.width + 100, sampleSize.height + 150] });
+      
+      var stream = doc.pipe(blobStream());
+
+      doc.fontSize(25)
+        .text('Family Diagram Matrix Layout', 30, 30);
 
       var size = sampleChart.draw(doc, 30, 60);
 

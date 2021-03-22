@@ -1,15 +1,24 @@
+#### Version 6.3.0
+**Warning**: Non-backward compatible API changes!
+* Added `matrixId` and `addToMatrix` properties to `FamItemConfig`.
+* Fixed label annotations placement for nodes having matrix layout.
+* Fixed label annotations placement to be in between regular node levels.
+* Fixed horizontal arrows for assistants and adviser item types.
+* Removed `spouses` property from `FamItemConfig`.
+* Removed `loopsLayoutMode` property from `FamConfig`.
 #### Version 6.2.2
 * Fixed Family Relations Optimizer
 #### Version 6.2.1
+**Warning**: Non-backward compatible API changes!
 * Removed Canvas support.
 * Removed GraphicsType enumeration.
 * Removed graphicsType from OrgConfig and FamConfig
 #### Version 6.1.1
-* Fixed levelOffset property to work regardless of empty levels
+* Fixed `levelOffset` property to work regardless of empty levels
 #### Version 6.1.0
 * Added LevelAnnotationConfig
 * Added level annotation options to OrgConfig and FamConfig
-* Fixed frame auto hiding for small control size
+* Fixed frame auto-hiding for small control size
 * Fixed group title options in PDFKit plugins.
 * Fixed shapes opacity in PDFKit plugins.
 #### Version 6.0.0

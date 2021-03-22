@@ -8,3 +8,11 @@ See primitives.LabelAnnotationConfig for details. By default, label annotations 
 [JavaScript](javascript.controls/CaseLabelsCascadesInFamilyChart.html)
 
 ![Screenshot](javascript.controls/__image_snapshots__/CaseLabelsCascadesInFamilyChart-snap.png)
+
+
+# Labels over connection lines in matrix-shaped family chart
+The following sample demonstrates how matrix layout places labels around nodes.
+
+[JavaScript](javascript.controls/CaseLabelsNMatrixInFamilyChart.html)
+
+![Screenshot](javascript.controls/__image_snapshots__/CaseLabelsNMatrixInFamilyChart-snap.png)

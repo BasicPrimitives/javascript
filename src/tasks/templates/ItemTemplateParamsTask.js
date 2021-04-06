@@ -9,7 +9,6 @@ export default function ItemTemplateParamsTask(itemsSizesOptionTask, cursorItemO
 
   function process() {
     var itemsSizesOptions = itemsSizesOptionTask.getOptions(),
-      hasButtonsRender = (itemsSizesOptions.onButtonsRender != null),
       cursorItem = cursorItemOptionTask.getCursorItem(),
       items = itemsSizesOptions.items,
       index, len;
@@ -21,7 +20,8 @@ export default function ItemTemplateParamsTask(itemsSizesOptionTask, cursorItemO
         templateParams = new TemplateParams(),
         isCursor = (cursorItem == itemConfig.id),
         template = readTemplatesTask.getTemplate(itemConfig.templateName, itemsSizesOptions.defaultTemplateName, readTemplatesTask.DefaultWidgetTemplateName),
-        templateConfig = template.templateConfig;
+        templateConfig = template.templateConfig,
+        hasButtonsRender = itemsSizesOptions.onButtonsRender != null || templateConfig.onButtonsRender != null;
 
       templateParams.template = template;
 

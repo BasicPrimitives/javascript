@@ -184,10 +184,13 @@ export default function TemplateConfig() {
   this.hasButtons = Enabled.Auto;
 
   /**
-   * This callback function is used in React component. It basically makes buttons obsolete 
-   * and gives end user possibility to render any content in buttons panel.
-   * 
-   * @ignore
+   * On buttons panel render event. This callback function is called to render context of buttons panel.
+   * It is used to replace `buttons` collection property in the control. So we preserve context buttons panel as a functional 
+   * concept, but eliminate buttons customization API.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
    */
   this.onButtonsRender = null;
 };

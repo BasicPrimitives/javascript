@@ -166,7 +166,7 @@ Button click event. See `buttons` property.
 
  `onButtonsRender(event, data)` 
 
-On buttons panel render event. This callback function is called to render context of buttons panel. It is used to replace `buttons` collection property in ReactJS component. So we preserve context buttons panel as a functional concept, but eliminate buttons customization API.
+On buttons panel render event. This callback function is called to render context of buttons panel. It is used to replace `buttons` collection property in the control. So we preserve context buttons panel as a functional concept, but eliminate buttons customization API.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 

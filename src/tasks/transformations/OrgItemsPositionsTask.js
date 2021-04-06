@@ -234,21 +234,9 @@ export default function OrgItemsPositionsTask(currentControlSizeTask, scaleOptio
   }
 
   function recalcLevelsDepth() {
-    var index, len,
-      index2, len2,
-      index3, len3,
-      treeItem,
-      treeLevel,
-      treeItems,
-      itemPosition,
-      treeItemsHavingPartners,
-      treeItemsGroup,
-      partners, partner,
-      levelOffset,
+    var treeItemsHavingPartners,
       minimalDepth,
-      dotsDepth,
-      startIndex, endIndex,
-      stackSegments;
+      dotsDepth;
 
 
     _treeLevels.loopLevels(this, function (levelIndex, treeLevel) {

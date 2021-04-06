@@ -15,7 +15,6 @@ export default function CreateLayoutsTreeTask(orderFamilyNodesTask, extractNeste
     var maximumId = orderFamilyNodesTask.getMaximumId();
     var getConnectorsStacksSizes = orderFamilyNodesTask.getConnectorsStacksSizes;
 
-    /* create layouts tree and index visibility levels for page auto fit mode */
     var layouts = extractNestedLayoutsTask.getLayouts();
     var rootLayout = new FamilyLayout(logicalFamily, treeLevels, getConnectorsStacksSizes);
     var layoutsTree = Tree();

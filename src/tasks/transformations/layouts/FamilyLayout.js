@@ -177,8 +177,9 @@ FamilyLayout.prototype.setOffsets = function (treeLevels, treeItemsPositions, ch
     var nodeId = treeLevels.getItemAtPosition(levelIndex, 0);
     if (nodeId != null) {
       var treeItemPosition = treeItemsPositions[nodeId];
-      var nodeOffset = familyAlignment.getOffset(nodeId) - treeItemPosition.leftPadding - treeItemPosition.actualSize.width / 2;
-      leftMargin = (leftMargin == null) ? nodeOffset : Math.min(leftMargin, nodeOffset);
+      var childLayoutPosition = childLayoutsPositions[nodeId];
+      var nodeOffset = familyAlignment.getOffset(nodeId) - childLayoutPosition.leftPadding - treeItemPosition.actualSize.width / 2;
+      leftMargin = (leftMargin === null) ? nodeOffset : Math.min(leftMargin, nodeOffset);
     }
   });
 

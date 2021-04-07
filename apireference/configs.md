@@ -236,3 +236,14 @@ Template configuration object defines DOM elements for node content, cursor and 
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `hasButtons` | boolean | `Enabled.Auto` | Sets buttons panel visibility. `Auto` - depends on master config `hasButtons` property setting. `True` - visible `False` - hidden | 
+
+**Events**
+
+ `onButtonsRender(event, data)` 
+
+On buttons panel render event. This callback function is called to render context of buttons panel. It is used to replace `buttons` collection property in the control. So we preserve context buttons panel as a functional concept, but eliminate buttons customization API.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `event` | Object | `` | Mouse event | 
+ | `data` | EventArgs | `` | Context information | 

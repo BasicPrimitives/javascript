@@ -317,7 +317,7 @@ export default function OrgConfig(name) {
 
   /**
    * On buttons panel render event. This callback function is called to render context of buttons panel.
-   * It is used to replace `buttons` collection property in ReactJS component. So we preserve context buttons panel as a functional 
+   * It is used to replace `buttons` collection property in the control. So we preserve context buttons panel as a functional 
    * concept, but eliminate buttons customization API.
    *
    * @callback

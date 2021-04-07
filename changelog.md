@@ -1,3 +1,6 @@
+#### Version 6.3.1
+* Fixed family diagram padding
+* Fixed `onButtonsRender` in `TemplateConfig`
 #### Version 6.3.0
 **Warning**: Non-backward compatible API changes!
 * Added `matrixId` and `addToMatrix` properties to `FamItemConfig`.

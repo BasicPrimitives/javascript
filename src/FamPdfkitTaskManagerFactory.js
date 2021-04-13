@@ -98,8 +98,8 @@ import NormalizeLogicalFamilyTask from './tasks/transformations/NormalizeLogical
 import OrderFamilyNodesTask from './tasks/transformations/OrderFamilyNodesTask';
 import LabelAnnotationTemplateParamsTask from './tasks/templates/LabelAnnotationTemplateParamsTask';
 import CombinedTemplateParamsTask from './tasks/templates/CombinedTemplateParamsTask';
-import CreateLayoutsTreeTask from './tasks/transformations/CreateLayoutsTreeTask';
-import ItemsPositionsTask from './tasks/transformations/FamItemsPositionsTask';
+import FamCreateLayoutsTreeTask from './tasks/transformations/FamCreateLayoutsTreeTask';
+import ItemsPositionsTask from './tasks/transformations/ItemsPositionsTask';
 
 import TaskManager from './managers/TaskManager';
 
@@ -186,7 +186,7 @@ export default function FamPdfkitTaskManagerFactory(getOptions, getGraphics, set
   tasks.addTask('ExtractNestedLayoutsTask', ['ExtractNestedLayoutsOptionTask', 'BindFamilyConnectorsTask'], ExtractNestedLayoutsTask, Colors.Red);
   tasks.addTask('NormalizeLogicalFamilyTask', ['NormalizeOptionTask', 'ExtractNestedLayoutsTask'], NormalizeLogicalFamilyTask, Colors.Red);
   tasks.addTask('OrderFamilyNodesTask', ['OrderFamilyNodesOptionTask', 'UserDefinedNodesOrderTask', 'NormalizeLogicalFamilyTask'], OrderFamilyNodesTask, Colors.Red);
-  tasks.addTask('CreateLayoutsTreeTask', ['OrderFamilyNodesTask', 'ExtractNestedLayoutsTask'], CreateLayoutsTreeTask, Colors.Red);
+  tasks.addTask('FamCreateLayoutsTreeTask', ['OrderFamilyNodesTask', 'ExtractNestedLayoutsTask'], FamCreateLayoutsTreeTask, Colors.Red);
 
   // Transformations / Templates
   tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask', 'templates'], ReadTemplatesTask, Colors.Cyan);
@@ -216,7 +216,7 @@ export default function FamPdfkitTaskManagerFactory(getOptions, getGraphics, set
   tasks.addTask('CurrentControlSizeTask', ['OptionsTask'], DummyCurrentControlSizeTask, Colors.Cyan);
 
   tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask',
-    'OrderFamilyNodesOptionTask', 'CreateLayoutsTreeTask',
+    'OrderFamilyNodesOptionTask', 'FamCreateLayoutsTreeTask',
     'CombinedTemplateParamsTask',
     'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], ItemsPositionsTask, Colors.Red);
 

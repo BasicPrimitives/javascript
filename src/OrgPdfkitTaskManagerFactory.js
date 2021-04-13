@@ -45,7 +45,9 @@ import LevelAnnotationTemplateTask from './tasks/templates/LevelAnnotationTempla
 
 import VisualTreeTask from './tasks/transformations/VisualTreeTask';
 import VisualTreeLevelsTask from './tasks/transformations/VisualTreeLevelsTask';
-import OrgExtractNestedLayoutsTask from './tasks/transformations/OrgExtractNestedLayoutsTask';
+import ExtractNestedLayoutsTask from './tasks/transformations/OrgExtractNestedLayoutsTask';
+import CreateLayoutsTreeTask from './tasks/transformations/OrgCreateLayoutsTreeTask';
+
 import ConnectionsGraphTask from './tasks/transformations/ConnectionsGraphTask';
 import HighlightItemTask from './tasks/transformations/selection/HighlightItemTask';
 import CursorItemTask from './tasks/transformations/selection/CursorItemTask';
@@ -57,7 +59,7 @@ import FrameSizeTask from './tasks/layout/FrameSizeTask';
 import LevelTitleSizeTask from './tasks/layout/LevelTitleSizeTask';
 import ApplyLayoutChangesTask from './tasks/layout/ApplyLayoutChangesTask';
 import DummyCurrentControlSizeTask from './tasks/layout/DummyCurrentControlSizeTask';
-import OrgItemsPositionsTask from './tasks/transformations/OrgItemsPositionsTask';
+import ItemsPositionsTask from './tasks/transformations/ItemsPositionsTask';
 import AlignDiagramTask from './tasks/layout/AlignDiagramTask';
 import CreateTransformTask from './tasks/layout/CreateTransformTask';
 import PaletteManagerTask from './tasks/transformations/PaletteManagerTask';
@@ -153,9 +155,10 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics, set
   
   tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'null', 'VisualTreeOptionTask', 'isFamilyChartMode'], VisualTreeTask, Colors.Red);
   tasks.addTask('VisualTreeLevelsTask', ['VisualTreeTask', 'ItemTemplateParamsTask'], VisualTreeLevelsTask, Colors.Red);
+  tasks.addTask('ExtractNestedLayoutsTask', ['OptionsTask'], ExtractNestedLayoutsTask, Colors.Red);
+  tasks.addTask('CreateLayoutsTreeTask', ['VisualTreeTask', 'VisualTreeLevelsTask', 'ExtractNestedLayoutsTask'], CreateLayoutsTreeTask, Colors.Red);
 
-  tasks.addTask('OrgExtractNestedLayoutsTask', ['OptionsTask'], OrgExtractNestedLayoutsTask, Colors.Cyan);
-  tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'VisualTreeLevelsTask', 'OrgExtractNestedLayoutsTask', 'AlignDiagramTask'], ConnectionsGraphTask, Colors.Cyan);
+  tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'VisualTreeLevelsTask', 'ExtractNestedLayoutsTask', 'AlignDiagramTask'], ConnectionsGraphTask, Colors.Cyan);
 
   // Transformations/Selections
   tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'null'], HighlightItemTask, Colors.Cyan);
@@ -168,9 +171,9 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics, set
   tasks.addTask('LevelTitleSizeTask', ['LevelTitlePlacementOptionTask', 'LevelAnnotationOptionTask', 'OrientationOptionTask', 'ScaleOptionTask'], LevelTitleSizeTask, Colors.Navy);
   tasks.addTask('CurrentControlSizeTask', ['OptionsTask'], DummyCurrentControlSizeTask, Colors.Cyan);
   tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'VisualTreeOptionTask',
-    'VisualTreeTask', 'VisualTreeLevelsTask',
+    'CreateLayoutsTreeTask',
     'ItemTemplateParamsTask',
-    'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], OrgItemsPositionsTask, Colors.Red);
+    'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], ItemsPositionsTask, Colors.Red);
 
   tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'null', 'ItemsPositionsTask', 'isFamilyChartMode'], AlignDiagramTask, Colors.Red);
   tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], CreateTransformTask, Colors.Cyan);

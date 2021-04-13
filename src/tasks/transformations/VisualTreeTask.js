@@ -7,7 +7,7 @@ import TreeItem from '../../models/TreeItem';
 /* method uses structures created in orgTreeTask to create visual tree used to render chart
   It populates visualTree structure with TreeItem objects.
   
-  1. Create invisble visual root item, so all orphants added to it, but since it is invisible, no connections are going to be drawn betwen them
+  1. Create invisible visual root item, so all orphans added to it, but since it is invisible, no connections are going to be drawn between them
   2. Loop orgTree nodes and populate visual tree hierarchy: visualTree
 */
 export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeOptionTask, isFamilyChartMode) {
@@ -918,7 +918,7 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
   function defineNavigationParent(parentItem, treeItem, skipFirstParent) {
     var parents = [];
 
-    /* take logicalParentItem when it is visible or collect all visible immidiate parents of logicalParentItem */
+    /* take logicalParentItem when it is visible or collect all visible immediate parents of logicalParentItem */
     if (skipFirstParent || parentItem.visibility == Visibility.Invisible || !_activeItems.hasOwnProperty(parentItem.id)) {
       if (!skipFirstParent) {
         parents.push(parentItem.id);
@@ -996,12 +996,17 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
     return _data.rightMargins;
   }
 
+  function getMaximumId() {
+    return _treeItemCounter;
+  }
+
   return {
     process: process,
     getVisualTree: getVisualTree,
     getLogicalFamily: getLogicalFamily,
     getConnectionsFamily: getConnectionsFamily,
     getLeftMargins: getLeftMargins,
-    getRightMargins: getRightMargins
+    getRightMargins: getRightMargins,
+    getMaximumId: getMaximumId
   };
 };

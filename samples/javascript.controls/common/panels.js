@@ -83,6 +83,7 @@ function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
     new CheckBoxConfig("placeAssistantsAboveChildren", true, "Place children of assistants above their parent node children", onUpdate),
     new RangeConfig("maximumColumnsInMatrix", null, "Maximum columns number in matrix children layout", 1, 20, 1, onUpdate),
     new RadioBoxConfig("minimalVisibility", Visibility.Dot, "Minimal nodes visibility", Visibility, ValueType.Integer, onUpdate),
+    new RangeConfig("minimumVisibleLevels", 0, "Minimum visible levels", 0, 10, 1, onUpdate),
     new RadioBoxConfig("selectionPathMode", SelectionPathMode.FullStack, "Selection Path Mode sets visibility of items between cursor item and root", SelectionPathMode, ValueType.Integer, onUpdate)
   ]));
 

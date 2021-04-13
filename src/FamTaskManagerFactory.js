@@ -17,6 +17,8 @@ import ConnectorsOptionTask from './tasks/options/ConnectorsOptionTask';
 import FamItemsOptionTask from './tasks/options/FamItemsOptionTask';
 import ItemsContentOptionTask from './tasks/options/ItemsContentOptionTask';
 import ItemsSizesOptionTask from './tasks/options/ItemsSizesOptionTask';
+import MinimumVisibleLevelsOptionTask from './tasks/options/MinimumVisibleLevelsOptionTask';
+
 import LabelsOptionTask from './tasks/options/LabelsOptionTask';
 import TemplatesOptionTask from './tasks/options/TemplatesOptionTask';
 import OrientationOptionTask from './tasks/options/OrientationOptionTask';
@@ -52,7 +54,9 @@ import CursorItemTask from './tasks/transformations/selection/CursorItemTask';
 import SelectedItemsTask from './tasks/transformations/selection/SelectedItemsTask';
 import NormalVisibilityItemsByAnnotationTask from './tasks/transformations/selection/NormalVisibilityItemsByAnnotationTask';
 import NormalVisibilityItemsByConnectorAnnotationTask from './tasks/transformations/selection/NormalVisibilityItemsByConnectorAnnotationTask';
+import NormalVisibilityItemsByMinimumVisibleLevelsTask from './tasks/transformations/selection/FamNormalVisibilityItemsByMinimumVisibleLevelsTask';
 import CombinedNormalVisibilityItemsTask from './tasks/transformations/selection/CombinedNormalVisibilityItemsTask';
+
 import FrameSizeTask from './tasks/layout/FrameSizeTask';
 import LevelTitleSizeTask from './tasks/layout/LevelTitleSizeTask';
 import LayoutOptionsTask from './tasks/options/LayoutOptionsTask';
@@ -112,8 +116,8 @@ import LabelAnnotationTemplateParamsTask from './tasks/templates/LabelAnnotation
 import CombinedTemplateParamsTask from './tasks/templates/CombinedTemplateParamsTask';
 import FamCursorNeighboursTask from './tasks/transformations/selection/FamCursorNeighboursTask';
 import FamSelectionPathItemsTask from './tasks/transformations/selection/FamSelectionPathItemsTask';
-import CreateLayoutsTreeTask from './tasks/transformations/CreateLayoutsTreeTask';
-import FamItemsPositionsTask from './tasks/transformations/FamItemsPositionsTask';
+import FamCreateLayoutsTreeTask from './tasks/transformations/FamCreateLayoutsTreeTask';
+import ItemsPositionsTask from './tasks/transformations/ItemsPositionsTask';
 
 import TaskManager from './managers/TaskManager';
 
@@ -155,6 +159,7 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
   tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], FamItemsOptionTask, Colors.Navy);
   tasks.addTask('ItemsContentOptionTask', ['OptionsTask', 'defaultItemConfig'], ItemsContentOptionTask, Colors.Navy);
   tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], ItemsSizesOptionTask, Colors.Navy);
+  tasks.addTask('MinimumVisibleLevelsOptionTask', ['OptionsTask', 'defaultConfig'], MinimumVisibleLevelsOptionTask, Colors.Navy);  
   tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], LabelsOptionTask, Colors.Navy);
   tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultTemplateConfig'], TemplatesOptionTask, Colors.Navy);
   tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], OrientationOptionTask, Colors.Navy);
@@ -206,7 +211,7 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
   tasks.addTask('ExtractNestedLayoutsTask', ['ExtractNestedLayoutsOptionTask', 'BindFamilyConnectorsTask'], ExtractNestedLayoutsTask, Colors.Red);  
   tasks.addTask('NormalizeLogicalFamilyTask', ['NormalizeOptionTask', 'ExtractNestedLayoutsTask'], NormalizeLogicalFamilyTask, Colors.Red);
   tasks.addTask('OrderFamilyNodesTask', ['OrderFamilyNodesOptionTask', 'UserDefinedNodesOrderTask', 'NormalizeLogicalFamilyTask'], OrderFamilyNodesTask, Colors.Red);
-  tasks.addTask('CreateLayoutsTreeTask', ['OrderFamilyNodesTask', 'ExtractNestedLayoutsTask'], CreateLayoutsTreeTask, Colors.Red);
+  tasks.addTask('FamCreateLayoutsTreeTask', ['OrderFamilyNodesTask', 'ExtractNestedLayoutsTask'], FamCreateLayoutsTreeTask, Colors.Red);
 
   // Transformations / Templates
   tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask', 'templates'], ReadTemplatesTask, Colors.Cyan);
@@ -238,6 +243,7 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
   tasks.addTask('NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', ['BackgroundHighlightPathAnnotationOptionTask'], NormalVisibilityItemsByAnnotationTask, Colors.Cyan);
   tasks.addTask('NormalVisibilityItemsByForegroundConnectorAnnotationTask', ['ForegroundConnectorAnnotationOptionTask'], NormalVisibilityItemsByConnectorAnnotationTask, Colors.Cyan);
   tasks.addTask('NormalVisibilityItemsByBackgroundConnectorAnnotationTask', ['BackgroundConnectorAnnotationOptionTask'], NormalVisibilityItemsByConnectorAnnotationTask, Colors.Cyan);
+  tasks.addTask('NormalVisibilityItemsByMinimumVisibleLevelsTask', ['MinimumVisibleLevelsOptionTask', 'OrderFamilyNodesTask'], NormalVisibilityItemsByMinimumVisibleLevelsTask, Colors.Cyan);
   tasks.addTask('CombinedNormalVisibilityItemsTask', [
     'ItemsSizesOptionTask',
     'CursorItemTask',
@@ -250,7 +256,8 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
     'NormalVisibilityItemsByForegroundHighlightPathAnnotationTask',
     'NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask',
     'NormalVisibilityItemsByForegroundConnectorAnnotationTask',
-    'NormalVisibilityItemsByBackgroundConnectorAnnotationTask'], CombinedNormalVisibilityItemsTask, Colors.Cyan);
+    'NormalVisibilityItemsByBackgroundConnectorAnnotationTask',
+    'NormalVisibilityItemsByMinimumVisibleLevelsTask'], CombinedNormalVisibilityItemsTask, Colors.Cyan);
 
   // Layout
   tasks.addTask('FrameSizeTask', ['FrameOptionTask', 'ReadTemplatesTask', 'ScaleOptionTask'], FrameSizeTask, Colors.Navy);
@@ -260,9 +267,9 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
   tasks.addTask('CurrentScrollPositionTask', ['LayoutOptionsTask'], CurrentScrollPositionTask, Colors.Black);
 
   tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask',
-    'OrderFamilyNodesOptionTask', 'CreateLayoutsTreeTask',
+    'OrderFamilyNodesOptionTask', 'FamCreateLayoutsTreeTask',
     'CombinedTemplateParamsTask',
-    'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], FamItemsPositionsTask, Colors.Red);
+    'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], ItemsPositionsTask, Colors.Red);
 
   tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], AlignDiagramTask, Colors.Red);
   tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], CreateTransformTask, Colors.Cyan);

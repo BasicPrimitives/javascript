@@ -3,8 +3,8 @@ import Size from '../../../graphics/structs/Size';
 import { Visibility, OrientationType, AdviserPlacementType } from '../../../enums';
 import TreeItemPosition from '../../../models/TreeItemPosition';
 
-export default function ItemLayout(treeItem) {
-    this.treeItem = treeItem;
+export default function ItemLayout(visibility) {
+    this.visibility = visibility;
 }
 
 ItemLayout.prototype.measure = function (levelVisibility, isCursor, isSelected, treeItemTemplate, treeItemsPositions, options) {
@@ -13,7 +13,7 @@ ItemLayout.prototype.measure = function (levelVisibility, isCursor, isSelected, 
         contentPosition;
     var { orientationType, checkBoxPanelSize, buttonsPanelSize, groupTitlePanelSize, groupTitlePlacementType } = options;
 
-    var treeItemVisibility = (isSelected || isCursor) ? Visibility.Normal : (!this.treeItem.isVisible ? Visibility.Invisible : Visibility.Auto);
+    var treeItemVisibility = (isSelected || isCursor) ? Visibility.Normal : this.visibility;
     var actualVisibility = (treeItemVisibility === Visibility.Auto) ? levelVisibility : treeItemVisibility;        
     switch (actualVisibility) {
         case Visibility.Normal:

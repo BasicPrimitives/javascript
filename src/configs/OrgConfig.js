@@ -56,6 +56,15 @@ export default function OrgConfig(name) {
   this.minimalVisibility = Visibility.Dot;
 
   /**
+   * Minimum visible levels option prevents top-level nodes from folding into markers. The option 
+   * accounts for organizational chart relations and `levelOffset` of individual items.
+   * 
+   * @group Auto Layout
+   * @type {number}
+   */
+  this.minimumVisibleLevels = 1;
+
+  /**
    * Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction,
    * this is needed for Arabic support and various layouts.
    * 

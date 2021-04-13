@@ -56,6 +56,14 @@ export default function FamConfig(name) {
   this.minimalVisibility = Visibility.Dot;
 
   /**
+   * Minimum visible levels option prevents top-level nodes from folding into markers. 
+   * 
+   * @group Auto Layout
+   * @type {number}
+   */
+   this.minimumVisibleLevels = 0;
+
+  /**
    * Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction,
    * this is needed for Arabic support and various layouts.
    * 

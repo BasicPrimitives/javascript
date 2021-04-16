@@ -17,5 +17,6 @@ export const ControlType = {
     SizeBox: 4,
     TextBox: 5,
     ColorPicker: 6,
-    Range: 7
+    Range: 7,
+    Thickness: 8
 };

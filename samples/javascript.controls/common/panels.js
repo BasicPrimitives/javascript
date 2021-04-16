@@ -7,6 +7,7 @@ import { CheckBoxConfig } from './CheckBox';
 import { SizeConfig } from './Size';
 import { ColorConfig } from './Color';
 import { RangeConfig } from './Range';
+import { ThicknessConfig } from './Thickness';
 
 import { ValueType } from './enums';
 
@@ -145,7 +146,7 @@ function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
     ], "DefaultTemplateOptions"));
   }
 
-  result.push(new PanelConfig("Intervals", [
+  result.push(new PanelConfig("Spacing & Padding", [
     new CaptionConfig("Vertical Intervals Between Rows", true),
     new RangeConfig("normalLevelShift", 20, "Normal", 1, 40, 1, onUpdate),
     new CaptionConfig("If you enable labels for dots, use the following interval to fit them between levels.", false),
@@ -157,7 +158,9 @@ function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
     new RangeConfig("dotItemsInterval", 2, "Dotted", 1, 40, 1, onUpdate),
     new RangeConfig("lineItemsInterval", 2, "Lined", 1, 40, 1, onUpdate),
 
-    new RangeConfig("cousinsIntervalMultiplier", 5, "Additional interval multiplier between cousins, it creates extra space between hierarchies", 1, 40, 1, onUpdate)
+    new RangeConfig("cousinsIntervalMultiplier", 5, "Additional interval multiplier between cousins, it creates extra space between hierarchies", 1, 40, 1, onUpdate),
+
+    new ThicknessConfig("padding", { left: 10, top: 10, right: 10, bottom: 10 }, "Diagram padding", 1, 100, 1, onUpdate),
   ]));
   
   result.push(new PanelConfig("Connectors", [

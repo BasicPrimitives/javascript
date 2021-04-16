@@ -334,6 +334,14 @@ export default function FamConfig(name) {
   this.frameOuterPadding = new Thickness(2, 2, 2, 2);
 
   /**
+   * Diagram padding. Adds extra padding around the diagram.
+   * 
+   * @group Frame
+   * @type {Thickness}
+  */
+  this.padding = new Thickness(10, 10, 10, 10);
+
+  /**
    * Collection of named templates used to define content for nodes, cursor and highlight.
    * By default control provides templates for all types of visual elements.
    * 

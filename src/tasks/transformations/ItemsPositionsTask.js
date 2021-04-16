@@ -18,7 +18,7 @@ export default function ItemsPositionsTask(currentControlSizeTask, scaleOptionTa
   };
 
   function process() {
-    var { verticalAlignment, pageFitMode, minimalVisibility,
+    var { verticalAlignment, pageFitMode, minimalVisibility, padding,
       normalLevelShift, dotLevelShift, lineLevelShift, normalItemsInterval, dotItemsInterval, lineItemsInterval,
       checkBoxPanelSize, buttonsPanelSize, groupTitlePanelSize, groupTitlePlacementType, cousinsIntervalMultiplier } = itemsSizesOptionTask.getOptions();
     var { arrowsDirection, linesWidth } = connectorsOptionTask.getOptions();
@@ -65,6 +65,7 @@ export default function ItemsPositionsTask(currentControlSizeTask, scaleOptionTa
     var options = {
       verticalAlignment,
       pageFitMode,
+      padding,
       minimalVisibility,
       orientationType,
       arrowsDirection,
@@ -119,6 +120,7 @@ export default function ItemsPositionsTask(currentControlSizeTask, scaleOptionTa
         panelSize.invert();
         break;
     }
+
     switch (pageFitMode) {
       case PageFitMode.None:
       case PageFitMode.AutoSize:

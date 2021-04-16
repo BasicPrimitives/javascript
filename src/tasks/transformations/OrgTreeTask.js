@@ -1,7 +1,7 @@
 ﻿import Tree from '../../algorithms/Tree';
 import OrgItem from '../../models/OrgItem';
 import OrgItemConfig from '../../configs/OrgItemConfig';
-import { ItemType } from '../../enums';
+import { ItemType, ChildrenPlacementType } from '../../enums';
 
 export default function OrgTreeTask(itemsOptionTask) {
   var _data = {
@@ -61,6 +61,8 @@ export default function OrgTreeTask(itemsOptionTask) {
     orgItemRoot = new OrgItem(rootItemConfig);
     orgItemRoot.hideParentConnection = true;
     orgItemRoot.hideChildrenConnection = true;
+    /* if user needs custom root item layout, it should explicitly create invisible node and set its children layout manually up */
+    orgItemRoot.childrenPlacementType = ChildrenPlacementType.Horizontal; 
 
     orgTree.add(null, orgItemRoot.id, orgItemRoot);
 

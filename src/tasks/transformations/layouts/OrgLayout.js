@@ -41,21 +41,21 @@ OrgLayout.prototype.measure = function (levelVisibility, isCursor, isSelected, t
     this.treeLevelsPositions.push(treeLevelPosition);
   });
 
-  this.setOffsets(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions, this.visualTree, this.rightMargins, this.leftMargins, options.intervals, options.arrowsDirection, options.linesWidth, options.cousinsIntervalMultiplier, options.horizontalAlignment);
+  this.setOffsets(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions, this.visualTree, this.rightMargins, this.leftMargins, options.intervals, options.arrowsDirection, options.linesWidth, options.cousinsIntervalMultiplier, options.horizontalAlignment, options.padding);
   this.setLevelsDepth(this.treeLevels, treeItemsPositions, this.treeLevelsPositions, options.verticalAlignment);
-  this.shiftLevels(this.treeLevelsPositions, options.shifts[Visibility.Line], options.shifts, options.arrowsDirection, options.linesWidth, this.getConnectorsStacksSizes);
+  this.shiftLevels(this.treeLevelsPositions, options.padding.top, options.shifts, options.arrowsDirection, options.linesWidth, this.getConnectorsStacksSizes);
 
   var treeItemPosition = new TreeItemPosition();
   treeItemPosition.actualVisibility = Visibility.Invisible;
-  treeItemPosition.actualSize = this.getLayoutSize(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions);
+  treeItemPosition.actualSize = this.getLayoutSize(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions, options.padding);
   return treeItemPosition;
 };
 
-OrgLayout.prototype.getLayoutSize = function (treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions) {
-  return new Rect(0, 0, Math.round(this.getLayoutWidth(treeLevels, treeItemsPositions, childLayoutsPositions)), Math.round(this.getLayoutHeight(treeLevelsPositions)));
+OrgLayout.prototype.getLayoutSize = function (treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions, padding) {
+  return new Rect(0, 0, Math.round(this.getLayoutWidth(treeLevels, treeItemsPositions, childLayoutsPositions, padding)), Math.round(this.getLayoutHeight(treeLevelsPositions, padding)));
 };
 
-OrgLayout.prototype.getLayoutWidth = function (treeLevels, treeItemsPositions, childLayoutsPositions) {
+OrgLayout.prototype.getLayoutWidth = function (treeLevels, treeItemsPositions, childLayoutsPositions, padding) {
   var result = 0;
   treeLevels.loopLevels(this, function (levelIndex, level) {
     var levelLength = treeLevels.getLevelLength(levelIndex);
@@ -64,16 +64,16 @@ OrgLayout.prototype.getLayoutWidth = function (treeLevels, treeItemsPositions, c
       var itemId = treeLevels.getItemAtPosition(levelIndex, levelLength - 1),
         treeItemPosition = treeItemsPositions[itemId],
         childLayoutPosition = childLayoutsPositions[itemId];
-      result = Math.max(result, childLayoutPosition.offset + treeItemPosition.actualSize.width + childLayoutPosition.rightPadding);
+      result = Math.max(result, childLayoutPosition.offset + treeItemPosition.actualSize.width + padding.right);
     }
   });
   return result;
 };
 
-OrgLayout.prototype.getLayoutHeight = function (treeLevelsPositions) {
+OrgLayout.prototype.getLayoutHeight = function (treeLevelsPositions, padding) {
   var len = treeLevelsPositions.length,
     treeLevel = treeLevelsPositions[len - 1];
-  return treeLevel.shift + treeLevel.nextLevelShift;
+  return treeLevel.getNodesBottom() + padding.bottom;
 };
 
 OrgLayout.prototype.setLevelsDepth = function (treeLevels, treeItemsPositions, treeLevelsPositions, verticalAlignment) {
@@ -131,7 +131,6 @@ OrgLayout.prototype.shiftLevels = function (treeLevelsPositions, shift, shifts, 
   var index,
     len,
     treeLevelPosition,
-    treeLevelConnectorStackSize,
     childrenSpace = 0,
     parentsSpace = 0,
     arrowTipLength = linesWidth * 8;
@@ -147,15 +146,21 @@ OrgLayout.prototype.shiftLevels = function (treeLevelsPositions, shift, shifts, 
       break;
   }
 
+  var isTopLevel = true;
   for (index = 0, len = treeLevelsPositions.length; index < len; index += 1) {
     treeLevelPosition = treeLevelsPositions[index];
-
-    treeLevelConnectorStackSize = getConnectorsStacksSizes(index);
-    shift += treeLevelPosition.setShift(shift, shifts[treeLevelPosition.actualVisibility], parentsSpace, childrenSpace, treeLevelConnectorStackSize.parentsStackSize);
+    
+    if(isTopLevel && treeLevelPosition.actualVisibility == Visibility.Invisible) {
+      treeLevelPosition.setShift(0, 0, 0, 0, 0);
+    } else {
+      var parentsStackSize = getConnectorsStacksSizes(index).parentsStackSize;
+      shift += treeLevelPosition.setShift(shift, shifts[treeLevelPosition.actualVisibility], parentsSpace, childrenSpace, parentsStackSize);
+      isTopLevel = false;
+    }
   }
 };
 
-OrgLayout.prototype.setOffsets = function (treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions, visualTree, rightMargins, leftMargins, intervals, arrowsDirection, linesWidth, cousinsIntervalMultiplier, horizontalAlignment) {
+OrgLayout.prototype.setOffsets = function (treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions, visualTree, rightMargins, leftMargins, intervals, arrowsDirection, linesWidth, cousinsIntervalMultiplier, horizontalAlignment, padding) {
   var index, len;
 
   for (index = 0, len = treeLevelsPositions.length; index < len; index += 1) {
@@ -184,10 +189,13 @@ OrgLayout.prototype.setOffsets = function (treeLevels, treeItemsPositions, child
       groupOffset,
       group,
       sibling,
-      cousinsInterval = treeLevelPosition.currentOffset > 0 ? treeItemPadding * (treeItem.relationDegree) * cousinsIntervalMultiplier : 0,
+      leftPadding = treeLevelPosition.currentOffset > 0 ? treeItemPadding + treeItemPadding * (treeItem.relationDegree) * cousinsIntervalMultiplier : padding.left,
       arrowTipLength = linesWidth * 8;
 
-    childLayoutsPositions[treeItemId] = new ChildLayoutPosition(0, treeItemPadding + cousinsInterval, treeItemPadding);
+    if(treeItemId == 0) {
+      var i = 2;
+    }
+    childLayoutsPositions[treeItemId] = new ChildLayoutPosition(0,  leftPadding, treeItemPadding);
     var childLayoutPosition = childLayoutsPositions[treeItemId];
 
     if (arrowsDirection != GroupByType.None) {

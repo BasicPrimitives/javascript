@@ -28,7 +28,6 @@ export function SizeRender() {
         config.caption,
         ["br"],
         this._render(config, namespace, "Width", defaultItem && defaultItem.width),
-        '\xa0',
         this._render(config, namespace, "Height", defaultItem && defaultItem.height)
       ];
       return controlBody;

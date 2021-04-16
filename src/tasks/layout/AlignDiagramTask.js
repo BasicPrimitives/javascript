@@ -1,6 +1,7 @@
 import Size from '../../graphics/structs/Size';
 import Rect from '../../graphics/structs/Rect';
 import Point from '../../graphics/structs/Point';
+import Thickness from '../../graphics/structs/Thickness';
 import TreeItemPosition from '../../models/TreeItemPosition';
 import { OrientationType, Visibility, HorizontalAlignmentType, PageFitMode } from '../../enums';
 import SpatialIndex from '../../algorithms/SpatialIndex';
@@ -14,44 +15,38 @@ export default function AlignDiagramTask(orientationOptionTask, itemsSizesOption
   },
     _activeItems,
     _treeItemsPositions,
-
-    _options,
-    _orientationOptions,
-    _visualTreeOptions,
-    _scaleOptions,
     _spatialIndex,
     _keyboardNavigationManager;
 
   function process() {
     var placeholderSize = new Size(itemsPositionsTask.getContentSize()),
       { optimalPanelSize } = currentControlSizeTask.getOptions(),
-      panelSize = new Size(optimalPanelSize);
-
+      { pageFitMode } = itemsSizesOptionTask.getOptions(),
+      { orientationType } = orientationOptionTask.getOptions(),
+      { horizontalAlignment } = visualTreeOptionTask.getOptions(),
+      { scale } = scaleOptionTask.getOptions();
+    
     _spatialIndex = null;
     _keyboardNavigationManager = null;
-
     _activeItems = activeItemsTask != null ? activeItemsTask.getActiveItems() : {};
     _treeItemsPositions = itemsPositionsTask.getItemsPositions();
 
-    _options = itemsSizesOptionTask.getOptions();
-    _orientationOptions = orientationOptionTask.getOptions();
-    _visualTreeOptions = visualTreeOptionTask.getOptions();
-    _scaleOptions = scaleOptionTask.getOptions();
+    var panelSize = new Size(optimalPanelSize);
 
-    switch (_orientationOptions.orientationType) {
+    switch (orientationType) {
       case OrientationType.Left:
       case OrientationType.Right:
         panelSize.invert();
         break;
     }
 
-    panelSize.scale(1.0 / _scaleOptions.scale);
+    panelSize.scale(1.0 / scale);
 
     // By default we translate everything forward
     _data.panelSize = panelSize;
     _data.treeItemsPositions = _treeItemsPositions;
 
-    switch (_options.pageFitMode) {
+    switch (pageFitMode) {
       case PageFitMode.AutoSize:
         _data.panelSize = new Size(placeholderSize);
         break;
@@ -59,7 +54,7 @@ export default function AlignDiagramTask(orientationOptionTask, itemsSizesOption
         _data.panelSize = new Size(placeholderSize);
         if (placeholderSize.width < panelSize.width) {
           _data.treeItemsPositions = {};
-          stretchToWidth(_data.treeItemsPositions, placeholderSize.width, panelSize.width);
+          stretchToWidth(_data.treeItemsPositions, placeholderSize.width, panelSize.width, horizontalAlignment);
           _data.panelSize.width = panelSize.width;
         }
         if (placeholderSize.height < panelSize.height) {
@@ -68,7 +63,7 @@ export default function AlignDiagramTask(orientationOptionTask, itemsSizesOption
         break;
     }
 
-    switch (_orientationOptions.orientationType) {
+    switch (orientationType) {
       case OrientationType.Left:
       case OrientationType.Right:
         _data.panelSize.invert();
@@ -78,12 +73,12 @@ export default function AlignDiagramTask(orientationOptionTask, itemsSizesOption
     return true;
   }
 
-  function stretchToWidth(treeItemsPositions, treeWidth, panelWidth) {
+  function stretchToWidth(treeItemsPositions, treeWidth, panelWidth, horizontalAlignment) {
     var offset;
     if (isFamilyChartMode) {
       offset = (panelWidth - treeWidth) / 2.0;
     } else {
-      switch (_visualTreeOptions.horizontalAlignment) {
+      switch (horizontalAlignment) {
         case HorizontalAlignmentType.Left:
           offset = 0;
           break;
@@ -99,12 +94,12 @@ export default function AlignDiagramTask(orientationOptionTask, itemsSizesOption
   }
 
   function translateItemPositions(treeItemsPositions, offsetX, offsetY) {
-    var treeItemid, treeItemPosition;
-    for (treeItemid in _treeItemsPositions) {
-      if (_treeItemsPositions.hasOwnProperty(treeItemid)) {
-        treeItemPosition = new TreeItemPosition(_treeItemsPositions[treeItemid]);
+    var treeItemId, treeItemPosition;
+    for (treeItemId in _treeItemsPositions) {
+      if (_treeItemsPositions.hasOwnProperty(treeItemId)) {
+        treeItemPosition = new TreeItemPosition(_treeItemsPositions[treeItemId]);
         treeItemPosition.actualPosition.translate(offsetX, offsetY);
-        treeItemsPositions[treeItemid] = treeItemPosition;
+        treeItemsPositions[treeItemId] = treeItemPosition;
       }
     }
   }
@@ -155,8 +150,8 @@ export default function AlignDiagramTask(orientationOptionTask, itemsSizesOption
 
   function getTreeItemForMousePosition(x, y, gravityRadius) {
     var result = null,
-      bestDistance = null, distance,
-      scale = _scaleOptions.scale,
+      bestDistance = null,
+      { scale } = scaleOptionTask.getOptions(),
       spatialIndex = getSpatialIndex(),
       selection,
       center;

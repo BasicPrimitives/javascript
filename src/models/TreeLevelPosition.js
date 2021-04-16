@@ -39,9 +39,9 @@ TreeLevelPosition.prototype.setShift = function (shift, levelSpace, topConnector
   return this.nextLevelShift;
 };
 
-TreeLevelPosition.prototype.shiftDown = function (shift) {
-  this.shift += shift;
-};
+TreeLevelPosition.prototype.getNodesBottom = function() {
+  return this.shift + this.depth;
+}
 
 TreeLevelPosition.prototype.toString = function () {
   return this.currentvisibility;

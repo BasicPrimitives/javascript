@@ -2,6 +2,8 @@
 * Added `Director`, `SuperAdviser` and `SuperAssistant` item types.
 * Added `directorsPlacementType`, `advisersPlacementType` to `OrgItemConfig`
 * Added `minimumVisibleLevels` option to `OrgConfig` and `FamConfig`
+* Added `padding` option to `OrgConfig` and `FamConfig`
+* Fixed `childrenPlacementType` option breaking multiple root nodes placement.
 #### Version 6.3.1
 * Fixed family diagram padding
 * Fixed `onButtonsRender` in `TemplateConfig`

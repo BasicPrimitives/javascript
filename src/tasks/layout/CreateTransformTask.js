@@ -1,7 +1,7 @@
 import Transform from '../../graphics/Transform';
 import Size from '../../graphics/structs/Size';
 
-export default function CreateTransformTask(orientationOptionTask, alignDiagramTask) {
+export default function CreateTransformTask(orientationOptionTask, scaleOptionTask, alignDiagramTask) {
   var _data = {
     transform: null
   };
@@ -19,7 +19,12 @@ export default function CreateTransformTask(orientationOptionTask, alignDiagramT
   }
 
   function getTreeItemForMousePosition(x, y, gravityRadius) {
-    var result = null;
+    var result = null,
+    { scale } = scaleOptionTask.getOptions();
+    
+    x = x / scale;
+    y = y / scale;
+
     _data.transform.transformPoint(x, y, false, this, function (x, y) {
       result = alignDiagramTask.getTreeItemForMousePosition(x, y, gravityRadius);
     });

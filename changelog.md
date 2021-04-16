@@ -4,6 +4,7 @@
 * Added `minimumVisibleLevels` option to `OrgConfig` and `FamConfig`
 * Added `padding` option to `OrgConfig` and `FamConfig`
 * Fixed `childrenPlacementType` option breaking multiple root nodes placement.
+* Fixed mouse interactivity for scaled and rotated right or bottom diagrams.
 #### Version 6.3.1
 * Fixed family diagram padding
 * Fixed `onButtonsRender` in `TemplateConfig`

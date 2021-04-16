@@ -1,7 +1,6 @@
 import Size from '../../graphics/structs/Size';
 import Rect from '../../graphics/structs/Rect';
 import Point from '../../graphics/structs/Point';
-import Thickness from '../../graphics/structs/Thickness';
 import TreeItemPosition from '../../models/TreeItemPosition';
 import { OrientationType, Visibility, HorizontalAlignmentType, PageFitMode } from '../../enums';
 import SpatialIndex from '../../algorithms/SpatialIndex';
@@ -151,13 +150,10 @@ export default function AlignDiagramTask(orientationOptionTask, itemsSizesOption
   function getTreeItemForMousePosition(x, y, gravityRadius) {
     var result = null,
       bestDistance = null,
-      { scale } = scaleOptionTask.getOptions(),
       spatialIndex = getSpatialIndex(),
       selection,
       center;
 
-    x = x / scale;
-    y = y / scale;
     selection = new Rect(x, y, 0, 0);
     center = new Point(x, y);
     selection.offset(gravityRadius, gravityRadius, gravityRadius, gravityRadius);

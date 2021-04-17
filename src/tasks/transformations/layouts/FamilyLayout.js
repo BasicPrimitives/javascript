@@ -146,16 +146,10 @@ FamilyLayout.prototype.shiftLevels = function (treeLevelsPositions, shift, shift
       break;
   }
 
-  var isTopLevel = true;
   for (index = 0, len = treeLevelsPositions.length; index < len; index += 1) {
     treeLevelPosition = treeLevelsPositions[index];
     parentsStackSize = getConnectorsStacksSizes(index).parentsStackSize;
-    if(isTopLevel && treeLevelPosition.actualVisibility == Visibility.Invisible) {
-      treeLevelPosition.setShift(0, 0, 0, 0, 0);
-    } else {
-      shift += treeLevelPosition.setShift(shift, shifts[treeLevelPosition.actualVisibility], parentsSpace, childrenSpace, parentsStackSize);
-      isTopLevel = false;
-    }
+    shift += treeLevelPosition.setShift(shift, shifts[treeLevelPosition.actualVisibility], parentsSpace, childrenSpace, parentsStackSize);
   }
 };
 

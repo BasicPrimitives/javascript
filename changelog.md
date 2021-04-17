@@ -63,7 +63,7 @@
 #### Version 5.8.1
 * Fixed performance bug in loops layout optimization
 #### Version 5.8.0
-* Added `loopsLayoutMode` property to `primitives.famdiagram.Config`. Property sets loops layout optimization mode in Family Diagram. See `Loops Layout Optimization` use case.
+* Added `loopsLayoutMode` property to `primitives.famdiagram.Config`. Property sets looped layout optimization mode in Family Diagram. See `Loops Layout Optimization` use case.
 * Added extra arrows to vertical segments of loops in family diagram
 * Fixed spouses selection in the family diagram
 * Fixed background annotation `includeChildren` property in family diagram having loops between items.
@@ -99,11 +99,11 @@
 #### Version 5.3.1
 * Fixed performance issue in react demo.
 #### Version 5.3.0
-* Added `relativeItem`, `placementType` and `position` properties to `primitives.famdiagram.ItemConfig`. Properties define user preferences for items order in Family Diagram. See "Family Members Order" data set in Family Chart & Annotations Demo.
+* Added `relativeItem`, `placementType` and `position` properties to `primitives.famdiagram.ItemConfig`. Properties define user preferences for items ordering in the family diagram. See "Family Members Order" data set in Family Chart & Annotations Demo.
 #### Version 5.2.4
 * Merged fix for straight connector annotations labels.
 #### Version 5.2.2
-* Fixed `update` method. In case when only nodes content properties changed like title, description, context, etc, chart will render only them. See Cursor item properties editor panel in Organizational Chart Editor Demo in React Demos.
+* Fixed `update` method. When only node content properties change like title and description, the chart will render only them. See the cursor item properties panel in Organizational Chart Editor Demo in React Demos.
 * Fixed elbows of connection lines.
 #### Version 5.2.1
 * Fixed performance bug. JSONML Templates triggered layout on every update. See Dependencies Chart Demo in React Demos.
@@ -114,7 +114,7 @@
 * Published React Demo & Tutorial to Github
 #### Version 5.1.0
 
-**Warning**: Extracted jQuery UI Widgets into separate `file primitives.jquery.latest.js` !
+**Warning**: Extracted jQuery UI Widgets into separate `file primitives.jquery.latest.js`!
 * Added npm package header and published library to [www.npmjs.com](https://www.npmjs.com/package/basicprimitives)
 * Added pagination for nodes in page fit mode set to None.
 #### Version 5.0.4
@@ -149,7 +149,7 @@
 * Added option enableMatrixLayout, minimumMatrixSize and maximumColumnsInMatrix to primitives.famdiagram.Config. See Family Chart & Annotations demo for usage.
 * Reworked background annotations merge. Items backgrounds don't grow beyond padding area anymore.
 * Reworked keyboard navigation. So it respects nodes crossing multiple layers of nodes.
-* Reworked mouse highlight gravity. Nodes are no longer highlighted when cursor is out of nodes bounds.
+* Reworked mouse highlight gravity. Nodes are no longer highlighted when the cursor is out of node bounds.
 * Removed PhantomJS support and page split rendering mode. Use PDFkit plugin for PDF generation and printing.
 * Reworked labels conflicts resolution in labels visibility auto mode.
 * Fixed inactive items usage in Family diagram.
@@ -325,7 +325,7 @@
 * Added Shape & Connector helper widgets: bpShape & bpConnector.
 * Added Shape, Connector & Highlight path annotations to orgDiagram. Added ConnectorAnnotationConfig, ShapeAnnotationConfig & HighlightPathAnnotationConfig classes to orgDiagram. Added annotations collection property to orgdiagram.Config.
 * Added connection lines styling options: linesType, highlightLinesColor, highlightLinesWidth, highlightLinesType to orgdiagram.Config.
-* Changed API from hierarchical structure defined by rootItem to flat list of ItemConfig objects defined in items collection property. Added id & parent properties to ItemConfig. Changed type of cursorItem, highlightItem & selectedItems properties from object references to ItemConfig id-s. Now, in order to define root item, root item in items collection should have its parent property set to null. Chart supports multiple root items. Chart does not search for orphans and ignores looped items. It is Applications responsibility to provide consistent collection of items.
+* Changed API from hierarchical structure defined by `rootItem` to a flat list of `ItemConfig` objects defined in items collection property. Added `id` & `parent` properties to `ItemConfig`. Changed type of  `cursorItem`, `highlightItem` & `selectedItems` properties from object references to `ItemConfig` id-s. To define root item, root item in items collection should have its parent property set to null. Chart supports multiple root items. The chart does not search for orphans and ignores looped items. It is the application's responsibility to provide a consistent collection of items.
 #### Version 1.0.39
 * Fixed SVG blurred lines in IE for charts layouted without absolute positioning.
 * Added tooltip option to ButtonConfig.
@@ -399,7 +399,7 @@
 * Fixed group title update for different heights.
 #### Version 1.0.19
 * Added childrenPlacementType to Config & ItemConfig options classes.
-* Added horizontalAlignment in Config.
+* Added `horizontalAlignment` in Config.
 #### Version 1.0.18
 * Fixed layout performance bug.
 #### Version 1.0.17
@@ -411,7 +411,7 @@
 * Fixed Bootstrap compatibility bugs. http://twitter.github.com/bootstrap/  Added Bootstrap demo for registered users.
 * Added onMouseClick event to Config.
 #### Version 1.0.15
-* Fixed narrow tree alignment to center instead of stretching it to available view port width.
+* Fixed narrow tree alignment to the center instead of stretching it to available viewport width.
 * Fixed Assistants & Advisers children placement. Parent's regular children are shifted down in order to provide space for them inside of parent's hierarchy.
 * Added maximumColumnsInMatrix option to org chart Config.
 * ASP.NET 3.5 Fixed IE8 related bugs.
@@ -443,17 +443,17 @@
 * Added items verticalAlignment property. It defines relative items alignment within one row: Top, Middle, Bottom. It only affects rows containing items of different heights.
 * Added connectorType options: Squared, Angular and Curved connector lines style for dots.
 #### Version 1.0.8
-* Fixed widget placement inside divs having non-absolute position.
-* Joomla 152-256 menu module: Suppressed layout update before sending server post back.
+* Fixed widget placement inside `divs` having non-absolute position.
+* Joomla 152-256 menu module: Suppressed layout update before sending server post-back.
 * ASP.NET 3.5 Custom control: Fixed custom control placement inside panels having non-absolute position.
 #### Version 1.0.7
-* Added parentItem to EventArgs class. (See use case: "Adding new items at run time")
+* Added `parentItem` to EventArgs class. (See use case: "Adding new items at run time")
 #### Version 1.0.6
 * Added itemTitleFirstFontColor & itemTitleSecondFontColor options to orgDiagram Config class.
 * Added common functions: highestContrast, luminosity, beforeOpacity, getColorHexValue, getRed, getBlue, getGreen.
 * Fixed itemTitleColor option.
 * ASP.NET custom control: Added TitleColor property to Item class.
-* Removed BOM marks from file.
+* Removed BOM marks from the release file.
 #### Version 1.0.5
 * Added onHighlightChanging & onCursorChanging events to orgDiagram Config class.
 * Named noname event arguments to named classes: primitives.orgdiagram.EventArgs & primitives.common.RenderEventArgs.

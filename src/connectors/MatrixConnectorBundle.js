@@ -68,7 +68,7 @@ MatrixConnectorBundle.prototype.traceChildrenLayout = function (data, params, op
 
       if (leftTreeItemPosition != null) {
         actualPosition = leftTreeItemPosition.actualPosition;
-        params.transform.transformPoints(actualPosition.right(), actualPosition.verticalCenter(), medianPoint.x, medianPoint.y,
+        params.transform.transformPoints(actualPosition.right(), medianPoint.y, medianPoint.x, medianPoint.y,
           true, this, function (fromX, fromY, toX, toY) {
             var polyline = new Polyline();
             polyline.addSegment(new MoveSegment(fromX, fromY));
@@ -84,7 +84,7 @@ MatrixConnectorBundle.prototype.traceChildrenLayout = function (data, params, op
 
       if (rightTreeItemPosition != null) {
         actualPosition = rightTreeItemPosition.actualPosition;
-        params.transform.transformPoints(actualPosition.left(), actualPosition.verticalCenter(), medianPoint.x, medianPoint.y,
+        params.transform.transformPoints(actualPosition.left(), medianPoint.y, medianPoint.x, medianPoint.y,
           true, this, function (fromX, fromY, toX, toY) {
             var polyline = new Polyline();
             polyline.addSegment(new MoveSegment(fromX, fromY));
@@ -181,7 +181,7 @@ MatrixConnectorBundle.prototype.traceParentsLayout = function (data, params, opt
 
       if (leftTreeItemPosition != null) {
         actualPosition = leftTreeItemPosition.actualPosition;
-        params.transform.transformPoints(actualPosition.right(), actualPosition.verticalCenter(), medianPoint.x, medianPoint.y,
+        params.transform.transformPoints(actualPosition.right(), medianPoint.y, medianPoint.x, medianPoint.y,
           true, this, function (fromX, fromY, toX, toY) {
             var polyline = new Polyline();
             polyline.addSegment(new MoveSegment(fromX, fromY));
@@ -197,7 +197,7 @@ MatrixConnectorBundle.prototype.traceParentsLayout = function (data, params, opt
 
       if (rightTreeItemPosition != null) {
         actualPosition = rightTreeItemPosition.actualPosition;
-        params.transform.transformPoints(actualPosition.left(), actualPosition.verticalCenter(), medianPoint.x, medianPoint.y,
+        params.transform.transformPoints(actualPosition.left(), medianPoint.y, medianPoint.x, medianPoint.y,
           true, this, function (fromX, fromY, toX, toY) {
             var polyline = new Polyline();
             polyline.addSegment(new MoveSegment(fromX, fromY));

@@ -45,7 +45,7 @@ FamilyLayout.prototype.measure = function (levelVisibility, isCursor, isSelected
   this.shiftLevels(this.treeLevelsPositions, options.padding.top, options.shifts, options.arrowsDirection, options.linesWidth, this.getConnectorsStacksSizes);
 
   var treeItemPosition = new TreeItemPosition();
-  treeItemPosition.actualVisibility = Visibility.Invisible;
+  treeItemPosition.actualVisibility = Visibility.Normal;
   treeItemPosition.actualSize = this.getLayoutSize(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions, options.padding);
   return treeItemPosition;
 };

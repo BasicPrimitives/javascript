@@ -1,5 +1,5 @@
 ﻿import Rect from '../../../graphics/structs/Rect';
-import { VerticalAlignmentType, Visibility, GroupByType, AdviserPlacementType } from '../../../enums';
+import { Visibility, GroupByType, AdviserPlacementType } from '../../../enums';
 import TreeItemPosition from '../../../models/TreeItemPosition';
 
 export default function HorizontalLayout(items, hideParentConnection, hideChildrenConnection) {
@@ -33,7 +33,6 @@ HorizontalLayout.prototype.Column = function () {
 HorizontalLayout.prototype.Row = function () {
   this.depth = 0;
   this.offset = 0;
-  this.horizontalConnectorsDepth = 0;
   this.minimalDepth = null;
   this.dotsDepth = null;
 };
@@ -50,7 +49,7 @@ HorizontalLayout.prototype.measure = function (levelVisibility, isCursor, isSele
   this.data = data;
 
   var treeItemPosition = new TreeItemPosition();
-  treeItemPosition.actualVisibility = Visibility.Invisible;
+  treeItemPosition.actualVisibility = Visibility.Normal;
   treeItemPosition.actualSize = this.getLayoutSize(data);
   return treeItemPosition;
 };
@@ -105,9 +104,7 @@ HorizontalLayout.prototype.measureRow = function (data, items, treeItemsPosition
     var treeItem = items[index];
     var treeItemId = treeItem.id;
     var treeItemPosition = treeItemsPositions[treeItemId];
-
     var verticalPadding = options.shifts[treeItemPosition.actualVisibility] / 2;
-
     row.depth = Math.max(row.depth, verticalPadding + treeItemPosition.actualSize.height + verticalPadding);
 
     switch (treeItemPosition.actualVisibility) {
@@ -120,28 +117,16 @@ HorizontalLayout.prototype.measureRow = function (data, items, treeItemsPosition
         row.minimalDepth = !row.minimalDepth ? treeItemPosition.actualSize.height : Math.min(row.minimalDepth, treeItemPosition.actualSize.height);
         break;
     }
-
-    row.offset = row.depth / 2;
-
-    if (row.minimalDepth == null) {
-      row.minimalDepth = row.depth;
-    }
-    if (row.dotsDepth != null && row.dotsDepth > row.minimalDepth) {
-      row.minimalDepth = row.dotsDepth;
-    }
-
-    switch (options.verticalAlignment) {
-      case VerticalAlignmentType.Top:
-        row.horizontalConnectorsDepth = row.minimalDepth / 2.0;
-        break;
-      case VerticalAlignmentType.Middle:
-        row.horizontalConnectorsDepth = row.depth / 2.0;
-        break;
-      case VerticalAlignmentType.Bottom:
-        row.horizontalConnectorsDepth = row.depth - row.minimalDepth / 2.0;
-        break;
-    }
   };
+  
+  row.offset = row.depth / 2;
+
+  if (row.minimalDepth == null) {
+    row.minimalDepth = row.depth;
+  }
+  if (row.dotsDepth != null && row.dotsDepth > row.minimalDepth) {
+    row.minimalDepth = row.dotsDepth;
+  }
 };
 
 HorizontalLayout.prototype.getLayoutSize = function (data) {
@@ -178,7 +163,7 @@ HorizontalLayout.prototype.arrange = function (thisArg, parentPosition, layoutDi
       treeItemPosition = {
         ...treeItemPosition,
         actualPosition,
-        horizontalConnectorsShift: parentPosition.y + row.offset - row.depth / 2 + row.horizontalConnectorsDepth,
+        horizontalConnectorsShift: parentPosition.y + row.offset - row.depth / 2 + row.offset,
         leftMedianOffset: column.depth / 2 + (layoutDirection == AdviserPlacementType.Left ? column.childrenPadding : column.parentsPadding),
         rightMedianOffset: column.depth / 2 + (layoutDirection == AdviserPlacementType.Left ? column.parentsPadding : column.childrenPadding),
         topConnectorShift: row.depth / 2,
@@ -191,28 +176,5 @@ HorizontalLayout.prototype.arrange = function (thisArg, parentPosition, layoutDi
 };
 
 HorizontalLayout.prototype.getItemPosition = function (visibility, offset, row, size, options) {
-  var itemShift = 0;
-
-  switch (visibility) {
-    case Visibility.Normal:
-      switch (options.verticalAlignment) {
-        case VerticalAlignmentType.Top:
-          itemShift = 0;
-          break;
-        case VerticalAlignmentType.Middle:
-          itemShift = (row.depth - size.height) / 2.0;
-          break;
-        case VerticalAlignmentType.Bottom:
-          itemShift = row.depth - size.height;
-          break;
-      }
-      break;
-    case Visibility.Dot:
-    case Visibility.Line:
-    case Visibility.Invisible:
-      itemShift = row.horizontalConnectorsDepth - size.height / 2.0;
-      break;
-  }
-
-  return new Rect(offset - size.width / 2, row.offset - row.depth / 2 + itemShift, size.width, size.height);
+  return new Rect(offset - size.width / 2, row.offset - size.height / 2.0, size.width, size.height);
 };

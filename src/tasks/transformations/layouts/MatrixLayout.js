@@ -55,7 +55,7 @@ MatrixLayout.prototype.measure = function (levelVisibility, isCursor, isSelected
   this.data = data;
 
   var treeItemPosition = new TreeItemPosition();
-  treeItemPosition.actualVisibility = Visibility.Invisible;
+  treeItemPosition.actualVisibility = Visibility.Normal;
   treeItemPosition.actualSize = this.getLayoutSize(data);
   return treeItemPosition;
 };

@@ -57,114 +57,116 @@ export default function DrawTreeItemsTask(getGraphics, createTransformTask, appl
             this, function (x, y, width, height) {
               var nodePosition = new Rect(x, y, width, height);
               if (viewPortPosition == null || viewPortPosition.overlaps(nodePosition)) {
-                var templateParams = itemTemplateParamsTask.getTemplateParams(treeItemId),
-                  template = templateParams.template;
+                var templateParams = itemTemplateParamsTask.getTemplateParams(treeItemId);
+                if(templateParams != null) {
+                  var template = templateParams.template;
 
-                uiHash = new RenderEventArgs();
-                uiHash.id = treeItemId;
-                uiHash.context = combinedContextsTask.getConfig(treeItemId);
-                uiHash.isCursor = (treeItemId == cursorItemId);
-                uiHash.isSelected = selectedItemsTask.isSelected(treeItemId);
-                uiHash.templateName = template.templateConfig.name;
+                  uiHash = new RenderEventArgs();
+                  uiHash.id = treeItemId;
+                  uiHash.context = combinedContextsTask.getConfig(treeItemId);
+                  uiHash.isCursor = (treeItemId == cursorItemId);
+                  uiHash.isSelected = selectedItemsTask.isSelected(treeItemId);
+                  uiHash.templateName = template.templateConfig.name;
 
-                uiHash.template = templateParams.template;
-                uiHash.isActive = templateParams.isActive;
-                uiHash.hasSelectorCheckbox = templateParams.hasSelectorCheckbox;
-                uiHash.hasButtons = templateParams.hasButtons;
-                uiHash.hasGroupTitle = templateParams.hasGroupTitle;
-                uiHash.onButtonsRender = templateParams.onButtonsRender;
+                  uiHash.template = templateParams.template;
+                  uiHash.isActive = templateParams.isActive;
+                  uiHash.hasSelectorCheckbox = templateParams.hasSelectorCheckbox;
+                  uiHash.hasButtons = templateParams.hasButtons;
+                  uiHash.hasGroupTitle = templateParams.hasGroupTitle;
+                  uiHash.onButtonsRender = templateParams.onButtonsRender;
 
-                _graphics.activate("placeholder", Layers.Item);
-                element = _graphics.template(
-                  x
-                  , y
-                  , width
-                  , height
-                  , treeItemPosition.contentPosition.x
-                  , treeItemPosition.contentPosition.y
-                  , treeItemPosition.contentPosition.width
-                  , treeItemPosition.contentPosition.height
-                  , template.itemTemplate.template()
-                  , template.itemTemplate.getHashCode()
-                  , template.itemTemplate.render
-                  , uiHash
-                  , { "borderWidth": template.templateConfig.itemBorderWidth }
-                );
+                  _graphics.activate("placeholder", Layers.Item);
+                  element = _graphics.template(
+                    x
+                    , y
+                    , width
+                    , height
+                    , treeItemPosition.contentPosition.x
+                    , treeItemPosition.contentPosition.y
+                    , treeItemPosition.contentPosition.width
+                    , treeItemPosition.contentPosition.height
+                    , template.itemTemplate.template()
+                    , template.itemTemplate.getHashCode()
+                    , template.itemTemplate.render
+                    , uiHash
+                    , { "borderWidth": template.templateConfig.itemBorderWidth }
+                  );
 
-                if (templateParams.hasGroupTitle) {
-                  var groupTitlePosition = 0;
-                  switch (_itemsSizesOptions.groupTitlePlacementType) {
-                    case AdviserPlacementType.Left:
-                    case AdviserPlacementType.Auto:
-                      groupTitlePosition = 2;
-                      break;
-                    case AdviserPlacementType.Right:
-                      groupTitlePosition = width - (_itemsSizesOptions.groupTitlePanelSize - 4);
-                      break;
-                    default:
+                  if (templateParams.hasGroupTitle) {
+                    var groupTitlePosition = 0;
+                    switch (_itemsSizesOptions.groupTitlePlacementType) {
+                      case AdviserPlacementType.Left:
+                      case AdviserPlacementType.Auto:
+                        groupTitlePosition = 2;
+                        break;
+                      case AdviserPlacementType.Right:
+                        groupTitlePosition = width - (_itemsSizesOptions.groupTitlePanelSize - 4);
+                        break;
+                      default:
+                    }
+                    element = _graphics.template(
+                      x,
+                      y,
+                      width,
+                      height,
+                      groupTitlePosition,
+                      treeItemPosition.contentPosition.y,
+                      _itemsSizesOptions.groupTitlePanelSize - 4,
+                      treeItemPosition.contentPosition.height + 2,
+                      _groupTitleTemplate.template(),
+                      _groupTitleTemplate.getHashCode(),
+                      _groupTitleTemplate.render,
+                      uiHash,
+                      null
+                    );
                   }
-                  element = _graphics.template(
-                    x,
-                    y,
-                    width,
-                    height,
-                    groupTitlePosition,
-                    treeItemPosition.contentPosition.y,
-                    _itemsSizesOptions.groupTitlePanelSize - 4,
-                    treeItemPosition.contentPosition.height + 2,
-                    _groupTitleTemplate.template(),
-                    _groupTitleTemplate.getHashCode(),
-                    _groupTitleTemplate.render,
-                    uiHash,
-                    null
-                  );
-                }
-                if (templateParams.hasSelectorCheckbox) {
-                  _graphics.activate("placeholder", Layers.Controls);
-                  element = _graphics.template(
-                    x,
-                    y,
-                    width,
-                    height,
-                    treeItemPosition.contentPosition.x,
-                    height - (_itemsSizesOptions.checkBoxPanelSize - 4),
-                    treeItemPosition.contentPosition.width,
-                    _itemsSizesOptions.checkBoxPanelSize - 4,
-                    _checkBoxTemplate.template(),
-                    _checkBoxTemplate.getHashCode(),
-                    _checkBoxTemplate.render,
-                    uiHash,
-                    null
-                  );
-                }
-                if (templateParams.hasButtons) {
-                  _graphics.activate("placeholder", Layers.Controls);
-                  var buttonsPanelPosition = 0;
-                  switch (_itemsSizesOptions.groupTitlePlacementType) {
-                    case AdviserPlacementType.Left:
-                    case AdviserPlacementType.Auto:
-                      buttonsPanelPosition = width - (_itemsSizesOptions.buttonsPanelSize - 4);
-                      break;
-                    case AdviserPlacementType.Right:
-                      buttonsPanelPosition = 2;
-                      break;
-                    default:
+                  if (templateParams.hasSelectorCheckbox) {
+                    _graphics.activate("placeholder", Layers.Controls);
+                    element = _graphics.template(
+                      x,
+                      y,
+                      width,
+                      height,
+                      treeItemPosition.contentPosition.x,
+                      height - (_itemsSizesOptions.checkBoxPanelSize - 4),
+                      treeItemPosition.contentPosition.width,
+                      _itemsSizesOptions.checkBoxPanelSize - 4,
+                      _checkBoxTemplate.template(),
+                      _checkBoxTemplate.getHashCode(),
+                      _checkBoxTemplate.render,
+                      uiHash,
+                      null
+                    );
                   }
-                  element = _graphics.template(
-                    x,
-                    y,
-                    width,
-                    height,
-                    buttonsPanelPosition,
-                    treeItemPosition.contentPosition.y,
-                    _itemsSizesOptions.buttonsPanelSize - 4,
-                    Math.max(treeItemPosition.contentPosition.height, height - treeItemPosition.contentPosition.y),
-                    _buttonsTemplate.template(),
-                    template.templateConfig.name + _buttonsTemplate.getHashCode(),
-                    _buttonsTemplate.render,
-                    uiHash,
-                    null
-                  );
+                  if (templateParams.hasButtons) {
+                    _graphics.activate("placeholder", Layers.Controls);
+                    var buttonsPanelPosition = 0;
+                    switch (_itemsSizesOptions.groupTitlePlacementType) {
+                      case AdviserPlacementType.Left:
+                      case AdviserPlacementType.Auto:
+                        buttonsPanelPosition = width - (_itemsSizesOptions.buttonsPanelSize - 4);
+                        break;
+                      case AdviserPlacementType.Right:
+                        buttonsPanelPosition = 2;
+                        break;
+                      default:
+                    }
+                    element = _graphics.template(
+                      x,
+                      y,
+                      width,
+                      height,
+                      buttonsPanelPosition,
+                      treeItemPosition.contentPosition.y,
+                      _itemsSizesOptions.buttonsPanelSize - 4,
+                      Math.max(treeItemPosition.contentPosition.height, height - treeItemPosition.contentPosition.y),
+                      _buttonsTemplate.template(),
+                      template.templateConfig.name + _buttonsTemplate.getHashCode(),
+                      _buttonsTemplate.render,
+                      uiHash,
+                      null
+                    );
+                  }
                 }
               }
             });//ignore jslint

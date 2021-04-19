@@ -510,8 +510,10 @@ export const ItemType = {
      */
     SubAssistant: 4,
     /**
-     * The sub-adviser type places the node on the side of the logical parent below 
-     * the connection line. The sub-adviser connects to the relation line with its top side.
+     * The sub adviser type sets node placement at the column in between logical parent 
+     * and adviser nodes and makes it connected vertically to the connection 
+     * line going from parent to the advisers.
+     * @ignore
      */
     SubAdviser: 5,
     /**
@@ -539,16 +541,17 @@ export const ItemType = {
      */
      Director: 9,
     /**
-     * The super-adviser type places the node on the side of the logical parent above 
-     * the connection line. The super-adviser connects to the relation line with its bottom side.
-     */
-     SuperAdviser: 10,
-    /**
-     * The super-assistant type sets node placement at the row in between logical parent 
+     * The assistant director type sets node placement at the row in between logical parent 
      * and directors nodes row and makes it connected horizontally to the connection 
      * line going from parent to the directors.
      */
-     SuperAssistant: 11
+     AssistantDirector: 10,
+    /**
+     * The assistant adviser type sets node placement at the column in between logical parent 
+     * and adviser nodes column and makes it connected vertically to the connection 
+     * line going from parent to the advisers.
+     */
+     AssistantAdviser: 11
 };
 
 export const LabelType =

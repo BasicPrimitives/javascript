@@ -251,7 +251,7 @@ export default function Polyline(newPaletteItem) {
       currentSegment = segments[len - 1];
       if (currentSegment.trim != null) {
         currentEndPoint = new Point(currentSegment.getEndPoint());
-        if (currentEndPoint.distanceTo(prevEndPoint) > arrowTipLength) {
+        if (currentEndPoint.distanceTo(prevEndPoint) >= arrowTipLength) {
           newEndPoint = currentSegment.trim(prevEndPoint, arrowTipLength);
 
           polyline = _getArrow(newEndPoint.x, newEndPoint.y, currentEndPoint.x, currentEndPoint.y, arrowTipLength, arrowTipWidth);

@@ -89,3 +89,30 @@ test('getFamilyLoops function returns empty array for DAG family structure', () 
 
   expect(result).toEqual(expected);
 });
+
+test('getFamilyLoops - find optimal set of loops in the looped linked list, nodes should stay connected after loops removal', () => {
+  var family = getFamily([
+    { id: '1', parents: ['2', '5'] },
+    { id: '2', parents: ['1', '3'] },
+    { id: '3', parents: ['2', '4'] },
+    { id: '4', parents: ['3', '5'] },
+    { id: '5', parents: ['4', '1'] }
+  ]);
+
+  var result = getFamilyLoops(family);
+
+  result.forEach((edge) => {
+    family.removeChildRelation(edge.from, edge.to);
+  });
+
+
+  var tree = family.getGraph().getSpanningTree('1');
+  var containsAllNodes = true;
+  family.loop((itemId) => {
+    if(tree.node(itemId) == null) {
+      containsAllNodes = false;
+    }
+  });
+
+  expect(containsAllNodes).toBe(true);
+});

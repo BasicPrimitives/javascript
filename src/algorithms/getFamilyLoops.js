@@ -179,16 +179,16 @@ export default function getFamilyLoops(family, debug) {
         if (edge.to == toNode) {
           if (!residueGraph.hasNode(toNode)) {
             // console.log("Edge to test: from: " + nodeid + ", to " + toNode);
-            var isIsolated = true;
+            var isIsolated = false;
             graph.dfsLoop(this, toNode, function (fromNode, toNode2, edge) {
-              if (edge.from == fromNode) {
-                return edge.capacity > 0;
+              if (edge.from == fromNode && !residueGraph.hasNode(fromNode)) {
+                return true;
               }
               return false;
             }, function (foundid) {
-              if (residueGraph.hasNode(foundid)) {
-                // console.log("Non-isolated: " + toNode + ", hits residue node" + foundid);
-                isIsolated = false;
+              if (foundid == to) {
+                // console.log("Isolated: " + toNode + ", may access exit node" + foundid);
+                isIsolated = true;
                 return true;
               }
               return false;
@@ -224,10 +224,9 @@ export default function getFamilyLoops(family, debug) {
         validatedFlow += 1;
       }
     }
-    if (validatedFlow != totalFlow) {
-      throw "Failed to properly collect edges cutting maximum flow";
+    if (validatedFlow == totalFlow) {
+      loops = optimizedLoops;
     }
-    loops = optimizedLoops;
   }
   return loops;
 };

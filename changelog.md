@@ -8,6 +8,7 @@
 * Fixed family matrix layout for top and bottom in-row vertical alignment.
 * Fixed non-optimized selection of loops in the family diagram.
 * Fixed arrows rendering for vertical single parent connectors.
+* Fixed loops optimization algorithm. Made it fault-tolerant.
 #### Version 6.3.1
 * Fixed family diagram padding
 * Fixed `onButtonsRender` in `TemplateConfig`

@@ -6,6 +6,7 @@
 * Fixed `childrenPlacementType` option breaking multiple root nodes placement.
 * Fixed mouse interactivity for scaled and rotated right or bottom diagrams.
 * Fixed family matrix layout for top and bottom in-row vertical alignment.
+* Fixed non-optimized selection of loops in the family diagram.
 #### Version 6.3.1
 * Fixed family diagram padding
 * Fixed `onButtonsRender` in `TemplateConfig`

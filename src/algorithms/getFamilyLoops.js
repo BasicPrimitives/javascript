@@ -34,11 +34,11 @@ export default function getFamilyLoops(family, debug) {
 
   cleanFamily.loop(this, function (itemid) {
     if (tempFamily.node(itemid) != null) {
-      cleanFamily.loopParents(this, itemid, function (parentid) {
+      tempFamily.loopParents(this, itemid, function (parentid) {
         loops.push(new Edge(parentid, itemid));
         tempFamily.removeChildRelation(parentid, itemid);
-        return cleanFamily.SKIP;
-      })
+        return tempFamily.SKIP;
+      });
       var itemsToRemove = [];
       tempFamily.loopTopo(this, function (itemid) {
         itemsToRemove.push(itemid);

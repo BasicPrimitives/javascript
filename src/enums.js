@@ -489,33 +489,49 @@ export const HorizontalAlignmentType = {
  */
 export const ItemType = {
     /**
-     * The regular node is a default placement of child nodes in the form of a horizontal line.
+     * The regular type places node below parent.
      */
     Regular: 0,
     /**
-     * The adviser type sets node placement at the same row as the logical parent node on the left or right side and makes it connected horizontally.
-     */
-    Adviser: 2,
-    /**
-     * The assistant type sets node placement at the row in between logical parent and child
-     * rows and makes it connected horizontally to the connection line going from parent to the regular children
+     * The assistant type places node at the row on the side of the connection line going from parent to its children.
      */
     Assistant: 1,
     /**
-     * The sub-assistant node type is a variation of the assistant node type.
-     * It places a node between the logical parent and its regular children, and the difference 
-     * is how it is connected. The top side of the node connects the sub-assistant to the connector
-     * line going to the parent node.
-     * @ignore
+     * The sub-assistant node type is a variation of the assistant node type. 
+     * The sub-assistant places node at the row on the side of the connection line
+     * going from parent to its children. The connection line goes out of the top side of the node.
      */
     SubAssistant: 4,
     /**
-     * The sub adviser type sets node placement at the column in between logical parent 
-     * and adviser nodes and makes it connected vertically to the connection 
-     * line going from parent to the advisers.
-     * @ignore
+     * The adviser type places node on the right or left side of the parent.
      */
-    SubAdviser: 5,
+    Adviser: 2,
+    /**
+     * The sub-adviser type places node on the right or left side of the parent. 
+     * The connection line goes out of the top side of the sub-adviser node.
+     */
+     SubAdviser: 5,
+    /**
+     * The super adviser type places node at the column between parent and 
+     * adviser nodes above the connection line going from the parent to advisers.
+     * The super adviser node is opposite to the sub-adviser, and 
+     * it rotates the entire hierarchy of its children in the upward direction.
+     */
+    SuperAdviser: 11,
+    /**
+     * The director type places node above the logical parent. So it opposite position
+     * to the regular nodes. The director node rotates the organizational chart layout
+     * and the hierarchy of its child nodes upward. If there is no space to place the
+     * director above the parent, control transforms it into a regular adviser node.
+     */
+    Director: 9,
+    /**
+     * The super assistant type places node between parent and directors 
+     * on the left or right side of the connection line connecting the parent with directors. 
+     * The super assistant node is opposite to the assistant, and 
+     * it rotates the entire hierarchy of its children in the upward direction.
+     */
+    SuperAssistant: 10,
     /**
      * The general partner type is an imitation of multiple inheritances in the organizational chart hierarchy.
      * The general-partner node is drawn side by side with its logical parent, and control places
@@ -534,24 +550,6 @@ export const ItemType = {
      * The difference is that it has an extra connection line to its logical parent.
      */
     AdviserPartner: 8,
-    /**
-     * The director type places node above the logical parent. So it completely rotates 
-     * the hierarchy of its child nodes upward. If there is no space to place the director
-     * above the parent, control transforms it into a regular adviser node.
-     */
-     Director: 9,
-    /**
-     * The assistant director type sets node placement at the row in between logical parent 
-     * and directors nodes row and makes it connected horizontally to the connection 
-     * line going from parent to the directors.
-     */
-     AssistantDirector: 10,
-    /**
-     * The assistant adviser type sets node placement at the column in between logical parent 
-     * and adviser nodes column and makes it connected vertically to the connection 
-     * line going from parent to the advisers.
-     */
-     AssistantAdviser: 11
 };
 
 export const LabelType =

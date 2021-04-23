@@ -116,3 +116,30 @@ test('getFamilyLoops - find optimal set of loops in the looped linked list, node
 
   expect(containsAllNodes).toBe(true);
 });
+
+test('getFamilyLoops - find optimal set of loops in the interlinked set of nodes, nodes should stay connected after loops removal', () => {
+  var family = getFamily([
+    { id: '1', parents: ['1', '2', '3', '4', '5'] },
+    { id: '2', parents: ['1', '2', '3', '4', '5'] },
+    { id: '3', parents: ['1', '2', '3', '4', '5'] },
+    { id: '4', parents: ['1', '2', '3', '4', '5'] },
+    { id: '5', parents: ['1', '2', '3', '4', '5'] }
+  ]);
+
+  var result = getFamilyLoops(family);
+
+  result.forEach((edge) => {
+    family.removeChildRelation(edge.from, edge.to);
+  });
+
+
+  var tree = family.getGraph().getSpanningTree('1');
+  var containsAllNodes = true;
+  family.loop((itemId) => {
+    if(tree.node(itemId) == null) {
+      containsAllNodes = false;
+    }
+  });
+
+  expect(containsAllNodes).toBe(true);
+});

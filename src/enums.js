@@ -510,28 +510,7 @@ export const ItemType = {
      * The sub-adviser type places node on the right or left side of the parent. 
      * The connection line goes out of the top side of the sub-adviser node.
      */
-     SubAdviser: 5,
-    /**
-     * The super adviser type places node at the column between parent and 
-     * adviser nodes above the connection line going from the parent to advisers.
-     * The super adviser node is opposite to the sub-adviser, and 
-     * it rotates the entire hierarchy of its children in the upward direction.
-     */
-    SuperAdviser: 11,
-    /**
-     * The director type places node above the logical parent. So it opposite position
-     * to the regular nodes. The director node rotates the organizational chart layout
-     * and the hierarchy of its child nodes upward. If there is no space to place the
-     * director above the parent, control transforms it into a regular adviser node.
-     */
-    Director: 9,
-    /**
-     * The super assistant type places node between parent and directors 
-     * on the left or right side of the connection line connecting the parent with directors. 
-     * The super assistant node is opposite to the assistant, and 
-     * it rotates the entire hierarchy of its children in the upward direction.
-     */
-    SuperAssistant: 10,
+    SubAdviser: 5,
     /**
      * The general partner type is an imitation of multiple inheritances in the organizational chart hierarchy.
      * The general-partner node is drawn side by side with its logical parent, and control places

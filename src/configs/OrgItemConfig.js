@@ -170,31 +170,6 @@ export default function OrgItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.adviserPlacementType = AdviserPlacementType.Auto;
 
   /**
-   * The property defines the shape of directors formation. 
-   * By default, control places directors nodes in a horizontal line above parent node side.
-   * On a large scale, this may result in a long stripe of nodes, 
-   * and the end-user has to scroll the screen to view all of them. To compensate for this, 
-   * we provide the option of placing them in a vertical or square/matrix formation. 
-   * That will reduce sideways screen scrolling by compacting the directors into 
-   * a much smaller area on the screen.
-   *  
-   * @type {ChildrenPlacementType}
-   */
-   this.directorsPlacementType = ChildrenPlacementType.Auto;
-
-  /**
-   * The property defines the shape of child advisers' formation. 
-   * By default, control places adviser nodes in a horizontal line on the parent node side.
-   * On a large scale, this may result in a long stripe of advisers chained to each other, 
-   * and the end-user has to scroll the screen to view all of them. To compensate for this, 
-   * we provide the option of placing them in a vertical or square/matrix formation. 
-   * That will reduce sideways screen scrolling by compacting the advisers into a much smaller area on the screen.
-   *  
-   * @type {ChildrenPlacementType}
-   */
-   this.advisersPlacementType = ChildrenPlacementType.Auto;
-
-  /**
    * The property defines children's layout formation. By default, control places children
    * in a horizontal line below the parent node. On a large scale, this may result in the end-user
    * having to scroll screens to view all nodes. To compensate for this, we place children 

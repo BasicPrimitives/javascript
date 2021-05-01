@@ -33,7 +33,7 @@ export default function RemoveLoopsTask(logicalFamilyTask) {
       edgesToReverse = getFamilyLoops(logicalFamily, debug),
       fakePairs = [];
 
-    // group edges by child node
+    /* group edges by child node */
     var loops = [];
     var loopsHash = {};
     for (index = 0, len = edgesToReverse.length; index < len; index += 1) {
@@ -78,11 +78,12 @@ export default function RemoveLoopsTask(logicalFamilyTask) {
           hideParentConnection: isConnectionsVisible,
           hideChildrenConnection: isConnectionsVisible,
           levelGravity: GroupByType.Children,
-          itemConfig: { title: "fake parent #" + maximumId, description: "This is fake parent item was created by loops reversal." }
+          itemConfig: { title: "fake parent #" + maximumId, description: "This is a fake parent item, it was created by loops removal task." }
         });
 
         logicalFamily.add([], fakeParent.id, fakeParent);
         logicalFamily.adopt([fakeParent.id], loop.itemid);
+        fakePairs.push({ from: fakeParent.id, to: loop.itemid, isOppositeFlow: false });
 
         for (index2 = 0, len2 = parents.length; index2 < len2; index2 += 1) {
           var parentid = parents[index2];
@@ -100,15 +101,16 @@ export default function RemoveLoopsTask(logicalFamilyTask) {
               hideParentConnection: true,
               hideChildrenConnection: true,
               levelGravity: GroupByType.Parents,
-              itemConfig: { title: "fake child #" + maximumId, description: "This is fake child item was created by loops reversal." }
+              itemConfig: { title: "fake child #" + maximumId, description: "This is a fake child item, it was created by loops removal task." }
             });
             fakeChildren[parentid] = fakeChild;
 
             logicalFamily.add([parentid], fakeChild.id, fakeChild);
+            fakePairs.push({ from: parentid, to: fakeChild.id, isOppositeFlow: false });
           }
 
           logicalFamily.adopt([fakeParent.id], fakeChild.id);
-          fakePairs.push({ from: fakeParent.id, to: fakeChild.id });
+          fakePairs.push({ from: fakeParent.id, to: fakeChild.id, isOppositeFlow: true });
 
         }
 

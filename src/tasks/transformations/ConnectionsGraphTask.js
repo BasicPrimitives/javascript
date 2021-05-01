@@ -49,19 +49,31 @@ export default function ConnectionsGraphTask(getGraphics, createTransformTask, c
   }
 
   function TraceLoops(graph, loops) {
-    for (var index = 0, len = loops.length; index < len; index += 1) {
-      var loop = loops[index];
-
-      graph.getShortestPath(this, loop.from, [loop.to], function (connectorEdge, fromItem, toItem) {
-        return connectorEdge.weight;
-      }, function (path, to) {
-        for (var index2 = 0, len2 = path.length - 1; index2 < len2; index2 += 1) {
-          var fromItem = path[index2], toItem = path[index2 + 1];
-          var edge = graph.edge(fromItem, toItem);
-          edge.isOppositeFlow = true;
-          edge.hasArrow = true;
+    var edges = [];
+    for(var isOppositeFlow = 1; isOppositeFlow >= 0; isOppositeFlow -=1) {
+      for (var index = 0, len = loops.length; index < len; index += 1) {
+        var loop = loops[index];
+        if(loop.isOppositeFlow == (isOppositeFlow == 1)) {
+          graph.getShortestPath(this, loop.from, [loop.to], function (connectorEdge, fromItem, toItem) {
+            return connectorEdge.weight;
+          }, function (path, to) {
+            for (var index2 = 0, len2 = path.length - 1; index2 < len2; index2 += 1) {
+              var fromItem = path[index2], toItem = path[index2 + 1];
+              var edge = graph.edge(fromItem, toItem);
+              if(edge.polyline.length() > 0) {
+                edge.isOppositeFlow = (isOppositeFlow == 1);
+                edges.push(edge);
+              }
+            }
+          }); //ignore jslint
         }
-      }); //ignore jslint
+      }
+    }
+    for (var index = 0, len = edges.length; index < len; index += 1) {
+      var edge = edges[index];
+      if(edge.isOppositeFlow) {
+        edge.hasArrow = true;
+      }
     }
   }
 

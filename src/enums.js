@@ -528,7 +528,7 @@ export const ItemType = {
      * The adviser partner is a variation of the limited partner. 
      * The difference is that it has an extra connection line to its logical parent.
      */
-    AdviserPartner: 8,
+    AdviserPartner: 8
 };
 
 export const LabelType =

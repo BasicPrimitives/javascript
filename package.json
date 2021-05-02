@@ -2,7 +2,7 @@
   "name": "basicprimitives",
   "sideEffects": false,
   "homepage": "https://www.basicprimitives.com/",
-  "version": "6.3.1",
+  "version": "6.4.0",
   "author": "Basic Primitives Inc. <support@basicprimitives.com> (https://www.basicprimitives.com)",
   "description": "Basic Primitives Diagrams for JavaScript - data visualization components library that implements organizational chart and multi-parent dependency diagrams, contains implementations of JavaScript Controls and PDF rendering plugins.",
   "repository": {

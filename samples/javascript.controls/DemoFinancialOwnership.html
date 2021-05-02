@@ -73,7 +73,19 @@
 
 				new primitives.LabelAnnotationConfig({ fromItem: 6, toItems: [7], title: "60%" }),
 				new primitives.LabelAnnotationConfig({ fromItem: 6, toItems: [7, 8], title: "100%" }),
-				new primitives.LabelAnnotationConfig({ fromItem: 6, toItems: [8], title: "40%" })
+				new primitives.LabelAnnotationConfig({ fromItem: 6, toItems: [8], title: "40%" }),
+				{
+					annotationType: primitives.AnnotationType.Connector,
+					fromItem: 1,
+					toItem: 2,
+					label: "<span class=\"badge bg-danger\">1</span>",
+					labelSize: { width: 30, height: 30 }, //new primitives.Size(80, 30)
+					connectorShapeType: primitives.ConnectorShapeType.OneWay,
+					color: primitives.Colors.Red,
+					offset: 5,
+					lineWidth: 2,
+					lineType: primitives.LineType.Dashed
+				}
 			];
 
 			options.defaultTemplateName = "UnitTemplate";
@@ -86,6 +98,7 @@
 			options.highlightLinesColor = primitives.Colors.Red;
 			options.highlightLinesWidth = 2;
 			options.highlightLinesType = primitives.LineType.Solid;
+			options.padding = { left: 10, top: 70, right: 10, bottom: 10 };
 
 			options.cousinsIntervalMultiplier = 1;
 
@@ -124,7 +137,7 @@
 			var options = optionsRender.getValues();
 
 			control.setOptions(options);
-			contro.update(primitives.UpdateMode.Refresh);
+			control.update(primitives.UpdateMode.Refresh);
 		}
 
 		function onTemplateRender(event, data) {

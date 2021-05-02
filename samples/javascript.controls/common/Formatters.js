@@ -36,7 +36,22 @@ export function SizeFormatter(arg0, arg1) {
     return result;
 };
 
-export function ThicknessFormatter(value) {
-    value = parseFloat(value, 10);
-    return new Thickness(value, value, value, value);
+export function ThicknessFormatter(left, top, right, bottom) {
+    var result;
+    switch(arguments.length) {
+        case 1: {
+                var leftValue = parseFloat(left, 10);
+                result = new Thickness(leftValue, leftValue, leftValue, leftValue);
+            }
+            break;
+        case 4: {
+                var leftValue = parseFloat(left, 10);
+                var topValue = parseFloat(top, 10);
+                var rightValue = parseFloat(right, 10);
+                var bottomValue = parseFloat(bottom, 10);
+                result = new Thickness(leftValue, topValue, rightValue, bottomValue);
+            }
+            break;
+    }
+    return result;
 };

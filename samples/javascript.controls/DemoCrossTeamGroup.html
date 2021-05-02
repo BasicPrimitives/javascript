@@ -28,6 +28,7 @@
         placeAssistantsAboveChildren: true,
         maximumColumnsInMatrix: 6,
         minimalVisibility: primitives.Visibility.Dot,
+        minimumVisibleLevels: 1,
         selectionPathMode: primitives.SelectionPathMode.FullStack,
 
         hasButtons: primitives.Enabled.Auto,
@@ -132,7 +133,8 @@
         /* Frame */
         showFrame: true,
         frameInnerPadding: 4,
-        frameOuterPadding: 4
+        frameOuterPadding: 4,
+        padding: new primitives.Thickness(10, 10, 10, 10)
       },
         /* On property change event handler */
         function () {

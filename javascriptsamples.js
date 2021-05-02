@@ -476,9 +476,29 @@ function SizeFormatter(arg0, arg1) {
   return result;
 }
 ;
-function ThicknessFormatter(value) {
-  value = parseFloat(value, 10);
-  return new _src_graphics_structs_Thickness__WEBPACK_IMPORTED_MODULE_0__["default"](value, value, value, value);
+function ThicknessFormatter(left, top, right, bottom) {
+  var result;
+
+  switch (arguments.length) {
+    case 1:
+      {
+        var leftValue = parseFloat(left, 10);
+        result = new _src_graphics_structs_Thickness__WEBPACK_IMPORTED_MODULE_0__["default"](leftValue, leftValue, leftValue, leftValue);
+      }
+      break;
+
+    case 4:
+      {
+        var leftValue = parseFloat(left, 10);
+        var topValue = parseFloat(top, 10);
+        var rightValue = parseFloat(right, 10);
+        var bottomValue = parseFloat(bottom, 10);
+        result = new _src_graphics_structs_Thickness__WEBPACK_IMPORTED_MODULE_0__["default"](leftValue, topValue, rightValue, bottomValue);
+      }
+      break;
+  }
+
+  return result;
 }
 ;
 
@@ -689,9 +709,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TextBox__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./TextBox */ "./samples/javascript.controls/common/TextBox.js");
 /* harmony import */ var _Color__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Color */ "./samples/javascript.controls/common/Color.js");
 /* harmony import */ var _Range__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Range */ "./samples/javascript.controls/common/Range.js");
-/* harmony import */ var _Formatters__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Formatters */ "./samples/javascript.controls/common/Formatters.js");
-/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../src/common */ "./src/common/index.js");
-/* harmony import */ var _src_common_jsonml_html__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../src/common/jsonml-html */ "./src/common/jsonml-html.js");
+/* harmony import */ var _Thickness__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Thickness */ "./samples/javascript.controls/common/Thickness.js");
+/* harmony import */ var _Formatters__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Formatters */ "./samples/javascript.controls/common/Formatters.js");
+/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../src/common */ "./src/common/index.js");
+/* harmony import */ var _src_common_jsonml_html__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../../src/common/jsonml-html */ "./src/common/jsonml-html.js");
+
 
 
 
@@ -714,13 +736,14 @@ function Render(panels, defaultValues) {
   this.renders[_enums__WEBPACK_IMPORTED_MODULE_0__["ControlType"].TextBox] = new _TextBox__WEBPACK_IMPORTED_MODULE_6__["TextBoxRender"]();
   this.renders[_enums__WEBPACK_IMPORTED_MODULE_0__["ControlType"].ColorPicker] = new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorRender"]();
   this.renders[_enums__WEBPACK_IMPORTED_MODULE_0__["ControlType"].Range] = new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeRender"]();
+  this.renders[_enums__WEBPACK_IMPORTED_MODULE_0__["ControlType"].Thickness] = new _Thickness__WEBPACK_IMPORTED_MODULE_9__["ThicknessRender"]();
   this.formatters = {};
-  this.formatters[_enums__WEBPACK_IMPORTED_MODULE_0__["ValueType"].Integer] = _Formatters__WEBPACK_IMPORTED_MODULE_9__["IntegerFormatter"];
-  this.formatters[_enums__WEBPACK_IMPORTED_MODULE_0__["ValueType"].String] = _Formatters__WEBPACK_IMPORTED_MODULE_9__["StringFormatter"];
-  this.formatters[_enums__WEBPACK_IMPORTED_MODULE_0__["ValueType"].Number] = _Formatters__WEBPACK_IMPORTED_MODULE_9__["NumberFormatter"];
-  this.formatters[_enums__WEBPACK_IMPORTED_MODULE_0__["ValueType"].Boolean] = _Formatters__WEBPACK_IMPORTED_MODULE_9__["BooleanFormatter"];
-  this.formatters[_enums__WEBPACK_IMPORTED_MODULE_0__["ValueType"].Size] = _Formatters__WEBPACK_IMPORTED_MODULE_9__["SizeFormatter"];
-  this.formatters[_enums__WEBPACK_IMPORTED_MODULE_0__["ValueType"].Thickness] = _Formatters__WEBPACK_IMPORTED_MODULE_9__["ThicknessFormatter"];
+  this.formatters[_enums__WEBPACK_IMPORTED_MODULE_0__["ValueType"].Integer] = _Formatters__WEBPACK_IMPORTED_MODULE_10__["IntegerFormatter"];
+  this.formatters[_enums__WEBPACK_IMPORTED_MODULE_0__["ValueType"].String] = _Formatters__WEBPACK_IMPORTED_MODULE_10__["StringFormatter"];
+  this.formatters[_enums__WEBPACK_IMPORTED_MODULE_0__["ValueType"].Number] = _Formatters__WEBPACK_IMPORTED_MODULE_10__["NumberFormatter"];
+  this.formatters[_enums__WEBPACK_IMPORTED_MODULE_0__["ValueType"].Boolean] = _Formatters__WEBPACK_IMPORTED_MODULE_10__["BooleanFormatter"];
+  this.formatters[_enums__WEBPACK_IMPORTED_MODULE_0__["ValueType"].Size] = _Formatters__WEBPACK_IMPORTED_MODULE_10__["SizeFormatter"];
+  this.formatters[_enums__WEBPACK_IMPORTED_MODULE_0__["ValueType"].Thickness] = _Formatters__WEBPACK_IMPORTED_MODULE_10__["ThicknessFormatter"];
   this.activePanel = "panel0";
   this.panels = panels;
   this.defaultValues = defaultValues;
@@ -792,12 +815,12 @@ function Render(panels, defaultValues) {
       for (var index = 0; index < panelConfig.items.length; index += 1) {
         var item = panelConfig.items[index];
         var render = this.renders[item.controlType];
-        var defaulValue = Object(_src_common__WEBPACK_IMPORTED_MODULE_10__["isNullOrEmpty"])(panelConfig.namespace) ? this.defaultValues[item.id] : this.defaultValues[panelConfig.namespace][item.id];
+        var defaulValue = Object(_src_common__WEBPACK_IMPORTED_MODULE_11__["isNullOrEmpty"])(panelConfig.namespace) ? this.defaultValues[item.id] : this.defaultValues[panelConfig.namespace][item.id];
         content.push(render.render(item, panelConfig.namespace || '', defaulValue));
       }
     }
 
-    placeholder.appendChild(_src_common_jsonml_html__WEBPACK_IMPORTED_MODULE_11__["default"].toHTML(accordion));
+    placeholder.appendChild(_src_common_jsonml_html__WEBPACK_IMPORTED_MODULE_12__["default"].toHTML(accordion));
   };
 
   this.getValues = function () {
@@ -807,7 +830,7 @@ function Render(panels, defaultValues) {
       var panelConfig = this.panels[panelIndex];
       var panelOptions = result;
 
-      if (!Object(_src_common__WEBPACK_IMPORTED_MODULE_10__["isNullOrEmpty"])(panelConfig.namespace)) {
+      if (!Object(_src_common__WEBPACK_IMPORTED_MODULE_11__["isNullOrEmpty"])(panelConfig.namespace)) {
         if (!result.hasOwnProperty(panelConfig.namespace)) {
           result[panelConfig.namespace] = {};
         }
@@ -870,7 +893,7 @@ function SizeRender() {
   this.render = function (config, namespace, defaultItem) {
     var controlBody = ["p", {
       "title": config.id
-    }, config.caption, ["br"], this._render(config, namespace, "Width", defaultItem && defaultItem.width), '\xa0', this._render(config, namespace, "Height", defaultItem && defaultItem.height)];
+    }, config.caption, ["br"], this._render(config, namespace, "Width", defaultItem && defaultItem.width), this._render(config, namespace, "Height", defaultItem && defaultItem.height)];
     return controlBody;
   };
 
@@ -939,6 +962,65 @@ function TextBoxRender() {
 
 /***/ }),
 
+/***/ "./samples/javascript.controls/common/Thickness.js":
+/*!*********************************************************!*\
+  !*** ./samples/javascript.controls/common/Thickness.js ***!
+  \*********************************************************/
+/*! exports provided: ThicknessConfig, ThicknessRender */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ThicknessConfig", function() { return ThicknessConfig; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ThicknessRender", function() { return ThicknessRender; });
+/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./enums */ "./samples/javascript.controls/common/enums.js");
+/* harmony import */ var _Range__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Range */ "./samples/javascript.controls/common/Range.js");
+/* harmony import */ var _Formatters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Formatters */ "./samples/javascript.controls/common/Formatters.js");
+
+
+
+function ThicknessConfig(id, defaultItem, caption, min, max, step, onUpdate) {
+  this.controlType = _enums__WEBPACK_IMPORTED_MODULE_0__["ControlType"].Thickness;
+  this.id = id;
+  this.defaultItem = defaultItem;
+  this.caption = caption;
+  this.min = min;
+  this.max = max;
+  this.step = step;
+  this.onUpdate = onUpdate;
+}
+;
+function ThicknessRender() {
+  this._render = function (config, namespace, sideName, defaultItem) {
+    var rangeRender = new _Range__WEBPACK_IMPORTED_MODULE_1__["RangeRender"]();
+    var rangeConfig = new _Range__WEBPACK_IMPORTED_MODULE_1__["RangeConfig"](config.id + "_" + sideName, defaultItem, sideName, config.min, config.max, config.step, config.onUpdate);
+    return rangeRender.render(rangeConfig, namespace, defaultItem);
+  };
+
+  this.render = function (config, namespace, defaultItem) {
+    var controlBody = ["p", {
+      "title": config.id
+    }, config.caption, ["br"], this._render(config, namespace, "Left", defaultItem && defaultItem.left), this._render(config, namespace, "Top", defaultItem && defaultItem.top), this._render(config, namespace, "Right", defaultItem && defaultItem.right), this._render(config, namespace, "Bottom", defaultItem && defaultItem.bottom)];
+    return controlBody;
+  };
+
+  this.getValue = function (item, namespace, formatters) {
+    var leftElement = document.getElementById(namespace + item.id + "_Left"),
+        left = leftElement.value,
+        topElement = document.getElementById(namespace + item.id + "_Top"),
+        top = topElement.value,
+        rightElement = document.getElementById(namespace + item.id + "_Right"),
+        right = rightElement.value,
+        bottomElement = document.getElementById(namespace + item.id + "_Bottom"),
+        bottom = bottomElement.value,
+        result = Object(_Formatters__WEBPACK_IMPORTED_MODULE_2__["ThicknessFormatter"])(left, top, right, bottom);
+    return result;
+  };
+}
+;
+
+/***/ }),
+
 /***/ "./samples/javascript.controls/common/enums.js":
 /*!*****************************************************!*\
   !*** ./samples/javascript.controls/common/enums.js ***!
@@ -968,7 +1050,8 @@ var ControlType = {
   SizeBox: 4,
   TextBox: 5,
   ColorPicker: 6,
-  Range: 7
+  Range: 7,
+  Thickness: 8
 };
 
 /***/ }),
@@ -1054,9 +1137,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Size__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Size */ "./samples/javascript.controls/common/Size.js");
 /* harmony import */ var _Color__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Color */ "./samples/javascript.controls/common/Color.js");
 /* harmony import */ var _Range__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Range */ "./samples/javascript.controls/common/Range.js");
-/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./enums */ "./samples/javascript.controls/common/enums.js");
-/* harmony import */ var _src_enums__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../src/enums */ "./src/enums.js");
-/* harmony import */ var _src_graphics_structs_Size__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../src/graphics/structs/Size */ "./src/graphics/structs/Size.js");
+/* harmony import */ var _Thickness__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Thickness */ "./samples/javascript.controls/common/Thickness.js");
+/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./enums */ "./samples/javascript.controls/common/enums.js");
+/* harmony import */ var _src_enums__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../src/enums */ "./src/enums.js");
+/* harmony import */ var _src_graphics_structs_Size__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../../src/graphics/structs/Size */ "./src/graphics/structs/Size.js");
+
 
 
 
@@ -1092,46 +1177,51 @@ function getFamDiagramOptionsRender(extraPanels, defaultOptions, onUpdate) {
 ;
 
 function getFamDiagramOptionsPanels(onUpdate) {
-  return [new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Family layout", [new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("neighboursSelectionMode", _src_enums__WEBPACK_IMPORTED_MODULE_10__["NeighboursSelectionMode"].ParentsChildrenSiblingsAndSpouses, "Neighbours Selection Modes", _src_enums__WEBPACK_IMPORTED_MODULE_10__["NeighboursSelectionMode"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupByType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["GroupByType"].Children, "Group by option defines node placement in layout close to its parents or children when node is linked across multiple levels in hierarchy. See \"alignment\" data set.", {
+  return [new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Family layout", [new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("neighboursSelectionMode", _src_enums__WEBPACK_IMPORTED_MODULE_11__["NeighboursSelectionMode"].ParentsChildrenSiblingsAndSpouses, "Neighbours Selection Modes", _src_enums__WEBPACK_IMPORTED_MODULE_11__["NeighboursSelectionMode"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupByType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["GroupByType"].Children, "Group by option defines node placement in layout close to its parents or children when node is linked across multiple levels in hierarchy. See \"alignment\" data set.", {
     Children: 2,
     Parents: 1
-  }, _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("alignBylevels", true, "Keep items at the same levels after connections bundling", onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("hideGrandParentsConnectors", true, "Hide direct relations to grand parents. It helps to reduce diagrams connectors layout complexity. This option should be used together with dynamic highlighting of connectors to grandparents via immediate parents, so information is not lost.", onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("enableMatrixLayout", false, "Enables matrix layout in family diagram. Nodes having the same set of parents and children are grouped into square shaped matrix in order to keep them visually together.", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("minimumMatrixSize", null, "Minimum number of nodes needed in order to be formed into matrix layout", 2, 10, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("maximumColumnsInMatrix", null, "Maximum columns number in matrix nodes layout", 1, 20, 1, onUpdate)])];
+  }, _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("alignBylevels", true, "Keep items at the same levels after connections bundling", onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("hideGrandParentsConnectors", true, "Hide direct relations to grand parents. It helps to reduce diagrams connectors layout complexity. This option should be used together with dynamic highlighting of connectors to grandparents via immediate parents, so information is not lost.", onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("enableMatrixLayout", false, "Enables matrix layout in family diagram. Nodes having the same set of parents and children are grouped into square shaped matrix in order to keep them visually together.", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("minimumMatrixSize", null, "Minimum number of nodes needed in order to be formed into matrix layout", 2, 10, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("maximumColumnsInMatrix", null, "Maximum columns number in matrix nodes layout", 1, 20, 1, onUpdate)])];
 }
 
 ;
 
 function getAnnotationsOptionsPanels(onUpdate) {
-  return [new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("On-screen Annotations", [new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("connectorPlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ConnectorPlacementType"].Offbeat, "Placement type", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ConnectorPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("connectorShapeType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ConnectorShapeType"].OneWay, "Connector shape type", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ConnectorShapeType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelPlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ConnectorLabelPlacementType"].Between, "Label Placement type", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ConnectorLabelPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("lineWidth", 1, "Line width", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Number, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("lineType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["LineType"].Dashed, "Line type", _src_enums__WEBPACK_IMPORTED_MODULE_10__["LineType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("color", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red, "Color", false, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("offset", 5, "Offset", [-50, -20, -10, -5, 0, 5, 10, 20, 50], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Number, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("zOrderType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ZOrderType"].Auto, "Connector Z order type", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ZOrderType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate)], "AnnotationOptions")];
+  return [new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("On-screen Annotations", [new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("connectorPlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ConnectorPlacementType"].Offbeat, "Placement type", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ConnectorPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("connectorShapeType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ConnectorShapeType"].OneWay, "Connector shape type", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ConnectorShapeType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelPlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ConnectorLabelPlacementType"].Between, "Label Placement type", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ConnectorLabelPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("lineWidth", 1, "Line width", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Number, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("lineType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["LineType"].Dashed, "Line type", _src_enums__WEBPACK_IMPORTED_MODULE_11__["LineType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("color", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Colors"].Red, "Color", false, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("offset", 5, "Offset", [-50, -20, -10, -5, 0, 5, 10, 20, 50], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Number, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("zOrderType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ZOrderType"].Auto, "Connector Z order type", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ZOrderType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate)], "AnnotationOptions")];
 }
 
 ;
 
 function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
   var result = [];
-  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Auto Layout", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Page Fit Mode defines rule of fitting chart into available screen space. Set it to None if you want to disable it.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("pageFitMode", _src_enums__WEBPACK_IMPORTED_MODULE_10__["PageFitMode"].FitToPage, "Page Fit Mode", {
+  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Auto Layout", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Page Fit Mode defines rule of fitting chart into available screen space. Set it to None if you want to disable it.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("pageFitMode", _src_enums__WEBPACK_IMPORTED_MODULE_11__["PageFitMode"].FitToPage, "Page Fit Mode", {
     None: 0,
     PageWidth: 1,
     PageHeight: 2,
     FitToPage: 3,
     SelectionOnly: 6
-  }, _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("orientationType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["OrientationType"].Top, "Orientation Type", _src_enums__WEBPACK_IMPORTED_MODULE_10__["OrientationType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("verticalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["VerticalAlignmentType"].Middle, "Items Vertical Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["VerticalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("horizontalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["HorizontalAlignmentType"].Center, "Items Horizontal Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["HorizontalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("childrenPlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ChildrenPlacementType"].Horizontal, "Children placement", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ChildrenPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("leavesPlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ChildrenPlacementType"].Horizontal, "Leaves placement defines layout shape for items having no children", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ChildrenPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("placeAdvisersAboveChildren", true, "Place children of advisers above their parent node children", onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("placeAssistantsAboveChildren", true, "Place children of assistants above their parent node children", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("maximumColumnsInMatrix", null, "Maximum columns number in matrix children layout", 1, 20, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("minimalVisibility", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Visibility"].Dot, "Minimal nodes visibility", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Visibility"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("selectionPathMode", _src_enums__WEBPACK_IMPORTED_MODULE_10__["SelectionPathMode"].FullStack, "Selection Path Mode sets visibility of items between cursor item and root", _src_enums__WEBPACK_IMPORTED_MODULE_10__["SelectionPathMode"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate)]));
-  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Default Template", [new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("hasButtons", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Enabled"].Auto, "Show user buttons", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Enabled"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("hasSelectorCheckbox", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Enabled"].True, "Show selection check box", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Enabled"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("selectCheckBoxLabel", "Selected", "Selection checkbox label", ["Selected", "Included", "Pinned", "Any label"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Default chart item template tries to select the best matching font color for current title background.", false), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("itemTitleFirstFontColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].White, "Title first font color", false, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("itemTitleSecondFontColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].White, "Title second font color", false, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("buttonsPanelSize", 28, "Buttons panel size", 10, 100, 2, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("checkBoxPanelSize", 24, "Checkbox panel size", 2, 100, 2, onUpdate)]));
-  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Group Titles", [new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitlePlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["AdviserPlacementType"].Left, "Placement", _src_enums__WEBPACK_IMPORTED_MODULE_10__["AdviserPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("groupTitlePanelSize", 24, "Group title panel width", 10, 72, 2, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleOrientation", _src_enums__WEBPACK_IMPORTED_MODULE_10__["TextOrientationType"].RotateRight, "Orientation", _src_enums__WEBPACK_IMPORTED_MODULE_10__["TextOrientationType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleVerticalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["VerticalAlignmentType"].Middle, "Vertical Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["VerticalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleHorizontalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["HorizontalAlignmentType"].Center, "Horizontal Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["HorizontalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("groupTitleColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black, "Background Color", false, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("For group title color, see title first and second font colors in default template options.", false), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("groupTitleFontSize", "12px", "Font size", ["8px", "10px", "12px", "14px", "16px", "18px", "20px"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleFontWeight", "normal", "Font Weight", ["normal", "bold"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleFontStyle", "normal", "Font Style", ["normal", "italic"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("groupTitleFontFamily", "Arial", "Font Style", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate)]));
-  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Level Titles", [new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("addLevelAnnotations", true, "Add level annotations.", onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitlePlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["AdviserPlacementType"].Left, "Placement", _src_enums__WEBPACK_IMPORTED_MODULE_10__["AdviserPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("levelTitlePlaceInside", true, "Place level titles inside view port", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("levelTitlePanelSize", 24, "Panel width", 10, 1000, 2, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleOrientation", _src_enums__WEBPACK_IMPORTED_MODULE_10__["TextOrientationType"].RotateRight, "Orientation", _src_enums__WEBPACK_IMPORTED_MODULE_10__["TextOrientationType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleVerticalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["VerticalAlignmentType"].Middle, "Vertical Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["VerticalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleHorizontalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["HorizontalAlignmentType"].Center, "Horizontal Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_10__["HorizontalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("levelTitleFontColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].White, "Font Color", false, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("levelTitleColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black, "Title Background Color", false, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("levelTitleFontSize", "12px", "Font size", ["8px", "10px", "12px", "14px", "16px", "18px", "20px", "30px", "40px", "50px"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleFontWeight", "normal", "Font Weight", ["normal", "bold"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleFontStyle", "normal", "Font Style", ["normal", "italic"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("levelTitleFontFamily", "Arial", "Font Style", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate)]));
+  }, _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("orientationType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["OrientationType"].Top, "Orientation Type", _src_enums__WEBPACK_IMPORTED_MODULE_11__["OrientationType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("verticalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_11__["VerticalAlignmentType"].Middle, "Items Vertical Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_11__["VerticalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("horizontalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_11__["HorizontalAlignmentType"].Center, "Items Horizontal Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_11__["HorizontalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("childrenPlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ChildrenPlacementType"].Horizontal, "Children placement", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ChildrenPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("leavesPlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ChildrenPlacementType"].Horizontal, "Leaves placement defines layout shape for items having no children", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ChildrenPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("placeAdvisersAboveChildren", true, "Place children of advisers above their parent node children", onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("placeAssistantsAboveChildren", true, "Place children of assistants above their parent node children", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("maximumColumnsInMatrix", null, "Maximum columns number in matrix children layout", 1, 20, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("minimalVisibility", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Visibility"].Dot, "Minimal nodes visibility", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Visibility"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("minimumVisibleLevels", 0, "Minimum visible levels", 0, 10, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("selectionPathMode", _src_enums__WEBPACK_IMPORTED_MODULE_11__["SelectionPathMode"].FullStack, "Selection Path Mode sets visibility of items between cursor item and root", _src_enums__WEBPACK_IMPORTED_MODULE_11__["SelectionPathMode"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate)]));
+  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Default Template", [new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("hasButtons", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Enabled"].Auto, "Show user buttons", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Enabled"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("hasSelectorCheckbox", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Enabled"].True, "Show selection check box", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Enabled"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("selectCheckBoxLabel", "Selected", "Selection checkbox label", ["Selected", "Included", "Pinned", "Any label"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Default chart item template tries to select the best matching font color for current title background.", false), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("itemTitleFirstFontColor", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Colors"].White, "Title first font color", false, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("itemTitleSecondFontColor", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Colors"].White, "Title second font color", false, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("buttonsPanelSize", 28, "Buttons panel size", 10, 100, 2, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("checkBoxPanelSize", 24, "Checkbox panel size", 2, 100, 2, onUpdate)]));
+  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Group Titles", [new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitlePlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["AdviserPlacementType"].Left, "Placement", _src_enums__WEBPACK_IMPORTED_MODULE_11__["AdviserPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("groupTitlePanelSize", 24, "Group title panel width", 10, 72, 2, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleOrientation", _src_enums__WEBPACK_IMPORTED_MODULE_11__["TextOrientationType"].RotateRight, "Orientation", _src_enums__WEBPACK_IMPORTED_MODULE_11__["TextOrientationType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleVerticalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_11__["VerticalAlignmentType"].Middle, "Vertical Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_11__["VerticalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleHorizontalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_11__["HorizontalAlignmentType"].Center, "Horizontal Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_11__["HorizontalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("groupTitleColor", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Colors"].Black, "Background Color", false, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("For group title color, see title first and second font colors in default template options.", false), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("groupTitleFontSize", "12px", "Font size", ["8px", "10px", "12px", "14px", "16px", "18px", "20px"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleFontWeight", "normal", "Font Weight", ["normal", "bold"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("groupTitleFontStyle", "normal", "Font Style", ["normal", "italic"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("groupTitleFontFamily", "Arial", "Font Style", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate)]));
+  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Level Titles", [new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("addLevelAnnotations", true, "Add level annotations.", onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitlePlacementType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["AdviserPlacementType"].Left, "Placement", _src_enums__WEBPACK_IMPORTED_MODULE_11__["AdviserPlacementType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("levelTitlePlaceInside", true, "Place level titles inside view port", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("levelTitlePanelSize", 24, "Panel width", 10, 1000, 2, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleOrientation", _src_enums__WEBPACK_IMPORTED_MODULE_11__["TextOrientationType"].RotateRight, "Orientation", _src_enums__WEBPACK_IMPORTED_MODULE_11__["TextOrientationType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleVerticalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_11__["VerticalAlignmentType"].Middle, "Vertical Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_11__["VerticalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleHorizontalAlignment", _src_enums__WEBPACK_IMPORTED_MODULE_11__["HorizontalAlignmentType"].Center, "Horizontal Alignment", _src_enums__WEBPACK_IMPORTED_MODULE_11__["HorizontalAlignmentType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("levelTitleFontColor", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Colors"].White, "Font Color", false, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("levelTitleColor", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Colors"].Black, "Title Background Color", false, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("levelTitleFontSize", "12px", "Font size", ["8px", "10px", "12px", "14px", "16px", "18px", "20px", "30px", "40px", "50px"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleFontWeight", "normal", "Font Weight", ["normal", "bold"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("levelTitleFontStyle", "normal", "Font Style", ["normal", "italic"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("levelTitleFontFamily", "Arial", "Font Style", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate)]));
 
   if (showDefaultTemplateOptions) {
-    result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Markers", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("These options are defined per item template. So if you need to show individual markers per item, you have to define template for every marker type and assign it to items. Template is some sort of named property bag.", false), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("By default marker has color of itemTitleColor property, download demos and check samples source data. If item has no title color set, then be sure that you set border line width and color for markers having no fill, otherwise you are not going to see them.", false), new _Size__WEBPACK_IMPORTED_MODULE_6__["SizeConfig"]("minimizedItemSize", new _src_graphics_structs_Size__WEBPACK_IMPORTED_MODULE_11__["default"](4, 4), "Marker size", 1, 40, 1, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("minimizedItemCornerRadius", null, "Corner Radius", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Number, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("highlightPadding", 2, "Highlight border padding around marker", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Thickness, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("minimizedItemShapeType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ShapeType"].None, "Marker Shape", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ShapeType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("minimizedItemLineWidth", 1, "Marker border line width", 0, 10, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("minimizedItemLineType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["LineType"].Solid, "Marker border line type", _src_enums__WEBPACK_IMPORTED_MODULE_10__["LineType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Following Border and Fill colors properties work only for items having no title color property set. See Partners & Annotations Demo to try them.", false), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("minimizedItemBorderColor", null, "Marker border line color", true, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("minimizedItemFillColor", null, "Marker fill color", true, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("minimizedItemOpacity", 1.0, "Opacity", 0, 1, 0.1, onUpdate)], "DefaultTemplateOptions"));
+    result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Markers", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("These options are defined per item template. So if you need to show individual markers per item, you have to define template for every marker type and assign it to items. Template is some sort of named property bag.", false), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("By default marker has color of itemTitleColor property, download demos and check samples source data. If item has no title color set, then be sure that you set border line width and color for markers having no fill, otherwise you are not going to see them.", false), new _Size__WEBPACK_IMPORTED_MODULE_6__["SizeConfig"]("minimizedItemSize", new _src_graphics_structs_Size__WEBPACK_IMPORTED_MODULE_12__["default"](4, 4), "Marker size", 1, 40, 1, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("minimizedItemCornerRadius", null, "Corner Radius", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Number, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("highlightPadding", 2, "Highlight border padding around marker", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Thickness, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("minimizedItemShapeType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ShapeType"].None, "Marker Shape", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ShapeType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("minimizedItemLineWidth", 1, "Marker border line width", 0, 10, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("minimizedItemLineType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["LineType"].Solid, "Marker border line type", _src_enums__WEBPACK_IMPORTED_MODULE_11__["LineType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Following Border and Fill colors properties work only for items having no title color property set. See Partners & Annotations Demo to try them.", false), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("minimizedItemBorderColor", null, "Marker border line color", true, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("minimizedItemFillColor", null, "Marker fill color", true, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("minimizedItemOpacity", 1.0, "Opacity", 0, 1, 0.1, onUpdate)], "DefaultTemplateOptions"));
   }
 
-  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Intervals", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Vertical Intervals Between Rows", true), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("normalLevelShift", 20, "Normal", 1, 40, 1, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("If you enable labels for dots, use the following interval to fit them between levels.", false), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("dotLevelShift", 20, "Dotted", 1, 320, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("lineLevelShift", 10, "Lined", 1, 320, 1, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Horizontal Intervals Between Items in Row", true), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("normalItemsInterval", 10, "Normal", 1, 40, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("dotItemsInterval", 2, "Dotted", 1, 40, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("lineItemsInterval", 2, "Lined", 1, 40, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("cousinsIntervalMultiplier", 5, "Additional interval multiplier between cousins, it creates extra space between hierarchies", 1, 40, 1, onUpdate)]));
-  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Connectors", [new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("arrowsDirection", _src_enums__WEBPACK_IMPORTED_MODULE_10__["GroupByType"].None, "Arrows Direction", _src_enums__WEBPACK_IMPORTED_MODULE_10__["GroupByType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("connectorType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ConnectorType"].Squared, "Connectors", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ConnectorType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("elbowType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ElbowType"].None, "Elbows Type", _src_enums__WEBPACK_IMPORTED_MODULE_10__["ElbowType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("bevelSize", 4, "Bevel Size", 1, 10, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("elbowDotSize", 4, "Elbow dot Size", 1, 10, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("linesType", _src_enums__WEBPACK_IMPORTED_MODULE_10__["LineType"].Solid, "Line type", _src_enums__WEBPACK_IMPORTED_MODULE_10__["LineType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("linesColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Silver, "Color", false, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("linesWidth", 1, "Line width", 1, 10, 1, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("showExtraArrows", true, "Show extra horizontal arrows on top of connectors for easy navigation between parents and children through connector lines", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("extraArrowsMinimumSpace", 30, "Available minimum space to show horizontal arrow", 1, 200, 1, onUpdate)]));
-  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Labels", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Label property should be defined for every item first, otherwise chart has nothing to show. Labels are visible only for markers. If you need to add labels to normal size items you have to modify default item template and place text outside item boundaries.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("showLabels", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Enabled"].Auto, "Show labels", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Enabled"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Size__WEBPACK_IMPORTED_MODULE_6__["SizeConfig"]("labelSize", new _src_graphics_structs_Size__WEBPACK_IMPORTED_MODULE_11__["default"](80, 24), "Size: Use this property to define labels bounding rectangle. Labels placed relative to markers(dots), so when they overlap in auto show mode one of them would be hidden. Set appropriate intervals between levels of markers in order to fit and make all labels visible.", 1, 400, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("labelOffset", 1, "Offset", 0, 30, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelOrientation", _src_enums__WEBPACK_IMPORTED_MODULE_10__["TextOrientationType"].Horizontal, "Label Orientation", _src_enums__WEBPACK_IMPORTED_MODULE_10__["TextOrientationType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelPlacement", _src_enums__WEBPACK_IMPORTED_MODULE_10__["PlacementType"].Top, "Label Placement", _src_enums__WEBPACK_IMPORTED_MODULE_10__["PlacementType"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("labelFontSize", "10px", "Font size", ["8px", "10px", "12px", "14px", "16px", "18px", "20px"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("labelFontFamily", "Arial", "Font Name", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("labelColor", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black, "Font Color", false, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelFontWeight", "normal", "Font Weight", ["normal", "bold"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelFontStyle", "normal", "Font Style", ["normal", "italic"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate)]));
-  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Callout", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("By default callout displays item content, but it can be redefined with custom callout template.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("calloutMaximumVisibility", _src_enums__WEBPACK_IMPORTED_MODULE_10__["Visibility"].Dot, "Maximum node type visibility", {
+  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Spacing & Padding", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Vertical Intervals Between Rows", true), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("normalLevelShift", 20, "Normal", 1, 40, 1, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("If you enable labels for dots, use the following interval to fit them between levels.", false), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("dotLevelShift", 20, "Dotted", 1, 320, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("lineLevelShift", 10, "Lined", 1, 320, 1, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Horizontal Intervals Between Items in Row", true), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("normalItemsInterval", 10, "Normal", 1, 40, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("dotItemsInterval", 2, "Dotted", 1, 40, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("lineItemsInterval", 2, "Lined", 1, 40, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("cousinsIntervalMultiplier", 5, "Additional interval multiplier between cousins, it creates extra space between hierarchies", 1, 40, 1, onUpdate), new _Thickness__WEBPACK_IMPORTED_MODULE_9__["ThicknessConfig"]("padding", {
+    left: 10,
+    top: 10,
+    right: 10,
+    bottom: 10
+  }, "Diagram padding", 1, 100, 1, onUpdate)]));
+  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Connectors", [new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("arrowsDirection", _src_enums__WEBPACK_IMPORTED_MODULE_11__["GroupByType"].None, "Arrows Direction", _src_enums__WEBPACK_IMPORTED_MODULE_11__["GroupByType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("connectorType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ConnectorType"].Squared, "Connectors", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ConnectorType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("elbowType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ElbowType"].None, "Elbows Type", _src_enums__WEBPACK_IMPORTED_MODULE_11__["ElbowType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("bevelSize", 4, "Bevel Size", 1, 10, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("elbowDotSize", 4, "Elbow dot Size", 1, 10, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("linesType", _src_enums__WEBPACK_IMPORTED_MODULE_11__["LineType"].Solid, "Line type", _src_enums__WEBPACK_IMPORTED_MODULE_11__["LineType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("linesColor", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Colors"].Silver, "Color", false, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("linesWidth", 1, "Line width", 1, 10, 1, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("showExtraArrows", true, "Show extra horizontal arrows on top of connectors for easy navigation between parents and children through connector lines", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("extraArrowsMinimumSpace", 30, "Available minimum space to show horizontal arrow", 1, 200, 1, onUpdate)]));
+  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Labels", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Label property should be defined for every item first, otherwise chart has nothing to show. Labels are visible only for markers. If you need to add labels to normal size items you have to modify default item template and place text outside item boundaries.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("showLabels", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Enabled"].Auto, "Show labels", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Enabled"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _Size__WEBPACK_IMPORTED_MODULE_6__["SizeConfig"]("labelSize", new _src_graphics_structs_Size__WEBPACK_IMPORTED_MODULE_12__["default"](80, 24), "Size: Use this property to define labels bounding rectangle. Labels placed relative to markers(dots), so when they overlap in auto show mode one of them would be hidden. Set appropriate intervals between levels of markers in order to fit and make all labels visible.", 1, 400, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("labelOffset", 1, "Offset", 0, 30, 1, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelOrientation", _src_enums__WEBPACK_IMPORTED_MODULE_11__["TextOrientationType"].Horizontal, "Label Orientation", _src_enums__WEBPACK_IMPORTED_MODULE_11__["TextOrientationType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelPlacement", _src_enums__WEBPACK_IMPORTED_MODULE_11__["PlacementType"].Top, "Label Placement", _src_enums__WEBPACK_IMPORTED_MODULE_11__["PlacementType"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("labelFontSize", "10px", "Font size", ["8px", "10px", "12px", "14px", "16px", "18px", "20px"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("labelFontFamily", "Arial", "Font Name", ["Arial", "Verdana", "Times New Roman", "Serif", "Courier"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("labelColor", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Colors"].Black, "Font Color", false, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelFontWeight", "normal", "Font Weight", ["normal", "bold"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("labelFontStyle", "normal", "Font Style", ["normal", "italic"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate)]));
+  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Callout", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("By default callout displays item content, but it can be redefined with custom callout template.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("calloutMaximumVisibility", _src_enums__WEBPACK_IMPORTED_MODULE_11__["Visibility"].Dot, "Maximum node type visibility", {
     Normal: 1,
     Dot: 2,
     Line: 3
-  }, _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("showCallout", true, "This option controls callout visibility for minimized items and it can be overwritten per item", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutPlacementOffset", 100, "Call out placement offset", 10, 300, 10, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("calloutfillColor", "#000000", "Fill color", true, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("calloutBorderColor", "#000000", "Border line color", true, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutOffset", 1, "Offset", 0, 30, 1, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("calloutCornerRadius", 4, "Corner Radius", ["0%", "5%", "10%", "20%", 0, 1, 2, 3, 4, 5, 10, 20, 30], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("calloutPointerWidth", "10%", "Pointer Base Width", ["0%", "5%", "10%", "20%", 0, 5, 10, 20, 50], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].String, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutLineWidth", 1, "Line width", 0, 10, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutOpacity", 0.2, "Opacity", 0, 1, 0.1, onUpdate)]));
-  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Interactivity", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Use this option to disable mouse highlight on touch devices.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("navigationMode", _src_enums__WEBPACK_IMPORTED_MODULE_10__["NavigationMode"].Default, "Navigation mode", _src_enums__WEBPACK_IMPORTED_MODULE_10__["NavigationMode"], _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Integer, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("This option defines highlight gravity radius, so minimized item gets highlighted when mouse pointer does not overlap marker but it is within gravity radius of its boundaries.", false), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("highlightGravityRadius", 40, "Gravity radius", 0, 100, 1, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("enablePanning", true, "Enable Panning", onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("In order to achieve better graceful degradation of your diagram use item templates of various sizes instead of CSS scale.", false), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("scale", 1.0, "CSS Scale", {
+  }, _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("showCallout", true, "This option controls callout visibility for minimized items and it can be overwritten per item", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutPlacementOffset", 100, "Call out placement offset", 10, 300, 10, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("calloutfillColor", "#000000", "Fill color", true, onUpdate), new _Color__WEBPACK_IMPORTED_MODULE_7__["ColorConfig"]("calloutBorderColor", "#000000", "Border line color", true, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutOffset", 1, "Offset", 0, 30, 1, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("calloutCornerRadius", 4, "Corner Radius", ["0%", "5%", "10%", "20%", 0, 1, 2, 3, 4, 5, 10, 20, 30], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("calloutPointerWidth", "10%", "Pointer Base Width", ["0%", "5%", "10%", "20%", 0, 5, 10, 20, 50], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].String, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutLineWidth", 1, "Line width", 0, 10, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("calloutOpacity", 0.2, "Opacity", 0, 1, 0.1, onUpdate)]));
+  result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Interactivity", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Use this option to disable mouse highlight on touch devices.", false), new _RadioBox__WEBPACK_IMPORTED_MODULE_4__["RadioBoxConfig"]("navigationMode", _src_enums__WEBPACK_IMPORTED_MODULE_11__["NavigationMode"].Default, "Navigation mode", _src_enums__WEBPACK_IMPORTED_MODULE_11__["NavigationMode"], _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Integer, onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("This option defines highlight gravity radius, so minimized item gets highlighted when mouse pointer does not overlap marker but it is within gravity radius of its boundaries.", false), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("highlightGravityRadius", 40, "Gravity radius", 0, 100, 1, onUpdate), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("enablePanning", true, "Enable Panning", onUpdate), new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("In order to achieve better graceful degradation of your diagram use item templates of various sizes instead of CSS scale.", false), new _DropDownBox__WEBPACK_IMPORTED_MODULE_3__["DropDownBoxConfig"]("scale", 1.0, "CSS Scale", {
     "50%": 0.5,
     "60%": 0.6,
     "70%": 0.7,
@@ -1148,7 +1238,7 @@ function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
     "180%": 1.8,
     "190%": 1.9,
     "200%": 2.0
-  }, _enums__WEBPACK_IMPORTED_MODULE_9__["ValueType"].Number, onUpdate)]));
+  }, _enums__WEBPACK_IMPORTED_MODULE_10__["ValueType"].Number, onUpdate)]));
   result.push(new _PanelConfig__WEBPACK_IMPORTED_MODULE_1__["default"]("Frame", [new _Caption__WEBPACK_IMPORTED_MODULE_2__["CaptionConfig"]("Displays selected items outside view port area.", false), new _CheckBox__WEBPACK_IMPORTED_MODULE_5__["CheckBoxConfig"]("showFrame", true, "Show Frame", onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("frameInnerPadding", 2, "Frame inner padding", 0, 20, 1, onUpdate), new _Range__WEBPACK_IMPORTED_MODULE_8__["RangeConfig"]("frameOuterPadding", 2, "Frame outer padding", 0, 20, 1, onUpdate)]));
   return result;
 }
@@ -2327,9 +2417,9 @@ __webpack_require__.r(__webpack_exports__);
  **/
 
 /**
- * Defines leftward or rightward item placement relative to the referenced item.
- * In case of assistants and advisers the referenced item is their immediate parent.
- * In case of family diagram the referenced item is spouse or sibling in the row. 
+ * The enumeration sets leftward or rightward item placement relative to the referenced item.
+ * In the case of assistants or advisers, the referenced node is their immediate parent.
+ * In the case of the family diagram, the referenced node is a sibling. 
  *  
  * @enum {AdviserPlacementType}
  */
@@ -2362,41 +2452,39 @@ var AdviserPlacementType = {
 
 var AnnotationType = {
   /**
-   * Connector lines between two nodes of the diagram. They are drawn on top of existing
-   * diagram layout and they don't affect nodes placement. So it is users responsibility to
-   * preserve space between nodes for them.
+   * The connector annotation displays a spline between two nodes of the diagram.
+   * They are drawn on top and across the existing diagram layout, and they don't affect nodes placement.
+   * If available space between nodes is not enough to display connector annotation,
+   * then control draws it outside on the side of them.
    */
   Connector: 0,
 
   /**
-   * Shape annotation is a possibility to draw some geometrical
-   * shapes over several nodes of the diagram. 
+   * Shape annotation is a possibility to draw some geometrical shapes over several nodes of the diagram. 
    */
   Shape: 1,
 
   /**
-   * Highlight path annotation traces path between given sequence of nodes 
-   * over existing connector lines in the diagram.
+   * Highlight path annotation traces a path between a given sequence of nodes over existing relation lines in the diagram.
    */
   HighlightPath: 2,
 
   /**
-   * In-layout label annotation. Label annotations are placed in layout between nodes,
-   * they preserve space between nodes, so they don't overlap neighboring nodes.
-   * Label annotations are designed for auto placement and bundling of connection lines between 
-   * nodes when needed.
+   * The in-layout label annotation display values over relation lines between nodes. 
+   * The control preserves space for labels in the diagram layout so they don't overlap nodes.
+   * Label annotations are designed for auto-placement and bundling of connection lines between nodes when needed.
    */
   Label: 3,
 
   /**
-   * Background annotation highlights nodes via drawing rectangular shape in the background.
-   * If shapes overlap the same style neighboring shapes they are merged into one continuous shape. 
+   * The background annotation highlights nodes via drawing the rectangular shape in the node's background.
+   * If the same style annotations of neighboring nodes overlap, control merges them into one continuous polygon geometry. 
    */
   Background: 4,
 
   /**
-   * Stripe annotation highlights same level nodes of the diagram via drawing continuous rectangular shape 
-   * from side to side in their background. Stripe has optional title on the side of the diagram view area.
+   * Level annotation highlights same level nodes of the diagram via drawing continuous rectangular shape 
+   * from side to side in their background. Level has optional title on the side of the diagram view area.
    * Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the 
    * background and does not occupy space. 
    */
@@ -2407,34 +2495,33 @@ var AnnotationType = {
  **/
 
 /**
- * Defines shape of children formation. By default a node's children are always placed in a horizontal line 
- * below the parent node. On a large scale this may result in the end user having to scroll screens 
- * in order to view all of the nodes. To compensate for this, we provide the option of placing all 
- * of the children of a parent node in a square/matrix formation. This will reduce sideways screen 
- * scrolling by compacting the child nodes into a much smaller area on the screen.
+ * The enumeration defines the shape of children's formation. By default, control places children in a horizontal 
+ * line below the parent node. On a large scale, this may result in the end-user having to scroll screens 
+ * to view all of them. To compensate, we provide the option of placing all of the children of a parent node
+ * in a square/matrix formation. That will reduce sideways screen scrolling by compacting the child
+ * nodes into a much smaller area on the screen.
  *  
  * @enum {ChildrenPlacementType}
  */
 
 var ChildrenPlacementType = {
   /**
-   * Auto. This mode lets you set children layout at the component level
-   * and then redefine it for individual nodes if needed.
+   * Auto: This mode lets you set nodes layout at the component level and then redefine it for individual nodes if needed.
    */
   Auto: 0,
 
   /**
-   * Children placed in vertical column
+   * Vertical layout
    */
   Vertical: 1,
 
   /**
-   * Horizontal children layout
+   * Horizontal layout
    */
   Horizontal: 2,
 
   /**
-   * Matrix formation of the children
+   * Matrix formation of the nodes
    */
   Matrix: 3
 };
@@ -2792,63 +2879,68 @@ var HorizontalAlignmentType = {
  **/
 
 /**
- * This enumeration defines child node placement relative to its parent node. By default all children that belong 
- * to a parent node are of the same rank and status between each other and due to that, are always aligned below
- * the parent and are organized in the same way. However for special cases were the end user wishes to have a child
- * that is separate from the rest of it's siblings, we provide custom child types that the end user can use to
- * place different ranking nodes anywhere around the parent node. These placement options give a lot of space for
- * the creation of roles such as an Assistant, Adviser, various Partners and co-heads that may be in the organization.
- * Additionally, by default a node's regular children are always placed in a horizontal line below the parent node. See children
- * placement type options for regular children layout.
+ * The enumeration defines child node placement relative to its parent node.
+ * By default, the control places all children that belong to the same parent as
+ * the horizontal line below it. That works for a regular hierarchy of nodes
+ * having the same type. In the organizational chart, we have a lot of exceptions
+ * and non-hierarchical relations between nodes. For this purpose, we provide custom
+ * item types to place nodes around the logical parent, which helps visually
+ * differentiate nodes logically belonging to the same parent.  These placement
+ * options give a lot of space for creating roles such as an Assistant, Adviser,
+ * various Partners, and co-heads in the organization.  Additionally, control allows
+ * shaping the same type of children into vertical and matrix formations
+ * and place them into multiple levels.
  *  
  * @enum {ItemType}
  */
 
 var ItemType = {
   /**
-   * Regular node is a default placement of child nodes in form of horizontal row.
+   * The regular type places node below parent.
    */
   Regular: 0,
 
   /**
-   * Adviser is drawn at the same row as parent node on the left or right side and connected horizontally to it. 
-   */
-  Adviser: 2,
-
-  /**
-   * Assistant node is drawn at row in between parent and child rows and connected horizontally
-   * to connection line going from parent to the regular children
+   * The assistant type places node at the row on the side of the connection line going from parent to its children.
    */
   Assistant: 1,
 
   /**
-   * Sub assistant is variation of assistant node type.
-   * It has the same placement but it is connected by the top side of the node to the connector line going to the parent node.
+   * The sub-assistant node type is a variation of the assistant node type. 
+   * The sub-assistant places node at the row on the side of the connection line
+   * going from parent to its children. The connection line goes out of the top side of the node.
    */
   SubAssistant: 4,
 
   /**
-   * Sub adviser is variation of adviser node type.
-   * It has the same placement but it is connected by the top side of the node to the connector line going to the parent node.
+   * The adviser type places node on the right or left side of the parent.
+   */
+  Adviser: 2,
+
+  /**
+   * The sub-adviser type places node on the right or left side of the parent. 
+   * The connection line goes out of the top side of the sub-adviser node.
    */
   SubAdviser: 5,
 
   /**
-   * General partner is imitation of multiple inheritance in the organizational chart hierarchy.
-   * General partner node is drawn side by side with its parent and remaining regular children
-   * are visually connected to both of them like they are their parents.
-   * Another layout feature of the general partner is that it is connected to parents of its immediate logical parent as well,
-   * so visually it becomes a child of its grand parent.
+   * The general partner type is an imitation of multiple inheritances in the organizational chart hierarchy.
+   * The general-partner node is drawn side by side with its logical parent, and control places
+   * regular children below them, so they visually look like parents. Another layout specifics
+   * of the general partner is that it is connected to its logical parent's parent.
+   * So visually, it becomes an immediate child of its grandparent.
    */
   GeneralPartner: 6,
 
   /**
-   * Limited partner is variation of general partner. The only difference is that is is not connected to its logical grand parent.
+   * The limited partner is a variation of the general partner.
+   * The only difference is that it is not connected to its logical grandparent.
    */
   LimitedPartner: 7,
 
   /**
-   * Adviser partner is a variation of limited partner. The only difference is that it has an extra connection line to its parent.
+   * The adviser partner is a variation of the limited partner. 
+   * The difference is that it has an extra connection line to its logical parent.
    */
   AdviserPartner: 8
 };

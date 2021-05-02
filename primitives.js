@@ -1344,8 +1344,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tasks_transformations_OrderFamilyNodesTask__WEBPACK_IMPORTED_MODULE_82__ = __webpack_require__(/*! ./tasks/transformations/OrderFamilyNodesTask */ "./src/tasks/transformations/OrderFamilyNodesTask.js");
 /* harmony import */ var _tasks_templates_LabelAnnotationTemplateParamsTask__WEBPACK_IMPORTED_MODULE_83__ = __webpack_require__(/*! ./tasks/templates/LabelAnnotationTemplateParamsTask */ "./src/tasks/templates/LabelAnnotationTemplateParamsTask.js");
 /* harmony import */ var _tasks_templates_CombinedTemplateParamsTask__WEBPACK_IMPORTED_MODULE_84__ = __webpack_require__(/*! ./tasks/templates/CombinedTemplateParamsTask */ "./src/tasks/templates/CombinedTemplateParamsTask.js");
-/* harmony import */ var _tasks_transformations_CreateLayoutsTreeTask__WEBPACK_IMPORTED_MODULE_85__ = __webpack_require__(/*! ./tasks/transformations/CreateLayoutsTreeTask */ "./src/tasks/transformations/CreateLayoutsTreeTask.js");
-/* harmony import */ var _tasks_transformations_FamItemsPositionsTask__WEBPACK_IMPORTED_MODULE_86__ = __webpack_require__(/*! ./tasks/transformations/FamItemsPositionsTask */ "./src/tasks/transformations/FamItemsPositionsTask.js");
+/* harmony import */ var _tasks_transformations_FamCreateLayoutsTreeTask__WEBPACK_IMPORTED_MODULE_85__ = __webpack_require__(/*! ./tasks/transformations/FamCreateLayoutsTreeTask */ "./src/tasks/transformations/FamCreateLayoutsTreeTask.js");
+/* harmony import */ var _tasks_transformations_ItemsPositionsTask__WEBPACK_IMPORTED_MODULE_86__ = __webpack_require__(/*! ./tasks/transformations/ItemsPositionsTask */ "./src/tasks/transformations/ItemsPositionsTask.js");
 /* harmony import */ var _managers_TaskManager__WEBPACK_IMPORTED_MODULE_87__ = __webpack_require__(/*! ./managers/TaskManager */ "./src/managers/TaskManager.js");
 
 
@@ -1509,7 +1509,7 @@ function FamPdfkitTaskManagerFactory(getOptions, getGraphics, setLayout, templat
   tasks.addTask('ExtractNestedLayoutsTask', ['ExtractNestedLayoutsOptionTask', 'BindFamilyConnectorsTask'], _tasks_transformations_ExtractNestedLayoutsTask__WEBPACK_IMPORTED_MODULE_80__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
   tasks.addTask('NormalizeLogicalFamilyTask', ['NormalizeOptionTask', 'ExtractNestedLayoutsTask'], _tasks_transformations_NormalizeLogicalFamilyTask__WEBPACK_IMPORTED_MODULE_81__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
   tasks.addTask('OrderFamilyNodesTask', ['OrderFamilyNodesOptionTask', 'UserDefinedNodesOrderTask', 'NormalizeLogicalFamilyTask'], _tasks_transformations_OrderFamilyNodesTask__WEBPACK_IMPORTED_MODULE_82__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
-  tasks.addTask('CreateLayoutsTreeTask', ['OrderFamilyNodesTask', 'ExtractNestedLayoutsTask'], _tasks_transformations_CreateLayoutsTreeTask__WEBPACK_IMPORTED_MODULE_85__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red); // Transformations / Templates
+  tasks.addTask('FamCreateLayoutsTreeTask', ['OrderFamilyNodesTask', 'ExtractNestedLayoutsTask'], _tasks_transformations_FamCreateLayoutsTreeTask__WEBPACK_IMPORTED_MODULE_85__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red); // Transformations / Templates
 
   tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask', 'templates'], _tasks_templates_ReadTemplatesTask__WEBPACK_IMPORTED_MODULE_31__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
   tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], _tasks_templates_ItemTemplateParamsTask__WEBPACK_IMPORTED_MODULE_32__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
@@ -1529,9 +1529,9 @@ function FamPdfkitTaskManagerFactory(getOptions, getGraphics, setLayout, templat
   tasks.addTask('FrameSizeTask', ['FrameOptionTask', 'ReadTemplatesTask', 'ScaleOptionTask'], _tasks_layout_FrameSizeTask__WEBPACK_IMPORTED_MODULE_43__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
   tasks.addTask('LevelTitleSizeTask', ['LevelTitlePlacementOptionTask', 'LevelAnnotationOptionTask', 'OrientationOptionTask', 'ScaleOptionTask'], _tasks_layout_LevelTitleSizeTask__WEBPACK_IMPORTED_MODULE_44__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
   tasks.addTask('CurrentControlSizeTask', ['OptionsTask'], _tasks_layout_DummyCurrentControlSizeTask__WEBPACK_IMPORTED_MODULE_46__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'OrderFamilyNodesOptionTask', 'CreateLayoutsTreeTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], _tasks_transformations_FamItemsPositionsTask__WEBPACK_IMPORTED_MODULE_86__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
+  tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'OrderFamilyNodesOptionTask', 'FamCreateLayoutsTreeTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], _tasks_transformations_ItemsPositionsTask__WEBPACK_IMPORTED_MODULE_86__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
   tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'null', 'ItemsPositionsTask', 'isFamilyChartMode'], _tasks_layout_AlignDiagramTask__WEBPACK_IMPORTED_MODULE_47__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
-  tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], _tasks_layout_CreateTransformTask__WEBPACK_IMPORTED_MODULE_48__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan); // Managers
+  tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'ScaleOptionTask', 'AlignDiagramTask'], _tasks_layout_CreateTransformTask__WEBPACK_IMPORTED_MODULE_48__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan); // Managers
 
   tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'LinePaletteOptionTask'], _tasks_transformations_PaletteManagerTask__WEBPACK_IMPORTED_MODULE_49__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
   tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask', 'FrameSizeTask', 'LevelTitleSizeTask'], _tasks_layout_ApplyLayoutChangesTask__WEBPACK_IMPORTED_MODULE_45__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
@@ -1584,97 +1584,99 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tasks_options_FamItemsOptionTask__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./tasks/options/FamItemsOptionTask */ "./src/tasks/options/FamItemsOptionTask.js");
 /* harmony import */ var _tasks_options_ItemsContentOptionTask__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./tasks/options/ItemsContentOptionTask */ "./src/tasks/options/ItemsContentOptionTask.js");
 /* harmony import */ var _tasks_options_ItemsSizesOptionTask__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./tasks/options/ItemsSizesOptionTask */ "./src/tasks/options/ItemsSizesOptionTask.js");
-/* harmony import */ var _tasks_options_LabelsOptionTask__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./tasks/options/LabelsOptionTask */ "./src/tasks/options/LabelsOptionTask.js");
-/* harmony import */ var _tasks_options_TemplatesOptionTask__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./tasks/options/TemplatesOptionTask */ "./src/tasks/options/TemplatesOptionTask.js");
-/* harmony import */ var _tasks_options_OrientationOptionTask__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./tasks/options/OrientationOptionTask */ "./src/tasks/options/OrientationOptionTask.js");
-/* harmony import */ var _tasks_options_MinimizedItemsOptionTask__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./tasks/options/MinimizedItemsOptionTask */ "./src/tasks/options/MinimizedItemsOptionTask.js");
-/* harmony import */ var _tasks_options_selection_CursorItemOptionTask__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./tasks/options/selection/CursorItemOptionTask */ "./src/tasks/options/selection/CursorItemOptionTask.js");
-/* harmony import */ var _tasks_options_selection_HighlightItemOptionTask__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./tasks/options/selection/HighlightItemOptionTask */ "./src/tasks/options/selection/HighlightItemOptionTask.js");
-/* harmony import */ var _tasks_options_selection_SelectedItemsOptionTask__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./tasks/options/selection/SelectedItemsOptionTask */ "./src/tasks/options/selection/SelectedItemsOptionTask.js");
-/* harmony import */ var _tasks_options_selection_CursorSelectionPathModeOptionTask__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./tasks/options/selection/CursorSelectionPathModeOptionTask */ "./src/tasks/options/selection/CursorSelectionPathModeOptionTask.js");
-/* harmony import */ var _tasks_options_annotations_SplitAnnotationsOptionTask__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./tasks/options/annotations/SplitAnnotationsOptionTask */ "./src/tasks/options/annotations/SplitAnnotationsOptionTask.js");
-/* harmony import */ var _tasks_options_annotations_ShapeAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./tasks/options/annotations/ShapeAnnotationOptionTask */ "./src/tasks/options/annotations/ShapeAnnotationOptionTask.js");
-/* harmony import */ var _tasks_options_annotations_HighlightPathAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./tasks/options/annotations/HighlightPathAnnotationOptionTask */ "./src/tasks/options/annotations/HighlightPathAnnotationOptionTask.js");
-/* harmony import */ var _tasks_options_annotations_ConnectorAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./tasks/options/annotations/ConnectorAnnotationOptionTask */ "./src/tasks/options/annotations/ConnectorAnnotationOptionTask.js");
-/* harmony import */ var _tasks_options_annotations_BackgroundAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./tasks/options/annotations/BackgroundAnnotationOptionTask */ "./src/tasks/options/annotations/BackgroundAnnotationOptionTask.js");
-/* harmony import */ var _tasks_options_annotations_LevelAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./tasks/options/annotations/LevelAnnotationOptionTask */ "./src/tasks/options/annotations/LevelAnnotationOptionTask.js");
-/* harmony import */ var _tasks_options_ScaleOptionTask__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./tasks/options/ScaleOptionTask */ "./src/tasks/options/ScaleOptionTask.js");
-/* harmony import */ var _tasks_options_FrameOptionTask__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./tasks/options/FrameOptionTask */ "./src/tasks/options/FrameOptionTask.js");
-/* harmony import */ var _tasks_options_LevelTitlePlacementOptionTask__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./tasks/options/LevelTitlePlacementOptionTask */ "./src/tasks/options/LevelTitlePlacementOptionTask.js");
-/* harmony import */ var _tasks_options_LevelTitleTemplateOptionTask__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./tasks/options/LevelTitleTemplateOptionTask */ "./src/tasks/options/LevelTitleTemplateOptionTask.js");
-/* harmony import */ var _tasks_transformations_CombinedContextsTask__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./tasks/transformations/CombinedContextsTask */ "./src/tasks/transformations/CombinedContextsTask.js");
-/* harmony import */ var _tasks_templates_ReadTemplatesTask__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./tasks/templates/ReadTemplatesTask */ "./src/tasks/templates/ReadTemplatesTask.js");
-/* harmony import */ var _tasks_templates_ActiveItemsTask__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./tasks/templates/ActiveItemsTask */ "./src/tasks/templates/ActiveItemsTask.js");
-/* harmony import */ var _tasks_templates_ItemTemplateParamsTask__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./tasks/templates/ItemTemplateParamsTask */ "./src/tasks/templates/ItemTemplateParamsTask.js");
-/* harmony import */ var _tasks_templates_GroupTitleTemplateTask__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./tasks/templates/GroupTitleTemplateTask */ "./src/tasks/templates/GroupTitleTemplateTask.js");
-/* harmony import */ var _tasks_templates_CheckBoxTemplateTask__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./tasks/templates/CheckBoxTemplateTask */ "./src/tasks/templates/CheckBoxTemplateTask.js");
-/* harmony import */ var _tasks_templates_ButtonsTemplateTask__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./tasks/templates/ButtonsTemplateTask */ "./src/tasks/templates/ButtonsTemplateTask.js");
-/* harmony import */ var _tasks_templates_AnnotationLabelTemplateTask__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./tasks/templates/AnnotationLabelTemplateTask */ "./src/tasks/templates/AnnotationLabelTemplateTask.js");
-/* harmony import */ var _tasks_templates_LevelAnnotationTemplateTask__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./tasks/templates/LevelAnnotationTemplateTask */ "./src/tasks/templates/LevelAnnotationTemplateTask.js");
-/* harmony import */ var _tasks_transformations_ConnectionsGraphTask__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./tasks/transformations/ConnectionsGraphTask */ "./src/tasks/transformations/ConnectionsGraphTask.js");
-/* harmony import */ var _tasks_transformations_selection_HighlightItemTask__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./tasks/transformations/selection/HighlightItemTask */ "./src/tasks/transformations/selection/HighlightItemTask.js");
-/* harmony import */ var _tasks_transformations_selection_CursorItemTask__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./tasks/transformations/selection/CursorItemTask */ "./src/tasks/transformations/selection/CursorItemTask.js");
-/* harmony import */ var _tasks_transformations_selection_SelectedItemsTask__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./tasks/transformations/selection/SelectedItemsTask */ "./src/tasks/transformations/selection/SelectedItemsTask.js");
-/* harmony import */ var _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./tasks/transformations/selection/NormalVisibilityItemsByAnnotationTask */ "./src/tasks/transformations/selection/NormalVisibilityItemsByAnnotationTask.js");
-/* harmony import */ var _tasks_transformations_selection_NormalVisibilityItemsByConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./tasks/transformations/selection/NormalVisibilityItemsByConnectorAnnotationTask */ "./src/tasks/transformations/selection/NormalVisibilityItemsByConnectorAnnotationTask.js");
-/* harmony import */ var _tasks_transformations_selection_CombinedNormalVisibilityItemsTask__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./tasks/transformations/selection/CombinedNormalVisibilityItemsTask */ "./src/tasks/transformations/selection/CombinedNormalVisibilityItemsTask.js");
-/* harmony import */ var _tasks_layout_FrameSizeTask__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./tasks/layout/FrameSizeTask */ "./src/tasks/layout/FrameSizeTask.js");
-/* harmony import */ var _tasks_layout_LevelTitleSizeTask__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./tasks/layout/LevelTitleSizeTask */ "./src/tasks/layout/LevelTitleSizeTask.js");
-/* harmony import */ var _tasks_options_LayoutOptionsTask__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./tasks/options/LayoutOptionsTask */ "./src/tasks/options/LayoutOptionsTask.js");
-/* harmony import */ var _tasks_layout_CurrentControlSizeTask__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./tasks/layout/CurrentControlSizeTask */ "./src/tasks/layout/CurrentControlSizeTask.js");
-/* harmony import */ var _tasks_layout_CurrentScrollPositionTask__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./tasks/layout/CurrentScrollPositionTask */ "./src/tasks/layout/CurrentScrollPositionTask.js");
-/* harmony import */ var _tasks_layout_AlignDiagramTask__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./tasks/layout/AlignDiagramTask */ "./src/tasks/layout/AlignDiagramTask.js");
-/* harmony import */ var _tasks_layout_CreateTransformTask__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./tasks/layout/CreateTransformTask */ "./src/tasks/layout/CreateTransformTask.js");
-/* harmony import */ var _tasks_transformations_PaletteManagerTask__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./tasks/transformations/PaletteManagerTask */ "./src/tasks/transformations/PaletteManagerTask.js");
-/* harmony import */ var _tasks_layout_ApplyLayoutChangesTask__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./tasks/layout/ApplyLayoutChangesTask */ "./src/tasks/layout/ApplyLayoutChangesTask.js");
-/* harmony import */ var _tasks_layout_CenterOnCursorTask__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./tasks/layout/CenterOnCursorTask */ "./src/tasks/layout/CenterOnCursorTask.js");
-/* harmony import */ var _tasks_layout_ProjectItemsToFrameTask__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./tasks/layout/ProjectItemsToFrameTask */ "./src/tasks/layout/ProjectItemsToFrameTask.js");
-/* harmony import */ var _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightPathAnnotationTask */ "./src/tasks/renders/DrawHighlightPathAnnotationTask.js");
-/* harmony import */ var _tasks_layout_ViewPortPlacementTask__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./tasks/layout/ViewPortPlacementTask */ "./src/tasks/layout/ViewPortPlacementTask.js");
-/* harmony import */ var _tasks_layout_VerticalOffsetTask__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./tasks/layout/VerticalOffsetTask */ "./src/tasks/layout/VerticalOffsetTask.js");
-/* harmony import */ var _tasks_layout_FamLogicalLevelsPlacementTask__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./tasks/layout/FamLogicalLevelsPlacementTask */ "./src/tasks/layout/FamLogicalLevelsPlacementTask.js");
-/* harmony import */ var _tasks_layout_MergeLevelIntervalsTask__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./tasks/layout/MergeLevelIntervalsTask */ "./src/tasks/layout/MergeLevelIntervalsTask.js");
-/* harmony import */ var _tasks_renders_DrawBackgroundAnnotationTask__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./tasks/renders/DrawBackgroundAnnotationTask */ "./src/tasks/renders/DrawBackgroundAnnotationTask.js");
-/* harmony import */ var _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./tasks/renders/DrawConnectorAnnotationTask */ "./src/tasks/renders/DrawConnectorAnnotationTask.js");
-/* harmony import */ var _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./tasks/renders/DrawShapeAnnotationTask */ "./src/tasks/renders/DrawShapeAnnotationTask.js");
-/* harmony import */ var _tasks_renders_DrawCursorTask__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./tasks/renders/DrawCursorTask */ "./src/tasks/renders/DrawCursorTask.js");
-/* harmony import */ var _tasks_renders_DrawHighlightTask__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightTask */ "./src/tasks/renders/DrawHighlightTask.js");
-/* harmony import */ var _tasks_renders_DrawHighlightAnnotationTask__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightAnnotationTask */ "./src/tasks/renders/DrawHighlightAnnotationTask.js");
-/* harmony import */ var _tasks_renders_DrawTreeItemsTask__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! ./tasks/renders/DrawTreeItemsTask */ "./src/tasks/renders/DrawTreeItemsTask.js");
-/* harmony import */ var _tasks_renders_DrawMinimizedItemsTask__WEBPACK_IMPORTED_MODULE_73__ = __webpack_require__(/*! ./tasks/renders/DrawMinimizedItemsTask */ "./src/tasks/renders/DrawMinimizedItemsTask.js");
-/* harmony import */ var _tasks_renders_DrawConnectorsTask__WEBPACK_IMPORTED_MODULE_74__ = __webpack_require__(/*! ./tasks/renders/DrawConnectorsTask */ "./src/tasks/renders/DrawConnectorsTask.js");
-/* harmony import */ var _tasks_renders_DrawItemLabelsTask__WEBPACK_IMPORTED_MODULE_75__ = __webpack_require__(/*! ./tasks/renders/DrawItemLabelsTask */ "./src/tasks/renders/DrawItemLabelsTask.js");
-/* harmony import */ var _tasks_renders_DrawFrameItemsTask__WEBPACK_IMPORTED_MODULE_76__ = __webpack_require__(/*! ./tasks/renders/DrawFrameItemsTask */ "./src/tasks/renders/DrawFrameItemsTask.js");
-/* harmony import */ var _tasks_renders_DrawFrameHighlightTask__WEBPACK_IMPORTED_MODULE_77__ = __webpack_require__(/*! ./tasks/renders/DrawFrameHighlightTask */ "./src/tasks/renders/DrawFrameHighlightTask.js");
-/* harmony import */ var _tasks_renders_DrawLevelAnnotationTitlesTask__WEBPACK_IMPORTED_MODULE_78__ = __webpack_require__(/*! ./tasks/renders/DrawLevelAnnotationTitlesTask */ "./src/tasks/renders/DrawLevelAnnotationTitlesTask.js");
-/* harmony import */ var _tasks_renders_DrawLevelAnnotationBackgroundTask__WEBPACK_IMPORTED_MODULE_79__ = __webpack_require__(/*! ./tasks/renders/DrawLevelAnnotationBackgroundTask */ "./src/tasks/renders/DrawLevelAnnotationBackgroundTask.js");
-/* harmony import */ var _tasks_options_OptionsTask__WEBPACK_IMPORTED_MODULE_80__ = __webpack_require__(/*! ./tasks/options/OptionsTask */ "./src/tasks/options/OptionsTask.js");
-/* harmony import */ var _tasks_options_FamVisualTreeOptionTask__WEBPACK_IMPORTED_MODULE_81__ = __webpack_require__(/*! ./tasks/options/FamVisualTreeOptionTask */ "./src/tasks/options/FamVisualTreeOptionTask.js");
-/* harmony import */ var _tasks_options_HideGrandParentsConnectorsOptionTask__WEBPACK_IMPORTED_MODULE_82__ = __webpack_require__(/*! ./tasks/options/HideGrandParentsConnectorsOptionTask */ "./src/tasks/options/HideGrandParentsConnectorsOptionTask.js");
-/* harmony import */ var _tasks_options_NormalizeOptionTask__WEBPACK_IMPORTED_MODULE_83__ = __webpack_require__(/*! ./tasks/options/NormalizeOptionTask */ "./src/tasks/options/NormalizeOptionTask.js");
-/* harmony import */ var _tasks_options_ExtractNestedLayoutsOptionTask__WEBPACK_IMPORTED_MODULE_84__ = __webpack_require__(/*! ./tasks/options/ExtractNestedLayoutsOptionTask */ "./src/tasks/options/ExtractNestedLayoutsOptionTask.js");
-/* harmony import */ var _tasks_options_OrderFamilyNodesOptionTask__WEBPACK_IMPORTED_MODULE_85__ = __webpack_require__(/*! ./tasks/options/OrderFamilyNodesOptionTask */ "./src/tasks/options/OrderFamilyNodesOptionTask.js");
-/* harmony import */ var _tasks_options_LinePaletteOptionTask__WEBPACK_IMPORTED_MODULE_86__ = __webpack_require__(/*! ./tasks/options/LinePaletteOptionTask */ "./src/tasks/options/LinePaletteOptionTask.js");
-/* harmony import */ var _tasks_options_selection_NeighboursSelectionModeOptionTask__WEBPACK_IMPORTED_MODULE_87__ = __webpack_require__(/*! ./tasks/options/selection/NeighboursSelectionModeOptionTask */ "./src/tasks/options/selection/NeighboursSelectionModeOptionTask.js");
-/* harmony import */ var _tasks_transformations_UserDefinedNodesOrderTask__WEBPACK_IMPORTED_MODULE_88__ = __webpack_require__(/*! ./tasks/transformations/UserDefinedNodesOrderTask */ "./src/tasks/transformations/UserDefinedNodesOrderTask.js");
-/* harmony import */ var _tasks_transformations_LogicalFamilyTask__WEBPACK_IMPORTED_MODULE_89__ = __webpack_require__(/*! ./tasks/transformations/LogicalFamilyTask */ "./src/tasks/transformations/LogicalFamilyTask.js");
-/* harmony import */ var _tasks_transformations_RemoveLoopsTask__WEBPACK_IMPORTED_MODULE_90__ = __webpack_require__(/*! ./tasks/transformations/RemoveLoopsTask */ "./src/tasks/transformations/RemoveLoopsTask.js");
-/* harmony import */ var _tasks_options_annotations_LabelAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_91__ = __webpack_require__(/*! ./tasks/options/annotations/LabelAnnotationOptionTask */ "./src/tasks/options/annotations/LabelAnnotationOptionTask.js");
-/* harmony import */ var _tasks_options_annotations_LabelAnnotationTemplateOptionTask__WEBPACK_IMPORTED_MODULE_92__ = __webpack_require__(/*! ./tasks/options/annotations/LabelAnnotationTemplateOptionTask */ "./src/tasks/options/annotations/LabelAnnotationTemplateOptionTask.js");
-/* harmony import */ var _tasks_options_annotations_LabelAnnotationPlacementOptionTask__WEBPACK_IMPORTED_MODULE_93__ = __webpack_require__(/*! ./tasks/options/annotations/LabelAnnotationPlacementOptionTask */ "./src/tasks/options/annotations/LabelAnnotationPlacementOptionTask.js");
-/* harmony import */ var _tasks_transformations_AddLabelAnnotationsTask__WEBPACK_IMPORTED_MODULE_94__ = __webpack_require__(/*! ./tasks/transformations/AddLabelAnnotationsTask */ "./src/tasks/transformations/AddLabelAnnotationsTask.js");
-/* harmony import */ var _tasks_transformations_HideGrandParentsConnectorsTask__WEBPACK_IMPORTED_MODULE_95__ = __webpack_require__(/*! ./tasks/transformations/HideGrandParentsConnectorsTask */ "./src/tasks/transformations/HideGrandParentsConnectorsTask.js");
-/* harmony import */ var _tasks_transformations_BindFamilyConnectorsTask__WEBPACK_IMPORTED_MODULE_96__ = __webpack_require__(/*! ./tasks/transformations/BindFamilyConnectorsTask */ "./src/tasks/transformations/BindFamilyConnectorsTask.js");
-/* harmony import */ var _tasks_transformations_ExtractNestedLayoutsTask__WEBPACK_IMPORTED_MODULE_97__ = __webpack_require__(/*! ./tasks/transformations/ExtractNestedLayoutsTask */ "./src/tasks/transformations/ExtractNestedLayoutsTask.js");
-/* harmony import */ var _tasks_transformations_NormalizeLogicalFamilyTask__WEBPACK_IMPORTED_MODULE_98__ = __webpack_require__(/*! ./tasks/transformations/NormalizeLogicalFamilyTask */ "./src/tasks/transformations/NormalizeLogicalFamilyTask.js");
-/* harmony import */ var _tasks_transformations_OrderFamilyNodesTask__WEBPACK_IMPORTED_MODULE_99__ = __webpack_require__(/*! ./tasks/transformations/OrderFamilyNodesTask */ "./src/tasks/transformations/OrderFamilyNodesTask.js");
-/* harmony import */ var _tasks_templates_LabelAnnotationTemplateParamsTask__WEBPACK_IMPORTED_MODULE_100__ = __webpack_require__(/*! ./tasks/templates/LabelAnnotationTemplateParamsTask */ "./src/tasks/templates/LabelAnnotationTemplateParamsTask.js");
-/* harmony import */ var _tasks_templates_CombinedTemplateParamsTask__WEBPACK_IMPORTED_MODULE_101__ = __webpack_require__(/*! ./tasks/templates/CombinedTemplateParamsTask */ "./src/tasks/templates/CombinedTemplateParamsTask.js");
-/* harmony import */ var _tasks_transformations_selection_FamCursorNeighboursTask__WEBPACK_IMPORTED_MODULE_102__ = __webpack_require__(/*! ./tasks/transformations/selection/FamCursorNeighboursTask */ "./src/tasks/transformations/selection/FamCursorNeighboursTask.js");
-/* harmony import */ var _tasks_transformations_selection_FamSelectionPathItemsTask__WEBPACK_IMPORTED_MODULE_103__ = __webpack_require__(/*! ./tasks/transformations/selection/FamSelectionPathItemsTask */ "./src/tasks/transformations/selection/FamSelectionPathItemsTask.js");
-/* harmony import */ var _tasks_transformations_CreateLayoutsTreeTask__WEBPACK_IMPORTED_MODULE_104__ = __webpack_require__(/*! ./tasks/transformations/CreateLayoutsTreeTask */ "./src/tasks/transformations/CreateLayoutsTreeTask.js");
-/* harmony import */ var _tasks_transformations_FamItemsPositionsTask__WEBPACK_IMPORTED_MODULE_105__ = __webpack_require__(/*! ./tasks/transformations/FamItemsPositionsTask */ "./src/tasks/transformations/FamItemsPositionsTask.js");
-/* harmony import */ var _managers_TaskManager__WEBPACK_IMPORTED_MODULE_106__ = __webpack_require__(/*! ./managers/TaskManager */ "./src/managers/TaskManager.js");
+/* harmony import */ var _tasks_options_MinimumVisibleLevelsOptionTask__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./tasks/options/MinimumVisibleLevelsOptionTask */ "./src/tasks/options/MinimumVisibleLevelsOptionTask.js");
+/* harmony import */ var _tasks_options_LabelsOptionTask__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./tasks/options/LabelsOptionTask */ "./src/tasks/options/LabelsOptionTask.js");
+/* harmony import */ var _tasks_options_TemplatesOptionTask__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./tasks/options/TemplatesOptionTask */ "./src/tasks/options/TemplatesOptionTask.js");
+/* harmony import */ var _tasks_options_OrientationOptionTask__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./tasks/options/OrientationOptionTask */ "./src/tasks/options/OrientationOptionTask.js");
+/* harmony import */ var _tasks_options_MinimizedItemsOptionTask__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./tasks/options/MinimizedItemsOptionTask */ "./src/tasks/options/MinimizedItemsOptionTask.js");
+/* harmony import */ var _tasks_options_selection_CursorItemOptionTask__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./tasks/options/selection/CursorItemOptionTask */ "./src/tasks/options/selection/CursorItemOptionTask.js");
+/* harmony import */ var _tasks_options_selection_HighlightItemOptionTask__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./tasks/options/selection/HighlightItemOptionTask */ "./src/tasks/options/selection/HighlightItemOptionTask.js");
+/* harmony import */ var _tasks_options_selection_SelectedItemsOptionTask__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./tasks/options/selection/SelectedItemsOptionTask */ "./src/tasks/options/selection/SelectedItemsOptionTask.js");
+/* harmony import */ var _tasks_options_selection_CursorSelectionPathModeOptionTask__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./tasks/options/selection/CursorSelectionPathModeOptionTask */ "./src/tasks/options/selection/CursorSelectionPathModeOptionTask.js");
+/* harmony import */ var _tasks_options_annotations_SplitAnnotationsOptionTask__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./tasks/options/annotations/SplitAnnotationsOptionTask */ "./src/tasks/options/annotations/SplitAnnotationsOptionTask.js");
+/* harmony import */ var _tasks_options_annotations_ShapeAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./tasks/options/annotations/ShapeAnnotationOptionTask */ "./src/tasks/options/annotations/ShapeAnnotationOptionTask.js");
+/* harmony import */ var _tasks_options_annotations_HighlightPathAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./tasks/options/annotations/HighlightPathAnnotationOptionTask */ "./src/tasks/options/annotations/HighlightPathAnnotationOptionTask.js");
+/* harmony import */ var _tasks_options_annotations_ConnectorAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./tasks/options/annotations/ConnectorAnnotationOptionTask */ "./src/tasks/options/annotations/ConnectorAnnotationOptionTask.js");
+/* harmony import */ var _tasks_options_annotations_BackgroundAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./tasks/options/annotations/BackgroundAnnotationOptionTask */ "./src/tasks/options/annotations/BackgroundAnnotationOptionTask.js");
+/* harmony import */ var _tasks_options_annotations_LevelAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./tasks/options/annotations/LevelAnnotationOptionTask */ "./src/tasks/options/annotations/LevelAnnotationOptionTask.js");
+/* harmony import */ var _tasks_options_ScaleOptionTask__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./tasks/options/ScaleOptionTask */ "./src/tasks/options/ScaleOptionTask.js");
+/* harmony import */ var _tasks_options_FrameOptionTask__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./tasks/options/FrameOptionTask */ "./src/tasks/options/FrameOptionTask.js");
+/* harmony import */ var _tasks_options_LevelTitlePlacementOptionTask__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./tasks/options/LevelTitlePlacementOptionTask */ "./src/tasks/options/LevelTitlePlacementOptionTask.js");
+/* harmony import */ var _tasks_options_LevelTitleTemplateOptionTask__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./tasks/options/LevelTitleTemplateOptionTask */ "./src/tasks/options/LevelTitleTemplateOptionTask.js");
+/* harmony import */ var _tasks_transformations_CombinedContextsTask__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./tasks/transformations/CombinedContextsTask */ "./src/tasks/transformations/CombinedContextsTask.js");
+/* harmony import */ var _tasks_templates_ReadTemplatesTask__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./tasks/templates/ReadTemplatesTask */ "./src/tasks/templates/ReadTemplatesTask.js");
+/* harmony import */ var _tasks_templates_ActiveItemsTask__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./tasks/templates/ActiveItemsTask */ "./src/tasks/templates/ActiveItemsTask.js");
+/* harmony import */ var _tasks_templates_ItemTemplateParamsTask__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./tasks/templates/ItemTemplateParamsTask */ "./src/tasks/templates/ItemTemplateParamsTask.js");
+/* harmony import */ var _tasks_templates_GroupTitleTemplateTask__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./tasks/templates/GroupTitleTemplateTask */ "./src/tasks/templates/GroupTitleTemplateTask.js");
+/* harmony import */ var _tasks_templates_CheckBoxTemplateTask__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./tasks/templates/CheckBoxTemplateTask */ "./src/tasks/templates/CheckBoxTemplateTask.js");
+/* harmony import */ var _tasks_templates_ButtonsTemplateTask__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./tasks/templates/ButtonsTemplateTask */ "./src/tasks/templates/ButtonsTemplateTask.js");
+/* harmony import */ var _tasks_templates_AnnotationLabelTemplateTask__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./tasks/templates/AnnotationLabelTemplateTask */ "./src/tasks/templates/AnnotationLabelTemplateTask.js");
+/* harmony import */ var _tasks_templates_LevelAnnotationTemplateTask__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./tasks/templates/LevelAnnotationTemplateTask */ "./src/tasks/templates/LevelAnnotationTemplateTask.js");
+/* harmony import */ var _tasks_transformations_ConnectionsGraphTask__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./tasks/transformations/ConnectionsGraphTask */ "./src/tasks/transformations/ConnectionsGraphTask.js");
+/* harmony import */ var _tasks_transformations_selection_HighlightItemTask__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./tasks/transformations/selection/HighlightItemTask */ "./src/tasks/transformations/selection/HighlightItemTask.js");
+/* harmony import */ var _tasks_transformations_selection_CursorItemTask__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./tasks/transformations/selection/CursorItemTask */ "./src/tasks/transformations/selection/CursorItemTask.js");
+/* harmony import */ var _tasks_transformations_selection_SelectedItemsTask__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./tasks/transformations/selection/SelectedItemsTask */ "./src/tasks/transformations/selection/SelectedItemsTask.js");
+/* harmony import */ var _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./tasks/transformations/selection/NormalVisibilityItemsByAnnotationTask */ "./src/tasks/transformations/selection/NormalVisibilityItemsByAnnotationTask.js");
+/* harmony import */ var _tasks_transformations_selection_NormalVisibilityItemsByConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./tasks/transformations/selection/NormalVisibilityItemsByConnectorAnnotationTask */ "./src/tasks/transformations/selection/NormalVisibilityItemsByConnectorAnnotationTask.js");
+/* harmony import */ var _tasks_transformations_selection_FamNormalVisibilityItemsByMinimumVisibleLevelsTask__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./tasks/transformations/selection/FamNormalVisibilityItemsByMinimumVisibleLevelsTask */ "./src/tasks/transformations/selection/FamNormalVisibilityItemsByMinimumVisibleLevelsTask.js");
+/* harmony import */ var _tasks_transformations_selection_CombinedNormalVisibilityItemsTask__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./tasks/transformations/selection/CombinedNormalVisibilityItemsTask */ "./src/tasks/transformations/selection/CombinedNormalVisibilityItemsTask.js");
+/* harmony import */ var _tasks_layout_FrameSizeTask__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./tasks/layout/FrameSizeTask */ "./src/tasks/layout/FrameSizeTask.js");
+/* harmony import */ var _tasks_layout_LevelTitleSizeTask__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./tasks/layout/LevelTitleSizeTask */ "./src/tasks/layout/LevelTitleSizeTask.js");
+/* harmony import */ var _tasks_options_LayoutOptionsTask__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./tasks/options/LayoutOptionsTask */ "./src/tasks/options/LayoutOptionsTask.js");
+/* harmony import */ var _tasks_layout_CurrentControlSizeTask__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./tasks/layout/CurrentControlSizeTask */ "./src/tasks/layout/CurrentControlSizeTask.js");
+/* harmony import */ var _tasks_layout_CurrentScrollPositionTask__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./tasks/layout/CurrentScrollPositionTask */ "./src/tasks/layout/CurrentScrollPositionTask.js");
+/* harmony import */ var _tasks_layout_AlignDiagramTask__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./tasks/layout/AlignDiagramTask */ "./src/tasks/layout/AlignDiagramTask.js");
+/* harmony import */ var _tasks_layout_CreateTransformTask__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./tasks/layout/CreateTransformTask */ "./src/tasks/layout/CreateTransformTask.js");
+/* harmony import */ var _tasks_transformations_PaletteManagerTask__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./tasks/transformations/PaletteManagerTask */ "./src/tasks/transformations/PaletteManagerTask.js");
+/* harmony import */ var _tasks_layout_ApplyLayoutChangesTask__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./tasks/layout/ApplyLayoutChangesTask */ "./src/tasks/layout/ApplyLayoutChangesTask.js");
+/* harmony import */ var _tasks_layout_CenterOnCursorTask__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./tasks/layout/CenterOnCursorTask */ "./src/tasks/layout/CenterOnCursorTask.js");
+/* harmony import */ var _tasks_layout_ProjectItemsToFrameTask__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./tasks/layout/ProjectItemsToFrameTask */ "./src/tasks/layout/ProjectItemsToFrameTask.js");
+/* harmony import */ var _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightPathAnnotationTask */ "./src/tasks/renders/DrawHighlightPathAnnotationTask.js");
+/* harmony import */ var _tasks_layout_ViewPortPlacementTask__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./tasks/layout/ViewPortPlacementTask */ "./src/tasks/layout/ViewPortPlacementTask.js");
+/* harmony import */ var _tasks_layout_VerticalOffsetTask__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./tasks/layout/VerticalOffsetTask */ "./src/tasks/layout/VerticalOffsetTask.js");
+/* harmony import */ var _tasks_layout_FamLogicalLevelsPlacementTask__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./tasks/layout/FamLogicalLevelsPlacementTask */ "./src/tasks/layout/FamLogicalLevelsPlacementTask.js");
+/* harmony import */ var _tasks_layout_MergeLevelIntervalsTask__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./tasks/layout/MergeLevelIntervalsTask */ "./src/tasks/layout/MergeLevelIntervalsTask.js");
+/* harmony import */ var _tasks_renders_DrawBackgroundAnnotationTask__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./tasks/renders/DrawBackgroundAnnotationTask */ "./src/tasks/renders/DrawBackgroundAnnotationTask.js");
+/* harmony import */ var _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./tasks/renders/DrawConnectorAnnotationTask */ "./src/tasks/renders/DrawConnectorAnnotationTask.js");
+/* harmony import */ var _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./tasks/renders/DrawShapeAnnotationTask */ "./src/tasks/renders/DrawShapeAnnotationTask.js");
+/* harmony import */ var _tasks_renders_DrawCursorTask__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! ./tasks/renders/DrawCursorTask */ "./src/tasks/renders/DrawCursorTask.js");
+/* harmony import */ var _tasks_renders_DrawHighlightTask__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightTask */ "./src/tasks/renders/DrawHighlightTask.js");
+/* harmony import */ var _tasks_renders_DrawHighlightAnnotationTask__WEBPACK_IMPORTED_MODULE_73__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightAnnotationTask */ "./src/tasks/renders/DrawHighlightAnnotationTask.js");
+/* harmony import */ var _tasks_renders_DrawTreeItemsTask__WEBPACK_IMPORTED_MODULE_74__ = __webpack_require__(/*! ./tasks/renders/DrawTreeItemsTask */ "./src/tasks/renders/DrawTreeItemsTask.js");
+/* harmony import */ var _tasks_renders_DrawMinimizedItemsTask__WEBPACK_IMPORTED_MODULE_75__ = __webpack_require__(/*! ./tasks/renders/DrawMinimizedItemsTask */ "./src/tasks/renders/DrawMinimizedItemsTask.js");
+/* harmony import */ var _tasks_renders_DrawConnectorsTask__WEBPACK_IMPORTED_MODULE_76__ = __webpack_require__(/*! ./tasks/renders/DrawConnectorsTask */ "./src/tasks/renders/DrawConnectorsTask.js");
+/* harmony import */ var _tasks_renders_DrawItemLabelsTask__WEBPACK_IMPORTED_MODULE_77__ = __webpack_require__(/*! ./tasks/renders/DrawItemLabelsTask */ "./src/tasks/renders/DrawItemLabelsTask.js");
+/* harmony import */ var _tasks_renders_DrawFrameItemsTask__WEBPACK_IMPORTED_MODULE_78__ = __webpack_require__(/*! ./tasks/renders/DrawFrameItemsTask */ "./src/tasks/renders/DrawFrameItemsTask.js");
+/* harmony import */ var _tasks_renders_DrawFrameHighlightTask__WEBPACK_IMPORTED_MODULE_79__ = __webpack_require__(/*! ./tasks/renders/DrawFrameHighlightTask */ "./src/tasks/renders/DrawFrameHighlightTask.js");
+/* harmony import */ var _tasks_renders_DrawLevelAnnotationTitlesTask__WEBPACK_IMPORTED_MODULE_80__ = __webpack_require__(/*! ./tasks/renders/DrawLevelAnnotationTitlesTask */ "./src/tasks/renders/DrawLevelAnnotationTitlesTask.js");
+/* harmony import */ var _tasks_renders_DrawLevelAnnotationBackgroundTask__WEBPACK_IMPORTED_MODULE_81__ = __webpack_require__(/*! ./tasks/renders/DrawLevelAnnotationBackgroundTask */ "./src/tasks/renders/DrawLevelAnnotationBackgroundTask.js");
+/* harmony import */ var _tasks_options_OptionsTask__WEBPACK_IMPORTED_MODULE_82__ = __webpack_require__(/*! ./tasks/options/OptionsTask */ "./src/tasks/options/OptionsTask.js");
+/* harmony import */ var _tasks_options_FamVisualTreeOptionTask__WEBPACK_IMPORTED_MODULE_83__ = __webpack_require__(/*! ./tasks/options/FamVisualTreeOptionTask */ "./src/tasks/options/FamVisualTreeOptionTask.js");
+/* harmony import */ var _tasks_options_HideGrandParentsConnectorsOptionTask__WEBPACK_IMPORTED_MODULE_84__ = __webpack_require__(/*! ./tasks/options/HideGrandParentsConnectorsOptionTask */ "./src/tasks/options/HideGrandParentsConnectorsOptionTask.js");
+/* harmony import */ var _tasks_options_NormalizeOptionTask__WEBPACK_IMPORTED_MODULE_85__ = __webpack_require__(/*! ./tasks/options/NormalizeOptionTask */ "./src/tasks/options/NormalizeOptionTask.js");
+/* harmony import */ var _tasks_options_ExtractNestedLayoutsOptionTask__WEBPACK_IMPORTED_MODULE_86__ = __webpack_require__(/*! ./tasks/options/ExtractNestedLayoutsOptionTask */ "./src/tasks/options/ExtractNestedLayoutsOptionTask.js");
+/* harmony import */ var _tasks_options_OrderFamilyNodesOptionTask__WEBPACK_IMPORTED_MODULE_87__ = __webpack_require__(/*! ./tasks/options/OrderFamilyNodesOptionTask */ "./src/tasks/options/OrderFamilyNodesOptionTask.js");
+/* harmony import */ var _tasks_options_LinePaletteOptionTask__WEBPACK_IMPORTED_MODULE_88__ = __webpack_require__(/*! ./tasks/options/LinePaletteOptionTask */ "./src/tasks/options/LinePaletteOptionTask.js");
+/* harmony import */ var _tasks_options_selection_NeighboursSelectionModeOptionTask__WEBPACK_IMPORTED_MODULE_89__ = __webpack_require__(/*! ./tasks/options/selection/NeighboursSelectionModeOptionTask */ "./src/tasks/options/selection/NeighboursSelectionModeOptionTask.js");
+/* harmony import */ var _tasks_transformations_UserDefinedNodesOrderTask__WEBPACK_IMPORTED_MODULE_90__ = __webpack_require__(/*! ./tasks/transformations/UserDefinedNodesOrderTask */ "./src/tasks/transformations/UserDefinedNodesOrderTask.js");
+/* harmony import */ var _tasks_transformations_LogicalFamilyTask__WEBPACK_IMPORTED_MODULE_91__ = __webpack_require__(/*! ./tasks/transformations/LogicalFamilyTask */ "./src/tasks/transformations/LogicalFamilyTask.js");
+/* harmony import */ var _tasks_transformations_RemoveLoopsTask__WEBPACK_IMPORTED_MODULE_92__ = __webpack_require__(/*! ./tasks/transformations/RemoveLoopsTask */ "./src/tasks/transformations/RemoveLoopsTask.js");
+/* harmony import */ var _tasks_options_annotations_LabelAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_93__ = __webpack_require__(/*! ./tasks/options/annotations/LabelAnnotationOptionTask */ "./src/tasks/options/annotations/LabelAnnotationOptionTask.js");
+/* harmony import */ var _tasks_options_annotations_LabelAnnotationTemplateOptionTask__WEBPACK_IMPORTED_MODULE_94__ = __webpack_require__(/*! ./tasks/options/annotations/LabelAnnotationTemplateOptionTask */ "./src/tasks/options/annotations/LabelAnnotationTemplateOptionTask.js");
+/* harmony import */ var _tasks_options_annotations_LabelAnnotationPlacementOptionTask__WEBPACK_IMPORTED_MODULE_95__ = __webpack_require__(/*! ./tasks/options/annotations/LabelAnnotationPlacementOptionTask */ "./src/tasks/options/annotations/LabelAnnotationPlacementOptionTask.js");
+/* harmony import */ var _tasks_transformations_AddLabelAnnotationsTask__WEBPACK_IMPORTED_MODULE_96__ = __webpack_require__(/*! ./tasks/transformations/AddLabelAnnotationsTask */ "./src/tasks/transformations/AddLabelAnnotationsTask.js");
+/* harmony import */ var _tasks_transformations_HideGrandParentsConnectorsTask__WEBPACK_IMPORTED_MODULE_97__ = __webpack_require__(/*! ./tasks/transformations/HideGrandParentsConnectorsTask */ "./src/tasks/transformations/HideGrandParentsConnectorsTask.js");
+/* harmony import */ var _tasks_transformations_BindFamilyConnectorsTask__WEBPACK_IMPORTED_MODULE_98__ = __webpack_require__(/*! ./tasks/transformations/BindFamilyConnectorsTask */ "./src/tasks/transformations/BindFamilyConnectorsTask.js");
+/* harmony import */ var _tasks_transformations_ExtractNestedLayoutsTask__WEBPACK_IMPORTED_MODULE_99__ = __webpack_require__(/*! ./tasks/transformations/ExtractNestedLayoutsTask */ "./src/tasks/transformations/ExtractNestedLayoutsTask.js");
+/* harmony import */ var _tasks_transformations_NormalizeLogicalFamilyTask__WEBPACK_IMPORTED_MODULE_100__ = __webpack_require__(/*! ./tasks/transformations/NormalizeLogicalFamilyTask */ "./src/tasks/transformations/NormalizeLogicalFamilyTask.js");
+/* harmony import */ var _tasks_transformations_OrderFamilyNodesTask__WEBPACK_IMPORTED_MODULE_101__ = __webpack_require__(/*! ./tasks/transformations/OrderFamilyNodesTask */ "./src/tasks/transformations/OrderFamilyNodesTask.js");
+/* harmony import */ var _tasks_templates_LabelAnnotationTemplateParamsTask__WEBPACK_IMPORTED_MODULE_102__ = __webpack_require__(/*! ./tasks/templates/LabelAnnotationTemplateParamsTask */ "./src/tasks/templates/LabelAnnotationTemplateParamsTask.js");
+/* harmony import */ var _tasks_templates_CombinedTemplateParamsTask__WEBPACK_IMPORTED_MODULE_103__ = __webpack_require__(/*! ./tasks/templates/CombinedTemplateParamsTask */ "./src/tasks/templates/CombinedTemplateParamsTask.js");
+/* harmony import */ var _tasks_transformations_selection_FamCursorNeighboursTask__WEBPACK_IMPORTED_MODULE_104__ = __webpack_require__(/*! ./tasks/transformations/selection/FamCursorNeighboursTask */ "./src/tasks/transformations/selection/FamCursorNeighboursTask.js");
+/* harmony import */ var _tasks_transformations_selection_FamSelectionPathItemsTask__WEBPACK_IMPORTED_MODULE_105__ = __webpack_require__(/*! ./tasks/transformations/selection/FamSelectionPathItemsTask */ "./src/tasks/transformations/selection/FamSelectionPathItemsTask.js");
+/* harmony import */ var _tasks_transformations_FamCreateLayoutsTreeTask__WEBPACK_IMPORTED_MODULE_106__ = __webpack_require__(/*! ./tasks/transformations/FamCreateLayoutsTreeTask */ "./src/tasks/transformations/FamCreateLayoutsTreeTask.js");
+/* harmony import */ var _tasks_transformations_ItemsPositionsTask__WEBPACK_IMPORTED_MODULE_107__ = __webpack_require__(/*! ./tasks/transformations/ItemsPositionsTask */ "./src/tasks/transformations/ItemsPositionsTask.js");
+/* harmony import */ var _managers_TaskManager__WEBPACK_IMPORTED_MODULE_108__ = __webpack_require__(/*! ./managers/TaskManager */ "./src/managers/TaskManager.js");
 
 
 
@@ -1686,6 +1688,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
  // reused tasks from org diagram
+
+
 
 
 
@@ -1785,7 +1789,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function FamTaskManagerFactory(getOptions, getGraphics, getLayout, setLayout, templates) {
-  var tasks = new _managers_TaskManager__WEBPACK_IMPORTED_MODULE_106__["default"](); // Dependencies
+  var tasks = new _managers_TaskManager__WEBPACK_IMPORTED_MODULE_108__["default"](); // Dependencies
 
   tasks.addDependency('options', getOptions);
   tasks.addDependency('graphics', getGraphics);
@@ -1814,119 +1818,121 @@ function FamTaskManagerFactory(getOptions, getGraphics, getLayout, setLayout, te
   tasks.addDependency('foreground', _enums__WEBPACK_IMPORTED_MODULE_10__["ZOrderType"].Foreground);
   tasks.addDependency('background', _enums__WEBPACK_IMPORTED_MODULE_10__["ZOrderType"].Background); // Options
 
-  tasks.addTask('OptionsTask', ['options'], _tasks_options_OptionsTask__WEBPACK_IMPORTED_MODULE_80__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black);
+  tasks.addTask('OptionsTask', ['options'], _tasks_options_OptionsTask__WEBPACK_IMPORTED_MODULE_82__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black);
   tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], _tasks_options_CalloutOptionTask__WEBPACK_IMPORTED_MODULE_11__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
   tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_ConnectorsOptionTask__WEBPACK_IMPORTED_MODULE_12__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
   tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], _tasks_options_FamItemsOptionTask__WEBPACK_IMPORTED_MODULE_13__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
   tasks.addTask('ItemsContentOptionTask', ['OptionsTask', 'defaultItemConfig'], _tasks_options_ItemsContentOptionTask__WEBPACK_IMPORTED_MODULE_14__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
   tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], _tasks_options_ItemsSizesOptionTask__WEBPACK_IMPORTED_MODULE_15__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], _tasks_options_LabelsOptionTask__WEBPACK_IMPORTED_MODULE_16__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultTemplateConfig'], _tasks_options_TemplatesOptionTask__WEBPACK_IMPORTED_MODULE_17__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_OrientationOptionTask__WEBPACK_IMPORTED_MODULE_18__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('VisualTreeOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_FamVisualTreeOptionTask__WEBPACK_IMPORTED_MODULE_81__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('MinimizedItemsOptionTask', ['OptionsTask'], _tasks_options_MinimizedItemsOptionTask__WEBPACK_IMPORTED_MODULE_19__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('HideGrandParentsConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_HideGrandParentsConnectorsOptionTask__WEBPACK_IMPORTED_MODULE_82__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('NormalizeOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_NormalizeOptionTask__WEBPACK_IMPORTED_MODULE_83__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('ExtractNestedLayoutsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], _tasks_options_ExtractNestedLayoutsOptionTask__WEBPACK_IMPORTED_MODULE_84__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('OrderFamilyNodesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], _tasks_options_OrderFamilyNodesOptionTask__WEBPACK_IMPORTED_MODULE_85__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('LinePaletteOptionTask', ['OptionsTask', 'defaultPaletteItemConfig'], _tasks_options_LinePaletteOptionTask__WEBPACK_IMPORTED_MODULE_86__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('CursorItemOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_selection_CursorItemOptionTask__WEBPACK_IMPORTED_MODULE_20__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('HighlightItemOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_selection_HighlightItemOptionTask__WEBPACK_IMPORTED_MODULE_21__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('SelectedItemsOptionTask', ['OptionsTask'], _tasks_options_selection_SelectedItemsOptionTask__WEBPACK_IMPORTED_MODULE_22__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('CursorSelectionPathModeOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_selection_CursorSelectionPathModeOptionTask__WEBPACK_IMPORTED_MODULE_23__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('NeighboursSelectionModeOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_selection_NeighboursSelectionModeOptionTask__WEBPACK_IMPORTED_MODULE_87__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('SplitAnnotationsOptionTask', ['OptionsTask'], _tasks_options_annotations_SplitAnnotationsOptionTask__WEBPACK_IMPORTED_MODULE_24__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('ForegroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'foreground'], _tasks_options_annotations_ShapeAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_25__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('BackgroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'background'], _tasks_options_annotations_ShapeAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_25__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('ForegroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'foreground'], _tasks_options_annotations_HighlightPathAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_26__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('BackgroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'background'], _tasks_options_annotations_HighlightPathAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_26__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], _tasks_options_annotations_ConnectorAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_27__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], _tasks_options_annotations_ConnectorAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_27__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], _tasks_options_annotations_BackgroundAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_28__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('LevelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultLevelAnnotationConfig'], _tasks_options_annotations_LevelAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_29__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_ScaleOptionTask__WEBPACK_IMPORTED_MODULE_30__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('FrameOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_FrameOptionTask__WEBPACK_IMPORTED_MODULE_31__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('LevelTitlePlacementOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_LevelTitlePlacementOptionTask__WEBPACK_IMPORTED_MODULE_32__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('LevelTitleTemplateOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_LevelTitleTemplateOptionTask__WEBPACK_IMPORTED_MODULE_33__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy); // Transformations
+  tasks.addTask('MinimumVisibleLevelsOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_MinimumVisibleLevelsOptionTask__WEBPACK_IMPORTED_MODULE_16__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], _tasks_options_LabelsOptionTask__WEBPACK_IMPORTED_MODULE_17__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultTemplateConfig'], _tasks_options_TemplatesOptionTask__WEBPACK_IMPORTED_MODULE_18__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_OrientationOptionTask__WEBPACK_IMPORTED_MODULE_19__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('VisualTreeOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_FamVisualTreeOptionTask__WEBPACK_IMPORTED_MODULE_83__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('MinimizedItemsOptionTask', ['OptionsTask'], _tasks_options_MinimizedItemsOptionTask__WEBPACK_IMPORTED_MODULE_20__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('HideGrandParentsConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_HideGrandParentsConnectorsOptionTask__WEBPACK_IMPORTED_MODULE_84__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('NormalizeOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_NormalizeOptionTask__WEBPACK_IMPORTED_MODULE_85__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('ExtractNestedLayoutsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], _tasks_options_ExtractNestedLayoutsOptionTask__WEBPACK_IMPORTED_MODULE_86__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('OrderFamilyNodesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], _tasks_options_OrderFamilyNodesOptionTask__WEBPACK_IMPORTED_MODULE_87__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('LinePaletteOptionTask', ['OptionsTask', 'defaultPaletteItemConfig'], _tasks_options_LinePaletteOptionTask__WEBPACK_IMPORTED_MODULE_88__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('CursorItemOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_selection_CursorItemOptionTask__WEBPACK_IMPORTED_MODULE_21__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('HighlightItemOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_selection_HighlightItemOptionTask__WEBPACK_IMPORTED_MODULE_22__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('SelectedItemsOptionTask', ['OptionsTask'], _tasks_options_selection_SelectedItemsOptionTask__WEBPACK_IMPORTED_MODULE_23__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('CursorSelectionPathModeOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_selection_CursorSelectionPathModeOptionTask__WEBPACK_IMPORTED_MODULE_24__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('NeighboursSelectionModeOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_selection_NeighboursSelectionModeOptionTask__WEBPACK_IMPORTED_MODULE_89__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('SplitAnnotationsOptionTask', ['OptionsTask'], _tasks_options_annotations_SplitAnnotationsOptionTask__WEBPACK_IMPORTED_MODULE_25__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('ForegroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'foreground'], _tasks_options_annotations_ShapeAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_26__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('BackgroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'background'], _tasks_options_annotations_ShapeAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_26__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('ForegroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'foreground'], _tasks_options_annotations_HighlightPathAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_27__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('BackgroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'background'], _tasks_options_annotations_HighlightPathAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_27__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], _tasks_options_annotations_ConnectorAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_28__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], _tasks_options_annotations_ConnectorAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_28__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], _tasks_options_annotations_BackgroundAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_29__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('LevelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultLevelAnnotationConfig'], _tasks_options_annotations_LevelAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_30__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_ScaleOptionTask__WEBPACK_IMPORTED_MODULE_31__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('FrameOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_FrameOptionTask__WEBPACK_IMPORTED_MODULE_32__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('LevelTitlePlacementOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_LevelTitlePlacementOptionTask__WEBPACK_IMPORTED_MODULE_33__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('LevelTitleTemplateOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_LevelTitleTemplateOptionTask__WEBPACK_IMPORTED_MODULE_34__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy); // Transformations
 
-  tasks.addTask('UserDefinedNodesOrderTask', ['OrderFamilyNodesOptionTask', 'defaultItemConfig'], _tasks_transformations_UserDefinedNodesOrderTask__WEBPACK_IMPORTED_MODULE_88__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
-  tasks.addTask('LogicalFamilyTask', ['ItemsOptionTask'], _tasks_transformations_LogicalFamilyTask__WEBPACK_IMPORTED_MODULE_89__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('LabelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'LogicalFamilyTask', 'defaultLabelAnnotationConfig'], _tasks_options_annotations_LabelAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_91__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('LabelAnnotationTemplateOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], _tasks_options_annotations_LabelAnnotationTemplateOptionTask__WEBPACK_IMPORTED_MODULE_92__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('LabelAnnotationPlacementOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], _tasks_options_annotations_LabelAnnotationPlacementOptionTask__WEBPACK_IMPORTED_MODULE_93__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('CombinedContextsTask', ['ItemsContentOptionTask', 'LabelAnnotationOptionTask'], _tasks_transformations_CombinedContextsTask__WEBPACK_IMPORTED_MODULE_34__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('AddLabelAnnotationsTask', ['LabelAnnotationPlacementOptionTask', 'LogicalFamilyTask'], _tasks_transformations_AddLabelAnnotationsTask__WEBPACK_IMPORTED_MODULE_94__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
-  tasks.addTask('RemoveLoopsTask', ['AddLabelAnnotationsTask'], _tasks_transformations_RemoveLoopsTask__WEBPACK_IMPORTED_MODULE_90__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
-  tasks.addTask('HideGrandParentsConnectorsTask', ['HideGrandParentsConnectorsOptionTask', 'RemoveLoopsTask'], _tasks_transformations_HideGrandParentsConnectorsTask__WEBPACK_IMPORTED_MODULE_95__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
-  tasks.addTask('BindFamilyConnectorsTask', ['HideGrandParentsConnectorsTask'], _tasks_transformations_BindFamilyConnectorsTask__WEBPACK_IMPORTED_MODULE_96__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
-  tasks.addTask('ExtractNestedLayoutsTask', ['ExtractNestedLayoutsOptionTask', 'BindFamilyConnectorsTask'], _tasks_transformations_ExtractNestedLayoutsTask__WEBPACK_IMPORTED_MODULE_97__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
-  tasks.addTask('NormalizeLogicalFamilyTask', ['NormalizeOptionTask', 'ExtractNestedLayoutsTask'], _tasks_transformations_NormalizeLogicalFamilyTask__WEBPACK_IMPORTED_MODULE_98__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
-  tasks.addTask('OrderFamilyNodesTask', ['OrderFamilyNodesOptionTask', 'UserDefinedNodesOrderTask', 'NormalizeLogicalFamilyTask'], _tasks_transformations_OrderFamilyNodesTask__WEBPACK_IMPORTED_MODULE_99__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
-  tasks.addTask('CreateLayoutsTreeTask', ['OrderFamilyNodesTask', 'ExtractNestedLayoutsTask'], _tasks_transformations_CreateLayoutsTreeTask__WEBPACK_IMPORTED_MODULE_104__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red); // Transformations / Templates
+  tasks.addTask('UserDefinedNodesOrderTask', ['OrderFamilyNodesOptionTask', 'defaultItemConfig'], _tasks_transformations_UserDefinedNodesOrderTask__WEBPACK_IMPORTED_MODULE_90__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
+  tasks.addTask('LogicalFamilyTask', ['ItemsOptionTask'], _tasks_transformations_LogicalFamilyTask__WEBPACK_IMPORTED_MODULE_91__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('LabelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'LogicalFamilyTask', 'defaultLabelAnnotationConfig'], _tasks_options_annotations_LabelAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_93__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('LabelAnnotationTemplateOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], _tasks_options_annotations_LabelAnnotationTemplateOptionTask__WEBPACK_IMPORTED_MODULE_94__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('LabelAnnotationPlacementOptionTask', ['LabelAnnotationOptionTask', 'defaultLabelAnnotationConfig'], _tasks_options_annotations_LabelAnnotationPlacementOptionTask__WEBPACK_IMPORTED_MODULE_95__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('CombinedContextsTask', ['ItemsContentOptionTask', 'LabelAnnotationOptionTask'], _tasks_transformations_CombinedContextsTask__WEBPACK_IMPORTED_MODULE_35__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('AddLabelAnnotationsTask', ['LabelAnnotationPlacementOptionTask', 'LogicalFamilyTask'], _tasks_transformations_AddLabelAnnotationsTask__WEBPACK_IMPORTED_MODULE_96__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
+  tasks.addTask('RemoveLoopsTask', ['AddLabelAnnotationsTask'], _tasks_transformations_RemoveLoopsTask__WEBPACK_IMPORTED_MODULE_92__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
+  tasks.addTask('HideGrandParentsConnectorsTask', ['HideGrandParentsConnectorsOptionTask', 'RemoveLoopsTask'], _tasks_transformations_HideGrandParentsConnectorsTask__WEBPACK_IMPORTED_MODULE_97__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
+  tasks.addTask('BindFamilyConnectorsTask', ['HideGrandParentsConnectorsTask'], _tasks_transformations_BindFamilyConnectorsTask__WEBPACK_IMPORTED_MODULE_98__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
+  tasks.addTask('ExtractNestedLayoutsTask', ['ExtractNestedLayoutsOptionTask', 'BindFamilyConnectorsTask'], _tasks_transformations_ExtractNestedLayoutsTask__WEBPACK_IMPORTED_MODULE_99__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
+  tasks.addTask('NormalizeLogicalFamilyTask', ['NormalizeOptionTask', 'ExtractNestedLayoutsTask'], _tasks_transformations_NormalizeLogicalFamilyTask__WEBPACK_IMPORTED_MODULE_100__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
+  tasks.addTask('OrderFamilyNodesTask', ['OrderFamilyNodesOptionTask', 'UserDefinedNodesOrderTask', 'NormalizeLogicalFamilyTask'], _tasks_transformations_OrderFamilyNodesTask__WEBPACK_IMPORTED_MODULE_101__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
+  tasks.addTask('FamCreateLayoutsTreeTask', ['OrderFamilyNodesTask', 'ExtractNestedLayoutsTask'], _tasks_transformations_FamCreateLayoutsTreeTask__WEBPACK_IMPORTED_MODULE_106__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red); // Transformations / Templates
 
-  tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask', 'templates'], _tasks_templates_ReadTemplatesTask__WEBPACK_IMPORTED_MODULE_35__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('ActiveItemsTask', ['ItemsSizesOptionTask', 'ReadTemplatesTask'], _tasks_templates_ActiveItemsTask__WEBPACK_IMPORTED_MODULE_36__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], _tasks_templates_ItemTemplateParamsTask__WEBPACK_IMPORTED_MODULE_37__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('LabelAnnotationTemplateParamsTask', ['ItemsSizesOptionTask', 'LabelAnnotationTemplateOptionTask', 'ReadTemplatesTask'], _tasks_templates_LabelAnnotationTemplateParamsTask__WEBPACK_IMPORTED_MODULE_100__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('CombinedTemplateParamsTask', ['ItemTemplateParamsTask', 'LabelAnnotationTemplateParamsTask'], _tasks_templates_CombinedTemplateParamsTask__WEBPACK_IMPORTED_MODULE_101__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask', 'templates'], _tasks_templates_GroupTitleTemplateTask__WEBPACK_IMPORTED_MODULE_38__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask', 'templates'], _tasks_templates_CheckBoxTemplateTask__WEBPACK_IMPORTED_MODULE_39__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask', 'templates'], _tasks_templates_ButtonsTemplateTask__WEBPACK_IMPORTED_MODULE_40__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask', 'templates'], _tasks_templates_AnnotationLabelTemplateTask__WEBPACK_IMPORTED_MODULE_41__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('LevelAnnotationTemplateTask', ['OrientationOptionTask', 'LevelTitleTemplateOptionTask', 'templates'], _tasks_templates_LevelAnnotationTemplateTask__WEBPACK_IMPORTED_MODULE_42__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'OrderFamilyNodesTask', 'ExtractNestedLayoutsTask', 'AlignDiagramTask', 'RemoveLoopsTask'], _tasks_transformations_ConnectionsGraphTask__WEBPACK_IMPORTED_MODULE_43__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan); // Transformations/Selections
+  tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask', 'templates'], _tasks_templates_ReadTemplatesTask__WEBPACK_IMPORTED_MODULE_36__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('ActiveItemsTask', ['ItemsSizesOptionTask', 'ReadTemplatesTask'], _tasks_templates_ActiveItemsTask__WEBPACK_IMPORTED_MODULE_37__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], _tasks_templates_ItemTemplateParamsTask__WEBPACK_IMPORTED_MODULE_38__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('LabelAnnotationTemplateParamsTask', ['ItemsSizesOptionTask', 'LabelAnnotationTemplateOptionTask', 'ReadTemplatesTask'], _tasks_templates_LabelAnnotationTemplateParamsTask__WEBPACK_IMPORTED_MODULE_102__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('CombinedTemplateParamsTask', ['ItemTemplateParamsTask', 'LabelAnnotationTemplateParamsTask'], _tasks_templates_CombinedTemplateParamsTask__WEBPACK_IMPORTED_MODULE_103__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask', 'templates'], _tasks_templates_GroupTitleTemplateTask__WEBPACK_IMPORTED_MODULE_39__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask', 'templates'], _tasks_templates_CheckBoxTemplateTask__WEBPACK_IMPORTED_MODULE_40__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask', 'templates'], _tasks_templates_ButtonsTemplateTask__WEBPACK_IMPORTED_MODULE_41__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask', 'templates'], _tasks_templates_AnnotationLabelTemplateTask__WEBPACK_IMPORTED_MODULE_42__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('LevelAnnotationTemplateTask', ['OrientationOptionTask', 'LevelTitleTemplateOptionTask', 'templates'], _tasks_templates_LevelAnnotationTemplateTask__WEBPACK_IMPORTED_MODULE_43__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'OrderFamilyNodesTask', 'ExtractNestedLayoutsTask', 'AlignDiagramTask', 'RemoveLoopsTask'], _tasks_transformations_ConnectionsGraphTask__WEBPACK_IMPORTED_MODULE_44__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan); // Transformations/Selections
 
-  tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'ActiveItemsTask'], _tasks_transformations_selection_HighlightItemTask__WEBPACK_IMPORTED_MODULE_44__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], _tasks_transformations_selection_CursorItemTask__WEBPACK_IMPORTED_MODULE_45__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'NeighboursSelectionModeOptionTask', 'AddLabelAnnotationsTask', 'ActiveItemsTask'], _tasks_transformations_selection_FamCursorNeighboursTask__WEBPACK_IMPORTED_MODULE_102__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask', 'ItemsOptionTask'], _tasks_transformations_selection_SelectedItemsTask__WEBPACK_IMPORTED_MODULE_46__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('SelectionPathItemsTask', ['RemoveLoopsTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], _tasks_transformations_selection_FamSelectionPathItemsTask__WEBPACK_IMPORTED_MODULE_103__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_47__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('NormalVisibilityItemsByBackgroundShapeAnnotationTask', ['BackgroundShapeAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_47__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('NormalVisibilityItemsByBackgroundAnnotationTask', ['BackgroundAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_47__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('NormalVisibilityItemsByForegroundHighlightPathAnnotationTask', ['ForegroundHighlightPathAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_47__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', ['BackgroundHighlightPathAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_47__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('NormalVisibilityItemsByForegroundConnectorAnnotationTask', ['ForegroundConnectorAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_48__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('NormalVisibilityItemsByBackgroundConnectorAnnotationTask', ['BackgroundConnectorAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_48__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('CombinedNormalVisibilityItemsTask', ['ItemsSizesOptionTask', 'CursorItemTask', 'CursorNeighboursTask', 'SelectedItemsTask', 'SelectionPathItemsTask', 'NormalVisibilityItemsByForegroundShapeAnnotationTask', 'NormalVisibilityItemsByBackgroundShapeAnnotationTask', 'NormalVisibilityItemsByBackgroundAnnotationTask', 'NormalVisibilityItemsByForegroundHighlightPathAnnotationTask', 'NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', 'NormalVisibilityItemsByForegroundConnectorAnnotationTask', 'NormalVisibilityItemsByBackgroundConnectorAnnotationTask'], _tasks_transformations_selection_CombinedNormalVisibilityItemsTask__WEBPACK_IMPORTED_MODULE_49__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan); // Layout
+  tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'ActiveItemsTask'], _tasks_transformations_selection_HighlightItemTask__WEBPACK_IMPORTED_MODULE_45__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], _tasks_transformations_selection_CursorItemTask__WEBPACK_IMPORTED_MODULE_46__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'NeighboursSelectionModeOptionTask', 'AddLabelAnnotationsTask', 'ActiveItemsTask'], _tasks_transformations_selection_FamCursorNeighboursTask__WEBPACK_IMPORTED_MODULE_104__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask', 'ItemsOptionTask'], _tasks_transformations_selection_SelectedItemsTask__WEBPACK_IMPORTED_MODULE_47__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('SelectionPathItemsTask', ['RemoveLoopsTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], _tasks_transformations_selection_FamSelectionPathItemsTask__WEBPACK_IMPORTED_MODULE_105__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_48__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByBackgroundShapeAnnotationTask', ['BackgroundShapeAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_48__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByBackgroundAnnotationTask', ['BackgroundAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_48__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByForegroundHighlightPathAnnotationTask', ['ForegroundHighlightPathAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_48__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', ['BackgroundHighlightPathAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_48__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByForegroundConnectorAnnotationTask', ['ForegroundConnectorAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_49__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByBackgroundConnectorAnnotationTask', ['BackgroundConnectorAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_49__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByMinimumVisibleLevelsTask', ['MinimumVisibleLevelsOptionTask', 'OrderFamilyNodesTask'], _tasks_transformations_selection_FamNormalVisibilityItemsByMinimumVisibleLevelsTask__WEBPACK_IMPORTED_MODULE_50__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('CombinedNormalVisibilityItemsTask', ['ItemsSizesOptionTask', 'CursorItemTask', 'CursorNeighboursTask', 'SelectedItemsTask', 'SelectionPathItemsTask', 'NormalVisibilityItemsByForegroundShapeAnnotationTask', 'NormalVisibilityItemsByBackgroundShapeAnnotationTask', 'NormalVisibilityItemsByBackgroundAnnotationTask', 'NormalVisibilityItemsByForegroundHighlightPathAnnotationTask', 'NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', 'NormalVisibilityItemsByForegroundConnectorAnnotationTask', 'NormalVisibilityItemsByBackgroundConnectorAnnotationTask', 'NormalVisibilityItemsByMinimumVisibleLevelsTask'], _tasks_transformations_selection_CombinedNormalVisibilityItemsTask__WEBPACK_IMPORTED_MODULE_51__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan); // Layout
 
-  tasks.addTask('FrameSizeTask', ['FrameOptionTask', 'ReadTemplatesTask', 'ScaleOptionTask'], _tasks_layout_FrameSizeTask__WEBPACK_IMPORTED_MODULE_50__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('LevelTitleSizeTask', ['LevelTitlePlacementOptionTask', 'LevelAnnotationOptionTask', 'OrientationOptionTask', 'ScaleOptionTask'], _tasks_layout_LevelTitleSizeTask__WEBPACK_IMPORTED_MODULE_51__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
-  tasks.addTask('LayoutOptionsTask', ['getLayout', 'OptionsTask'], _tasks_options_LayoutOptionsTask__WEBPACK_IMPORTED_MODULE_52__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black);
-  tasks.addTask('CurrentControlSizeTask', ['LayoutOptionsTask', 'ItemsSizesOptionTask', 'FrameSizeTask', 'LevelTitleSizeTask'], _tasks_layout_CurrentControlSizeTask__WEBPACK_IMPORTED_MODULE_53__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black);
-  tasks.addTask('CurrentScrollPositionTask', ['LayoutOptionsTask'], _tasks_layout_CurrentScrollPositionTask__WEBPACK_IMPORTED_MODULE_54__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black);
-  tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'OrderFamilyNodesOptionTask', 'CreateLayoutsTreeTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], _tasks_transformations_FamItemsPositionsTask__WEBPACK_IMPORTED_MODULE_105__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
-  tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], _tasks_layout_AlignDiagramTask__WEBPACK_IMPORTED_MODULE_55__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
-  tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], _tasks_layout_CreateTransformTask__WEBPACK_IMPORTED_MODULE_56__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan); // Managers
+  tasks.addTask('FrameSizeTask', ['FrameOptionTask', 'ReadTemplatesTask', 'ScaleOptionTask'], _tasks_layout_FrameSizeTask__WEBPACK_IMPORTED_MODULE_52__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('LevelTitleSizeTask', ['LevelTitlePlacementOptionTask', 'LevelAnnotationOptionTask', 'OrientationOptionTask', 'ScaleOptionTask'], _tasks_layout_LevelTitleSizeTask__WEBPACK_IMPORTED_MODULE_53__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Navy);
+  tasks.addTask('LayoutOptionsTask', ['getLayout', 'OptionsTask'], _tasks_options_LayoutOptionsTask__WEBPACK_IMPORTED_MODULE_54__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black);
+  tasks.addTask('CurrentControlSizeTask', ['LayoutOptionsTask', 'ItemsSizesOptionTask', 'FrameSizeTask', 'LevelTitleSizeTask'], _tasks_layout_CurrentControlSizeTask__WEBPACK_IMPORTED_MODULE_55__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black);
+  tasks.addTask('CurrentScrollPositionTask', ['LayoutOptionsTask'], _tasks_layout_CurrentScrollPositionTask__WEBPACK_IMPORTED_MODULE_56__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Black);
+  tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'OrderFamilyNodesOptionTask', 'FamCreateLayoutsTreeTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], _tasks_transformations_ItemsPositionsTask__WEBPACK_IMPORTED_MODULE_107__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
+  tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], _tasks_layout_AlignDiagramTask__WEBPACK_IMPORTED_MODULE_57__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Red);
+  tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'ScaleOptionTask', 'AlignDiagramTask'], _tasks_layout_CreateTransformTask__WEBPACK_IMPORTED_MODULE_58__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan); // Managers
 
-  tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'LinePaletteOptionTask'], _tasks_transformations_PaletteManagerTask__WEBPACK_IMPORTED_MODULE_57__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan); // Apply Layout Changes
+  tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'LinePaletteOptionTask'], _tasks_transformations_PaletteManagerTask__WEBPACK_IMPORTED_MODULE_59__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan); // Apply Layout Changes
 
-  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask', 'FrameSizeTask', 'LevelTitleSizeTask'], _tasks_layout_ApplyLayoutChangesTask__WEBPACK_IMPORTED_MODULE_58__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('CenterOnCursorTask', ['LayoutOptionsTask', 'ApplyLayoutChangesTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], _tasks_layout_CenterOnCursorTask__WEBPACK_IMPORTED_MODULE_59__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('ProjectItemsToFrameTask', ['CreateTransformTask', 'FrameSizeTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'ItemTemplateParamsTask', 'SelectedItemsTask'], _tasks_layout_ProjectItemsToFrameTask__WEBPACK_IMPORTED_MODULE_60__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('ViewPortPlacementTask', ['ScaleOptionTask', 'CenterOnCursorTask', 'CreateTransformTask', 'ApplyLayoutChangesTask'], _tasks_layout_ViewPortPlacementTask__WEBPACK_IMPORTED_MODULE_62__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('VerticalOffsetTask', ['ViewPortPlacementTask'], _tasks_layout_VerticalOffsetTask__WEBPACK_IMPORTED_MODULE_63__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('LogicalLevelsPlacementTask', ['OrderFamilyNodesTask', 'AlignDiagramTask'], _tasks_layout_FamLogicalLevelsPlacementTask__WEBPACK_IMPORTED_MODULE_64__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('MergeLevelIntervalsTask', ['LevelAnnotationOptionTask', 'LogicalLevelsPlacementTask'], _tasks_layout_MergeLevelIntervalsTask__WEBPACK_IMPORTED_MODULE_65__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green); // Renders
+  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask', 'FrameSizeTask', 'LevelTitleSizeTask'], _tasks_layout_ApplyLayoutChangesTask__WEBPACK_IMPORTED_MODULE_60__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('CenterOnCursorTask', ['LayoutOptionsTask', 'ApplyLayoutChangesTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], _tasks_layout_CenterOnCursorTask__WEBPACK_IMPORTED_MODULE_61__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('ProjectItemsToFrameTask', ['CreateTransformTask', 'FrameSizeTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'ItemTemplateParamsTask', 'SelectedItemsTask'], _tasks_layout_ProjectItemsToFrameTask__WEBPACK_IMPORTED_MODULE_62__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('ViewPortPlacementTask', ['ScaleOptionTask', 'CenterOnCursorTask', 'CreateTransformTask', 'ApplyLayoutChangesTask'], _tasks_layout_ViewPortPlacementTask__WEBPACK_IMPORTED_MODULE_64__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('VerticalOffsetTask', ['ViewPortPlacementTask'], _tasks_layout_VerticalOffsetTask__WEBPACK_IMPORTED_MODULE_65__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('LogicalLevelsPlacementTask', ['OrderFamilyNodesTask', 'AlignDiagramTask'], _tasks_layout_FamLogicalLevelsPlacementTask__WEBPACK_IMPORTED_MODULE_66__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('MergeLevelIntervalsTask', ['LevelAnnotationOptionTask', 'LogicalLevelsPlacementTask'], _tasks_layout_MergeLevelIntervalsTask__WEBPACK_IMPORTED_MODULE_67__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green); // Renders
 
-  tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground'], _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_61__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background'], _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_61__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
-  tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'LogicalFamilyTask', 'AlignDiagramTask'], _tasks_renders_DrawBackgroundAnnotationTask__WEBPACK_IMPORTED_MODULE_66__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_67__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_67__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_68__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_68__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask'], _tasks_renders_DrawCursorTask__WEBPACK_IMPORTED_MODULE_69__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], _tasks_renders_DrawHighlightTask__WEBPACK_IMPORTED_MODULE_70__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawHighlightAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'FrameSizeTask'], _tasks_renders_DrawHighlightAnnotationTask__WEBPACK_IMPORTED_MODULE_71__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'ItemsSizesOptionTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask', 'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask'], _tasks_renders_DrawTreeItemsTask__WEBPACK_IMPORTED_MODULE_72__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawMinimizedItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'MinimizedItemsOptionTask', 'CombinedTemplateParamsTask', 'AlignDiagramTask'], _tasks_renders_DrawMinimizedItemsTask__WEBPACK_IMPORTED_MODULE_73__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask'], _tasks_renders_DrawConnectorsTask__WEBPACK_IMPORTED_MODULE_74__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawItemLabelsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LabelsOptionTask', 'AlignDiagramTask'], _tasks_renders_DrawItemLabelsTask__WEBPACK_IMPORTED_MODULE_75__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawFrameItemsTask', ['graphics', 'ApplyLayoutChangesTask', 'ProjectItemsToFrameTask', 'ItemTemplateParamsTask', 'MinimizedItemsOptionTask'], _tasks_renders_DrawFrameItemsTask__WEBPACK_IMPORTED_MODULE_76__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawFrameHighlightTask', ['graphics', 'ProjectItemsToFrameTask', 'CombinedContextsTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask'], _tasks_renders_DrawFrameHighlightTask__WEBPACK_IMPORTED_MODULE_77__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawLevelAnnotationBackgroundTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask'], _tasks_renders_DrawLevelAnnotationBackgroundTask__WEBPACK_IMPORTED_MODULE_79__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
-  tasks.addTask('DrawLevelAnnotationTitlesTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask', 'LevelTitlePlacementOptionTask'], _tasks_renders_DrawLevelAnnotationTitlesTask__WEBPACK_IMPORTED_MODULE_78__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground'], _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_63__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background'], _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_63__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Cyan);
+  tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'LogicalFamilyTask', 'AlignDiagramTask'], _tasks_renders_DrawBackgroundAnnotationTask__WEBPACK_IMPORTED_MODULE_68__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_69__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_69__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_70__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_70__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask'], _tasks_renders_DrawCursorTask__WEBPACK_IMPORTED_MODULE_71__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], _tasks_renders_DrawHighlightTask__WEBPACK_IMPORTED_MODULE_72__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawHighlightAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'FrameSizeTask'], _tasks_renders_DrawHighlightAnnotationTask__WEBPACK_IMPORTED_MODULE_73__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'ItemsSizesOptionTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'CombinedTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask', 'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask'], _tasks_renders_DrawTreeItemsTask__WEBPACK_IMPORTED_MODULE_74__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawMinimizedItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'MinimizedItemsOptionTask', 'CombinedTemplateParamsTask', 'AlignDiagramTask'], _tasks_renders_DrawMinimizedItemsTask__WEBPACK_IMPORTED_MODULE_75__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask'], _tasks_renders_DrawConnectorsTask__WEBPACK_IMPORTED_MODULE_76__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawItemLabelsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LabelsOptionTask', 'AlignDiagramTask'], _tasks_renders_DrawItemLabelsTask__WEBPACK_IMPORTED_MODULE_77__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawFrameItemsTask', ['graphics', 'ApplyLayoutChangesTask', 'ProjectItemsToFrameTask', 'ItemTemplateParamsTask', 'MinimizedItemsOptionTask'], _tasks_renders_DrawFrameItemsTask__WEBPACK_IMPORTED_MODULE_78__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawFrameHighlightTask', ['graphics', 'ProjectItemsToFrameTask', 'CombinedContextsTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask'], _tasks_renders_DrawFrameHighlightTask__WEBPACK_IMPORTED_MODULE_79__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawLevelAnnotationBackgroundTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask'], _tasks_renders_DrawLevelAnnotationBackgroundTask__WEBPACK_IMPORTED_MODULE_81__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
+  tasks.addTask('DrawLevelAnnotationTitlesTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask', 'LevelTitlePlacementOptionTask'], _tasks_renders_DrawLevelAnnotationTitlesTask__WEBPACK_IMPORTED_MODULE_80__["default"], _enums__WEBPACK_IMPORTED_MODULE_10__["Colors"].Green);
   return tasks;
 }
 ;
@@ -2190,34 +2196,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tasks_transformations_VisualTreeTask__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./tasks/transformations/VisualTreeTask */ "./src/tasks/transformations/VisualTreeTask.js");
 /* harmony import */ var _tasks_transformations_VisualTreeLevelsTask__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./tasks/transformations/VisualTreeLevelsTask */ "./src/tasks/transformations/VisualTreeLevelsTask.js");
 /* harmony import */ var _tasks_transformations_OrgExtractNestedLayoutsTask__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./tasks/transformations/OrgExtractNestedLayoutsTask */ "./src/tasks/transformations/OrgExtractNestedLayoutsTask.js");
-/* harmony import */ var _tasks_transformations_ConnectionsGraphTask__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./tasks/transformations/ConnectionsGraphTask */ "./src/tasks/transformations/ConnectionsGraphTask.js");
-/* harmony import */ var _tasks_transformations_selection_HighlightItemTask__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./tasks/transformations/selection/HighlightItemTask */ "./src/tasks/transformations/selection/HighlightItemTask.js");
-/* harmony import */ var _tasks_transformations_selection_CursorItemTask__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./tasks/transformations/selection/CursorItemTask */ "./src/tasks/transformations/selection/CursorItemTask.js");
-/* harmony import */ var _tasks_transformations_selection_SelectedItemsTask__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./tasks/transformations/selection/SelectedItemsTask */ "./src/tasks/transformations/selection/SelectedItemsTask.js");
-/* harmony import */ var _tasks_transformations_selection_DummyCombinedNormalVisibilityItemsTask__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./tasks/transformations/selection/DummyCombinedNormalVisibilityItemsTask */ "./src/tasks/transformations/selection/DummyCombinedNormalVisibilityItemsTask.js");
-/* harmony import */ var _tasks_layout_FrameSizeTask__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./tasks/layout/FrameSizeTask */ "./src/tasks/layout/FrameSizeTask.js");
-/* harmony import */ var _tasks_layout_LevelTitleSizeTask__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./tasks/layout/LevelTitleSizeTask */ "./src/tasks/layout/LevelTitleSizeTask.js");
-/* harmony import */ var _tasks_layout_ApplyLayoutChangesTask__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./tasks/layout/ApplyLayoutChangesTask */ "./src/tasks/layout/ApplyLayoutChangesTask.js");
-/* harmony import */ var _tasks_layout_DummyCurrentControlSizeTask__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./tasks/layout/DummyCurrentControlSizeTask */ "./src/tasks/layout/DummyCurrentControlSizeTask.js");
-/* harmony import */ var _tasks_transformations_OrgItemsPositionsTask__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./tasks/transformations/OrgItemsPositionsTask */ "./src/tasks/transformations/OrgItemsPositionsTask.js");
-/* harmony import */ var _tasks_layout_AlignDiagramTask__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./tasks/layout/AlignDiagramTask */ "./src/tasks/layout/AlignDiagramTask.js");
-/* harmony import */ var _tasks_layout_CreateTransformTask__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./tasks/layout/CreateTransformTask */ "./src/tasks/layout/CreateTransformTask.js");
-/* harmony import */ var _tasks_transformations_PaletteManagerTask__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./tasks/transformations/PaletteManagerTask */ "./src/tasks/transformations/PaletteManagerTask.js");
-/* harmony import */ var _tasks_layout_ViewPortPlacementTask__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./tasks/layout/ViewPortPlacementTask */ "./src/tasks/layout/ViewPortPlacementTask.js");
-/* harmony import */ var _tasks_layout_VerticalOffsetTask__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./tasks/layout/VerticalOffsetTask */ "./src/tasks/layout/VerticalOffsetTask.js");
-/* harmony import */ var _tasks_layout_OrgLogicalLevelsPlacementTask__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./tasks/layout/OrgLogicalLevelsPlacementTask */ "./src/tasks/layout/OrgLogicalLevelsPlacementTask.js");
-/* harmony import */ var _tasks_layout_MergeLevelIntervalsTask__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./tasks/layout/MergeLevelIntervalsTask */ "./src/tasks/layout/MergeLevelIntervalsTask.js");
-/* harmony import */ var _tasks_renders_DrawBackgroundAnnotationTask__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./tasks/renders/DrawBackgroundAnnotationTask */ "./src/tasks/renders/DrawBackgroundAnnotationTask.js");
-/* harmony import */ var _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightPathAnnotationTask */ "./src/tasks/renders/DrawHighlightPathAnnotationTask.js");
-/* harmony import */ var _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./tasks/renders/DrawConnectorAnnotationTask */ "./src/tasks/renders/DrawConnectorAnnotationTask.js");
-/* harmony import */ var _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./tasks/renders/DrawShapeAnnotationTask */ "./src/tasks/renders/DrawShapeAnnotationTask.js");
-/* harmony import */ var _tasks_renders_DrawCursorTask__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./tasks/renders/DrawCursorTask */ "./src/tasks/renders/DrawCursorTask.js");
-/* harmony import */ var _tasks_renders_DrawHighlightTask__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightTask */ "./src/tasks/renders/DrawHighlightTask.js");
-/* harmony import */ var _tasks_renders_DrawTreeItemsTask__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./tasks/renders/DrawTreeItemsTask */ "./src/tasks/renders/DrawTreeItemsTask.js");
-/* harmony import */ var _tasks_renders_DrawConnectorsTask__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./tasks/renders/DrawConnectorsTask */ "./src/tasks/renders/DrawConnectorsTask.js");
-/* harmony import */ var _tasks_renders_DrawLevelAnnotationTitlesTask__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./tasks/renders/DrawLevelAnnotationTitlesTask */ "./src/tasks/renders/DrawLevelAnnotationTitlesTask.js");
-/* harmony import */ var _tasks_renders_DrawLevelAnnotationBackgroundTask__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./tasks/renders/DrawLevelAnnotationBackgroundTask */ "./src/tasks/renders/DrawLevelAnnotationBackgroundTask.js");
-/* harmony import */ var _managers_TaskManager__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./managers/TaskManager */ "./src/managers/TaskManager.js");
+/* harmony import */ var _tasks_transformations_OrgCreateLayoutsTreeTask__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./tasks/transformations/OrgCreateLayoutsTreeTask */ "./src/tasks/transformations/OrgCreateLayoutsTreeTask.js");
+/* harmony import */ var _tasks_transformations_ConnectionsGraphTask__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./tasks/transformations/ConnectionsGraphTask */ "./src/tasks/transformations/ConnectionsGraphTask.js");
+/* harmony import */ var _tasks_transformations_selection_HighlightItemTask__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./tasks/transformations/selection/HighlightItemTask */ "./src/tasks/transformations/selection/HighlightItemTask.js");
+/* harmony import */ var _tasks_transformations_selection_CursorItemTask__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./tasks/transformations/selection/CursorItemTask */ "./src/tasks/transformations/selection/CursorItemTask.js");
+/* harmony import */ var _tasks_transformations_selection_SelectedItemsTask__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./tasks/transformations/selection/SelectedItemsTask */ "./src/tasks/transformations/selection/SelectedItemsTask.js");
+/* harmony import */ var _tasks_transformations_selection_DummyCombinedNormalVisibilityItemsTask__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./tasks/transformations/selection/DummyCombinedNormalVisibilityItemsTask */ "./src/tasks/transformations/selection/DummyCombinedNormalVisibilityItemsTask.js");
+/* harmony import */ var _tasks_layout_FrameSizeTask__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./tasks/layout/FrameSizeTask */ "./src/tasks/layout/FrameSizeTask.js");
+/* harmony import */ var _tasks_layout_LevelTitleSizeTask__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./tasks/layout/LevelTitleSizeTask */ "./src/tasks/layout/LevelTitleSizeTask.js");
+/* harmony import */ var _tasks_layout_ApplyLayoutChangesTask__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./tasks/layout/ApplyLayoutChangesTask */ "./src/tasks/layout/ApplyLayoutChangesTask.js");
+/* harmony import */ var _tasks_layout_DummyCurrentControlSizeTask__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./tasks/layout/DummyCurrentControlSizeTask */ "./src/tasks/layout/DummyCurrentControlSizeTask.js");
+/* harmony import */ var _tasks_transformations_ItemsPositionsTask__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./tasks/transformations/ItemsPositionsTask */ "./src/tasks/transformations/ItemsPositionsTask.js");
+/* harmony import */ var _tasks_layout_AlignDiagramTask__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./tasks/layout/AlignDiagramTask */ "./src/tasks/layout/AlignDiagramTask.js");
+/* harmony import */ var _tasks_layout_CreateTransformTask__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./tasks/layout/CreateTransformTask */ "./src/tasks/layout/CreateTransformTask.js");
+/* harmony import */ var _tasks_transformations_PaletteManagerTask__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./tasks/transformations/PaletteManagerTask */ "./src/tasks/transformations/PaletteManagerTask.js");
+/* harmony import */ var _tasks_layout_ViewPortPlacementTask__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./tasks/layout/ViewPortPlacementTask */ "./src/tasks/layout/ViewPortPlacementTask.js");
+/* harmony import */ var _tasks_layout_VerticalOffsetTask__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./tasks/layout/VerticalOffsetTask */ "./src/tasks/layout/VerticalOffsetTask.js");
+/* harmony import */ var _tasks_layout_OrgLogicalLevelsPlacementTask__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./tasks/layout/OrgLogicalLevelsPlacementTask */ "./src/tasks/layout/OrgLogicalLevelsPlacementTask.js");
+/* harmony import */ var _tasks_layout_MergeLevelIntervalsTask__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./tasks/layout/MergeLevelIntervalsTask */ "./src/tasks/layout/MergeLevelIntervalsTask.js");
+/* harmony import */ var _tasks_renders_DrawBackgroundAnnotationTask__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./tasks/renders/DrawBackgroundAnnotationTask */ "./src/tasks/renders/DrawBackgroundAnnotationTask.js");
+/* harmony import */ var _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightPathAnnotationTask */ "./src/tasks/renders/DrawHighlightPathAnnotationTask.js");
+/* harmony import */ var _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./tasks/renders/DrawConnectorAnnotationTask */ "./src/tasks/renders/DrawConnectorAnnotationTask.js");
+/* harmony import */ var _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./tasks/renders/DrawShapeAnnotationTask */ "./src/tasks/renders/DrawShapeAnnotationTask.js");
+/* harmony import */ var _tasks_renders_DrawCursorTask__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./tasks/renders/DrawCursorTask */ "./src/tasks/renders/DrawCursorTask.js");
+/* harmony import */ var _tasks_renders_DrawHighlightTask__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightTask */ "./src/tasks/renders/DrawHighlightTask.js");
+/* harmony import */ var _tasks_renders_DrawTreeItemsTask__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./tasks/renders/DrawTreeItemsTask */ "./src/tasks/renders/DrawTreeItemsTask.js");
+/* harmony import */ var _tasks_renders_DrawConnectorsTask__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./tasks/renders/DrawConnectorsTask */ "./src/tasks/renders/DrawConnectorsTask.js");
+/* harmony import */ var _tasks_renders_DrawLevelAnnotationTitlesTask__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./tasks/renders/DrawLevelAnnotationTitlesTask */ "./src/tasks/renders/DrawLevelAnnotationTitlesTask.js");
+/* harmony import */ var _tasks_renders_DrawLevelAnnotationBackgroundTask__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./tasks/renders/DrawLevelAnnotationBackgroundTask */ "./src/tasks/renders/DrawLevelAnnotationBackgroundTask.js");
+/* harmony import */ var _managers_TaskManager__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./managers/TaskManager */ "./src/managers/TaskManager.js");
+
 
 
 
@@ -2289,7 +2297,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function OrgPdfkitTaskManagerFactory(getOptions, getGraphics, setLayout, templates) {
-  var tasks = new _managers_TaskManager__WEBPACK_IMPORTED_MODULE_69__["default"](); // Dependencies
+  var tasks = new _managers_TaskManager__WEBPACK_IMPORTED_MODULE_70__["default"](); // Dependencies
 
   tasks.addDependency('options', getOptions);
   tasks.addDependency('graphics', getGraphics);
@@ -2347,42 +2355,43 @@ function OrgPdfkitTaskManagerFactory(getOptions, getGraphics, setLayout, templat
   tasks.addTask('LevelAnnotationTemplateTask', ['OrientationOptionTask', 'LevelTitleTemplateOptionTask', 'templates'], _tasks_templates_LevelAnnotationTemplateTask__WEBPACK_IMPORTED_MODULE_38__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
   tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'null', 'VisualTreeOptionTask', 'isFamilyChartMode'], _tasks_transformations_VisualTreeTask__WEBPACK_IMPORTED_MODULE_39__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Red);
   tasks.addTask('VisualTreeLevelsTask', ['VisualTreeTask', 'ItemTemplateParamsTask'], _tasks_transformations_VisualTreeLevelsTask__WEBPACK_IMPORTED_MODULE_40__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Red);
-  tasks.addTask('OrgExtractNestedLayoutsTask', ['OptionsTask'], _tasks_transformations_OrgExtractNestedLayoutsTask__WEBPACK_IMPORTED_MODULE_41__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
-  tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'VisualTreeLevelsTask', 'OrgExtractNestedLayoutsTask', 'AlignDiagramTask'], _tasks_transformations_ConnectionsGraphTask__WEBPACK_IMPORTED_MODULE_42__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan); // Transformations/Selections
+  tasks.addTask('ExtractNestedLayoutsTask', ['OptionsTask'], _tasks_transformations_OrgExtractNestedLayoutsTask__WEBPACK_IMPORTED_MODULE_41__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Red);
+  tasks.addTask('CreateLayoutsTreeTask', ['VisualTreeTask', 'VisualTreeLevelsTask', 'ExtractNestedLayoutsTask'], _tasks_transformations_OrgCreateLayoutsTreeTask__WEBPACK_IMPORTED_MODULE_42__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Red);
+  tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'VisualTreeLevelsTask', 'ExtractNestedLayoutsTask', 'AlignDiagramTask'], _tasks_transformations_ConnectionsGraphTask__WEBPACK_IMPORTED_MODULE_43__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan); // Transformations/Selections
 
-  tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'null'], _tasks_transformations_selection_HighlightItemTask__WEBPACK_IMPORTED_MODULE_43__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
-  tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'null'], _tasks_transformations_selection_CursorItemTask__WEBPACK_IMPORTED_MODULE_44__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
-  tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask', 'ItemsOptionTask'], _tasks_transformations_selection_SelectedItemsTask__WEBPACK_IMPORTED_MODULE_45__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
-  tasks.addTask('CombinedNormalVisibilityItemsTask', ['OptionsTask'], _tasks_transformations_selection_DummyCombinedNormalVisibilityItemsTask__WEBPACK_IMPORTED_MODULE_46__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
-  tasks.addTask('FrameSizeTask', ['FrameOptionTask', 'ReadTemplatesTask', 'ScaleOptionTask'], _tasks_layout_FrameSizeTask__WEBPACK_IMPORTED_MODULE_47__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Navy);
-  tasks.addTask('LevelTitleSizeTask', ['LevelTitlePlacementOptionTask', 'LevelAnnotationOptionTask', 'OrientationOptionTask', 'ScaleOptionTask'], _tasks_layout_LevelTitleSizeTask__WEBPACK_IMPORTED_MODULE_48__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Navy);
-  tasks.addTask('CurrentControlSizeTask', ['OptionsTask'], _tasks_layout_DummyCurrentControlSizeTask__WEBPACK_IMPORTED_MODULE_50__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
-  tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'VisualTreeOptionTask', 'VisualTreeTask', 'VisualTreeLevelsTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], _tasks_transformations_OrgItemsPositionsTask__WEBPACK_IMPORTED_MODULE_51__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Red);
-  tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'null', 'ItemsPositionsTask', 'isFamilyChartMode'], _tasks_layout_AlignDiagramTask__WEBPACK_IMPORTED_MODULE_52__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Red);
-  tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], _tasks_layout_CreateTransformTask__WEBPACK_IMPORTED_MODULE_53__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan); // Managers
+  tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'null'], _tasks_transformations_selection_HighlightItemTask__WEBPACK_IMPORTED_MODULE_44__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
+  tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'null'], _tasks_transformations_selection_CursorItemTask__WEBPACK_IMPORTED_MODULE_45__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
+  tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask', 'ItemsOptionTask'], _tasks_transformations_selection_SelectedItemsTask__WEBPACK_IMPORTED_MODULE_46__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
+  tasks.addTask('CombinedNormalVisibilityItemsTask', ['OptionsTask'], _tasks_transformations_selection_DummyCombinedNormalVisibilityItemsTask__WEBPACK_IMPORTED_MODULE_47__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
+  tasks.addTask('FrameSizeTask', ['FrameOptionTask', 'ReadTemplatesTask', 'ScaleOptionTask'], _tasks_layout_FrameSizeTask__WEBPACK_IMPORTED_MODULE_48__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Navy);
+  tasks.addTask('LevelTitleSizeTask', ['LevelTitlePlacementOptionTask', 'LevelAnnotationOptionTask', 'OrientationOptionTask', 'ScaleOptionTask'], _tasks_layout_LevelTitleSizeTask__WEBPACK_IMPORTED_MODULE_49__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Navy);
+  tasks.addTask('CurrentControlSizeTask', ['OptionsTask'], _tasks_layout_DummyCurrentControlSizeTask__WEBPACK_IMPORTED_MODULE_51__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
+  tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'VisualTreeOptionTask', 'CreateLayoutsTreeTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], _tasks_transformations_ItemsPositionsTask__WEBPACK_IMPORTED_MODULE_52__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Red);
+  tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'null', 'ItemsPositionsTask', 'isFamilyChartMode'], _tasks_layout_AlignDiagramTask__WEBPACK_IMPORTED_MODULE_53__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Red);
+  tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'ScaleOptionTask', 'AlignDiagramTask'], _tasks_layout_CreateTransformTask__WEBPACK_IMPORTED_MODULE_54__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan); // Managers
 
-  tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'null'], _tasks_transformations_PaletteManagerTask__WEBPACK_IMPORTED_MODULE_54__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
-  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask', 'FrameSizeTask', 'LevelTitleSizeTask'], _tasks_layout_ApplyLayoutChangesTask__WEBPACK_IMPORTED_MODULE_49__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
-  tasks.addTask('ViewPortPlacementTask', ['ScaleOptionTask', 'CenterOnCursorTask', 'CreateTransformTask', 'ApplyLayoutChangesTask'], _tasks_layout_ViewPortPlacementTask__WEBPACK_IMPORTED_MODULE_55__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
-  tasks.addTask('VerticalOffsetTask', ['ViewPortPlacementTask'], _tasks_layout_VerticalOffsetTask__WEBPACK_IMPORTED_MODULE_56__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
-  tasks.addTask('LogicalLevelsPlacementTask', ['OrgTreeTask', 'AlignDiagramTask'], _tasks_layout_OrgLogicalLevelsPlacementTask__WEBPACK_IMPORTED_MODULE_57__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
-  tasks.addTask('MergeLevelIntervalsTask', ['LevelAnnotationOptionTask', 'LogicalLevelsPlacementTask'], _tasks_layout_MergeLevelIntervalsTask__WEBPACK_IMPORTED_MODULE_58__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green); // Renders
+  tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'null'], _tasks_transformations_PaletteManagerTask__WEBPACK_IMPORTED_MODULE_55__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
+  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask', 'FrameSizeTask', 'LevelTitleSizeTask'], _tasks_layout_ApplyLayoutChangesTask__WEBPACK_IMPORTED_MODULE_50__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  tasks.addTask('ViewPortPlacementTask', ['ScaleOptionTask', 'CenterOnCursorTask', 'CreateTransformTask', 'ApplyLayoutChangesTask'], _tasks_layout_ViewPortPlacementTask__WEBPACK_IMPORTED_MODULE_56__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  tasks.addTask('VerticalOffsetTask', ['ViewPortPlacementTask'], _tasks_layout_VerticalOffsetTask__WEBPACK_IMPORTED_MODULE_57__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  tasks.addTask('LogicalLevelsPlacementTask', ['OrgTreeTask', 'AlignDiagramTask'], _tasks_layout_OrgLogicalLevelsPlacementTask__WEBPACK_IMPORTED_MODULE_58__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  tasks.addTask('MergeLevelIntervalsTask', ['LevelAnnotationOptionTask', 'LogicalLevelsPlacementTask'], _tasks_layout_MergeLevelIntervalsTask__WEBPACK_IMPORTED_MODULE_59__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green); // Renders
 
-  tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'VisualTreeTask', 'AlignDiagramTask'], _tasks_renders_DrawBackgroundAnnotationTask__WEBPACK_IMPORTED_MODULE_59__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'VisualTreeTask', 'AlignDiagramTask'], _tasks_renders_DrawBackgroundAnnotationTask__WEBPACK_IMPORTED_MODULE_60__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
   tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundAnnotationTask'
   /*dummy dependency enforeces drawing order */
-  ], _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_62__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
-  tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundShapeAnnotationTask'], _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_61__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
-  tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'null', 'ItemsSizesOptionTask', 'CombinedContextsTask', 'AlignDiagramTask', 'null', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask', 'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask', 'DrawBackgroundConnectorAnnotationTask'], _tasks_renders_DrawTreeItemsTask__WEBPACK_IMPORTED_MODULE_65__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
-  tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground', 'DrawTreeItemsTask'], _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_60__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
-  tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask', 'DrawBackgroundHighlightPathAnnotationTask'], _tasks_renders_DrawConnectorsTask__WEBPACK_IMPORTED_MODULE_66__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
-  tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background', 'DrawConnectorsTask'], _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_60__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
-  tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawForegroundHighlightPathAnnotationTask'], _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_62__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
-  tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawForegroundShapeAnnotationTask'], _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_61__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
-  tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawForegroundConnectorAnnotationTask'], _tasks_renders_DrawCursorTask__WEBPACK_IMPORTED_MODULE_63__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
-  tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawCursorTask'], _tasks_renders_DrawHighlightTask__WEBPACK_IMPORTED_MODULE_64__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
-  tasks.addTask('DrawLevelAnnotationBackgroundTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask'], _tasks_renders_DrawLevelAnnotationBackgroundTask__WEBPACK_IMPORTED_MODULE_68__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
-  tasks.addTask('DrawLevelAnnotationTitlesTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask', 'LevelTitlePlacementOptionTask'], _tasks_renders_DrawLevelAnnotationTitlesTask__WEBPACK_IMPORTED_MODULE_67__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  ], _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_63__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundShapeAnnotationTask'], _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_62__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'null', 'ItemsSizesOptionTask', 'CombinedContextsTask', 'AlignDiagramTask', 'null', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask', 'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask', 'DrawBackgroundConnectorAnnotationTask'], _tasks_renders_DrawTreeItemsTask__WEBPACK_IMPORTED_MODULE_66__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground', 'DrawTreeItemsTask'], _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_61__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
+  tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask', 'DrawBackgroundHighlightPathAnnotationTask'], _tasks_renders_DrawConnectorsTask__WEBPACK_IMPORTED_MODULE_67__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background', 'DrawConnectorsTask'], _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_61__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Cyan);
+  tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawForegroundHighlightPathAnnotationTask'], _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_63__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawForegroundShapeAnnotationTask'], _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_62__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawForegroundConnectorAnnotationTask'], _tasks_renders_DrawCursorTask__WEBPACK_IMPORTED_MODULE_64__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawCursorTask'], _tasks_renders_DrawHighlightTask__WEBPACK_IMPORTED_MODULE_65__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  tasks.addTask('DrawLevelAnnotationBackgroundTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask'], _tasks_renders_DrawLevelAnnotationBackgroundTask__WEBPACK_IMPORTED_MODULE_69__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
+  tasks.addTask('DrawLevelAnnotationTitlesTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask', 'LevelTitlePlacementOptionTask'], _tasks_renders_DrawLevelAnnotationTitlesTask__WEBPACK_IMPORTED_MODULE_68__["default"], _enums__WEBPACK_IMPORTED_MODULE_8__["Colors"].Green);
   return tasks;
 }
 
@@ -2414,78 +2423,84 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tasks_options_OrgItemsOptionTask__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./tasks/options/OrgItemsOptionTask */ "./src/tasks/options/OrgItemsOptionTask.js");
 /* harmony import */ var _tasks_options_ItemsContentOptionTask__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./tasks/options/ItemsContentOptionTask */ "./src/tasks/options/ItemsContentOptionTask.js");
 /* harmony import */ var _tasks_options_ItemsSizesOptionTask__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./tasks/options/ItemsSizesOptionTask */ "./src/tasks/options/ItemsSizesOptionTask.js");
-/* harmony import */ var _tasks_options_LabelsOptionTask__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./tasks/options/LabelsOptionTask */ "./src/tasks/options/LabelsOptionTask.js");
-/* harmony import */ var _tasks_options_TemplatesOptionTask__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./tasks/options/TemplatesOptionTask */ "./src/tasks/options/TemplatesOptionTask.js");
-/* harmony import */ var _tasks_options_OrientationOptionTask__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./tasks/options/OrientationOptionTask */ "./src/tasks/options/OrientationOptionTask.js");
-/* harmony import */ var _tasks_options_OrgVisualTreeOptionTask__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./tasks/options/OrgVisualTreeOptionTask */ "./src/tasks/options/OrgVisualTreeOptionTask.js");
-/* harmony import */ var _tasks_options_MinimizedItemsOptionTask__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./tasks/options/MinimizedItemsOptionTask */ "./src/tasks/options/MinimizedItemsOptionTask.js");
-/* harmony import */ var _tasks_options_selection_CursorItemOptionTask__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./tasks/options/selection/CursorItemOptionTask */ "./src/tasks/options/selection/CursorItemOptionTask.js");
-/* harmony import */ var _tasks_options_selection_HighlightItemOptionTask__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./tasks/options/selection/HighlightItemOptionTask */ "./src/tasks/options/selection/HighlightItemOptionTask.js");
-/* harmony import */ var _tasks_options_selection_SelectedItemsOptionTask__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./tasks/options/selection/SelectedItemsOptionTask */ "./src/tasks/options/selection/SelectedItemsOptionTask.js");
-/* harmony import */ var _tasks_options_selection_CursorSelectionPathModeOptionTask__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./tasks/options/selection/CursorSelectionPathModeOptionTask */ "./src/tasks/options/selection/CursorSelectionPathModeOptionTask.js");
-/* harmony import */ var _tasks_options_annotations_SplitAnnotationsOptionTask__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./tasks/options/annotations/SplitAnnotationsOptionTask */ "./src/tasks/options/annotations/SplitAnnotationsOptionTask.js");
-/* harmony import */ var _tasks_options_annotations_ShapeAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./tasks/options/annotations/ShapeAnnotationOptionTask */ "./src/tasks/options/annotations/ShapeAnnotationOptionTask.js");
-/* harmony import */ var _tasks_options_annotations_HighlightPathAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./tasks/options/annotations/HighlightPathAnnotationOptionTask */ "./src/tasks/options/annotations/HighlightPathAnnotationOptionTask.js");
-/* harmony import */ var _tasks_options_annotations_ConnectorAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./tasks/options/annotations/ConnectorAnnotationOptionTask */ "./src/tasks/options/annotations/ConnectorAnnotationOptionTask.js");
-/* harmony import */ var _tasks_options_annotations_BackgroundAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./tasks/options/annotations/BackgroundAnnotationOptionTask */ "./src/tasks/options/annotations/BackgroundAnnotationOptionTask.js");
-/* harmony import */ var _tasks_options_annotations_LevelAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./tasks/options/annotations/LevelAnnotationOptionTask */ "./src/tasks/options/annotations/LevelAnnotationOptionTask.js");
-/* harmony import */ var _tasks_options_ScaleOptionTask__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./tasks/options/ScaleOptionTask */ "./src/tasks/options/ScaleOptionTask.js");
-/* harmony import */ var _tasks_options_FrameOptionTask__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./tasks/options/FrameOptionTask */ "./src/tasks/options/FrameOptionTask.js");
-/* harmony import */ var _tasks_options_LevelTitlePlacementOptionTask__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./tasks/options/LevelTitlePlacementOptionTask */ "./src/tasks/options/LevelTitlePlacementOptionTask.js");
-/* harmony import */ var _tasks_options_LevelTitleTemplateOptionTask__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./tasks/options/LevelTitleTemplateOptionTask */ "./src/tasks/options/LevelTitleTemplateOptionTask.js");
-/* harmony import */ var _tasks_transformations_CombinedContextsTask__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./tasks/transformations/CombinedContextsTask */ "./src/tasks/transformations/CombinedContextsTask.js");
-/* harmony import */ var _tasks_transformations_OrgTreeTask__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./tasks/transformations/OrgTreeTask */ "./src/tasks/transformations/OrgTreeTask.js");
-/* harmony import */ var _tasks_templates_ReadTemplatesTask__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./tasks/templates/ReadTemplatesTask */ "./src/tasks/templates/ReadTemplatesTask.js");
-/* harmony import */ var _tasks_templates_ActiveItemsTask__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./tasks/templates/ActiveItemsTask */ "./src/tasks/templates/ActiveItemsTask.js");
-/* harmony import */ var _tasks_templates_ItemTemplateParamsTask__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./tasks/templates/ItemTemplateParamsTask */ "./src/tasks/templates/ItemTemplateParamsTask.js");
-/* harmony import */ var _tasks_templates_GroupTitleTemplateTask__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./tasks/templates/GroupTitleTemplateTask */ "./src/tasks/templates/GroupTitleTemplateTask.js");
-/* harmony import */ var _tasks_templates_CheckBoxTemplateTask__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./tasks/templates/CheckBoxTemplateTask */ "./src/tasks/templates/CheckBoxTemplateTask.js");
-/* harmony import */ var _tasks_templates_ButtonsTemplateTask__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./tasks/templates/ButtonsTemplateTask */ "./src/tasks/templates/ButtonsTemplateTask.js");
-/* harmony import */ var _tasks_templates_AnnotationLabelTemplateTask__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./tasks/templates/AnnotationLabelTemplateTask */ "./src/tasks/templates/AnnotationLabelTemplateTask.js");
-/* harmony import */ var _tasks_templates_LevelAnnotationTemplateTask__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./tasks/templates/LevelAnnotationTemplateTask */ "./src/tasks/templates/LevelAnnotationTemplateTask.js");
-/* harmony import */ var _tasks_transformations_VisualTreeTask__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./tasks/transformations/VisualTreeTask */ "./src/tasks/transformations/VisualTreeTask.js");
-/* harmony import */ var _tasks_transformations_VisualTreeLevelsTask__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./tasks/transformations/VisualTreeLevelsTask */ "./src/tasks/transformations/VisualTreeLevelsTask.js");
-/* harmony import */ var _tasks_transformations_OrgExtractNestedLayoutsTask__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./tasks/transformations/OrgExtractNestedLayoutsTask */ "./src/tasks/transformations/OrgExtractNestedLayoutsTask.js");
-/* harmony import */ var _tasks_transformations_ConnectionsGraphTask__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./tasks/transformations/ConnectionsGraphTask */ "./src/tasks/transformations/ConnectionsGraphTask.js");
-/* harmony import */ var _tasks_transformations_selection_HighlightItemTask__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./tasks/transformations/selection/HighlightItemTask */ "./src/tasks/transformations/selection/HighlightItemTask.js");
-/* harmony import */ var _tasks_transformations_selection_CursorItemTask__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./tasks/transformations/selection/CursorItemTask */ "./src/tasks/transformations/selection/CursorItemTask.js");
-/* harmony import */ var _tasks_transformations_selection_OrgCursorNeighboursTask__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./tasks/transformations/selection/OrgCursorNeighboursTask */ "./src/tasks/transformations/selection/OrgCursorNeighboursTask.js");
-/* harmony import */ var _tasks_transformations_selection_SelectedItemsTask__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./tasks/transformations/selection/SelectedItemsTask */ "./src/tasks/transformations/selection/SelectedItemsTask.js");
-/* harmony import */ var _tasks_transformations_selection_OrgSelectionPathItemsTask__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./tasks/transformations/selection/OrgSelectionPathItemsTask */ "./src/tasks/transformations/selection/OrgSelectionPathItemsTask.js");
-/* harmony import */ var _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./tasks/transformations/selection/NormalVisibilityItemsByAnnotationTask */ "./src/tasks/transformations/selection/NormalVisibilityItemsByAnnotationTask.js");
-/* harmony import */ var _tasks_transformations_selection_NormalVisibilityItemsByConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./tasks/transformations/selection/NormalVisibilityItemsByConnectorAnnotationTask */ "./src/tasks/transformations/selection/NormalVisibilityItemsByConnectorAnnotationTask.js");
-/* harmony import */ var _tasks_transformations_selection_CombinedNormalVisibilityItemsTask__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./tasks/transformations/selection/CombinedNormalVisibilityItemsTask */ "./src/tasks/transformations/selection/CombinedNormalVisibilityItemsTask.js");
-/* harmony import */ var _tasks_layout_FrameSizeTask__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./tasks/layout/FrameSizeTask */ "./src/tasks/layout/FrameSizeTask.js");
-/* harmony import */ var _tasks_layout_LevelTitleSizeTask__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./tasks/layout/LevelTitleSizeTask */ "./src/tasks/layout/LevelTitleSizeTask.js");
-/* harmony import */ var _tasks_options_LayoutOptionsTask__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./tasks/options/LayoutOptionsTask */ "./src/tasks/options/LayoutOptionsTask.js");
-/* harmony import */ var _tasks_layout_CurrentControlSizeTask__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./tasks/layout/CurrentControlSizeTask */ "./src/tasks/layout/CurrentControlSizeTask.js");
-/* harmony import */ var _tasks_layout_CurrentScrollPositionTask__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./tasks/layout/CurrentScrollPositionTask */ "./src/tasks/layout/CurrentScrollPositionTask.js");
-/* harmony import */ var _tasks_transformations_OrgItemsPositionsTask__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./tasks/transformations/OrgItemsPositionsTask */ "./src/tasks/transformations/OrgItemsPositionsTask.js");
-/* harmony import */ var _tasks_layout_AlignDiagramTask__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./tasks/layout/AlignDiagramTask */ "./src/tasks/layout/AlignDiagramTask.js");
-/* harmony import */ var _tasks_layout_CreateTransformTask__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./tasks/layout/CreateTransformTask */ "./src/tasks/layout/CreateTransformTask.js");
-/* harmony import */ var _tasks_transformations_PaletteManagerTask__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./tasks/transformations/PaletteManagerTask */ "./src/tasks/transformations/PaletteManagerTask.js");
-/* harmony import */ var _tasks_layout_ApplyLayoutChangesTask__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./tasks/layout/ApplyLayoutChangesTask */ "./src/tasks/layout/ApplyLayoutChangesTask.js");
-/* harmony import */ var _tasks_layout_CenterOnCursorTask__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./tasks/layout/CenterOnCursorTask */ "./src/tasks/layout/CenterOnCursorTask.js");
-/* harmony import */ var _tasks_layout_ProjectItemsToFrameTask__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./tasks/layout/ProjectItemsToFrameTask */ "./src/tasks/layout/ProjectItemsToFrameTask.js");
-/* harmony import */ var _tasks_layout_ViewPortPlacementTask__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./tasks/layout/ViewPortPlacementTask */ "./src/tasks/layout/ViewPortPlacementTask.js");
-/* harmony import */ var _tasks_layout_VerticalOffsetTask__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./tasks/layout/VerticalOffsetTask */ "./src/tasks/layout/VerticalOffsetTask.js");
-/* harmony import */ var _tasks_layout_OrgLogicalLevelsPlacementTask__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! ./tasks/layout/OrgLogicalLevelsPlacementTask */ "./src/tasks/layout/OrgLogicalLevelsPlacementTask.js");
-/* harmony import */ var _tasks_layout_MergeLevelIntervalsTask__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! ./tasks/layout/MergeLevelIntervalsTask */ "./src/tasks/layout/MergeLevelIntervalsTask.js");
-/* harmony import */ var _tasks_renders_DrawBackgroundAnnotationTask__WEBPACK_IMPORTED_MODULE_73__ = __webpack_require__(/*! ./tasks/renders/DrawBackgroundAnnotationTask */ "./src/tasks/renders/DrawBackgroundAnnotationTask.js");
-/* harmony import */ var _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_74__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightPathAnnotationTask */ "./src/tasks/renders/DrawHighlightPathAnnotationTask.js");
-/* harmony import */ var _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_75__ = __webpack_require__(/*! ./tasks/renders/DrawConnectorAnnotationTask */ "./src/tasks/renders/DrawConnectorAnnotationTask.js");
-/* harmony import */ var _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_76__ = __webpack_require__(/*! ./tasks/renders/DrawShapeAnnotationTask */ "./src/tasks/renders/DrawShapeAnnotationTask.js");
-/* harmony import */ var _tasks_renders_DrawCursorTask__WEBPACK_IMPORTED_MODULE_77__ = __webpack_require__(/*! ./tasks/renders/DrawCursorTask */ "./src/tasks/renders/DrawCursorTask.js");
-/* harmony import */ var _tasks_renders_DrawHighlightTask__WEBPACK_IMPORTED_MODULE_78__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightTask */ "./src/tasks/renders/DrawHighlightTask.js");
-/* harmony import */ var _tasks_renders_DrawHighlightAnnotationTask__WEBPACK_IMPORTED_MODULE_79__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightAnnotationTask */ "./src/tasks/renders/DrawHighlightAnnotationTask.js");
-/* harmony import */ var _tasks_renders_DrawTreeItemsTask__WEBPACK_IMPORTED_MODULE_80__ = __webpack_require__(/*! ./tasks/renders/DrawTreeItemsTask */ "./src/tasks/renders/DrawTreeItemsTask.js");
-/* harmony import */ var _tasks_renders_DrawMinimizedItemsTask__WEBPACK_IMPORTED_MODULE_81__ = __webpack_require__(/*! ./tasks/renders/DrawMinimizedItemsTask */ "./src/tasks/renders/DrawMinimizedItemsTask.js");
-/* harmony import */ var _tasks_renders_DrawConnectorsTask__WEBPACK_IMPORTED_MODULE_82__ = __webpack_require__(/*! ./tasks/renders/DrawConnectorsTask */ "./src/tasks/renders/DrawConnectorsTask.js");
-/* harmony import */ var _tasks_renders_DrawItemLabelsTask__WEBPACK_IMPORTED_MODULE_83__ = __webpack_require__(/*! ./tasks/renders/DrawItemLabelsTask */ "./src/tasks/renders/DrawItemLabelsTask.js");
-/* harmony import */ var _tasks_renders_DrawFrameItemsTask__WEBPACK_IMPORTED_MODULE_84__ = __webpack_require__(/*! ./tasks/renders/DrawFrameItemsTask */ "./src/tasks/renders/DrawFrameItemsTask.js");
-/* harmony import */ var _tasks_renders_DrawFrameHighlightTask__WEBPACK_IMPORTED_MODULE_85__ = __webpack_require__(/*! ./tasks/renders/DrawFrameHighlightTask */ "./src/tasks/renders/DrawFrameHighlightTask.js");
-/* harmony import */ var _tasks_renders_DrawLevelAnnotationTitlesTask__WEBPACK_IMPORTED_MODULE_86__ = __webpack_require__(/*! ./tasks/renders/DrawLevelAnnotationTitlesTask */ "./src/tasks/renders/DrawLevelAnnotationTitlesTask.js");
-/* harmony import */ var _tasks_renders_DrawLevelAnnotationBackgroundTask__WEBPACK_IMPORTED_MODULE_87__ = __webpack_require__(/*! ./tasks/renders/DrawLevelAnnotationBackgroundTask */ "./src/tasks/renders/DrawLevelAnnotationBackgroundTask.js");
+/* harmony import */ var _tasks_options_MinimumVisibleLevelsOptionTask__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./tasks/options/MinimumVisibleLevelsOptionTask */ "./src/tasks/options/MinimumVisibleLevelsOptionTask.js");
+/* harmony import */ var _tasks_options_LabelsOptionTask__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./tasks/options/LabelsOptionTask */ "./src/tasks/options/LabelsOptionTask.js");
+/* harmony import */ var _tasks_options_TemplatesOptionTask__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./tasks/options/TemplatesOptionTask */ "./src/tasks/options/TemplatesOptionTask.js");
+/* harmony import */ var _tasks_options_OrientationOptionTask__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./tasks/options/OrientationOptionTask */ "./src/tasks/options/OrientationOptionTask.js");
+/* harmony import */ var _tasks_options_OrgVisualTreeOptionTask__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./tasks/options/OrgVisualTreeOptionTask */ "./src/tasks/options/OrgVisualTreeOptionTask.js");
+/* harmony import */ var _tasks_options_MinimizedItemsOptionTask__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./tasks/options/MinimizedItemsOptionTask */ "./src/tasks/options/MinimizedItemsOptionTask.js");
+/* harmony import */ var _tasks_options_selection_CursorItemOptionTask__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./tasks/options/selection/CursorItemOptionTask */ "./src/tasks/options/selection/CursorItemOptionTask.js");
+/* harmony import */ var _tasks_options_selection_HighlightItemOptionTask__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./tasks/options/selection/HighlightItemOptionTask */ "./src/tasks/options/selection/HighlightItemOptionTask.js");
+/* harmony import */ var _tasks_options_selection_SelectedItemsOptionTask__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./tasks/options/selection/SelectedItemsOptionTask */ "./src/tasks/options/selection/SelectedItemsOptionTask.js");
+/* harmony import */ var _tasks_options_selection_CursorSelectionPathModeOptionTask__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./tasks/options/selection/CursorSelectionPathModeOptionTask */ "./src/tasks/options/selection/CursorSelectionPathModeOptionTask.js");
+/* harmony import */ var _tasks_options_annotations_SplitAnnotationsOptionTask__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./tasks/options/annotations/SplitAnnotationsOptionTask */ "./src/tasks/options/annotations/SplitAnnotationsOptionTask.js");
+/* harmony import */ var _tasks_options_annotations_ShapeAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./tasks/options/annotations/ShapeAnnotationOptionTask */ "./src/tasks/options/annotations/ShapeAnnotationOptionTask.js");
+/* harmony import */ var _tasks_options_annotations_HighlightPathAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./tasks/options/annotations/HighlightPathAnnotationOptionTask */ "./src/tasks/options/annotations/HighlightPathAnnotationOptionTask.js");
+/* harmony import */ var _tasks_options_annotations_ConnectorAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./tasks/options/annotations/ConnectorAnnotationOptionTask */ "./src/tasks/options/annotations/ConnectorAnnotationOptionTask.js");
+/* harmony import */ var _tasks_options_annotations_BackgroundAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./tasks/options/annotations/BackgroundAnnotationOptionTask */ "./src/tasks/options/annotations/BackgroundAnnotationOptionTask.js");
+/* harmony import */ var _tasks_options_annotations_LevelAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./tasks/options/annotations/LevelAnnotationOptionTask */ "./src/tasks/options/annotations/LevelAnnotationOptionTask.js");
+/* harmony import */ var _tasks_options_ScaleOptionTask__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./tasks/options/ScaleOptionTask */ "./src/tasks/options/ScaleOptionTask.js");
+/* harmony import */ var _tasks_options_FrameOptionTask__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./tasks/options/FrameOptionTask */ "./src/tasks/options/FrameOptionTask.js");
+/* harmony import */ var _tasks_options_LevelTitlePlacementOptionTask__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./tasks/options/LevelTitlePlacementOptionTask */ "./src/tasks/options/LevelTitlePlacementOptionTask.js");
+/* harmony import */ var _tasks_options_LevelTitleTemplateOptionTask__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./tasks/options/LevelTitleTemplateOptionTask */ "./src/tasks/options/LevelTitleTemplateOptionTask.js");
+/* harmony import */ var _tasks_transformations_CombinedContextsTask__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./tasks/transformations/CombinedContextsTask */ "./src/tasks/transformations/CombinedContextsTask.js");
+/* harmony import */ var _tasks_transformations_OrgTreeTask__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./tasks/transformations/OrgTreeTask */ "./src/tasks/transformations/OrgTreeTask.js");
+/* harmony import */ var _tasks_templates_ReadTemplatesTask__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./tasks/templates/ReadTemplatesTask */ "./src/tasks/templates/ReadTemplatesTask.js");
+/* harmony import */ var _tasks_templates_ActiveItemsTask__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./tasks/templates/ActiveItemsTask */ "./src/tasks/templates/ActiveItemsTask.js");
+/* harmony import */ var _tasks_templates_ItemTemplateParamsTask__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./tasks/templates/ItemTemplateParamsTask */ "./src/tasks/templates/ItemTemplateParamsTask.js");
+/* harmony import */ var _tasks_templates_GroupTitleTemplateTask__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./tasks/templates/GroupTitleTemplateTask */ "./src/tasks/templates/GroupTitleTemplateTask.js");
+/* harmony import */ var _tasks_templates_CheckBoxTemplateTask__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./tasks/templates/CheckBoxTemplateTask */ "./src/tasks/templates/CheckBoxTemplateTask.js");
+/* harmony import */ var _tasks_templates_ButtonsTemplateTask__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./tasks/templates/ButtonsTemplateTask */ "./src/tasks/templates/ButtonsTemplateTask.js");
+/* harmony import */ var _tasks_templates_AnnotationLabelTemplateTask__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./tasks/templates/AnnotationLabelTemplateTask */ "./src/tasks/templates/AnnotationLabelTemplateTask.js");
+/* harmony import */ var _tasks_templates_LevelAnnotationTemplateTask__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./tasks/templates/LevelAnnotationTemplateTask */ "./src/tasks/templates/LevelAnnotationTemplateTask.js");
+/* harmony import */ var _tasks_transformations_VisualTreeTask__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./tasks/transformations/VisualTreeTask */ "./src/tasks/transformations/VisualTreeTask.js");
+/* harmony import */ var _tasks_transformations_VisualTreeLevelsTask__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./tasks/transformations/VisualTreeLevelsTask */ "./src/tasks/transformations/VisualTreeLevelsTask.js");
+/* harmony import */ var _tasks_transformations_OrgExtractNestedLayoutsTask__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./tasks/transformations/OrgExtractNestedLayoutsTask */ "./src/tasks/transformations/OrgExtractNestedLayoutsTask.js");
+/* harmony import */ var _tasks_transformations_OrgCreateLayoutsTreeTask__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./tasks/transformations/OrgCreateLayoutsTreeTask */ "./src/tasks/transformations/OrgCreateLayoutsTreeTask.js");
+/* harmony import */ var _tasks_transformations_ConnectionsGraphTask__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./tasks/transformations/ConnectionsGraphTask */ "./src/tasks/transformations/ConnectionsGraphTask.js");
+/* harmony import */ var _tasks_transformations_selection_HighlightItemTask__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./tasks/transformations/selection/HighlightItemTask */ "./src/tasks/transformations/selection/HighlightItemTask.js");
+/* harmony import */ var _tasks_transformations_selection_CursorItemTask__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./tasks/transformations/selection/CursorItemTask */ "./src/tasks/transformations/selection/CursorItemTask.js");
+/* harmony import */ var _tasks_transformations_selection_OrgCursorNeighboursTask__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./tasks/transformations/selection/OrgCursorNeighboursTask */ "./src/tasks/transformations/selection/OrgCursorNeighboursTask.js");
+/* harmony import */ var _tasks_transformations_selection_SelectedItemsTask__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./tasks/transformations/selection/SelectedItemsTask */ "./src/tasks/transformations/selection/SelectedItemsTask.js");
+/* harmony import */ var _tasks_transformations_selection_OrgSelectionPathItemsTask__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./tasks/transformations/selection/OrgSelectionPathItemsTask */ "./src/tasks/transformations/selection/OrgSelectionPathItemsTask.js");
+/* harmony import */ var _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./tasks/transformations/selection/NormalVisibilityItemsByAnnotationTask */ "./src/tasks/transformations/selection/NormalVisibilityItemsByAnnotationTask.js");
+/* harmony import */ var _tasks_transformations_selection_NormalVisibilityItemsByConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./tasks/transformations/selection/NormalVisibilityItemsByConnectorAnnotationTask */ "./src/tasks/transformations/selection/NormalVisibilityItemsByConnectorAnnotationTask.js");
+/* harmony import */ var _tasks_transformations_selection_OrgNormalVisibilityItemsByMinimumVisibleLevelsTask__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./tasks/transformations/selection/OrgNormalVisibilityItemsByMinimumVisibleLevelsTask */ "./src/tasks/transformations/selection/OrgNormalVisibilityItemsByMinimumVisibleLevelsTask.js");
+/* harmony import */ var _tasks_transformations_selection_CombinedNormalVisibilityItemsTask__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./tasks/transformations/selection/CombinedNormalVisibilityItemsTask */ "./src/tasks/transformations/selection/CombinedNormalVisibilityItemsTask.js");
+/* harmony import */ var _tasks_layout_FrameSizeTask__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./tasks/layout/FrameSizeTask */ "./src/tasks/layout/FrameSizeTask.js");
+/* harmony import */ var _tasks_layout_LevelTitleSizeTask__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./tasks/layout/LevelTitleSizeTask */ "./src/tasks/layout/LevelTitleSizeTask.js");
+/* harmony import */ var _tasks_options_LayoutOptionsTask__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./tasks/options/LayoutOptionsTask */ "./src/tasks/options/LayoutOptionsTask.js");
+/* harmony import */ var _tasks_layout_CurrentControlSizeTask__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./tasks/layout/CurrentControlSizeTask */ "./src/tasks/layout/CurrentControlSizeTask.js");
+/* harmony import */ var _tasks_layout_CurrentScrollPositionTask__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./tasks/layout/CurrentScrollPositionTask */ "./src/tasks/layout/CurrentScrollPositionTask.js");
+/* harmony import */ var _tasks_transformations_ItemsPositionsTask__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./tasks/transformations/ItemsPositionsTask */ "./src/tasks/transformations/ItemsPositionsTask.js");
+/* harmony import */ var _tasks_layout_AlignDiagramTask__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./tasks/layout/AlignDiagramTask */ "./src/tasks/layout/AlignDiagramTask.js");
+/* harmony import */ var _tasks_layout_CreateTransformTask__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./tasks/layout/CreateTransformTask */ "./src/tasks/layout/CreateTransformTask.js");
+/* harmony import */ var _tasks_transformations_PaletteManagerTask__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./tasks/transformations/PaletteManagerTask */ "./src/tasks/transformations/PaletteManagerTask.js");
+/* harmony import */ var _tasks_layout_ApplyLayoutChangesTask__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./tasks/layout/ApplyLayoutChangesTask */ "./src/tasks/layout/ApplyLayoutChangesTask.js");
+/* harmony import */ var _tasks_layout_CenterOnCursorTask__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./tasks/layout/CenterOnCursorTask */ "./src/tasks/layout/CenterOnCursorTask.js");
+/* harmony import */ var _tasks_layout_ProjectItemsToFrameTask__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! ./tasks/layout/ProjectItemsToFrameTask */ "./src/tasks/layout/ProjectItemsToFrameTask.js");
+/* harmony import */ var _tasks_layout_ViewPortPlacementTask__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! ./tasks/layout/ViewPortPlacementTask */ "./src/tasks/layout/ViewPortPlacementTask.js");
+/* harmony import */ var _tasks_layout_VerticalOffsetTask__WEBPACK_IMPORTED_MODULE_73__ = __webpack_require__(/*! ./tasks/layout/VerticalOffsetTask */ "./src/tasks/layout/VerticalOffsetTask.js");
+/* harmony import */ var _tasks_layout_OrgLogicalLevelsPlacementTask__WEBPACK_IMPORTED_MODULE_74__ = __webpack_require__(/*! ./tasks/layout/OrgLogicalLevelsPlacementTask */ "./src/tasks/layout/OrgLogicalLevelsPlacementTask.js");
+/* harmony import */ var _tasks_layout_MergeLevelIntervalsTask__WEBPACK_IMPORTED_MODULE_75__ = __webpack_require__(/*! ./tasks/layout/MergeLevelIntervalsTask */ "./src/tasks/layout/MergeLevelIntervalsTask.js");
+/* harmony import */ var _tasks_renders_DrawBackgroundAnnotationTask__WEBPACK_IMPORTED_MODULE_76__ = __webpack_require__(/*! ./tasks/renders/DrawBackgroundAnnotationTask */ "./src/tasks/renders/DrawBackgroundAnnotationTask.js");
+/* harmony import */ var _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_77__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightPathAnnotationTask */ "./src/tasks/renders/DrawHighlightPathAnnotationTask.js");
+/* harmony import */ var _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_78__ = __webpack_require__(/*! ./tasks/renders/DrawConnectorAnnotationTask */ "./src/tasks/renders/DrawConnectorAnnotationTask.js");
+/* harmony import */ var _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_79__ = __webpack_require__(/*! ./tasks/renders/DrawShapeAnnotationTask */ "./src/tasks/renders/DrawShapeAnnotationTask.js");
+/* harmony import */ var _tasks_renders_DrawCursorTask__WEBPACK_IMPORTED_MODULE_80__ = __webpack_require__(/*! ./tasks/renders/DrawCursorTask */ "./src/tasks/renders/DrawCursorTask.js");
+/* harmony import */ var _tasks_renders_DrawHighlightTask__WEBPACK_IMPORTED_MODULE_81__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightTask */ "./src/tasks/renders/DrawHighlightTask.js");
+/* harmony import */ var _tasks_renders_DrawHighlightAnnotationTask__WEBPACK_IMPORTED_MODULE_82__ = __webpack_require__(/*! ./tasks/renders/DrawHighlightAnnotationTask */ "./src/tasks/renders/DrawHighlightAnnotationTask.js");
+/* harmony import */ var _tasks_renders_DrawTreeItemsTask__WEBPACK_IMPORTED_MODULE_83__ = __webpack_require__(/*! ./tasks/renders/DrawTreeItemsTask */ "./src/tasks/renders/DrawTreeItemsTask.js");
+/* harmony import */ var _tasks_renders_DrawMinimizedItemsTask__WEBPACK_IMPORTED_MODULE_84__ = __webpack_require__(/*! ./tasks/renders/DrawMinimizedItemsTask */ "./src/tasks/renders/DrawMinimizedItemsTask.js");
+/* harmony import */ var _tasks_renders_DrawConnectorsTask__WEBPACK_IMPORTED_MODULE_85__ = __webpack_require__(/*! ./tasks/renders/DrawConnectorsTask */ "./src/tasks/renders/DrawConnectorsTask.js");
+/* harmony import */ var _tasks_renders_DrawItemLabelsTask__WEBPACK_IMPORTED_MODULE_86__ = __webpack_require__(/*! ./tasks/renders/DrawItemLabelsTask */ "./src/tasks/renders/DrawItemLabelsTask.js");
+/* harmony import */ var _tasks_renders_DrawFrameItemsTask__WEBPACK_IMPORTED_MODULE_87__ = __webpack_require__(/*! ./tasks/renders/DrawFrameItemsTask */ "./src/tasks/renders/DrawFrameItemsTask.js");
+/* harmony import */ var _tasks_renders_DrawFrameHighlightTask__WEBPACK_IMPORTED_MODULE_88__ = __webpack_require__(/*! ./tasks/renders/DrawFrameHighlightTask */ "./src/tasks/renders/DrawFrameHighlightTask.js");
+/* harmony import */ var _tasks_renders_DrawLevelAnnotationTitlesTask__WEBPACK_IMPORTED_MODULE_89__ = __webpack_require__(/*! ./tasks/renders/DrawLevelAnnotationTitlesTask */ "./src/tasks/renders/DrawLevelAnnotationTitlesTask.js");
+/* harmony import */ var _tasks_renders_DrawLevelAnnotationBackgroundTask__WEBPACK_IMPORTED_MODULE_90__ = __webpack_require__(/*! ./tasks/renders/DrawLevelAnnotationBackgroundTask */ "./src/tasks/renders/DrawLevelAnnotationBackgroundTask.js");
+
+
+
 
 
 
@@ -2602,96 +2617,99 @@ function TaskManagerFactory(getOptions, getGraphics, getLayout, setLayout, templ
   tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], _tasks_options_OrgItemsOptionTask__WEBPACK_IMPORTED_MODULE_13__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
   tasks.addTask('ItemsContentOptionTask', ['OptionsTask', 'defaultItemConfig'], _tasks_options_ItemsContentOptionTask__WEBPACK_IMPORTED_MODULE_14__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
   tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], _tasks_options_ItemsSizesOptionTask__WEBPACK_IMPORTED_MODULE_15__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], _tasks_options_LabelsOptionTask__WEBPACK_IMPORTED_MODULE_16__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultTemplateConfig'], _tasks_options_TemplatesOptionTask__WEBPACK_IMPORTED_MODULE_17__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_OrientationOptionTask__WEBPACK_IMPORTED_MODULE_18__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('VisualTreeOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_OrgVisualTreeOptionTask__WEBPACK_IMPORTED_MODULE_19__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('MinimizedItemsOptionTask', ['OptionsTask'], _tasks_options_MinimizedItemsOptionTask__WEBPACK_IMPORTED_MODULE_20__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('CursorItemOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_selection_CursorItemOptionTask__WEBPACK_IMPORTED_MODULE_21__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('HighlightItemOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_selection_HighlightItemOptionTask__WEBPACK_IMPORTED_MODULE_22__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('SelectedItemsOptionTask', ['OptionsTask'], _tasks_options_selection_SelectedItemsOptionTask__WEBPACK_IMPORTED_MODULE_23__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('CursorSelectionPathModeOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_selection_CursorSelectionPathModeOptionTask__WEBPACK_IMPORTED_MODULE_24__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('SplitAnnotationsOptionTask', ['OptionsTask'], _tasks_options_annotations_SplitAnnotationsOptionTask__WEBPACK_IMPORTED_MODULE_25__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('ForegroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'foreground'], _tasks_options_annotations_ShapeAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_26__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('BackgroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'background'], _tasks_options_annotations_ShapeAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_26__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('ForegroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'foreground'], _tasks_options_annotations_HighlightPathAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_27__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('BackgroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'background'], _tasks_options_annotations_HighlightPathAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_27__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], _tasks_options_annotations_ConnectorAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_28__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], _tasks_options_annotations_ConnectorAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_28__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], _tasks_options_annotations_BackgroundAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_29__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('LevelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultLevelAnnotationConfig'], _tasks_options_annotations_LevelAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_30__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_ScaleOptionTask__WEBPACK_IMPORTED_MODULE_31__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('FrameOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_FrameOptionTask__WEBPACK_IMPORTED_MODULE_32__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('LevelTitlePlacementOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_LevelTitlePlacementOptionTask__WEBPACK_IMPORTED_MODULE_33__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('LevelTitleTemplateOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_LevelTitleTemplateOptionTask__WEBPACK_IMPORTED_MODULE_34__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy); // Transformations
+  tasks.addTask('MinimumVisibleLevelsOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_MinimumVisibleLevelsOptionTask__WEBPACK_IMPORTED_MODULE_16__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('LabelsOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], _tasks_options_LabelsOptionTask__WEBPACK_IMPORTED_MODULE_17__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('TemplatesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultTemplateConfig'], _tasks_options_TemplatesOptionTask__WEBPACK_IMPORTED_MODULE_18__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('OrientationOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_OrientationOptionTask__WEBPACK_IMPORTED_MODULE_19__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('VisualTreeOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_OrgVisualTreeOptionTask__WEBPACK_IMPORTED_MODULE_20__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('MinimizedItemsOptionTask', ['OptionsTask'], _tasks_options_MinimizedItemsOptionTask__WEBPACK_IMPORTED_MODULE_21__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('CursorItemOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_selection_CursorItemOptionTask__WEBPACK_IMPORTED_MODULE_22__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('HighlightItemOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_selection_HighlightItemOptionTask__WEBPACK_IMPORTED_MODULE_23__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('SelectedItemsOptionTask', ['OptionsTask'], _tasks_options_selection_SelectedItemsOptionTask__WEBPACK_IMPORTED_MODULE_24__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('CursorSelectionPathModeOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_selection_CursorSelectionPathModeOptionTask__WEBPACK_IMPORTED_MODULE_25__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('SplitAnnotationsOptionTask', ['OptionsTask'], _tasks_options_annotations_SplitAnnotationsOptionTask__WEBPACK_IMPORTED_MODULE_26__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('ForegroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'foreground'], _tasks_options_annotations_ShapeAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_27__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('BackgroundShapeAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultShapeAnnotationConfig', 'background'], _tasks_options_annotations_ShapeAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_27__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('ForegroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'foreground'], _tasks_options_annotations_HighlightPathAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_28__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('BackgroundHighlightPathAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultHighlightPathAnnotationConfig', 'background'], _tasks_options_annotations_HighlightPathAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_28__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('ForegroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'foreground'], _tasks_options_annotations_ConnectorAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_29__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('BackgroundConnectorAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultConnectorAnnotationConfig', 'background'], _tasks_options_annotations_ConnectorAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_29__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('BackgroundAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultBackgroundAnnotationConfig'], _tasks_options_annotations_BackgroundAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_30__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('LevelAnnotationOptionTask', ['SplitAnnotationsOptionTask', 'defaultLevelAnnotationConfig'], _tasks_options_annotations_LevelAnnotationOptionTask__WEBPACK_IMPORTED_MODULE_31__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('ScaleOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_ScaleOptionTask__WEBPACK_IMPORTED_MODULE_32__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('FrameOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_FrameOptionTask__WEBPACK_IMPORTED_MODULE_33__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('LevelTitlePlacementOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_LevelTitlePlacementOptionTask__WEBPACK_IMPORTED_MODULE_34__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('LevelTitleTemplateOptionTask', ['OptionsTask', 'defaultConfig'], _tasks_options_LevelTitleTemplateOptionTask__WEBPACK_IMPORTED_MODULE_35__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy); // Transformations
 
-  tasks.addTask('CombinedContextsTask', ['ItemsContentOptionTask'], _tasks_transformations_CombinedContextsTask__WEBPACK_IMPORTED_MODULE_35__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('OrgTreeTask', ['ItemsOptionTask'], _tasks_transformations_OrgTreeTask__WEBPACK_IMPORTED_MODULE_36__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Red); // Transformations / Templates
+  tasks.addTask('CombinedContextsTask', ['ItemsContentOptionTask'], _tasks_transformations_CombinedContextsTask__WEBPACK_IMPORTED_MODULE_36__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('OrgTreeTask', ['ItemsOptionTask'], _tasks_transformations_OrgTreeTask__WEBPACK_IMPORTED_MODULE_37__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Red); // Transformations / Templates
 
-  tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask', 'templates'], _tasks_templates_ReadTemplatesTask__WEBPACK_IMPORTED_MODULE_37__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('ActiveItemsTask', ['ItemsSizesOptionTask', 'ReadTemplatesTask'], _tasks_templates_ActiveItemsTask__WEBPACK_IMPORTED_MODULE_38__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], _tasks_templates_ItemTemplateParamsTask__WEBPACK_IMPORTED_MODULE_39__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask', 'templates'], _tasks_templates_GroupTitleTemplateTask__WEBPACK_IMPORTED_MODULE_40__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask', 'templates'], _tasks_templates_CheckBoxTemplateTask__WEBPACK_IMPORTED_MODULE_41__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask', 'templates'], _tasks_templates_ButtonsTemplateTask__WEBPACK_IMPORTED_MODULE_42__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask', 'templates'], _tasks_templates_AnnotationLabelTemplateTask__WEBPACK_IMPORTED_MODULE_43__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('LevelAnnotationTemplateTask', ['OrientationOptionTask', 'LevelTitleTemplateOptionTask', 'templates'], _tasks_templates_LevelAnnotationTemplateTask__WEBPACK_IMPORTED_MODULE_44__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'ActiveItemsTask', 'VisualTreeOptionTask', 'isFamilyChartMode'], _tasks_transformations_VisualTreeTask__WEBPACK_IMPORTED_MODULE_45__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Red);
-  tasks.addTask('VisualTreeLevelsTask', ['VisualTreeTask', 'ItemTemplateParamsTask'], _tasks_transformations_VisualTreeLevelsTask__WEBPACK_IMPORTED_MODULE_46__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Red);
-  tasks.addTask('OrgExtractNestedLayoutsTask', ['OptionsTask'], _tasks_transformations_OrgExtractNestedLayoutsTask__WEBPACK_IMPORTED_MODULE_47__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'VisualTreeLevelsTask', 'OrgExtractNestedLayoutsTask', 'AlignDiagramTask'], _tasks_transformations_ConnectionsGraphTask__WEBPACK_IMPORTED_MODULE_48__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan); // Transformations/Selections
+  tasks.addTask('ReadTemplatesTask', ['TemplatesOptionTask', 'templates'], _tasks_templates_ReadTemplatesTask__WEBPACK_IMPORTED_MODULE_38__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('ActiveItemsTask', ['ItemsSizesOptionTask', 'ReadTemplatesTask'], _tasks_templates_ActiveItemsTask__WEBPACK_IMPORTED_MODULE_39__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('ItemTemplateParamsTask', ['ItemsSizesOptionTask', 'CursorItemOptionTask', 'ReadTemplatesTask'], _tasks_templates_ItemTemplateParamsTask__WEBPACK_IMPORTED_MODULE_40__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('GroupTitleTemplateTask', ['TemplatesOptionTask', 'templates'], _tasks_templates_GroupTitleTemplateTask__WEBPACK_IMPORTED_MODULE_41__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask', 'templates'], _tasks_templates_CheckBoxTemplateTask__WEBPACK_IMPORTED_MODULE_42__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask', 'templates'], _tasks_templates_ButtonsTemplateTask__WEBPACK_IMPORTED_MODULE_43__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask', 'templates'], _tasks_templates_AnnotationLabelTemplateTask__WEBPACK_IMPORTED_MODULE_44__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('LevelAnnotationTemplateTask', ['OrientationOptionTask', 'LevelTitleTemplateOptionTask', 'templates'], _tasks_templates_LevelAnnotationTemplateTask__WEBPACK_IMPORTED_MODULE_45__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'ActiveItemsTask', 'VisualTreeOptionTask', 'isFamilyChartMode'], _tasks_transformations_VisualTreeTask__WEBPACK_IMPORTED_MODULE_46__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Red);
+  tasks.addTask('VisualTreeLevelsTask', ['VisualTreeTask', 'ItemTemplateParamsTask'], _tasks_transformations_VisualTreeLevelsTask__WEBPACK_IMPORTED_MODULE_47__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Red);
+  tasks.addTask('ExtractNestedLayoutsTask', ['OptionsTask'], _tasks_transformations_OrgExtractNestedLayoutsTask__WEBPACK_IMPORTED_MODULE_48__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Red);
+  tasks.addTask('CreateLayoutsTreeTask', ['VisualTreeTask', 'VisualTreeLevelsTask', 'ExtractNestedLayoutsTask'], _tasks_transformations_OrgCreateLayoutsTreeTask__WEBPACK_IMPORTED_MODULE_49__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Red);
+  tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'VisualTreeLevelsTask', 'ExtractNestedLayoutsTask', 'AlignDiagramTask'], _tasks_transformations_ConnectionsGraphTask__WEBPACK_IMPORTED_MODULE_50__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan); // Transformations/Selections
 
-  tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'ActiveItemsTask'], _tasks_transformations_selection_HighlightItemTask__WEBPACK_IMPORTED_MODULE_49__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], _tasks_transformations_selection_CursorItemTask__WEBPACK_IMPORTED_MODULE_50__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'VisualTreeTask'], _tasks_transformations_selection_OrgCursorNeighboursTask__WEBPACK_IMPORTED_MODULE_51__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask', 'ItemsOptionTask'], _tasks_transformations_selection_SelectedItemsTask__WEBPACK_IMPORTED_MODULE_52__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('SelectionPathItemsTask', ['VisualTreeTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], _tasks_transformations_selection_OrgSelectionPathItemsTask__WEBPACK_IMPORTED_MODULE_53__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_54__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('NormalVisibilityItemsByBackgroundShapeAnnotationTask', ['BackgroundShapeAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_54__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('NormalVisibilityItemsByBackgroundAnnotationTask', ['BackgroundAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_54__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('NormalVisibilityItemsByForegroundHighlightPathAnnotationTask', ['ForegroundHighlightPathAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_54__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', ['BackgroundHighlightPathAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_54__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('NormalVisibilityItemsByForegroundConnectorAnnotationTask', ['ForegroundConnectorAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_55__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('NormalVisibilityItemsByBackgroundConnectorAnnotationTask', ['BackgroundConnectorAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_55__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('CombinedNormalVisibilityItemsTask', ['ItemsSizesOptionTask', 'CursorItemTask', 'CursorNeighboursTask', 'SelectedItemsTask', 'SelectionPathItemsTask', 'NormalVisibilityItemsByForegroundShapeAnnotationTask', 'NormalVisibilityItemsByBackgroundShapeAnnotationTask', 'NormalVisibilityItemsByBackgroundAnnotationTask', 'NormalVisibilityItemsByForegroundHighlightPathAnnotationTask', 'NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', 'NormalVisibilityItemsByForegroundConnectorAnnotationTask', 'NormalVisibilityItemsByBackgroundConnectorAnnotationTask'], _tasks_transformations_selection_CombinedNormalVisibilityItemsTask__WEBPACK_IMPORTED_MODULE_56__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan); // Layout
+  tasks.addTask('HighlightItemTask', ['HighlightItemOptionTask', 'ActiveItemsTask'], _tasks_transformations_selection_HighlightItemTask__WEBPACK_IMPORTED_MODULE_51__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('CursorItemTask', ['CursorItemOptionTask', 'ActiveItemsTask'], _tasks_transformations_selection_CursorItemTask__WEBPACK_IMPORTED_MODULE_52__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('CursorNeighboursTask', ['CursorItemTask', 'VisualTreeTask'], _tasks_transformations_selection_OrgCursorNeighboursTask__WEBPACK_IMPORTED_MODULE_53__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('SelectedItemsTask', ['SelectedItemsOptionTask', 'ItemsOptionTask'], _tasks_transformations_selection_SelectedItemsTask__WEBPACK_IMPORTED_MODULE_54__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('SelectionPathItemsTask', ['VisualTreeTask', 'CursorItemTask', 'SelectedItemsTask', 'CursorSelectionPathModeOptionTask'], _tasks_transformations_selection_OrgSelectionPathItemsTask__WEBPACK_IMPORTED_MODULE_55__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByForegroundShapeAnnotationTask', ['ForegroundShapeAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_56__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByBackgroundShapeAnnotationTask', ['BackgroundShapeAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_56__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByBackgroundAnnotationTask', ['BackgroundAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_56__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByForegroundHighlightPathAnnotationTask', ['ForegroundHighlightPathAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_56__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', ['BackgroundHighlightPathAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByAnnotationTask__WEBPACK_IMPORTED_MODULE_56__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByForegroundConnectorAnnotationTask', ['ForegroundConnectorAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_57__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByBackgroundConnectorAnnotationTask', ['BackgroundConnectorAnnotationOptionTask'], _tasks_transformations_selection_NormalVisibilityItemsByConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_57__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('NormalVisibilityItemsByMinimumVisibleLevelsTask', ['MinimumVisibleLevelsOptionTask', 'OrgTreeTask'], _tasks_transformations_selection_OrgNormalVisibilityItemsByMinimumVisibleLevelsTask__WEBPACK_IMPORTED_MODULE_58__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('CombinedNormalVisibilityItemsTask', ['ItemsSizesOptionTask', 'CursorItemTask', 'CursorNeighboursTask', 'SelectedItemsTask', 'SelectionPathItemsTask', 'NormalVisibilityItemsByForegroundShapeAnnotationTask', 'NormalVisibilityItemsByBackgroundShapeAnnotationTask', 'NormalVisibilityItemsByBackgroundAnnotationTask', 'NormalVisibilityItemsByForegroundHighlightPathAnnotationTask', 'NormalVisibilityItemsByBackgroundHighlightPathAnnotationTask', 'NormalVisibilityItemsByForegroundConnectorAnnotationTask', 'NormalVisibilityItemsByBackgroundConnectorAnnotationTask', 'NormalVisibilityItemsByMinimumVisibleLevelsTask'], _tasks_transformations_selection_CombinedNormalVisibilityItemsTask__WEBPACK_IMPORTED_MODULE_59__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan); // Layout
 
-  tasks.addTask('FrameSizeTask', ['FrameOptionTask', 'ReadTemplatesTask', 'ScaleOptionTask'], _tasks_layout_FrameSizeTask__WEBPACK_IMPORTED_MODULE_57__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('LevelTitleSizeTask', ['LevelTitlePlacementOptionTask', 'LevelAnnotationOptionTask', 'OrientationOptionTask', 'ScaleOptionTask'], _tasks_layout_LevelTitleSizeTask__WEBPACK_IMPORTED_MODULE_58__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
-  tasks.addTask('LayoutOptionsTask', ['getLayout', 'OptionsTask'], _tasks_options_LayoutOptionsTask__WEBPACK_IMPORTED_MODULE_59__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Black);
-  tasks.addTask('CurrentControlSizeTask', ['LayoutOptionsTask', 'ItemsSizesOptionTask', 'FrameSizeTask', 'LevelTitleSizeTask'], _tasks_layout_CurrentControlSizeTask__WEBPACK_IMPORTED_MODULE_60__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Black);
-  tasks.addTask('CurrentScrollPositionTask', ['LayoutOptionsTask'], _tasks_layout_CurrentScrollPositionTask__WEBPACK_IMPORTED_MODULE_61__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Black);
-  tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'VisualTreeOptionTask', 'VisualTreeTask', 'VisualTreeLevelsTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], _tasks_transformations_OrgItemsPositionsTask__WEBPACK_IMPORTED_MODULE_62__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Red);
-  tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], _tasks_layout_AlignDiagramTask__WEBPACK_IMPORTED_MODULE_63__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Red);
-  tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'AlignDiagramTask'], _tasks_layout_CreateTransformTask__WEBPACK_IMPORTED_MODULE_64__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan); // Managers
+  tasks.addTask('FrameSizeTask', ['FrameOptionTask', 'ReadTemplatesTask', 'ScaleOptionTask'], _tasks_layout_FrameSizeTask__WEBPACK_IMPORTED_MODULE_60__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('LevelTitleSizeTask', ['LevelTitlePlacementOptionTask', 'LevelAnnotationOptionTask', 'OrientationOptionTask', 'ScaleOptionTask'], _tasks_layout_LevelTitleSizeTask__WEBPACK_IMPORTED_MODULE_61__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Navy);
+  tasks.addTask('LayoutOptionsTask', ['getLayout', 'OptionsTask'], _tasks_options_LayoutOptionsTask__WEBPACK_IMPORTED_MODULE_62__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Black);
+  tasks.addTask('CurrentControlSizeTask', ['LayoutOptionsTask', 'ItemsSizesOptionTask', 'FrameSizeTask', 'LevelTitleSizeTask'], _tasks_layout_CurrentControlSizeTask__WEBPACK_IMPORTED_MODULE_63__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Black);
+  tasks.addTask('CurrentScrollPositionTask', ['LayoutOptionsTask'], _tasks_layout_CurrentScrollPositionTask__WEBPACK_IMPORTED_MODULE_64__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Black);
+  tasks.addTask('ItemsPositionsTask', ['CurrentControlSizeTask', 'ScaleOptionTask', 'OrientationOptionTask', 'ItemsSizesOptionTask', 'ConnectorsOptionTask', 'VisualTreeOptionTask', 'CreateLayoutsTreeTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], _tasks_transformations_ItemsPositionsTask__WEBPACK_IMPORTED_MODULE_65__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Red);
+  tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], _tasks_layout_AlignDiagramTask__WEBPACK_IMPORTED_MODULE_66__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Red);
+  tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'ScaleOptionTask', 'AlignDiagramTask'], _tasks_layout_CreateTransformTask__WEBPACK_IMPORTED_MODULE_67__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan); // Managers
 
-  tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'null'], _tasks_transformations_PaletteManagerTask__WEBPACK_IMPORTED_MODULE_65__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan); // Apply Layout Changes
+  tasks.addTask('PaletteManagerTask', ['ConnectorsOptionTask', 'null'], _tasks_transformations_PaletteManagerTask__WEBPACK_IMPORTED_MODULE_68__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan); // Apply Layout Changes
 
-  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask', 'FrameSizeTask', 'LevelTitleSizeTask'], _tasks_layout_ApplyLayoutChangesTask__WEBPACK_IMPORTED_MODULE_66__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('CenterOnCursorTask', ['LayoutOptionsTask', 'ApplyLayoutChangesTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], _tasks_layout_CenterOnCursorTask__WEBPACK_IMPORTED_MODULE_67__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('ProjectItemsToFrameTask', ['CreateTransformTask', 'FrameSizeTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'ItemTemplateParamsTask', 'SelectedItemsTask'], _tasks_layout_ProjectItemsToFrameTask__WEBPACK_IMPORTED_MODULE_68__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('ViewPortPlacementTask', ['ScaleOptionTask', 'CenterOnCursorTask', 'CreateTransformTask', 'ApplyLayoutChangesTask'], _tasks_layout_ViewPortPlacementTask__WEBPACK_IMPORTED_MODULE_69__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('VerticalOffsetTask', ['ViewPortPlacementTask'], _tasks_layout_VerticalOffsetTask__WEBPACK_IMPORTED_MODULE_70__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('LogicalLevelsPlacementTask', ['OrgTreeTask', 'AlignDiagramTask'], _tasks_layout_OrgLogicalLevelsPlacementTask__WEBPACK_IMPORTED_MODULE_71__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('MergeLevelIntervalsTask', ['LevelAnnotationOptionTask', 'LogicalLevelsPlacementTask'], _tasks_layout_MergeLevelIntervalsTask__WEBPACK_IMPORTED_MODULE_72__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green); // Renders
+  tasks.addTask('ApplyLayoutChangesTask', ['graphics', 'setLayout', 'ItemsSizesOptionTask', 'CurrentControlSizeTask', 'ScaleOptionTask', 'AlignDiagramTask', 'FrameSizeTask', 'LevelTitleSizeTask'], _tasks_layout_ApplyLayoutChangesTask__WEBPACK_IMPORTED_MODULE_69__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('CenterOnCursorTask', ['LayoutOptionsTask', 'ApplyLayoutChangesTask', 'CurrentScrollPositionTask', 'CursorItemTask', 'AlignDiagramTask', 'CreateTransformTask', 'ScaleOptionTask'], _tasks_layout_CenterOnCursorTask__WEBPACK_IMPORTED_MODULE_70__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('ProjectItemsToFrameTask', ['CreateTransformTask', 'FrameSizeTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'ItemTemplateParamsTask', 'SelectedItemsTask'], _tasks_layout_ProjectItemsToFrameTask__WEBPACK_IMPORTED_MODULE_71__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('ViewPortPlacementTask', ['ScaleOptionTask', 'CenterOnCursorTask', 'CreateTransformTask', 'ApplyLayoutChangesTask'], _tasks_layout_ViewPortPlacementTask__WEBPACK_IMPORTED_MODULE_72__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('VerticalOffsetTask', ['ViewPortPlacementTask'], _tasks_layout_VerticalOffsetTask__WEBPACK_IMPORTED_MODULE_73__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('LogicalLevelsPlacementTask', ['OrgTreeTask', 'AlignDiagramTask'], _tasks_layout_OrgLogicalLevelsPlacementTask__WEBPACK_IMPORTED_MODULE_74__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('MergeLevelIntervalsTask', ['LevelAnnotationOptionTask', 'LogicalLevelsPlacementTask'], _tasks_layout_MergeLevelIntervalsTask__WEBPACK_IMPORTED_MODULE_75__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green); // Renders
 
-  tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'VisualTreeTask', 'AlignDiagramTask'], _tasks_renders_DrawBackgroundAnnotationTask__WEBPACK_IMPORTED_MODULE_73__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground'], _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_74__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background'], _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_74__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
-  tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_75__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_75__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_76__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_76__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask'], _tasks_renders_DrawCursorTask__WEBPACK_IMPORTED_MODULE_77__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], _tasks_renders_DrawHighlightTask__WEBPACK_IMPORTED_MODULE_78__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawHighlightAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'FrameSizeTask'], _tasks_renders_DrawHighlightAnnotationTask__WEBPACK_IMPORTED_MODULE_79__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'ItemsSizesOptionTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask', 'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask'], _tasks_renders_DrawTreeItemsTask__WEBPACK_IMPORTED_MODULE_80__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawMinimizedItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'MinimizedItemsOptionTask', 'ItemTemplateParamsTask', 'AlignDiagramTask'], _tasks_renders_DrawMinimizedItemsTask__WEBPACK_IMPORTED_MODULE_81__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask'], _tasks_renders_DrawConnectorsTask__WEBPACK_IMPORTED_MODULE_82__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawItemLabelsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LabelsOptionTask', 'AlignDiagramTask'], _tasks_renders_DrawItemLabelsTask__WEBPACK_IMPORTED_MODULE_83__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawFrameItemsTask', ['graphics', 'ApplyLayoutChangesTask', 'ProjectItemsToFrameTask', 'ItemTemplateParamsTask', 'MinimizedItemsOptionTask'], _tasks_renders_DrawFrameItemsTask__WEBPACK_IMPORTED_MODULE_84__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawFrameHighlightTask', ['graphics', 'ProjectItemsToFrameTask', 'CombinedContextsTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask'], _tasks_renders_DrawFrameHighlightTask__WEBPACK_IMPORTED_MODULE_85__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawLevelAnnotationBackgroundTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask'], _tasks_renders_DrawLevelAnnotationBackgroundTask__WEBPACK_IMPORTED_MODULE_87__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
-  tasks.addTask('DrawLevelAnnotationTitlesTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask', 'LevelTitlePlacementOptionTask'], _tasks_renders_DrawLevelAnnotationTitlesTask__WEBPACK_IMPORTED_MODULE_86__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'VisualTreeTask', 'AlignDiagramTask'], _tasks_renders_DrawBackgroundAnnotationTask__WEBPACK_IMPORTED_MODULE_76__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground'], _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_77__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background'], _tasks_renders_DrawHighlightPathAnnotationTask__WEBPACK_IMPORTED_MODULE_77__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Cyan);
+  tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_78__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], _tasks_renders_DrawConnectorAnnotationTask__WEBPACK_IMPORTED_MODULE_78__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_79__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], _tasks_renders_DrawShapeAnnotationTask__WEBPACK_IMPORTED_MODULE_79__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask'], _tasks_renders_DrawCursorTask__WEBPACK_IMPORTED_MODULE_80__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask'], _tasks_renders_DrawHighlightTask__WEBPACK_IMPORTED_MODULE_81__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawHighlightAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'CombinedContextsTask', 'CalloutOptionTask', 'ReadTemplatesTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'FrameSizeTask'], _tasks_renders_DrawHighlightAnnotationTask__WEBPACK_IMPORTED_MODULE_82__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'ScaleOptionTask', 'ItemsSizesOptionTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CenterOnCursorTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask', 'GroupTitleTemplateTask', 'CheckBoxTemplateTask', 'ButtonsTemplateTask'], _tasks_renders_DrawTreeItemsTask__WEBPACK_IMPORTED_MODULE_83__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawMinimizedItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'MinimizedItemsOptionTask', 'ItemTemplateParamsTask', 'AlignDiagramTask'], _tasks_renders_DrawMinimizedItemsTask__WEBPACK_IMPORTED_MODULE_84__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask'], _tasks_renders_DrawConnectorsTask__WEBPACK_IMPORTED_MODULE_85__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawItemLabelsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LabelsOptionTask', 'AlignDiagramTask'], _tasks_renders_DrawItemLabelsTask__WEBPACK_IMPORTED_MODULE_86__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawFrameItemsTask', ['graphics', 'ApplyLayoutChangesTask', 'ProjectItemsToFrameTask', 'ItemTemplateParamsTask', 'MinimizedItemsOptionTask'], _tasks_renders_DrawFrameItemsTask__WEBPACK_IMPORTED_MODULE_87__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawFrameHighlightTask', ['graphics', 'ProjectItemsToFrameTask', 'CombinedContextsTask', 'ItemTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask'], _tasks_renders_DrawFrameHighlightTask__WEBPACK_IMPORTED_MODULE_88__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawLevelAnnotationBackgroundTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask'], _tasks_renders_DrawLevelAnnotationBackgroundTask__WEBPACK_IMPORTED_MODULE_90__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
+  tasks.addTask('DrawLevelAnnotationTitlesTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask', 'LevelTitlePlacementOptionTask'], _tasks_renders_DrawLevelAnnotationTitlesTask__WEBPACK_IMPORTED_MODULE_89__["default"], _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Green);
   return tasks;
 }
 ;
@@ -10183,10 +10201,10 @@ function getFamilyLoops(family, debug) {
   var cleanFamily = tempFamily.clone();
   cleanFamily.loop(this, function (itemid) {
     if (tempFamily.node(itemid) != null) {
-      cleanFamily.loopParents(this, itemid, function (parentid) {
+      tempFamily.loopParents(this, itemid, function (parentid) {
         loops.push(new Edge(parentid, itemid));
         tempFamily.removeChildRelation(parentid, itemid);
-        return cleanFamily.SKIP;
+        return tempFamily.SKIP;
       });
       var itemsToRemove = [];
       tempFamily.loopTopo(this, function (itemid) {
@@ -10355,17 +10373,17 @@ function getFamilyLoops(family, debug) {
         if (edge.to == toNode) {
           if (!residueGraph.hasNode(toNode)) {
             // console.log("Edge to test: from: " + nodeid + ", to " + toNode);
-            var isIsolated = true;
+            var isIsolated = false;
             graph.dfsLoop(this, toNode, function (fromNode, toNode2, edge) {
-              if (edge.from == fromNode) {
-                return edge.capacity > 0;
+              if (edge.from == fromNode && !residueGraph.hasNode(fromNode)) {
+                return true;
               }
 
               return false;
             }, function (foundid) {
-              if (residueGraph.hasNode(foundid)) {
-                // console.log("Non-isolated: " + toNode + ", hits residue node" + foundid);
-                isIsolated = false;
+              if (foundid == to) {
+                // console.log("Isolated: " + toNode + ", may access exit node" + foundid);
+                isIsolated = true;
                 return true;
               }
 
@@ -10406,11 +10424,9 @@ function getFamilyLoops(family, debug) {
       }
     }
 
-    if (validatedFlow != totalFlow) {
-      throw "Failed to properly collect edges cutting maximum flow";
+    if (validatedFlow == totalFlow) {
+      loops = optimizedLoops;
     }
-
-    loops = optimizedLoops;
   }
 
   return loops;
@@ -12953,6 +12969,14 @@ function FamConfig(name) {
 
   this.minimalVisibility = _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Dot;
   /**
+   * Minimum visible levels option prevents top-level nodes from folding into markers. 
+   * 
+   * @group Auto Layout
+   * @type {number}
+   */
+
+  this.minimumVisibleLevels = 0;
+  /**
    * Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction,
    * this is needed for Arabic support and various layouts.
    * 
@@ -13220,6 +13244,14 @@ function FamConfig(name) {
    */
 
   this.frameOuterPadding = new _graphics_structs_Thickness__WEBPACK_IMPORTED_MODULE_1__["default"](2, 2, 2, 2);
+  /**
+   * Diagram padding. Adds extra padding around the diagram.
+   * 
+   * @group Frame
+   * @type {Thickness}
+  */
+
+  this.padding = new _graphics_structs_Thickness__WEBPACK_IMPORTED_MODULE_1__["default"](10, 10, 10, 10);
   /**
    * Collection of named templates used to define content for nodes, cursor and highlight.
    * By default control provides templates for all types of visual elements.
@@ -14523,7 +14555,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 /**
  * @class LevelAnnotationConfig
  * @classdesc Level annotation highlights same level nodes of the diagram via drawing continuous rectangular shape 
- * from side to side in their background. Stripe has optional title on the side of the diagram view area.
+ * from side to side in their background. Level has optional title on the side of the diagram view area.
  * Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the 
  * background and does not occupy space. 
  *
@@ -14697,6 +14729,15 @@ function OrgConfig(name) {
    */
 
   this.minimalVisibility = _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Dot;
+  /**
+   * Minimum visible levels option prevents top-level nodes from folding into markers. The option 
+   * accounts for organizational chart relations and `levelOffset` of individual items.
+   * 
+   * @group Auto Layout
+   * @type {number}
+   */
+
+  this.minimumVisibleLevels = 1;
   /**
    * Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction,
    * this is needed for Arabic support and various layouts.
@@ -14927,6 +14968,14 @@ function OrgConfig(name) {
 
   this.frameOuterPadding = new _graphics_structs_Thickness__WEBPACK_IMPORTED_MODULE_1__["default"](2, 2, 2, 2);
   /**
+   * Diagram padding. Adds extra padding around the diagram.
+   * 
+   * @group Frame
+   * @type {Thickness}
+  */
+
+  this.padding = new _graphics_structs_Thickness__WEBPACK_IMPORTED_MODULE_1__["default"](10, 10, 10, 10);
+  /**
    * Collection of named templates used to define content for nodes, cursor and highlight.
    * By default control provides templates for all types of visual elements.
    * 
@@ -14958,7 +15007,7 @@ function OrgConfig(name) {
   this.hasButtons = _enums__WEBPACK_IMPORTED_MODULE_0__["Enabled"].Auto;
   /**
    * On buttons panel render event. This callback function is called to render context of buttons panel.
-   * It is used to replace `buttons` collection property in ReactJS component. So we preserve context buttons panel as a functional 
+   * It is used to replace `buttons` collection property in the control. So we preserve context buttons panel as a functional 
    * concept, but eliminate buttons customization API.
    *
    * @callback
@@ -15896,32 +15945,32 @@ function OrgItemConfig(arg0, arg1, arg2, arg3, arg4) {
 
   this.adviserPlacementType = _enums__WEBPACK_IMPORTED_MODULE_1__["AdviserPlacementType"].Auto;
   /**
-   * Defines shape of children formation. By default a node's children are always placed in a horizontal line 
-   * below the parent node. On a large scale this may result in the end user having to scroll screens 
-   * in order to view all of the nodes. To compensate for this, we provide the option of placing all 
-   * of the children of a parent node in a square/matrix formation. This will reduce sideways screen 
-   * scrolling by compacting the child nodes into a much smaller area on the screen.
-   *  
+   * The property defines children's layout formation. By default, control places children
+   * in a horizontal line below the parent node. On a large scale, this may result in the end-user
+   * having to scroll screens to view all nodes. To compensate for this, we place children 
+   * in a square/matrix formation. That will reduce sideways screen scrolling by compacting
+   * the child nodes into a much smaller area on the screen.
+   *   
    * @type {ChildrenPlacementType}
    */
 
   this.childrenPlacementType = _enums__WEBPACK_IMPORTED_MODULE_1__["ChildrenPlacementType"].Auto;
   /**
-   * Sets default placement of assistants hierarchies relative to the regular children of the node.
-   * If assistant node has its own children then control adds extra levels, so assistants children are placed
-   * above level of the regular children.
+   * The property sets the default placement of assistants hierarchies relative to the regular 
+   * children of the node. If the assistant node has its children, then control adds extra levels,
+   * so the assistant's children are placed above the regular children.
    * 
    * @type {Enabled}
    */
 
   this.placeAssistantsAboveChildren = _enums__WEBPACK_IMPORTED_MODULE_1__["Enabled"].Auto;
   /**
-  * Sets default placement of advisers hierarchies relative to the regular children of the node.
-  * If adviser node has its own children then control adds extra levels, so advisers children are placed
-  * above level of the regular children.
-  * 
-  * @type {Enabled}
-  */
+   * The property sets default placement of advisers hierarchies relative to the regular 
+   * children of the node. If the adviser node has its children, then control adds extra levels,
+   * so the adviser's children are placed above the regular children.
+   * 
+   * @type {Enabled}
+   */
 
   this.placeAdvisersAboveChildren = _enums__WEBPACK_IMPORTED_MODULE_1__["Enabled"].Auto;
   /**
@@ -16475,10 +16524,13 @@ function TemplateConfig() {
 
   this.hasButtons = _enums__WEBPACK_IMPORTED_MODULE_2__["Enabled"].Auto;
   /**
-   * This callback function is used in React component. It basically makes buttons obsolete 
-   * and gives end user possibility to render any content in buttons panel.
-   * 
-   * @ignore
+   * On buttons panel render event. This callback function is called to render context of buttons panel.
+   * It is used to replace `buttons` collection property in the control. So we preserve context buttons panel as a functional 
+   * concept, but eliminate buttons customization API.
+   *
+   * @callback
+   * @param {Object} event Mouse event
+   * @param {EventArgs} data Context information
    */
 
   this.onButtonsRender = null;
@@ -16957,7 +17009,7 @@ MatrixConnectorBundle.prototype.traceChildrenLayout = function (data, params, op
 
       if (leftTreeItemPosition != null) {
         actualPosition = leftTreeItemPosition.actualPosition;
-        params.transform.transformPoints(actualPosition.right(), actualPosition.verticalCenter(), medianPoint.x, medianPoint.y, true, this, function (fromX, fromY, toX, toY) {
+        params.transform.transformPoints(actualPosition.right(), medianPoint.y, medianPoint.x, medianPoint.y, true, this, function (fromX, fromY, toX, toY) {
           var polyline = new _graphics_structs_Polyline__WEBPACK_IMPORTED_MODULE_0__["default"]();
           polyline.addSegment(new _graphics_structs_MoveSegment__WEBPACK_IMPORTED_MODULE_1__["default"](fromX, fromY));
           polyline.addSegment(new _graphics_structs_LineSegment__WEBPACK_IMPORTED_MODULE_2__["default"](toX, toY));
@@ -16970,7 +17022,7 @@ MatrixConnectorBundle.prototype.traceChildrenLayout = function (data, params, op
 
       if (rightTreeItemPosition != null) {
         actualPosition = rightTreeItemPosition.actualPosition;
-        params.transform.transformPoints(actualPosition.left(), actualPosition.verticalCenter(), medianPoint.x, medianPoint.y, true, this, function (fromX, fromY, toX, toY) {
+        params.transform.transformPoints(actualPosition.left(), medianPoint.y, medianPoint.x, medianPoint.y, true, this, function (fromX, fromY, toX, toY) {
           var polyline = new _graphics_structs_Polyline__WEBPACK_IMPORTED_MODULE_0__["default"]();
           polyline.addSegment(new _graphics_structs_MoveSegment__WEBPACK_IMPORTED_MODULE_1__["default"](fromX, fromY));
           polyline.addSegment(new _graphics_structs_LineSegment__WEBPACK_IMPORTED_MODULE_2__["default"](toX, toY));
@@ -17067,7 +17119,7 @@ MatrixConnectorBundle.prototype.traceParentsLayout = function (data, params, opt
 
       if (leftTreeItemPosition != null) {
         actualPosition = leftTreeItemPosition.actualPosition;
-        params.transform.transformPoints(actualPosition.right(), actualPosition.verticalCenter(), medianPoint.x, medianPoint.y, true, this, function (fromX, fromY, toX, toY) {
+        params.transform.transformPoints(actualPosition.right(), medianPoint.y, medianPoint.x, medianPoint.y, true, this, function (fromX, fromY, toX, toY) {
           var polyline = new _graphics_structs_Polyline__WEBPACK_IMPORTED_MODULE_0__["default"]();
           polyline.addSegment(new _graphics_structs_MoveSegment__WEBPACK_IMPORTED_MODULE_1__["default"](fromX, fromY));
           polyline.addSegment(new _graphics_structs_LineSegment__WEBPACK_IMPORTED_MODULE_2__["default"](toX, toY));
@@ -17080,7 +17132,7 @@ MatrixConnectorBundle.prototype.traceParentsLayout = function (data, params, opt
 
       if (rightTreeItemPosition != null) {
         actualPosition = rightTreeItemPosition.actualPosition;
-        params.transform.transformPoints(actualPosition.left(), actualPosition.verticalCenter(), medianPoint.x, medianPoint.y, true, this, function (fromX, fromY, toX, toY) {
+        params.transform.transformPoints(actualPosition.left(), medianPoint.y, medianPoint.x, medianPoint.y, true, this, function (fromX, fromY, toX, toY) {
           var polyline = new _graphics_structs_Polyline__WEBPACK_IMPORTED_MODULE_0__["default"]();
           polyline.addSegment(new _graphics_structs_MoveSegment__WEBPACK_IMPORTED_MODULE_1__["default"](fromX, fromY));
           polyline.addSegment(new _graphics_structs_LineSegment__WEBPACK_IMPORTED_MODULE_2__["default"](toX, toY));
@@ -17372,9 +17424,9 @@ __webpack_require__.r(__webpack_exports__);
  **/
 
 /**
- * Defines leftward or rightward item placement relative to the referenced item.
- * In case of assistants and advisers the referenced item is their immediate parent.
- * In case of family diagram the referenced item is spouse or sibling in the row. 
+ * The enumeration sets leftward or rightward item placement relative to the referenced item.
+ * In the case of assistants or advisers, the referenced node is their immediate parent.
+ * In the case of the family diagram, the referenced node is a sibling. 
  *  
  * @enum {AdviserPlacementType}
  */
@@ -17407,41 +17459,39 @@ var AdviserPlacementType = {
 
 var AnnotationType = {
   /**
-   * Connector lines between two nodes of the diagram. They are drawn on top of existing
-   * diagram layout and they don't affect nodes placement. So it is users responsibility to
-   * preserve space between nodes for them.
+   * The connector annotation displays a spline between two nodes of the diagram.
+   * They are drawn on top and across the existing diagram layout, and they don't affect nodes placement.
+   * If available space between nodes is not enough to display connector annotation,
+   * then control draws it outside on the side of them.
    */
   Connector: 0,
 
   /**
-   * Shape annotation is a possibility to draw some geometrical
-   * shapes over several nodes of the diagram. 
+   * Shape annotation is a possibility to draw some geometrical shapes over several nodes of the diagram. 
    */
   Shape: 1,
 
   /**
-   * Highlight path annotation traces path between given sequence of nodes 
-   * over existing connector lines in the diagram.
+   * Highlight path annotation traces a path between a given sequence of nodes over existing relation lines in the diagram.
    */
   HighlightPath: 2,
 
   /**
-   * In-layout label annotation. Label annotations are placed in layout between nodes,
-   * they preserve space between nodes, so they don't overlap neighboring nodes.
-   * Label annotations are designed for auto placement and bundling of connection lines between 
-   * nodes when needed.
+   * The in-layout label annotation display values over relation lines between nodes. 
+   * The control preserves space for labels in the diagram layout so they don't overlap nodes.
+   * Label annotations are designed for auto-placement and bundling of connection lines between nodes when needed.
    */
   Label: 3,
 
   /**
-   * Background annotation highlights nodes via drawing rectangular shape in the background.
-   * If shapes overlap the same style neighboring shapes they are merged into one continuous shape. 
+   * The background annotation highlights nodes via drawing the rectangular shape in the node's background.
+   * If the same style annotations of neighboring nodes overlap, control merges them into one continuous polygon geometry. 
    */
   Background: 4,
 
   /**
-   * Stripe annotation highlights same level nodes of the diagram via drawing continuous rectangular shape 
-   * from side to side in their background. Stripe has optional title on the side of the diagram view area.
+   * Level annotation highlights same level nodes of the diagram via drawing continuous rectangular shape 
+   * from side to side in their background. Level has optional title on the side of the diagram view area.
    * Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the 
    * background and does not occupy space. 
    */
@@ -17452,34 +17502,33 @@ var AnnotationType = {
  **/
 
 /**
- * Defines shape of children formation. By default a node's children are always placed in a horizontal line 
- * below the parent node. On a large scale this may result in the end user having to scroll screens 
- * in order to view all of the nodes. To compensate for this, we provide the option of placing all 
- * of the children of a parent node in a square/matrix formation. This will reduce sideways screen 
- * scrolling by compacting the child nodes into a much smaller area on the screen.
+ * The enumeration defines the shape of children's formation. By default, control places children in a horizontal 
+ * line below the parent node. On a large scale, this may result in the end-user having to scroll screens 
+ * to view all of them. To compensate, we provide the option of placing all of the children of a parent node
+ * in a square/matrix formation. That will reduce sideways screen scrolling by compacting the child
+ * nodes into a much smaller area on the screen.
  *  
  * @enum {ChildrenPlacementType}
  */
 
 var ChildrenPlacementType = {
   /**
-   * Auto. This mode lets you set children layout at the component level
-   * and then redefine it for individual nodes if needed.
+   * Auto: This mode lets you set nodes layout at the component level and then redefine it for individual nodes if needed.
    */
   Auto: 0,
 
   /**
-   * Children placed in vertical column
+   * Vertical layout
    */
   Vertical: 1,
 
   /**
-   * Horizontal children layout
+   * Horizontal layout
    */
   Horizontal: 2,
 
   /**
-   * Matrix formation of the children
+   * Matrix formation of the nodes
    */
   Matrix: 3
 };
@@ -17837,63 +17886,68 @@ var HorizontalAlignmentType = {
  **/
 
 /**
- * This enumeration defines child node placement relative to its parent node. By default all children that belong 
- * to a parent node are of the same rank and status between each other and due to that, are always aligned below
- * the parent and are organized in the same way. However for special cases were the end user wishes to have a child
- * that is separate from the rest of it's siblings, we provide custom child types that the end user can use to
- * place different ranking nodes anywhere around the parent node. These placement options give a lot of space for
- * the creation of roles such as an Assistant, Adviser, various Partners and co-heads that may be in the organization.
- * Additionally, by default a node's regular children are always placed in a horizontal line below the parent node. See children
- * placement type options for regular children layout.
+ * The enumeration defines child node placement relative to its parent node.
+ * By default, the control places all children that belong to the same parent as
+ * the horizontal line below it. That works for a regular hierarchy of nodes
+ * having the same type. In the organizational chart, we have a lot of exceptions
+ * and non-hierarchical relations between nodes. For this purpose, we provide custom
+ * item types to place nodes around the logical parent, which helps visually
+ * differentiate nodes logically belonging to the same parent.  These placement
+ * options give a lot of space for creating roles such as an Assistant, Adviser,
+ * various Partners, and co-heads in the organization.  Additionally, control allows
+ * shaping the same type of children into vertical and matrix formations
+ * and place them into multiple levels.
  *  
  * @enum {ItemType}
  */
 
 var ItemType = {
   /**
-   * Regular node is a default placement of child nodes in form of horizontal row.
+   * The regular type places node below parent.
    */
   Regular: 0,
 
   /**
-   * Adviser is drawn at the same row as parent node on the left or right side and connected horizontally to it. 
-   */
-  Adviser: 2,
-
-  /**
-   * Assistant node is drawn at row in between parent and child rows and connected horizontally
-   * to connection line going from parent to the regular children
+   * The assistant type places node at the row on the side of the connection line going from parent to its children.
    */
   Assistant: 1,
 
   /**
-   * Sub assistant is variation of assistant node type.
-   * It has the same placement but it is connected by the top side of the node to the connector line going to the parent node.
+   * The sub-assistant node type is a variation of the assistant node type. 
+   * The sub-assistant places node at the row on the side of the connection line
+   * going from parent to its children. The connection line goes out of the top side of the node.
    */
   SubAssistant: 4,
 
   /**
-   * Sub adviser is variation of adviser node type.
-   * It has the same placement but it is connected by the top side of the node to the connector line going to the parent node.
+   * The adviser type places node on the right or left side of the parent.
+   */
+  Adviser: 2,
+
+  /**
+   * The sub-adviser type places node on the right or left side of the parent. 
+   * The connection line goes out of the top side of the sub-adviser node.
    */
   SubAdviser: 5,
 
   /**
-   * General partner is imitation of multiple inheritance in the organizational chart hierarchy.
-   * General partner node is drawn side by side with its parent and remaining regular children
-   * are visually connected to both of them like they are their parents.
-   * Another layout feature of the general partner is that it is connected to parents of its immediate logical parent as well,
-   * so visually it becomes a child of its grand parent.
+   * The general partner type is an imitation of multiple inheritances in the organizational chart hierarchy.
+   * The general-partner node is drawn side by side with its logical parent, and control places
+   * regular children below them, so they visually look like parents. Another layout specifics
+   * of the general partner is that it is connected to its logical parent's parent.
+   * So visually, it becomes an immediate child of its grandparent.
    */
   GeneralPartner: 6,
 
   /**
-   * Limited partner is variation of general partner. The only difference is that is is not connected to its logical grand parent.
+   * The limited partner is a variation of the general partner.
+   * The only difference is that it is not connected to its logical grandparent.
    */
   LimitedPartner: 7,
 
   /**
-   * Adviser partner is a variation of limited partner. The only difference is that it has an extra connection line to its parent.
+   * The adviser partner is a variation of the limited partner. 
+   * The difference is that it has an extra connection line to its logical parent.
    */
   AdviserPartner: 8
 };
@@ -22279,7 +22333,7 @@ function Polyline(newPaletteItem) {
       if (currentSegment.trim != null) {
         currentEndPoint = new _Point__WEBPACK_IMPORTED_MODULE_4__["default"](currentSegment.getEndPoint());
 
-        if (currentEndPoint.distanceTo(prevEndPoint) > arrowTipLength) {
+        if (currentEndPoint.distanceTo(prevEndPoint) >= arrowTipLength) {
           newEndPoint = currentSegment.trim(prevEndPoint, arrowTipLength);
           polyline = _getArrow(newEndPoint.x, newEndPoint.y, currentEndPoint.x, currentEndPoint.y, arrowTipLength, arrowTipWidth);
           onAddArrowSegments(polyline, newEndPoint);
@@ -24749,24 +24803,6 @@ function FamilyItem(arg0) {
 
 /***/ }),
 
-/***/ "./src/models/LevelVisibility.js":
-/*!***************************************!*\
-  !*** ./src/models/LevelVisibility.js ***!
-  \***************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return LevelVisibility; });
-function LevelVisibility(level, currentvisibility) {
-  this.level = level;
-  this.currentvisibility = currentvisibility;
-}
-;
-
-/***/ }),
-
 /***/ "./src/models/OrgItem.js":
 /*!*******************************!*\
   !*** ./src/models/OrgItem.js ***!
@@ -24934,7 +24970,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return TreeItem; });
 /* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../enums */ "./src/enums.js");
 
-/* This is model class used to define visual structure of chart */
+/* This is model class used to define visual structure of the chart */
 
 function TreeItem() {
   /* auto generated internal item id */
@@ -24945,7 +24981,7 @@ function TreeItem() {
   this.visualDepth = 1; // private 
 
   this.partners = [];
-  /* thess are nodes connected with bottom line together into one family, family is group of items having common set of children */
+  /* nodes connected with bottom line together into one family, family is group of items having common set of children */
 
   this.visibility = _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Normal;
   this.actualItemType = null; // ItemType
@@ -24954,7 +24990,7 @@ function TreeItem() {
 
   this.gravity = 0; // HorizontalAlignmentType.Center
 
-  /* This value is used to increase gap between neighboring left item in hiearchy */
+  /* This value is used to increase space on the left side of the item */
 
   this.relationDegree = 0;
 }
@@ -24978,9 +25014,6 @@ __webpack_require__.r(__webpack_exports__);
 
 function TreeItemPosition(source) {
   this.level = null;
-  this.offset = 0;
-  this.leftPadding = 0;
-  this.rightPadding = 0;
   this.actualVisibility = _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Normal;
   this.actualSize = null;
   this.actualPosition = null;
@@ -25099,8 +25132,8 @@ TreeLevelPosition.prototype.setShift = function (shift, levelSpace, topConnector
   return this.nextLevelShift;
 };
 
-TreeLevelPosition.prototype.shiftDown = function (shift) {
-  this.shift += shift;
+TreeLevelPosition.prototype.getNodesBottom = function () {
+  return this.shift + this.depth;
 };
 
 TreeLevelPosition.prototype.toString = function () {
@@ -25408,10 +25441,6 @@ function AlignDiagramTask(orientationOptionTask, itemsSizesOptionTask, visualTre
   },
       _activeItems,
       _treeItemsPositions,
-      _options,
-      _orientationOptions,
-      _visualTreeOptions,
-      _scaleOptions,
       _spatialIndex,
       _keyboardNavigationManager;
 
@@ -25419,30 +25448,34 @@ function AlignDiagramTask(orientationOptionTask, itemsSizesOptionTask, visualTre
     var placeholderSize = new _graphics_structs_Size__WEBPACK_IMPORTED_MODULE_0__["default"](itemsPositionsTask.getContentSize()),
         _currentControlSizeTa = currentControlSizeTask.getOptions(),
         optimalPanelSize = _currentControlSizeTa.optimalPanelSize,
-        panelSize = new _graphics_structs_Size__WEBPACK_IMPORTED_MODULE_0__["default"](optimalPanelSize);
+        _itemsSizesOptionTask = itemsSizesOptionTask.getOptions(),
+        pageFitMode = _itemsSizesOptionTask.pageFitMode,
+        _orientationOptionTas = orientationOptionTask.getOptions(),
+        orientationType = _orientationOptionTas.orientationType,
+        _visualTreeOptionTask = visualTreeOptionTask.getOptions(),
+        horizontalAlignment = _visualTreeOptionTask.horizontalAlignment,
+        _scaleOptionTask$getO = scaleOptionTask.getOptions(),
+        scale = _scaleOptionTask$getO.scale;
 
     _spatialIndex = null;
     _keyboardNavigationManager = null;
     _activeItems = activeItemsTask != null ? activeItemsTask.getActiveItems() : {};
     _treeItemsPositions = itemsPositionsTask.getItemsPositions();
-    _options = itemsSizesOptionTask.getOptions();
-    _orientationOptions = orientationOptionTask.getOptions();
-    _visualTreeOptions = visualTreeOptionTask.getOptions();
-    _scaleOptions = scaleOptionTask.getOptions();
+    var panelSize = new _graphics_structs_Size__WEBPACK_IMPORTED_MODULE_0__["default"](optimalPanelSize);
 
-    switch (_orientationOptions.orientationType) {
+    switch (orientationType) {
       case _enums__WEBPACK_IMPORTED_MODULE_4__["OrientationType"].Left:
       case _enums__WEBPACK_IMPORTED_MODULE_4__["OrientationType"].Right:
         panelSize.invert();
         break;
     }
 
-    panelSize.scale(1.0 / _scaleOptions.scale); // By default we translate everything forward
+    panelSize.scale(1.0 / scale); // By default we translate everything forward
 
     _data.panelSize = panelSize;
     _data.treeItemsPositions = _treeItemsPositions;
 
-    switch (_options.pageFitMode) {
+    switch (pageFitMode) {
       case _enums__WEBPACK_IMPORTED_MODULE_4__["PageFitMode"].AutoSize:
         _data.panelSize = new _graphics_structs_Size__WEBPACK_IMPORTED_MODULE_0__["default"](placeholderSize);
         break;
@@ -25452,7 +25485,7 @@ function AlignDiagramTask(orientationOptionTask, itemsSizesOptionTask, visualTre
 
         if (placeholderSize.width < panelSize.width) {
           _data.treeItemsPositions = {};
-          stretchToWidth(_data.treeItemsPositions, placeholderSize.width, panelSize.width);
+          stretchToWidth(_data.treeItemsPositions, placeholderSize.width, panelSize.width, horizontalAlignment);
           _data.panelSize.width = panelSize.width;
         }
 
@@ -25463,7 +25496,7 @@ function AlignDiagramTask(orientationOptionTask, itemsSizesOptionTask, visualTre
         break;
     }
 
-    switch (_orientationOptions.orientationType) {
+    switch (orientationType) {
       case _enums__WEBPACK_IMPORTED_MODULE_4__["OrientationType"].Left:
       case _enums__WEBPACK_IMPORTED_MODULE_4__["OrientationType"].Right:
         _data.panelSize.invert();
@@ -25474,13 +25507,13 @@ function AlignDiagramTask(orientationOptionTask, itemsSizesOptionTask, visualTre
     return true;
   }
 
-  function stretchToWidth(treeItemsPositions, treeWidth, panelWidth) {
+  function stretchToWidth(treeItemsPositions, treeWidth, panelWidth, horizontalAlignment) {
     var offset;
 
     if (isFamilyChartMode) {
       offset = (panelWidth - treeWidth) / 2.0;
     } else {
-      switch (_visualTreeOptions.horizontalAlignment) {
+      switch (horizontalAlignment) {
         case _enums__WEBPACK_IMPORTED_MODULE_4__["HorizontalAlignmentType"].Left:
           offset = 0;
           break;
@@ -25499,13 +25532,13 @@ function AlignDiagramTask(orientationOptionTask, itemsSizesOptionTask, visualTre
   }
 
   function translateItemPositions(treeItemsPositions, offsetX, offsetY) {
-    var treeItemid, treeItemPosition;
+    var treeItemId, treeItemPosition;
 
-    for (treeItemid in _treeItemsPositions) {
-      if (_treeItemsPositions.hasOwnProperty(treeItemid)) {
-        treeItemPosition = new _models_TreeItemPosition__WEBPACK_IMPORTED_MODULE_3__["default"](_treeItemsPositions[treeItemid]);
+    for (treeItemId in _treeItemsPositions) {
+      if (_treeItemsPositions.hasOwnProperty(treeItemId)) {
+        treeItemPosition = new _models_TreeItemPosition__WEBPACK_IMPORTED_MODULE_3__["default"](_treeItemsPositions[treeItemId]);
         treeItemPosition.actualPosition.translate(offsetX, offsetY);
-        treeItemsPositions[treeItemid] = treeItemPosition;
+        treeItemsPositions[treeItemId] = treeItemPosition;
       }
     }
   }
@@ -25569,13 +25602,9 @@ function AlignDiagramTask(orientationOptionTask, itemsSizesOptionTask, visualTre
   function getTreeItemForMousePosition(x, y, gravityRadius) {
     var result = null,
         bestDistance = null,
-        distance,
-        scale = _scaleOptions.scale,
         spatialIndex = getSpatialIndex(),
         selection,
         center;
-    x = x / scale;
-    y = y / scale;
     selection = new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_1__["default"](x, y, 0, 0);
     center = new _graphics_structs_Point__WEBPACK_IMPORTED_MODULE_2__["default"](x, y);
     selection.offset(gravityRadius, gravityRadius, gravityRadius, gravityRadius);
@@ -25960,7 +25989,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _graphics_structs_Size__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../graphics/structs/Size */ "./src/graphics/structs/Size.js");
 
 
-function CreateTransformTask(orientationOptionTask, alignDiagramTask) {
+function CreateTransformTask(orientationOptionTask, scaleOptionTask, alignDiagramTask) {
   var _data = {
     transform: null
   };
@@ -25977,7 +26006,12 @@ function CreateTransformTask(orientationOptionTask, alignDiagramTask) {
   }
 
   function getTreeItemForMousePosition(x, y, gravityRadius) {
-    var result = null;
+    var result = null,
+        _scaleOptionTask$getO = scaleOptionTask.getOptions(),
+        scale = _scaleOptionTask$getO.scale;
+
+    x = x / scale;
+    y = y / scale;
 
     _data.transform.transformPoint(x, y, false, this, function (x, y) {
       result = alignDiagramTask.getTreeItemForMousePosition(x, y, gravityRadius);
@@ -27568,6 +27602,12 @@ function ItemsSizesOptionTask(optionsTask, defaultConfig, defaultItemConfig) {
 
     /* items visibility */
     pageFitMode: new _readers_EnumerationReader__WEBPACK_IMPORTED_MODULE_3__["default"](_enums__WEBPACK_IMPORTED_MODULE_5__["PageFitMode"], false, defaultConfig.pageFitMode),
+    padding: new _readers_ObjectReader__WEBPACK_IMPORTED_MODULE_2__["default"]({
+      left: new _readers_ValueReader__WEBPACK_IMPORTED_MODULE_1__["default"](["number"], false, defaultConfig.padding.left),
+      top: new _readers_ValueReader__WEBPACK_IMPORTED_MODULE_1__["default"](["number"], false, defaultConfig.padding.top),
+      right: new _readers_ValueReader__WEBPACK_IMPORTED_MODULE_1__["default"](["number"], false, defaultConfig.padding.right),
+      bottom: new _readers_ValueReader__WEBPACK_IMPORTED_MODULE_1__["default"](["number"], false, defaultConfig.padding.bottom)
+    }, false, defaultConfig.padding),
     minimalVisibility: new _readers_EnumerationReader__WEBPACK_IMPORTED_MODULE_3__["default"](_enums__WEBPACK_IMPORTED_MODULE_5__["Visibility"], false, defaultConfig.minimalVisibility),
     selectionPathMode: new _readers_EnumerationReader__WEBPACK_IMPORTED_MODULE_3__["default"](_enums__WEBPACK_IMPORTED_MODULE_5__["SelectionPathMode"], false, defaultConfig.selectionPathMode),
     autoSizeMinimum: new _readers_ObjectReader__WEBPACK_IMPORTED_MODULE_2__["default"]({
@@ -27968,6 +28008,58 @@ function MinimizedItemsOptionTask(optionsTask) {
     getItemOptions: getItemOptions,
     getOptions: getOptions,
     description: "Checks minimized items drawing options."
+  };
+}
+;
+
+/***/ }),
+
+/***/ "./src/tasks/options/MinimumVisibleLevelsOptionTask.js":
+/*!*************************************************************!*\
+  !*** ./src/tasks/options/MinimumVisibleLevelsOptionTask.js ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MinimumVisibleLevelsOptionTask; });
+/* harmony import */ var _readers_ValueReader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../readers/ValueReader */ "./src/readers/ValueReader.js");
+/* harmony import */ var _readers_ObjectReader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../readers/ObjectReader */ "./src/readers/ObjectReader.js");
+/* harmony import */ var _readers_EnumerationReader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../readers/EnumerationReader */ "./src/readers/EnumerationReader.js");
+/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../enums */ "./src/enums.js");
+
+
+
+
+function MinimumVisibleLevelsOptionTask(optionsTask, defaultConfig) {
+  var _data = {},
+      _hash = {};
+
+  var _dataTemplate = new _readers_ObjectReader__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    /* items visibility */
+    pageFitMode: new _readers_EnumerationReader__WEBPACK_IMPORTED_MODULE_2__["default"](_enums__WEBPACK_IMPORTED_MODULE_3__["PageFitMode"], false, defaultConfig.pageFitMode),
+    minimalVisibility: new _readers_EnumerationReader__WEBPACK_IMPORTED_MODULE_2__["default"](_enums__WEBPACK_IMPORTED_MODULE_3__["Visibility"], false, defaultConfig.minimalVisibility),
+    minimumVisibleLevels: new _readers_ValueReader__WEBPACK_IMPORTED_MODULE_0__["default"](["number"], false, defaultConfig.minimumVisibleLevels)
+  });
+
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    };
+    _data = _dataTemplate.read(_data, optionsTask.getOptions(), "options", context);
+    return context.isChanged;
+  }
+
+  function getOptions() {
+    return _data;
+  }
+
+  return {
+    process: process,
+    getOptions: getOptions,
+    description: "Checks minimum visible levels options."
   };
 }
 ;
@@ -31178,7 +31270,7 @@ function DrawMinimizedItemsTask(getGraphics, createTransformTask, applyLayoutCha
 
               break;
 
-            default:
+            case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Invisible:
               if (_debug) {
                 itemTitleColor = _enums__WEBPACK_IMPORTED_MODULE_1__["Colors"].Red;
 
@@ -31193,9 +31285,12 @@ function DrawMinimizedItemsTask(getGraphics, createTransformTask, applyLayoutCha
                 }
 
                 polyline = markers.getPolyline(paletteItems[itemTitleColor]);
-                polyline.addSegment(new _graphics_structs_DotSegment__WEBPACK_IMPORTED_MODULE_3__["default"](x - 1, y - 1, 2, 2, 1));
+                polyline.addSegment(new _graphics_structs_DotSegment__WEBPACK_IMPORTED_MODULE_3__["default"](x - 2, y - 2, 4, 4, 2));
               }
 
+              break;
+
+            default:
               break;
           }
         }); //ignore jslint
@@ -31387,71 +31482,74 @@ function DrawTreeItemsTask(getGraphics, createTransformTask, applyLayoutChangesT
             var nodePosition = new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_2__["default"](x, y, width, height);
 
             if (viewPortPosition == null || viewPortPosition.overlaps(nodePosition)) {
-              var templateParams = itemTemplateParamsTask.getTemplateParams(treeItemId),
-                  template = templateParams.template;
-              uiHash = new _events_RenderEventArgs__WEBPACK_IMPORTED_MODULE_3__["default"]();
-              uiHash.id = treeItemId;
-              uiHash.context = combinedContextsTask.getConfig(treeItemId);
-              uiHash.isCursor = treeItemId == cursorItemId;
-              uiHash.isSelected = selectedItemsTask.isSelected(treeItemId);
-              uiHash.templateName = template.templateConfig.name;
-              uiHash.template = templateParams.template;
-              uiHash.isActive = templateParams.isActive;
-              uiHash.hasSelectorCheckbox = templateParams.hasSelectorCheckbox;
-              uiHash.hasButtons = templateParams.hasButtons;
-              uiHash.hasGroupTitle = templateParams.hasGroupTitle;
-              uiHash.onButtonsRender = templateParams.onButtonsRender;
+              var templateParams = itemTemplateParamsTask.getTemplateParams(treeItemId);
 
-              _graphics.activate("placeholder", _enums__WEBPACK_IMPORTED_MODULE_4__["Layers"].Item);
+              if (templateParams != null) {
+                var template = templateParams.template;
+                uiHash = new _events_RenderEventArgs__WEBPACK_IMPORTED_MODULE_3__["default"]();
+                uiHash.id = treeItemId;
+                uiHash.context = combinedContextsTask.getConfig(treeItemId);
+                uiHash.isCursor = treeItemId == cursorItemId;
+                uiHash.isSelected = selectedItemsTask.isSelected(treeItemId);
+                uiHash.templateName = template.templateConfig.name;
+                uiHash.template = templateParams.template;
+                uiHash.isActive = templateParams.isActive;
+                uiHash.hasSelectorCheckbox = templateParams.hasSelectorCheckbox;
+                uiHash.hasButtons = templateParams.hasButtons;
+                uiHash.hasGroupTitle = templateParams.hasGroupTitle;
+                uiHash.onButtonsRender = templateParams.onButtonsRender;
 
-              element = _graphics.template(x, y, width, height, treeItemPosition.contentPosition.x, treeItemPosition.contentPosition.y, treeItemPosition.contentPosition.width, treeItemPosition.contentPosition.height, template.itemTemplate.template(), template.itemTemplate.getHashCode(), template.itemTemplate.render, uiHash, {
-                "borderWidth": template.templateConfig.itemBorderWidth
-              });
+                _graphics.activate("placeholder", _enums__WEBPACK_IMPORTED_MODULE_4__["Layers"].Item);
 
-              if (templateParams.hasGroupTitle) {
-                var groupTitlePosition = 0;
+                element = _graphics.template(x, y, width, height, treeItemPosition.contentPosition.x, treeItemPosition.contentPosition.y, treeItemPosition.contentPosition.width, treeItemPosition.contentPosition.height, template.itemTemplate.template(), template.itemTemplate.getHashCode(), template.itemTemplate.render, uiHash, {
+                  "borderWidth": template.templateConfig.itemBorderWidth
+                });
 
-                switch (_itemsSizesOptions.groupTitlePlacementType) {
-                  case _enums__WEBPACK_IMPORTED_MODULE_4__["AdviserPlacementType"].Left:
-                  case _enums__WEBPACK_IMPORTED_MODULE_4__["AdviserPlacementType"].Auto:
-                    groupTitlePosition = 2;
-                    break;
+                if (templateParams.hasGroupTitle) {
+                  var groupTitlePosition = 0;
 
-                  case _enums__WEBPACK_IMPORTED_MODULE_4__["AdviserPlacementType"].Right:
-                    groupTitlePosition = width - (_itemsSizesOptions.groupTitlePanelSize - 4);
-                    break;
+                  switch (_itemsSizesOptions.groupTitlePlacementType) {
+                    case _enums__WEBPACK_IMPORTED_MODULE_4__["AdviserPlacementType"].Left:
+                    case _enums__WEBPACK_IMPORTED_MODULE_4__["AdviserPlacementType"].Auto:
+                      groupTitlePosition = 2;
+                      break;
 
-                  default:
+                    case _enums__WEBPACK_IMPORTED_MODULE_4__["AdviserPlacementType"].Right:
+                      groupTitlePosition = width - (_itemsSizesOptions.groupTitlePanelSize - 4);
+                      break;
+
+                    default:
+                  }
+
+                  element = _graphics.template(x, y, width, height, groupTitlePosition, treeItemPosition.contentPosition.y, _itemsSizesOptions.groupTitlePanelSize - 4, treeItemPosition.contentPosition.height + 2, _groupTitleTemplate.template(), _groupTitleTemplate.getHashCode(), _groupTitleTemplate.render, uiHash, null);
                 }
 
-                element = _graphics.template(x, y, width, height, groupTitlePosition, treeItemPosition.contentPosition.y, _itemsSizesOptions.groupTitlePanelSize - 4, treeItemPosition.contentPosition.height + 2, _groupTitleTemplate.template(), _groupTitleTemplate.getHashCode(), _groupTitleTemplate.render, uiHash, null);
-              }
+                if (templateParams.hasSelectorCheckbox) {
+                  _graphics.activate("placeholder", _enums__WEBPACK_IMPORTED_MODULE_4__["Layers"].Controls);
 
-              if (templateParams.hasSelectorCheckbox) {
-                _graphics.activate("placeholder", _enums__WEBPACK_IMPORTED_MODULE_4__["Layers"].Controls);
-
-                element = _graphics.template(x, y, width, height, treeItemPosition.contentPosition.x, height - (_itemsSizesOptions.checkBoxPanelSize - 4), treeItemPosition.contentPosition.width, _itemsSizesOptions.checkBoxPanelSize - 4, _checkBoxTemplate.template(), _checkBoxTemplate.getHashCode(), _checkBoxTemplate.render, uiHash, null);
-              }
-
-              if (templateParams.hasButtons) {
-                _graphics.activate("placeholder", _enums__WEBPACK_IMPORTED_MODULE_4__["Layers"].Controls);
-
-                var buttonsPanelPosition = 0;
-
-                switch (_itemsSizesOptions.groupTitlePlacementType) {
-                  case _enums__WEBPACK_IMPORTED_MODULE_4__["AdviserPlacementType"].Left:
-                  case _enums__WEBPACK_IMPORTED_MODULE_4__["AdviserPlacementType"].Auto:
-                    buttonsPanelPosition = width - (_itemsSizesOptions.buttonsPanelSize - 4);
-                    break;
-
-                  case _enums__WEBPACK_IMPORTED_MODULE_4__["AdviserPlacementType"].Right:
-                    buttonsPanelPosition = 2;
-                    break;
-
-                  default:
+                  element = _graphics.template(x, y, width, height, treeItemPosition.contentPosition.x, height - (_itemsSizesOptions.checkBoxPanelSize - 4), treeItemPosition.contentPosition.width, _itemsSizesOptions.checkBoxPanelSize - 4, _checkBoxTemplate.template(), _checkBoxTemplate.getHashCode(), _checkBoxTemplate.render, uiHash, null);
                 }
 
-                element = _graphics.template(x, y, width, height, buttonsPanelPosition, treeItemPosition.contentPosition.y, _itemsSizesOptions.buttonsPanelSize - 4, Math.max(treeItemPosition.contentPosition.height, height - treeItemPosition.contentPosition.y), _buttonsTemplate.template(), template.templateConfig.name + _buttonsTemplate.getHashCode(), _buttonsTemplate.render, uiHash, null);
+                if (templateParams.hasButtons) {
+                  _graphics.activate("placeholder", _enums__WEBPACK_IMPORTED_MODULE_4__["Layers"].Controls);
+
+                  var buttonsPanelPosition = 0;
+
+                  switch (_itemsSizesOptions.groupTitlePlacementType) {
+                    case _enums__WEBPACK_IMPORTED_MODULE_4__["AdviserPlacementType"].Left:
+                    case _enums__WEBPACK_IMPORTED_MODULE_4__["AdviserPlacementType"].Auto:
+                      buttonsPanelPosition = width - (_itemsSizesOptions.buttonsPanelSize - 4);
+                      break;
+
+                    case _enums__WEBPACK_IMPORTED_MODULE_4__["AdviserPlacementType"].Right:
+                      buttonsPanelPosition = 2;
+                      break;
+
+                    default:
+                  }
+
+                  element = _graphics.template(x, y, width, height, buttonsPanelPosition, treeItemPosition.contentPosition.y, _itemsSizesOptions.buttonsPanelSize - 4, Math.max(treeItemPosition.contentPosition.height, height - treeItemPosition.contentPosition.y), _buttonsTemplate.template(), template.templateConfig.name + _buttonsTemplate.getHashCode(), _buttonsTemplate.render, uiHash, null);
+                }
               }
             }
           }); //ignore jslint
@@ -31867,7 +31965,6 @@ function ItemTemplateParamsTask(itemsSizesOptionTask, cursorItemOptionTask, read
 
   function process() {
     var itemsSizesOptions = itemsSizesOptionTask.getOptions(),
-        hasButtonsRender = itemsSizesOptions.onButtonsRender != null,
         cursorItem = cursorItemOptionTask.getCursorItem(),
         items = itemsSizesOptions.items,
         index,
@@ -31879,7 +31976,8 @@ function ItemTemplateParamsTask(itemsSizesOptionTask, cursorItemOptionTask, read
           templateParams = new _models_TemplateParams__WEBPACK_IMPORTED_MODULE_0__["default"](),
           isCursor = cursorItem == itemConfig.id,
           template = readTemplatesTask.getTemplate(itemConfig.templateName, itemsSizesOptions.defaultTemplateName, readTemplatesTask.DefaultWidgetTemplateName),
-          templateConfig = template.templateConfig;
+          templateConfig = template.templateConfig,
+          hasButtonsRender = itemsSizesOptions.onButtonsRender != null || templateConfig.onButtonsRender != null;
       templateParams.template = template;
       templateParams.isActive = itemConfig.isActive && templateConfig.isActive;
 
@@ -32490,19 +32588,37 @@ function ConnectionsGraphTask(getGraphics, createTransformTask, connectorsOption
   }
 
   function TraceLoops(graph, loops) {
-    for (var index = 0, len = loops.length; index < len; index += 1) {
-      var loop = loops[index];
-      graph.getShortestPath(this, loop.from, [loop.to], function (connectorEdge, fromItem, toItem) {
-        return connectorEdge.weight;
-      }, function (path, to) {
-        for (var index2 = 0, len2 = path.length - 1; index2 < len2; index2 += 1) {
-          var fromItem = path[index2],
-              toItem = path[index2 + 1];
-          var edge = graph.edge(fromItem, toItem);
-          edge.isOppositeFlow = true;
-          edge.hasArrow = true;
+    var edges = [];
+
+    for (var isOppositeFlow = 1; isOppositeFlow >= 0; isOppositeFlow -= 1) {
+      for (var index = 0, len = loops.length; index < len; index += 1) {
+        var loop = loops[index];
+
+        if (loop.isOppositeFlow == (isOppositeFlow == 1)) {
+          graph.getShortestPath(this, loop.from, [loop.to], function (connectorEdge, fromItem, toItem) {
+            return connectorEdge.weight;
+          }, function (path, to) {
+            for (var index2 = 0, len2 = path.length - 1; index2 < len2; index2 += 1) {
+              var fromItem = path[index2],
+                  toItem = path[index2 + 1];
+              var edge = graph.edge(fromItem, toItem);
+
+              if (edge.polyline.length() > 0) {
+                edge.isOppositeFlow = isOppositeFlow == 1;
+                edges.push(edge);
+              }
+            }
+          }); //ignore jslint
         }
-      }); //ignore jslint
+      }
+    }
+
+    for (var index = 0, len = edges.length; index < len; index += 1) {
+      var edge = edges[index];
+
+      if (edge.isOppositeFlow) {
+        edge.hasArrow = true;
+      }
     }
   }
 
@@ -32513,95 +32629,6 @@ function ConnectionsGraphTask(getGraphics, createTransformTask, connectorsOption
   return {
     process: process,
     getGraph: getGraph
-  };
-}
-;
-
-/***/ }),
-
-/***/ "./src/tasks/transformations/CreateLayoutsTreeTask.js":
-/*!************************************************************!*\
-  !*** ./src/tasks/transformations/CreateLayoutsTreeTask.js ***!
-  \************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return CreateLayoutsTreeTask; });
-/* harmony import */ var _layouts_FamilyLayout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./layouts/FamilyLayout */ "./src/tasks/transformations/layouts/FamilyLayout.js");
-/* harmony import */ var _layouts_ItemLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./layouts/ItemLayout */ "./src/tasks/transformations/layouts/ItemLayout.js");
-/* harmony import */ var _algorithms_Tree__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../algorithms/Tree */ "./src/algorithms/Tree.js");
-
-
-
-function CreateLayoutsTreeTask(orderFamilyNodesTask, extractNestedLayoutsTask) {
-  var _data = {
-    layoutsTree: {},
-    maximumId: null
-  };
-
-  function process() {
-    var logicalFamily = orderFamilyNodesTask.getLogicalFamily();
-    var treeLevels = orderFamilyNodesTask.getTreeLevels();
-    var maximumId = orderFamilyNodesTask.getMaximumId();
-    var getConnectorsStacksSizes = orderFamilyNodesTask.getConnectorsStacksSizes;
-    /* create layouts tree and index visibility levels for page auto fit mode */
-
-    var layouts = extractNestedLayoutsTask.getLayouts();
-    var rootLayout = new _layouts_FamilyLayout__WEBPACK_IMPORTED_MODULE_0__["default"](logicalFamily, treeLevels, getConnectorsStacksSizes);
-    var layoutsTree = Object(_algorithms_Tree__WEBPACK_IMPORTED_MODULE_2__["default"])();
-    maximumId++;
-    layoutsTree.add(null, maximumId, rootLayout);
-    var levelLayouts = [{
-      id: maximumId,
-      levelLayout: rootLayout
-    }];
-
-    while (levelLayouts.length > 0) {
-      var nextLevelLayouts = [];
-
-      for (var index = 0; index < levelLayouts.length; index += 1) {
-        var _levelLayouts$index = levelLayouts[index],
-            id = _levelLayouts$index.id,
-            levelLayout = _levelLayouts$index.levelLayout;
-        levelLayout.loop(this, function (treeItem) {
-          var treeItemId = treeItem.id;
-          var itemLayout = layouts[treeItemId];
-
-          if (!itemLayout) {
-            itemLayout = new _layouts_ItemLayout__WEBPACK_IMPORTED_MODULE_1__["default"](treeItem);
-          } else {
-            nextLevelLayouts.push({
-              id: treeItemId,
-              levelLayout: itemLayout
-            });
-          }
-
-          layoutsTree.add(id, treeItemId, itemLayout);
-        });
-      }
-
-      levelLayouts = nextLevelLayouts;
-    }
-
-    _data.layoutsTree = layoutsTree;
-    _data.maximumId = maximumId;
-    return true;
-  }
-
-  function getLayoutsTree() {
-    return _data.layoutsTree;
-  }
-
-  function getMaximumId() {
-    return _data.maximumId;
-  }
-
-  return {
-    process: process,
-    getLayoutsTree: getLayoutsTree,
-    getMaximumId: getMaximumId
   };
 }
 ;
@@ -32694,16 +32721,159 @@ function ExtractNestedLayoutsTask(extractNestedLayoutsOptionTask, bindFamilyConn
 
 /***/ }),
 
-/***/ "./src/tasks/transformations/FamItemsPositionsTask.js":
-/*!************************************************************!*\
-  !*** ./src/tasks/transformations/FamItemsPositionsTask.js ***!
-  \************************************************************/
+/***/ "./src/tasks/transformations/FamCreateLayoutsTreeTask.js":
+/*!***************************************************************!*\
+  !*** ./src/tasks/transformations/FamCreateLayoutsTreeTask.js ***!
+  \***************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return FamItemsPositionsTask; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return FamCreateLayoutsTreeTask; });
+/* harmony import */ var _layouts_FamilyLayout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./layouts/FamilyLayout */ "./src/tasks/transformations/layouts/FamilyLayout.js");
+/* harmony import */ var _layouts_ItemLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./layouts/ItemLayout */ "./src/tasks/transformations/layouts/ItemLayout.js");
+/* harmony import */ var _algorithms_Tree__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../algorithms/Tree */ "./src/algorithms/Tree.js");
+/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../enums */ "./src/enums.js");
+
+
+
+
+function FamCreateLayoutsTreeTask(orderFamilyNodesTask, extractNestedLayoutsTask) {
+  var _data = {
+    layoutsTree: {},
+    maximumId: null
+  };
+
+  function process() {
+    var logicalFamily = orderFamilyNodesTask.getLogicalFamily();
+    var treeLevels = orderFamilyNodesTask.getTreeLevels();
+    var maximumId = orderFamilyNodesTask.getMaximumId();
+    var getConnectorsStacksSizes = orderFamilyNodesTask.getConnectorsStacksSizes;
+    var layouts = extractNestedLayoutsTask.getLayouts();
+    var rootLayout = new _layouts_FamilyLayout__WEBPACK_IMPORTED_MODULE_0__["default"](logicalFamily, treeLevels, getConnectorsStacksSizes);
+    var layoutsTree = Object(_algorithms_Tree__WEBPACK_IMPORTED_MODULE_2__["default"])();
+    maximumId++;
+    layoutsTree.add(null, maximumId, rootLayout);
+    var levelLayouts = [{
+      id: maximumId,
+      levelLayout: rootLayout
+    }];
+
+    while (levelLayouts.length > 0) {
+      var nextLevelLayouts = [];
+
+      for (var index = 0; index < levelLayouts.length; index += 1) {
+        var _levelLayouts$index = levelLayouts[index],
+            id = _levelLayouts$index.id,
+            levelLayout = _levelLayouts$index.levelLayout;
+        levelLayout.loop(this, function (treeItem) {
+          var treeItemId = treeItem.id;
+          var itemLayout = layouts[treeItemId];
+
+          if (!itemLayout) {
+            itemLayout = new _layouts_ItemLayout__WEBPACK_IMPORTED_MODULE_1__["default"](treeItem.isVisible ? _enums__WEBPACK_IMPORTED_MODULE_3__["Visibility"].Auto : _enums__WEBPACK_IMPORTED_MODULE_3__["Visibility"].Invisible);
+          } else {
+            nextLevelLayouts.push({
+              id: treeItemId,
+              levelLayout: itemLayout
+            });
+          }
+
+          layoutsTree.add(id, treeItemId, itemLayout);
+        });
+      }
+
+      levelLayouts = nextLevelLayouts;
+    }
+
+    _data.layoutsTree = layoutsTree;
+    _data.maximumId = maximumId;
+    return true;
+  }
+
+  function getLayoutsTree() {
+    return _data.layoutsTree;
+  }
+
+  function getMaximumId() {
+    return _data.maximumId;
+  }
+
+  return {
+    process: process,
+    getLayoutsTree: getLayoutsTree,
+    getMaximumId: getMaximumId
+  };
+}
+;
+
+/***/ }),
+
+/***/ "./src/tasks/transformations/HideGrandParentsConnectorsTask.js":
+/*!*********************************************************************!*\
+  !*** ./src/tasks/transformations/HideGrandParentsConnectorsTask.js ***!
+  \*********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HideGrandParentsConnectorsTask; });
+/*  This task optionally eliminates direct connections to grand parents */
+function HideGrandParentsConnectorsTask(hideGrandParentsConnectorsOptionTask, removeLoopsTask) {
+  var _data = {
+    maximumId: null,
+
+    /* maximum of OrgItem.id */
+    logicalFamily: null
+  };
+
+  function process(debug) {
+    var logicalFamily = removeLoopsTask.getLogicalFamily(),
+        maximumId = removeLoopsTask.getMaximumId();
+    var options = hideGrandParentsConnectorsOptionTask.getOptions();
+
+    if (options.hideGrandParentsConnectors == true) {
+      /* optionally eliminate grand parents connectors */
+      logicalFamily = logicalFamily.getFamilyWithoutGrandParentsRelations();
+    } else {
+      logicalFamily = logicalFamily.clone();
+    }
+
+    _data.logicalFamily = logicalFamily;
+    _data.maximumId = maximumId;
+    return true;
+  }
+
+  function getLogicalFamily() {
+    return _data.logicalFamily;
+  }
+
+  function getMaximumId() {
+    return _data.maximumId;
+  }
+
+  return {
+    process: process,
+    getLogicalFamily: getLogicalFamily,
+    getMaximumId: getMaximumId
+  };
+}
+;
+
+/***/ }),
+
+/***/ "./src/tasks/transformations/ItemsPositionsTask.js":
+/*!*********************************************************!*\
+  !*** ./src/tasks/transformations/ItemsPositionsTask.js ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ItemsPositionsTask; });
 /* harmony import */ var _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../graphics/structs/Rect */ "./src/graphics/structs/Rect.js");
 /* harmony import */ var _graphics_structs_Size__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../graphics/structs/Size */ "./src/graphics/structs/Size.js");
 /* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../enums */ "./src/enums.js");
@@ -32717,7 +32887,7 @@ function LevelVisibility(level, visibility) {
 }
 
 ;
-function FamItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientationOptionTask, itemsSizesOptionTask, connectorsOptionTask, normalizeOptionTask, createLayoutsTreeTask, itemTemplateParamsTask, cursorItemTask, combinedNormalVisibilityItemsTask) {
+function ItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientationOptionTask, itemsSizesOptionTask, connectorsOptionTask, normalizeOptionTask, createLayoutsTreeTask, itemTemplateParamsTask, cursorItemTask, combinedNormalVisibilityItemsTask) {
   var _data = {
     treeItemsPositions: {},
     // TreeItemPosition();
@@ -32730,6 +32900,7 @@ function FamItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientat
         verticalAlignment = _itemsSizesOptionTask.verticalAlignment,
         pageFitMode = _itemsSizesOptionTask.pageFitMode,
         minimalVisibility = _itemsSizesOptionTask.minimalVisibility,
+        padding = _itemsSizesOptionTask.padding,
         normalLevelShift = _itemsSizesOptionTask.normalLevelShift,
         dotLevelShift = _itemsSizesOptionTask.dotLevelShift,
         lineLevelShift = _itemsSizesOptionTask.lineLevelShift,
@@ -32739,14 +32910,16 @@ function FamItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientat
         checkBoxPanelSize = _itemsSizesOptionTask.checkBoxPanelSize,
         buttonsPanelSize = _itemsSizesOptionTask.buttonsPanelSize,
         groupTitlePanelSize = _itemsSizesOptionTask.groupTitlePanelSize,
-        groupTitlePlacementType = _itemsSizesOptionTask.groupTitlePlacementType;
+        groupTitlePlacementType = _itemsSizesOptionTask.groupTitlePlacementType,
+        cousinsIntervalMultiplier = _itemsSizesOptionTask.cousinsIntervalMultiplier;
 
     var _connectorsOptionTask = connectorsOptionTask.getOptions(),
         arrowsDirection = _connectorsOptionTask.arrowsDirection,
         linesWidth = _connectorsOptionTask.linesWidth;
 
     var _normalizeOptionTask$ = normalizeOptionTask.getOptions(),
-        maximumColumnsInMatrix = _normalizeOptionTask$.maximumColumnsInMatrix;
+        maximumColumnsInMatrix = _normalizeOptionTask$.maximumColumnsInMatrix,
+        horizontalAlignment = _normalizeOptionTask$.horizontalAlignment;
 
     var _orientationOptionTas = orientationOptionTask.getOptions(),
         orientationType = _orientationOptionTas.orientationType;
@@ -32793,6 +32966,7 @@ function FamItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientat
     var options = {
       verticalAlignment: verticalAlignment,
       pageFitMode: pageFitMode,
+      padding: padding,
       minimalVisibility: minimalVisibility,
       orientationType: orientationType,
       arrowsDirection: arrowsDirection,
@@ -32802,8 +32976,10 @@ function FamItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientat
       groupTitlePanelSize: groupTitlePanelSize,
       groupTitlePlacementType: groupTitlePlacementType,
       maximumColumnsInMatrix: maximumColumnsInMatrix,
+      horizontalAlignment: horizontalAlignment,
       shifts: getShifts(normalLevelShift, dotLevelShift, lineLevelShift, lineLevelShift),
-      intervals: getIntervals(normalItemsInterval, dotItemsInterval, lineItemsInterval, lineItemsInterval)
+      intervals: getIntervals(normalItemsInterval, dotItemsInterval, lineItemsInterval, lineItemsInterval),
+      cousinsIntervalMultiplier: cousinsIntervalMultiplier
     };
     /* find optimal panel size */
 
@@ -32863,10 +33039,12 @@ function FamItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientat
         result = measureLayout(rootLayoutId, layoutsTree, enabledLevelVisibilities, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options);
 
         if (checkDiagramSize(result.size, panelSize, pageFitMode)) {
-          // Find optimal diagram size
+          /* maximum compression fits to page */
           var minimalPlaceholderSize = new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_0__["default"](0, 0, result.size.width, result.size.height);
           minimalPlaceholderSize.addRect(0, 0, panelSize.width, panelSize.height);
           minimalPlaceholderSize.offset(0, 0, 5, 5);
+          /* Find optimal diagram size */
+
           findOptimalSize(this, possibleLevelVisibilities.length - 1, function (index) {
             enabledLevelVisibilities = getLevelVisibilities(maximumLevelIndex, possibleLevelVisibilities, index);
             result = measureLayout(rootLayoutId, layoutsTree, enabledLevelVisibilities, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options);
@@ -32882,28 +33060,9 @@ function FamItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientat
     return result;
   }
 
-  function measureLayout(rootLayoutId, layoutsTree, levelVisibilities, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options) {
-    var treeItemsPositions = {};
-    /* measure individual nodes from bottom to up */
-
-    layoutsTree.loopPostOrder(this, function (childLayoutId, childLayout, parentLayoutId, parentLayout) {
-      var levelIndex = levelIndexes[childLayoutId];
-      var levelVisibility = levelVisibilities[levelIndex];
-      var isCursor = cursorItemId == childLayoutId;
-      var isSelected = isItemSelected(childLayoutId);
-      var treeItemTemplate = getTemplateParams(childLayoutId);
-      treeItemsPositions[childLayoutId] = childLayout.measure(levelVisibility, isCursor, isSelected, treeItemTemplate, treeItemsPositions, options);
-    });
-    return {
-      treeItemsPositions: treeItemsPositions,
-      size: treeItemsPositions[rootLayoutId].actualSize
-    };
-  }
-
   function findOptimalSize(thisArg, maximum, funcCheckSize) {
     var minimum = 0,
         cursorIndex;
-    /* maximum compression fit to page */
 
     if (!funcCheckSize.call(thisArg, minimum)) {
       /* minimum compression does not fit to page */
@@ -32927,6 +33086,24 @@ function FamItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientat
   }
 
   ;
+
+  function measureLayout(rootLayoutId, layoutsTree, levelVisibilities, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options) {
+    var treeItemsPositions = {};
+    /* measure individual nodes from bottom to up */
+
+    layoutsTree.loopPostOrder(this, function (childLayoutId, childLayout, parentLayoutId, parentLayout) {
+      var levelIndex = levelIndexes[childLayoutId];
+      var levelVisibility = levelVisibilities[levelIndex];
+      var isCursor = cursorItemId == childLayoutId;
+      var isSelected = isItemSelected(childLayoutId);
+      var treeItemTemplate = getTemplateParams(childLayoutId);
+      treeItemsPositions[childLayoutId] = childLayout.measure(levelVisibility, isCursor, isSelected, treeItemTemplate, treeItemsPositions, options);
+    });
+    return {
+      treeItemsPositions: treeItemsPositions,
+      size: treeItemsPositions[rootLayoutId].actualSize
+    };
+  }
 
   function getLevelVisibilities(maximumLevelIndex, possibleLevelVisibilities, cursorIndex) {
     var index, levelVisibility;
@@ -33049,60 +33226,6 @@ function FamItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientat
     getItemsPositions: getItemsPositions,
     getItemPosition: getItemPosition,
     getContentSize: getContentSize
-  };
-}
-;
-
-/***/ }),
-
-/***/ "./src/tasks/transformations/HideGrandParentsConnectorsTask.js":
-/*!*********************************************************************!*\
-  !*** ./src/tasks/transformations/HideGrandParentsConnectorsTask.js ***!
-  \*********************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HideGrandParentsConnectorsTask; });
-/*  This task optionally eliminates direct connections to grand parents */
-function HideGrandParentsConnectorsTask(hideGrandParentsConnectorsOptionTask, removeLoopsTask) {
-  var _data = {
-    maximumId: null,
-
-    /* maximum of OrgItem.id */
-    logicalFamily: null
-  };
-
-  function process(debug) {
-    var logicalFamily = removeLoopsTask.getLogicalFamily(),
-        maximumId = removeLoopsTask.getMaximumId();
-    var options = hideGrandParentsConnectorsOptionTask.getOptions();
-
-    if (options.hideGrandParentsConnectors == true) {
-      /* optionally eliminate grand parents connectors */
-      logicalFamily = logicalFamily.getFamilyWithoutGrandParentsRelations();
-    } else {
-      logicalFamily = logicalFamily.clone();
-    }
-
-    _data.logicalFamily = logicalFamily;
-    _data.maximumId = maximumId;
-    return true;
-  }
-
-  function getLogicalFamily() {
-    return _data.logicalFamily;
-  }
-
-  function getMaximumId() {
-    return _data.maximumId;
-  }
-
-  return {
-    process: process,
-    getLogicalFamily: getLogicalFamily,
-    getMaximumId: getMaximumId
   };
 }
 ;
@@ -33345,6 +33468,95 @@ function OrderFamilyNodesTask(orderFamilyNodesOptionTask, userDefinedNodesOrderT
 
 /***/ }),
 
+/***/ "./src/tasks/transformations/OrgCreateLayoutsTreeTask.js":
+/*!***************************************************************!*\
+  !*** ./src/tasks/transformations/OrgCreateLayoutsTreeTask.js ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return OrgCreateLayoutsTreeTask; });
+/* harmony import */ var _layouts_OrgLayout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./layouts/OrgLayout */ "./src/tasks/transformations/layouts/OrgLayout.js");
+/* harmony import */ var _layouts_ItemLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./layouts/ItemLayout */ "./src/tasks/transformations/layouts/ItemLayout.js");
+/* harmony import */ var _algorithms_Tree__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../algorithms/Tree */ "./src/algorithms/Tree.js");
+
+
+
+function OrgCreateLayoutsTreeTask(visualTreeTask, visualTreeLevelsTask, extractNestedLayoutsTask) {
+  var _data = {
+    layoutsTree: {},
+    maximumId: null
+  };
+
+  function process() {
+    var visualTree = visualTreeTask.getVisualTree();
+    var leftMargins = visualTreeTask.getLeftMargins();
+    var rightMargins = visualTreeTask.getRightMargins();
+    var maximumId = visualTreeTask.getMaximumId();
+    var treeLevels = visualTreeLevelsTask.getTreeLevels();
+    var getConnectorsStacksSizes = visualTreeLevelsTask.getConnectorsStacksSizes;
+    var layouts = extractNestedLayoutsTask.getLayouts();
+    var rootLayout = new _layouts_OrgLayout__WEBPACK_IMPORTED_MODULE_0__["default"](visualTree, treeLevels, leftMargins, rightMargins, getConnectorsStacksSizes);
+    var layoutsTree = Object(_algorithms_Tree__WEBPACK_IMPORTED_MODULE_2__["default"])();
+    maximumId++;
+    layoutsTree.add(null, maximumId, rootLayout);
+    var levelLayouts = [{
+      id: maximumId,
+      levelLayout: rootLayout
+    }];
+
+    while (levelLayouts.length > 0) {
+      var nextLevelLayouts = [];
+
+      for (var index = 0; index < levelLayouts.length; index += 1) {
+        var _levelLayouts$index = levelLayouts[index],
+            id = _levelLayouts$index.id,
+            levelLayout = _levelLayouts$index.levelLayout;
+        levelLayout.loop(this, function (treeItem) {
+          var treeItemId = treeItem.id;
+          var itemLayout = layouts[treeItemId];
+
+          if (!itemLayout) {
+            itemLayout = new _layouts_ItemLayout__WEBPACK_IMPORTED_MODULE_1__["default"](treeItem.visibility);
+          } else {
+            nextLevelLayouts.push({
+              id: treeItemId,
+              levelLayout: itemLayout
+            });
+          }
+
+          layoutsTree.add(id, treeItemId, itemLayout);
+        });
+      }
+
+      levelLayouts = nextLevelLayouts;
+    }
+
+    _data.layoutsTree = layoutsTree;
+    _data.maximumId = maximumId;
+    return true;
+  }
+
+  function getLayoutsTree() {
+    return _data.layoutsTree;
+  }
+
+  function getMaximumId() {
+    return _data.maximumId;
+  }
+
+  return {
+    process: process,
+    getLayoutsTree: getLayoutsTree,
+    getMaximumId: getMaximumId
+  };
+}
+;
+
+/***/ }),
+
 /***/ "./src/tasks/transformations/OrgExtractNestedLayoutsTask.js":
 /*!******************************************************************!*\
   !*** ./src/tasks/transformations/OrgExtractNestedLayoutsTask.js ***!
@@ -33372,814 +33584,16 @@ function OrgExtractNestedLayoutsTask(extractNestedLayoutsOptionTask, bindFamilyC
     return [];
   }
 
+  function getLayouts() {
+    return {};
+  }
+
   return {
     process: process,
     getNestedLayoutParentConnectorIds: getNestedLayoutParentConnectorIds,
     getNestedLayoutBottomConnectorIds: getNestedLayoutBottomConnectorIds,
-    getBundles: getBundles
-  };
-}
-;
-
-/***/ }),
-
-/***/ "./src/tasks/transformations/OrgItemsPositionsTask.js":
-/*!************************************************************!*\
-  !*** ./src/tasks/transformations/OrgItemsPositionsTask.js ***!
-  \************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return OrgItemsPositionsTask; });
-/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../enums */ "./src/enums.js");
-/* harmony import */ var _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../graphics/structs/Rect */ "./src/graphics/structs/Rect.js");
-/* harmony import */ var _graphics_structs_Size__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../graphics/structs/Size */ "./src/graphics/structs/Size.js");
-/* harmony import */ var _models_TreeItemPosition__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../models/TreeItemPosition */ "./src/models/TreeItemPosition.js");
-/* harmony import */ var _models_LevelVisibility__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../models/LevelVisibility */ "./src/models/LevelVisibility.js");
-/* harmony import */ var _models_TreeLevelPosition__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../models/TreeLevelPosition */ "./src/models/TreeLevelPosition.js");
-
-
-
-
-
-
-function OrgItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientationOptionTask, itemsSizesOptionTask, connectorsOptionTask, visualTreeOptionTask, visualTreeTask, visualTreeLevelsTask, itemTemplateParamsTask, cursorItemTask, combinedNormalVisibilityItemsTask) {
-  var _data = {
-    treeItemsPositions: {},
-    // TreeItemPosition();
-    panelSize: null // Rect();
-
-  },
-      _treeLevels,
-      _treeLevelsPositions,
-      // TreeLevelPosition()
-  _visualTree,
-      _leftMargins,
-      _rightMargins,
-      _orientationOptions,
-      _connectorsOptions,
-      _visualTreeOptions,
-      _itemsSizesOptions,
-      _intervals;
-
-  function process() {
-    var _currentControlSizeTa = currentControlSizeTask.getOptions(),
-        optimalPanelSize = _currentControlSizeTa.optimalPanelSize,
-        panelSize = new _graphics_structs_Size__WEBPACK_IMPORTED_MODULE_2__["default"](optimalPanelSize),
-        panelRect,
-        _scaleOptionTask$getO = scaleOptionTask.getOptions(),
-        scale = _scaleOptionTask$getO.scale;
-
-    _itemsSizesOptions = itemsSizesOptionTask.getOptions();
-    _intervals = getIntervals(_itemsSizesOptions);
-    _orientationOptions = orientationOptionTask.getOptions();
-    _connectorsOptions = connectorsOptionTask.getOptions();
-    _visualTreeOptions = visualTreeOptionTask.getOptions();
-    _treeLevels = visualTreeLevelsTask.getTreeLevels();
-    _visualTree = visualTreeTask.getVisualTree();
-    _leftMargins = visualTreeTask.getLeftMargins();
-    _rightMargins = visualTreeTask.getRightMargins();
-    _treeLevelsPositions = [];
-    _data.treeItemsPositions = {};
-    panelSize.scale(1.0 / scale);
-    panelRect = new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_1__["default"](0, 0, panelSize.width, panelSize.height);
-    _data.panelSize = positionTreeItems(panelRect);
-    recalcItemsPositions();
-    return true;
-  }
-  /*  Position */
-
-
-  function positionTreeItems(panelSize) {
-    var placeholderSize = new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_1__["default"](0, 0, 0, 0),
-        levelVisibilities,
-        visibilities,
-        minimalPlaceholderSize,
-        leftMargin,
-        rightMargin,
-        cursorIndex;
-
-    switch (_orientationOptions.orientationType) {
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["OrientationType"].Left:
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["OrientationType"].Right:
-        panelSize.invert();
-        break;
-    }
-
-    if (!_treeLevels.isEmpty()) {
-      switch (_itemsSizesOptions.pageFitMode) {
-        case _enums__WEBPACK_IMPORTED_MODULE_0__["PageFitMode"].None:
-        case _enums__WEBPACK_IMPORTED_MODULE_0__["PageFitMode"].AutoSize:
-          levelVisibilities = [new _models_LevelVisibility__WEBPACK_IMPORTED_MODULE_4__["default"](0, _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Normal)];
-          placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, 0);
-          break;
-
-        default:
-          levelVisibilities = [new _models_LevelVisibility__WEBPACK_IMPORTED_MODULE_4__["default"](0, _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Normal)];
-          visibilities = [];
-
-          switch (_itemsSizesOptions.minimalVisibility) {
-            case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Normal:
-              break;
-
-            case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Dot:
-              visibilities.push(_enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Dot);
-              break;
-
-            case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Auto:
-            case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Line:
-            case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Invisible:
-              visibilities.push(_enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Dot);
-              visibilities.push(_enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Line);
-              break;
-          }
-
-          _treeLevels.loopLevelsReversed(this, function (level, levelContext) {
-            var index;
-
-            for (index = 0; index < visibilities.length; index += 1) {
-              levelVisibilities.push(new _models_LevelVisibility__WEBPACK_IMPORTED_MODULE_4__["default"](level, visibilities[index]));
-            }
-          }); // Find minimal placeholder size to hold completly folded diagram
-
-
-          minimalPlaceholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, levelVisibilities.length - 1);
-          minimalPlaceholderSize.addRect(panelSize);
-          minimalPlaceholderSize.offset(0, 0, 5, 5);
-          leftMargin = null;
-          rightMargin = null;
-          cursorIndex = null; // Maximized
-
-          placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, 0);
-
-          if (!checkDiagramSize(placeholderSize, minimalPlaceholderSize)) {
-            leftMargin = 0; // Minimized
-
-            placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, levelVisibilities.length - 1);
-
-            if (checkDiagramSize(placeholderSize, minimalPlaceholderSize)) {
-              rightMargin = levelVisibilities.length - 1;
-              cursorIndex = rightMargin;
-
-              while (rightMargin - leftMargin > 1) {
-                cursorIndex = Math.floor((rightMargin + leftMargin) / 2.0);
-                placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, cursorIndex);
-
-                if (checkDiagramSize(placeholderSize, minimalPlaceholderSize)) {
-                  rightMargin = cursorIndex;
-                } else {
-                  leftMargin = cursorIndex;
-                }
-              }
-
-              if (rightMargin !== cursorIndex) {
-                placeholderSize = setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, rightMargin);
-              }
-            }
-          }
-
-          break;
-      }
-    }
-
-    return placeholderSize;
-  }
-
-  function setTreeLevelsVisibilityAndPositionTreeItems(levelVisibilities, cursorIndex) {
-    var index, levelVisibility;
-    _treeLevelsPositions = [];
-
-    _treeLevels.loopLevels(this, function (index, levelContext) {
-      var treeLevelPosition = new _models_TreeLevelPosition__WEBPACK_IMPORTED_MODULE_5__["default"]();
-      treeLevelPosition.currentvisibility = _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Normal;
-
-      _treeLevelsPositions.push(treeLevelPosition);
-    });
-
-    for (index = 0; index <= cursorIndex; index += 1) {
-      levelVisibility = levelVisibilities[index];
-      _treeLevelsPositions[levelVisibility.level].currentvisibility = levelVisibility.currentvisibility;
-    }
-
-    recalcItemsSize();
-    setOffsets();
-    recalcLevelsDepth();
-    shiftLevels();
-    return new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_1__["default"](0, 0, Math.round(getDiagramWidth()), Math.round(getDiagramHeight()));
-  }
-
-  function checkDiagramSize(diagramSize, panelSize) {
-    var result = false;
-
-    switch (_itemsSizesOptions.pageFitMode) {
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["PageFitMode"].PageWidth:
-        if (panelSize.width >= diagramSize.width) {
-          result = true;
-        }
-
-        break;
-
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["PageFitMode"].PageHeight:
-        if (panelSize.height >= diagramSize.height) {
-          result = true;
-        }
-
-        break;
-
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["PageFitMode"].FitToPage:
-        if (panelSize.height >= diagramSize.height && panelSize.width >= diagramSize.width) {
-          result = true;
-        }
-
-        break;
-    }
-
-    return result;
-  }
-
-  function getDiagramHeight() {
-    var len = _treeLevelsPositions.length,
-        treeLevel = _treeLevelsPositions[len - 1];
-    return treeLevel.shift + treeLevel.nextLevelShift;
-  }
-
-  function getDiagramWidth() {
-    var result = 0,
-        index,
-        len;
-
-    for (index = 0, len = _treeLevelsPositions.length; index < len; index += 1) {
-      result = Math.max(result, _treeLevelsPositions[index].currentOffset);
-    }
-
-    result += _itemsSizesOptions.normalItemsInterval;
-    return result;
-  }
-
-  function recalcItemsSize() {
-    var cursorItemId = cursorItemTask.getCursorTreeItem();
-    _data.treeItemsPositions = {};
-
-    _treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
-      var treeLevelPosition = _treeLevelsPositions[levelIndex];
-
-      _treeLevels.loopLevelItems(this, levelIndex, function (treeItemId, treeItem, position) {
-        var treeItemPosition = new _models_TreeItemPosition__WEBPACK_IMPORTED_MODULE_3__["default"](),
-            treeItemVisibility = combinedNormalVisibilityItemsTask.isItemSelected(treeItemId) ? _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Normal : treeItem.visibility,
-            treeItemtemplate = itemTemplateParamsTask.getTemplateParams(treeItemId);
-        var actualVisibility = treeItemVisibility === _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Auto ? treeLevelPosition.currentvisibility : treeItemVisibility;
-        var size = getSize(actualVisibility, cursorItemId == treeItemId, treeItemtemplate, _itemsSizesOptions, _orientationOptions.orientationType);
-        treeItemPosition.actualVisibility = actualVisibility;
-        treeItemPosition.actualSize = size.actualSize;
-        treeItemPosition.contentPosition = size.contentPosition;
-        _data.treeItemsPositions[treeItemId] = treeItemPosition;
-      });
-    });
-  }
-
-  function recalcLevelsDepth() {
-    var index, len, index2, len2, index3, len3, treeItem, treeLevel, treeItems, itemPosition, treeItemsHavingPartners, treeItemsGroup, partners, partner, levelOffset, minimalDepth, dotsDepth, startIndex, endIndex, stackSegments;
-
-    _treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
-      var treeLevelPosition = _treeLevelsPositions[levelIndex];
-      treeLevelPosition.shift = 0.0;
-      treeLevelPosition.depth = 0.0;
-      treeLevelPosition.actualVisibility = _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Invisible;
-      treeItemsHavingPartners = [];
-      minimalDepth = null;
-      /* minimum  height of non-dot items in level */
-
-      dotsDepth = null;
-      /* maximum dots height */
-
-      _treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
-        var treeItemPosition = _data.treeItemsPositions[itemid];
-        treeLevelPosition.depth = Math.max(treeLevelPosition.depth, treeItemPosition.actualSize.height);
-
-        switch (treeItemPosition.actualVisibility) {
-          case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Dot:
-          case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Line:
-          case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Invisible:
-            dotsDepth = !dotsDepth ? treeItemPosition.actualSize.height : Math.min(dotsDepth, treeItemPosition.actualSize.height);
-            break;
-
-          default:
-            minimalDepth = !minimalDepth ? treeItemPosition.actualSize.height : Math.min(minimalDepth, treeItemPosition.actualSize.height);
-            break;
-        }
-
-        treeLevelPosition.actualVisibility = Math.min(treeLevelPosition.actualVisibility, treeItemPosition.actualVisibility);
-      });
-
-      if (minimalDepth == null) {
-        minimalDepth = treeLevelPosition.depth;
-      }
-
-      if (dotsDepth != null && dotsDepth > minimalDepth) {
-        minimalDepth = dotsDepth;
-      }
-
-      switch (_itemsSizesOptions.verticalAlignment) {
-        case _enums__WEBPACK_IMPORTED_MODULE_0__["VerticalAlignmentType"].Top:
-          treeLevelPosition.horizontalConnectorsDepth = minimalDepth / 2.0;
-          break;
-
-        case _enums__WEBPACK_IMPORTED_MODULE_0__["VerticalAlignmentType"].Middle:
-          treeLevelPosition.horizontalConnectorsDepth = treeLevelPosition.depth / 2.0;
-          break;
-
-        case _enums__WEBPACK_IMPORTED_MODULE_0__["VerticalAlignmentType"].Bottom:
-          treeLevelPosition.horizontalConnectorsDepth = treeLevelPosition.depth - minimalDepth / 2.0;
-          break;
-      }
-    });
-  }
-
-  function shiftLevels() {
-    var shift = _itemsSizesOptions.lineLevelShift,
-        index,
-        len,
-        treeLevelPosition,
-        treeLevelConnectorStackSize,
-        childrenSpace = 0,
-        parentsSpace = 0,
-        arrowTipLength = _connectorsOptions.linesWidth * 8;
-
-    switch (_connectorsOptions.arrowsDirection) {
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["GroupByType"].Parents:
-        childrenSpace = arrowTipLength;
-        parentsSpace = 0;
-        break;
-
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["GroupByType"].Children:
-        childrenSpace = 0;
-        parentsSpace = arrowTipLength;
-        break;
-    }
-
-    for (index = 0, len = _treeLevelsPositions.length; index < len; index += 1) {
-      treeLevelPosition = _treeLevelsPositions[index];
-      treeLevelConnectorStackSize = visualTreeLevelsTask.getConnectorsStacksSizes(index);
-      shift += treeLevelPosition.setShift(shift, getLevelSpace(treeLevelPosition.actualVisibility), parentsSpace, childrenSpace, treeLevelConnectorStackSize.parentsStackSize);
-    }
-  }
-
-  function getLevelSpace(visibility) {
-    var result = 0.0;
-
-    switch (visibility) {
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Normal:
-        result = _itemsSizesOptions.normalLevelShift;
-        break;
-
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Dot:
-        result = _itemsSizesOptions.dotLevelShift;
-        break;
-
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Line:
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Invisible:
-        result = _itemsSizesOptions.lineLevelShift;
-        break;
-    }
-
-    return result;
-  }
-
-  function setOffsets() {
-    var index, len;
-
-    for (index = 0, len = _treeLevelsPositions.length; index < len; index += 1) {
-      _treeLevelsPositions[index].currentOffset = 0.0;
-    }
-
-    _visualTree.loopPostOrder(this, function (treeItemId, treeItem, parentid, parent) {
-      var treeItemPosition = _data.treeItemsPositions[treeItemId],
-          treeItemVisibility = treeItemPosition.actualVisibility,
-          treeItemLevelIndex = _treeLevels.getLevelIndex(treeItemId),
-          treeLevelPosition = _treeLevelsPositions[treeItemLevelIndex],
-          treeItemPadding = _intervals[treeItemVisibility === _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Auto ? treeLevelPosition.currentvisibility : treeItemVisibility] / 2.0,
-          index,
-          len,
-          offset,
-          siblings,
-          gaps,
-          gap,
-          leftMargin,
-          parentItem,
-          groups,
-          items,
-          item1,
-          item2,
-          groupIndex,
-          groupOffset,
-          group,
-          sibling,
-          cousinsInterval = treeLevelPosition.currentOffset > 0 ? treeItemPadding * treeItem.relationDegree * _itemsSizesOptions.cousinsIntervalMultiplier : 0,
-          arrowTipLength = _connectorsOptions.linesWidth * 8;
-
-      treeItemPosition.leftPadding = treeItemPadding + cousinsInterval;
-      treeItemPosition.rightPadding = treeItemPadding;
-
-      if (_connectorsOptions.arrowsDirection != _enums__WEBPACK_IMPORTED_MODULE_0__["GroupByType"].None) {
-        if (treeItem.connectorPlacement & _enums__WEBPACK_IMPORTED_MODULE_0__["SideFlag"].Left) {
-          treeItemPosition.leftPadding += arrowTipLength;
-        }
-
-        if (treeItem.connectorPlacement & _enums__WEBPACK_IMPORTED_MODULE_0__["SideFlag"].Right) {
-          treeItemPosition.rightPadding += arrowTipLength;
-        }
-      }
-
-      treeItemPosition.offset = treeLevelPosition.currentOffset + treeItemPosition.leftPadding;
-      treeLevelPosition.currentOffset = treeItemPosition.offset + treeItemPosition.actualSize.width + treeItemPosition.rightPadding;
-
-      if (_visualTree.hasChildren(treeItemId)) {
-        offset = getChildrenOffset(treeItem);
-
-        if (offset > 0) {
-          offsetItemChildren(treeItem, offset);
-        } else if (offset < 0) {
-          offset = -offset;
-          offsetItem(treeItem, offset);
-          siblings = null;
-          gaps = {};
-          leftMargin = null;
-          parentItem = _visualTree.parent(treeItem.id);
-
-          if (parentItem !== null) {
-            _visualTree.loopChildrenReversed(this, parentItem.id, function (childItemId, childItem, index) {
-              if (childItem === treeItem) {
-                siblings = [];
-              } else if (siblings !== null) {
-                gap = getGapBetweenSiblings(childItem, treeItem);
-                gaps[childItem.id] = gap;
-
-                if (gap > 0) {
-                  siblings.splice(0, 0, childItem);
-                } else {
-                  leftMargin = childItem;
-                  return true;
-                }
-              }
-            });
-
-            if (siblings.length > 0) {
-              groups = null;
-
-              if (leftMargin !== null) {
-                items = [leftMargin];
-                items = items.concat(siblings);
-                items.push(treeItem);
-                groups = [[leftMargin]];
-
-                for (index = 1, len = items.length; index < len; index += 1) {
-                  item1 = items[index - 1];
-                  item2 = items[index];
-
-                  if (item1.gravity == _enums__WEBPACK_IMPORTED_MODULE_0__["HorizontalAlignmentType"].Right || item2.gravity == _enums__WEBPACK_IMPORTED_MODULE_0__["HorizontalAlignmentType"].Left) {
-                    groups[groups.length - 1].push(item2);
-                  } else {
-                    groups.push([item2]);
-                  }
-                }
-              } else {
-                groups = [siblings.slice(0)];
-                groups[groups.length - 1].push(treeItem);
-              } // align items to the right
-
-
-              if (groups.length > 0) {
-                siblings = groups[groups.length - 1];
-
-                for (index = siblings.length - 2; index >= 0; index -= 1) {
-                  sibling = siblings[index];
-                  gap = gaps[sibling.id];
-                  offset = Math.min(gap, offset);
-                  offsetItem(sibling, offset);
-                  offsetItemChildren(sibling, offset);
-                }
-              } // spread items proportionally
-
-
-              groupOffset = offset / (groups.length - 1);
-
-              for (groupIndex = groups.length - 2; groupIndex > 0; groupIndex -= 1) {
-                group = groups[groupIndex];
-
-                for (index = group.length - 1; index >= 0; index -= 1) {
-                  sibling = group[index];
-                  gap = gaps[sibling.id];
-                  offset = Math.min(groupIndex * groupOffset, Math.min(gap, offset));
-                  offsetItem(sibling, offset);
-                  offsetItemChildren(sibling, offset);
-                }
-              }
-            }
-          }
-        }
-      }
-    });
-  }
-
-  function getGapBetweenSiblings(leftItem, rightItem) {
-    var result = null,
-        rightMargins = getRightMargins(leftItem),
-        leftMargins = getLeftMargins(rightItem),
-        depth = Math.min(rightMargins.length, leftMargins.length),
-        index,
-        gap;
-
-    for (index = 0; index < depth; index += 1) {
-      gap = leftMargins[index] - rightMargins[index];
-      result = result !== null ? Math.min(result, gap) : gap;
-
-      if (gap <= 0) {
-        break;
-      }
-    }
-
-    return Math.floor(result);
-  }
-
-  function getRightMargins(treeItem) {
-    var result = [],
-        rightMargins,
-        index,
-        len,
-        marginItemPosition;
-    rightMargins = _rightMargins[treeItem.id];
-
-    if (rightMargins === undefined) {
-      rightMargins = [];
-    }
-
-    rightMargins = rightMargins.slice();
-    rightMargins.splice(0, 0, treeItem.id);
-
-    for (index = 0, len = rightMargins.length; index < len; index += 1) {
-      marginItemPosition = _data.treeItemsPositions[rightMargins[index]];
-      result[index] = marginItemPosition.offset + marginItemPosition.actualSize.width + marginItemPosition.rightPadding;
-    }
-
-    return result;
-  }
-
-  function getLeftMargins(treeItem) {
-    var result = [],
-        leftMargins,
-        index,
-        len,
-        marginItemPosition;
-    leftMargins = _leftMargins[treeItem.id];
-
-    if (leftMargins === undefined) {
-      leftMargins = [];
-    }
-
-    leftMargins = leftMargins.slice();
-    leftMargins.splice(0, 0, treeItem.id);
-
-    for (index = 0, len = leftMargins.length; index < len; index += 1) {
-      marginItemPosition = _data.treeItemsPositions[leftMargins[index]];
-      result[index] = marginItemPosition.offset - marginItemPosition.leftPadding;
-    }
-
-    return result;
-  }
-
-  function getChildrenOffset(treeItem) {
-    var treeItemPosition = _data.treeItemsPositions[treeItem.id],
-        treeItemCenterOffset = treeItemPosition.offset + treeItemPosition.actualSize.width / 2.0,
-        childrenCenterOffset = null,
-        firstItem,
-        firstItemPosition,
-        lastItem,
-        lastItemPosition,
-        visualAggregatorPosition;
-
-    if (treeItem.visualAggregatorId === null) {
-      firstItem = null;
-
-      _visualTree.loopChildren(this, treeItem.id, function (childItemId, childItem, index) {
-        firstItem = childItem;
-
-        if (firstItem.connectorPlacement & _enums__WEBPACK_IMPORTED_MODULE_0__["SideFlag"].Top) {
-          return true;
-        }
-      });
-
-      firstItemPosition = _data.treeItemsPositions[firstItem.id];
-      lastItem = null;
-
-      _visualTree.loopChildrenReversed(this, treeItem.id, function (childItemId, childItem, index) {
-        lastItem = childItem;
-
-        if (lastItem.connectorPlacement & _enums__WEBPACK_IMPORTED_MODULE_0__["SideFlag"].Top) {
-          return true;
-        }
-      });
-
-      lastItemPosition = _data.treeItemsPositions[lastItem.id];
-
-      switch (_visualTreeOptions.horizontalAlignment) {
-        case _enums__WEBPACK_IMPORTED_MODULE_0__["HorizontalAlignmentType"].Left:
-          childrenCenterOffset = firstItemPosition.offset + firstItemPosition.actualSize.width / 2.0;
-          break;
-
-        case _enums__WEBPACK_IMPORTED_MODULE_0__["HorizontalAlignmentType"].Right:
-          childrenCenterOffset = lastItemPosition.offset + lastItemPosition.actualSize.width / 2.0;
-          break;
-
-        case _enums__WEBPACK_IMPORTED_MODULE_0__["HorizontalAlignmentType"].Center:
-          childrenCenterOffset = (firstItemPosition.offset + lastItemPosition.offset + lastItemPosition.actualSize.width) / 2.0;
-          break;
-      }
-    } else {
-      visualAggregatorPosition = _data.treeItemsPositions[treeItem.visualAggregatorId];
-      childrenCenterOffset = visualAggregatorPosition.offset + visualAggregatorPosition.actualSize.width / 2.0;
-    }
-
-    var i = treeItemCenterOffset - childrenCenterOffset;
-    return treeItemCenterOffset - childrenCenterOffset;
-  }
-
-  function offsetItem(treeItem, offset) {
-    var treeItemPosition = _data.treeItemsPositions[treeItem.id];
-    treeItemPosition.offset += offset;
-
-    var treeLevelPosition = _treeLevelsPositions[_treeLevels.getLevelIndex(treeItem.id)];
-
-    treeLevelPosition.currentOffset = Math.max(treeLevelPosition.currentOffset, treeItemPosition.offset + treeItemPosition.actualSize.width + treeItemPosition.rightPadding);
-  }
-
-  function offsetItemChildren(treeItem, offset) {
-    var childTreeItemPosition, treeLevelPosition;
-
-    _visualTree.loopLevels(this, treeItem.id, function (childItemId, childItem, levelid) {
-      childTreeItemPosition = _data.treeItemsPositions[childItemId];
-      childTreeItemPosition.offset += offset;
-      treeLevelPosition = _treeLevelsPositions[_treeLevels.getLevelIndex(childItemId)];
-      treeLevelPosition.currentOffset = Math.max(treeLevelPosition.currentOffset, childTreeItemPosition.offset + childTreeItemPosition.actualSize.width);
-      return true;
-    });
-  }
-
-  function recalcItemsPositions() {
-    var prevLevelPosition = null;
-
-    _treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
-      var treeLevelPosition = _treeLevelsPositions[levelIndex];
-
-      _treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
-        var treeItemPosition = _data.treeItemsPositions[itemid];
-        var result = getPosition(treeItemPosition.actualVisibility, treeItemPosition.offset, treeItemPosition.actualSize, prevLevelPosition, treeLevelPosition, _itemsSizesOptions.verticalAlignment);
-        treeItemPosition.actualPosition = result.position;
-        treeItemPosition.horizontalConnectorsShift = result.horizontalConnectorsShift;
-        treeItemPosition.topConnectorShift = result.topConnectorShift;
-        treeItemPosition.topConnectorInterval = result.topConnectorInterval;
-        treeItemPosition.bottomConnectorShift = result.bottomConnectorShift;
-        treeItemPosition.bottomConnectorInterval = result.bottomConnectorInterval;
-      });
-
-      prevLevelPosition = treeLevelPosition;
-    });
-  }
-
-  function getSize(visibility, isCursor, treeItemTemplate, itemsSizesOptions, orientationType) {
-    var templateConfig, size, contentPosition;
-
-    switch (visibility) {
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Normal:
-        templateConfig = treeItemTemplate.template.templateConfig;
-        size = new _graphics_structs_Size__WEBPACK_IMPORTED_MODULE_2__["default"](templateConfig.itemSize);
-        contentPosition = new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_1__["default"](0, 0, size.width, size.height);
-
-        if (isCursor) {
-          size.height += templateConfig.cursorPadding.top + templateConfig.cursorPadding.bottom;
-          size.width += templateConfig.cursorPadding.left + templateConfig.cursorPadding.right;
-          contentPosition.x = templateConfig.cursorPadding.left;
-          contentPosition.y = templateConfig.cursorPadding.top;
-        }
-
-        if (treeItemTemplate.hasSelectorCheckbox) {
-          size.height += itemsSizesOptions.checkBoxPanelSize;
-        }
-
-        if (treeItemTemplate.hasButtons) {
-          size.width += itemsSizesOptions.buttonsPanelSize;
-
-          switch (itemsSizesOptions.groupTitlePlacementType) {
-            case _enums__WEBPACK_IMPORTED_MODULE_0__["AdviserPlacementType"].Right:
-              contentPosition.x += itemsSizesOptions.buttonsPanelSize;
-              break;
-          }
-        }
-
-        if (treeItemTemplate.hasGroupTitle) {
-          size.width += itemsSizesOptions.groupTitlePanelSize;
-
-          switch (itemsSizesOptions.groupTitlePlacementType) {
-            case _enums__WEBPACK_IMPORTED_MODULE_0__["AdviserPlacementType"].Right:
-              break;
-
-            default:
-              contentPosition.x += itemsSizesOptions.groupTitlePanelSize;
-              break;
-          }
-        }
-
-        break;
-
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Dot:
-        templateConfig = treeItemTemplate.template.templateConfig;
-        size = new _graphics_structs_Size__WEBPACK_IMPORTED_MODULE_2__["default"](templateConfig.minimizedItemSize);
-        break;
-
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Line:
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Invisible:
-        size = new _graphics_structs_Size__WEBPACK_IMPORTED_MODULE_2__["default"]();
-        break;
-    }
-
-    switch (orientationType) {
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["OrientationType"].Left:
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["OrientationType"].Right:
-        size.invert();
-        break;
-    }
-
-    return {
-      actualSize: size,
-      contentPosition: contentPosition
-    };
-  }
-
-  function getPosition(visibility, offset, size, prevLevel, level, verticalAlignment) {
-    var itemShift = 0;
-
-    switch (visibility) {
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Normal:
-        switch (verticalAlignment) {
-          case _enums__WEBPACK_IMPORTED_MODULE_0__["VerticalAlignmentType"].Top:
-            itemShift = 0;
-            break;
-
-          case _enums__WEBPACK_IMPORTED_MODULE_0__["VerticalAlignmentType"].Middle:
-            itemShift = (level.depth - size.height) / 2.0;
-            break;
-
-          case _enums__WEBPACK_IMPORTED_MODULE_0__["VerticalAlignmentType"].Bottom:
-            itemShift = level.depth - size.height;
-            break;
-        }
-
-        break;
-
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Dot:
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Line:
-      case _enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Invisible:
-        itemShift = level.horizontalConnectorsDepth - size.height / 2.0;
-        break;
-    }
-
-    return {
-      position: new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_1__["default"](offset, level.shift + itemShift, size.width, size.height),
-      horizontalConnectorsShift: level.shift + level.horizontalConnectorsDepth,
-      topConnectorShift: prevLevel != null ? prevLevel.shift + prevLevel.connectorShift : null,
-      topConnectorInterval: prevLevel != null ? prevLevel.levelSpace / 2 : null,
-      bottomConnectorShift: level.shift + level.connectorShift,
-      bottomConnectorInterval: level.levelSpace / 2
-    };
-  }
-
-  function getIntervals(options) {
-    var result = [];
-    result[_enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Normal] = options.normalItemsInterval;
-    result[_enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Dot] = options.dotItemsInterval;
-    result[_enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Line] = options.lineItemsInterval;
-    result[_enums__WEBPACK_IMPORTED_MODULE_0__["Visibility"].Invisible] = options.lineItemsInterval;
-    return result;
-  }
-
-  function getItemPosition(itemid) {
-    return _data.treeItemsPositions[itemid];
-  }
-
-  function getItemsPositions() {
-    return _data.treeItemsPositions;
-  }
-
-  function getContentSize() {
-    return _data.panelSize;
-  }
-
-  return {
-    process: process,
-    getItemsPositions: getItemsPositions,
-    getItemPosition: getItemPosition,
-    getContentSize: getContentSize
+    getBundles: getBundles,
+    getLayouts: getLayouts
   };
 }
 ;
@@ -34265,6 +33679,9 @@ function OrgTreeTask(itemsOptionTask) {
     orgItemRoot = new _models_OrgItem__WEBPACK_IMPORTED_MODULE_1__["default"](rootItemConfig);
     orgItemRoot.hideParentConnection = true;
     orgItemRoot.hideChildrenConnection = true;
+    /* if user needs custom root item layout, it should explicitly create invisible node and set its children layout manually up */
+
+    orgItemRoot.childrenPlacementType = _enums__WEBPACK_IMPORTED_MODULE_3__["ChildrenPlacementType"].Horizontal;
     orgTree.add(null, orgItemRoot.id, orgItemRoot);
     orgTree.loopLevels(this, function (nodeid, node, levelid) {
       if (levelid > 0) {
@@ -34414,7 +33831,8 @@ function RemoveLoopsTask(logicalFamilyTask) {
         index2,
         len2,
         edgesToReverse = Object(_algorithms_getFamilyLoops__WEBPACK_IMPORTED_MODULE_0__["default"])(logicalFamily, debug),
-        fakePairs = []; // group edges by child node
+        fakePairs = [];
+    /* group edges by child node */
 
     var loops = [];
     var loopsHash = {};
@@ -34468,11 +33886,16 @@ function RemoveLoopsTask(logicalFamilyTask) {
           levelGravity: _enums__WEBPACK_IMPORTED_MODULE_2__["GroupByType"].Children,
           itemConfig: {
             title: "fake parent #" + maximumId,
-            description: "This is fake parent item was created by loops reversal."
+            description: "This is a fake parent item, it was created by loops removal task."
           }
         });
         logicalFamily.add([], fakeParent.id, fakeParent);
         logicalFamily.adopt([fakeParent.id], loop.itemid);
+        fakePairs.push({
+          from: fakeParent.id,
+          to: loop.itemid,
+          isOppositeFlow: false
+        });
 
         for (index2 = 0, len2 = parents.length; index2 < len2; index2 += 1) {
           var parentid = parents[index2];
@@ -34491,17 +33914,23 @@ function RemoveLoopsTask(logicalFamilyTask) {
               levelGravity: _enums__WEBPACK_IMPORTED_MODULE_2__["GroupByType"].Parents,
               itemConfig: {
                 title: "fake child #" + maximumId,
-                description: "This is fake child item was created by loops reversal."
+                description: "This is a fake child item, it was created by loops removal task."
               }
             });
             fakeChildren[parentid] = fakeChild;
             logicalFamily.add([parentid], fakeChild.id, fakeChild);
+            fakePairs.push({
+              from: parentid,
+              to: fakeChild.id,
+              isOppositeFlow: false
+            });
           }
 
           logicalFamily.adopt([fakeParent.id], fakeChild.id);
           fakePairs.push({
             from: fakeParent.id,
-            to: fakeChild.id
+            to: fakeChild.id,
+            isOppositeFlow: true
           });
         } // assign remaining parents of our item to the fake parent
 
@@ -34801,7 +34230,7 @@ __webpack_require__.r(__webpack_exports__);
 /* method uses structures created in orgTreeTask to create visual tree used to render chart
   It populates visualTree structure with TreeItem objects.
   
-  1. Create invisble visual root item, so all orphants added to it, but since it is invisible, no connections are going to be drawn betwen them
+  1. Create invisible visual root item, so all orphans added to it, but since it is invisible, no connections are going to be drawn between them
   2. Loop orgTree nodes and populate visual tree hierarchy: visualTree
 */
 
@@ -35804,7 +35233,7 @@ function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeOptionTask, isFa
 
   function defineNavigationParent(parentItem, treeItem, skipFirstParent) {
     var parents = [];
-    /* take logicalParentItem when it is visible or collect all visible immidiate parents of logicalParentItem */
+    /* take logicalParentItem when it is visible or collect all visible immediate parents of logicalParentItem */
 
     if (skipFirstParent || parentItem.visibility == _enums__WEBPACK_IMPORTED_MODULE_2__["Visibility"].Invisible || !_activeItems.hasOwnProperty(parentItem.id)) {
       if (!skipFirstParent) {
@@ -35887,13 +35316,18 @@ function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeOptionTask, isFa
     return _data.rightMargins;
   }
 
+  function getMaximumId() {
+    return _treeItemCounter;
+  }
+
   return {
     process: process,
     getVisualTree: getVisualTree,
     getLogicalFamily: getLogicalFamily,
     getConnectionsFamily: getConnectionsFamily,
     getLeftMargins: getLeftMargins,
-    getRightMargins: getRightMargins
+    getRightMargins: getRightMargins,
+    getMaximumId: getMaximumId
   };
 }
 ;
@@ -37734,20 +37168,20 @@ FamilyLayout.prototype.measure = function (levelVisibility, isCursor, isSelected
     var treeLevelPosition = new _models_TreeLevelPosition__WEBPACK_IMPORTED_MODULE_3__["default"]();
     this.treeLevelsPositions.push(treeLevelPosition);
   });
-  this.setOffsets(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions, this.logicalFamily, options.intervals);
+  this.setOffsets(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions, this.logicalFamily, options.intervals, options.padding);
   this.setLevelsDepth(this.treeLevels, treeItemsPositions, this.treeLevelsPositions, options.verticalAlignment);
-  this.shiftLevels(this.treeLevelsPositions, options.shifts[_enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Line], options.shifts, options.arrowsDirection, options.linesWidth, this.getConnectorsStacksSizes);
+  this.shiftLevels(this.treeLevelsPositions, options.padding.top, options.shifts, options.arrowsDirection, options.linesWidth, this.getConnectorsStacksSizes);
   var treeItemPosition = new _models_TreeItemPosition__WEBPACK_IMPORTED_MODULE_4__["default"]();
-  treeItemPosition.actualVisibility = _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Invisible;
-  treeItemPosition.actualSize = this.getLayoutSize(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions);
+  treeItemPosition.actualVisibility = _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Normal;
+  treeItemPosition.actualSize = this.getLayoutSize(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions, options.padding);
   return treeItemPosition;
 };
 
-FamilyLayout.prototype.getLayoutSize = function (treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions) {
-  return new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_0__["default"](0, 0, Math.round(this.getLayoutWidth(treeLevels, treeItemsPositions, childLayoutsPositions)), Math.round(this.getLayoutHeight(treeLevelsPositions)));
+FamilyLayout.prototype.getLayoutSize = function (treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions, padding) {
+  return new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_0__["default"](0, 0, Math.round(this.getLayoutWidth(treeLevels, treeItemsPositions, childLayoutsPositions, padding)), Math.round(this.getLayoutHeight(treeLevelsPositions, padding)));
 };
 
-FamilyLayout.prototype.getLayoutWidth = function (treeLevels, treeItemsPositions, childLayoutsPositions) {
+FamilyLayout.prototype.getLayoutWidth = function (treeLevels, treeItemsPositions, childLayoutsPositions, padding) {
   var result = 0;
   treeLevels.loopLevels(this, function (levelIndex, level) {
     var levelLength = treeLevels.getLevelLength(levelIndex);
@@ -37756,16 +37190,16 @@ FamilyLayout.prototype.getLayoutWidth = function (treeLevels, treeItemsPositions
       var itemId = treeLevels.getItemAtPosition(levelIndex, levelLength - 1),
           treeItemPosition = treeItemsPositions[itemId],
           childLayoutPosition = childLayoutsPositions[itemId];
-      result = Math.max(result, childLayoutPosition.offset + treeItemPosition.actualSize.width + childLayoutPosition.rightPadding);
+      result = Math.max(result, childLayoutPosition.offset + treeItemPosition.actualSize.width + padding.right);
     }
   });
   return result;
 };
 
-FamilyLayout.prototype.getLayoutHeight = function (treeLevelsPositions) {
+FamilyLayout.prototype.getLayoutHeight = function (treeLevelsPositions, padding) {
   var len = treeLevelsPositions.length,
       treeLevel = treeLevelsPositions[len - 1];
-  return treeLevel.shift + treeLevel.nextLevelShift;
+  return treeLevel.getNodesBottom() + padding.bottom;
 };
 
 FamilyLayout.prototype.setLevelsDepth = function (treeLevels, treeItemsPositions, treeLevelsPositions, verticalAlignment) {
@@ -37828,7 +37262,7 @@ FamilyLayout.prototype.shiftLevels = function (treeLevelsPositions, shift, shift
   var index,
       len,
       treeLevelPosition,
-      treeLevelConnectorStackSize,
+      parentsStackSize,
       childrenSpace = 0,
       parentsSpace = 0,
       arrowTipLength = linesWidth * 8;
@@ -37847,12 +37281,12 @@ FamilyLayout.prototype.shiftLevels = function (treeLevelsPositions, shift, shift
 
   for (index = 0, len = treeLevelsPositions.length; index < len; index += 1) {
     treeLevelPosition = treeLevelsPositions[index];
-    treeLevelConnectorStackSize = getConnectorsStacksSizes(index);
-    shift += treeLevelPosition.setShift(shift, shifts[treeLevelPosition.actualVisibility], parentsSpace, childrenSpace, treeLevelConnectorStackSize.parentsStackSize);
+    parentsStackSize = getConnectorsStacksSizes(index).parentsStackSize;
+    shift += treeLevelPosition.setShift(shift, shifts[treeLevelPosition.actualVisibility], parentsSpace, childrenSpace, parentsStackSize);
   }
 };
 
-FamilyLayout.prototype.setOffsets = function (treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions, logicalFamily, intervals) {
+FamilyLayout.prototype.setOffsets = function (treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions, logicalFamily, intervals, padding) {
   var index, len;
 
   for (index = 0, len = treeLevelsPositions.length; index < len; index += 1) {
@@ -37872,15 +37306,15 @@ FamilyLayout.prototype.setOffsets = function (treeLevels, treeItemsPositions, ch
 
     if (nodeId != null) {
       var treeItemPosition = treeItemsPositions[nodeId];
-      var nodeOffset = familyAlignment.getOffset(nodeId) - treeItemPosition.leftPadding - treeItemPosition.actualSize.width / 2;
-      leftMargin = leftMargin == null ? nodeOffset : Math.min(leftMargin, nodeOffset);
+      var nodeOffset = familyAlignment.getOffset(nodeId) - treeItemPosition.actualSize.width / 2;
+      leftMargin = leftMargin === null ? nodeOffset : Math.min(leftMargin, nodeOffset);
     }
   });
   treeLevels.loopLevels(this, function (levelIndex, level) {
     treeLevels.loopLevelItems(this, levelIndex, function (nodeId, node, position) {
       var treeItemPosition = treeItemsPositions[nodeId];
       var nodeOffset = familyAlignment.getOffset(nodeId);
-      childLayoutsPositions[nodeId].offset = nodeOffset - treeItemPosition.actualSize.width / 2 - leftMargin;
+      childLayoutsPositions[nodeId].offset = nodeOffset - treeItemPosition.actualSize.width / 2 - leftMargin + padding.left;
     });
   });
 };
@@ -37994,7 +37428,6 @@ HorizontalLayout.prototype.Column = function () {
 HorizontalLayout.prototype.Row = function () {
   this.depth = 0;
   this.offset = 0;
-  this.horizontalConnectorsDepth = 0;
   this.minimalDepth = null;
   this.dotsDepth = null;
 };
@@ -38008,7 +37441,7 @@ HorizontalLayout.prototype.measure = function (levelVisibility, isCursor, isSele
   this.measureRow(data, this.items, treeItemsPositions, options);
   this.data = data;
   var treeItemPosition = new _models_TreeItemPosition__WEBPACK_IMPORTED_MODULE_2__["default"]();
-  treeItemPosition.actualVisibility = _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Invisible;
+  treeItemPosition.actualVisibility = _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Normal;
   treeItemPosition.actualSize = this.getLayoutSize(data);
   return treeItemPosition;
 };
@@ -38083,33 +37516,18 @@ HorizontalLayout.prototype.measureRow = function (data, items, treeItemsPosition
         row.minimalDepth = !row.minimalDepth ? treeItemPosition.actualSize.height : Math.min(row.minimalDepth, treeItemPosition.actualSize.height);
         break;
     }
-
-    row.offset = row.depth / 2;
-
-    if (row.minimalDepth == null) {
-      row.minimalDepth = row.depth;
-    }
-
-    if (row.dotsDepth != null && row.dotsDepth > row.minimalDepth) {
-      row.minimalDepth = row.dotsDepth;
-    }
-
-    switch (options.verticalAlignment) {
-      case _enums__WEBPACK_IMPORTED_MODULE_1__["VerticalAlignmentType"].Top:
-        row.horizontalConnectorsDepth = row.minimalDepth / 2.0;
-        break;
-
-      case _enums__WEBPACK_IMPORTED_MODULE_1__["VerticalAlignmentType"].Middle:
-        row.horizontalConnectorsDepth = row.depth / 2.0;
-        break;
-
-      case _enums__WEBPACK_IMPORTED_MODULE_1__["VerticalAlignmentType"].Bottom:
-        row.horizontalConnectorsDepth = row.depth - row.minimalDepth / 2.0;
-        break;
-    }
   }
 
   ;
+  row.offset = row.depth / 2;
+
+  if (row.minimalDepth == null) {
+    row.minimalDepth = row.depth;
+  }
+
+  if (row.dotsDepth != null && row.dotsDepth > row.minimalDepth) {
+    row.minimalDepth = row.dotsDepth;
+  }
 };
 
 HorizontalLayout.prototype.getLayoutSize = function (data) {
@@ -38143,7 +37561,7 @@ HorizontalLayout.prototype.arrange = function (thisArg, parentPosition, layoutDi
       actualPosition.translate(parentPosition.x, parentPosition.y);
       treeItemPosition = _objectSpread(_objectSpread({}, treeItemPosition), {}, {
         actualPosition: actualPosition,
-        horizontalConnectorsShift: parentPosition.y + row.offset - row.depth / 2 + row.horizontalConnectorsDepth,
+        horizontalConnectorsShift: parentPosition.y + row.offset - row.depth / 2 + row.offset,
         leftMedianOffset: column.depth / 2 + (layoutDirection == _enums__WEBPACK_IMPORTED_MODULE_1__["AdviserPlacementType"].Left ? column.childrenPadding : column.parentsPadding),
         rightMedianOffset: column.depth / 2 + (layoutDirection == _enums__WEBPACK_IMPORTED_MODULE_1__["AdviserPlacementType"].Left ? column.parentsPadding : column.childrenPadding),
         topConnectorShift: row.depth / 2,
@@ -38157,34 +37575,7 @@ HorizontalLayout.prototype.arrange = function (thisArg, parentPosition, layoutDi
 };
 
 HorizontalLayout.prototype.getItemPosition = function (visibility, offset, row, size, options) {
-  var itemShift = 0;
-
-  switch (visibility) {
-    case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Normal:
-      switch (options.verticalAlignment) {
-        case _enums__WEBPACK_IMPORTED_MODULE_1__["VerticalAlignmentType"].Top:
-          itemShift = 0;
-          break;
-
-        case _enums__WEBPACK_IMPORTED_MODULE_1__["VerticalAlignmentType"].Middle:
-          itemShift = (row.depth - size.height) / 2.0;
-          break;
-
-        case _enums__WEBPACK_IMPORTED_MODULE_1__["VerticalAlignmentType"].Bottom:
-          itemShift = row.depth - size.height;
-          break;
-      }
-
-      break;
-
-    case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Dot:
-    case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Line:
-    case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Invisible:
-      itemShift = row.horizontalConnectorsDepth - size.height / 2.0;
-      break;
-  }
-
-  return new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_0__["default"](offset - size.width / 2, row.offset - row.depth / 2 + itemShift, size.width, size.height);
+  return new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_0__["default"](offset - size.width / 2, row.offset - size.height / 2.0, size.width, size.height);
 };
 
 /***/ }),
@@ -38207,8 +37598,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function ItemLayout(treeItem) {
-  this.treeItem = treeItem;
+function ItemLayout(visibility) {
+  this.visibility = visibility;
 }
 
 ItemLayout.prototype.measure = function (levelVisibility, isCursor, isSelected, treeItemTemplate, treeItemsPositions, options) {
@@ -38218,7 +37609,7 @@ ItemLayout.prototype.measure = function (levelVisibility, isCursor, isSelected, 
       buttonsPanelSize = options.buttonsPanelSize,
       groupTitlePanelSize = options.groupTitlePanelSize,
       groupTitlePlacementType = options.groupTitlePlacementType;
-  var treeItemVisibility = isSelected || isCursor ? _enums__WEBPACK_IMPORTED_MODULE_2__["Visibility"].Normal : !this.treeItem.isVisible ? _enums__WEBPACK_IMPORTED_MODULE_2__["Visibility"].Invisible : _enums__WEBPACK_IMPORTED_MODULE_2__["Visibility"].Auto;
+  var treeItemVisibility = isSelected || isCursor ? _enums__WEBPACK_IMPORTED_MODULE_2__["Visibility"].Normal : this.visibility;
   var actualVisibility = treeItemVisibility === _enums__WEBPACK_IMPORTED_MODULE_2__["Visibility"].Auto ? levelVisibility : treeItemVisibility;
 
   switch (actualVisibility) {
@@ -38365,7 +37756,7 @@ MatrixLayout.prototype.measure = function (levelVisibility, isCursor, isSelected
   this.measureRows(data, this.items, treeItemsPositions, options);
   this.data = data;
   var treeItemPosition = new _models_TreeItemPosition__WEBPACK_IMPORTED_MODULE_2__["default"]();
-  treeItemPosition.actualVisibility = _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Invisible;
+  treeItemPosition.actualVisibility = _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Normal;
   treeItemPosition.actualSize = this.getLayoutSize(data);
   return treeItemPosition;
 };
@@ -38584,6 +37975,516 @@ MatrixLayout.prototype.getItemPosition = function (visibility, column, row, size
 
 /***/ }),
 
+/***/ "./src/tasks/transformations/layouts/OrgLayout.js":
+/*!********************************************************!*\
+  !*** ./src/tasks/transformations/layouts/OrgLayout.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return OrgLayout; });
+/* harmony import */ var _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../graphics/structs/Rect */ "./src/graphics/structs/Rect.js");
+/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../enums */ "./src/enums.js");
+/* harmony import */ var _models_TreeLevelPosition__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../models/TreeLevelPosition */ "./src/models/TreeLevelPosition.js");
+/* harmony import */ var _models_TreeItemPosition__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../models/TreeItemPosition */ "./src/models/TreeItemPosition.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+
+function ChildLayoutPosition(offset, leftPadding, rightPadding) {
+  this.offset = offset;
+  this.leftPadding = leftPadding;
+  this.rightPadding = rightPadding;
+}
+
+function OrgLayout(visualTree, treeLevels, leftMargins, rightMargins, getConnectorsStacksSizes) {
+  this.visualTree = visualTree;
+  this.treeLevels = treeLevels; // TreeLevels of OrgItem used properties: isVisible
+
+  this.leftMargins = leftMargins;
+  this.rightMargins = rightMargins;
+  this.getConnectorsStacksSizes = getConnectorsStacksSizes;
+  this.treeLevelsPositions = [];
+  this.childLayoutsPositions = {};
+}
+;
+
+OrgLayout.prototype.loop = function (thisArg, onItem) {
+  if (onItem != null) {
+    var zeroBasedLevelIndex = 0;
+    this.treeLevels.loopLevels(this, function (levelIndex) {
+      this.treeLevels.loopLevelItems(this, levelIndex, function (treeItemId, treeItem) {
+        onItem.call(thisArg, treeItem, zeroBasedLevelIndex);
+      });
+      zeroBasedLevelIndex += 1;
+    });
+  }
+};
+
+OrgLayout.prototype.measure = function (levelVisibility, isCursor, isSelected, treeItemTemplate, treeItemsPositions, options) {
+  this.treeLevelsPositions = [];
+  this.treeLevels.loopLevels(this, function (index, levelContext) {
+    var treeLevelPosition = new _models_TreeLevelPosition__WEBPACK_IMPORTED_MODULE_2__["default"]();
+    this.treeLevelsPositions.push(treeLevelPosition);
+  });
+  this.setOffsets(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions, this.visualTree, this.rightMargins, this.leftMargins, options.intervals, options.arrowsDirection, options.linesWidth, options.cousinsIntervalMultiplier, options.horizontalAlignment, options.padding);
+  this.setLevelsDepth(this.treeLevels, treeItemsPositions, this.treeLevelsPositions, options.verticalAlignment);
+  this.shiftLevels(this.treeLevelsPositions, options.padding.top, options.shifts, options.arrowsDirection, options.linesWidth, this.getConnectorsStacksSizes);
+  var treeItemPosition = new _models_TreeItemPosition__WEBPACK_IMPORTED_MODULE_3__["default"]();
+  treeItemPosition.actualVisibility = _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Normal;
+  treeItemPosition.actualSize = this.getLayoutSize(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions, options.padding);
+  return treeItemPosition;
+};
+
+OrgLayout.prototype.getLayoutSize = function (treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions, padding) {
+  return new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_0__["default"](0, 0, Math.round(this.getLayoutWidth(treeLevels, treeItemsPositions, childLayoutsPositions, padding)), Math.round(this.getLayoutHeight(treeLevelsPositions, padding)));
+};
+
+OrgLayout.prototype.getLayoutWidth = function (treeLevels, treeItemsPositions, childLayoutsPositions, padding) {
+  var result = 0;
+  treeLevels.loopLevels(this, function (levelIndex, level) {
+    var levelLength = treeLevels.getLevelLength(levelIndex);
+
+    if (levelLength > 0) {
+      var itemId = treeLevels.getItemAtPosition(levelIndex, levelLength - 1),
+          treeItemPosition = treeItemsPositions[itemId],
+          childLayoutPosition = childLayoutsPositions[itemId];
+      result = Math.max(result, childLayoutPosition.offset + treeItemPosition.actualSize.width + padding.right);
+    }
+  });
+  return result;
+};
+
+OrgLayout.prototype.getLayoutHeight = function (treeLevelsPositions, padding) {
+  var len = treeLevelsPositions.length,
+      treeLevel = treeLevelsPositions[len - 1];
+  return treeLevel.getNodesBottom() + padding.bottom;
+};
+
+OrgLayout.prototype.setLevelsDepth = function (treeLevels, treeItemsPositions, treeLevelsPositions, verticalAlignment) {
+  var minimalDepth, dotsDepth;
+  treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
+    var treeLevelPosition = treeLevelsPositions[levelIndex];
+    treeLevelPosition.shift = 0.0;
+    treeLevelPosition.depth = 0.0;
+    treeLevelPosition.actualVisibility = _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Invisible;
+    minimalDepth = null;
+    /* minimum  height of non-dot items in level */
+
+    dotsDepth = null;
+    /* maximum dots height */
+
+    treeLevels.loopLevelItems(this, levelIndex, function (itemId, treeItem, position) {
+      var treeItemPosition = treeItemsPositions[itemId];
+      treeLevelPosition.depth = Math.max(treeLevelPosition.depth, treeItemPosition.actualSize.height);
+
+      switch (treeItemPosition.actualVisibility) {
+        case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Dot:
+        case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Line:
+        case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Invisible:
+          dotsDepth = !dotsDepth ? treeItemPosition.actualSize.height : Math.min(dotsDepth, treeItemPosition.actualSize.height);
+          break;
+
+        default:
+          minimalDepth = !minimalDepth ? treeItemPosition.actualSize.height : Math.min(minimalDepth, treeItemPosition.actualSize.height);
+          break;
+      }
+
+      treeLevelPosition.actualVisibility = Math.min(treeLevelPosition.actualVisibility, treeItemPosition.actualVisibility);
+    });
+
+    if (minimalDepth == null) {
+      minimalDepth = treeLevelPosition.depth;
+    }
+
+    if (dotsDepth != null && dotsDepth > minimalDepth) {
+      minimalDepth = dotsDepth;
+    }
+
+    switch (verticalAlignment) {
+      case _enums__WEBPACK_IMPORTED_MODULE_1__["VerticalAlignmentType"].Top:
+        treeLevelPosition.horizontalConnectorsDepth = minimalDepth / 2.0;
+        break;
+
+      case _enums__WEBPACK_IMPORTED_MODULE_1__["VerticalAlignmentType"].Middle:
+        treeLevelPosition.horizontalConnectorsDepth = treeLevelPosition.depth / 2.0;
+        break;
+
+      case _enums__WEBPACK_IMPORTED_MODULE_1__["VerticalAlignmentType"].Bottom:
+        treeLevelPosition.horizontalConnectorsDepth = treeLevelPosition.depth - minimalDepth / 2.0;
+        break;
+    }
+  });
+};
+
+OrgLayout.prototype.shiftLevels = function (treeLevelsPositions, shift, shifts, arrowsDirection, linesWidth, getConnectorsStacksSizes) {
+  var index,
+      len,
+      treeLevelPosition,
+      childrenSpace = 0,
+      parentsSpace = 0,
+      arrowTipLength = linesWidth * 8;
+
+  switch (arrowsDirection) {
+    case _enums__WEBPACK_IMPORTED_MODULE_1__["GroupByType"].Parents:
+      childrenSpace = arrowTipLength;
+      parentsSpace = 0;
+      break;
+
+    case _enums__WEBPACK_IMPORTED_MODULE_1__["GroupByType"].Children:
+      childrenSpace = 0;
+      parentsSpace = arrowTipLength;
+      break;
+  }
+
+  var isTopLevel = true;
+
+  for (index = 0, len = treeLevelsPositions.length; index < len; index += 1) {
+    treeLevelPosition = treeLevelsPositions[index];
+
+    if (isTopLevel && treeLevelPosition.actualVisibility == _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Invisible) {
+      treeLevelPosition.setShift(0, 0, 0, 0, 0);
+    } else {
+      var parentsStackSize = getConnectorsStacksSizes(index).parentsStackSize;
+      shift += treeLevelPosition.setShift(shift, shifts[treeLevelPosition.actualVisibility], parentsSpace, childrenSpace, parentsStackSize);
+      isTopLevel = false;
+    }
+  }
+};
+
+OrgLayout.prototype.setOffsets = function (treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions, visualTree, rightMargins, leftMargins, intervals, arrowsDirection, linesWidth, cousinsIntervalMultiplier, horizontalAlignment, padding) {
+  var index, len;
+
+  for (index = 0, len = treeLevelsPositions.length; index < len; index += 1) {
+    treeLevelsPositions[index].currentOffset = 0.0;
+  }
+
+  visualTree.loopPostOrder(this, function (treeItemId, treeItem, parentId, parent) {
+    var treeItemPosition = treeItemsPositions[treeItemId],
+        treeItemVisibility = treeItemPosition.actualVisibility,
+        treeItemLevelIndex = treeLevels.getLevelIndex(treeItemId),
+        treeLevelPosition = treeLevelsPositions[treeItemLevelIndex],
+        treeItemPadding = intervals[treeItemVisibility === _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Auto ? treeLevelPosition.currentvisibility : treeItemVisibility] / 2.0,
+        index,
+        len,
+        offset,
+        siblings,
+        gaps,
+        gap,
+        leftMargin,
+        parentItem,
+        groups,
+        items,
+        item1,
+        item2,
+        groupIndex,
+        groupOffset,
+        group,
+        sibling,
+        leftPadding = treeLevelPosition.currentOffset > 0 ? treeItemPadding + treeItemPadding * treeItem.relationDegree * cousinsIntervalMultiplier : padding.left,
+        arrowTipLength = linesWidth * 8;
+
+    if (treeItemId == 0) {
+      var i = 2;
+    }
+
+    childLayoutsPositions[treeItemId] = new ChildLayoutPosition(0, leftPadding, treeItemPadding);
+    var childLayoutPosition = childLayoutsPositions[treeItemId];
+
+    if (arrowsDirection != _enums__WEBPACK_IMPORTED_MODULE_1__["GroupByType"].None) {
+      if (treeItem.connectorPlacement & _enums__WEBPACK_IMPORTED_MODULE_1__["SideFlag"].Left) {
+        childLayoutPosition.leftPadding += arrowTipLength;
+      }
+
+      if (treeItem.connectorPlacement & _enums__WEBPACK_IMPORTED_MODULE_1__["SideFlag"].Right) {
+        childLayoutPosition.rightPadding += arrowTipLength;
+      }
+    }
+
+    childLayoutPosition.offset = treeLevelPosition.currentOffset + childLayoutPosition.leftPadding;
+    treeLevelPosition.currentOffset = childLayoutPosition.offset + treeItemPosition.actualSize.width + childLayoutPosition.rightPadding;
+
+    if (visualTree.hasChildren(treeItemId)) {
+      offset = this.getChildrenOffset(treeItem, treeItemsPositions, childLayoutsPositions, visualTree, horizontalAlignment);
+
+      if (offset > 0) {
+        this.offsetItemChildren(treeItem, offset, treeLevels, visualTree, treeItemsPositions, childLayoutsPositions, treeLevelsPositions);
+      } else if (offset < 0) {
+        offset = -offset;
+        this.offsetItem(treeItem, offset, treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions);
+        siblings = null;
+        gaps = {};
+        leftMargin = null;
+        parentItem = visualTree.parent(treeItem.id);
+
+        if (parentItem !== null) {
+          visualTree.loopChildrenReversed(this, parentItem.id, function (childItemId, childItem, index) {
+            if (childItem === treeItem) {
+              siblings = [];
+            } else if (siblings !== null) {
+              gap = this.getGapBetweenSiblings(childItem, treeItem, rightMargins, leftMargins, treeItemsPositions, childLayoutsPositions);
+              gaps[childItem.id] = gap;
+
+              if (gap > 0) {
+                siblings.splice(0, 0, childItem);
+              } else {
+                leftMargin = childItem;
+                return true;
+              }
+            }
+          });
+
+          if (siblings.length > 0) {
+            groups = null;
+
+            if (leftMargin !== null) {
+              items = [leftMargin];
+              items = items.concat(siblings);
+              items.push(treeItem);
+              groups = [[leftMargin]];
+
+              for (index = 1, len = items.length; index < len; index += 1) {
+                item1 = items[index - 1];
+                item2 = items[index];
+
+                if (item1.gravity == _enums__WEBPACK_IMPORTED_MODULE_1__["HorizontalAlignmentType"].Right || item2.gravity == _enums__WEBPACK_IMPORTED_MODULE_1__["HorizontalAlignmentType"].Left) {
+                  groups[groups.length - 1].push(item2);
+                } else {
+                  groups.push([item2]);
+                }
+              }
+            } else {
+              groups = [siblings.slice(0)];
+              groups[groups.length - 1].push(treeItem);
+            } // align items to the right
+
+
+            if (groups.length > 0) {
+              siblings = groups[groups.length - 1];
+
+              for (index = siblings.length - 2; index >= 0; index -= 1) {
+                sibling = siblings[index];
+                gap = gaps[sibling.id];
+                offset = Math.min(gap, offset);
+                this.offsetItem(sibling, offset, treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions);
+                this.offsetItemChildren(sibling, offset, treeLevels, visualTree, treeItemsPositions, childLayoutsPositions, treeLevelsPositions);
+              }
+            } // spread items proportionally
+
+
+            groupOffset = offset / (groups.length - 1);
+
+            for (groupIndex = groups.length - 2; groupIndex > 0; groupIndex -= 1) {
+              group = groups[groupIndex];
+
+              for (index = group.length - 1; index >= 0; index -= 1) {
+                sibling = group[index];
+                gap = gaps[sibling.id];
+                offset = Math.min(groupIndex * groupOffset, Math.min(gap, offset));
+                this.offsetItem(sibling, offset, treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions);
+                this.offsetItemChildren(sibling, offset, treeLevels, visualTree, treeItemsPositions, childLayoutsPositions, treeLevelsPositions);
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+};
+
+OrgLayout.prototype.getGapBetweenSiblings = function (leftItem, rightItem, rightMargins, leftMargins, treeItemsPositions, childLayoutsPositions) {
+  var result = null,
+      itemRightMargins = this.getRightMargins(leftItem, rightMargins, treeItemsPositions, childLayoutsPositions),
+      itemLeftMargins = this.getLeftMargins(rightItem, leftMargins, childLayoutsPositions),
+      depth = Math.min(itemRightMargins.length, itemLeftMargins.length);
+
+  for (var index = 0; index < depth; index += 1) {
+    var gap = itemLeftMargins[index] - itemRightMargins[index];
+    result = result !== null ? Math.min(result, gap) : gap;
+
+    if (gap <= 0) {
+      break;
+    }
+  }
+
+  return Math.floor(result);
+};
+
+OrgLayout.prototype.getRightMargins = function (treeItem, rightMargins, treeItemsPositions, childLayoutsPositions) {
+  var result = [],
+      itemRightMargins = rightMargins[treeItem.id];
+
+  if (itemRightMargins === undefined) {
+    itemRightMargins = [];
+  }
+
+  itemRightMargins = itemRightMargins.slice();
+  itemRightMargins.splice(0, 0, treeItem.id);
+
+  for (var index = 0, len = itemRightMargins.length; index < len; index += 1) {
+    var treeItemId = itemRightMargins[index];
+    var treeItemPosition = treeItemsPositions[treeItemId];
+    var childLayoutPosition = childLayoutsPositions[treeItemId];
+    result[index] = childLayoutPosition.offset + treeItemPosition.actualSize.width + childLayoutPosition.rightPadding;
+  }
+
+  return result;
+};
+
+OrgLayout.prototype.getLeftMargins = function (treeItem, leftMargins, childLayoutsPositions) {
+  var result = [],
+      itemLeftMargins = leftMargins[treeItem.id];
+
+  if (itemLeftMargins === undefined) {
+    itemLeftMargins = [];
+  }
+
+  itemLeftMargins = itemLeftMargins.slice();
+  itemLeftMargins.splice(0, 0, treeItem.id);
+
+  for (var index = 0, len = itemLeftMargins.length; index < len; index += 1) {
+    var childLayoutPosition = childLayoutsPositions[itemLeftMargins[index]];
+    result[index] = childLayoutPosition.offset - childLayoutPosition.leftPadding;
+  }
+
+  return result;
+};
+
+OrgLayout.prototype.getChildrenOffset = function (treeItem, treeItemsPositions, childLayoutsPositions, visualTree, horizontalAlignment) {
+  var treeItemPosition = treeItemsPositions[treeItem.id],
+      childLayoutPosition = childLayoutsPositions[treeItem.id],
+      treeItemCenterOffset = childLayoutPosition.offset + treeItemPosition.actualSize.width / 2.0,
+      childrenCenterOffset = null;
+
+  if (treeItem.visualAggregatorId === null) {
+    var firstItem = null;
+    visualTree.loopChildren(this, treeItem.id, function (childItemId, childItem, index) {
+      firstItem = childItem;
+
+      if (firstItem.connectorPlacement & _enums__WEBPACK_IMPORTED_MODULE_1__["SideFlag"].Top) {
+        return true;
+      }
+    });
+    var firstItemPosition = treeItemsPositions[firstItem.id];
+    var firstLayoutPosition = childLayoutsPositions[firstItem.id];
+    var lastItem = null;
+    visualTree.loopChildrenReversed(this, treeItem.id, function (childItemId, childItem, index) {
+      lastItem = childItem;
+
+      if (lastItem.connectorPlacement & _enums__WEBPACK_IMPORTED_MODULE_1__["SideFlag"].Top) {
+        return true;
+      }
+    });
+    var lastItemPosition = treeItemsPositions[lastItem.id];
+    var lastLayoutPosition = childLayoutsPositions[lastItem.id];
+
+    switch (horizontalAlignment) {
+      case _enums__WEBPACK_IMPORTED_MODULE_1__["HorizontalAlignmentType"].Left:
+        childrenCenterOffset = firstLayoutPosition.offset + firstItemPosition.actualSize.width / 2.0;
+        break;
+
+      case _enums__WEBPACK_IMPORTED_MODULE_1__["HorizontalAlignmentType"].Right:
+        childrenCenterOffset = lastLayoutPosition.offset + lastItemPosition.actualSize.width / 2.0;
+        break;
+
+      case _enums__WEBPACK_IMPORTED_MODULE_1__["HorizontalAlignmentType"].Center:
+        childrenCenterOffset = (firstLayoutPosition.offset + lastLayoutPosition.offset + lastItemPosition.actualSize.width) / 2.0;
+        break;
+    }
+  } else {
+    var visualAggregatorPosition = treeItemsPositions[treeItem.visualAggregatorId];
+    var visualAggregatorLayoutPosition = childLayoutsPositions[treeItem.visualAggregatorId];
+    childrenCenterOffset = visualAggregatorLayoutPosition.offset + visualAggregatorPosition.actualSize.width / 2.0;
+  }
+
+  return treeItemCenterOffset - childrenCenterOffset;
+};
+
+OrgLayout.prototype.offsetItem = function (treeItem, offset, treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions) {
+  var treeItemPosition = treeItemsPositions[treeItem.id];
+  var childLayoutPosition = childLayoutsPositions[treeItem.id];
+  childLayoutPosition.offset += offset;
+  var treeLevelPosition = treeLevelsPositions[treeLevels.getLevelIndex(treeItem.id)];
+  treeLevelPosition.currentOffset = Math.max(treeLevelPosition.currentOffset, childLayoutPosition.offset + treeItemPosition.actualSize.width + childLayoutPosition.rightPadding);
+};
+
+OrgLayout.prototype.offsetItemChildren = function (treeItem, offset, treeLevels, visualTree, treeItemsPositions, childLayoutsPositions, treeLevelsPositions) {
+  visualTree.loopLevels(this, treeItem.id, function (childItemId, childItem, levelid) {
+    var treeItemPosition = treeItemsPositions[childItemId];
+    var childLayoutPosition = childLayoutsPositions[childItemId];
+    childLayoutPosition.offset += offset;
+    var treeLevelPosition = treeLevelsPositions[treeLevels.getLevelIndex(childItemId)];
+    treeLevelPosition.currentOffset = Math.max(treeLevelPosition.currentOffset, childLayoutPosition.offset + treeItemPosition.actualSize.width);
+    return true;
+  });
+};
+
+OrgLayout.prototype.arrange = function (thisArg, position, layoutDirection, treeItemsPositions, options, onItemPositioned) {
+  var prevLevelPosition = null;
+
+  if (onItemPositioned != null) {
+    this.treeLevels.loopLevels(this, function (levelIndex, treeLevel) {
+      var treeLevelPosition = this.treeLevelsPositions[levelIndex];
+      this.treeLevels.loopLevelItems(this, levelIndex, function (itemId, treeItem, position) {
+        var treeItemPosition = treeItemsPositions[itemId];
+        var childLayoutPosition = this.childLayoutsPositions[itemId];
+        var result = this.getItemPosition(treeItemPosition.actualVisibility, childLayoutPosition.offset, treeItemPosition.actualSize, prevLevelPosition, treeLevelPosition, options.verticalAlignment);
+        onItemPositioned.call(thisArg, itemId, _objectSpread(_objectSpread({}, treeItemPosition), result));
+      });
+      prevLevelPosition = treeLevelPosition;
+    });
+  }
+};
+
+OrgLayout.prototype.getItemPosition = function (visibility, offset, size, prevLevel, level, verticalAlignment) {
+  var itemShift = 0;
+
+  switch (visibility) {
+    case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Normal:
+      switch (verticalAlignment) {
+        case _enums__WEBPACK_IMPORTED_MODULE_1__["VerticalAlignmentType"].Top:
+          itemShift = 0;
+          break;
+
+        case _enums__WEBPACK_IMPORTED_MODULE_1__["VerticalAlignmentType"].Middle:
+          itemShift = (level.depth - size.height) / 2.0;
+          break;
+
+        case _enums__WEBPACK_IMPORTED_MODULE_1__["VerticalAlignmentType"].Bottom:
+          itemShift = level.depth - size.height;
+          break;
+      }
+
+      break;
+
+    case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Dot:
+    case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Line:
+    case _enums__WEBPACK_IMPORTED_MODULE_1__["Visibility"].Invisible:
+      itemShift = level.horizontalConnectorsDepth - size.height / 2.0;
+      break;
+  }
+
+  return {
+    actualPosition: new _graphics_structs_Rect__WEBPACK_IMPORTED_MODULE_0__["default"](offset, level.shift + itemShift, size.width, size.height),
+    horizontalConnectorsShift: level.shift + level.horizontalConnectorsDepth,
+    topConnectorShift: prevLevel != null ? prevLevel.shift + prevLevel.connectorShift : null,
+    topConnectorInterval: prevLevel != null ? prevLevel.levelSpace / 2 : null,
+    bottomConnectorShift: level.shift + level.connectorShift,
+    bottomConnectorInterval: level.levelSpace / 2
+  };
+};
+
+/***/ }),
+
 /***/ "./src/tasks/transformations/selection/CombinedNormalVisibilityItemsTask.js":
 /*!**********************************************************************************!*\
   !*** ./src/tasks/transformations/selection/CombinedNormalVisibilityItemsTask.js ***!
@@ -38600,12 +38501,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function CombinedNormalVisibilityItemsTask(itemsSizesOptionTask, cursorItemTask, cursorNeighboursTask, selectedItemsTask, selectionPathItemsTask, normalVisibilityItemsByForegroundShapeAnnotationTask, normalVisibilityItemsByBackgroundShapeAnnotationTask, normalVisibilityItemsByBackgroundAnnotationTask, normalVisibilityItemsByForegroundHighlightPathAnnotationTask, normalVisibilityItemsByBackgroundHighlightPathAnnotationTask, normalVisibilityItemsByForegroundConnectorAnnotationTask, normalVisibilityItemsByBackgroundConnectorAnnotationTask) {
+function CombinedNormalVisibilityItemsTask(itemsSizesOptionTask, cursorItemTask, cursorNeighboursTask, selectedItemsTask, selectionPathItemsTask, normalVisibilityItemsByForegroundShapeAnnotationTask, normalVisibilityItemsByBackgroundShapeAnnotationTask, normalVisibilityItemsByBackgroundAnnotationTask, normalVisibilityItemsByForegroundHighlightPathAnnotationTask, normalVisibilityItemsByBackgroundHighlightPathAnnotationTask, normalVisibilityItemsByForegroundConnectorAnnotationTask, normalVisibilityItemsByBackgroundConnectorAnnotationTask, NormalVisibilityItemsByMinimumVisibleLevelsTask) {
   var _data = {
     items: []
   },
       _hash = {},
-      _sourceTasks = [cursorItemTask, cursorNeighboursTask, selectedItemsTask, selectionPathItemsTask, normalVisibilityItemsByForegroundShapeAnnotationTask, normalVisibilityItemsByBackgroundShapeAnnotationTask, normalVisibilityItemsByBackgroundAnnotationTask, normalVisibilityItemsByForegroundHighlightPathAnnotationTask, normalVisibilityItemsByBackgroundHighlightPathAnnotationTask, normalVisibilityItemsByForegroundConnectorAnnotationTask, normalVisibilityItemsByBackgroundConnectorAnnotationTask],
+      _sourceTasks = [cursorItemTask, cursorNeighboursTask, selectedItemsTask, selectionPathItemsTask, normalVisibilityItemsByForegroundShapeAnnotationTask, normalVisibilityItemsByBackgroundShapeAnnotationTask, normalVisibilityItemsByBackgroundAnnotationTask, normalVisibilityItemsByForegroundHighlightPathAnnotationTask, normalVisibilityItemsByBackgroundHighlightPathAnnotationTask, normalVisibilityItemsByForegroundConnectorAnnotationTask, normalVisibilityItemsByBackgroundConnectorAnnotationTask, NormalVisibilityItemsByMinimumVisibleLevelsTask],
       _dataTemplate = new _readers_ArrayReader__WEBPACK_IMPORTED_MODULE_0__["default"](new _readers_ValueReader__WEBPACK_IMPORTED_MODULE_1__["default"](["string", "number"], true), true);
 
   function process() {
@@ -38810,6 +38711,89 @@ function FamCursorNeighboursTask(cursorItemTask, neighboursSelectionModeOptionTa
             }
           });
           break;
+      }
+    }
+
+    return result;
+  }
+
+  function getItems() {
+    return _data.items;
+  }
+
+  return {
+    process: process,
+    getItems: getItems
+  };
+}
+;
+
+/***/ }),
+
+/***/ "./src/tasks/transformations/selection/FamNormalVisibilityItemsByMinimumVisibleLevelsTask.js":
+/*!***************************************************************************************************!*\
+  !*** ./src/tasks/transformations/selection/FamNormalVisibilityItemsByMinimumVisibleLevelsTask.js ***!
+  \***************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return FamNormalVisibilityItemsByMinimumVisibleLevelsTask; });
+/* harmony import */ var _readers_ArrayReader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../readers/ArrayReader */ "./src/readers/ArrayReader.js");
+/* harmony import */ var _readers_ValueReader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../readers/ValueReader */ "./src/readers/ValueReader.js");
+/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../enums */ "./src/enums.js");
+
+
+
+function FamNormalVisibilityItemsByMinimumVisibleLevelsTask(minimumVisibleLevelsOptionTask, orderFamilyNodesTask) {
+  var _data = {
+    items: []
+  },
+      _hash = {};
+
+  var _dataTemplate = new _readers_ArrayReader__WEBPACK_IMPORTED_MODULE_0__["default"](new _readers_ValueReader__WEBPACK_IMPORTED_MODULE_1__["default"](["string", "number"], true), true);
+
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    },
+        treeLevels = orderFamilyNodesTask.getTreeLevels(),
+        _minimumVisibleLevels = minimumVisibleLevelsOptionTask.getOptions(),
+        pageFitMode = _minimumVisibleLevels.pageFitMode,
+        minimalVisibility = _minimumVisibleLevels.minimalVisibility,
+        minimumVisibleLevels = _minimumVisibleLevels.minimumVisibleLevels;
+
+    _data.items = _dataTemplate.read(_data.items, getSelectedItems(treeLevels, pageFitMode, minimalVisibility, minimumVisibleLevels), "items", context);
+    return context.isChanged;
+  }
+
+  function getSelectedItems(treeLevels, pageFitMode, minimalVisibility, minimumVisibleLevels) {
+    var result = [];
+
+    if (minimumVisibleLevels > 0) {
+      if (_enums__WEBPACK_IMPORTED_MODULE_2__["PageFitMode"].PageWidth == pageFitMode || _enums__WEBPACK_IMPORTED_MODULE_2__["PageFitMode"].PageHeight || _enums__WEBPACK_IMPORTED_MODULE_2__["PageFitMode"].FitToPage) {
+        if (minimalVisibility != _enums__WEBPACK_IMPORTED_MODULE_2__["Visibility"].Normal) {
+          var index = 0,
+              currentLevel = null;
+          treeLevels.loopLevels(this, function (levelIndex, level) {
+            treeLevels.loopLevelItems(this, levelIndex, function (nodeId, node, position) {
+              if (node.isVisible) {
+                if (currentLevel !== levelIndex) {
+                  currentLevel = levelIndex;
+                  index += 1;
+                }
+
+                result.push(nodeId);
+              }
+            });
+
+            if (index >= minimumVisibleLevels) {
+              return true;
+            }
+          });
+        }
       }
     }
 
@@ -39122,6 +39106,95 @@ function OrgCursorNeighboursTask(cursorItemTask, navigationFamilyTask) {
 
         return true;
       });
+    }
+
+    return result;
+  }
+
+  function getItems() {
+    return _data.items;
+  }
+
+  return {
+    process: process,
+    getItems: getItems
+  };
+}
+;
+
+/***/ }),
+
+/***/ "./src/tasks/transformations/selection/OrgNormalVisibilityItemsByMinimumVisibleLevelsTask.js":
+/*!***************************************************************************************************!*\
+  !*** ./src/tasks/transformations/selection/OrgNormalVisibilityItemsByMinimumVisibleLevelsTask.js ***!
+  \***************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return OrgNormalVisibilityItemsByMinimumVisibleLevelsTask; });
+/* harmony import */ var _readers_ArrayReader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../readers/ArrayReader */ "./src/readers/ArrayReader.js");
+/* harmony import */ var _readers_ValueReader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../readers/ValueReader */ "./src/readers/ValueReader.js");
+/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../enums */ "./src/enums.js");
+
+
+
+function OrgNormalVisibilityItemsByMinimumVisibleLevelsTask(minimumVisibleLevelsOptionTask, orgTreeTask) {
+  var _data = {
+    items: []
+  },
+      _hash = {};
+
+  var _dataTemplate = new _readers_ArrayReader__WEBPACK_IMPORTED_MODULE_0__["default"](new _readers_ValueReader__WEBPACK_IMPORTED_MODULE_1__["default"](["string", "number"], true), true);
+
+  function process() {
+    var context = {
+      isChanged: false,
+      hash: _hash
+    },
+        orgTree = orgTreeTask.getOrgTree(),
+        _minimumVisibleLevels = minimumVisibleLevelsOptionTask.getOptions(),
+        pageFitMode = _minimumVisibleLevels.pageFitMode,
+        minimalVisibility = _minimumVisibleLevels.minimalVisibility,
+        minimumVisibleLevels = _minimumVisibleLevels.minimumVisibleLevels;
+
+    _data.items = _dataTemplate.read(_data.items, getSelectedItems(orgTree, pageFitMode, minimalVisibility, minimumVisibleLevels), "items", context);
+    return context.isChanged;
+  }
+
+  function getSelectedItems(orgTree, pageFitMode, minimalVisibility, minimumVisibleLevels) {
+    var result = [],
+        buckets = [];
+
+    if (minimumVisibleLevels > 0) {
+      if (_enums__WEBPACK_IMPORTED_MODULE_2__["PageFitMode"].PageWidth == pageFitMode || _enums__WEBPACK_IMPORTED_MODULE_2__["PageFitMode"].PageHeight || _enums__WEBPACK_IMPORTED_MODULE_2__["PageFitMode"].FitToPage) {
+        if (minimalVisibility != _enums__WEBPACK_IMPORTED_MODULE_2__["Visibility"].Normal) {
+          orgTree.loopLevels(this, function (nodeId, node, levelIndex) {
+            if (node.isVisible) {
+              var nodeLevel = levelIndex + node.levelOffset;
+
+              if (!buckets[nodeLevel]) {
+                buckets[nodeLevel] = [nodeId];
+              } else {
+                buckets[nodeLevel].push(nodeId);
+              }
+            }
+          });
+          var actualLevel = 0;
+
+          for (var index = 0; index < buckets.length; index += 1) {
+            if (buckets[index] != null) {
+              result = result.concat(buckets[index]);
+              actualLevel += 1;
+
+              if (actualLevel >= minimumVisibleLevels) {
+                break;
+              }
+            }
+          }
+        }
+      }
     }
 
     return result;

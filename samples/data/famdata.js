@@ -676,25 +676,34 @@ var famdataWorld = {
   ]
 };
 
-var famdata2NodesLoopTest = {
+var linkedListLoopTest = {
   cursorItem: 2,
   annotations: [
-    { annotationType: primitives.AnnotationType.Label, fromItem: 2, toItems: [1, 101, 102, 103], title: "2->1" },
-    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [2], title: "1->2" },
-    new primitives.BackgroundAnnotationConfig({
-      items: [1, 101, 102, 103],
-      borderColor: "#f8e5f9",
-      fillColor: "#e5f9f8",
-      lineWidth: 2,
-      selectItems: true,
-      includeChildren: true,
-      lineType: primitives.LineType.Dotted,
-      offset: new primitives.Thickness(20, 20, 20, 20)
-    })
+    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [2], title: "12%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 2, toItems: [3], title: "23%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 3, toItems: [4], title: "34%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 4, toItems: [5], title: "34%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [5], title: "15%" }
   ],
   items: [
-    { id: 1, parents: [2], title: "1", label: "1", description: "1", image: "../images/photos/j.png", itemTitleColor: "#ff0000" },
-    { id: 2, parents: [1, 101, 102, 103], title: "2", label: "2", description: "2", image: "../images/photos/b.png", itemTitleColor: "#4b0082" },
+    { id: 1, parents: [5,2], title: "1", label: "1", description: "1", image: "../images/photos/a.png", itemTitleColor: "#ff0000" },
+    { id: 2, parents: [1,3], title: "2", label: "2", description: "2", image: "../images/photos/b.png", itemTitleColor: "#4b0082" },
+    { id: 3, parents: [2,4], title: "3", label: "3", description: "3", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
+    { id: 4, parents: [3,5], title: "4", label: "4", description: "4", image: "../images/photos/d.png", itemTitleColor: "#4b0082" },
+    { id: 5, parents: [4,1], title: "5", label: "5", description: "5", image: "../images/photos/e.png", itemTitleColor: "#4b0082" },
+  ]
+};
+
+var intelinkedNodes = {
+  cursorItem: 1,
+  annotations: [
+  ],
+  items: [
+    { id: 1, parents: [1,2,3,4,5], title: "1", label: "1", description: "1", image: "../images/photos/a.png", itemTitleColor: "#ff0000" },
+    { id: 2, parents: [1,2,3,4,5], title: "2", label: "2", description: "2", image: "../images/photos/b.png", itemTitleColor: "#4b0082" },
+    { id: 3, parents: [1,2,3,4,5], title: "3", label: "3", description: "3", image: "../images/photos/c.png", itemTitleColor: "#4b0082" },
+    { id: 4, parents: [1,2,3,4,5], title: "4", label: "4", description: "4", image: "../images/photos/d.png", itemTitleColor: "#4b0082" },
+    { id: 5, parents: [1,2,3,4,5], title: "5", label: "5", description: "5", image: "../images/photos/e.png", itemTitleColor: "#4b0082" },
   ]
 };
 
@@ -810,6 +819,142 @@ var matrixLayout = {
   ]
 };
 
+var matrixNLabelsLayout = {
+  cursorItem: 1,
+  enableMatrixLayout: true,
+  annotations: [
+    {
+      annotationType: primitives.AnnotationType.Connector,
+      fromItem: 10,
+      toItem: 24,
+      label: "<span class=\"badge bg-danger\">1</span>",
+      labelSize: { width: 30, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
+      offset: 5,
+      lineWidth: 2,
+      lineType: primitives.LineType.Dashed
+    }
+  ],
+  items: [
+    { id: 1, parents: [], title: "1", label: "1", description: "", image: "../images/photos/z.png", itemTitleColor: "#ff0000" },
+    { id: 2, parents: [1, 101, 102, 103], title: "2", label: "2", description: "", image: "../images/photos/a.png", itemTitleColor: "#ff0000" },
+    { id: 3, parents: [1, 101, 102, 103], title: "3", label: "3", description: "", image: "../images/photos/b.png", itemTitleColor: "#ff0000" },
+    { id: 4, parents: [1, 101, 102, 103], title: "4", label: "4", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" },
+    { id: 6, parents: [1, 101, 102, 103], title: "6", label: "6", description: "", image: "../images/photos/e.png", itemTitleColor: "#ff0000" },
+    { id: 7, parents: [1, 101, 102, 103], title: "7", label: "7", description: "", image: "../images/photos/f.png", itemTitleColor: "#ff0000" },
+    { id: 8, parents: [1, 101, 102, 103], title: "8", label: "8", description: "", image: "../images/photos/g.png", itemTitleColor: "#ff0000" },
+    { id: 10, parents: [1, 101, 102, 103], title: "10", label: "10", description: "", image: "../images/photos/i.png", itemTitleColor: "#ff0000" },
+    { id: 11, parents: [1, 101, 102, 103], title: "11", label: "11", description: "", image: "../images/photos/b.png", itemTitleColor: "#ff0000" },
+    { id: 12, parents: [11], title: "12", label: "12", description: "", image: "../images/photos/b.png", itemTitleColor: "#ff0000" },
+    { id: 33, parents: [2, 3, 4, 6, 7, 8, 10, 12], title: "33", label: "33", description: "", image: "../images/photos/m.png", itemTitleColor: "#4b0082" }
+  ],
+  annotations: [
+    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [2], title: "1->2" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [3], title: "1->3" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [4], title: "1->4" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [6], title: "1->6" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [7], title: "1->7" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [8], title: "1->8" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 1, toItems: [10], title: "1->10" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [2], title: "33->2" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [3], title: "33->3" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [4], title: "33->4" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [6], title: "33->6" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [7], title: "33->7" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 33, toItems: [8], title: "33->8" }
+  ]
+};
+
+var matrixGroups = {
+  cursorItem: 1,
+  enableMatrixLayout: true,
+  minimumMatrixSize: 3,
+  annotations: [
+    {
+      annotationType: primitives.AnnotationType.Connector,
+      fromItem: 10,
+      toItem: 24,
+      label: "<span class=\"badge bg-danger\">1</span>",
+      labelSize: { width: 30, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
+      offset: 5,
+      lineWidth: 2,
+      lineType: primitives.LineType.Dashed
+    }
+  ],
+  items: [
+    { id: 1, parents: [], title: "1", label: "1", description: "", image: "../images/photos/z.png", itemTitleColor: "#ff0000" },
+    { id: 2, parents: [1, 101, 102, 103], title: "2", label: "2", description: "", image: "../images/photos/a.png", itemTitleColor: "#ff0000" },
+    { id: 3, parents: [1, 101, 102, 103], title: "3", label: "3", description: "", image: "../images/photos/b.png", itemTitleColor: "#ff0000" },
+    { id: 4, parents: [1, 101, 102, 103], title: "4", label: "4", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" },
+    { id: 5, parents: [1, 101, 102, 103], title: "5", label: "5", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" },
+    { id: 6, parents: [1, 101, 102, 103], matrixId: "2", title: "6", label: "6", description: "", image: "../images/photos/e.png", itemTitleColor: "#ff0000" },
+    { id: 7, parents: [1, 101, 102, 103], matrixId: "2", title: "7", label: "7", description: "", image: "../images/photos/f.png", itemTitleColor: "#ff0000" },
+    { id: 8, parents: [1, 101, 102, 103], matrixId: "2", title: "8", label: "8", description: "", image: "../images/photos/g.png", itemTitleColor: "#ff0000" },
+    { id: 9, parents: [1, 101, 102, 103], matrixId: "2", title: "10", label: "10", description: "", image: "../images/photos/i.png", itemTitleColor: "#ff0000" },
+    { id: 10, parents: [1, 101, 102, 103], addToMatrix: false,  title: "10", label: "10", description: "", image: "../images/photos/i.png", itemTitleColor: "#ff0000" },
+    { id: 33, parents: [2, 3, 4, 5, 6, 7, 8, 9, 10], title: "33", label: "33", description: "", image: "../images/photos/m.png", itemTitleColor: "#4b0082" }
+  ]
+};
+
+var labelsSelection = {
+  cursorItem: 1,
+  enableMatrixLayout: false,
+  pageFitMode: primitives.PageFitMode.SelectionOnly,
+  neighboursSelectionMode: primitives.NeighboursSelectionMode.ParentsAndChildren,
+  annotations: [
+    {
+      annotationType: primitives.AnnotationType.Connector,
+      fromItem: 10,
+      toItem: 24,
+      label: "<span class=\"badge bg-danger\">1</span>",
+      labelSize: { width: 30, height: 30 }, //new primitives.Size(80, 30)
+      connectorShapeType: primitives.ConnectorShapeType.OneWay,
+      color: primitives.Colors.Red,
+      offset: 5,
+      lineWidth: 2,
+      lineType: primitives.LineType.Dashed
+    }
+  ],
+  items: [
+    { id: 1, parents: [], title: "1", label: "1", description: "", image: "../images/photos/a.png", itemTitleColor: "#ff0000" },
+    { id: 2, parents: [], title: "2", label: "2", description: "", image: "../images/photos/b.png", itemTitleColor: "#ff0000" },
+    { id: 3, parents: [], title: "3", label: "3", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" },
+    { id: 4, parents: [], title: "4", label: "4", description: "", image: "../images/photos/d.png", itemTitleColor: "#ff0000" },
+    { id: 5, parents: [], title: "5", label: "5", description: "", image: "../images/photos/e.png", itemTitleColor: "#ff0000" },
+
+
+    { id: 6, parents: [1, 2, 3], title: "6", label: "6", description: "", image: "../images/photos/f.png", itemTitleColor: "#ff0000" },
+    { id: 7, parents: [3, 4, 5], title: "7", label: "7", description: "", image: "../images/photos/g.png", itemTitleColor: "#ff0000" },
+
+    { id: 8, parents: [6, 7], title: "8", label: "8", description: "", image: "../images/photos/h.png", itemTitleColor: "#ff0000" },
+
+    { id: 9, parents: [8], title: "9", label: "9", description: "", image: "../images/photos/a.png", itemTitleColor: "#ff0000" },
+    { id: 10, parents: [8], title: "10", label: "10", description: "", image: "../images/photos/b.png", itemTitleColor: "#ff0000" },
+    { id: 11, parents: [8], title: "11", label: "11", description: "", image: "../images/photos/c.png", itemTitleColor: "#ff0000" },
+    { id: 12, parents: [8], title: "12", label: "12", description: "", image: "../images/photos/e.png", itemTitleColor: "#ff0000" },
+    { id: 13, parents: [8], title: "13", label: "13", description: "", image: "../images/photos/f.png", itemTitleColor: "#ff0000" },
+  ],
+  annotations: [
+    { annotationType: primitives.AnnotationType.Label, fromItem: 6, toItems: [1], title: "48.26%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 6, toItems: [2], title: "24.92%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 6, toItems: [3], title: "26.81%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 7, toItems: [3], title: "37.19%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 7, toItems: [4], title: "69.98%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 7, toItems: [5], title: "0.82%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 8, toItems: [6], title: "98.14%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 8, toItems: [7], title: "1.85%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 9, toItems: [8], title: "100%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 10, toItems: [8], title: "100%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 11, toItems: [8], title: "100%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 12, toItems: [8], title: "100%" },
+    { annotationType: primitives.AnnotationType.Label, fromItem: 13, toItems: [8], title: "100%" }
+  ]
+};
+
+
 var dataSetNames = {
   "2 Cross Relations": "crossShape",
   "3 Cross Relations": "famdata2",
@@ -828,7 +973,11 @@ var dataSetNames = {
   "W Shape Family": "wFamily",
   "Simple Family": "simpleFamily",
   "Matrix": "matrixLayout",
-  "Lables on Loop": "famdata2NodesLoopTest"
+  "Linked List Loop": "linkedListLoopTest",
+  "Inter Linked": "intelinkedNodes",
+  "Matrix & Labels": "matrixNLabelsLayout",
+  "Matrix Groups": "matrixGroups",
+  "Labels Selection": "labelsSelection"
 };
 
 var defaultDataSetName = dataSetNames["Mix"];

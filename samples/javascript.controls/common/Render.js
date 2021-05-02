@@ -7,6 +7,7 @@ import { SizeRender } from './Size';
 import { TextBoxRender } from './TextBox';
 import { ColorRender } from './Color';
 import { RangeRender } from './Range';
+import { ThicknessRender } from './Thickness';
 
 import { IntegerFormatter, StringFormatter, NumberFormatter, BooleanFormatter, SizeFormatter, ThicknessFormatter } from './Formatters';
 
@@ -23,6 +24,7 @@ export default function Render(panels, defaultValues) {
     this.renders[ControlType.TextBox] = new TextBoxRender();
     this.renders[ControlType.ColorPicker] = new ColorRender();
     this.renders[ControlType.Range] = new RangeRender();
+    this.renders[ControlType.Thickness] = new ThicknessRender();
   
     this.formatters = {};
     this.formatters[ValueType.Integer] = IntegerFormatter;

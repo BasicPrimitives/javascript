@@ -26,6 +26,7 @@
         leavesPlacementType: primitives.ChildrenPlacementType.Horizontal,
         maximumColumnsInMatrix: 6,
         minimalVisibility: primitives.Visibility.Dot,
+        minimumVisibleLevels: 1,
         selectionPathMode: primitives.SelectionPathMode.FullStack,
 
         hasButtons: primitives.Enabled.Auto,
@@ -129,7 +130,8 @@
         /* Frame */
         showFrame: false,
         frameInnerPadding: 2,
-        frameOuterPadding: 2
+        frameOuterPadding: 2,
+        padding: new primitives.Thickness(10, 10, 10, 10)
       },
         /* On property change event handler */
         function () {

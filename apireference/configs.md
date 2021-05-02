@@ -116,7 +116,7 @@ In-layout label annotation. Label annotations are placed in layout between nodes
  | `toItems` | string[] | `[]` | This collection should contain only child or parent items of the annotated item. It cannot contain children and parents at the same time. If it contain sub set of children then annotation label bundles children into subset and annotations form cascades of labels over connection lines in the diagram. | 
 
 ## <a name="LevelAnnotationConfig" id="LevelAnnotationConfig">LevelAnnotationConfig</a>
-Level annotation highlights same level nodes of the diagram via drawing continuous rectangular shape from side to side in their background. Stripe has optional title on the side of the diagram view area. Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the background and does not occupy space.
+Level annotation highlights same level nodes of the diagram via drawing continuous rectangular shape from side to side in their background. Level has optional title on the side of the diagram view area. Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the background and does not occupy space.
 
  `LevelAnnotationConfig` 
 
@@ -124,7 +124,7 @@ Level annotation highlights same level nodes of the diagram via drawing continuo
 
  `LevelAnnotationConfig(arg0)` 
 
-Level annotation highlights same level nodes of the diagram via drawing continuous rectangular shape from side to side in their background. Stripe has optional title on the side of the diagram view area. Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the background and does not occupy space.
+Level annotation highlights same level nodes of the diagram via drawing continuous rectangular shape from side to side in their background. Level has optional title on the side of the diagram view area. Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the background and does not occupy space.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 

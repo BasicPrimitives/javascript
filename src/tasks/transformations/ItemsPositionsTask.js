@@ -7,8 +7,8 @@ function LevelVisibility(level, visibility) {
   this.visibility = visibility;
 };
 
-export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientationOptionTask, itemsSizesOptionTask, connectorsOptionTask,
-  normalizeOptionTask, createLayoutsTreeTask,
+export default function ItemsPositionsTask(currentControlSizeTask, scaleOptionTask, orientationOptionTask, itemsSizesOptionTask, connectorsOptionTask, normalizeOptionTask,
+  createLayoutsTreeTask,
   itemTemplateParamsTask,
   cursorItemTask, combinedNormalVisibilityItemsTask) {
 
@@ -18,11 +18,11 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
   };
 
   function process() {
-    var { verticalAlignment, pageFitMode, minimalVisibility,
+    var { verticalAlignment, pageFitMode, minimalVisibility, padding,
       normalLevelShift, dotLevelShift, lineLevelShift, normalItemsInterval, dotItemsInterval, lineItemsInterval,
-      checkBoxPanelSize, buttonsPanelSize, groupTitlePanelSize, groupTitlePlacementType } = itemsSizesOptionTask.getOptions();
+      checkBoxPanelSize, buttonsPanelSize, groupTitlePanelSize, groupTitlePlacementType, cousinsIntervalMultiplier } = itemsSizesOptionTask.getOptions();
     var { arrowsDirection, linesWidth } = connectorsOptionTask.getOptions();
-    var { maximumColumnsInMatrix } = normalizeOptionTask.getOptions();
+    var { maximumColumnsInMatrix, horizontalAlignment } = normalizeOptionTask.getOptions();
     var { orientationType } = orientationOptionTask.getOptions();
 
     var isItemSelected = combinedNormalVisibilityItemsTask.isItemSelected;
@@ -65,6 +65,7 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
     var options = {
       verticalAlignment,
       pageFitMode,
+      padding,
       minimalVisibility,
       orientationType,
       arrowsDirection,
@@ -74,8 +75,10 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
       groupTitlePanelSize,
       groupTitlePlacementType,
       maximumColumnsInMatrix,
+      horizontalAlignment,
       shifts: getShifts(normalLevelShift, dotLevelShift, lineLevelShift, lineLevelShift),
-      intervals: getIntervals(normalItemsInterval, dotItemsInterval, lineItemsInterval, lineItemsInterval)
+      intervals: getIntervals(normalItemsInterval, dotItemsInterval, lineItemsInterval, lineItemsInterval),
+      cousinsIntervalMultiplier
     };
 
     /* find optimal panel size */
@@ -117,6 +120,7 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
         panelSize.invert();
         break;
     }
+
     switch (pageFitMode) {
       case PageFitMode.None:
       case PageFitMode.AutoSize:
@@ -131,10 +135,11 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
         // Find minimal placeholder size to hold completely folded diagram
         result = measureLayout(rootLayoutId, layoutsTree, enabledLevelVisibilities, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options);
         if (checkDiagramSize(result.size, panelSize, pageFitMode)) {
-          // Find optimal diagram size
+          /* maximum compression fits to page */
           var minimalPlaceholderSize = new Rect(0, 0, result.size.width, result.size.height);
           minimalPlaceholderSize.addRect(0, 0, panelSize.width, panelSize.height);
           minimalPlaceholderSize.offset(0, 0, 5, 5);
+          /* Find optimal diagram size */
           findOptimalSize(this, possibleLevelVisibilities.length - 1, function (index) {
             enabledLevelVisibilities = getLevelVisibilities(maximumLevelIndex, possibleLevelVisibilities, index);
             result = measureLayout(rootLayoutId, layoutsTree, enabledLevelVisibilities, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options);
@@ -148,6 +153,28 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
 
     return result;
   }
+
+  function findOptimalSize(thisArg, maximum, funcCheckSize) {
+    var minimum = 0,
+      cursorIndex;
+    if (!funcCheckSize.call(thisArg, minimum)) {
+      /* minimum compression does not fit to page */
+      cursorIndex = maximum;
+      while (maximum - minimum > 1) {
+        cursorIndex = Math.floor((maximum + minimum) / 2.0);
+        if (funcCheckSize.call(thisArg, cursorIndex)) {
+          /* middle point size fit to page */
+          maximum = cursorIndex;
+        }
+        else {
+          minimum = cursorIndex;
+        }
+      }
+      if (maximum !== cursorIndex) {
+        funcCheckSize.call(thisArg, maximum);
+      }
+    }
+  };
 
   function measureLayout(rootLayoutId, layoutsTree, levelVisibilities, levelIndexes, cursorItemId, isItemSelected, getTemplateParams, options ) {
     var treeItemsPositions = {};
@@ -168,29 +195,6 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
     }
   }
 
-  function findOptimalSize(thisArg, maximum, funcCheckSize) {
-    var minimum = 0,
-      cursorIndex;
-    /* maximum compression fit to page */
-    if (!funcCheckSize.call(thisArg, minimum)) {
-      /* minimum compression does not fit to page */
-      cursorIndex = maximum;
-      while (maximum - minimum > 1) {
-        cursorIndex = Math.floor((maximum + minimum) / 2.0);
-        if (funcCheckSize.call(thisArg, cursorIndex)) {
-          /* middle point size fit to page */
-          maximum = cursorIndex;
-        }
-        else {
-          minimum = cursorIndex;
-        }
-      }
-      if (maximum !== cursorIndex) {
-        funcCheckSize.call(thisArg, maximum);
-      }
-    }
-  };
-
   function getLevelVisibilities(maximumLevelIndex, possibleLevelVisibilities, cursorIndex) {
     var index,
       levelVisibility;
@@ -210,7 +214,6 @@ export default function FamItemsPositionsTask(currentControlSizeTask, scaleOptio
 
   function getPossibleLevelVisibilities(maximumLevelIndex, minimalVisibility) {
     var result = [new LevelVisibility(0, Visibility.Normal)];
-  
     var visibilities = [];
     switch (minimalVisibility) {
       case Visibility.Normal:

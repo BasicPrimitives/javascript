@@ -40,21 +40,21 @@ FamilyLayout.prototype.measure = function (levelVisibility, isCursor, isSelected
     this.treeLevelsPositions.push(treeLevelPosition);
   });
 
-  this.setOffsets(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions, this.logicalFamily, options.intervals);
+  this.setOffsets(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions, this.logicalFamily, options.intervals, options.padding);
   this.setLevelsDepth(this.treeLevels, treeItemsPositions, this.treeLevelsPositions, options.verticalAlignment);
-  this.shiftLevels(this.treeLevelsPositions, options.shifts[Visibility.Line], options.shifts, options.arrowsDirection, options.linesWidth, this.getConnectorsStacksSizes);
+  this.shiftLevels(this.treeLevelsPositions, options.padding.top, options.shifts, options.arrowsDirection, options.linesWidth, this.getConnectorsStacksSizes);
 
   var treeItemPosition = new TreeItemPosition();
-  treeItemPosition.actualVisibility = Visibility.Invisible;
-  treeItemPosition.actualSize = this.getLayoutSize(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions);
+  treeItemPosition.actualVisibility = Visibility.Normal;
+  treeItemPosition.actualSize = this.getLayoutSize(this.treeLevels, treeItemsPositions, this.childLayoutsPositions, this.treeLevelsPositions, options.padding);
   return treeItemPosition;
 };
 
-FamilyLayout.prototype.getLayoutSize = function (treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions) {
-  return new Rect(0, 0, Math.round(this.getLayoutWidth(treeLevels, treeItemsPositions, childLayoutsPositions)), Math.round(this.getLayoutHeight(treeLevelsPositions)));
+FamilyLayout.prototype.getLayoutSize = function (treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions, padding) {
+  return new Rect(0, 0, Math.round(this.getLayoutWidth(treeLevels, treeItemsPositions, childLayoutsPositions, padding)), Math.round(this.getLayoutHeight(treeLevelsPositions, padding)));
 };
 
-FamilyLayout.prototype.getLayoutWidth = function (treeLevels, treeItemsPositions, childLayoutsPositions) {
+FamilyLayout.prototype.getLayoutWidth = function (treeLevels, treeItemsPositions, childLayoutsPositions, padding) {
   var result = 0;
   treeLevels.loopLevels(this, function (levelIndex, level) {
     var levelLength = treeLevels.getLevelLength(levelIndex);
@@ -63,16 +63,16 @@ FamilyLayout.prototype.getLayoutWidth = function (treeLevels, treeItemsPositions
       var itemId = treeLevels.getItemAtPosition(levelIndex, levelLength - 1),
         treeItemPosition = treeItemsPositions[itemId],
         childLayoutPosition = childLayoutsPositions[itemId];
-      result = Math.max(result, childLayoutPosition.offset + treeItemPosition.actualSize.width + childLayoutPosition.rightPadding);
+      result = Math.max(result, childLayoutPosition.offset + treeItemPosition.actualSize.width + padding.right);
     }
   });
   return result;
 };
 
-FamilyLayout.prototype.getLayoutHeight = function (treeLevelsPositions) {
+FamilyLayout.prototype.getLayoutHeight = function (treeLevelsPositions, padding) {
   var len = treeLevelsPositions.length,
     treeLevel = treeLevelsPositions[len - 1];
-  return treeLevel.shift + treeLevel.nextLevelShift;
+  return treeLevel.getNodesBottom() + padding.bottom;
 };
 
 FamilyLayout.prototype.setLevelsDepth = function (treeLevels, treeItemsPositions, treeLevelsPositions, verticalAlignment) {
@@ -130,7 +130,7 @@ FamilyLayout.prototype.shiftLevels = function (treeLevelsPositions, shift, shift
   var index,
     len,
     treeLevelPosition,
-    treeLevelConnectorStackSize,
+    parentsStackSize,
     childrenSpace = 0,
     parentsSpace = 0,
     arrowTipLength = linesWidth * 8;
@@ -148,13 +148,12 @@ FamilyLayout.prototype.shiftLevels = function (treeLevelsPositions, shift, shift
 
   for (index = 0, len = treeLevelsPositions.length; index < len; index += 1) {
     treeLevelPosition = treeLevelsPositions[index];
-
-    treeLevelConnectorStackSize = getConnectorsStacksSizes(index);
-    shift += treeLevelPosition.setShift(shift, shifts[treeLevelPosition.actualVisibility], parentsSpace, childrenSpace, treeLevelConnectorStackSize.parentsStackSize);
+    parentsStackSize = getConnectorsStacksSizes(index).parentsStackSize;
+    shift += treeLevelPosition.setShift(shift, shifts[treeLevelPosition.actualVisibility], parentsSpace, childrenSpace, parentsStackSize);
   }
 };
 
-FamilyLayout.prototype.setOffsets = function (treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions, logicalFamily, intervals) {
+FamilyLayout.prototype.setOffsets = function (treeLevels, treeItemsPositions, childLayoutsPositions, treeLevelsPositions, logicalFamily, intervals, padding) {
   var index, len;
 
   for (index = 0, len = treeLevelsPositions.length; index < len; index += 1) {
@@ -177,8 +176,7 @@ FamilyLayout.prototype.setOffsets = function (treeLevels, treeItemsPositions, ch
     var nodeId = treeLevels.getItemAtPosition(levelIndex, 0);
     if (nodeId != null) {
       var treeItemPosition = treeItemsPositions[nodeId];
-      var childLayoutPosition = childLayoutsPositions[nodeId];
-      var nodeOffset = familyAlignment.getOffset(nodeId) - childLayoutPosition.leftPadding - treeItemPosition.actualSize.width / 2;
+      var nodeOffset = familyAlignment.getOffset(nodeId) - treeItemPosition.actualSize.width / 2;
       leftMargin = (leftMargin === null) ? nodeOffset : Math.min(leftMargin, nodeOffset);
     }
   });
@@ -187,7 +185,7 @@ FamilyLayout.prototype.setOffsets = function (treeLevels, treeItemsPositions, ch
     treeLevels.loopLevelItems(this, levelIndex, function (nodeId, node, position) {
       var treeItemPosition = treeItemsPositions[nodeId];
       var nodeOffset = familyAlignment.getOffset(nodeId);
-      childLayoutsPositions[nodeId].offset = nodeOffset - treeItemPosition.actualSize.width / 2 - leftMargin;
+      childLayoutsPositions[nodeId].offset = nodeOffset - treeItemPosition.actualSize.width / 2 - leftMargin + padding.left;
     });
   });
 };

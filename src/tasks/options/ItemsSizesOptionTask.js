@@ -23,6 +23,12 @@ export default function ItemsSizesOptionTask(optionsTask, defaultConfig, default
     onButtonsRender: new FunctionReader(),
     /* items visibility */
     pageFitMode: new EnumerationReader(PageFitMode, false, defaultConfig.pageFitMode),
+    padding: new ObjectReader({
+      left: new ValueReader(["number"], false, defaultConfig.padding.left),
+      top: new ValueReader(["number"], false, defaultConfig.padding.top),
+      right: new ValueReader(["number"], false, defaultConfig.padding.right),
+      bottom: new ValueReader(["number"], false, defaultConfig.padding.bottom)
+    }, false, defaultConfig.padding),
     minimalVisibility: new EnumerationReader(Visibility, false, defaultConfig.minimalVisibility),
     selectionPathMode: new EnumerationReader(SelectionPathMode, false, defaultConfig.selectionPathMode),
     autoSizeMinimum: new ObjectReader({

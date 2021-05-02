@@ -97,7 +97,7 @@ export default function DrawMinimizedItemsTask(getGraphics, createTransformTask,
                   );
                 }
                 break;
-              default:
+              case Visibility.Invisible:
                 if (_debug) {
                   itemTitleColor = Colors.Red;
                   if (!paletteItems.hasOwnProperty(itemTitleColor)) {
@@ -110,8 +110,10 @@ export default function DrawMinimizedItemsTask(getGraphics, createTransformTask,
                     });
                   }
                   polyline = markers.getPolyline(paletteItems[itemTitleColor]);
-                  polyline.addSegment(new DotSegment(x - 1, y - 1, 2, 2, 1));
+                  polyline.addSegment(new DotSegment(x - 2, y - 2, 4, 4, 2));
                 }
+                break;                
+              default:
                 break;
             }
           });//ignore jslint

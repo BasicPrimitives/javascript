@@ -1,3 +1,13 @@
+#### Version 6.4.0
+* Added `minimumVisibleLevels` option to `OrgConfig` and `FamConfig`
+* Added `padding` option to `OrgConfig` and `FamConfig`
+* Fixed `childrenPlacementType` option breaking multiple root nodes placement.
+* Fixed mouse interactivity for scaled and rotated right or bottom diagrams.
+* Fixed family matrix layout for top and bottom in-row vertical alignment.
+* Fixed non-optimized selection of loops in the family diagram.
+* Fixed arrows rendering for vertical single parent connectors.
+* Fixed loops optimization algorithm. Made it fault-tolerant.
+* Fixed arrows direction for loops.
 #### Version 6.3.1
 * Fixed family diagram padding
 * Fixed `onButtonsRender` in `TemplateConfig`
@@ -17,7 +27,7 @@
 * Removed GraphicsType enumeration.
 * Removed graphicsType from OrgConfig and FamConfig
 #### Version 6.1.1
-* Fixed `levelOffset` property to work regardless of empty levels
+* Fixed the `levelOffset` property to work regardless of empty levels
 #### Version 6.1.0
 * Added LevelAnnotationConfig
 * Added level annotation options to OrgConfig and FamConfig
@@ -48,17 +58,17 @@
 * Fixed frame placeholder size
 #### Version 5.9.0
 * Added `showFrame`, `fameInnerPadding`, `frameOuterPadding` properties to `primitives.orgdiagram.Config` & `primitives.famdiagram.Config`
-* Modified callout annotation placement for minimized nodes placed outside view port.
-* Fixed exception when `selectedItems` collection contains non existing items.
+* Modified call-out annotation placement for minimized nodes placed outside view port.
+* Fixed exception when `selectedItems` collection contains non-existing items.
 * Fixed center on cursor in AutoSize mode
 #### Version 5.8.2
 * Fixed `selectionPathMode` in Family Diagram.
 #### Version 5.8.1
 * Fixed performance bug in loops layout optimization
 #### Version 5.8.0
-* Added `loopsLayoutMode` property to `primitives.famdiagram.Config`. Property sets loops layout optimization mode in Family Diagram. See `Loops Layout Optimization` use case.
+* Added `loopsLayoutMode` property to `primitives.famdiagram.Config`. Property sets looped layout optimization mode in Family Diagram. See `Loops Layout Optimization` use case.
 * Added extra arrows to vertical segments of loops in family diagram
-* Fixed spouses selection in family diagram
+* Fixed spouses selection in the family diagram
 * Fixed background annotation `includeChildren` property in family diagram having loops between items.
 #### Version 5.7.0
 * Added `primaryParent` property to `primitives.famdiagram.ItemConfig`. Property defines user preference for item placement relative to its multiple parents in Family Diagram. See Technological Tree Demo.
@@ -66,9 +76,9 @@
 * Updated IntelliSense API annotations
 #### Version 5.6.3
 * Fixed initial callout placement
-* Fixed neighbours selection in family diagram having inactive nodes
+* Fixed neighbors selection in family diagram having inactive nodes
 #### Version 5.6.2
-* Fixed performance bug in the value reader.
+* Fixed performance bug in the value-reader.
 #### Version 5.6.0
 * Added `placeAssistantsAboveChildren` and `placeAdvisersAboveChildren` properties to `primitives.orgdiagram.Config` & `primitives.orgdiagram.ItemConfig`.
 * Added `levelOffset` property to `primitives.orgdiagram.ItemConfig`.
@@ -83,7 +93,7 @@
 * Removed CSS file from React component
 #### Version 5.4.0
 * Added OrgDiagram & FamDiagram React components and samples.
-* Extracted platform specific functionality out of core.
+* Extracted web-specific functionality out of the core.
 * Added onButtonsRender event to TemplateConfig.
 * Added support of cycles in objects definitions of labels.
 * Fixed CSS scale bugs.
@@ -92,11 +102,11 @@
 #### Version 5.3.1
 * Fixed performance issue in react demo.
 #### Version 5.3.0
-* Added `relativeItem`, `placementType` and `position` properties to `primitives.famdiagram.ItemConfig`. Properties define user preferences for items order in Family Diagram. See "Family Members Order" data set in Family Chart & Annotations Demo.
+* Added `relativeItem`, `placementType` and `position` properties to `primitives.famdiagram.ItemConfig`. Properties define user preferences for items ordering in the family diagram. See "Family Members Order" data set in Family Chart & Annotations Demo.
 #### Version 5.2.4
 * Merged fix for straight connector annotations labels.
 #### Version 5.2.2
-* Fixed `update` method. In case when only nodes content properties changed like title, description, context, etc, chart will render only them. See Cursor item properties editor panel in Organizational Chart Editor Demo in React Demos.
+* Fixed `update` method. When only node content properties change like title and description, the chart will render only them. See the cursor item properties panel in Organizational Chart Editor Demo in React Demos.
 * Fixed elbows of connection lines.
 #### Version 5.2.1
 * Fixed performance bug. JSONML Templates triggered layout on every update. See Dependencies Chart Demo in React Demos.
@@ -107,13 +117,13 @@
 * Published React Demo & Tutorial to Github
 #### Version 5.1.0
 
-**Warning**: Extracted jQuery UI Widgets into separate `file primitives.jquery.latest.js` !
+**Warning**: Extracted jQuery UI Widgets into separate `file primitives.jquery.latest.js`!
 * Added npm package header and published library to [www.npmjs.com](https://www.npmjs.com/package/basicprimitives)
 * Added pagination for nodes in page fit mode set to None.
 #### Version 5.0.4
-* Fixed cursor neighbours selection over template inactive items.
+* Fixed cursor neighbors selection over template inactive items.
 #### Version 5.0.3
-* Fixed call out placement in auto size mode when control is placed in document layout and scrolled.
+* Fixed call-out placement in auto-size mode when control is placed in document layout and scrolled.
 #### Version 5.0.2
 * Fixed highlight path annotation tracing when famDiagram option hiding direct connections to grandparents is enabled.
 * Fixed false layout invalidation on highlight changed event
@@ -127,11 +137,8 @@
 * Removed support of VML and IE8
 * Reworked Drag & Scroll to use native JavaScript draggable object
 * Fixed highlight call-out placement in CSS Zoom scale mode.
-* Fixed selection check-boxes to ignore mouse double click event
+* Fixed selection checkboxes to ignore mouse double click event
 * Fixed controls rendering inside divs having computed width and height
-
-*Version 4.3.0 archived. See primitives430.zip in downloads. Archive contains demos, "how to use" examples & reference. It is available only for registered users.*
-
 #### Version 4.3.0
 * Added option groupTitlePlacementType to primitives.famdiagram.Config and primitives.orgdiagram.Config. Property swaps positions of group title and buttons.
 #### Version 4.2.3
@@ -145,7 +152,7 @@
 * Added option enableMatrixLayout, minimumMatrixSize and maximumColumnsInMatrix to primitives.famdiagram.Config. See Family Chart & Annotations demo for usage.
 * Reworked background annotations merge. Items backgrounds don't grow beyond padding area anymore.
 * Reworked keyboard navigation. So it respects nodes crossing multiple layers of nodes.
-* Reworked mouse highlight gravity. Nodes are no longer highlighted when cursor is out of nodes bounds.
+* Reworked mouse highlight gravity. Nodes are no longer highlighted when the cursor is out of node bounds.
 * Removed PhantomJS support and page split rendering mode. Use PDFkit plugin for PDF generation and printing.
 * Reworked labels conflicts resolution in labels visibility auto mode.
 * Fixed inactive items usage in Family diagram.
@@ -222,8 +229,6 @@
 * Optimized data processing and rendering. See Controls Processing Diagrams.
 * Fixed CSS scale. See primitives.famdiagram.Config.scale and primitives.orgdiagram.Config.scale options
 * Added `neighboursSelectionMode` option to `primitives.famdiagram.Config`. See `primitives.common.NeighboursSelectionMode` enumeration for ParentsAndChildren & ParentsChildrenSiblingsAndSpouses options of cursor related nodes selection.
-*Version 2.1.10 archived. See primitives2110.zip in downloads. Archive contains demos, "how to use" examples & reference. It is available only for registered users.*
-
 #### Version 2.1.10
 * Fixed label annotations placement on loop connections in famDiagram.
 #### Version 2.1.9
@@ -231,9 +236,9 @@
 * Changed arrow size of 2 & 3 pixel wide lines.
 #### Version 2.1.8
 * Added PageFitMode.AutoSize, autoSizeMaximum and autoSizeMinimum options to Configs of orgDiagram & famDiagram widgets.
-* Changed PageFitMode.PrintPreview mode to auto size widget to show all nodes of diagram. 
+* Changed PageFitMode.PrintPreview mode to auto size widget to show all nodes of the diagram. 
 #### Version 2.1.7
-* Fixed multiple spouses connection lines.
+* Fixed multiple spouse's connection lines.
 #### Version 2.1.6
 * Added minimizedItemShapeType to Config, ItemConfig & TemplateConfig of orgDigram & famDiagram widgets.
 * Added minimizedItemLineWidth, minimizedItemBorderColor, minimizedItemLineType, minimizedItemFillColor and minimizedItemOpacity to TemplateConfig of orgDigram & famDiagram widgets. 
@@ -241,7 +246,7 @@
 * Fixed spouses navigation.
 * Fixed annotation labels navigation.
 #### Version 2.1.5
-* Fixed exception on orphan invisible item.
+* Fixed exception an orphan invisible item.
 * Enforced side alignment for SubAdviser and SubAssistant item types in orgDiagram.
 #### Version 2.1.4
 * Fixed keyboard navigation with arrow keys.
@@ -250,18 +255,18 @@
 #### Version 2.1.2
 * Improved family diagram layout.
 #### Version 2.1.1
-* Fixed loops visualization in family diagram.
+* Fixed loops visualization in the family diagram.
 #### Version 2.1.0
-* Added support of loops in family diagram. The item defined first in users items collection stays at the top of diagram.
-* Added nodes grouping to children/parents. See groupByType option of  primitives.famdiagram.Config
+* Added support of loops in the family diagram. The item defined first in users items collection stays at the top of diagram.
+* Added nodes grouping to children/parents. See `groupByType` option of  primitives.famdiagram.Config
 * Fixed disconnected family fragments alignment to the top.
 #### Version 2.0.24
-* Added onItemDblClick event to famDiagram and orgDiagram widget configs.
+* Added `onItemDblClick` event to `famDiagram` and `orgDiagram` widget configs.
 #### Version 2.0.23
-* Added elbowDotSize option to famDiagram and orgDiagram widget configs.
+* Added `elbowDotSize` option to `famDiagram` and `orgDiagram` widget configs.
 #### Version 2.0.22
-* Added BackgroundAnnotationConfig to famDiagram and orgDiagram widgets. See Partners & Annotations Demo.
-* Added includeChildren option to primitives.orgdiagram.BackgroundAnnotationConfig selecting all descendants of annotated items.
+* Added `BackgroundAnnotationConfig` to `famDiagram` and `orgDiagram` widgets. See Partners & Annotations Demo.
+* Added `includeChildren` option to `primitives.orgdiagram.BackgroundAnnotationConfig` selecting all descendants of annotated items.
 #### Version 2.0.21
 * Added arrowsDirection option to primitives.orgdiagram.Config, primitives.famdiagram. Config. See "Arrows Direction" options in "Organizational Chart Navigation" demo.
 #### Version 2.0.20
@@ -323,7 +328,7 @@
 * Added Shape & Connector helper widgets: bpShape & bpConnector.
 * Added Shape, Connector & Highlight path annotations to orgDiagram. Added ConnectorAnnotationConfig, ShapeAnnotationConfig & HighlightPathAnnotationConfig classes to orgDiagram. Added annotations collection property to orgdiagram.Config.
 * Added connection lines styling options: linesType, highlightLinesColor, highlightLinesWidth, highlightLinesType to orgdiagram.Config.
-* Changed API from hierarchical structure defined by rootItem to flat list of ItemConfig objects defined in items collection property. Added id & parent properties to ItemConfig. Changed type of cursorItem, highlightItem & selectedItems properties from object references to ItemConfig id-s. Now, in order to define root item, root item in items collection should have its parent property set to null. Chart supports multiple root items. Chart does not search for orphans and ignores looped items. It is Applications responsibility to provide consistent collection of items.
+* Changed API from hierarchical structure defined by `rootItem` to a flat list of `ItemConfig` objects defined in items collection property. Added `id` & `parent` properties to `ItemConfig`. Changed type of  `cursorItem`, `highlightItem` & `selectedItems` properties from object references to `ItemConfig` id-s. To define root item, root item in items collection should have its parent property set to null. Chart supports multiple root items. The chart does not search for orphans and ignores looped items. It is the application's responsibility to provide a consistent collection of items.
 #### Version 1.0.39
 * Fixed SVG blurred lines in IE for charts layouted without absolute positioning.
 * Added tooltip option to ButtonConfig.
@@ -397,7 +402,7 @@
 * Fixed group title update for different heights.
 #### Version 1.0.19
 * Added childrenPlacementType to Config & ItemConfig options classes.
-* Added horizontalAlignment in Config.
+* Added `horizontalAlignment` in Config.
 #### Version 1.0.18
 * Fixed layout performance bug.
 #### Version 1.0.17
@@ -409,7 +414,7 @@
 * Fixed Bootstrap compatibility bugs. http://twitter.github.com/bootstrap/  Added Bootstrap demo for registered users.
 * Added onMouseClick event to Config.
 #### Version 1.0.15
-* Fixed narrow tree alignment to center instead of stretching it to available view port width.
+* Fixed narrow tree alignment to the center instead of stretching it to available viewport width.
 * Fixed Assistants & Advisers children placement. Parent's regular children are shifted down in order to provide space for them inside of parent's hierarchy.
 * Added maximumColumnsInMatrix option to org chart Config.
 * ASP.NET 3.5 Fixed IE8 related bugs.
@@ -441,17 +446,17 @@
 * Added items verticalAlignment property. It defines relative items alignment within one row: Top, Middle, Bottom. It only affects rows containing items of different heights.
 * Added connectorType options: Squared, Angular and Curved connector lines style for dots.
 #### Version 1.0.8
-* Fixed widget placement inside divs having non-absolute position.
-* Joomla 152-256 menu module: Suppressed layout update before sending server post back.
+* Fixed widget placement inside `divs` having non-absolute position.
+* Joomla 152-256 menu module: Suppressed layout update before sending server post-back.
 * ASP.NET 3.5 Custom control: Fixed custom control placement inside panels having non-absolute position.
 #### Version 1.0.7
-* Added parentItem to EventArgs class. (See use case: "Adding new items at run time")
+* Added `parentItem` to EventArgs class. (See use case: "Adding new items at run time")
 #### Version 1.0.6
 * Added itemTitleFirstFontColor & itemTitleSecondFontColor options to orgDiagram Config class.
 * Added common functions: highestContrast, luminosity, beforeOpacity, getColorHexValue, getRed, getBlue, getGreen.
 * Fixed itemTitleColor option.
 * ASP.NET custom control: Added TitleColor property to Item class.
-* Removed BOM marks from file.
+* Removed BOM marks from the release file.
 #### Version 1.0.5
 * Added onHighlightChanging & onCursorChanging events to orgDiagram Config class.
 * Named noname event arguments to named classes: primitives.orgdiagram.EventArgs & primitives.common.RenderEventArgs.

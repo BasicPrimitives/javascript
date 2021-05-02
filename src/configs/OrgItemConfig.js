@@ -170,32 +170,32 @@ export default function OrgItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.adviserPlacementType = AdviserPlacementType.Auto;
 
   /**
-   * Defines shape of children formation. By default a node's children are always placed in a horizontal line 
-   * below the parent node. On a large scale this may result in the end user having to scroll screens 
-   * in order to view all of the nodes. To compensate for this, we provide the option of placing all 
-   * of the children of a parent node in a square/matrix formation. This will reduce sideways screen 
-   * scrolling by compacting the child nodes into a much smaller area on the screen.
-   *  
+   * The property defines children's layout formation. By default, control places children
+   * in a horizontal line below the parent node. On a large scale, this may result in the end-user
+   * having to scroll screens to view all nodes. To compensate for this, we place children 
+   * in a square/matrix formation. That will reduce sideways screen scrolling by compacting
+   * the child nodes into a much smaller area on the screen.
+   *   
    * @type {ChildrenPlacementType}
    */
   this.childrenPlacementType = ChildrenPlacementType.Auto;
 
   /**
-   * Sets default placement of assistants hierarchies relative to the regular children of the node.
-   * If assistant node has its own children then control adds extra levels, so assistants children are placed
-   * above level of the regular children.
+   * The property sets the default placement of assistants hierarchies relative to the regular 
+   * children of the node. If the assistant node has its children, then control adds extra levels,
+   * so the assistant's children are placed above the regular children.
    * 
    * @type {Enabled}
    */
   this.placeAssistantsAboveChildren = Enabled.Auto;
 
   /**
- * Sets default placement of advisers hierarchies relative to the regular children of the node.
- * If adviser node has its own children then control adds extra levels, so advisers children are placed
- * above level of the regular children.
- * 
- * @type {Enabled}
- */
+   * The property sets default placement of advisers hierarchies relative to the regular 
+   * children of the node. If the adviser node has its children, then control adds extra levels,
+   * so the adviser's children are placed above the regular children.
+   * 
+   * @type {Enabled}
+   */
   this.placeAdvisersAboveChildren = Enabled.Auto;
 
   /**

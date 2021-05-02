@@ -56,6 +56,14 @@ export default function FamConfig(name) {
   this.minimalVisibility = Visibility.Dot;
 
   /**
+   * Minimum visible levels option prevents top-level nodes from folding into markers. 
+   * 
+   * @group Auto Layout
+   * @type {number}
+   */
+   this.minimumVisibleLevels = 0;
+
+  /**
    * Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction,
    * this is needed for Arabic support and various layouts.
    * 
@@ -324,6 +332,14 @@ export default function FamConfig(name) {
    * @type {Thickness}
    */
   this.frameOuterPadding = new Thickness(2, 2, 2, 2);
+
+  /**
+   * Diagram padding. Adds extra padding around the diagram.
+   * 
+   * @group Frame
+   * @type {Thickness}
+  */
+  this.padding = new Thickness(10, 10, 10, 10);
 
   /**
    * Collection of named templates used to define content for nodes, cursor and highlight.

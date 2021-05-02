@@ -4,7 +4,7 @@ import { AnnotationType, LineType, Colors } from '../enums';
 /**
  * @class LevelAnnotationConfig
  * @classdesc Level annotation highlights same level nodes of the diagram via drawing continuous rectangular shape 
- * from side to side in their background. Stripe has optional title on the side of the diagram view area.
+ * from side to side in their background. Level has optional title on the side of the diagram view area.
  * Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the 
  * background and does not occupy space. 
  *

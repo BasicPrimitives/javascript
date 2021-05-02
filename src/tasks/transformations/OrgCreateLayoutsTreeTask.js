@@ -1,8 +1,8 @@
-import FamilyLayout from './layouts/FamilyLayout';
+import OrgLayout from './layouts/OrgLayout';
 import ItemLayout from './layouts/ItemLayout';
 import Tree from '../../algorithms/Tree';
 
-export default function CreateLayoutsTreeTask(orderFamilyNodesTask, extractNestedLayoutsTask ) {
+export default function OrgCreateLayoutsTreeTask(visualTreeTask, visualTreeLevelsTask, extractNestedLayoutsTask ) {
 
   var _data = {
     layoutsTree: {},
@@ -10,14 +10,15 @@ export default function CreateLayoutsTreeTask(orderFamilyNodesTask, extractNeste
   };
 
   function process() {
-    var logicalFamily = orderFamilyNodesTask.getLogicalFamily();
-    var treeLevels = orderFamilyNodesTask.getTreeLevels();
-    var maximumId = orderFamilyNodesTask.getMaximumId();
-    var getConnectorsStacksSizes = orderFamilyNodesTask.getConnectorsStacksSizes;
-
-    /* create layouts tree and index visibility levels for page auto fit mode */
+    var visualTree = visualTreeTask.getVisualTree();
+    var leftMargins = visualTreeTask.getLeftMargins();
+    var rightMargins = visualTreeTask.getRightMargins();
+    var maximumId = visualTreeTask.getMaximumId();
+    var treeLevels = visualTreeLevelsTask.getTreeLevels();
+    var getConnectorsStacksSizes = visualTreeLevelsTask.getConnectorsStacksSizes;
     var layouts = extractNestedLayoutsTask.getLayouts();
-    var rootLayout = new FamilyLayout(logicalFamily, treeLevels, getConnectorsStacksSizes);
+    
+    var rootLayout = new OrgLayout(visualTree, treeLevels, leftMargins, rightMargins, getConnectorsStacksSizes);
     var layoutsTree = Tree();
     maximumId++;
     layoutsTree.add(null, maximumId, rootLayout);
@@ -31,7 +32,7 @@ export default function CreateLayoutsTreeTask(orderFamilyNodesTask, extractNeste
           var treeItemId = treeItem.id;
           var itemLayout = layouts[treeItemId];
           if(!itemLayout) {
-            itemLayout = new ItemLayout(treeItem);
+            itemLayout = new ItemLayout(treeItem.visibility);
           } else {
             nextLevelLayouts.push({id: treeItemId, levelLayout: itemLayout});
           }

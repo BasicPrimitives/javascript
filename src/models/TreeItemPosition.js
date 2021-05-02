@@ -3,10 +3,7 @@ import { Visibility } from '../enums';
 
 export default function TreeItemPosition(source) {
   this.level = null;
-  this.offset = 0;
-  this.leftPadding = 0;
-  this.rightPadding = 0;
-
+  
   this.actualVisibility = Visibility.Normal;
   this.actualSize = null;
   this.actualPosition = null;

@@ -15,10 +15,15 @@
     return [];
   }
 
+  function getLayouts() {
+    return {};
+  }
+
   return {
     process: process,
     getNestedLayoutParentConnectorIds: getNestedLayoutParentConnectorIds,
     getNestedLayoutBottomConnectorIds: getNestedLayoutBottomConnectorIds,
-    getBundles: getBundles
+    getBundles: getBundles,
+    getLayouts: getLayouts
   };
 };

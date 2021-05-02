@@ -6,7 +6,8 @@ export default function CombinedNormalVisibilityItemsTask(itemsSizesOptionTask, 
   normalVisibilityItemsByForegroundShapeAnnotationTask, normalVisibilityItemsByBackgroundShapeAnnotationTask,
   normalVisibilityItemsByBackgroundAnnotationTask,
   normalVisibilityItemsByForegroundHighlightPathAnnotationTask, normalVisibilityItemsByBackgroundHighlightPathAnnotationTask,
-  normalVisibilityItemsByForegroundConnectorAnnotationTask, normalVisibilityItemsByBackgroundConnectorAnnotationTask
+  normalVisibilityItemsByForegroundConnectorAnnotationTask, normalVisibilityItemsByBackgroundConnectorAnnotationTask,
+  NormalVisibilityItemsByMinimumVisibleLevelsTask
 ) {
   var _data = {
     items: []
@@ -20,7 +21,8 @@ export default function CombinedNormalVisibilityItemsTask(itemsSizesOptionTask, 
       normalVisibilityItemsByForegroundShapeAnnotationTask, normalVisibilityItemsByBackgroundShapeAnnotationTask,
       normalVisibilityItemsByBackgroundAnnotationTask,
       normalVisibilityItemsByForegroundHighlightPathAnnotationTask, normalVisibilityItemsByBackgroundHighlightPathAnnotationTask,
-      normalVisibilityItemsByForegroundConnectorAnnotationTask, normalVisibilityItemsByBackgroundConnectorAnnotationTask
+      normalVisibilityItemsByForegroundConnectorAnnotationTask, normalVisibilityItemsByBackgroundConnectorAnnotationTask,
+      NormalVisibilityItemsByMinimumVisibleLevelsTask
     ],
     _dataTemplate = new ArrayReader(
       new ValueReader(["string", "number"], true),

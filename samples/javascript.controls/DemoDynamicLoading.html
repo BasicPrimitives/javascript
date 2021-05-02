@@ -68,6 +68,7 @@
       placeAssistantsAboveChildren: true,
       maximumColumnsInMatrix: 6,
       minimalVisibility: primitives.Visibility.Dot,
+      minimumVisibleLevels: 2,
       selectionPathMode: primitives.SelectionPathMode.FullStack,
 
       hasButtons: primitives.Enabled.Auto,
@@ -171,7 +172,8 @@
       /* Frame */
       showFrame: false,
       frameInnerPadding: 2,
-      frameOuterPadding: 2
+      frameOuterPadding: 2,
+      padding: new primitives.Thickness(10, 10, 10, 10)
     },
       /* On property change event handler */
       function () {
@@ -473,32 +475,13 @@
         ],
         ["div",
           {
+            name: "description",
             "class": "bp-item",
             style: {
               top: "22px",
               left: "56px",
               width: "118px",
-              height: "13px",
-              fontSize: "11px"
-            }
-          },
-          ["a",
-            {
-              name: "email",
-              href: "",
-              target: "_top"
-            }
-          ]
-        ],
-        ["div",
-          {
-            name: "description",
-            "class": "bp-item",
-            style: {
-              top: "37px",
-              left: "56px",
-              width: "118px",
-              height: "39px",
+              height: "54px",
               fontSize: "11px",
               overflow: "hidden"
             }
@@ -553,25 +536,8 @@
         photo.src = itemConfig.image;
         photo.alt = itemConfig.title;
 
-        var email = element.childNodes[2];
-        email.textContent = itemConfig.email;
-        email.href = ("mailto:" + itemConfig.email + "?Subject=Hello%20again");
-
-        var description = element.childNodes[3];
+        var description = element.childNodes[2];
         description.textContent = itemConfig.description;
-
-        switch (data.renderingMode) {
-          case primitives.RenderingMode.Create:
-            /* Initialize template content here */
-            email.addEventListener("click", function (e) {
-              /* Block mouse click propagation in order to avoid layout updates before server postback*/
-              primitives.stopPropagation(e);
-            });
-            break;
-          case primitives.RenderingMode.Update:
-            /* Update template content here */
-            break;
-        }
       }
 
       if (data.templateName == "contactTemplate") {
@@ -599,7 +565,7 @@
           case primitives.RenderingMode.Create:
             /* Initialize template content here */
             email.addEventListener("click", function (e) {
-              /* Block mouse click propagation in order to avoid layout updates before server postback*/
+              /* Block mouse click propagation in order to avoid layout updates before server post back*/
               primitives.stopPropagation(e);
             });
             break;

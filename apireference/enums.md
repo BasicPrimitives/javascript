@@ -1,6 +1,6 @@
 # Enumerations
 ## <a name="AdviserPlacementType" id="AdviserPlacementType">AdviserPlacementType</a>
-Defines leftward or rightward item placement relative to the referenced item. In case of assistants and advisers the referenced item is their immediate parent. In case of family diagram the referenced item is spouse or sibling in the row.
+The enumeration sets leftward or rightward item placement relative to the referenced item. In the case of assistants or advisers, the referenced node is their immediate parent. In the case of the family diagram, the referenced node is a sibling.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
@@ -13,22 +13,22 @@ Defines type of on-screen and in-layout annotation object. Annotations are geome
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `Background` | number | `4` | Background annotation highlights nodes via drawing rectangular shape in the background. If shapes overlap the same style neighboring shapes they are merged into one continuous shape. | 
- | `Connector` | number | `0` | Connector lines between two nodes of the diagram. They are drawn on top of existing diagram layout and they don't affect nodes placement. So it is users responsibility to preserve space between nodes for them. | 
- | `HighlightPath` | number | `2` | Highlight path annotation traces path between given sequence of nodes over existing connector lines in the diagram. | 
- | `Label` | number | `3` | In-layout label annotation. Label annotations are placed in layout between nodes, they preserve space between nodes, so they don't overlap neighboring nodes. Label annotations are designed for auto placement and bundling of connection lines between nodes when needed. | 
- | `Level` | number | `5` | Stripe annotation highlights same level nodes of the diagram via drawing continuous rectangular shape from side to side in their background. Stripe has optional title on the side of the diagram view area. Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the background and does not occupy space. | 
+ | `Background` | number | `4` | The background annotation highlights nodes via drawing the rectangular shape in the node's background. If the same style annotations of neighboring nodes overlap, control merges them into one continuous polygon geometry. | 
+ | `Connector` | number | `0` | The connector annotation displays a spline between two nodes of the diagram. They are drawn on top and across the existing diagram layout, and they don't affect nodes placement. If available space between nodes is not enough to display connector annotation, then control draws it outside on the side of them. | 
+ | `HighlightPath` | number | `2` | Highlight path annotation traces a path between a given sequence of nodes over existing relation lines in the diagram. | 
+ | `Label` | number | `3` | The in-layout label annotation display values over relation lines between nodes. The control preserves space for labels in the diagram layout so they don't overlap nodes. Label annotations are designed for auto-placement and bundling of connection lines between nodes when needed. | 
+ | `Level` | number | `5` | Level annotation highlights same level nodes of the diagram via drawing continuous rectangular shape from side to side in their background. Level has optional title on the side of the diagram view area. Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the background and does not occupy space. | 
  | `Shape` | number | `1` | Shape annotation is a possibility to draw some geometrical shapes over several nodes of the diagram. | 
 
 ## <a name="ChildrenPlacementType" id="ChildrenPlacementType">ChildrenPlacementType</a>
-Defines shape of children formation. By default a node's children are always placed in a horizontal line below the parent node. On a large scale this may result in the end user having to scroll screens in order to view all of the nodes. To compensate for this, we provide the option of placing all of the children of a parent node in a square/matrix formation. This will reduce sideways screen scrolling by compacting the child nodes into a much smaller area on the screen.
+The enumeration defines the shape of children's formation. By default, control places children in a horizontal line below the parent node. On a large scale, this may result in the end-user having to scroll screens to view all of them. To compensate, we provide the option of placing all of the children of a parent node in a square/matrix formation. That will reduce sideways screen scrolling by compacting the child nodes into a much smaller area on the screen.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `Auto` | number | `0` | Auto. This mode lets you set children layout at the component level and then redefine it for individual nodes if needed. | 
- | `Horizontal` | number | `2` | Horizontal children layout | 
- | `Matrix` | number | `3` | Matrix formation of the children | 
- | `Vertical` | number | `1` | Children placed in vertical column | 
+ | `Auto` | number | `0` | Auto: This mode lets you set nodes layout at the component level and then redefine it for individual nodes if needed. | 
+ | `Horizontal` | number | `2` | Horizontal layout | 
+ | `Matrix` | number | `3` | Matrix formation of the nodes | 
+ | `Vertical` | number | `1` | Vertical layout | 
 
 ## <a name="ConnectorLabelPlacementType" id="ConnectorLabelPlacementType">ConnectorLabelPlacementType</a>
 Label placement relative to connector annotation. Connector annotation is bound and drawn between two nodes defined by two properties: `fromItem` and `toItem`. Label can be placed close to "start", "end" nodes or in between of them along the connector line.
@@ -103,18 +103,18 @@ Horizontal alignment
  | `Right` | number | `2` | Right | 
 
 ## <a name="ItemType" id="ItemType">ItemType</a>
-This enumeration defines child node placement relative to its parent node. By default all children that belong to a parent node are of the same rank and status between each other and due to that, are always aligned below the parent and are organized in the same way. However for special cases were the end user wishes to have a child that is separate from the rest of it's siblings, we provide custom child types that the end user can use to place different ranking nodes anywhere around the parent node. These placement options give a lot of space for the creation of roles such as an Assistant, Adviser, various Partners and co-heads that may be in the organization. Additionally, by default a node's regular children are always placed in a horizontal line below the parent node. See children placement type options for regular children layout.
+The enumeration defines child node placement relative to its parent node. By default, the control places all children that belong to the same parent as the horizontal line below it. That works for a regular hierarchy of nodes having the same type. In the organizational chart, we have a lot of exceptions and non-hierarchical relations between nodes. For this purpose, we provide custom item types to place nodes around the logical parent, which helps visually differentiate nodes logically belonging to the same parent.  These placement options give a lot of space for creating roles such as an Assistant, Adviser, various Partners, and co-heads in the organization.  Additionally, control allows shaping the same type of children into vertical and matrix formations and place them into multiple levels.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `Adviser` | number | `2` | Adviser is drawn at the same row as parent node on the left or right side and connected horizontally to it. | 
- | `AdviserPartner` | number | `8` | Adviser partner is a variation of limited partner. The only difference is that it has an extra connection line to its parent. | 
- | `Assistant` | number | `1` | Assistant node is drawn at row in between parent and child rows and connected horizontally to connection line going from parent to the regular children | 
- | `GeneralPartner` | number | `6` | General partner is imitation of multiple inheritance in the organizational chart hierarchy. General partner node is drawn side by side with its parent and remaining regular children are visually connected to both of them like they are their parents. Another layout feature of the general partner is that it is connected to parents of its immediate logical parent as well, so visually it becomes a child of its grand parent. | 
- | `LimitedPartner` | number | `7` | Limited partner is variation of general partner. The only difference is that is is not connected to its logical grand parent. | 
- | `Regular` | number | `0` | Regular node is a default placement of child nodes in form of horizontal row. | 
- | `SubAdviser` | number | `5` | Sub adviser is variation of adviser node type. It has the same placement but it is connected by the top side of the node to the connector line going to the parent node. | 
- | `SubAssistant` | number | `4` | Sub assistant is variation of assistant node type. It has the same placement but it is connected by the top side of the node to the connector line going to the parent node. | 
+ | `Adviser` | number | `2` | The adviser type places node on the right or left side of the parent. | 
+ | `AdviserPartner` | number | `8` | The adviser partner is a variation of the limited partner. The difference is that it has an extra connection line to its logical parent. | 
+ | `Assistant` | number | `1` | The assistant type places node at the row on the side of the connection line going from parent to its children. | 
+ | `GeneralPartner` | number | `6` | The general partner type is an imitation of multiple inheritances in the organizational chart hierarchy. The general-partner node is drawn side by side with its logical parent, and control places regular children below them, so they visually look like parents. Another layout specifics of the general partner is that it is connected to its logical parent's parent. So visually, it becomes an immediate child of its grandparent. | 
+ | `LimitedPartner` | number | `7` | The limited partner is a variation of the general partner. The only difference is that it is not connected to its logical grandparent. | 
+ | `Regular` | number | `0` | The regular type places node below parent. | 
+ | `SubAdviser` | number | `5` | The sub-adviser type places node on the right or left side of the parent. The connection line goes out of the top side of the sub-adviser node. | 
+ | `SubAssistant` | number | `4` | The sub-assistant node type is a variation of the assistant node type. The sub-assistant places node at the row on the side of the connection line going from parent to its children. The connection line goes out of the top side of the node. | 
 
 ## <a name="LineType" id="LineType">LineType</a>
 Line style of connection lines.

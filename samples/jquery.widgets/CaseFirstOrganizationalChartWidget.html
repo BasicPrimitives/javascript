@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Item Template</title>
+
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <script type="text/javascript">
+    OrgDiagramWidget = function (Config, templates) {
+        this.widgetEventPrefix = "orgdiagram";
+
+        this.options = new Config();
+        this.control = null;
+        this.templates = templates;
+    };
+
+    OrgDiagramWidget.prototype._create = function () {
+        this.element.addClass("ui-widget");
+
+        this.control = primitives.OrgDiagram(this.element[0], this._readOptions(this.options), this.templates);
+    };
+
+    /**
+     * Removes all elements control added to the DOM including event listeners.
+     */
+    OrgDiagramWidget.prototype.destroy = function () {
+        this.control.destroy();
+    };
+
+    /**
+     * Performs full redraw of the diagram contents reevaluating all options. This method has to be called explicitly
+     * after all options are set in order to update contents.
+     * 
+     * @param {UpdateMode} updateMode 
+     * @param {bollean} forceCenterOnCursor 
+     */
+    OrgDiagramWidget.prototype.update = function (updateMode, centerOnCursor) {
+        this.control.update(updateMode, centerOnCursor);
+    };
+
+    OrgDiagramWidget.prototype._setOption = function (key, value) {
+        jQuery.Widget.prototype._setOption.apply(this, arguments);
+
+        switch (key) {
+            case "disabled":
+            var handles = jQuery([]);
+            if (value) {
+                handles.filter(".ui-state-focus").blur();
+                handles.removeClass("ui-state-hover");
+                handles.propAttr("disabled", true);
+                this.element.addClass("ui-disabled");
+            } else {
+                handles.propAttr("disabled", false);
+                this.element.removeClass("ui-disabled");
+            }
+            break;
+            default:
+            break;
+        }
+
+        this.control.setOptions(this._readOptions(this.options));
+    };
+
+    OrgDiagramWidget.prototype._readOptions = function (options) {
+        var result = {},
+            self = this;
+        /* shallow copy */
+        for (var property in options) {
+            if (options.hasOwnProperty(property)) {
+            switch (property) {
+                case 'onHighlightChanged':
+                case 'onCursorChanged':
+                case 'onSelectionChanging':
+                case 'onButtonClick':
+                case 'onMouseClick':
+                case 'onMouseDblClick':
+                  result[property] = function (property) {
+                    return function (event, eventArgs) {
+                    self._trigger(property, event, eventArgs);
+                    };
+                }(property);
+                break;
+                case 'onItemRender':
+                case 'onCursorRender':
+                case 'onHighlightRender':
+                  result[property] = function (property) {
+                    return function (event, eventArgs) {
+                    eventArgs.element = jQuery(eventArgs.element);
+                    self._trigger(property, event, eventArgs);
+                    };
+                }(property);
+                break;
+                case 'onHighlightChanging':
+                  result[property] = function (event, eventArgs) {
+                    var options = self.control.getOptions();
+                    self.options.highlightItem = options.highlightItem;
+
+                    self._trigger("onHighlightChanging", event, eventArgs);
+                };
+                break;
+                case 'onCursorChanging':
+                  result[property] = function (event, eventArgs) {
+                    var options = self.control.getOptions();
+                    self.options.cursorItem = options.cursorItem;
+
+                    self._trigger("onCursorChanging", event, eventArgs);
+                };
+                break;
+                case 'onSelectionChanged':
+                  result[property] = function (event, eventArgs) {
+                    var options = self.control.getOptions();
+                    self.options.selectedItems = options.selectedItems;
+
+                    self._trigger("onSelectionChanged", event, eventArgs);
+                };
+                break;
+                default:
+                  result[property] = options[property];
+                break;
+            }
+        }
+    }
+    return result;
+    };
+
+    if (typeof jQuery != "undefined") {
+        (function ($) {
+            $.widget("ui.orgDiagram", new OrgDiagramWidget(primitives.OrgConfig));
+        }(jQuery));
+    }; //ignore jslint
+  </script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+    jQuery(document).ready(function () {
+      var options = new primitives.OrgConfig();
+
+      var items = [
+        new primitives.OrgItemConfig({
+          id: 0,
+          parent: null,
+          title: "Scott Aasrud",
+          description: "VP, Public Sector",
+          image: "../images/photos/a.png",
+          phone: "(123) 456-78-90",
+          email: "itema@org.com",
+          image: "../images/photos/a.png",
+          templateName: "contactTemplate",
+          itemTitleColor: "red",
+          groupTitle: "Group 2"
+        }),
+        new primitives.OrgItemConfig({
+          id: 1,
+          parent: 0,
+          title: "Ted Lucas",
+          description: "VP, Human Resources",
+          image: "../images/photos/b.png",
+          groupTitle: "Group 1"
+        }),
+        new primitives.OrgItemConfig({
+          id: 2,
+          parent: 0,
+          title: "Fritz Stuger",
+          phone: "(123) 654-78-90",
+          email: "itemc@org.com",
+          description: "Business Solutions, US",
+          image: "../images/photos/c.png",
+          templateName: "contactTemplate2",
+          groupTitle: "Group 3"
+        })
+      ];
+
+      options.items = items;
+      options.cursorItem = 0;
+      options.templates = [getContactTemplate(), getContactTemplate2()];
+      options.onItemRender = onTemplateRender;
+
+      jQuery("#basicdiagram").orgDiagram(options);
+
+
+      function onTemplateRender(event, data) {
+        switch (data.renderingMode) {
+          case primitives.RenderingMode.Create:
+            /* Initialize widgets here */
+            break;
+          case primitives.RenderingMode.Update:
+            /* Update widgets here */
+            break;
+        }
+
+        var itemConfig = data.context;
+
+        if (data.templateName == "contactTemplate2") {
+          data.element.find("[name=photo]").attr({ "src": itemConfig.image, "alt": itemConfig.title });
+          data.element.find("[name=titleBackground]").css({ "background": itemConfig.itemTitleColor });
+
+          var fields = ["title", "description", "phone", "email"];
+          for (var index = 0; index < fields.length; index++) {
+            var field = fields[index];
+
+            var element = data.element.find("[name=" + field + "]");
+            if (element.text() != itemConfig[field]) {
+              element.text(itemConfig[field]);
+            }
+          }
+        } else if (data.templateName == "contactTemplate") {
+          data.element.find("[name=photo]").attr({ "src": itemConfig.image, "alt": itemConfig.title });
+          data.element.find("[name=titleBackground]").css({ "background": itemConfig.itemTitleColor });
+
+          var fields = ["title", "description", "phone", "email"];
+          for (var index = 0; index < fields.length; index++) {
+            var field = fields[index];
+
+            var element = data.element.find("[name=" + field + "]");
+            if (element.text() != itemConfig[field]) {
+              element.text(itemConfig[field]);
+            }
+          }
+        }
+      }
+
+      function getContactTemplate2() {
+        var result = new primitives.TemplateConfig();
+        result.name = "contactTemplate2";
+
+        result.itemSize = new primitives.Size(220, 120);
+        result.minimizedItemSize = new primitives.Size(3, 3);
+
+        var itemTemplate = jQuery(
+          '<div class="bp-item bp-corner-all bt-item-frame">'
+          + '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 216px; height: 20px;">'
+          + '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px;">'
+          + '</div>'
+          + '</div>'
+          + '<div class="bp-item bp-photo-frame" style="top: 26px; left: 164px; width: 50px; height: 60px;">'
+          + '<img name="photo" style="height:60px; width:50px;" />'
+          + '</div>'
+          + '<div name="phone" class="bp-item" style="top: 26px; left: 6px; width: 162px; height: 18px; font-size: 12px;"></div>'
+          + '<div name="email" class="bp-item" style="top: 44px; left: 6px; width: 162px; height: 18px; font-size: 12px;"></div>'
+          + '<div name="description" class="bp-item" style="top: 62px; left: 6px; width: 162px; height: 36px; font-size: 10px;"></div>'
+          + '</div>'
+        ).css({
+          width: result.itemSize.width + "px",
+          height: result.itemSize.height + "px"
+        }).addClass("bp-item bp-corner-all bt-item-frame");
+        result.itemTemplate = itemTemplate.wrap('<div>').parent().html();
+
+        return result;
+      }
+
+      function getContactTemplate() {
+        var result = new primitives.TemplateConfig();
+        result.name = "contactTemplate";
+
+        result.itemSize = new primitives.Size(220, 120);
+        result.minimizedItemSize = new primitives.Size(3, 3);
+
+        var itemTemplate = jQuery(
+          '<div class="bp-item bp-corner-all bt-item-frame">'
+          + '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 216px; height: 20px;">'
+          + '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 208px; height: 18px;">'
+          + '</div>'
+          + '</div>'
+          + '<div class="bp-item bp-photo-frame" style="top: 26px; left: 2px; width: 50px; height: 60px;">'
+          + '<img name="photo" style="height:60px; width:50px;" />'
+          + '</div>'
+          + '<div name="phone" class="bp-item" style="top: 26px; left: 56px; width: 162px; height: 18px; font-size: 12px;"></div>'
+          + '<div name="email" class="bp-item" style="top: 44px; left: 56px; width: 162px; height: 18px; font-size: 12px;"></div>'
+          + '<div name="description" class="bp-item" style="top: 62px; left: 56px; width: 162px; height: 36px; font-size: 10px;"></div>'
+          + '</div>'
+        ).css({
+          width: result.itemSize.width + "px",
+          height: result.itemSize.height + "px"
+        }).addClass("bp-item bp-corner-all bt-item-frame");
+        result.itemTemplate = itemTemplate.wrap('<div>').parent().html();
+
+        return result;
+      }
+
+    });
+  </script>
+</head>
+
+<body>
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" />
+</body>
+
+</html>

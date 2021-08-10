@@ -1,0 +1,187 @@
+﻿<!DOCTYPE html>
+<html style="height: 95%">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Auto size Page to fit Organizational Chart</title>
+  <script type="text/javascript" src="../../pdfkitsamples.js"></script>
+  <script type="text/javascript" src="../../primitives.js"></script>
+
+  <script type='text/javascript'>
+    var control;
+    var timer = null;
+    var photos = pdfkitsamples.photos;
+    var PDFDocument = pdfkitsamples.PDFDocument;
+    var blobStream = pdfkitsamples.blobStream;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // create a document and pipe to a blob
+      var sample3 = primitives.OrgDiagramPdfkit({
+        items: [
+          new primitives.OrgItemConfig({
+            id: 0,
+            parent: null,
+            title: "James Smith",
+            description: "VP, Public Sector",
+            image: photos.a
+          }),
+          new primitives.OrgItemConfig({
+            id: 1,
+            parent: 0,
+            title: "Ted Lucas 1",
+            description: "VP, Human Resources",
+            image: photos.b
+          }),
+          new primitives.OrgItemConfig({
+            id: 2,
+            parent: 0,
+            title: "Fritz Stuger 2",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 3,
+            parent: 0,
+            title: "Fritz Stuger 3",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 4,
+            parent: 0,
+            title: "Fritz Stuger 4",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 5,
+            parent: 0,
+            title: "Fritz Stuger 5",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 6,
+            parent: 0,
+            title: "Fritz Stuger 6",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 7,
+            parent: 0,
+            title: "Fritz Stuger 7",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 8,
+            parent: 0,
+            title: "Fritz Stuger 8",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 9,
+            parent: 0,
+            title: "Fritz Stuger 9",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 10,
+            parent: 2,
+            title: "Fritz Stuger 10",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 11,
+            parent: 3,
+            title: "Fritz Stuger 11",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 12,
+            parent: 10,
+            title: "Fritz Stuger 12",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 14,
+            parent: 12,
+            title: "Fritz Stuger 14",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 15,
+            parent: 14,
+            title: "Fritz Stuger 15",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 16,
+            parent: 15,
+            title: "Fritz Stuger 16",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 17,
+            parent: 16,
+            title: "Fritz Stuger 17",
+            description: "Business Solutions, US",
+            image: photos.c
+          }), new primitives.OrgItemConfig({
+            id: 18,
+            parent: 17,
+            title: "Fritz Stuger 18",
+            description: "Business Solutions, US",
+            image: photos.c
+          })
+
+        ],
+        annotations: [
+          {
+            annotationType: primitives.AnnotationType.Connector,
+            fromItem: 9,
+            toItem: 18,
+            label: "Auto size Page to fit Organizational Chart",
+            labelSize: { width: 200, height: 200 }, //new primitives.Size(80, 30)
+            connectorShapeType: primitives.ConnectorShapeType.BothWay,
+            connectorPlacementType: primitives.ConnectorPlacementType.Straight,
+            color: primitives.Colors.Red,
+            offset: -30,
+            lineWidth: 2,
+            lineType: primitives.LineType.Solid
+          }
+        ],
+        cursorItem: null,
+        hasSelectorCheckbox: primitives.Enabled.False
+      });
+
+      var sample3size = sample3.getSize();
+
+      var doc = new PDFDocument({ size: [sample3size.width + 100, sample3size.height + 150] });
+      var stream = doc.pipe(blobStream());
+
+      doc.save();
+
+      // draw some text
+      doc.fontSize(25)
+        .text('Auto size Page to fit Organizational Chart', 50, 50);
+
+      sample3.draw(doc, 50, 100);
+
+      doc.restore();
+
+      doc.end();
+
+      stream.on('finish', function () {
+        var string = stream.toBlobURL('application/pdf');
+        document.getElementById("previewpanel").setAttribute("src", string);
+      });
+    });
+
+  </script>
+</head>
+
+<body style="height: 100%">
+  <div id="basicdiagram" style="width: 100%; height: 100%; border-style: none; border-width: 0px;">
+    <iframe id="previewpanel" type="application/pdf" width="100%" height="100%" frameborder="0"
+      style="position:relative;z-index:999">
+    </iframe>
+  </div>
+</body>
+
+</html>

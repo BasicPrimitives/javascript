@@ -3,7 +3,7 @@
 
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>Labels cascades over connection lines in family chart</title>
+  <title>Labels cascades over connection lines in family chart. Custom label template.</title>
 
   
 
@@ -49,8 +49,57 @@
       options.dotItemsInterval = 5;
       options.lineItemsInterval = 5;
 
+      // the following options are optional
+      options.defaultLabelAnnotationTemplate = "LabelAnnotationTemplate";
+      options.templates = [getLabelAnnotationTemplate()];
+			options.onItemRender = onTemplateRender;
+
       control = primitives.FamDiagram(document.getElementById("basicdiagram"), options);
     });
+
+		function onTemplateRender(event, data) {
+			var itemConfig = data.context,
+				element = data.element;
+
+			if (data.templateName == "LabelAnnotationTemplate") {
+				var title = element.firstChild;
+				title.textContent = itemConfig.title;
+			}
+		}
+
+    function getLabelAnnotationTemplate() {
+			var result = new primitives.TemplateConfig();
+			result.name = "LabelAnnotationTemplate";
+
+			result.itemSize = new primitives.Size(100, 20);
+			result.minimizedItemSize = new primitives.Size(3, 3);
+
+			result.itemTemplate = ["div",
+				{
+					"style": {
+						width: result.itemSize.width + "px",
+						height: result.itemSize.height + "px"
+					},
+					"class": "bp-item"
+				},
+				["div",
+					{
+						"name": "title",
+						"style": {
+							top: "0px",
+							left: "0px",
+							width: "100px",
+							height: "20px",
+							fontSize: "16px",
+							textAlign: "center"
+						},
+						"class": ["bp-item"]
+					}
+				]
+			];
+
+			return result;
+		}
 
   </script>
 </head>

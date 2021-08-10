@@ -23,7 +23,7 @@ module.exports = {
 		filename: "[name].js",
 		library: "[name]",
 		libraryTarget: "umd",
-		publicPath: '/assets/',
+		publicPath: '/',
 		globalObject: "this"
 	},
     module: {

@@ -17,21 +17,21 @@
     "@babel/preset-env": "^7.12.7",
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
+    "blob-stream": "^0.1.3",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^5.0.1",
+    "file-saver": "^2.0.5",
     "html-webpack-plugin": "^4.5.0",
     "jest": "^26.6.3",
     "jest-image-snapshot": "^4.2.0",
     "jest-puppeteer": "^4.4.0",
+    "pdfkit-nodejs-webpack": "^0.0.2",
     "puppeteer": "^5.5.0",
     "style-loader": "^2.0.0",
     "url-loader": "^4.1.1",
-    "webpack": "^4.44.2",
-    "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0",
-    "blob-stream": "^0.1.3",
-    "file-saver": "^2.0.5",
-    "pdfkit-nodejs-webpack": "^0.0.2"
+    "webpack": "^4.46.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.1"
   },
   "scripts": {
     "test": "jest",
@@ -39,9 +39,7 @@
     "start": "webpack serve ",
     "apireference": "node apireference.js apireference.json"
   },
-  "dependencies": {
-
-  },
+  "dependencies": {},
   "jest": {
     "testEnvironment": "jsdom"
   },

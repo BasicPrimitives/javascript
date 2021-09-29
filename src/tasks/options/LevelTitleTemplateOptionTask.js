@@ -1,6 +1,7 @@
 import ValueReader from '../../readers/ValueReader';
 import ObjectReader from '../../readers/ObjectReader';
 import EnumerationReader from '../../readers/EnumerationReader';
+import FunctionReader from '../../readers/FunctionReader';
 import { HorizontalAlignmentType, VerticalAlignmentType, TextOrientationType } from '../../enums';
 
 export default function LevelTitleTemplateOptionTask(optionsTask, defaultConfig) {
@@ -16,7 +17,9 @@ export default function LevelTitleTemplateOptionTask(optionsTask, defaultConfig)
     levelTitleFontColor: new ValueReader(["string"], false, defaultConfig.levelTitleFontColor),
     levelTitleColor: new ValueReader(["string"], false, defaultConfig.levelTitleColor),
     levelTitleFontWeight: new ValueReader(["string"], false, defaultConfig.levelTitleFontWeight),
-    levelTitleFontStyle: new ValueReader(["string"], false, defaultConfig.levelTitleFontStyle)
+    levelTitleFontStyle: new ValueReader(["string"], false, defaultConfig.levelTitleFontStyle),
+    onLevelTitleRender: new FunctionReader(),
+    onLevelBackgroundRender: new FunctionReader()
   });
   function process() {
     var context = {

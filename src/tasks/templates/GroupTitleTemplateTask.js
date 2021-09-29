@@ -12,7 +12,12 @@
     var options;
     if (_data.template == null) {
       options = templatesOptionTask.getOptions();
-      _data.template = new templates.GroupTitleTemplate(options);
+      var { onGroupTitleRender } = options;
+      if(onGroupTitleRender != null) {
+        _data.template = new templates.CustomRenderTemplate(options, onGroupTitleRender);  
+      } else {
+        _data.template = new templates.GroupTitleTemplate(options);
+      }
     }
     return _data.template;
   }

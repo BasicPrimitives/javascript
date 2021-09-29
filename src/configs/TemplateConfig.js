@@ -189,7 +189,6 @@ export default function TemplateConfig() {
    * concept, but eliminate buttons customization API.
    *
    * @callback
-   * @param {Object} event Mouse event
    * @param {EventArgs} data Context information
    */
   this.onButtonsRender = null;

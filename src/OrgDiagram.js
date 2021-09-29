@@ -1,5 +1,6 @@
 import AnnotationLabelTemplate from './templates/html/AnnotationLabelTemplate';
 import ButtonsTemplate from './templates/html/ButtonsTemplate';
+import CustomRenderTemplate from './templates/html/CustomRenderTemplate';
 import CheckBoxTemplate from './templates/html/CheckBoxTemplate';
 import CursorTemplate from './templates/html/CursorTemplate';
 import DotHighlightTemplate from './templates/html/DotHighlightTemplate';
@@ -28,6 +29,7 @@ export default function OrgDiagram(element, options, templates) {
   return BaseControl(element, options, OrgTaskManagerFactory, OrgEventArgsFactory, {
     AnnotationLabelTemplate,
     ButtonsTemplate,
+    CustomRenderTemplate,
     CheckBoxTemplate,
     CursorTemplate,
     DotHighlightTemplate,

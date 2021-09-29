@@ -1,5 +1,6 @@
 import AnnotationLabelTemplate from './templates/pdf/AnnotationLabelTemplate';
 import CheckBoxTemplate from './templates/pdf/CheckBoxTemplate';
+import CustomRenderTemplate from './templates/pdf/CustomRenderTemplate';
 import CursorTemplate from './templates/pdf/CursorTemplate';
 import DummyTemplate from './templates/pdf/DummyTemplate';
 import GroupTitleTemplate from './templates/pdf/GroupTitleTemplate';
@@ -26,6 +27,7 @@ export default function FamDiagramPdfkit(options, templates) {
     ButtonsTemplate: DummyTemplate,
     CheckBoxTemplate,
     CursorTemplate,
+    CustomRenderTemplate,
     DotHighlightTemplate: DummyTemplate,
     GroupTitleTemplate,
     HighlightTemplate,

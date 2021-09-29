@@ -14,7 +14,12 @@
     var options;
     if (_data.backgroundTemplate == null) {
       options = levelTitleTemplateOptionTask.getOptions();
-      _data.backgroundTemplate = new templates.LevelBackgroundTemplate(options);
+      var { onLevelBackgroundRender } = options;
+      if( onLevelBackgroundRender != null ) {
+        _data.backgroundTemplate = new templates.CustomRenderTemplate(options, onLevelBackgroundRender);  
+      } else {
+        _data.backgroundTemplate = new templates.LevelBackgroundTemplate(options);
+      }
     }
     return _data.backgroundTemplate;
   }
@@ -24,7 +29,12 @@
     if (_data.titleTemplate == null) {
       var { orientationType: orientation } = orientationOptionTask.getOptions();
       options = levelTitleTemplateOptionTask.getOptions();
-      _data.titleTemplate = new templates.LevelTitleTemplate(options, orientation);
+      var { onLevelTitleRender } = options;
+      if( onLevelTitleRender != null ) {
+        _data.titleTemplate = new templates.CustomRenderTemplate(options, onLevelTitleRender);  
+      } else {
+        _data.titleTemplate = new templates.LevelTitleTemplate(options, orientation);
+      }
     }
     return _data.titleTemplate;
   }

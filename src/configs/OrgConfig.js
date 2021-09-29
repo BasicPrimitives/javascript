@@ -338,7 +338,6 @@ export default function OrgConfig(name) {
    * concept, but eliminate buttons customization API.
    *
    * @callback
-   * @param {Object} event Mouse event
    * @param {EventArgs} data Context information
    */
   this.onButtonsRender = null;
@@ -835,6 +834,16 @@ export default function OrgConfig(name) {
    */
   this.groupTitleFontStyle = "normal";
 
+  /**
+    * On group title render event. This callback function renders the group title panel.
+    * It overwrites the default group title renderer. It is called only when the group title is visible.
+    * See other group title options for details.
+    *
+    * @group Group Titles
+    * @callback
+    * @param {EventArgs} data Context information
+    */
+  this.onGroupTitleRender = null;
 
   /**
    * The size of the panel containing level titles.
@@ -931,6 +940,28 @@ export default function OrgConfig(name) {
    * @type {string}
    */
   this.levelTitleFontStyle = "normal";
+
+  /**
+   * On level annotation title render event. This callback function is called to render level annotation title panel. 
+   * It is used to overwrite default level title template renderer. It is called only when level annotations are visible.
+   * See other level annotation options for details.
+   *
+   * @group Level Titles
+   * @callback
+   * @param {EventArgs} data Context information
+   */
+   this.onLevelTitleRender = null;
+
+  /**
+   * On level annotation background render event. This callback function is called to render level annotation background panel. 
+   * It is used to overwrite default level background template renderer. It is called only when level annotations are visible.
+   * See other level annotation options for details.
+   *
+   * @group Level Titles
+   * @callback
+   * @param {EventArgs} data Context information
+   */
+   this.onLevelBackgroundRender = null;   
 
   /**
    * @ignore

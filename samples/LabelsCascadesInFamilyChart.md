@@ -11,7 +11,7 @@ See primitives.LabelAnnotationConfig for details. By default, label annotations 
 
 
 # Labels over connection lines in matrix-shaped family chart
-The following sample demonstrates how matrix layout places labels around nodes.
+The following sample demonstrates how control shows labels around matrix of nodes.
 
 [JavaScript](javascript.controls/CaseLabelsNMatrixInFamilyChart.html)
 

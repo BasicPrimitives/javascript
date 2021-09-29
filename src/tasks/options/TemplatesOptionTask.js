@@ -25,6 +25,7 @@ export default function TemplatesOptionTask(optionsTask, defaultConfig, defaultT
     onItemRender: new FunctionReader(),
     onCursorRender: new FunctionReader(),
     onHighlightRender: new FunctionReader(),
+    onGroupTitleRender: new FunctionReader(),
     templates: new ArrayReader(
       new ObjectReader({
         name: new ValueReader(["string"], true),

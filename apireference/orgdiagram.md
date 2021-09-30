@@ -166,13 +166,12 @@ Button click event. See `buttons` property.
  | `event` | Object | `` | Mouse event | 
  | `data` | EventArgs | `` | Context information | 
 
- `onButtonsRender(event, data)` 
+ `onButtonsRender(data)` 
 
 On buttons panel render event. This callback function is called to render context of buttons panel. It is used to replace `buttons` collection property in the control. So we preserve context buttons panel as a functional concept, but eliminate buttons customization API.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `event` | Object | `` | Mouse event | 
  | `data` | EventArgs | `` | Context information | 
 
  `onCursorChanged(event, data)` 
@@ -201,6 +200,14 @@ Callback function for rendering content of the cursor template. This callback is
 | --- | --- | --- | --- | 
  | `event` | Object | `` | Event if available | 
  | `data` | RenderEventArgs | `` | The context information | 
+
+ `onGroupTitleRender(data)` 
+
+On group title render event. This callback function renders the group title panel. It overwrites the default group title renderer. It is called only when the group title is visible. See other group title options for details.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `data` | EventArgs | `` | Context information | 
 
  `onHighlightChanged(event, data)` 
 
@@ -237,6 +244,22 @@ Callback function for rendering content of the diagram nodes. This callback is o
 | --- | --- | --- | --- | 
  | `event` | Object | `` | Event if available | 
  | `data` | RenderEventArgs | `` | The context information | 
+
+ `onLevelBackgroundRender(data)` 
+
+On level annotation background render event. This callback function is called to render level annotation background panel. It is used to overwrite default level background template renderer. It is called only when level annotations are visible. See other level annotation options for details.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `data` | EventArgs | `` | Context information | 
+
+ `onLevelTitleRender(data)` 
+
+On level annotation title render event. This callback function is called to render level annotation title panel. It is used to overwrite default level title template renderer. It is called only when level annotations are visible. See other level annotation options for details.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `data` | EventArgs | `` | Context information | 
 
  `onMouseClick(event, data)` 
 

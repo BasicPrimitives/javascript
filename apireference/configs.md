@@ -239,11 +239,10 @@ Template configuration object defines DOM elements for node content, cursor and 
 
 **Events**
 
- `onButtonsRender(event, data)` 
+ `onButtonsRender(data)` 
 
 On buttons panel render event. This callback function is called to render context of buttons panel. It is used to replace `buttons` collection property in the control. So we preserve context buttons panel as a functional concept, but eliminate buttons customization API.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `event` | Object | `` | Mouse event | 
  | `data` | EventArgs | `` | Context information | 

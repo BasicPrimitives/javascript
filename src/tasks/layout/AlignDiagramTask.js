@@ -7,7 +7,7 @@ import SpatialIndex from '../../algorithms/SpatialIndex';
 import KeyboardNavigationManager from '../../managers/KeyboardNavigationManager';
 
 export default function AlignDiagramTask(orientationOptionTask, itemsSizesOptionTask, visualTreeOptionTask, scaleOptionTask,
-  currentControlSizeTask, activeItemsTask, itemsPositionsTask, isFamilyChartMode) {
+  currentControlSizeTask, activeItemsTask, itemsPositionsTask) {
   var _data = {
     treeItemsPositions: {}, // TreeItemPosition();
     panelSize: null // Rect();
@@ -74,20 +74,16 @@ export default function AlignDiagramTask(orientationOptionTask, itemsSizesOption
 
   function stretchToWidth(treeItemsPositions, treeWidth, panelWidth, horizontalAlignment) {
     var offset;
-    if (isFamilyChartMode) {
-      offset = (panelWidth - treeWidth) / 2.0;
-    } else {
-      switch (horizontalAlignment) {
-        case HorizontalAlignmentType.Left:
-          offset = 0;
-          break;
-        case HorizontalAlignmentType.Right:
-          offset = panelWidth - treeWidth;
-          break;
-        case HorizontalAlignmentType.Center:
-          offset = (panelWidth - treeWidth) / 2.0;
-          break;
-      }
+    switch (horizontalAlignment) {
+      case HorizontalAlignmentType.Left:
+        offset = 0;
+        break;
+      case HorizontalAlignmentType.Right:
+        offset = panelWidth - treeWidth;
+        break;
+      case HorizontalAlignmentType.Center:
+        offset = (panelWidth - treeWidth) / 2.0;
+        break;
     }
     translateItemPositions(treeItemsPositions, offset, 0);
   }

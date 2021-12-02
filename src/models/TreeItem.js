@@ -7,7 +7,6 @@ export default function TreeItem() {
 
   /* Visual child id which is supposed to be straight under it */
   this.visualAggregatorId = null;
-  this.visualDepth = 1; // private 
 
   this.partners = []; /* nodes connected with bottom line together into one family, family is group of items having common set of children */
 

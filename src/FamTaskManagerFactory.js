@@ -143,8 +143,6 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
   tasks.addDependency('defaultLabelAnnotationConfig', new LabelAnnotationConfig());
   tasks.addDependency('defaultLevelAnnotationConfig', new LevelAnnotationConfig());
 
-  tasks.addDependency('isFamilyChartMode', true);/* in regular org diagram we hide branch if it contains only invisible nodes, 
-    in the family chart we use invisible items to draw connectors across multiple levels */
   tasks.addDependency('showElbowDots', true);/* in regular org chart we don;t have situations when connector lines cross, but we have such situations in 
     family tree so we need extra visual attribute to distinguish intersections betwen connectors */
   tasks.addDependency('null', null);
@@ -271,7 +269,7 @@ export default function FamTaskManagerFactory(getOptions, getGraphics, getLayout
     'CombinedTemplateParamsTask',
     'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], ItemsPositionsTask, Colors.Red);
 
-  tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask', 'isFamilyChartMode'], AlignDiagramTask, Colors.Red);
+  tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'ActiveItemsTask', 'ItemsPositionsTask'], AlignDiagramTask, Colors.Red);
   tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'ScaleOptionTask', 'AlignDiagramTask'], CreateTransformTask, Colors.Cyan);
 
   // Managers

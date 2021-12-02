@@ -138,14 +138,14 @@
           image: "../images/photos/p.png",
           groupTitle: "Part Time",
           groupTitleColor: primitives.Colors.Green,
-          levelOffset: 2
+          levelOffset: null
         });
       };
 
       items.push({
         id: 1003,
         parent: 103,
-        title: "Assistant",
+        title: "Assistant 1",
         description: "Assistant Description",
         image: "../images/photos/b.png",
         itemType: primitives.ItemType.Assistant,
@@ -158,7 +158,7 @@
       items.push({
         id: 1004,
         parent: 17,
-        title: "Assistant",
+        title: "Assistant 2",
         description: "Assistant Description",
         image: "../images/photos/b.png",
         itemType: primitives.ItemType.Assistant,
@@ -170,13 +170,148 @@
 
       items.push({
         id: 1005,
-        parent: 16,
-        title: "Assistant",
-        description: "Assistant Description",
+        parent: 14,
+        title: "Adviser 3",
+        description: "Adviser Description 3",
         image: "../images/photos/b.png",
         itemType: primitives.ItemType.Adviser,
         adviserPlacementType: primitives.AdviserPlacementType.Right,
         groupTitle: "Audit",
+        groupTitleColor: primitives.Colors.Olive,
+        levelOffset: 0
+      });
+
+
+      items.push({
+        id: 1006,
+        parent: 1005,
+        title: "Child of Ass 3",
+        description: "Child Description",
+        image: "../images/photos/b.png",
+        itemType: primitives.ItemType.Regular,
+        groupTitle: "Audit",
+        groupTitleColor: primitives.Colors.Olive,
+        levelOffset: 0
+      });
+
+      items.push({
+        id: 1007,
+        parent: 1006,
+        title: "Child of Child of Ass 3",
+        description: "Child Description",
+        image: "../images/photos/b.png",
+        itemType: primitives.ItemType.Regular,
+        groupTitle: "Audit",
+        groupTitleColor: primitives.Colors.Olive,
+        levelOffset: 0
+      });
+
+      items.push({
+        id: 1008,
+        parent: 1007,
+        title: "Child of Child of Child of Ass 3",
+        description: "Child Description",
+        image: "../images/photos/b.png",
+        itemType: primitives.ItemType.Regular,
+        groupTitle: "Audit",
+        groupTitleColor: primitives.Colors.Olive,
+        levelOffset: 0
+      });
+
+      items.push({
+        id: 1009,
+        parent: 17,
+        title: "Test Adviser",
+        description: "Child Description",
+        image: "../images/photos/b.png",
+        itemType: primitives.ItemType.Adviser,
+        adviserPlacementType: primitives.AdviserPlacementType.Left,
+        groupTitle: "Test",
+        groupTitleColor: primitives.Colors.Olive,
+        levelOffset: 0
+      });
+
+      items.push({
+        id: 1010,
+        parent: 1009,
+        title: "Test Adviser 2",
+        description: "Adviser Description 2",
+        image: "../images/photos/b.png",
+        itemType: primitives.ItemType.Adviser,
+        groupTitle: "Test",
+        groupTitleColor: primitives.Colors.Olive,
+        levelOffset: 0
+      });
+
+      items.push({
+        id: 1011,
+        parent: 1010,
+        title: "Test Child 2",
+        description: "Child Description",
+        image: "../images/photos/b.png",
+        itemType: primitives.ItemType.Regular,
+        groupTitle: "Test",
+        groupTitleColor: primitives.Colors.Olive,
+        levelOffset: 0
+      });
+
+      items.push({
+        id: 1012,
+        parent: 1011,
+        title: "Test Child 3",
+        description: "Child Description",
+        image: "../images/photos/b.png",
+        itemType: primitives.ItemType.Regular,
+        groupTitle: "Test",
+        groupTitleColor: primitives.Colors.Olive,
+        levelOffset: 0
+      });
+
+
+      items.push({
+        id: 1013,
+        parent: 31,
+        title: "Test Adviser",
+        description: "Child Description",
+        image: "../images/photos/b.png",
+        itemType: primitives.ItemType.Adviser,
+        groupTitle: "Test",
+        groupTitleColor: primitives.Colors.Olive,
+        levelOffset: 0
+      });
+
+      items.push({
+        id: 1014,
+        parent: 1013,
+        title: "Test Child",
+        description: "Child Description",
+        image: "../images/photos/b.png",
+        itemType: primitives.ItemType.Adviser,
+        groupTitle: "Test",
+        groupTitleColor: primitives.Colors.Olive,
+        levelOffset: 0
+      });
+
+      items.push({
+        id: 1015,
+        parent: 1014,
+        title: "Test Child 2",
+        description: "Child Description",
+        image: "../images/photos/b.png",
+        itemType: primitives.ItemType.Regular,
+        groupTitle: "Test",
+        groupTitleColor: primitives.Colors.Olive,
+        levelOffset: 0
+      });
+
+      items.push({
+        id: 1016,
+        parent: 1015,
+        title: "Test Child 3",
+        description: "Child Description",
+        image: "../images/photos/b.png",
+        itemType: primitives.ItemType.Regular,
+        groupTitle: "Test",
         groupTitleColor: primitives.Colors.Olive,
         levelOffset: 0
       });
@@ -202,6 +337,7 @@
       options.leavesPlacementType = primitives.ChildrenPlacementType.Matrix;
 
       options.arrowsDirection = primitives.GroupByType.Children;
+      options.placeAdvisersAboveChildren = true;
 
       options.annotations = [
           {

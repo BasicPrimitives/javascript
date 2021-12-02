@@ -9,7 +9,7 @@ export default function DrawMinimizedItemsTask(getGraphics, createTransformTask,
   minimizedItemsOptionTask, itemTemplateParamsTask, alignDiagramTask) {
   var _graphics,
     _transform,
-    _debug = false,
+    _debug = true,
     _options,
     _positions;
 
@@ -99,7 +99,7 @@ export default function DrawMinimizedItemsTask(getGraphics, createTransformTask,
                 break;
               case Visibility.Invisible:
                 if (_debug) {
-                  itemTitleColor = Colors.Red;
+                  itemTitleColor = (treeItemId == 1010 || treeItemId == 1011) ? Colors.Cyan : Colors.Red;
                   if (!paletteItems.hasOwnProperty(itemTitleColor)) {
                     paletteItems[itemTitleColor] = new PaletteItem({
                       'lineColor': itemTitleColor,
@@ -110,7 +110,7 @@ export default function DrawMinimizedItemsTask(getGraphics, createTransformTask,
                     });
                   }
                   polyline = markers.getPolyline(paletteItems[itemTitleColor]);
-                  polyline.addSegment(new DotSegment(x - 2, y - 2, 4, 4, 2));
+                  polyline.addSegment(new DotSegment(x - 4, y - 4, 8, 8, 4));
                 }
                 break;                
               default:

@@ -9,7 +9,6 @@ export default function OrgItem(options) {
 
   this.isVisible = true; // If it is true then item is shown and selectable in hierarchy. 
   this.isActive = true; // If it is true then item is clickable in hierarchy. 
-  this.hasVisibleChildren = false; // If it is true then item is Visible or one of its children in hierarchy. 
 
   this.itemType = ItemType.Regular; // This property defines how item should be placed in chart. 
   this.adviserPlacementType = AdviserPlacementType.Auto; // Left or Right placement relative to parent

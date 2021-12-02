@@ -8,6 +8,7 @@ export default function OrgVisualTreeOptionTask(optionsTask, defaultConfig) {
     _hash = {};
 
   var _dataTemplate = new ObjectReader({
+    alignBranches: new ValueReader(["boolean"], false, defaultConfig.alignBranches),
     leavesPlacementType: new EnumerationReader(ChildrenPlacementType, false, defaultConfig.leavesPlacementType),
     childrenPlacementType: new EnumerationReader(ChildrenPlacementType, false, defaultConfig.childrenPlacementType),
     placeAdvisersAboveChildren: new ValueReader(["boolean"], false, defaultConfig.placeAdvisersAboveChildren),

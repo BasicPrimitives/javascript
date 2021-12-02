@@ -102,7 +102,6 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics, set
   tasks.addDependency('defaultShapeAnnotationConfig', new ShapeAnnotationConfig());
   tasks.addDependency('defaultLevelAnnotationConfig', new LevelAnnotationConfig());
 
-  tasks.addDependency('isFamilyChartMode', false);
   tasks.addDependency('showElbowDots', false);
   tasks.addDependency('null', null);
   tasks.addDependency('foreground', ZOrderType.Foreground);
@@ -153,7 +152,7 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics, set
   tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask', 'templates'], AnnotationLabelTemplateTask, Colors.Cyan);
   tasks.addTask('LevelAnnotationTemplateTask', ['OrientationOptionTask', 'LevelTitleTemplateOptionTask', 'templates'], LevelAnnotationTemplateTask, Colors.Cyan);
   
-  tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'null', 'VisualTreeOptionTask', 'isFamilyChartMode'], VisualTreeTask, Colors.Red);
+  tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'null', 'VisualTreeOptionTask'], VisualTreeTask, Colors.Red);
   tasks.addTask('VisualTreeLevelsTask', ['VisualTreeTask', 'ItemTemplateParamsTask'], VisualTreeLevelsTask, Colors.Red);
   tasks.addTask('ExtractNestedLayoutsTask', ['OptionsTask'], ExtractNestedLayoutsTask, Colors.Red);
   tasks.addTask('CreateLayoutsTreeTask', ['VisualTreeTask', 'VisualTreeLevelsTask', 'ExtractNestedLayoutsTask'], CreateLayoutsTreeTask, Colors.Red);
@@ -175,7 +174,7 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics, set
     'ItemTemplateParamsTask',
     'CursorItemTask', 'CombinedNormalVisibilityItemsTask'], ItemsPositionsTask, Colors.Red);
 
-  tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'null', 'ItemsPositionsTask', 'isFamilyChartMode'], AlignDiagramTask, Colors.Red);
+  tasks.addTask('AlignDiagramTask', ['OrientationOptionTask', 'ItemsSizesOptionTask', 'VisualTreeOptionTask', 'ScaleOptionTask', 'CurrentControlSizeTask', 'null', 'ItemsPositionsTask'], AlignDiagramTask, Colors.Red);
   tasks.addTask('CreateTransformTask', ['OrientationOptionTask', 'ScaleOptionTask', 'AlignDiagramTask'], CreateTransformTask, Colors.Cyan);
 
   // Managers

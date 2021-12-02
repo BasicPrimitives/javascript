@@ -689,6 +689,15 @@ export default function OrgConfig(name) {
   this.calloutOpacity = 0.2;
 
   /**
+   * Enables cross branch nodes alignment. Places the same type of nodes across all branches of the diagram at the same level.
+   * 
+   * @group Auto Layout
+   * @type {boolean}
+   */
+   this.alignBranches = true;
+
+
+  /**
    * Sets default formation of child nodes. By default all children that belong to a parent node are always aligned 
    * below and placed in a horizontal line. On a large scale this may result in the end user having to scroll screens
    * in order to view all of the nodes. To compensate for this, we provide the option of placing all of the children

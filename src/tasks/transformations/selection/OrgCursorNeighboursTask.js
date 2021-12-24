@@ -18,7 +18,7 @@ export default function OrgCursorNeighboursTask(cursorItemTask, navigationFamily
     var result = [];
     if (cursorTreeItemId !== null) {
       navigationFamily.loopNeighbours(this, cursorTreeItemId, function (treeItemId, treeItem, distance) {
-        if (treeItem.visibility === Visibility.Auto) {
+        if (treeItem.isVisible) {
           result.push(treeItemId);
         }
         return true;

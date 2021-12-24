@@ -694,7 +694,7 @@ export default function OrgConfig(name) {
    * @group Auto Layout
    * @type {boolean}
    */
-   this.alignBranches = true;
+   this.alignBranches = false;
 
 
   /**

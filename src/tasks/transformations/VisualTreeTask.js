@@ -4,59 +4,170 @@ import { SideFlag, Visibility, HorizontalAlignmentType, AdviserPlacementType,
   Enabled, ChildrenPlacementType, ItemType } from '../../enums';
 import TreeItem from '../../models/TreeItem';
 
-var RowType = {
+var GroupType = {
   Items: 0,
-  /**
-   * Advisers
-   */
-  Advisers: 1,
-  /**
-   * Assistants
-   */
-  Assistants: 2,
-  /**
-   * Row Children
-   */
-  RowChildren: 3,
-  /**
-   * Children
-   */
-  Children: 4
+  Assistants: 1,
+  RowChildren: 2,
+  Children: 3
 };
-
-function Row(id) {
-  this.id = id;
-  this.extend = true; /* indicates that we need to extend aggregators to fit nodes branches */
-  this.nodes = []; /* nodes to measure depth for*/
-  this.aggregators = []; /* nodes to extend */
-  this.partners = []; /* nodes to align by depth */
-
-  this.merge = function(row) {
-    this.nodes = [...this.nodes, ...row.nodes];
-    this.aggregators = [...this.aggregators, ...row.aggregators];
-    this.partners = [...this.partners, ...row.partners];
-  }
-}
-
-function Nest() {
-  this.advisers = []; // Row
-  this.assistants = []; // Row
-  this.rowChildren = []; // Row
-  this.children = []; // Row
-
-  this.partners = [];
-  this.hasPartners = function() {
-    return this.partners.length > 0;
-  }
-
-  this.depth = 0;
-}
 
 function NodeProps() {
   this.hasVisibleChildren = false; // If it is true then item is Visible or one of its children in hierarchy. 
   this.hasPartners = false; // If it is true then item has partners. 
+  this.isPartner = false;
   this.hasLeavesOnly = true; // If it is true then all regular child items having levelOffset = null are leaves 
   this.hasChildren = false;
+
+  this.rows = [];
+  this.groupedRows = [];
+
+  this.getRow = function(itemType, index) {
+    return (this.rows[itemType] || [])[index || 0] || [];
+  }
+
+  this.getRows = function(itemType) {
+    return this.rows[itemType] || [];
+  }
+
+  this.getGroupedRow = function(groupType, index) {
+    return (this.groupedRows[groupType] || [])[index || 0] || [];
+  }
+
+  this.getGroupedRows = function(groupType) {
+    return this.groupedRows[groupType] || [];
+  }
+
+  this.getLength = function() {
+    return this.groupedRows.length;
+  }
+
+  this.addChildToRow = function(itemType, index, orgItem) {
+    this.rows[itemType] = this.rows[itemType] || [];
+    var groups = this.rows[itemType];
+    groups[index] = groups[index] || [];
+    groups[index].push(orgItem);
+  }
+
+  this.addChildToGroupedRow = function(groupType, index, orgItem) {
+    this.groupedRows[groupType] = this.groupedRows[groupType] || [];
+    var groups = this.groupedRows[groupType];
+    groups[index] = groups[index] || [];
+    groups[index].push(orgItem);
+  }
+
+  this.addChild =function(itemType, index, orgItem) {
+    switch (itemType) {
+      case ItemType.SubAdviser:
+      case ItemType.Adviser:
+        this.addChildToRow(itemType, 0, orgItem);
+        this.addChildToGroupedRow(GroupType.Items, 0, orgItem);
+        break;
+      case ItemType.SubAssistant:
+      case ItemType.Assistant:
+        index = (index < 0 || index == null) ? 0 : index;
+        this.addChildToRow(itemType, index, orgItem);
+        this.addChildToGroupedRow(GroupType.Assistants, index, orgItem);
+        break;
+      case ItemType.Regular:
+        if(index < 0 || index === undefined || index === null) {
+          this.addChildToGroupedRow(GroupType.Children, 0, orgItem);
+        } else {
+          this.addChildToGroupedRow(GroupType.RowChildren, index, orgItem);
+        }
+        break;
+      default:
+        this.addChildToRow(itemType, 0, orgItem);
+        break;
+    }
+  }
+}
+
+var RowType = {
+  Items: 0,
+  Advisers: 1,
+  SubAdvisers: 2,
+  Assistants: 3,
+  SubAssistants: 4,
+  RowChildren: 5,
+  Children: 6
+};
+
+
+var mapRowTypes = {};
+mapRowTypes[RowType.Items] = GroupType.Items;
+mapRowTypes[RowType.Advisers] = GroupType.Items;
+mapRowTypes[RowType.SubAdvisers] = GroupType.Items;
+mapRowTypes[RowType.Assistants] = GroupType.Assistants;
+mapRowTypes[RowType.SubAssistants] = GroupType.Assistants;
+mapRowTypes[RowType.RowChildren] = GroupType.RowChildren;
+mapRowTypes[RowType.Children] = GroupType.Children;
+
+function Row(id) {
+  this.id = id;
+  this.index = 0;
+  this.offset = 0;
+  this.extend = true; /* indicates that we need to keep branches of this row children above subsequent rows */
+  this.nodes = [];
+  this.depth = 0;
+  
+  this.groups = [];
+  this.groups[GroupType.Items] = [[1,1]];
+  
+  this.getDepth = function() {
+    var [currExtend, currDepth] = this.groups.reduce((acc, row) => {
+        return row.reduce(([currExtend, currDepth], item) => {
+          var [extend, depth] = item || [1, 1];
+          return [currExtend + extend, Math.max(currDepth, currExtend + depth)];
+        }, acc)
+    }, [0,0]);
+    return Math.max(currExtend, currDepth) || 1;
+  };
+
+
+  this.addRowDepth = function(rowType, extend, index, depth) {
+    var groupIndex = mapRowTypes[rowType];
+    if(!this.groups[groupIndex]) {
+      this.groups[groupIndex] = [];
+    }
+    var rows = this.groups[groupIndex];
+    var [currExtend, currDepth] = rows[index] || [1,1];
+    rows[index] = [Math.max(currExtend, extend ? depth : 1), Math.max(currDepth, depth)];
+  }
+
+  // function loopGroupTypes(rowType, len)
+  this.loopGroupTypes = function(thisArg, onGroupType) {
+    for(var index = 0, len = this.groups.length; index < len; index+=1) {
+      if(this.groups[index]) {
+        if(onGroupType.call(thisArg, index, len)) {
+          break;
+        }
+      }
+    }
+  }
+
+  this.getRowDepth = function(groupType, index) {
+    var row = (this.groups[groupType] || [])[index];
+    return (row && row[0]) || 1;
+  }
+
+  this.getRowsDepth = function(groupType) {
+    var rows = this.groups[groupType] || [];
+    return rows.map(item => item[0]);
+  }
+
+  // function onRow(rowDepth, index)
+  this.loopRows = function(thisArg, rowType, onRow) {
+    var groupIndex = mapRowTypes[rowType];
+    var rows = this.groups[groupIndex] || [];
+    for(var index = 0; index < rows.length; index+=1) {
+      var row = rows[index];
+      if(row) {
+        if(onRow.call(thisArg, row[0], index)) {
+          break;
+        }
+      }
+    }
+  }
 }
 
 /* method uses structures created in orgTreeTask to create visual tree used to render chart
@@ -102,7 +213,7 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
 
   function RowKeyGenerator() {
     var _rowsHash = {};
-    var _rowIndex = 0;
+    var _rowIndex = 1;
 
     function get(parentId, rowType, index) {
       if(arguments.length > 0) {
@@ -125,21 +236,19 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
   }
 
   function createVisualTreeItems(orgTree, options, visualTree) {
-    var treeItem,
-      visualParent,
-      index,
-      nests = {},
+    var index,
       leftSiblingOffset,
       rightSiblingOffset,
       orgTreeProps = {};
 
    
-    /* org tree item has visible children */
+    /* stage 1: orgTreeProps hash, find and set actualItemType, hasPartners, hasVisibleChildren, hasLeavesOnly */
     orgTree.loopPostOrder(this, function (nodeId, node, parentId, parent) {
       if(!orgTreeProps.hasOwnProperty(nodeId)) {
         orgTreeProps[nodeId] = new NodeProps();
       }
       var nodeProps = orgTreeProps[nodeId];
+      nodeProps.actualItemType = node.itemType;
 
       nodeProps.hasVisibleChildren = node.isVisible || nodeProps.hasVisibleChildren;
       if (parent != null) {
@@ -150,12 +259,13 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
         parentProps.hasVisibleChildren = parentProps.hasVisibleChildren || nodeProps.hasVisibleChildren;
         parentProps.hasChildren = true;
         parentProps.hasLeavesOnly = parentProps.hasLeavesOnly && !nodeProps.hasChildren;
-        switch (node.actualItemType) {
+        switch (node.itemType) {
           case ItemType.LimitedPartner:
           case ItemType.AdviserPartner:
           case ItemType.GeneralPartner:
             /* Don't support partner of partner */
             parentProps.hasPartners = true;
+            nodeProps.isPartner = true;
             break;
         }
       }
@@ -165,9 +275,208 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
     var rowKeyGenerator = RowKeyGenerator(); // rowKey = rowKeyGenerator.get(parentRowId, RowType.Children, 3);
     var rowHash = {}; // rowHash[nodeId] = rowKey;
 
-    /* stage 1: create visual tree & nests alignment tree */
+    /* stage 2: create rowsTree, find alignment rows, nodes having children aligned across branches of the hierarchy */
     orgTree.loopLevels(this, function (parentOrgItemId, parentOrgItem, levelid) {
-      if (!orgTreeProps[parentOrgItemId].hasVisibleChildren) {
+      var parentProps = orgTreeProps[parentOrgItemId];
+      if(!parentProps) {
+        parentProps = new NodeProps();
+        parentProps.actualItemType = ItemType.Regular;
+        orgTreeProps[parentOrgItemId] = parentProps;
+      }
+      if (!parentProps.hasVisibleChildren) {
+        return orgTree.SKIP;
+      }
+
+      orgTree.loopChildren(this, parentOrgItemId, function (orgItemId, orgItem, index) {
+        var treeItemProps = orgTreeProps[orgItemId];
+        if (treeItemProps.hasVisibleChildren) {
+          switch (parentProps.actualItemType) {
+            case ItemType.LimitedPartner:
+            case ItemType.AdviserPartner:
+            case ItemType.GeneralPartner:
+              switch (treeItemProps.actualItemType) {
+                case ItemType.LimitedPartner:
+                case ItemType.AdviserPartner:
+                case ItemType.GeneralPartner:
+                  /* Don't support partner of partner */
+                  treeItemProps.actualItemType = ItemType.Adviser;
+                  break;
+                case ItemType.Regular:
+                  /* Don't support regular children of partner */
+                  treeItemProps.actualItemType = ItemType.Assistant;
+                  break;
+              }
+              break;
+          }
+
+          parentProps.addChild(treeItemProps.actualItemType, orgItem.levelOffset, orgItem);
+        }
+      });
+
+      /* find the alignment row for the parent node */
+      var parentRowId = rowHash[parentOrgItemId];
+      var parentRow;
+      if(!parentRowId) {
+        parentRowId = rowKeyGenerator.get(null, RowType.Children, 0);
+        parentRow = new Row(parentRowId);
+        parentRow.rowType = RowType.Items;
+        parentRow.index = 0;
+        parentRow.offset = 0;
+        parentRow.extend = false;
+        rowsTree.add(null, parentRowId, parentRow);
+        rowHash[parentOrgItemId] = parentRowId;
+      } else {
+        parentRow = rowsTree.node(parentRowId);
+      }
+
+      var partners = [...parentProps.getRow(ItemType.AdviserPartner), ...parentProps.getRow(ItemType.LimitedPartner), ...parentProps.getRow(ItemType.GeneralPartner)];
+      var advisers = parentProps.getRow(ItemType.Adviser);
+      if(advisers.length > 0) {
+        /* extend advisers level */
+        var extendChildren = partners.length > 0;
+        if(!extendChildren) {
+          switch (parentOrgItem.placeAdvisersAboveChildren) {
+            case Enabled.Auto:
+              extendChildren = options.placeAdvisersAboveChildren;
+              break;
+            case Enabled.True:
+              extendChildren = true;
+              break;
+          }
+        }
+        if(options.alignBranches) {
+          switch (parentProps.actualItemType) {
+            case ItemType.LimitedPartner:
+            case ItemType.AdviserPartner:
+            case ItemType.GeneralPartner:
+              extendChildren = true;
+              break;
+          }
+          if(extendChildren) {
+            var rowId = rowKeyGenerator.get(parentRow.id, RowType.Advisers, 0);
+            mergeNodesIntoAlignmentRow(advisers, rowsTree, rowHash, parentRow.id, rowId, { extendChildren, index: 0, offset: 0, rowType: RowType.Advisers } );
+          } else {
+            mergeNodesIntoAlignmentRow(advisers, rowsTree, rowHash, parentRow.id, parentRow.id, { extendChildren, index: 0, offset: 0, rowType: RowType.Advisers } );
+          }
+        } else {
+          var rowId = rowKeyGenerator.get();
+          mergeNodesIntoAlignmentRow(advisers, rowsTree, rowHash, parentRow.id,  rowId, { extendChildren, index: 0, offset: 0, rowType: RowType.Advisers } );
+        }
+      }
+
+      var subAdvisers = parentProps.getRow(ItemType.SubAdviser);
+      if(subAdvisers.length > 0) {
+        /* extend advisers level */
+        var extendChildren = partners.length > 0;
+        if(!extendChildren) {
+          switch (parentOrgItem.placeAdvisersAboveChildren) {
+            case Enabled.Auto:
+              extendChildren = options.placeAdvisersAboveChildren;
+              break;
+            case Enabled.True:
+              extendChildren = true;
+              break;
+          }
+        }
+        if(options.alignBranches) {
+          switch (parentProps.actualItemType) {
+            case ItemType.LimitedPartner:
+            case ItemType.AdviserPartner:
+            case ItemType.GeneralPartner:
+              extendChildren = true;
+              break;
+          }
+          var rowId = rowKeyGenerator.get(parentRow.id, RowType.SubAdvisers, 0);
+          mergeNodesIntoAlignmentRow(subAdvisers, rowsTree, rowHash, parentRow.id, rowId, { extendChildren, index: 0, offset: 1, rowType: RowType.SubAdvisers });
+
+        } else {
+          var rowId = rowKeyGenerator.get();
+          mergeNodesIntoAlignmentRow(subAdvisers, rowsTree, rowHash, parentRow.id, rowId, { extendChildren, index: 0, offset: 1, rowType: RowType.SubAdvisers });
+        }
+      }
+
+      var assistants = parentProps.getRows(ItemType.Assistant);
+      /* create assistants levels */
+      if(assistants.length > 0) {
+        /* extend assistants levels */
+        var extendChildren = partners.length > 0 || options.alignBranches;
+        if(!extendChildren) {
+          switch (parentOrgItem.placeAssistantsAboveChildren) {
+            case Enabled.Auto:
+              extendChildren = options.placeAssistantsAboveChildren;
+              break;
+            case Enabled.True:
+              extendChildren = true;
+              break;
+          }
+        }
+        assistants.forEach((nodes, index) => {
+          var rowId = options.alignBranches ? rowKeyGenerator.get(parentRow.id, RowType.Assistants, index) : rowKeyGenerator.get();
+          mergeNodesIntoAlignmentRow(nodes, rowsTree, rowHash, parentRow.id, rowId, { extendChildren, index, offset: 0, rowType: RowType.Assistants });
+        });
+      }
+
+      var subAssistants = parentProps.getRows(ItemType.SubAssistant);
+      /* create assistants levels */
+      if(subAssistants.length > 0) {
+        /* extend assistants levels */
+        var extendChildren = partners.length > 0 || options.alignBranches;
+        if(!extendChildren) {
+          switch (parentOrgItem.placeAssistantsAboveChildren) {
+            case Enabled.Auto:
+              extendChildren = options.placeAssistantsAboveChildren;
+              break;
+            case Enabled.True:
+              extendChildren = true;
+              break;
+          }
+        }
+        subAssistants.forEach((nodes, index) => {
+          var rowId = options.alignBranches ? rowKeyGenerator.get(parentRow.id, RowType.SubAssistants, index) : rowKeyGenerator.get();
+          mergeNodesIntoAlignmentRow(nodes, rowsTree, rowHash, parentRow.id, rowId, { extendChildren, index, offset: 1, rowType: RowType.SubAssistants });
+        });
+      }
+
+      if(partners.length > 0) {
+        mergeNodesIntoAlignmentRow(partners, rowsTree, rowHash, parentRow.id, parentRow.id, {});
+      }
+
+      var rowChildren = parentProps.getGroupedRows(GroupType.RowChildren);
+      /* create row children levels */
+      if(rowChildren.length > 0) {
+        rowChildren.forEach((nodes, index) => {
+          var rowId = options.alignBranches ? rowKeyGenerator.get(parentRow.id, RowType.RowChildren, index) : rowKeyGenerator.get();
+          mergeNodesIntoAlignmentRow(nodes, rowsTree, rowHash, parentRow.id, rowId, { extendChildren: true, index, offset: 0, rowType: RowType.RowChildren });
+        });
+      }
+
+      /* add remaining children in formation */
+      var children = parentProps.getGroupedRow(GroupType.Children);
+      if(children.length > 0) {
+        var props = orgTreeProps[parentOrgItemId];
+        var childrenRows = getRegularChildrenRows(options, children, parentOrgItem.childrenPlacementType, props.hasLeavesOnly);
+        childrenRows.forEach((nodes, index) => {
+          var rowId = options.alignBranches ? rowKeyGenerator.get(parentRow.id, RowType.Children, index) : rowKeyGenerator.get();
+          mergeNodesIntoAlignmentRow(nodes, rowsTree, rowHash, parentRow.id, rowId, { extendChildren: true, index, offset: 0, rowType: RowType.Children });
+        });
+      }
+    });
+
+    /* stage 3: measure depth of rows in rowsTree, count number of assistants and child rows, find depth of partner's branches */
+    rowsTree.loopPostOrder(this, function (rowId, row, parentRowId, parentRow) {
+      console.log(rowId + "  " + Object.entries(RowType).filter(([name, value]) => value == row.rowType)[0][0]  + " parent=" + parentRowId + " extend=" + row.extend);
+      if(parentRow != null) {
+        row.depth = row.getDepth() + row.offset;
+        console.log(rowId + "  depth = " + row.depth);
+        parentRow.addRowDepth(row.rowType, row.extend, row.index, row.depth);
+      }
+    });
+    var visualPartners = {};
+
+    /* stage 4: create visual tree */
+    orgTree.loopLevels(this, function (parentOrgItemId, parentOrgItem, levelid) {
+      var parentProps = orgTreeProps[parentOrgItemId];
+      if (!parentProps.hasVisibleChildren) {
         return orgTree.SKIP;
       }
 
@@ -193,440 +502,142 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
 
       /* find the alignment row for the parent node */
       var parentRowId = rowHash[parentOrgItemId];
-      var parentRow;
-      if(!parentRowId) {
-        parentRowId = rowKeyGenerator.get(null, RowType.Items, 0);
-        parentRow = new Row(parentRowId);
-        //rowsTree.add(null, parentRowId, parentRow);
-        rowHash[parentOrgItemId] = parentRowId;
-      } else {
-        parentRow = rowsTree.node(parentRowId);
-      }
+      var parentRow = rowsTree.node(parentRowId);
 
-      var nest = new Nest();
+      var partners = [
+        ...parentProps.getRow(ItemType.AdviserPartner), 
+        ...parentProps.getRow(ItemType.LimitedPartner), 
+        ...parentProps.getRow(ItemType.GeneralPartner)
+      ];
 
-      var advisers = [];
-      var partnerAdvisers = [];
-      var generalPartners = [];
-      var assistants = [];
-      var rowChildren = [];
-      var regularChildren = []; /* children added after all other custom item types */
-      
-      /* populate children */
-      orgTree.loopChildren(this, parentOrgItemId, function (orgItemId, orgItem, index) {
-        var shiftParent;
-        if (orgTreeProps[orgItemId].hasVisibleChildren) {
-          treeItem = getNewTreeItem({
-            parentId: parentOrgItemId,
-            actualItemType: orgItem.itemType,
-            adviserPlacementType: orgItem.adviserPlacementType
-          }, orgItem);
-
-          switch (logicalParentItem.actualItemType) {
-            case ItemType.LimitedPartner:
-            case ItemType.AdviserPartner:
-            case ItemType.GeneralPartner:
-              switch (treeItem.actualItemType) {
-                case ItemType.LimitedPartner:
-                case ItemType.AdviserPartner:
-                case ItemType.GeneralPartner:
-                  /* Don't support partner of partner */
-                  treeItem.actualItemType = ItemType.Adviser;
-                  break;
-                case ItemType.Regular:
-                  /* Don't support regular children of partner */
-                  treeItem.actualItemType = ItemType.Assistant;
-                  break;
-              }
-              break;
+      var visualParent = logicalParentItem;
+      var visualParent2 = null;
+      var flagPartners = true;
+      parentRow.loopGroupTypes(this, function(groupType, len) {
+        if(!(parentProps.hasPartners || parentProps.isPartner) && groupType > parentProps.getLength() - 1) {
+          return true;
+        }
+        if(groupType > GroupType.Assistants && flagPartners) {
+          flagPartners = false;
+          if(parentProps.hasPartners) {
+            visualPartners[parentOrgItemId] = [visualParent.id];
+            visualParent = visualParent2 || visualParent;
+            visualParent2 = null;
+            visualParent.partners = visualPartners[parentOrgItemId];
           }
-
-          switch (treeItem.actualItemType) {
-            case ItemType.SubAdviser:
-            case ItemType.Adviser:
-              advisers.push(treeItem);
-              defineNavigationParent(logicalParentItem, treeItem);
-              break;
-            case ItemType.SubAssistant:
-            case ItemType.Assistant:
-              var levelOffset = orgItem.levelOffset || 0;
-              if (assistants[levelOffset] == null) {
-                assistants[levelOffset] = [treeItem];
-              } else {
-                assistants[levelOffset].push(treeItem);
-              }
-              defineNavigationParent(logicalParentItem, treeItem);
-              break;
-            case ItemType.AdviserPartner:
-                partnerAdvisers.push(treeItem);
-                if (logicalParentItem.parentId != null) {
-                  defineNavigationParent(visualTree.node(logicalParentItem.parentId), treeItem);
-                } else {
-                  defineNavigationParent(logicalParentItem, treeItem, true);
+          if(parentProps.isPartner) {
+            visualPartners[parentOrgItem.parent].push(visualParent.id);
+          }
+        }
+        var fillEmptyLevels = groupType < len - 1;
+        var rows = [];
+        switch(groupType) {
+          case GroupType.Items:
+            var row = parentProps.getGroupedRows(GroupType.Items)[0] || [];
+            var depth = parentRow.getRowDepth(GroupType.Items, 0);
+            addAdvisers(visualTree, orgTreeProps, visualParent, row, leftSiblingOffset, rightSiblingOffset);
+            row.forEach(item => defineNavigationParent(parentOrgItem, item));
+            if(partners.length > 0) {
+              visualParent2 = addPartners(visualTree, orgTreeProps, visualParent, partners, leftSiblingOffset, rightSiblingOffset);
+              /* every child logically belongs to every partner */
+              partners.forEach( partner => {
+                defineNavigationParent(parentOrgItem, partner, true);
+                if(partner.id != logicalParentItem.id) {
+                  var rowChildren = parentProps.getGroupedRows(GroupType.RowChildren);
+                  rowChildren.forEach(row => row.forEach(child => defineNavigationParent(partner, child)));
+                  var regularChildren = parentProps.getGroupedRow(GroupType.Children);
+                  regularChildren.forEach(child => defineNavigationParent(partner, child));
                 }
-                break;
-            case ItemType.LimitedPartner:
-            case ItemType.GeneralPartner:
-              generalPartners.push(treeItem);
-              if (logicalParentItem.parentId != null) {
-                defineNavigationParent(visualTree.node(logicalParentItem.parentId), treeItem);
-              } else {
-                defineNavigationParent(logicalParentItem, treeItem, true);
+              })
+            }
+            if(parentProps.hasPartners || parentProps.isPartner || groupType < parentProps.getLength() - 1) {
+              while(depth > 1) {
+                visualParent = createNewVisualAggregator(visualTree, visualParent, false);
+                if(visualParent2) {
+                  visualParent2 = createNewVisualAggregator(visualTree, visualParent2, false);
+                }
+                depth-=1;
               }
-              break;
-            case ItemType.Regular:
-              if(orgItem.levelOffset === undefined || orgItem.levelOffset === null) {
-                regularChildren.push(treeItem);
-              } else {
-                if (rowChildren[orgItem.levelOffset] == null) {
-                  rowChildren[orgItem.levelOffset] = [treeItem];
-                } else {
-                  rowChildren[orgItem.levelOffset].push(treeItem);
+            }
+            break;
+          case GroupType.Assistants:
+            var rows = parentProps.getGroupedRows(GroupType.Assistants);
+            parentRow.loopRows(this, RowType.Assistants, function(depth, rowIndex) {
+              var row = rows[rowIndex] || [];
+              if(!fillEmptyLevels && rowIndex > rows.length - 1) {
+                return true;
+              }
+              visualParent = addAssistants(visualTree, orgTreeProps, visualParent, row);
+              if(visualParent2) {
+                visualParent2 = createNewVisualAggregator(visualTree, visualParent2, false);
+              }
+              row.forEach(item => defineNavigationParent(parentOrgItem, item));
+              if(parentProps.hasPartners || parentProps.isPartner || rowIndex < rows.length - 1 || groupType < parentProps.getLength() - 1) {
+                while(depth > 1) {
+                  visualParent = createNewVisualAggregator(visualTree, visualParent, false);
+                  if(visualParent2) {
+                    visualParent2 = createNewVisualAggregator(visualTree, visualParent2, false);
+                  }
+                  depth-=1;
                 }
               }
-              defineNavigationParent(logicalParentItem, treeItem);
-              break;
-          }
-        }
-      });
-
-      visualParent = logicalParentItem;
-
-      var partners = [...partnerAdvisers, ...generalPartners];
-
-      if(advisers.length > 0) {
-        nest.advisers = addAdvisers(visualTree, visualParent, advisers, leftSiblingOffset, rightSiblingOffset);
-
-        /* extend advisers level */
-        var extendChildren = partners.length > 0;
-        if(!extendChildren) {
-          switch (parentOrgItemId.placeAdvisersAboveChildren) {
-            case Enabled.Auto:
-              extendChildren = options.placeAdvisersAboveChildren;
-              break;
-            case Enabled.True:
-              extendChildren = true;
-              break;
-          }
-        }
-        if (!extendChildren) {
-          nest.advisers.forEach(sourceRow => sourceRow.extend = false);
-        }
-        if(!extendChildren && options.alignBranches) {
-          mergeIntoParentRow(nest.advisers[0], rowsTree, rowHash, parentRowId)
-        } else {
-          mergeRows(nest.advisers, rowKeyGenerator, rowsTree, rowHash, parentRow.Id,  RowType.Advisers, options.alignBranches);
-        }
-      }
-
-      /* create assistants levels */
-      if(assistants.length > 0) {
-        nest.assistants = addAssistants(visualTree, visualParent, assistants);
-        visualParent = nest.assistants[nest.assistants.length - 1].aggregators[0];
-
-        /* extend assistants levels */
-        var extendChildren = partners.length > 0 || options.alignBranches;
-        if(!extendChildren) {
-          switch (parentOrgItemId.placeAssistantsAboveChildren) {
-            case Enabled.Auto:
-              extendChildren = options.placeAssistantsAboveChildren;
-              break;
-            case Enabled.True:
-              extendChildren = true;
-              break;
-          }
-        }
-
-        if (!extendChildren) {
-          nest.assistants.forEach(sourceRow => sourceRow.extend = false);
-        }
-        mergeRows(nest.assistants, rowKeyGenerator, rowsTree, rowHash, parentRow.Id, RowType.Assistants, options.alignBranches);
-      }
-
-      if(partners.length > 0) {
-        var {partnersRow, centerPartner: visualParent } = addPartners(visualTree, logicalParentItem, partners, leftSiblingOffset, rightSiblingOffset);
-        nest.partners = partnersRow;
-
-        /* every child logically belongs to every partner */
-        partners.forEach( partner => {
-          if(partner.id != logicalParentItem.id) {
-            rowChildren.forEach(row => row.forEach(child => defineNavigationParent(partner, child)));
-            regularChildren.forEach(child => defineNavigationParent(partner, child));
-          }
-        })
-      }
-
-      /* create row children levels */
-      if(rowChildren.length > 0) {
-        var looseLastRow = regularChildren.length == 0;
-        var hideChildConnector = (logicalParentItem.visibility == Visibility.Invisible) && (logicalParentItem.connectorPlacement === 0);
-        nest.rowChildren = addRowChildren(visualTree, visualParent, rowChildren, looseLastRow, hideChildConnector, options.horizontalAlignment);
-        if(!looseLastRow) {
-          visualParent = nest.rowChildren[nest.rowChildren.length - 1].aggregators[0];
-        }
-        mergeRows(nest.rowChildren, rowKeyGenerator, rowsTree, rowHash, parentRow.Id, RowType.RowChildren, options.alignBranches);
-      }
-
-      /* add remaining children in formation */
-      if(regularChildren.length > 0) {
-        var props = orgTreeProps[logicalParentItem.id];
-        nest.children = addChildren(orgTree, visualTree, options, logicalParentItem, visualParent, regularChildren, parentOrgItem.childrenPlacementType, props.hasLeavesOnly);
-
-        mergeRows(nest.children, rowKeyGenerator, rowsTree, rowHash, parentRow.Id, RowType.Children, options.alignBranches);
-      }
-
-      nests[parentOrgItemId] = nest;
-    });
-
-    /* stage 2: visual tree post creation transformations */
-    /* transform tree to place children sub-branches inside of the hierarchy */
-    orgTree.loopPostOrder(this, function (nodeid, node, parentid, parent) {
-      var logicalParentItem = visualTree.node(nodeid);
-      var nest = nests[nodeid];
-      if (logicalParentItem != null) {
-
-        /* extend assistants levels */
-        if(nest.assistants.length > 0) {
-          var extendChildren = nest.hasPartners();
-          if(!extendChildren) {
-            switch (node.placeAssistantsAboveChildren) {
-              case Enabled.Auto:
-                extendChildren = options.placeAssistantsAboveChildren;
-                break;
-              case Enabled.True:
-                extendChildren = true;
-                break;
+            });
+            break;
+          case GroupType.RowChildren:
+            var rows = parentProps.getGroupedRows(GroupType.RowChildren);
+            parentRow.loopRows(this, RowType.RowChildren, function(depth, rowIndex) {
+              var row = rows[rowIndex] || [];
+              if(!fillEmptyLevels && rowIndex > rows.length - 1) {
+                return true;
+              }
+              var hideChildConnector = (logicalParentItem.visibility == Visibility.Invisible) && (logicalParentItem.connectorPlacement === 0);
+              visualParent = addRowChildren(visualTree, visualParent, row, fillEmptyLevels || rowIndex < rows.length - 1, hideChildConnector, options.horizontalAlignment);
+              row.forEach(item => defineNavigationParent(parentOrgItem, item));
+              if(rowIndex < rows.length - 1 || groupType < parentProps.getLength() - 1) {
+                while(depth > 1) {
+                  visualParent = createNewVisualAggregator(visualTree, visualParent, false);
+                  depth-=1;
+                }
+              }
+            });
+            break;
+          case GroupType.Children:
+            var regularChildren = parentProps.getGroupedRow(GroupType.Children); /* children added after all other custom item types */
+            /* add remaining children in formation */
+            if(regularChildren.length > 0) {
+              var props = orgTreeProps[logicalParentItem.id];
+              var depths = parentRow.getRowsDepth(GroupType.Children);
+              addChildren(orgTree, visualTree, depths, options, logicalParentItem, visualParent, regularChildren, parentOrgItem.childrenPlacementType, props.hasLeavesOnly);
+              regularChildren.forEach(item => defineNavigationParent(parentOrgItem, item));
             }
-          }
-
-          if (extendChildren) {
-            extendAggregators(visualTree, nests, nest.assistants);
-          }
+            break;
         }
-   
-        /* extend advisers level */
-        if(nest.advisers.length > 0) {
-          extendChildren = nest.hasPartners();
-          if(!extendChildren) {
-            switch (node.placeAdvisersAboveChildren) {
-              case Enabled.Auto:
-                extendChildren = options.placeAdvisersAboveChildren;
-                break;
-              case Enabled.True:
-                extendChildren = true;
-                break;
-            }
-          }
-          if (extendChildren) {
-            extendAggregators(visualTree, nests, nest.advisers);
-          }
-        }
-
-        /* extend row children levels */
-        /* if we have multiple rows of children, see `levelOffset` property, */
-        /* we make their sub-children to be placed in between of them */
-        if(nest.rowChildren.length > 0) {
-          extendAggregators(visualTree, nests, nest.rowChildren);
-        }
-
-        /* extend regular children levels */
-        if(nest.children.length > 0) {
-          extendAggregators(visualTree, nests, nest.children);
-        }
-
-        /* extend partners branches, in order to draw connector lines between them and logical parent children */
-        if (nest.hasPartners()) {
-          /* partners collection includes treeItem so we should have at least 2 items */
-          extendAggregators(visualTree, nests, nest.partners);
-          alignPartnersChildren(visualTree, nest.partners[0].nodes);
-        }
-
-        nest.depth = getItemDepth(visualTree, nests, logicalParentItem);
-      }
-    });
-  }
-
-  function mergeIntoParentRow(sourceRow, rowsTree, rowHash, parentRowId) {
-      var targetRow = rowsTree.node(parentRowId);
-      if(targetRow) {
-        targetRow.merge(sourceRow);
-      } else {
-        throw "Parent row not found!";
-      };
-      sourceRow.nodes.forEach(child => {
-        rowHash[child.id] = parentRowId;
-      });
-  }
-
-  function mergeRows(sourceRows, rowKeyGenerator, rowsTree, rowHash, parentRowId, rowType, alignBranches) {
-    sourceRows.forEach((sourceRow, rowIndex) => {
-      var rowId = alignBranches ? rowKeyGenerator.get(parentRowId, rowType, rowIndex) : rowKeyGenerator.get();
-      var targetRow = rowsTree.node(rowId);
-      if(targetRow) {
-        targetRow.merge(sourceRow);
-      } else {
-        targetRow = sourceRow;
-        sourceRow.id = rowId;
-        rowsTree.add(parentRowId, rowId, sourceRow)        
-      };
-      sourceRow.nodes.forEach(child => {
-        rowHash[child.id] = rowId;
       });
     });
   }
 
-  function extendAggregators(visualTree, nests, rowChildren) {
-    var rowDepths = [];
-    if(rowChildren.length > 0) {
-      for (var rowIndex = 0, len = rowChildren.length; rowIndex < len; rowIndex += 1) {
-        var row = rowChildren[rowIndex];
-        rowDepths[rowIndex] = 0;
-        if(row.nodes != null) {
-          rowDepths[rowIndex] = getDepth(visualTree, nests, row.nodes, row.aggregators);
-        }
-      }
-    }
-
-    for (var index = 0, len = rowDepths.length; index < len; index += 1) {
-      var rowDepth = rowDepths[index];
-      if (rowDepth > 1) {
-        for (var childIndex = 0, childrenLen = rowChildren[index].aggregators.length; childIndex < childrenLen; childIndex += 1) {
-          var rowAggregator = rowChildren[index].aggregators[childIndex];
-          if (visualTree.hasChildren(rowAggregator.id)) {
-            var depth = rowDepth;
-            while (depth > 1) {
-              rowAggregator = createNewVisualAggregator(visualTree, rowAggregator, false);
-              depth -= 1;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  function getDepth(visualTree, nests, treeItems, aggregators) {
-    var result = 0,
-      aggregatorsHash = {};
-    for(var index = 0; index < aggregators.length; index+=1) {
-      var aggregator = aggregators[index];
-      aggregatorsHash[aggregator.id] = true;
-    }
-
-    for(var index = 0; index < treeItems.length; index+=1) {
-      var treeItem = treeItems[index];
-      if(!aggregatorsHash[treeItem.id]) {
-        result = Math.max(result, getItemDepth(visualTree, nests, treeItem));
-      }
-    }
-    return result;    
-  }
-
-  function getItemDepth(visualTree, nests, treeItem) {
-    var result = 0;
-    var nest = nests[treeItem.id];
-    if(nest != null && nest.depth > 0) {
-      result = nest.depth;
+  function mergeNodesIntoAlignmentRow(nodes, rowsTree, rowHash, parentRowId, rowId, { extendChildren, index, offset, rowType }) {
+    var row = rowsTree.node(rowId);
+    if(row) {
+      row.nodes = [...row.nodes, ...nodes];
     } else {
-      result = Math.max(result, getVisualTreeDepth(visualTree, nests, treeItem));
-
-      if(nest != null) {
-        var advisersRows = nest.advisers;
-        if(advisersRows.length > 0) {
-          var advisers =  advisersRows[0].nodes;
-          for(var advIndex = 0; advIndex < advisers.length; advIndex+=1) {
-            var adviser = advisers[advIndex];
-              result = Math.max(result, getVisualTreeDepth(visualTree, nests, adviser));
-          }
-        }
-      }
-    }
-    return result;
+      row = new Row(rowId);
+      row.nodes = nodes;
+      row.extend = extendChildren;
+      row.index = index || 0;
+      row.offset = offset || 0;
+      row.rowType = rowType;
+      rowsTree.add(parentRowId, rowId, row)        
+    };
+    nodes.forEach(child => {
+      rowHash[child.id] = rowId;
+    });
   }
 
-  function getVisualTreeDepth(visualTree, nests, treeItem) {
-    var result = 0;
-    var nest = nests[treeItem.id];
-    if(nest != null && nest.depth > 0) {
-      result = nest.depth;
-    } else {
-      visualTree.loopLevels(this, treeItem.id, function (childId, child, level) {
-        if(nests.hasOwnProperty(childId)) {
-          result = Math.max(result, level + nests[childId].depth);  
-          return visualTree.SKIP;
-        } else {
-          result = Math.max(result, level + 1);
-        }
-      });
-      result += 1;
-    }
-    return result;
-  }
-
-  function alignPartnersChildren(visualTree, partners) {
-    var depth,
-      maxDepth = 0,
-      extendedPartners = {},
-      visualPartners = [],
-      visualPartner;
-
-    /* Find maximum depth required to enclose partners branches */
-    for (var index = 0; index < partners.length; index += 1) {
-      var partner = partners[index];
-      ({visualPartner, depth} = getLastVisualAggregator(visualTree, partner));
-      maxDepth = Math.max(maxDepth, depth);
-
-      if(partner.partners.length > 0) {
-        visualPartners.push(partner);
-      }
-    }
-
-    /* Extend visual aggregators lines and ensure that connector lines are visible */
-    for (var index = 0, len = partners.length; index < len; index += 1) {
-      var partner = partners[index];
-      ({visualPartner} = getLastVisualAggregator(visualTree, partner));
-      depth = 1;
-      var visualAggregator = partner;
-      while (visualAggregator.visualAggregatorId != null) {
-        visualAggregator = visualTree.node(visualAggregator.visualAggregatorId);
-        visualAggregator.connectorPlacement = visualPartner.connectorPlacement & (SideFlag.Top | SideFlag.Bottom);
-        depth += 1;
-      }
-      while (depth < maxDepth) {
-        visualPartner = createNewVisualAggregator(visualTree, visualPartner, false);
-        depth += 1;
-      }
-      ({ visualPartner } = getLastVisualAggregator(visualTree, visualPartner));
-
-      extendedPartners[partner.id] = visualPartner.id;
-    }
-
-    /* Store collection of visual partners to draw connector lines*/
-    for(var index = 0; index < visualPartners.length; index+=1) {
-      var partner = visualPartners[index];
-
-      var newPartners = partner.partners.map(partnerId => extendedPartners[partnerId]);
-      partner.partners.length = 0;
-      visualTree.node(extendedPartners[partner.id]).partners = newPartners;      
-    }
-  }
-
-  function getLastVisualAggregator(visualTree, treeItem) {
-    var visualPartner = treeItem,
-      depth = 1;
-
-    while (visualPartner.visualAggregatorId != null) {
-      visualPartner = visualTree.node(visualPartner.visualAggregatorId);
-      depth +=1;
-    }
-    return { visualPartner, depth };
-  }
-
-
-  function addPartners(visualTree, parent, partners, leftSiblingOffset, rightSiblingOffset) {
+  function addPartners(visualTree, orgTreeProps, parent, partners, leftSiblingOffset, rightSiblingOffset) {
     var leftItems = [];
     var rightItems = [];
-    for (var index = 0; index < partners.length; index += 1) {
-      var item = partners[index];
+    partners.map(partner => getNewTreeItem({}, partner)).forEach(item => {
       var isLeft = true;
       if (parent.connectorPlacement & SideFlag.Right) {
         isLeft = true;
@@ -645,7 +656,8 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
             item.connectorPlacement = SideFlag.Left | SideFlag.Bottom;
             break;
         }
-        switch (item.actualItemType) {
+        var itemProp = orgTreeProps[item.id];
+        switch (itemProp.actualItemType) {
           case ItemType.GeneralPartner:
             item.connectorPlacement = SideFlag.Top | SideFlag.Bottom;
             break;
@@ -661,10 +673,9 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
       } else {
         rightItems.push(item);
       }
-    }
+    });
 
     var partners = [...leftItems, parent, ...rightItems];
-    var visualPartners = partners.map(item => item.id);
     var parentIndex = leftItems.length;
     var centerIndex = Math.floor((partners.length) / 2);
     var invisiblePartner = null;
@@ -676,19 +687,15 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
       }
     }
 
-    var row = new Row();
     var visualParent = visualTree.parent(parent.id);
     for (var index = parentIndex - 1; index >= 0; index -= 1) {
       var item = partners[index];
-      row.nodes.push(item)
       visualTree.add(visualParent.id, item.id, item, leftSiblingOffset);
 
       item.gravity = HorizontalAlignmentType.Right;
     }
-    row.nodes.push(parent)
     for (var index = parentIndex + 1; index < partners.length; index += 1) {
       var item = partners[index];
-      row.nodes.push(item)
       visualTree.add(visualParent.id, item.id, item, visualTree.countChildren(visualParent.id) - rightSiblingOffset);
       
       item.gravity = HorizontalAlignmentType.Left;
@@ -705,21 +712,14 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
     }
 
     var centerPartner = partners[centerIndex];
-    centerPartner.partners = visualPartners;
-
-    row.aggregators.push(centerPartner)
-
-    return { partnersRow: [row], centerPartner: centerPartner }
+    return centerPartner;
   }
 
-  function addAdvisers(visualTree, parent, advisers, leftSiblingOffset, rightSiblingOffset, onItemAdded) {
-    var row = new Row();
-    row.nodes.push(parent)
-    row.aggregators.push(parent)
-    for (var index = 0; index < advisers.length; index += 1) {
-      var item = advisers[index];
+  function addAdvisers(visualTree, orgTreeProps, parent, advisers, leftSiblingOffset, rightSiblingOffset) {
+    advisers.map(adviser => getNewTreeItem({}, adviser)).forEach(item => {
+      var itemProps = orgTreeProps[item.id];
       var alteredItem;
-      switch(item.actualItemType) {
+      switch(itemProps.actualItemType) {
         case ItemType.SubAdviser:
           item.connectorPlacement = SideFlag.Top | SideFlag.Bottom;
           alteredItem = getNewTreeItem({ visibility: Visibility.Invisible });
@@ -729,8 +729,6 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
           alteredItem = item;
           break;
       }
-      row.nodes.push(alteredItem)
-      
       var visualParent = visualTree.parent(parent.id);
       if (parent.connectorPlacement & SideFlag.Right) {
         visualTree.add(visualParent.id, alteredItem.id, alteredItem, leftSiblingOffset);
@@ -762,106 +760,74 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
             break;
         }
       }
-      if(onItemAdded !=null) {
-        onItemAdded(alteredItem, alteredItem.gravity == HorizontalAlignmentType.Left ? AdviserPlacementType.Right : AdviserPlacementType.Left);
-      }
-    }
-    return [row];
+    })
   }
   
-  function addAssistants(visualTree, visualParent, rowsOfAssistants) {
-    var results = [];
-    for (var rowIndex = 0; rowIndex < rowsOfAssistants.length; rowIndex += 1) {
-      var assistants = rowsOfAssistants[rowIndex] || [];
-      var nextVisualParent = createNewVisualAggregator(visualTree, visualParent, false);
-      var row = new Row();
-      row.aggregators.push(nextVisualParent)
-      for (var index = 0; index < assistants.length; index += 1) {
-        var item = assistants[index];
-        var alteredItem;
-        switch(item.actualItemType) {
-          case ItemType.SubAssistant:
-            item.connectorPlacement = SideFlag.Top | SideFlag.Bottom;
-            alteredItem = getNewTreeItem({ visibility: Visibility.Invisible });
-            visualTree.add(alteredItem.id, item.id, item);
-            break;
-          case ItemType.Assistant:
-            alteredItem = item;
-            break;
-        }
-        row.nodes.push(alteredItem)
-        switch (item.adviserPlacementType) {
-          case AdviserPlacementType.Left:
-            visualTree.add(visualParent.id, alteredItem.id, alteredItem, 0);
-            alteredItem.connectorPlacement = SideFlag.Right | SideFlag.Bottom;
-            alteredItem.gravity = HorizontalAlignmentType.Right;
-            break;
-          default:
-            visualTree.add(visualParent.id, alteredItem.id, alteredItem);
-            alteredItem.connectorPlacement = SideFlag.Left | SideFlag.Bottom;
-            alteredItem.gravity = HorizontalAlignmentType.Left;
-            break;
-        }
+  function addAssistants(visualTree, orgTreeProps, visualParent, assistants) {
+    var nextVisualParent = createNewVisualAggregator(visualTree, visualParent, false);
+    assistants.map(assistant => getNewTreeItem({}, assistant)).forEach(item => {
+      var itemProps = orgTreeProps[item.id];
+      var alteredItem;
+      switch(itemProps.actualItemType) {
+        case ItemType.SubAssistant:
+          item.connectorPlacement = SideFlag.Top | SideFlag.Bottom;
+          alteredItem = getNewTreeItem({ visibility: Visibility.Invisible });
+          visualTree.add(alteredItem.id, item.id, item);
+          break;
+        case ItemType.Assistant:
+          alteredItem = item;
+          break;
       }
-      results.push(row);
-
-      visualParent = nextVisualParent;
-    }
-    return results;
+      switch (item.adviserPlacementType) {
+        case AdviserPlacementType.Left:
+          visualTree.add(visualParent.id, alteredItem.id, alteredItem, 0);
+          alteredItem.connectorPlacement = SideFlag.Right | SideFlag.Bottom;
+          alteredItem.gravity = HorizontalAlignmentType.Right;
+          break;
+        default:
+          visualTree.add(visualParent.id, alteredItem.id, alteredItem);
+          alteredItem.connectorPlacement = SideFlag.Left | SideFlag.Bottom;
+          alteredItem.gravity = HorizontalAlignmentType.Left;
+          break;
+      }
+    });
+    return nextVisualParent;
   }
 
-  function addRowChildren(visualTree, visualParent, rowsOfChildren, looseLastRow, hideChildConnector, horizontalAlignment) {
-    var results = [];
-
-    for (var rowIndex = 0; rowIndex < rowsOfChildren.length; rowIndex += 1) {
-      var rowOfChildren = rowsOfChildren[rowIndex] || [];
-      var row = new Row();
-      if (rowOfChildren != null) {
-        var nextVisualParent = null;
-        if(!(looseLastRow && rowIndex == rowsOfChildren.length - 1)) {
-          nextVisualParent = createNewVisualAggregator(visualTree, visualParent, hideChildConnector);
-          row.aggregators.push(nextVisualParent);
-        }
-        
-        var medianIndex = 0;
-        switch (horizontalAlignment) {
-          case HorizontalAlignmentType.Center:
-            medianIndex = Math.ceil(rowOfChildren.length / 2) - 1;
-            break;
-          case HorizontalAlignmentType.Left:
-            medianIndex = -1;
-            break;
-          case HorizontalAlignmentType.Right:
-            medianIndex = rowOfChildren.length - 1;
-            break;
-        }
-        for (var index = medianIndex; index >= 0; index -= 1) {
-          var item = rowOfChildren[index];
-          visualTree.add(visualParent.id, item.id, item, 0);
-          item.connectorPlacement = SideFlag.Top | SideFlag.Bottom;
-          item.gravity = HorizontalAlignmentType.Right;
-
-          row.nodes.push(item);
-        }
-
-        for (index = medianIndex + 1; index < rowOfChildren.length; index += 1) {
-          item = rowOfChildren[index];
-          visualTree.add(visualParent.id, item.id, item);
-          item.connectorPlacement = SideFlag.Top | SideFlag.Bottom;
-          item.gravity = HorizontalAlignmentType.Left;
-
-          row.nodes.push(item);
-        }
-
-        visualParent = nextVisualParent;
-      }
-      results.push(row);;
+  function addRowChildren(visualTree, visualParent, rowOfChildren, fillEmptyLevels, hideChildConnector, horizontalAlignment) {
+    var nextVisualParent = null;
+    if(fillEmptyLevels) {
+      nextVisualParent = createNewVisualAggregator(visualTree, visualParent, hideChildConnector);
+    }
+    var medianIndex = 0;
+    switch (horizontalAlignment) {
+      case HorizontalAlignmentType.Center:
+        medianIndex = Math.ceil(rowOfChildren.length / 2) - 1;
+        break;
+      case HorizontalAlignmentType.Left:
+        medianIndex = -1;
+        break;
+      case HorizontalAlignmentType.Right:
+        medianIndex = rowOfChildren.length - 1;
+        break;
+    }
+    for (var index = medianIndex; index >= 0; index -= 1) {
+      var item = getNewTreeItem({}, rowOfChildren[index]);
+      visualTree.add(visualParent.id, item.id, item, 0);
+      item.connectorPlacement = SideFlag.Top | SideFlag.Bottom;
+      item.gravity = HorizontalAlignmentType.Right;
     }
 
-    return results;
+    for (index = medianIndex + 1; index < rowOfChildren.length; index += 1) {
+      item = getNewTreeItem({}, rowOfChildren[index]);
+      visualTree.add(visualParent.id, item.id, item);
+      item.connectorPlacement = SideFlag.Top | SideFlag.Bottom;
+      item.gravity = HorizontalAlignmentType.Left;
+    }
+    return nextVisualParent;
   }
 
-  function addChildren(orgTree, visualTree, options, treeItem, visualParent, regularChildren, childrenPlacementType, hasLeavesOnly) {
+  function addChildren(orgTree, visualTree, depths, options, treeItem, visualParent, regularChildren, childrenPlacementType, hasLeavesOnly) {
     var visualParent,
       currentVisualParent,
       leftChildItem,
@@ -874,8 +840,7 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
       rowIndex,
       index, len,
       singleItemPlacement,
-      hideParentConnector = (treeItem.visibility == Visibility.Invisible) && (treeItem.connectorPlacement === 0),
-      results = [];
+      hideParentConnector = (treeItem.visibility == Visibility.Invisible) && (treeItem.connectorPlacement === 0);
 
     switch (options.horizontalAlignment) {
       case HorizontalAlignmentType.Center:
@@ -905,7 +870,7 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
     switch (childrenPlacementType) {
       case ChildrenPlacementType.Horizontal:
         for (index = 0, len = regularChildren.length; index < len; index += 1) {
-          childItem = regularChildren[index];
+          childItem = getNewTreeItem({}, regularChildren[index]);
           orgChildItem = orgTree.node(childItem.id);
           visualTree.add(visualParent.id, childItem.id, childItem);
           childItem.connectorPlacement = (orgChildItem.hideParentConnection ? 0 : SideFlag.Top) | (orgChildItem.hideChildrenConnection ? 0 : SideFlag.Bottom);
@@ -924,35 +889,33 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
           for (rowIndex = 0; rowIndex < height; rowIndex += 1) {
             leftChildItem = getMatrixItem(regularChildren, columnIndex * 2, rowIndex, width);
             rightChildItem = getMatrixItem(regularChildren, columnIndex * 2 + 1, rowIndex, width);
-            if (results[rowIndex] === undefined) {
-              results[rowIndex] = new Row();
-            }
-            var row = results[rowIndex];
             if (leftChildItem !== null) {
+              leftChildItem =  getNewTreeItem({},leftChildItem);
               if (columnIndex === 0) {
                 leftChildItem.relationDegree = 1;
               }
               visualTree.add(currentVisualParent.id, leftChildItem.id, leftChildItem);
               leftChildItem.connectorPlacement = (hideParentConnector ? 0 : SideFlag.Right) | SideFlag.Bottom;
               leftChildItem.gravity = HorizontalAlignmentType.Right;
-
-              row.nodes.push(leftChildItem);
             }
             if (leftChildItem !== null || rightChildItem !== null) {
-              // currentVisualParent.id,
-              newAggregatorItem = getNewTreeItem({
-                visibility: Visibility.Invisible,
-                connectorPlacement: hideParentConnector ? 0 : SideFlag.Top | SideFlag.Bottom
-              });
-              visualTree.add(currentVisualParent.id, newAggregatorItem.id, newAggregatorItem);
-              row.aggregators.push(newAggregatorItem);
+              var depth = depths[rowIndex] || 1;
+              var aggregatorItem = currentVisualParent;
+              while(depth > 0) {
+                newAggregatorItem = getNewTreeItem({
+                  visibility: Visibility.Invisible,
+                  connectorPlacement: hideParentConnector ? 0 : SideFlag.Top | SideFlag.Bottom
+                });
+                visualTree.add(aggregatorItem.id, newAggregatorItem.id, newAggregatorItem);
+                aggregatorItem = newAggregatorItem;
+                depth -= 1;
+              }
             }
             if (rightChildItem !== null) {
+              rightChildItem = getNewTreeItem({},rightChildItem);
               visualTree.add(currentVisualParent.id, rightChildItem.id, rightChildItem);
               rightChildItem.connectorPlacement = (hideParentConnector ? 0 : SideFlag.Left) | SideFlag.Bottom;
               rightChildItem.gravity = HorizontalAlignmentType.Left;
-
-              row.nodes.push(rightChildItem);
             }
             currentVisualParent = newAggregatorItem;
           }
@@ -964,41 +927,72 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
         break;
       case ChildrenPlacementType.Vertical:
         for (index = 0, len = regularChildren.length; index < len; index += 1) {
-          childItem = regularChildren[index];
-
-          var row = new Row();
-
-          // visualParent.id,
-          newAggregatorItem = getNewTreeItem({
-            visibility: Visibility.Invisible,
-            connectorPlacement: hideParentConnector ? 0 : SideFlag.Top | SideFlag.Bottom
-          });
-
+          childItem = getNewTreeItem({}, regularChildren[index]);
+          var depth = depths[index] || 1;
+          var aggregatorItem = visualParent;
+          while(depth > 0) {
+            newAggregatorItem = getNewTreeItem({
+              visibility: Visibility.Invisible,
+              connectorPlacement: hideParentConnector ? 0 : SideFlag.Top | SideFlag.Bottom
+            });
+            visualTree.add(aggregatorItem.id, newAggregatorItem.id, newAggregatorItem);
+            aggregatorItem = newAggregatorItem;
+            depth -= 1;
+          }
 
           switch (singleItemPlacement) {
             case AdviserPlacementType.Left:
-              visualTree.add(visualParent.id, childItem.id, childItem);
-              visualTree.add(visualParent.id, newAggregatorItem.id, newAggregatorItem);
+              visualTree.add(visualParent.id, childItem.id, childItem, 0);
               childItem.connectorPlacement = (hideParentConnector ? 0 : SideFlag.Right) | SideFlag.Bottom;
               childItem.gravity = HorizontalAlignmentType.Right;
               break;
             case AdviserPlacementType.Right:
-              visualTree.add(visualParent.id, newAggregatorItem.id, newAggregatorItem);
               visualTree.add(visualParent.id, childItem.id, childItem);
               childItem.connectorPlacement = (hideParentConnector ? 0 : SideFlag.Left) | SideFlag.Bottom;
               childItem.gravity = HorizontalAlignmentType.Left;
               break;
           }
-
-          row.aggregators = [newAggregatorItem];
-          row.nodes = [childItem];
-          results.push(row);
-
           visualParent = newAggregatorItem;
         }
         break;
       default:
         throw "Children placement is undefined!";
+    }
+  }
+
+  function getRegularChildrenRows(options, regularChildren, childrenPlacementType, hasLeavesOnly) {
+    var results = [];
+
+    if (childrenPlacementType === ChildrenPlacementType.Auto) {
+      if (hasLeavesOnly) {
+        childrenPlacementType = (options.leavesPlacementType === ChildrenPlacementType.Auto) ?
+          ChildrenPlacementType.Matrix : options.leavesPlacementType;
+      }
+      else {
+        childrenPlacementType = (options.childrenPlacementType === ChildrenPlacementType.Auto) ?
+          ChildrenPlacementType.Horizontal : options.childrenPlacementType;
+      }
+    }
+
+    if (childrenPlacementType == ChildrenPlacementType.Matrix && regularChildren.length < 3) {
+      childrenPlacementType = ChildrenPlacementType.Horizontal;
+    }
+
+    switch (childrenPlacementType) {
+      case ChildrenPlacementType.Horizontal:
+        results.push(regularChildren);
+        break;
+      case ChildrenPlacementType.Matrix:
+        var width = Math.min(options.maximumColumnsInMatrix, Math.ceil(Math.sqrt(regularChildren.length)));
+        for(var index = 0; index < regularChildren.length; index+= width) {
+          results.push(regularChildren.slice(index, index + width));
+        }
+        break;
+      case ChildrenPlacementType.Vertical:
+        regularChildren.forEach(childItem => {
+          results.push([childItem])
+        })
+        break;
     }
     return results;
   }
@@ -1025,7 +1019,7 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
 
   function createNewVisualAggregator(visualTree, treeItem, hideChildrenConnector) {
     var newAggregatorItem,
-      hideParentConnector = ((treeItem.visibility == Visibility.Invisible) && (treeItem.connectorPlacement === 0)) || hideChildrenConnector;
+      hideParentConnector = ((treeItem.visibility == Visibility.Invisible) && ((treeItem.connectorPlacement & SideFlag.Top) === 0)) || hideChildrenConnector;
 
     newAggregatorItem = getNewTreeItem({
       visibility: Visibility.Invisible,
@@ -1042,6 +1036,11 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
   function getNewTreeItem(properties, orgItem) {
     var result = new TreeItem(),
       optionKey;
+
+    if (orgItem != null) {
+      result.actualItemType = orgItem.itemType;
+      result.adviserPlacementType = orgItem.adviserPlacementType;
+    }
 
     for (optionKey in properties) {
       if (properties.hasOwnProperty(optionKey)) {
@@ -1062,16 +1061,15 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
 
   function defineNavigationParent(parentItem, treeItem, skipFirstParent) {
     var parents = [];
-
     /* take logicalParentItem when it is visible or collect all visible immediate parents of logicalParentItem */
-    if (skipFirstParent || parentItem.visibility == Visibility.Invisible || !_activeItems.hasOwnProperty(parentItem.id)) {
-      if (!skipFirstParent) {
+    if (skipFirstParent || !parentItem.isVisible || !_activeItems.hasOwnProperty(parentItem.id)) {
+      if (!skipFirstParent && parentItem.isVisible) {
         parents.push(parentItem.id);
       }
-      _data.navigationFamily.loopParents(this, parentItem.id, function (parentid, parent, level) {
-        if (parent.visibility != Visibility.Invisible) {
-          parents.push(parentid);
-          if (_activeItems.hasOwnProperty(parentid)) {
+      _data.navigationFamily.loopParents(this, parentItem.id, function (parentId, parent, level) {
+        if (parent.isVisible) {
+          parents.push(parentId);
+          if (_activeItems.hasOwnProperty(parentId)) {
             return _data.navigationFamily.SKIP;
           }
         }
@@ -1129,10 +1127,6 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
     return _data.navigationFamily;
   }
 
-  function getConnectionsFamily() {
-    return _data.connectionsFamily;
-  }
-
   function getLeftMargins() {
     return _data.leftMargins;
   }
@@ -1149,7 +1143,6 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
     process: process,
     getVisualTree: getVisualTree,
     getLogicalFamily: getLogicalFamily,
-    getConnectionsFamily: getConnectionsFamily,
     getLeftMargins: getLeftMargins,
     getRightMargins: getRightMargins,
     getMaximumId: getMaximumId

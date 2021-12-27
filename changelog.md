@@ -1,3 +1,9 @@
+#### Version 6.5.0
+**Warning**: Non-backward compatible API changes!
+* Added `alignBranches` option to `OrgConfig`.
+* Removed children formation for items having `levelOffset`.
+* Fixed highlight path annotation tracing over partner connection.
+* Fixed `placeAssistantsAboveChildren` property for multiple assistants rows
 #### Version 6.4.1
 * Added `onGroupTitleRender`, `onLevelTitleRender` and `onLevelBackgroundRender` options to `OrgConfig` and `FamConfig`
 #### Version 6.4.0

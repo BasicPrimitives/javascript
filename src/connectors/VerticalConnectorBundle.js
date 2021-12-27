@@ -103,7 +103,7 @@ VerticalConnectorBundle.prototype.trace = function (data, params, options) {
   var topCenterPoint = null;
   if (parents.length > 0) {
     topCenterPoint = new this.ConnectorDestination({
-      id: (children.length == 0 ? this.dotId : this.getId(data)),
+      id: (children.length == 0 && this.dotId ? this.dotId : this.getId(data)),
       x: parentHorizontalCenter,
       y: parentsConnectorOffset
     });
@@ -113,7 +113,7 @@ VerticalConnectorBundle.prototype.trace = function (data, params, options) {
   var bottomCenterPoint = null;
   if (children.length > 0) {
     bottomCenterPoint = new this.ConnectorDestination({
-      id: (parents.length == 0 ? this.dotId : this.getId(data)),
+      id: (parents.length == 0 && this.dotId ?  this.dotId : this.getId(data)),
       x: parentHorizontalCenter,
       y: childrenConnectorOffset
     });

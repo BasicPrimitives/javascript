@@ -9,7 +9,7 @@ export default function DrawMinimizedItemsTask(getGraphics, createTransformTask,
   minimizedItemsOptionTask, itemTemplateParamsTask, alignDiagramTask) {
   var _graphics,
     _transform,
-    _debug = true,
+    _debug = false,
     _options,
     _positions;
 
@@ -99,7 +99,7 @@ export default function DrawMinimizedItemsTask(getGraphics, createTransformTask,
                 break;
               case Visibility.Invisible:
                 if (_debug) {
-                  itemTitleColor = (treeItemId == 1010 || treeItemId == 1011) ? Colors.Cyan : Colors.Red;
+                  itemTitleColor = Colors.Red;
                   if (!paletteItems.hasOwnProperty(itemTitleColor)) {
                     paletteItems[itemTitleColor] = new PaletteItem({
                       'lineColor': itemTitleColor,

@@ -102,11 +102,7 @@ export const ChildrenPlacementType = {
     /**
      * Matrix formation of the nodes
      */
-    Matrix: 3,
-    /**
-     * Fork layout
-     */
-    Fork: 4
+    Matrix: 3
 };
 
 /**

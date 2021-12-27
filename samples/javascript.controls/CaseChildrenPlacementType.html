@@ -120,9 +120,30 @@
 			];
 			return result;
 		}
+
+	function Update() {
+      var alignBranches = getRadioValue("alignBranches");
+      control.setOption("alignBranches", (alignBranches == "1" ? true : false));
+      control.update(primitives.UpdateMode.Refresh);
+    }
+
+    function getRadioValue(name) {
+      var radios = document.getElementsByName(name);
+      for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+          return radios[i].value;
+        }
+      }
+      return result;
+    }
 	</script>
 </head>
 <body>
+	<p>
+		Enable cross-branch children alignment:
+		<label><input onclick="Update()" name="alignBranches" type="radio" value="1">Yes</label>
+		<label><input onclick="Update()" name="alignBranches" type="radio" value="0" checked="">No</label>
+	</p>
 	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
 </body>
 </html>

@@ -248,12 +248,12 @@ function getMatrixedLeaves() {
 
   var counter = 8;
   var groups = { 
-    "E": { levels: [0, 0, 6, 2, 25] }, 
-    "V": { levels: [14, 12, 8, 8, 56]},
-    "U": { levels: [2, 4, 6, 8, 37] }, 
-    "O": { levels: [0, 0, 0, 0, 12] },
-    "P": { levels: [1, 10, 0, 1, 24] },
-    "L": { levels: [1, 5, 0, 2, 18] }
+    "E": { levels: [0, 0, 6, 2], childrenCount: 25 }, 
+    "V": { levels: [14, 12, 8, 8], childrenCount: 56},
+    "U": { levels: [2, 4, 6, 8], childrenCount: 37 }, 
+    "O": { levels: [0, 0, 0, 0], childrenCount: 12 },
+    "P": { levels: [1, 10, 0, 1], childrenCount: 24 },
+    "L": { levels: [1, 5, 0, 2], childrenCount: 18 }
   };
   for (var groupKey in groups) {
     var group = groups[groupKey];
@@ -278,15 +278,30 @@ function getMatrixedLeaves() {
           id: counter,
           parent: manager.id,
           title: GetNextName(),
-          description: "Description of #" + counter.toString() + " member of group " + groupKey,
+          description: "Description of #" + counter.toString() + " row child of group " + groupKey,
           image: "../images/photos/" + groupKey.toLowerCase() + ".png",
-          email: GetRandomEmail(counter.toString() + " member of " + groupKey),
+          email: GetRandomEmail(counter.toString() + " row member of " + groupKey),
           phone: GetRandomPhone(),
           label: counter.toString(),
           levelOffset: levelIndex
         });
         items.push(memberItem);
       }
+    }
+    var childrenCount = group.childrenCount;
+    for (var index = 0; index < childrenCount; index += 1) {
+      counter++;
+      var memberItem = new primitives.OrgItemConfig({
+        id: counter,
+        parent: manager.id,
+        title: GetNextName(),
+        description: "Description of #" + counter.toString() + " member of group " + groupKey,
+        image: "../images/photos/" + groupKey.toLowerCase() + ".png",
+        email: GetRandomEmail(counter.toString() + " member of " + groupKey),
+        phone: GetRandomPhone(),
+        label: counter.toString()
+      });
+      items.push(memberItem);
     }
   }
 

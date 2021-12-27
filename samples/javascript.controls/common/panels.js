@@ -28,12 +28,16 @@ export function getOrgEditorOptionsRender(extraPanels, defaultOptions) {
 };
 
 export function getOrgDiagramOptionsRender(defaultOptions, onUpdate) {
-  var commonOptionsPanels = getCommonOptionsPanels(onUpdate, true);
-  return new Render(commonOptionsPanels, defaultOptions);
+  var panels = [];
+  panels = panels.concat(getAutoLayoutOptionsPanels(onUpdate));
+  panels = panels.concat(getOrgDiagramOptionsPanels(onUpdate));
+  panels = panels.concat(getCommonOptionsPanels(onUpdate, true));
+  return new Render(panels, defaultOptions);
 };
 
 export function getFamDiagramOptionsRender(extraPanels, defaultOptions, onUpdate) {
   var panels = extraPanels;
+  panels = panels.concat(getAutoLayoutOptionsPanels(onUpdate));
   panels = panels.concat(getFamDiagramOptionsPanels(onUpdate));
   panels = panels.concat(getAnnotationsOptionsPanels(onUpdate));
   panels = panels.concat(getCommonOptionsPanels(onUpdate, true));
@@ -44,13 +48,26 @@ export function getFamDiagramOptionsRender(extraPanels, defaultOptions, onUpdate
 function getFamDiagramOptionsPanels(onUpdate) {
   return [
     new PanelConfig("Family layout", [
-      new RadioBoxConfig("neighboursSelectionMode", NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses, "Neighbours Selection Modes", NeighboursSelectionMode, ValueType.Integer, onUpdate),
+      new RadioBoxConfig("neighboursSelectionMode", NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses, "Neighbors Selection Modes", NeighboursSelectionMode, ValueType.Integer, onUpdate),
       new RadioBoxConfig("groupByType", GroupByType.Children, "Group by option defines node placement in layout close to its parents or children when node is linked across multiple levels in hierarchy. See \"alignment\" data set.", { Children: 2, Parents: 1 }, ValueType.Integer, onUpdate),
       new CheckBoxConfig("alignBylevels", true, "Keep items at the same levels after connections bundling", onUpdate),
       new CheckBoxConfig("hideGrandParentsConnectors", true, "Hide direct relations to grand parents. It helps to reduce diagrams connectors layout complexity. This option should be used together with dynamic highlighting of connectors to grandparents via immediate parents, so information is not lost.", onUpdate),
       new CheckBoxConfig("enableMatrixLayout", false, "Enables matrix layout in family diagram. Nodes having the same set of parents and children are grouped into square shaped matrix in order to keep them visually together.", onUpdate),
       new RangeConfig("minimumMatrixSize", null, "Minimum number of nodes needed in order to be formed into matrix layout", 2, 10, 1, onUpdate),
       new RangeConfig("maximumColumnsInMatrix", null, "Maximum columns number in matrix nodes layout", 1, 20, 1, onUpdate)
+    ])
+  ];
+};
+
+function getOrgDiagramOptionsPanels(onUpdate) {
+  return [
+    new PanelConfig("Org layout", [
+      new CheckBoxConfig("alignBranches", true, "Align children across branches", onUpdate),
+      new RadioBoxConfig("childrenPlacementType", ChildrenPlacementType.Horizontal, "Children placement", ChildrenPlacementType, ValueType.Integer, onUpdate),
+      new RadioBoxConfig("leavesPlacementType", ChildrenPlacementType.Horizontal, "Leaves placement defines layout shape for items having no children", ChildrenPlacementType, ValueType.Integer, onUpdate),
+      new CheckBoxConfig("placeAdvisersAboveChildren", true, "Place children of advisers above their parent node children", onUpdate),
+      new CheckBoxConfig("placeAssistantsAboveChildren", true, "Place children of assistants above their parent node children", onUpdate),
+      new RangeConfig("maximumColumnsInMatrix", null, "Maximum columns number in matrix children layout", 1, 20, 1, onUpdate)
     ])
   ];
 };
@@ -70,23 +87,25 @@ function getAnnotationsOptionsPanels(onUpdate) {
   ];
 };
 
-function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
+function getAutoLayoutOptionsPanels(onUpdate) {
   var result = [];
+
   result.push(new PanelConfig("Auto Layout", [
     new CaptionConfig("Page Fit Mode defines rule of fitting chart into available screen space. Set it to None if you want to disable it.", false),
     new RadioBoxConfig("pageFitMode", PageFitMode.FitToPage, "Page Fit Mode", { None: 0, PageWidth: 1, PageHeight: 2, FitToPage: 3, SelectionOnly: 6 }, ValueType.Integer, onUpdate),
     new RadioBoxConfig("orientationType", OrientationType.Top, "Orientation Type", OrientationType, ValueType.Integer, onUpdate),
     new RadioBoxConfig("verticalAlignment", VerticalAlignmentType.Middle, "Items Vertical Alignment", VerticalAlignmentType, ValueType.Integer, onUpdate),
     new RadioBoxConfig("horizontalAlignment", HorizontalAlignmentType.Center, "Items Horizontal Alignment", HorizontalAlignmentType, ValueType.Integer, onUpdate),
-    new RadioBoxConfig("childrenPlacementType", ChildrenPlacementType.Horizontal, "Children placement", ChildrenPlacementType, ValueType.Integer, onUpdate),
-    new RadioBoxConfig("leavesPlacementType", ChildrenPlacementType.Horizontal, "Leaves placement defines layout shape for items having no children", ChildrenPlacementType, ValueType.Integer, onUpdate),
-    new CheckBoxConfig("placeAdvisersAboveChildren", true, "Place children of advisers above their parent node children", onUpdate),
-    new CheckBoxConfig("placeAssistantsAboveChildren", true, "Place children of assistants above their parent node children", onUpdate),
-    new RangeConfig("maximumColumnsInMatrix", null, "Maximum columns number in matrix children layout", 1, 20, 1, onUpdate),
     new RadioBoxConfig("minimalVisibility", Visibility.Dot, "Minimal nodes visibility", Visibility, ValueType.Integer, onUpdate),
     new RangeConfig("minimumVisibleLevels", 0, "Minimum visible levels", 0, 10, 1, onUpdate),
     new RadioBoxConfig("selectionPathMode", SelectionPathMode.FullStack, "Selection Path Mode sets visibility of items between cursor item and root", SelectionPathMode, ValueType.Integer, onUpdate)
   ]));
+
+  return result;
+};
+
+function getCommonOptionsPanels(onUpdate, showDefaultTemplateOptions) {
+  var result = [];
 
   result.push(new PanelConfig("Default Template", [
     new RadioBoxConfig("hasButtons", Enabled.Auto, "Show user buttons", Enabled, ValueType.Integer, onUpdate),

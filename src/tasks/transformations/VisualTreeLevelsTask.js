@@ -42,7 +42,7 @@ export default function VisualTreeLevelsTask(visualTreeTask, itemTemplateParamsT
       index3, len3,
       treeItem,
       itemPosition,
-      bundle, bundlesToStack, bundlesByItemmId = {},
+      bundle, bundlesToStack, bundlesByItemId = {},
       startIndex, endIndex, stackSegments;
 
 
@@ -54,7 +54,7 @@ export default function VisualTreeLevelsTask(visualTreeTask, itemTemplateParamsT
 
       treeLevels.loopLevelItems(this, levelIndex, function (itemid, treeItem, position) {
         var parents = [];
-        if (!bundlesByItemmId.hasOwnProperty(itemid)) {
+        if (!bundlesByItemId.hasOwnProperty(itemid)) {
           if (treeItem.connectorPlacement & SideFlag.Bottom) {
             parents.push(itemid);
           }
@@ -64,7 +64,7 @@ export default function VisualTreeLevelsTask(visualTreeTask, itemTemplateParamsT
             bundle = new VerticalConnectorBundle(parents, []);
 
             for (var index = 0, len = parents.length; index < len; index += 1) {
-              bundlesByItemmId[parents[index]] = bundle;
+              bundlesByItemId[parents[index]] = bundle;
             }
 
             orgTree.loopChildren(this, itemid, function (childid, child, index) {

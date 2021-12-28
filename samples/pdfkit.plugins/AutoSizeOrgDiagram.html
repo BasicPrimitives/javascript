@@ -3,7 +3,7 @@
 
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>Family Chart AutoSize</title>
+  <title>Auto size Organizational Chart to fit into Page</title>
   <script type="text/javascript" src="../../pdfkitsamples.js"></script>
   <script type="text/javascript" src="../../primitives.js"></script>
 
@@ -136,7 +136,7 @@
             annotationType: primitives.AnnotationType.Connector,
             fromItem: 9,
             toItem: 18,
-            label: "PDF document sized to fit organizational diagram",
+            label: "Scale organizational diagram to fit into PDF Document Page size",
             labelSize: { width: 200, height: 200 }, //new primitives.Size(80, 30)
             connectorShapeType: primitives.ConnectorShapeType.BothWay,
             connectorPlacementType: primitives.ConnectorPlacementType.Straight,
@@ -151,15 +151,17 @@
       });
 
       var sample3size = sample3.getSize();
-
-      var doc = new PDFDocument({ size: [sample3size.width + 100, sample3size.height + 150] });
+      var doc = new PDFDocument({size: 'LEGAL'});
       var stream = doc.pipe(blobStream());
 
+      var legalSize = { width: 612.00, height: 1008.00 } // See http://pdfkit.org/docs/paper_sizes.html
+      var scale = Math.min(legalSize.width / (sample3size.width + 100), legalSize.height / (sample3size.height + 100))
       doc.save();
+      doc.scale(scale);
 
       // draw some text
       doc.fontSize(25)
-        .text('Auto sized page containing Organizational Chart ...', 50, 50);
+        .text('Scale organizational diagram to fit into PDF Document Page size', 50, 50);
 
       sample3.draw(doc, 50, 100);
 

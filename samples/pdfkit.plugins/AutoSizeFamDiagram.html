@@ -3,7 +3,7 @@
 
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>Family Chart AutoSize</title>
+  <title>Auto size Family Chart to fit into Page</title>
   <script src="../../pdfkitsamples.js"></script>
   <script type="text/javascript" src="../../primitives.js"></script>
 
@@ -82,15 +82,19 @@
 
       var sample3size = sample3.getSize();
 
-      var doc = new pdfkitsamples.PDFDocument({ size: [sample3size.width + 100, sample3size.height + 150] });
-      var stream = doc.pipe(pdfkitsamples.blobStream());
+      var doc = new PDFDocument({size: 'LEGAL'});
+      var stream = doc.pipe(blobStream());
 
+      var legalSize = { width: 612.00, height: 1008.00 } // See http://pdfkit.org/docs/paper_sizes.html
+      var scale = Math.min(legalSize.width / (sample3size.width + 100), legalSize.height / (sample3size.height + 100))
       doc.save();
+      doc.scale(scale);
 
       // draw some text
       doc.fontSize(25)
-        .text('Auto sized page containing Family Chart ...', 50, 50);
+        .text('Scale family diagram to fit into PDF Document Page size', 50, 50);
 
+      // draw the diagram
       sample3.draw(doc, 50, 100);
 
       doc.restore();

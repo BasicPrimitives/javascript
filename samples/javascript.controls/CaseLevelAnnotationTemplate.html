@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Level Annotation - Custom Template</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
+
+  <script type='text/javascript'>
+    var control;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      /* This sample verifies JSON form of items & connector annotation creation */
+      control = primitives.OrgDiagram(document.getElementById('basicdiagram'), {
+        items: [
+          /* JSON noname objects equivalent to primitives.OrgItemConfig */
+          { id: 0, parent: null, title: "James Smith", description: "VP, Public Sector", image: "../images/photos/a.png" },
+          { id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: "../images/photos/b.png" },
+          { id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: "../images/photos/c.png" },
+          { id: 3, parent: 0, title: "Joseph Gipson", description: "President, Entertainment & Devices Devision", image: "../images/photos/d.png" }
+        ],
+        annotations: [
+          /* JSON noname object equivalent to primitives.ConnectorAnnotationConfig */
+          {
+            annotationType: primitives.AnnotationType.Level,
+            levels: [0],
+            title: "Level 0",
+            titleColor: primitives.Colors.RoyalBlue,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          },
+          new primitives.LevelAnnotationConfig({
+            annotationType: primitives.AnnotationType.Level,
+            levels: [1],
+            title: "Level 1",
+            titleColor: primitives.Colors.Green,
+            offset: new primitives.Thickness(0, 0, 0, -1),
+            lineWidth: new primitives.Thickness(0, 0, 0, 0),
+            opacity: 0.08,
+            borderColor: primitives.Colors.Gray,
+            fillColor: primitives.Colors.Gray,
+            lineType: primitives.LineType.Dotted
+          })
+        ],
+        cursorItem: 0,
+        hasSelectorCheckbox: primitives.Enabled.True,
+        arrowsDirection: primitives.GroupByType.Parents,
+        pageFitMode: primitives.PageFitMode.None,
+        onLevelTitleRender: function(data) {
+          var title = data.context.title;
+          var titleColor = data.context.titleColor;
+          var width = data.width;
+          var height = data.height;
+          var element = data.element;
+          element.innerHTML = "";
+          element.appendChild(primitives.JsonML.toHTML(["table",
+            {
+              "style": {
+                fontSize: "12px",
+                fontFamily: "Arial, Helvetica, sans-serif",
+                fontWeight: "normal",
+                fontStyle: "normal",
+                color: "white",
+                position: "absolute",
+                padding: 0,
+                margin: 0,
+                textAlign: "center",
+                lineHeight: 1,
+                transformOrigin: "center center",
+                transform: "rotate(90deg)",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                tableLayout: "fixed",
+                maxWidth: height + "px",
+                maxHeight: width + "px",
+                width: height + "px",
+                height: width + "px",
+                left: (Math.round(width / 2.0 - height / 2.0)) + "px",
+                top: (Math.round(height / 2.0 - width / 2.0)) + "px",
+                background: titleColor,
+                borderRadius: "4px"
+              },
+              onclick: function(event) { 				
+                var message = "User clicked on level annotation title: '" + data.context.title + "'.";
+				        alert(message);
+              }
+            },
+            ["tbody",
+              ["tr",
+                ["td",
+                  {
+                  "style": {
+                    "verticalAlign": "middle",
+                    "padding": 0,
+                    "textOverflow": "ellipsis",
+                    "whiteSpace": "nowrap",
+                    "overflow": "hidden"
+                  }
+                  },
+                  title
+                ]
+              ]
+            ]
+          ]));
+        },
+        onLevelBackgroundRender: function(data) {
+          var title = data.context.title;
+          var titleColor = data.context.titleColor;
+          var fillColor = data.context.fillColor;
+          var opacity = data.context.opacity;
+          var width = data.width;
+          var height = data.height;
+          var element = data.element;
+          element.innerHTML = "";
+          element.appendChild(primitives.JsonML.toHTML(["div",
+            {
+              "style": {
+                fontSize: "120px",
+                fontFamily: "Arial, Helvetica, sans-serif",
+                fontWeight: "normal",
+                fontStyle: "normal",
+                color: "Black",
+                position: "absolute",
+                padding: "10px",
+                margin: 0,
+                textAlign: "left",
+                lineHeight: 1,
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                tableLayout: "fixed",
+                width: width + "px",
+                height: height - 1 + "px",
+                background: fillColor,
+                opacity: opacity
+              }
+            },
+            title
+          ]));
+        }
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
+</body>
+
+</html>

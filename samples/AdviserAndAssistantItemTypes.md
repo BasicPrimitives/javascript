@@ -27,7 +27,7 @@ Use the `levelOffset` option to arrange assistants into multiple rows. See the r
 
 ## Sub Adviser & Sub Assistant item types
 
-Sub Adviser & Sub Assistant item types are variations of regular Adviser & Assistant types. The only difference is that they have the connection line going from the top edge of the node, and they are shift down one level relative to their parents.
+Sub Adviser & Sub Assistant item types are variations of regular Adviser & Assistant types. The only difference is that they shifted one level down relative to their original position.
 
 Use the `adviserPlacementType` option to place them on the parent's hierarchy's left or right side.
 
@@ -37,7 +37,7 @@ Use the `adviserPlacementType` option to place them on the parent's hierarchy's 
 
 ## Adviser child nodes placement above parent's node children
 
-If the adviser node has its children, then control adds extra levels, so it places advisers children at rows above the parent's children. You can alter this layout schema with the `placeAdvisersAboveChildren` option. If you set it to false, control would place advisers and the parent's children at the same row of the diagram. 
+If the adviser node has children, then they can be placed side by side with parents children or above them. You can choose the adviser's children's placement with the `placeAdvisersAboveChildren` option. If you set it to false, control would place advisers and the parent's children at the same row of the diagram. See Cross -Branch alignment for more options.
 
 [JavaScript](javascript.controls/CasePlaceAdvisersAboveChildren.html)
 

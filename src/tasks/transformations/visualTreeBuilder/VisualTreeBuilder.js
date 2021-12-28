@@ -54,13 +54,12 @@ export default function VisualTreeBuilder() {
       }
       var nodeProps = orgTreeProps[nodeId];
       nodeProps.actualItemType = node.itemType;
-      nodeProps.hasVisibleChildren = node.isVisible || nodeProps.hasVisibleChildren;
       if (parent != null) {
         if(!orgTreeProps.hasOwnProperty(parentId)) {
           orgTreeProps[parentId] = new NodeProps();
         }
         var parentProps = orgTreeProps[parentId];
-        parentProps.hasVisibleChildren = parentProps.hasVisibleChildren || nodeProps.hasVisibleChildren;
+        parentProps.hasVisibleChildren = parentProps.hasVisibleChildren || node.isVisible || nodeProps.hasVisibleChildren;
         parentProps.hasChildren = true;
         parentProps.hasLeavesOnly = parentProps.hasLeavesOnly && !nodeProps.hasChildren;
       }

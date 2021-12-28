@@ -32,6 +32,7 @@ Organizational Chart configuration object. Use this object as a reference for av
 ### Auto Layout Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
+ | `alignBranches` | boolean | `false` | Enables cross branch nodes alignment. Places the same type of nodes across all branches of the diagram at the same level. | 
  | `autoSizeMaximum` | Size | `{1024, 768}` | Sets maximum size the diagram can expand itself in auto size mode. See `pageFitMode` property. In the auto size mode diagram controls its placeholder size itself, it sets its size to accommodate all nodes and render them normally. | 
  | `autoSizeMinimum` | Size | `{800, 600}` | Sets minimum size the diagram can shrink itself in auto size mode. See `pageFitMode` property. In the auto size mode diagram controls its placeholder size itself, it sets its size to accommodate all nodes and render them normally. | 
  | `childrenPlacementType` | ChildrenPlacementType | `Horizontal` | Sets default formation of child nodes. By default all children that belong to a parent node are always aligned below and placed in a horizontal line. On a large scale this may result in the end user having to scroll screens in order to view all of the nodes. To compensate for this, we provide the option of placing all of the children of a parent node in a square/matrix formation. This will reduce sideways screen scrolling by compacting the child nodes into a much smaller area on the screen. | 

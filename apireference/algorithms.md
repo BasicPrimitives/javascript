@@ -1751,14 +1751,15 @@ Callback for iterating nodes and providing parent in parameters
  | `parentid` | string | `` | The parent node id | 
  | `parent` | object | `` | The parent node context object | 
 
- `loopPreOrder(thisArg, onItem)` 
+ `loopPreOrder(thisArg, arg0, arg1)` 
 
 Traverse tree structure in pre order. Parent first - children next
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `thisArg` | Object | `` | The callback function invocation context | 
- | `onItem` | onTreeItemWithParentCallback | `` | A callback function to call for every node | 
+ | `arg0` | string | `` | The node id to start traversing | 
+ | `arg1` | onTreeItemWithParentCallback | `` | A callback function to call for every node | 
 **Callbacks**
 
  `onTreeItemWithParentCallback(nodeid, node, parentid, parent)` 

@@ -193,22 +193,39 @@ export default function Tree(source) {
      * Traverse tree structure in pre order.
      * Parent first - children next
      * @param {Object} thisArg The callback function invocation context
-     * @param {onTreeItemWithParentCallback} onItem A callback function to call for every node 
+     * @param {string} arg0 The node id to start traversing
+     * @param {onTreeItemWithParentCallback} arg1 A callback function to call for every node 
      */
-    function loopPreOrder(thisArg, onItem) {
+    function loopPreOrder(thisArg, arg0, arg1) {
       var stack = [], nodeid,
         key,
         index,
         parentid,
         prevParent,
-        children;
+        children,
+        startNodeId,
+        onItem;
   
+      switch (arguments.length) {
+        case 2:
+          onItem = arg0;
+          break;
+        case 3:
+          startNodeId = arg0;
+          onItem = arg1;
+          break;
+      }
+
       if (onItem != null) {
   
-        for (key in _rootChildren) {
-          if (_rootChildren.hasOwnProperty(key)) {
-            stack = stack.concat(_rootChildren[key]);
+        if(!node(startNodeId)) {
+          for (key in _rootChildren) {
+            if (_rootChildren.hasOwnProperty(key)) {
+              stack = stack.concat(_rootChildren[key]);
+            }
           }
+        } else {
+          stack.push(startNodeId);
         }
   
         while (stack.length > 0) {

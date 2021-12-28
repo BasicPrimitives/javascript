@@ -501,7 +501,7 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
     if (selectedId != null) {
       var selectedItems = (_data.options.selectedItems || []).slice();
       var eventArgs = getEventArgs(null, selectedId);
-      var position = selectedItems.findIndex(function(itemid) { return selectedId === itemid});
+      var position = selectedItems.findIndex(function(itemid) { return selectedId == itemid});
       trigger("onSelectionChanging", event, eventArgs);
       if (!eventArgs.cancel) {
         if (position >= 0) {
@@ -546,7 +546,7 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
         eventArgs = getEventArgs(null, newCursorItemId, buttonName);
         trigger("onButtonClick", event, eventArgs);
       }
-      else if (target.getAttribute("name") === "checkbox" || target.getAttribute("name") === "selectiontext") { //ignore jslint
+      else if (target.getAttribute("name") === "checkbox" || target.getAttribute("name") === "selectiontext") { 
 
       }
       else {
@@ -651,7 +651,7 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
     var scrollPanel = _data.layout.scrollPanel;
     _dragFrom = new Point(event.clientX, event.clientY);
     _scrollFrom = new Point(scrollPanel.scrollLeft, scrollPanel.scrollTop);
-    _dragImage = _dragImage || new Image(); //ignore jslint
+    _dragImage = _dragImage || new Image(); 
     event.dataTransfer.setDragImage(_dragImage, 0, 0);
   }
 

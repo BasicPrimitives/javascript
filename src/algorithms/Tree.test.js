@@ -55,6 +55,16 @@ test('Pre order sequence test', () => {
     expect(preOrderSequence).toEqual(expectedChildren);
 });
 
+test('Pre order with start node sequence test', () => {
+    const tree = getTree(items);
+    const preOrderSequence = [];
+    tree.loopPreOrder(this, 1, function (nodeid, node) {
+        preOrderSequence.push(nodeid);
+    });
+    const expectedChildren = [1, 2, 3, 9, 10];
+    expect(preOrderSequence).toEqual(expectedChildren);
+});
+
 test('loopEulerWalk - returns tree nodes in Euler Walk sequence', () => {
     const tree = getTree(items);
     const eulerWalkSequence = [];

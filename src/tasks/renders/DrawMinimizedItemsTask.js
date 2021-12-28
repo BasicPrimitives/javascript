@@ -110,7 +110,7 @@ export default function DrawMinimizedItemsTask(getGraphics, createTransformTask,
                     });
                   }
                   polyline = markers.getPolyline(paletteItems[itemTitleColor]);
-                  polyline.addSegment(new DotSegment(x - 2, y - 2, 4, 4, 2));
+                  polyline.addSegment(new DotSegment(x - 4, y - 4, 8, 8, 4));
                 }
                 break;                
               default:

@@ -55,6 +55,10 @@ function eqL(levels, items) {
   return result;
 }
 
+function getLeftNode(visualTree, nodeId) {
+  return visualTree.getChild(visualTree.parentid(nodeId), visualTree.indexOf(nodeId) - 1);
+}
+
 test("Horizontal children layout", () => {
   var builder = VisualTreeBuilder();
   const items = [
@@ -1226,3 +1230,199 @@ test("Trim trailing invisible nodes", () => {
   expect(visualTree.node(3)).toBe(undefined);
 });
 
+test("Cross-branch aligned child should be at the same level", () => {
+  var builder = VisualTreeBuilder();
+  const items = [
+    { id: 0, parent: null, name: "Auto created invisible root item" },
+    { id: 1, parent: 0, name: "1"},
+    { id: 2, parent: 1, name: "Branch 1" },
+    { id: 3, parent: 1, name: "Branch 2" },
+    { id: 4, parent: 2, name: "4", itemType: ItemType.Assistant },
+    { id: 5, parent: 2, name: "5"},
+    { id: 6, parent: 3, name: "6"},
+  ];
+  var { visualTree, navigationFamily } = builder.build(
+    getOrgTree(items),
+    getMaximumId(items),
+    getActiveItems(items),
+    {
+      alignBranches: true,
+      childrenPlacementType: ChildrenPlacementType.Horizontal,
+      horizontalAlignment: HorizontalAlignmentType.Center,
+      leavesPlacementType: ChildrenPlacementType.Horizontal,
+      maximumColumnsInMatrix: 2,
+      placeAdvisersAboveChildren: true,
+      placeAssistantsAboveChildren: true,
+    }
+  );
+  var l = getLevels(visualTree);
+  expect(l[0] < l[2] && eqL(l, [2,3]) && l[2] < l[4] && l[4] < l[5] && eqL(l, [5,6])).toBe(true);
+});
+
+test("Cross-branch aligned child should be at the same level when assistants have children", () => {
+  var builder = VisualTreeBuilder();
+  const items = [
+    { id: 0, parent: null, name: "Auto created invisible root item" },
+    { id: 1, parent: 0, name: "1"},
+    { id: 2, parent: 1, name: "Branch 1" },
+    { id: 3, parent: 1, name: "Branch 2" },
+    { id: 4, parent: 2, name: "4", itemType: ItemType.Assistant },
+    { id: 5, parent: 2, name: "5"},
+    { id: 6, parent: 3, name: "6"},
+    { id: 7, parent: 4, name: "Extra child for Assistant"},
+  ];
+  var { visualTree, navigationFamily } = builder.build(
+    getOrgTree(items),
+    getMaximumId(items),
+    getActiveItems(items),
+    {
+      alignBranches: true,
+      childrenPlacementType: ChildrenPlacementType.Horizontal,
+      horizontalAlignment: HorizontalAlignmentType.Center,
+      leavesPlacementType: ChildrenPlacementType.Horizontal,
+      maximumColumnsInMatrix: 3,
+      placeAdvisersAboveChildren: true,
+      placeAssistantsAboveChildren: true,
+    }
+  );
+  var l = getLevels(visualTree);
+  expect(l[0] < l[2] && eqL(l, [2,3]) && l[2] < l[4] && l[4] < l[5] && eqL(l, [5,6])).toBe(true);
+  expect(l[7] < l[5]).toBe(true);
+});
+
+test("Cross-branch alignment Use Case", () => {
+  var builder = VisualTreeBuilder();
+  const items = [
+    /* Branch 1 */
+    { id: 0, parent: null, name: "Auto created invisible root item" },
+    { id: 1,parent: 0, title: "Branch 1", childrenPlacementType: ChildrenPlacementType.Matrix },
+    { id: 10, parent: 1, levelOffset: 0, title: "Child 1 at row 0" },
+    { id: 11, parent: 1, levelOffset: 0, title: "Child 2 at row 0" },
+    { id: 12, parent: 1, levelOffset: 1, title: "Child 3 at row 1" },
+    { id: 13, parent: 1, levelOffset: 1, title: "Child 4 at row 1" },
+    { id: 14, parent: 1, levelOffset: 1, title: "Child 5 at row 1" },
+    { id: 15, parent: 1, levelOffset: 1, title: "Child 6 at row 1" },
+    { id: 2, parent: 1, title: "Child 7" },
+    { id: 3, parent: 1, title: "Child 8" },
+    { id: 4, parent: 1, title: "Child 9" },
+    { id: 5, parent: 1, title: "Child 10" },
+    { id: 6, parent: 1, title: "Child 11" },
+    { id: 7, parent: 1, title: "Child 12" },
+    { id: 8, parent: 1, title: "Child 13" },
+    { id: 9, parent: 1, title: "Child 14" },
+
+    /* Branch 2 */
+    { id: 101, parent: 0, title: "Branch 2" },
+    { id: 102, parent: 101, levelOffset: 1, title: "Child 1 at row 1" },
+    { id: 103, parent: 101, levelOffset: 1, title: "Child 2 at row 1", childrenPlacementType: ChildrenPlacementType.Vertical },
+    { id: 104, parent: 103, title: "Sub Child 3" },
+    { id: 105, parent: 103, title: "Sub Child 4" },
+    { id: 106, parent: 101, title: "Child 3" },
+    { id: 107, parent: 101, title: "Child 4" }
+  ];
+  var { visualTree, navigationFamily } = builder.build(
+    getOrgTree(items),
+    getMaximumId(items),
+    getActiveItems(items),
+    {
+      alignBranches: true,
+      childrenPlacementType: ChildrenPlacementType.Horizontal,
+      horizontalAlignment: HorizontalAlignmentType.Center,
+      leavesPlacementType: ChildrenPlacementType.Horizontal,
+      maximumColumnsInMatrix: 3,
+      placeAdvisersAboveChildren: true,
+      placeAssistantsAboveChildren: true,
+    }
+  );
+  var l = getLevels(visualTree);
+  expect(l[10] < l[12] && eqL(l, [10,11]) && eqL(l, [12,13,14,15,102,103]) && l[12] < l[2] && eqL(l, [2, 3, 4, 106, 107])).toBe(true);
+});
+
+test("Cross-branch aligned matrix children formation should not have empty trailing aggregators", () => {
+  var builder = VisualTreeBuilder();
+  const items = [
+    /* Branch 1 */
+    { id: 0, parent: null, name: "Auto created invisible root item" },
+    /* matrix layout example */
+    { id: 1, parent: 0, title: "Matrix Layout", childrenPlacementType: ChildrenPlacementType.Matrix },
+    { id: 2, parent: 1, title: "Child 1" },
+    { id: 3, parent: 1, title: "Child 2" },
+    { id: 4, parent: 1, title: "Child 3" },
+    { id: 5, parent: 1, title: "Child 4" },
+    { id: 6, parent: 1, title: "Child 5" },
+    { id: 7, parent: 1, title: "Child 6" },
+    { id: 8, parent: 1, title: "Child 7" },
+    { id: 9, parent: 1, title: "Child 8" },
+
+    /* vertical layout example */
+    { id: 101, parent: 0, title: "Vertical Layout", childrenPlacementType: ChildrenPlacementType.Vertical },
+    { id: 102, parent: 101, title: "Child 1" },
+    { id: 103, parent: 101, title: "Child 2", childrenPlacementType: ChildrenPlacementType.Vertical },
+      { id: 104, parent: 103, title: "Sub Child 3" },
+      { id: 105, parent: 103, title: "Sub Child 4" },
+    { id: 106, parent: 101, title: "Child 5" }
+  ];
+  var { visualTree, navigationFamily } = builder.build(
+    getOrgTree(items),
+    getMaximumId(items),
+    getActiveItems(items),
+    {
+      alignBranches: true,
+      childrenPlacementType: ChildrenPlacementType.Horizontal,
+      horizontalAlignment: HorizontalAlignmentType.Center,
+      leavesPlacementType: ChildrenPlacementType.Horizontal,
+      maximumColumnsInMatrix: 3,
+      placeAdvisersAboveChildren: true,
+      placeAssistantsAboveChildren: true,
+    }
+  );
+  var l = getLevels(visualTree);
+  var va = getLeftNode(visualTree, 7);
+  
+  expect(eqL(l, [8,9,106]) && l[105] < l[106]).toBe(true);
+  expect(visualTree.hasChildren(va.id)).toBe(false);
+});
+
+test("Cross-branch aligned vertical children formation should not have empty trailing aggregators", () => {
+  var builder = VisualTreeBuilder();
+  const items = [
+    /* Branch 1 */
+    { id: 0, parent: null, name: "Auto created invisible root item" },
+    /* matrix layout example */
+    { id: 1, parent: 0, title: "Matrix Layout", childrenPlacementType: ChildrenPlacementType.Matrix },
+    { id: 2, parent: 1, title: "Child 1" },
+    { id: 3, parent: 1, title: "Child 2" },
+    { id: 4, parent: 1, title: "Child 3" },
+    { id: 5, parent: 1, title: "Child 4" },
+    { id: 6, parent: 1, title: "Child 5", childrenPlacementType: ChildrenPlacementType.Vertical },
+      { id: 104, parent: 6, title: "Sub Child 3" },
+      { id: 105, parent: 6, title: "Sub Child 4" },
+    { id: 7, parent: 1, title: "Child 6" },
+    { id: 8, parent: 1, title: "Child 7" },
+    { id: 9, parent: 1, title: "Child 8" },
+
+    /* vertical layout example */
+    { id: 101, parent: 0, title: "Vertical Layout", childrenPlacementType: ChildrenPlacementType.Vertical },
+    { id: 102, parent: 101, title: "Child 1" },
+    { id: 103, parent: 101, title: "Child 2" }
+  ];
+  var { visualTree, navigationFamily } = builder.build(
+    getOrgTree(items),
+    getMaximumId(items),
+    getActiveItems(items),
+    {
+      alignBranches: true,
+      childrenPlacementType: ChildrenPlacementType.Horizontal,
+      horizontalAlignment: HorizontalAlignmentType.Center,
+      leavesPlacementType: ChildrenPlacementType.Horizontal,
+      maximumColumnsInMatrix: 3,
+      placeAdvisersAboveChildren: true,
+      placeAssistantsAboveChildren: true,
+    }
+  );
+  var l = getLevels(visualTree);
+  var va = getLeftNode(visualTree, 103);
+  
+  expect(l[105] < l[9]).toBe(true);
+  expect(visualTree.hasChildren(va.id)).toBe(false);
+});

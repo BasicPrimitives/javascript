@@ -1646,3 +1646,31 @@ test("Extending partners connection lines having advisers and assistants ", () =
   expect(l[11] < l[8] && l[8] < l[5] && l[5] < l[6] && l[6] < l[2] && l[2] < l[4]).toBe(true);
   expect(visualTree.parent(2).partners.length).toBe(3);
 });
+
+test("Cross-branch alignment of Adviser and its parent's children ", () => {
+  var builder = VisualTreeBuilder();
+  const items = [
+    { id: 0, parent: null, name: "Auto created invisible root item" },
+    { id: 1, parent: 0, name: "1" },
+    { id: 2, parent: 1, name: "2", itemType: ItemType.Adviser, adviserPlacementType: AdviserPlacementType.Right },
+    { id: 3, parent: 1, name: "3", itemType: ItemType.Assistant, adviserPlacementType: AdviserPlacementType.Right },
+    { id: 4, parent: 1, name: "4" },
+    { id: 5, parent: 2, name: "5" }
+  ];
+  var { visualTree, navigationFamily } = builder.build(
+    getOrgTree(items),
+    getMaximumId(items),
+    getActiveItems(items),
+    {
+      alignBranches: true,
+      childrenPlacementType: ChildrenPlacementType.Horizontal,
+      horizontalAlignment: HorizontalAlignmentType.Center,
+      leavesPlacementType: ChildrenPlacementType.Horizontal,
+      maximumColumnsInMatrix: 3,
+      placeAdvisersAboveChildren: false,
+      placeAssistantsAboveChildren: true,
+    }
+  );
+  var l = getLevels(visualTree);
+  expect(eqL(l, [4, 5]) && l[1] < l[3] && l[3] < l[4]).toBe(true);
+});

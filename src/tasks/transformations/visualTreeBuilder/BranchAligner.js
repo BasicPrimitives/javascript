@@ -126,20 +126,21 @@ function BranchAligner() {
 
   /* measure depth of rows in rowsTree, count number of assistants and child rows, find depth of partner's branches */
   function align(debug) {
-      _rowsTree.loopPostOrder(this, function (rowId, row, parentRowId, parentRow) {
-          // console.log(rowId + "  " + Object.entries(RowType).filter(([name, value]) => value == row.rowType)[0][0]  + " parent=" + parentRowId + " extend=" + row.extend);
-          row.depth = row.getDepth() + row.offset;
-          if(parentRow != null) {
-              //console.log(rowId + "  depth = " + row.depth);
-              parentRow.addRowDepth(row.rowType, row.extend, row.index, row.depth);
-          }
-      });
+    _rowsTree.loopPostOrder(this, function (rowId, row, parentRowId, parentRow) {
+        // console.log(rowId + "  " + Object.entries(RowType).filter(([name, value]) => value == row.rowType)[0][0]  + " parent=" + parentRowId + " extend=" + row.extend);
+        row.depth = row.getDepth() + row.offset;
+        if(parentRow != null) {
+            //console.log(rowId + "  depth = " + row.depth);
+            parentRow.addRowDepth(row.rowType, row.extend, row.index, row.depth);
+        }
+    });
   }
 
   // function loopGroupTypes(rowType, len)
   function loopGroupTypes(thisArg, nodeId, onGroupType) {
-      var rowId = _rowHash[nodeId];
-      var row = _rowsTree.node(rowId);
+    var rowId = _rowHash[nodeId];
+    var row = _rowsTree.node(rowId);
+    if(row) {
       for(var index = 0, len = row.groups.length; index < len; index+=1) {
         if(row.groups[index]) {
           if(onGroupType.call(thisArg, index, len)) {
@@ -147,6 +148,7 @@ function BranchAligner() {
           }
         }
       }
+    }
   }    
 
   function getRowDepth(nodeId, groupType, index) {

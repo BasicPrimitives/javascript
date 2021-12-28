@@ -2,7 +2,15 @@
 import Tree from "../../../algorithms/Tree";
 import OrgItemConfig from "../../../configs/OrgItemConfig";
 import OrgItem from "../../../models/OrgItem";
-import { ItemType, ChildrenPlacementType, HorizontalAlignmentType, AdviserPlacementType, SideFlag, Visibility } from "../../../enums";
+import { 
+  ItemType,
+  ChildrenPlacementType,
+  HorizontalAlignmentType,
+  AdviserPlacementType,
+  SideFlag,
+  Visibility,
+  Enabled
+} from "../../../enums";
 
 function getOrgTree(items) {
   const tree = Tree();
@@ -15,7 +23,9 @@ function getOrgTree(items) {
 
 function getActiveItems(items) {
   return items.reduce((acc, item) => {
-    acc[item.id] = item.id;
+    if(item.isActive) {
+      acc[item.id] = item.id;
+    }
     return acc;
   }, {});
 }
@@ -57,6 +67,10 @@ function eqL(levels, items) {
 
 function getLeftNode(visualTree, nodeId) {
   return visualTree.getChild(visualTree.parentid(nodeId), visualTree.indexOf(nodeId) - 1);
+}
+
+function getRightNode(visualTree, nodeId) {
+  return visualTree.getChild(visualTree.parentid(nodeId), visualTree.indexOf(nodeId) + 1);
 }
 
 test("Horizontal children layout", () => {
@@ -789,8 +803,10 @@ test("General Partner on right", () => {
   );
   var l = getLevels(visualTree);
   var p = getPositions(visualTree);
+  var ip = getRightNode(visualTree, 1);
   expect(l[1] == l[2] && p[1] < p[2]).toBe(true);
   expect(visualTree.node(2).connectorPlacement).toBe(SideFlag.Top | SideFlag.Bottom);
+  expect(ip.partners).toEqual([1,2]);
 });
 
 test("General Partner on left", () => {
@@ -816,8 +832,10 @@ test("General Partner on left", () => {
   );
   var l = getLevels(visualTree);
   var p = getPositions(visualTree);
+  var ip = getLeftNode(visualTree, 1);
   expect(l[1] == l[2] && p[1] > p[2]).toBe(true);
   expect(visualTree.node(2).connectorPlacement).toBe(SideFlag.Top | SideFlag.Bottom);
+  expect(ip.partners).toEqual([1,2]);
 });
 
 test("General Partner on right with shared child", () => {
@@ -909,6 +927,8 @@ test("Limited Partner on right", () => {
   var p = getPositions(visualTree);
   expect(l[1] == l[2] && p[1] < p[2]).toBe(true);
   expect(visualTree.node(2).connectorPlacement).toBe(SideFlag.Bottom);
+  var ip = getRightNode(visualTree, 1);
+  expect(ip.partners).toEqual([1,2]);
 });
 
 test("Limited Partner on left", () => {
@@ -936,6 +956,9 @@ test("Limited Partner on left", () => {
   var p = getPositions(visualTree);
   expect(l[1] == l[2] && p[1] > p[2]).toBe(true);
   expect(visualTree.node(2).connectorPlacement).toBe(SideFlag.Bottom);
+
+  var ip = getLeftNode(visualTree, 1);
+  expect(ip.partners).toEqual([1,2]);
 });
 
 test("Limited Partner on right with shared child", () => {
@@ -1027,6 +1050,9 @@ test("Adviser Partner on right", () => {
   var p = getPositions(visualTree);
   expect(l[1] == l[2] && p[1] < p[2]).toBe(true);
   expect(visualTree.node(2).connectorPlacement).toBe(SideFlag.Left | SideFlag.Bottom);
+
+  var ip = getRightNode(visualTree, 1);
+  expect(ip.partners).toEqual([1,2]);
 });
 
 test("Adviser Partner on left", () => {
@@ -1054,6 +1080,9 @@ test("Adviser Partner on left", () => {
   var p = getPositions(visualTree);
   expect(l[1] == l[2] && p[1] > p[2]).toBe(true);
   expect(visualTree.node(2).connectorPlacement).toBe(SideFlag.Right |SideFlag.Bottom);
+
+  var ip = getLeftNode(visualTree, 1);
+  expect(ip.partners).toEqual([1,2]);
 });
 
 test("Adviser Partner on right with shared child", () => {
@@ -1425,4 +1454,195 @@ test("Cross-branch aligned vertical children formation should not have empty tra
   
   expect(l[105] < l[9]).toBe(true);
   expect(visualTree.hasChildren(va.id)).toBe(false);
+});
+
+test("Cross-branch alignment of assistants children", () => {
+  var builder = VisualTreeBuilder();
+  const items = [
+    /* Branch 1 */
+    { id: 0, parent: null, name: "Auto created invisible root item" },
+    /* matrix layout example */
+    { id: 2, parent: 0, title: "Child 1" },
+    { id: 3, parent: 2, title: "Assistant 1", itemType: ItemType.Assistant },
+    { id: 4, parent: 3, title: "Assistant of Assistant", itemType: ItemType.Assistant },
+    { id: 5, parent: 3, title: "Child of Assistant 1" },
+
+    { id: 6, parent: 0, title: "Child 2" },
+    { id: 7, parent: 6, title: "Assistant 2", itemType: ItemType.Assistant },
+    { id: 9, parent: 7, title: "Child of Assistant 2" }
+  ];
+  var { visualTree, navigationFamily } = builder.build(
+    getOrgTree(items),
+    getMaximumId(items),
+    getActiveItems(items),
+    {
+      alignBranches: true,
+      childrenPlacementType: ChildrenPlacementType.Horizontal,
+      horizontalAlignment: HorizontalAlignmentType.Center,
+      leavesPlacementType: ChildrenPlacementType.Horizontal,
+      maximumColumnsInMatrix: 3,
+      placeAdvisersAboveChildren: true,
+      placeAssistantsAboveChildren: true,
+    }
+  );
+  var l = getLevels(visualTree);
+  
+  expect(l[2] < l[3] && l[3] < l[4] && l[4] < l[5] && eqL(l, [2, 6]) && eqL(l, [3, 7]) && eqL(l, [5, 9])).toBe(true);
+});
+
+
+test("2 level cross-branch alignment of assistants and row children at multiple levels", () => {
+  var builder = VisualTreeBuilder();
+  const items = [
+    { id: 0, parent: null, name: "Auto created invisible root item" },
+    { id: 2, parent: 0, title: "Child 1" },
+      { id: 3, parent: 2, title: "Assistant of 1", levelOffset: 1, itemType: ItemType.Assistant },
+      { id: 4, parent: 2, title: "Row Child 1 of 1", levelOffset: 3 },
+      { id: 5, parent: 2, title: "Child 1 of 1" },
+        { id: 6, parent: 5, title: "Assistant of 1-1", itemType: ItemType.Assistant },
+        { id: 26, parent: 5, title: "Row Child 1 of 1-1", levelOffset: 1 },
+        { id: 7, parent: 5, title: "Child 2 of 1-1" },
+      { id: 8, parent: 2, title: "Child 2 of 1" },
+        { id: 9, parent: 8, title: "Child 1 of 2-1" },
+
+    { id: 10, parent: 0, title: "Child 2" },
+      { id: 11, parent: 10, title: "Assistant of 2", itemType: ItemType.Assistant },
+      { id: 12, parent: 10, title: "Row Child 1 of 2", levelOffset: 2 },
+      { id: 13, parent: 10, title: "Child 1 of 2" },
+        { id: 14, parent: 13, title: "Row Child 1 of 1-2", levelOffset: 2 },
+        { id: 15, parent: 13, title: "Child 1 of 1-2" },
+      { id: 16, parent: 10, title: "Child 2 of 2" },		
+        { id: 17, parent: 16, title: "Assistant of 2-2", levelOffset: 3, itemType: ItemType.Assistant },
+        { id: 18, parent: 16, title: "Child 1 of 2-2" },
+
+    { id: 19, parent: 0, title: "Child 3" },
+      { id: 20, parent: 19, title: "Row Child 1 of 3", levelOffset: 1 },
+      { id: 21, parent: 19, title: "Child 1 of 3" },
+        { id: 22, parent: 21, title: "Assistant of 1-3", levelOffset: 2, itemType: ItemType.Assistant },
+        { id: 23, parent: 21, title: "Child 1 of 1-3" },
+      { id: 24, parent: 19, title: "Child 2 of 3" },							
+        { id: 25, parent: 24, title: "Child 1 of 2-3" }
+  ];
+  var { visualTree, navigationFamily } = builder.build(
+    getOrgTree(items),
+    getMaximumId(items),
+    getActiveItems(items),
+    {
+      alignBranches: true,
+      childrenPlacementType: ChildrenPlacementType.Horizontal,
+      horizontalAlignment: HorizontalAlignmentType.Center,
+      leavesPlacementType: ChildrenPlacementType.Horizontal,
+      maximumColumnsInMatrix: 3,
+      placeAdvisersAboveChildren: true,
+      placeAssistantsAboveChildren: true,
+    }
+  );
+  var l = getLevels(visualTree);
+  
+  expect(eqL(l, [2, 10, 19]) && eqL(l, [5, 8, 13, 16, 21, 24]) && eqL(l, [7, 9, 15, 18, 23, 25])).toBe(true);
+  expect(l[2] < l[5] && l[5] < l[7]).toBe(true);
+  expect(l[2] < l[11] && l[11] < l[3] && l[3] < l[20] && l[20] < l[12] && l[12] < l[4] && l[4] < l[5]).toBe(true);
+  expect(l[5] < l[6] && l[6] < l[22] && l[22] < l[17] && l[17] < l[26] && l[26] < l[14] && l[14] < l[7]).toBe(true);
+});
+
+test("Cross-branch aligned row children formation should not have empty trailing aggregators", () => {
+  var builder = VisualTreeBuilder();
+  const items = [
+    { id: 0, parent: null, name: "Auto created invisible root item" },
+    { id: 2, parent: 0, title: "Child 1" },
+    { id: 4, parent: 2, title: "Row Child 1 of 1", levelOffset: 3 },
+    { id: 5, parent: 2, title: "Child 1 of 1" },
+    { id: 10, parent: 0, title: "Child 2" },
+    { id: 12, parent: 10, title: "Row Child 1 of 2", levelOffset: 2 }
+  ];
+  var { visualTree, navigationFamily } = builder.build(
+    getOrgTree(items),
+    getMaximumId(items),
+    getActiveItems(items),
+    {
+      alignBranches: true,
+      childrenPlacementType: ChildrenPlacementType.Horizontal,
+      horizontalAlignment: HorizontalAlignmentType.Center,
+      leavesPlacementType: ChildrenPlacementType.Horizontal,
+      maximumColumnsInMatrix: 3,
+      placeAdvisersAboveChildren: true,
+      placeAssistantsAboveChildren: true,
+    }
+  );
+  var va = getRightNode(visualTree, 12);
+  
+  expect(va).toBeUndefined();
+});
+
+test("Cross-branch aligned assistants should not have empty trailing aggregators", () => {
+  var builder = VisualTreeBuilder();
+  const items = [
+    { id: 0, parent: null, name: "Auto created invisible root item" },
+    { id: 2, parent: 0, title: "Child 1" },
+    { id: 3, parent: 2, title: "Assistant of 1", levelOffset: 1, itemType: ItemType.Assistant },
+    { id: 5, parent: 2, title: "Child 1 of 1" },
+    { id: 10, parent: 0, title: "Child 2" },
+    { id: 11, parent: 10, title: "Assistant of 2", itemType: ItemType.Assistant }
+  ];
+  var { visualTree, navigationFamily } = builder.build(
+    getOrgTree(items),
+    getMaximumId(items),
+    getActiveItems(items),
+    {
+      alignBranches: true,
+      childrenPlacementType: ChildrenPlacementType.Horizontal,
+      horizontalAlignment: HorizontalAlignmentType.Center,
+      leavesPlacementType: ChildrenPlacementType.Horizontal,
+      maximumColumnsInMatrix: 3,
+      placeAdvisersAboveChildren: true,
+      placeAssistantsAboveChildren: true,
+    }
+  );
+   
+  expect(visualTree.hasChildren(getLeftNode(visualTree, 11).id)).toBe(false);
+});
+
+test("Extending partners connection lines having advisers and assistants ", () => {
+  var builder = VisualTreeBuilder();
+  const items = [
+    { id: 0,
+      parent: null,
+      isVisible: false, 
+      isActive: false, 
+      itemType: ItemType.Regular, 
+      name: "Auto created invisible root item",
+      hideParentConnection: true,
+      hideChildrenConnection: true,
+      childrenPlacementType: ChildrenPlacementType.Horizontal
+    },
+    { id: 11, parent: 0, title: "Parent" },
+    { id: 10, parent: 11, title: "10", placeAssistantsAboveChildren: Enabled.False }, // Should disregard this options    
+    { id: 5, parent: 11, title: "Assistant", itemType: ItemType.Assistant, adviserPlacementType: AdviserPlacementType.Right },
+    { id: 6, parent: 5, title: "Assistant's Child" },
+    { id: 1, parent: 11, title: "LimitedPartner", itemType: ItemType.GeneralPartner, adviserPlacementType: AdviserPlacementType.Right },
+    { id: 7, parent: 1, title: "Adviser", itemType: ItemType.Adviser, adviserPlacementType: AdviserPlacementType.Right },
+    { id: 8, parent: 7, title: "Adviser's Child" },
+    { id: 2, parent: 11, title: "Parent's Child" },
+    { id: 3, parent: 2, title: "LimitedPartner", itemType: ItemType.LimitedPartner, adviserPlacementType: AdviserPlacementType.Right },
+    { id: 4, parent: 2, title: "4" },
+    { id: 9, parent: 11, title: "LimitedPartner", itemType: ItemType.LimitedPartner, adviserPlacementType: AdviserPlacementType.Right }
+  ];
+  var { visualTree, navigationFamily } = builder.build(
+    getOrgTree(items),
+    getMaximumId(items),
+    getActiveItems(items),
+    {
+      alignBranches: true,
+      childrenPlacementType: ChildrenPlacementType.Horizontal,
+      horizontalAlignment: HorizontalAlignmentType.Center,
+      leavesPlacementType: ChildrenPlacementType.Horizontal,
+      maximumColumnsInMatrix: 3,
+      placeAdvisersAboveChildren: true,
+      placeAssistantsAboveChildren: true,
+    }
+  );
+  var l = getLevels(visualTree);
+  expect(eqL(l, [11, 1, 7, 9]) && eqL(l, [3, 2])).toBe(true);
+  expect(l[11] < l[8] && l[8] < l[5] && l[5] < l[6] && l[6] < l[2] && l[2] < l[4]).toBe(true);
+  expect(visualTree.parent(2).partners.length).toBe(3);
 });

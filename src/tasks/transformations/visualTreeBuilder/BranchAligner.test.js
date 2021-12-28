@@ -355,3 +355,18 @@ test("addSplitChildren - add dis-aligned nodes", () => {
   var expected = [];
   expect(result).toEqual(expected);
 });
+
+test("loopGroupTypes - iterate groups of non-existing node", () => {
+  var branchAligner = BranchAligner();
+
+  branchAligner.mergeToChild(null, [{id: 1}, {id: 6}], RowType.Items, 0, 0, false)
+  branchAligner.mergeToChild(1, [{id: 2}], RowType.Advisers, 0, 0, false)
+  branchAligner.align();
+
+  var result = [];
+  branchAligner.loopGroupTypes(this, 7, function(rowType, len) {
+    result.push([rowType]);
+  })
+  var expected = [];
+  expect(result).toEqual(expected);
+});

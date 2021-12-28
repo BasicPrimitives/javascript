@@ -255,9 +255,6 @@ export default function VisualTreeBuilder() {
     var visualPartners = {};
     orgTree.loopLevels(this, function (parentOrgItemId, parentOrgItem, levelid) {
       var parentProps = orgTreeProps[parentOrgItemId];
-      if (!parentProps.hasVisibleChildren) {
-        return orgTree.SKIP;
-      }
 
       var logicalParentItem = visualTree.node(parentOrgItemId);
       if (!logicalParentItem) {
@@ -306,7 +303,9 @@ export default function VisualTreeBuilder() {
             visualPartners[parentOrgItem.parent].push(visualParent.id);
           }
         }
-        var fillEmptyLevels = groupType < len - 1;
+        var fillEmptyLevels = ((parentProps.isPartner || parentProps.hasPartners) && groupType <= GroupType.Assistants);
+        fillEmptyLevels = fillEmptyLevels || groupType < parentProps.groupSorter.getLength() - 1;
+
         var rows = [];
         switch(groupType) {
           case GroupType.Items:
@@ -361,6 +360,9 @@ export default function VisualTreeBuilder() {
             });
             break;
           case GroupType.RowChildren:
+            if(parentOrgItem.id == 10) {
+              var i = 2;
+            }
             var rows = parentProps.groupSorter.getRows(GroupType.RowChildren);
             branchAligner.loopRows(this, parentOrgItemId, RowType.RowChildren, function(depth, rowIndex) {
               var row = rows[rowIndex] || [];
@@ -401,6 +403,9 @@ export default function VisualTreeBuilder() {
         if(parentProps.isPartner) {
           visualPartners[parentOrgItem.parent].push(visualParent.id);
         }
+      }
+      if (!parentProps.hasVisibleChildren) {
+        return orgTree.SKIP;
       }
     });
 

@@ -21,6 +21,7 @@
 
 ## Organizational Chart Layout Options
 * [Children Layout](ChildrenLayout.md)
+* [Cross-Branch Alignment](CrossBranchAlignment.md)
 * [Adviser & Assistant item types](AdviserAndAssistantItemTypes.md)
 * [Partner item types](PartnerItemTypes.md)
 * [Multiple root items](MultipleRootItemsInChart.md)

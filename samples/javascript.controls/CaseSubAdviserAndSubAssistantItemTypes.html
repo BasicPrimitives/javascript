@@ -21,8 +21,7 @@
 					parent: null,
 					title: "James Smith",
 					description: "Parent Item",
-					image: "../images/photos/a.png",
-					placeAssistantsAboveChildren: primitives.Enabled.Auto
+					image: "../images/photos/a.png"
 				}),
 				new primitives.OrgItemConfig({
 					id: 1,
@@ -61,7 +60,6 @@
 			options.autoSizeMinimum = new primitives.Size(100, 100);
 			options.autoSizeMaximum = new primitives.Size(2000, 2000);
 			options.arrowsDirection = primitives.GroupByType.Children;
-			options.placeAssistantsAboveChildren = true;
 
 			control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
 		});

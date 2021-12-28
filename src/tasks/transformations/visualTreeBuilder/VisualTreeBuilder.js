@@ -360,9 +360,6 @@ export default function VisualTreeBuilder() {
             });
             break;
           case GroupType.RowChildren:
-            if(parentOrgItem.id == 10) {
-              var i = 2;
-            }
             var rows = parentProps.groupSorter.getRows(GroupType.RowChildren);
             branchAligner.loopRows(this, parentOrgItemId, RowType.RowChildren, function(depth, rowIndex) {
               var row = rows[rowIndex] || [];

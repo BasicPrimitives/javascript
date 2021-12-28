@@ -192,9 +192,6 @@ OrgLayout.prototype.setOffsets = function (treeLevels, treeItemsPositions, child
       leftPadding = treeLevelPosition.currentOffset > 0 ? treeItemPadding + treeItemPadding * (treeItem.relationDegree) * cousinsIntervalMultiplier : padding.left,
       arrowTipLength = linesWidth * 8;
 
-    if(treeItemId == 0) {
-      var i = 2;
-    }
     childLayoutsPositions[treeItemId] = new ChildLayoutPosition(0,  leftPadding, treeItemPadding);
     var childLayoutPosition = childLayoutsPositions[treeItemId];
 

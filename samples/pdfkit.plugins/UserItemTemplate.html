@@ -132,6 +132,166 @@
 
       var size = sampleChart.draw(doc, 30, 60);
 
+      doc.addPage();
+
+      doc.fontSize(25)
+        .text('Various Sizes of User Item Templates ', 30, 30);
+
+      // See http://dataurl.net/#dataurlmaker for image to data url conversion
+      var photo1 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALaSURBVHhe7ZTBUeNAAAQVCxlQxZc0uB8ZkABfR3FFAORABoRACkRxSB6Nxm1hmeKBj5qu/tgedN6+haGUcjn8fXuvqypQgkW1CpRgUa0CJVhUq0AJFtUqUIJFtQqUYFGtAiVYVKtACRbVKlCCRbUKlGBRrQIlWFSrQAkW1SpQgkW1CpRgUa0CJVhUq0AJFtUqUIJFtQqUYFGtAiVYVKtACRbVKlCCRbUKlGBRrQIlWFSrQAkW1SpQgkW1CpRgUa0CJVhUq0AJFtUqUIJFtQqUYFGtAiVYVKtACRbVKlCCRbUKlGBRrQIlWFSrQAkW1SpQgkW1CpRgUa0CJVh8393jzTDcPxy9/9+pQAkWZ/l0rx+euXp89ac/Hev17nr8SrdPeP/LTic7BIuzHGPd3L3ky2H487x/+a1YePJXjf/FS4319v7w5+NJCvRjsV52V/s7PiW73FhTIL0zx3q+1b9w8Es6Op3KzKfSr8/CfFU/2X/uhcc6ull8uXz16SRLPhzs6Mkb+1XP2Zzhx0MIFmd5eKR9Dp8nb9nkeMXmT6fr4yszOYa+3u32Lxlra7/q5cVKDu7C/Gvod+LA/rOyfHoYF7E296teXqxPv+5mLB4jn7YW69R+1d8Uqzdr8VSszb9BfPLWftXfEmv/6XISvDy+Shv7VX9NrNHpMDN8zj7HiH/k5H5xCk1O38GT6gkJFtUqUIJFtQqUYFGtAiVYVKtACRbVKlCCRbUKlGBRrQIlWFSrQAkW1SpQgkW1CpRgUa0CJVhUq0AJFtUqUIJFtQqUYFGtAiVYVKtACRbVKlCCRbUKlGBRrQIlWFSrQAkW1SpQgkW1CpRgUa0CJVhUq0AJFtUqUIJFtQqUYFGtAiVYVKtACRbVKlCCRbUKlGBRrQIlWFSrQAkW1SpQgkW1CpRgUa0CJVhUq0AJFtUqUIJFtQqUYFGtAiVYVKtACRbVKlCCRbUKVEr5cYbhH4pgzY+N7yq4AAAAAElFTkSuQmCC';
+      var photo2 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMaSURBVHhe7du/SxthHMfxb/tHXCkdQiLtgShUCDjpEgjUDt1qC8XQQQItnRoQAnGwEBDcBOFwMgg2bh2qIByUOAkHGSpCBnNk6ND8Fb0fT+4uJeH8hKcJls+LgHeXR7h753nuskSIaNYeqL8iVqevtmhY2TTCjYfhH7oLxgIwFoCxAIwFYCwAYwEYC8BYAMYCMBaAsQCMBWAsAGMBGAvAWADGAjAWgLEAjAVgLABjARgLwFgAxgIwFoCxAIwFYCwAYwEYC8BYAMYCMBaAsQCMBWAsgP5Y/aO1slm5Vnv/lYlitSpl00i+do9c9dYsufabxFlt2+qwPhPPrPzri77VCV6HG936sp6T8z+GNbun9iDX28unz06iU5LmW+29dCzD1b1P6yLN89kuvYWdvrVTUDv/5pT03LOMubzIze+hGWEfj1ukPWs3WiymcdwKjwaLaLMh4pwWg7eieTF6fIrglDTTE6t/64jMP8qoXZHGvnn+PFgRX6p5b5HGV+gttGJNqlfRerncDK8/W/gaLJ9ogYfTZOz4FMEpaaYhlvf4229KrvpxQR3weBe8F+4apc8rIr/ccHK59kFD1k+2StlgV62XywNrzI+s0PEDPev736ekwcSxBovFNGp18eZCfD2+5CzLPV6S7m3X3+xdOG3JzeWC44q/Xtrffo68qaPjFdfeqnVl4+XQKWkwcazE07BzVojTpHuSHboGIzuvtsZAx/uPxXY8tTXSc8+CDJak0ndv1NYY0PjwnrByiH1+dzTdWJliPlqSA/6deOnV4shrA8d7pWp1J1e9ereqjug15ZmVXXyR974uRo8zNRE+lNVvRTNPc+I4P6KplDY+qVUJSw3fPXWa9jI0Smfh4z/5cIgnQqb8Pviq4b8bfM9KGR8Lnpsi6n+jl9Yv8fyNdDovergxgxv8/cVYAMYCMBaAsQCMBWAsAGMBGAvAWADGAjAWgLEAjAVgLABjARgLwFgAxgIwFoCxAIwFYCwAYwEYC8BYAMYCMBaAsQCMBWAsAGMBGAvAWADGAjAWgLEAjAVgLABjARiLiO4PkT8psDJAAggo9gAAAABJRU5ErkJggg==';
+      var photo3 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAOYSURBVHhe7ZzBS9tgGMaf7Y/oGB5K6zZBFCYUPOmlUNDLbnOCTMaQwsZOEwaCHhQEwZtMkLGDIji97aIgFIaeBgEPE6FjtngYY/0nti/JV5tE17qlqY/s+UFskuYTkt/3Pt/rwdwC8MtsgoTb9lOQICFkhCJrrVyze6KTFHtSdk8VQoeEkCEhZEgIGRJChoSQISFkSAgZEkKGhJAhIWRICBkSQoaEkCEhZEgIGRJChoSQISFkSAgZEkKGhJAhIWRICBkSQoaEkCEhZEgIGRJChoSQISFkSAgZEkKGhJAhIWRICBkSQoaEkHFtQmrroyj2TOPYHguf9gs5mPb+7zq6La1X7QU3hSpKT6L3kfwESqhCcni8X/NeROBt756isjiI4lzJfp8A3kQYRenMHsfkeG4Qzsjnxj2UtzCEDawkLKUzkTW8jFdj5nN778ZEVN98DW8mM/bIJY/CTM58nuBnm6RfRsfWkFT3n26mhM1ALFwabWdrWApc426bB/a7erRMbZh9BzsFe02wGpuO56JjQmqnjvnZiztp/9jHjYA9PLSxsGBmoBttoYflRlFhFpgJxIeJwMOp+kPNIP/BPxeKyvm8++UVxl8R83tmFx1kZ94iH7qH9tIRIW5HtbINczMv0WfP+bgPcPn8XGrytclp4Hu1XiVm9q+amT+2FY4PG4GHq2to/rqcOOMji7qpwKyRGo6x9pOQkEB0mG12Ed7MvXgz0YrJ4u4AUDmt+Idn+3COzNnurH8cwIvAo4/40izPY423lVevKrOod7mNSRsbh8tISEikyyrvxirzrszFWZnK9Nq91sQd75PHhNdpmcn2PrlusWNrSBwaEdagVj2xe62JO76BX8H4+q1FVP473ELSBeSCERbAaxIGHqG/WeXFHX+BCn6YCMSDe2i8cqy9kFdIBv0jJuu3x0MdUb1JGHpRbDyY9H0zfx04n4LV8BfjQ/iteLgLcxf5cRy6cfzcdnAJQB9Zqcnd8zY12iRMDNuLXNJFPLNts3ed/TvkyuNDmPUiMqbYM4gdLGAh5nrYCr1zkQBXeJ0bsaj/T0gIGRJChoSQISFkSAgZEkKGhJAhIWRICBkSQoaEkCEhZEgIGRJChoSQISFkSAgZEkKGhJAhIWRICBkSQoaEkCEhZEgIGRJChoSQISFkSAgZEkKGhJAhIWRICBkSQoaEkCEhZEgIGRJChoSQISFkhN7kIK4fVQgZEkIF8Bu8fEDKN7ru0wAAAABJRU5ErkJggg==';
+
+      var sampleChart2 = primitives.OrgDiagramPdfkit({
+        items: [
+          new primitives.OrgItemConfig({
+            id: 0,
+            parent: null,
+            title: "James Smith",
+            description: "VP, Public Sector",
+            image: photos.a,
+            link: "http://www.basicprimitives.com?userid=0"
+          }),
+          new primitives.OrgItemConfig({
+            id: 1,
+            parent: 0,
+            title: "Ted Lucas",
+            description: "VP, Human Resources",
+            image: photos.b,
+            templateName: "contactTemplate2",
+            link: "http://www.basicprimitives.com?userid=1"
+          }),
+          new primitives.OrgItemConfig({
+            id: 2,
+            parent: 0,
+            title: "Fritz Stuger",
+            description: "Business Solutions, US",
+            image: photos.c,
+            templateName: "contactTemplate3",
+            link: "http://www.basicprimitives.com?userid=2"
+          })
+        ],
+        cursorItem: null,
+        hasSelectorCheckbox: primitives.Enabled.False,
+        templates: [getContactTemplate2(), getContactTemplate3()],
+        onItemRender: onCustomTemplateRender
+      });
+
+      function getContactTemplate2() {
+        var result = new primitives.TemplateConfig();
+        result.name = "contactTemplate2";
+        result.itemTemplate = "PDFKit does not use HTML template.";
+        result.itemSize = new primitives.Size(220, 120);
+        result.highlightPadding = new primitives.Thickness(2, 2, 2, 2);
+        return result;
+      }
+
+      function getContactTemplate3() {
+        var result = new primitives.TemplateConfig();
+        result.name = "contactTemplate3";
+        result.itemTemplate = "PDFKit does not use HTML template.";
+        result.itemSize = new primitives.Size(140, 100);
+        result.highlightPadding = new primitives.Thickness(2, 2, 2, 2);
+        return result;
+      }
+
+      function onCustomTemplateRender(doc, position, data) {
+        var itemConfig = data.context,
+          itemTitleColor = itemConfig.itemTitleColor != null ? itemConfig.itemTitleColor : Colors.RoyalBlue,
+          color = "white",
+          contentSize = new primitives.Size(position.width, position.height);
+
+        contentSize.width -= 2;
+        contentSize.height -= 2;
+
+        doc.save();
+
+        switch(data.templateName) {
+          case "contactTemplate2":
+            /* item border */
+            doc.roundedRect(position.x, position.y, position.width, position.height, 4)
+              .lineWidth(1)
+              .stroke('#dddddd');
+
+            /* title background */
+            doc.fillColor(itemTitleColor)
+              .roundedRect(position.x + 2, position.y + 2, (contentSize.width - 4), 18, 2)
+              .fill();
+
+            /* title */
+            doc.fillColor(color)
+              .font('Helvetica', 12)
+              .text(itemConfig.title, position.x + 4, position.y + 7, {
+                ellipsis: true,
+                width: (contentSize.width - 4 - 4 * 2),
+                height: 16,
+                align: 'left'
+              });
+
+            /* photo */
+            if (itemConfig.image != null) {
+              doc.image(itemConfig.image, position.x + 3, position.y + 24);
+            }
+            /* photo frame */
+            doc.rect(position.x + 3, position.y + 24, 50, 60)
+              .stroke('#cccccc');
+
+            /* description */
+            doc.fillColor('black')
+              .font('Helvetica', 10)
+              .text(itemConfig.description, position.x + 56, position.y + 24, {
+                ellipsis: true,
+                width: (contentSize.width - 4 - 56),
+                height: 74,
+                align: 'left'
+              });
+            
+            break;
+          case "contactTemplate3":
+            /* item border */
+            doc.roundedRect(position.x, position.y, position.width, position.height, 4)
+              .lineWidth(1)
+              .stroke('#dddddd');
+
+            /* title background */
+            doc.fillColor(itemTitleColor)
+              .roundedRect(position.x + 2, position.y + 2, (contentSize.width - 4), 18, 2)
+              .fill();
+
+            /* title */
+            doc.fillColor(color)
+              .font('Helvetica', 12)
+              .text(itemConfig.title, position.x + 4, position.y + 7, {
+                ellipsis: true,
+                width: (contentSize.width - 4 - 4 * 2),
+                height: 16,
+                align: 'left'
+              });
+
+            /* photo */
+            if (itemConfig.image != null) {
+              doc.image(itemConfig.image, position.x + 3, position.y + 24);
+            }
+            /* photo frame */
+            doc.rect(position.x + 3, position.y + 24, 50, 60)
+              .stroke('#cccccc');
+
+            /* description */
+            doc.fillColor('black')
+              .font('Helvetica', 10)
+              .text(itemConfig.description, position.x + 56, position.y + 24, {
+                ellipsis: true,
+                width: (contentSize.width - 4 - 56),
+                height: 74,
+                align: 'left'
+              });
+            break
+        }
+        doc.restore();
+      }
+
+      var size = sampleChart2.draw(doc, 30, 60);
+
       doc.restore();
 
       doc.end();

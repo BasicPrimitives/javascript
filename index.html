@@ -43,6 +43,12 @@
             }
           },
           {
+            label: "Cross-branch alignment",
+            frameworks: {
+              javascript: "samples/javascript.controls/DemoCrossBranchAlignment.html"
+            }
+          },
+          {
             label: "Cross Team Working Group",
             frameworks: {
               javascript: "samples/javascript.controls/DemoCrossTeamGroup.html"
@@ -119,7 +125,13 @@
             }
           },
           {
-            label: "Drag & Drop Demo",
+            label: "jQuery UI Widget Example",
+            frameworks: {
+              javascript: "samples/jquery.widgets/CaseFirstOrganizationalChartWidget.html"
+            }
+          },
+          {
+            label: "Vanilla JavaScript Drag & Drop Demo",
             frameworks: {
               javascript: "samples/javascript.controls/DemoDragNDrop.html"
             }
@@ -130,15 +142,27 @@
         label: "PDFkit Specific Use Cases",
         items: [
           {
-            label: "Page Size Organizational Chart",
+            label: "Auto size Organizational Chart to fit into Page",
             frameworks: {
               pdfkit: "samples/pdfkit.plugins/AutoSizeOrgDiagram.html"
             }
           },
           {
-            label: "Page Size Family Diagram",
+            label: "Auto size Page to fit Organizational Chart",
+            frameworks: {
+              pdfkit: "samples/pdfkit.plugins/AutoSizePageToFitOrgDiagram.html"
+            }
+          },
+          {
+            label: "Auto size Family Chart to fit into Page",
             frameworks: {
               pdfkit: "samples/pdfkit.plugins/AutoSizeFamDiagram.html"
+            }
+          },
+          {
+            label: "Auto size Page to Family Chart",
+            frameworks: {
+              pdfkit: "samples/pdfkit.plugins/AutoSizePageToFitFamDiagram.html"
             }
           },
           {
@@ -243,6 +267,13 @@
               javascript: "samples/javascript.controls/CaseItemAndGroupTitleColors.html",
               pdfkit: "samples/pdfkit.plugins/ItemAndGroupTitleColors.html"
             }
+          },
+          {
+            label: "Group title - Custom Template",
+            frameworks: {
+              javascript: "samples/javascript.controls/CaseGroupTitleTemplate.html",
+              pdfkit: "samples/pdfkit.plugins/GroupTitleTemplate.html"
+            }
           }
         ]
       },
@@ -254,6 +285,12 @@
             frameworks: {
               javascript: "samples/javascript.controls/CaseChildrenPlacementType.html",
               pdfkit: "samples/pdfkit.plugins/ChildrenPlacementType.html"
+            }
+          },
+          {
+            label: "Cross-branch alignment",
+            frameworks: {
+              javascript: "samples/javascript.controls/CaseCrossBranchAlignment.html"
             }
           },
           {
@@ -323,7 +360,7 @@
             }
           },
           {
-            label: "Skip levels",
+            label: "Skip levels with invisible items",
             frameworks: {
               javascript: "samples/javascript.controls/CaseSkippedLevels.html"
             }
@@ -372,9 +409,10 @@
             }
           },
           {
-            label: "Labels cascades over connection lines in family chart",
+            label: "Labels cascades over connection lines in family chart. Custom label template.",
             frameworks: {
-              javascript: "samples/javascript.controls/CaseLabelsCascadesInFamilyChart.html"
+              javascript: "samples/javascript.controls/CaseLabelsCascadesInFamilyChart.html",
+              pdfkit: "samples/pdfkit.plugins/LabelsCascadesInFamilyChart.html"
             }
           },
           {
@@ -492,6 +530,12 @@
             frameworks: {
               javascript: "samples/javascript.controls/CaseLevelAnnotation.html",
               pdfkit: "samples/pdfkit.plugins/LevelAnnotation.html"
+            }
+          },
+          {
+            label: "Level Annotation - Custom Templates",
+            frameworks: {
+              javascript: "samples/javascript.controls/CaseLevelAnnotationTemplate.html"
             }
           },
           {

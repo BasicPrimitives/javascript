@@ -18,6 +18,7 @@
     var /* Layout */
       optionsRender = javascriptsamples.getOrgDiagramOptionsRender({
         pageFitMode: primitives.PageFitMode.FitToPage,
+        alignBranches: false,
         orientationType: primitives.OrientationType.Top,
         verticalAlignment: primitives.VerticalAlignmentType.Middle,
         horizontalAlignment: primitives.HorizontalAlignmentType.Center,
@@ -446,6 +447,17 @@
           groupTitle: "Partner"
         }),
         new primitives.OrgItemConfig({
+          id: 1400,
+          parent: 14,
+          title: "GP 14 Assistant",
+          description: "Assistant on right",
+          image: "../images/photos/g.png",
+          itemType: primitives.ItemType.Assistant,
+          adviserPlacementType: primitives.AdviserPlacementType.Right,
+          groupTitleColor: primitives.Colors.Green,
+          levelOffset: 2
+        }),
+        new primitives.OrgItemConfig({
           id: 15,
           parent: 13,
           title: "Adviser 15",
@@ -562,6 +574,14 @@
           itemType: primitives.ItemType.Adviser,
           adviserPlacementType: primitives.AdviserPlacementType.Right
         }, {
+          id: 127,
+          parent: 27,
+          title: "Child of Adviser 27",
+          description: "Extra Child",
+          image: "../images/photos/a.png",
+          itemType: primitives.ItemType.Regular,
+          adviserPlacementType: primitives.AdviserPlacementType.Right
+        }, {
           id: 28,
           parent: 7,
           title: "Assistant 28",
@@ -577,11 +597,47 @@
           image: "../images/photos/s.png",
           itemType: primitives.ItemType.Assistant,
           adviserPlacementType: primitives.AdviserPlacementType.Left
+        }, {
+          id: 280,
+          parent: 7,
+          title: "Assistant 280",
+          description: "Assistant on right",
+          image: "../images/photos/s.png",
+          itemType: primitives.ItemType.Assistant,
+          adviserPlacementType: primitives.AdviserPlacementType.Right,
+          levelOffset: 1
+        }, {
+          id: 290,
+          parent: 7,
+          title: "Assistant 290",
+          description: "Assistant on left",
+          image: "../images/photos/s.png",
+          itemType: primitives.ItemType.Assistant,
+          adviserPlacementType: primitives.AdviserPlacementType.Left,
+          levelOffset: 1
+        }, {
+          id: 291,
+          parent: 7,
+          title: "Assistant 291",
+          description: "Assistant on left",
+          image: "../images/photos/s.png",
+          itemType: primitives.ItemType.Assistant,
+          adviserPlacementType: primitives.AdviserPlacementType.Left,
+          levelOffset: 3
+        }, {
+          id: 292,
+          parent: 7,
+          title: "Assistant 292",
+          description: "Assistant on left",
+          image: "../images/photos/s.png",
+          itemType: primitives.ItemType.Assistant,
+          adviserPlacementType: primitives.AdviserPlacementType.Left,
+          levelOffset: 4
         }
       ]);
 
 			/* Add some regular children to item having Partners attached 
-			   These chidlren are shared by their parent and paarents partner items. */
+			   These children are shared by their parent and parents partner items. */
 
       var commonChildren = [];
 

@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Group title - Custom Template</title>
+
+	
+	<script type="text/javascript" src="../../primitives.js"></script>
+	<link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+		var control;
+
+		document.addEventListener('DOMContentLoaded', function () {
+			var options = new primitives.OrgConfig();
+
+			var items = [
+				new primitives.OrgItemConfig({
+					id: 0,
+					parent: null,
+					title: "James Smith",
+					description: "VP, Public Sector",
+					groupTitle: "Group 1",
+					image: "../images/photos/a.png"
+				}),
+				new primitives.OrgItemConfig({
+					id: 1,
+					parent: 0,
+					title: "Ted Lucas",
+					description: "VP, Human Resources",
+					image: "../images/photos/b.png",
+					groupTitle: "Group 2",
+					groupTitleColor: primitives.Colors.Black
+				}),
+				new primitives.OrgItemConfig({
+					id: 2,
+					parent: 0,
+					title: "Fritz Stuger",
+					description: "Business Solutions, US",
+					image: "../images/photos/c.png",
+					groupTitle: "Group 1"
+				})
+			];
+
+			options.items = items;
+			options.cursorItem = 0;
+			options.itemTitleFirstFontColor = primitives.Colors.White;
+			options.itemTitleSecondFontColor = primitives.Colors.Black;
+			options.groupTitleOrientation = primitives.TextOrientationType.RotateRight;
+			options.onGroupTitleRender = function(data) {
+				var itemConfig = data.context;
+				var element = data.element;
+				element.innerHTML = "";
+				element.appendChild(primitives.JsonML.toHTML(["table",
+					{
+						"style": {
+							fontSize: "12px",
+							fontFamily: "Arial, Helvetica, sans-serif",
+							fontWeight: "normal",
+							fontStyle: "normal",
+							color: "white",
+							position: "absolute",
+							padding: 0,
+							margin: 0,
+							textAlign: "center",
+							lineHeight: 1,
+							transformOrigin: "center center",
+							transform: "rotate(90deg)",
+							textOverflow: "ellipsis",
+							whiteSpace: "nowrap",
+							overflow: "hidden",
+							tableLayout: "fixed",
+							maxWidth: "100px",
+    						maxHeight: "20px",
+							width: "100px",
+							height: "20px",
+							left: "-40px",
+							top: "40px",
+							background: itemConfig.groupTitleColor,
+							borderRadius: "4px"
+						},
+						onclick: function(event) { 				
+							var message = "User clicked on group title: '" + itemConfig.groupTitle + "' of '" + itemConfig.title + "'.";
+							alert(message);
+							event.stopPropagation();
+						}
+					},
+					["tbody",
+						["tr",
+							["td",
+								{
+								"style": {
+									"verticalAlign": "middle",
+									"padding": 0,
+									"textOverflow": "ellipsis",
+									"whiteSpace": "nowrap",
+									"overflow": "hidden"
+								}
+								},
+								itemConfig.groupTitle
+							]
+						]
+					]
+				]));
+			};
+
+			control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
+		});
+
+	</script>
+
+</head>
+<body>
+	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
+</body>
+</html>

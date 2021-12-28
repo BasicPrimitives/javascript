@@ -109,6 +109,13 @@ describe("Screen Shots", () => {
     })
   });
 
+  it('CaseCrossBranchAlignment', async () => {
+    await testByTemplate({
+      url: "http://localhost:8080/samples/javascript.controls/CaseCrossBranchAlignment.html",
+      imageName: "CaseCrossBranchAlignment"
+    })
+  });
+
   it('CaseConnectorAnnotation', async () => {
     await testByTemplate({
       url: "http://localhost:8080/samples/javascript.controls/CaseConnectorAnnotation.html",

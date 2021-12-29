@@ -9,6 +9,7 @@ Family Layout
 * Fix loops for looped parent-child nodes
 
 Organizational Chart Layout
+* Add `ChildrenPlacementType.Fork` layout
 * Add new item types to draw org diagram in all directions. Star Layered Layout. Preserve layers as a core feature. 
 * Fix inactive cursor neighbors nodes visibility in PageFitMode.SelectedItemsOnly mode
 

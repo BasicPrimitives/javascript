@@ -1,5 +1,6 @@
 ﻿import Family from '../../algorithms/Family';
 import Tree from '../../algorithms/Tree';
+import BranchAligner from './visualTreeBuilder/BranchAligner';
 import VisualTreeBuilder from './visualTreeBuilder/VisualTreeBuilder';
 
 export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeOptionTask) {
@@ -8,6 +9,7 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
     _rightMargins,
     _navigationFamily, /* Family structure where key: TreeItem.id and value: TreeItem */
     _treeItemCounter,
+    _branchAligner,
     _visualTreeBuilder = VisualTreeBuilder();
 
   function process() {
@@ -21,11 +23,13 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
       ({ 
         visualTree: _visualTree, 
         navigationFamily: _navigationFamily,
-        treeItemCounter: _treeItemCounter 
+        treeItemCounter: _treeItemCounter,
+        branchAligner: _branchAligner
       } = _visualTreeBuilder.build(orgTree, _treeItemCounter, activeItems, options));
     } else {
       _visualTree = Tree();
       _navigationFamily = Family();
+      _branchAligner = BranchAligner();
     }
 
     ({
@@ -86,6 +90,10 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
     return _navigationFamily;
   }
 
+  function getBranchAligner() {
+    return _branchAligner;
+  }
+
   function getLeftMargins() {
     return _leftMargins;
   }
@@ -104,6 +112,7 @@ export default function VisualTreeTask(orgTreeTask, activeItemsTask, visualTreeO
     getLogicalFamily: getLogicalFamily,
     getLeftMargins: getLeftMargins,
     getRightMargins: getRightMargins,
-    getMaximumId: getMaximumId
+    getMaximumId: getMaximumId,
+    getBranchAligner: getBranchAligner
   };
 };

@@ -21,7 +21,7 @@ export default function OrgItemsOptionTask(optionsTask, defaultItemConfig) {
         placeAssistantsAboveChildren: new EnumerationReader(Enabled, false, defaultItemConfig.placeAssistantsAboveChildren),
         isVisible: new ValueReader(["boolean"], false, defaultItemConfig.isVisible),
         isActive: new ValueReader(["boolean"], false, defaultItemConfig.isActive),
-        levelOffset: new ValueReader(["number"], true)
+        levelOffset: new ValueReader(["number"], false, null)
       }),
       true,
       "id",

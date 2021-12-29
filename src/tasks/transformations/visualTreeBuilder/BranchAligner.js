@@ -28,10 +28,10 @@ function RowKeyGenerator() {
 
 function Row(id) {
   this.id = id;
+  this.rowType = RowType.Items;
   this.index = 0;
   this.offset = 0;
   this.extend = true; /* indicates that we need to keep branches of this row children above subsequent rows */
-  this.nodes = [];
   this.depth = 0;
   
   this.groups = [];
@@ -118,7 +118,7 @@ function BranchAligner() {
       row.offset = offset || 0;
       row.rowType = rowType;
       _rowsTree.add(parentRowId, rowId, row);
-    };
+    }
     nodes.forEach(child => {
       _rowHash[child.id] = rowId;
     });
@@ -127,10 +127,8 @@ function BranchAligner() {
   /* measure depth of rows in rowsTree, count number of assistants and child rows, find depth of partner's branches */
   function align(debug) {
     _rowsTree.loopPostOrder(this, function (rowId, row, parentRowId, parentRow) {
-        // console.log(rowId + "  " + Object.entries(RowType).filter(([name, value]) => value == row.rowType)[0][0]  + " parent=" + parentRowId + " extend=" + row.extend);
         row.depth = row.getDepth() + row.offset;
         if(parentRow != null) {
-            //console.log(rowId + "  depth = " + row.depth);
             parentRow.addRowDepth(row.rowType, row.extend, row.index, row.depth);
         }
     });
@@ -157,6 +155,17 @@ function BranchAligner() {
     var childRow = (row.groups[groupType] || [])[index];
     return (childRow && childRow[0]) || 1;
   }
+
+  function getGroupSize(nodeId, groupType) {
+    var rowId = _rowHash[nodeId];
+    var row = _rowsTree.node(rowId);
+    if(row) {
+      if(row.groups.hasOwnProperty(groupType)){
+        return row.groups[groupType].length; 
+      } 
+    }
+    return 0;
+  }  
 
   function getRowsDepth(nodeId, groupType) {
     var rowId = _rowHash[nodeId];
@@ -190,7 +199,8 @@ function BranchAligner() {
       loopGroupTypes: loopGroupTypes,
       getRowDepth: getRowDepth,
       getRowsDepth: getRowsDepth,
-      loopRows: loopRows
+      loopRows: loopRows,
+      getGroupSize: getGroupSize
   }
 }
 

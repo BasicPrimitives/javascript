@@ -1,8 +1,9 @@
 import { ItemType } from '../../enums';
 import getMergedIntervals from '../../algorithms/getMergedIntervals';
 import Interval from '../../graphics/structs/Interval';
+import { GroupType } from '../transformations/visualTreeBuilder/enums';
 
-export default function OrgLogicalLevelsPlacementTask(orgTreeTask, alignDiagramTask) {
+export default function OrgLogicalLevelsPlacementTask(orgTreeTask, visualTreeTask, alignDiagramTask) {
   var _data = {
     positions: []
   };
@@ -16,13 +17,19 @@ export default function OrgLogicalLevelsPlacementTask(orgTreeTask, alignDiagramT
     var intervals = [],
       orgTree = orgTreeTask.getOrgTree(),
       itemsPositions = alignDiagramTask.getItemsPositions(),
+      branchAligner = visualTreeTask.getBranchAligner(),
       visited = {};
+
     orgTree.loopLevels(this, function(nodeId, node, levelIndex) {
       if(node.itemType == ItemType.Regular) {
         if(node.isVisible) {
           var itemPosition = itemsPositions[nodeId];
           if(itemPosition) {
-            var interval = new Interval(itemPosition.topConnectorShift, itemPosition.bottomConnectorShift - 1, levelIndex + node.levelOffset)
+            var levelOffset = node.levelOffset;
+            if(levelOffset === null) {
+              levelOffset = branchAligner.getGroupSize(node.parent, GroupType.RowChildren);
+            }
+            var interval = new Interval(itemPosition.topConnectorShift, itemPosition.bottomConnectorShift - 1, levelIndex + levelOffset)
             var key = interval.toString();
             if(!visited[key]) {
               visited[key] = true;

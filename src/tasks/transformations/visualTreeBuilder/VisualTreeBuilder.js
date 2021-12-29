@@ -30,11 +30,12 @@ export default function VisualTreeBuilder() {
     _treeItemCounter = maximumId;
     _activeItems = activeItems;
     
-    var {visualTree, navigationFamily} = createVisualTreeItems(orgTree, options, activeItems);
+    var {visualTree, navigationFamily, branchAligner} = createVisualTreeItems(orgTree, options, activeItems);
 
     return {
         visualTree: visualTree,
         navigationFamily: navigationFamily.getFamily(),
+        branchAligner: branchAligner,
         treeItemCounter: _treeItemCounter
     };
   }
@@ -408,7 +409,8 @@ export default function VisualTreeBuilder() {
 
     return {
         visualTree: visualTree,
-        navigationFamily: navigationFamily
+        navigationFamily: navigationFamily,
+        branchAligner: branchAligner
     }
   }
 

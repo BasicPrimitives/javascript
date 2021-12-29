@@ -1,3 +1,5 @@
+#### Version 6.5.1
+* Fixed level index for regular children
 #### Version 6.5.0
 **Warning**: Non-backward compatible API changes!
 * Added `alignBranches` option to `OrgConfig`.

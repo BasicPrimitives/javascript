@@ -64,105 +64,31 @@
       options.arrowsDirection = primitives.GroupByType.Children;
       options.placeAdvisersAboveChildren = true;
 
-      options.annotations = [
-          {
+      options.annotations = (new Array(10).fill(0)).map((_, index) => {
+        return (index%2 == 0) ? {
             annotationType: primitives.AnnotationType.Level,
-            levels: [0],
-            title: "Level 0",
+            levels: [index],
+            title: "Level " + index.toString(),
             titleColor: primitives.Colors.RoyalBlue,
             offset: new primitives.Thickness(0, 0, 0, -1),
             lineWidth: new primitives.Thickness(0, 0, 0, 0),
-            opacity: 0,
+            opacity:  0,
             borderColor: primitives.Colors.Gray,
             fillColor: primitives.Colors.Gray,
             lineType: primitives.LineType.Dotted
-          },
-          {
+          } : {
             annotationType: primitives.AnnotationType.Level,
-            levels: [1],
-            title: "Level 1",
+            levels: [index],
+            title: "Level " + index.toString(),
             titleColor: primitives.Colors.RoyalBlue,
             offset: new primitives.Thickness(0, 0, 0, -1),
             lineWidth: new primitives.Thickness(0, 0, 0, 0),
-            opacity: 0.08,
+            opacity:  0.08,
             borderColor: primitives.Colors.Gray,
             fillColor: primitives.Colors.Gray,
             lineType: primitives.LineType.Dotted
-          },
-          {
-            annotationType: primitives.AnnotationType.Level,
-            levels: [2],
-            title: "Level 2",
-            titleColor: primitives.Colors.RoyalBlue,
-            offset: new primitives.Thickness(0, 0, 0, -1),
-            lineWidth: new primitives.Thickness(0, 0, 0, 0),
-            opacity: 0,
-            borderColor: primitives.Colors.Gray,
-            fillColor: primitives.Colors.Gray,
-            lineType: primitives.LineType.Dotted
-          },
-          {
-            annotationType: primitives.AnnotationType.Level,
-            levels: [3],
-            title: "Level 3",
-            titleColor: primitives.Colors.RoyalBlue,
-            offset: new primitives.Thickness(0, 0, 0, -1),
-            lineWidth: new primitives.Thickness(0, 0, 0, 0),
-            opacity: 0.08,
-            borderColor: primitives.Colors.Gray,
-            fillColor: primitives.Colors.Gray,
-            lineType: primitives.LineType.Dotted
-          },
-          {
-            annotationType: primitives.AnnotationType.Level,
-            levels: [4],
-            title: "Level 4",
-            titleColor: primitives.Colors.RoyalBlue,
-            offset: new primitives.Thickness(0, 0, 0, -1),
-            lineWidth: new primitives.Thickness(0, 0, 0, 0),
-            opacity: 0,
-            borderColor: primitives.Colors.Gray,
-            fillColor: primitives.Colors.Gray,
-            lineType: primitives.LineType.Dotted
-          },
-          {
-            annotationType: primitives.AnnotationType.Level,
-            levels: [5],
-            title: "Level 5",
-            titleColor: primitives.Colors.RoyalBlue,
-            offset: new primitives.Thickness(0, 0, 0, -1),
-            lineWidth: new primitives.Thickness(0, 0, 0, 0),
-            opacity: 0.08,
-            borderColor: primitives.Colors.Gray,
-            fillColor: primitives.Colors.Gray,
-            lineType: primitives.LineType.Dotted
-          },
-          {
-            annotationType: primitives.AnnotationType.Level,
-            levels: [6],
-            title: "Level 6",
-            titleColor: primitives.Colors.RoyalBlue,
-            offset: new primitives.Thickness(0, 0, 0, -1),
-            lineWidth: new primitives.Thickness(0, 0, 0, 0),
-            opacity: 0,
-            borderColor: primitives.Colors.Gray,
-            fillColor: primitives.Colors.Gray,
-            lineType: primitives.LineType.Dotted
-          },
-          {
-            annotationType: primitives.AnnotationType.Level,
-            levels: [7],
-            title: "Level 7",
-            titleColor: primitives.Colors.RoyalBlue,
-            offset: new primitives.Thickness(0, 0, 0, -1),
-            lineWidth: new primitives.Thickness(0, 0, 0, 0),
-            opacity: 0.08,
-            borderColor: primitives.Colors.Gray,
-            fillColor: primitives.Colors.Gray,
-            lineType: primitives.LineType.Dotted
-          }
-        ];
-
+          };
+      });
       control = primitives.OrgDiagram(document.getElementById("basicdiagram"), options);
 
       window.addEventListener('resize', function (event) {

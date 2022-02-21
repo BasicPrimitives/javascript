@@ -6,10 +6,6 @@
 * [Adding new items at runtime](AddingNewItemsToChartAtRuntime.md)
 * [Diagram Sizing](DiagramSizing.md)
 * [Zoom Using CSS Scale Transform](ZoomWithCSSScaleTransform.md)
-
-## Integration
-* [React Demos](https://github.com/BasicPrimitives/react-demo)
-* [AngularJS Organizational Chart Directive](AngularJSFirstOrganizationalChartDirective.md)
 * [PDFkit Specific Use Cases](PDFkitSpecific.md)
 
 ## User Interface Events &amp; Options

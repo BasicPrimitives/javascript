@@ -280,7 +280,7 @@ Callback for iterating family nodes level by level
 
  `loopLevels(thisArg, parentAligned, onItem)` 
 
-Loops through nodes of family structure level by level. This function aligns nodes top or bottom.
+Function loops through nodes of family structure level by level.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -293,7 +293,7 @@ Loops through nodes of family structure level by level. This function aligns nod
 
 Callback for iterating family nodes level by level
 
- Returns: `number` - returns break to break the loop and exit. returns skip to skip node's branch traversing.
+ Returns: `number` - returns `break` to break the loop and exit, `skip` to skip node's branch traversing.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -303,7 +303,7 @@ Callback for iterating family nodes level by level
 
  `loopNeighbours(thisArg, itemid, onItem)` 
 
-Loops through the node neighbours of the family structure level by level
+Loops through the node neighbors of the family structure level by level
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 

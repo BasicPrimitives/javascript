@@ -1,4 +1,6 @@
 #### Version 6.5.1
+* Added Angular 13 components and samples, see GtiHub [angular](https://github.com/BasicPrimitives/angular) repository.
+* Removed deprecated AngularJS directive sample.
 * Fixed level index for regular children
 #### Version 6.5.0
 **Warning**: Non-backward compatible API changes!

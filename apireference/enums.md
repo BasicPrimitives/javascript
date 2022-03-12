@@ -1,6 +1,6 @@
 # Enumerations
 ## <a name="AdviserPlacementType" id="AdviserPlacementType">AdviserPlacementType</a>
-The enumeration sets leftward or rightward item placement relative to the referenced item. In the case of assistants or advisers, the referenced node is their immediate parent. In the case of the family diagram, the referenced node is a sibling.
+The adviser placement type controls assistants and advisers placement relative to the parent node, on the left or the right side of the parent's hierarchy in the organizational chart. In the case of the family diagram, the position is defined relative to siblings.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
@@ -9,29 +9,29 @@ The enumeration sets leftward or rightward item placement relative to the refere
  | `Right` | number | `3` | Right side | 
 
 ## <a name="AnnotationType" id="AnnotationType">AnnotationType</a>
-Defines type of on-screen and in-layout annotation object. Annotations are geometrical figures drawn around or bound to existing nodes of the diagram.
+Annotation type defines the type of on-screen and in-layout annotation object. Annotations are geometrical figures drawn around or bound to existing nodes of the diagram.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `Background` | number | `4` | The background annotation highlights nodes via drawing the rectangular shape in the node's background. If the same style annotations of neighboring nodes overlap, control merges them into one continuous polygon geometry. | 
+ | `Background` | number | `4` | The background annotation highlights nodes via drawing the rectangular shape in the node's background. If annotations of neighboring nodes overlap, control merges them into one continuous polygon geometry. | 
  | `Connector` | number | `0` | The connector annotation displays a spline between two nodes of the diagram. They are drawn on top and across the existing diagram layout, and they don't affect nodes placement. If available space between nodes is not enough to display connector annotation, then control draws it outside on the side of them. | 
  | `HighlightPath` | number | `2` | Highlight path annotation traces a path between a given sequence of nodes over existing relation lines in the diagram. | 
- | `Label` | number | `3` | The in-layout label annotation display values over relation lines between nodes. The control preserves space for labels in the diagram layout so they don't overlap nodes. Label annotations are designed for auto-placement and bundling of connection lines between nodes when needed. | 
- | `Level` | number | `5` | Level annotation highlights same level nodes of the diagram via drawing continuous rectangular shape from side to side in their background. Level has optional title on the side of the diagram view area. Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the background and does not occupy space. | 
- | `Shape` | number | `1` | Shape annotation is a possibility to draw some geometrical shapes over several nodes of the diagram. | 
+ | `Label` | number | `3` | The in-layout label annotations display values over relation lines between nodes. The control reserves space for labels in the diagram layout to not overlap nodes. Label annotations are designed for auto-placement and bundling connection lines between nodes when needed. | 
+ | `Level` | number | `5` | Level annotation highlights the row of nodes of the diagram by drawing a continuous rectangular shape from side to side in their background. The level annotation has the optional title on the side of the diagram view area. The level's title is optionally placed inside or outside of the diagram. If placed inside, it is drawn in the background and does not occupy space. | 
+ | `Shape` | number | `1` | Shape annotation lets draw some geometrical figures over nodes of the diagram. | 
 
 ## <a name="ChildrenPlacementType" id="ChildrenPlacementType">ChildrenPlacementType</a>
-The enumeration defines the shape of children's formation. By default, control places children in a horizontal line below the parent node. On a large scale, this may result in the end-user having to scroll screens to view all of them. To compensate, we provide the option of placing all of the children of a parent node in a square/matrix formation. That will reduce sideways screen scrolling by compacting the child nodes into a much smaller area on the screen.
+The children's placement type enumeration defines the shape of children's formation. Control places children in a horizontal line below the parent node by default. In the case of many child nodes, this may result in the end-user having to scroll screens to view all of them. To compensate, we provide the option of placing all of the parent node's children in a square/matrix formation. That will reduce sideways screen scrolling by compacting the child nodes into a much smaller area on the screen.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `Auto` | number | `0` | Auto: This mode lets you set nodes layout at the component level and then redefine it for individual nodes if needed. | 
+ | `Auto` | number | `0` | Sets nodes layout at the component level | 
  | `Horizontal` | number | `2` | Horizontal layout | 
  | `Matrix` | number | `3` | Matrix formation of the nodes | 
  | `Vertical` | number | `1` | Vertical layout | 
 
 ## <a name="ConnectorLabelPlacementType" id="ConnectorLabelPlacementType">ConnectorLabelPlacementType</a>
-Label placement relative to connector annotation. Connector annotation is bound and drawn between two nodes defined by two properties: `fromItem` and `toItem`. Label can be placed close to "start", "end" nodes or in between of them along the connector line.
+Connector label placement type defines label placement relative to connector annotation endpoints. Connector annotation is bound and drawn between two nodes defined by the `fromItem` and the `toItem` properties. The label can be placed close to the start, end, or between them along the connector line.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
@@ -40,15 +40,15 @@ Label placement relative to connector annotation. Connector annotation is bound 
  | `To` | number | `2` | To | 
 
 ## <a name="ConnectorPlacementType" id="ConnectorPlacementType">ConnectorPlacementType</a>
-Connector placement type defines style of connector line drawing over diagram layout. It supports two options: the `Straight` is classic direct line connecting two nodes, this is the most expected style of connector annotation drawing over diagram, the second style is called `Offbeat` and it design to dynamically adopt to nodes mutual location and gap between them. It uses free hand line style drawing going from start to the end nodes. Since every diagram is packed with various connection lines, this annotation placement style is deliberately made not straight, so it can be noticeable on top of other lines of the diagram.
+Connector placement type defines style and shape of the connector line.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `Offbeat` | number | `0` | Places connector annotation in the way that it does not overlap underlying diagram connector lines. If nodes are close to each other and gap between them cannot fit annotation, then it will be drawn on the side of the nodes, so it will have enough space for arrow and label. | 
- | `Straight` | number | `1` | Straight line annotation between nodes. This annotation mode provides basic conflict resolution between annotations overlapping each other. If two or more straight annotations overlap each other then layout engine will add extra offset to them, so they will be drawn in parallel to each other. | 
+ | `Offbeat` | number | `0` | The offbeat connection line style places the connector line not to overlap or parallel the underlying diagram connector lines. If nodes are close to each other and the gap between them cannot fit annotation, it will be traced around the nodes to have enough space for arrows and labels. | 
+ | `Straight` | number | `1` | The straight option is a classic direct line connecting two nodes. The component provides conflict resolution between annotations overlapping each other. If two or more annotations overlap, the layout engine will add offset to them to be drawn parallel. | 
 
 ## <a name="ConnectorShapeType" id="ConnectorShapeType">ConnectorShapeType</a>
-Connector shape type defines number of lines and arrows at their ends drawn between nodes of the connector annotation. This feature combined with basic conflict resolution, which places overlapping annotations in parallel when they overlap each other, gives you full flexibility over variations of possible connector lines between two given nodes of diagram.
+Connector shape type defines the number of lines and arrows at their ends drawn between nodes of the connector annotation. The possibility to draw single lines, combined with conflict resolution, which places overlapping annotations in parallel when they overlap each other, provides flexibility to create an infinite variety of parallel lines and styles between nodes.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
@@ -57,13 +57,13 @@ Connector shape type defines number of lines and arrows at their ends drawn betw
  | `TwoWay` | number | `1` | Two parallel lines with single arrows | 
 
 ## <a name="ConnectorType" id="ConnectorType">ConnectorType</a>
-Connection lines style. This option is only applicable to nodes minimized to markers or lines. Full size nodes are always connected with squared connection lines
+The connector type option defines the base connection lines in the diagram. It is only applicable to nodes minimized to markers or lines. The templated nodes are always connected with squared connection lines
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `Angular` | number | `1` | Angular direct node to node connection lines | 
- | `Curved` | number | `2` | Curved direct node to node connection lines | 
- | `Squared` | number | `0` | Orthogonal connection lines | 
+ | `Angular` | number | `1` | Angular | 
+ | `Curved` | number | `2` | Curved | 
+ | `Squared` | number | `0` | Orthogonal | 
 
 ## <a name="ElbowType" id="ElbowType">ElbowType</a>
 Elbow style of connection lines
@@ -85,7 +85,7 @@ Defines option state.
  | `True` | number | `1` | Enabled | 
 
 ## <a name="GroupByType" id="GroupByType">GroupByType</a>
-This enumeration defines objects gravity in the chart relative to parents and children. For example connection lines can be drawn with arrows, so this enumeration controls direction of arrows up towards parents or down towards children in the hierarchy. The other example is nodes placement close to their immediate parents or immediate children in case when parents and children are offset from them by multiple levels in hierarchy.
+The group by type enumeration defines direction towards parents or children. For example, connection lines arrows direction can be towards parents or down towards children in the hierarchy. The other example is the placement of nodes close to their parents or children when we have multiple empty levels between parents and children of the node.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
@@ -103,18 +103,18 @@ Horizontal alignment
  | `Right` | number | `2` | Right | 
 
 ## <a name="ItemType" id="ItemType">ItemType</a>
-The enumeration defines child node placement relative to its parent node. By default, the control places all children that belong to the same parent as the horizontal line below it. That works for a regular hierarchy of nodes having the same type. In the organizational chart, we have a lot of exceptions and non-hierarchical relations between nodes. For this purpose, we provide custom item types to place nodes around the logical parent, which helps visually differentiate nodes logically belonging to the same parent.  These placement options give a lot of space for creating roles such as an Assistant, Adviser, various Partners, and co-heads in the organization.  Additionally, control allows shaping the same type of children into vertical and matrix formations and place them into multiple levels.
+The enumeration defines child nodes' placement relative to their parents. By default, all children of the same parent node are of the same rank and status are aligned below the parent in a horizontal line. However, for exceptional cases where the end-user wishes to have a child separate from the rest of its siblings, we provide custom child types that the end-user can use to place different ranking nodes anywhere around the parent node. These placement options give a lot of space for creating roles such as an Assistant, Adviser, various Partners, and co-heads in the organization.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `Adviser` | number | `2` | The adviser type places node on the right or left side of the parent. | 
+ | `Adviser` | number | `2` | The adviser type places node on the right or left side of the parent and attaches to it with a horizontal connection line. | 
  | `AdviserPartner` | number | `8` | The adviser partner is a variation of the limited partner. The difference is that it has an extra connection line to its logical parent. | 
  | `Assistant` | number | `1` | The assistant type places node at the row on the side of the connection line going from parent to its children. | 
  | `GeneralPartner` | number | `6` | The general partner type is an imitation of multiple inheritances in the organizational chart hierarchy. The general-partner node is drawn side by side with its logical parent, and control places regular children below them, so they visually look like parents. Another layout specifics of the general partner is that it is connected to its logical parent's parent. So visually, it becomes an immediate child of its grandparent. | 
  | `LimitedPartner` | number | `7` | The limited partner is a variation of the general partner. The only difference is that it is not connected to its logical grandparent. | 
- | `Regular` | number | `0` | The regular type places node below parent. | 
- | `SubAdviser` | number | `5` | The sub-adviser type places node on the right or left side of the parent. The connection line goes out of the top side of the sub-adviser node. | 
- | `SubAssistant` | number | `4` | The sub-assistant node type is a variation of the assistant node type. The sub-assistant places node at the row on the side of the connection line going from parent to its children. The connection line goes out of the top side of the node. | 
+ | `Regular` | number | `0` | The regular type places node below the parent. | 
+ | `SubAdviser` | number | `5` | The sub-adviser type places node on the right or left side of the parent and attaches to it with the connection line that goes out of the top side of the sub-adviser node. | 
+ | `SubAssistant` | number | `4` | The sub-assistant node type is a variation of the assistant type. It is placed on the side of the connection line going from parent to regular children and attached to it with the connection line going from the top of the node. | 
 
 ## <a name="LineType" id="LineType">LineType</a>
 Line style of connection lines.
@@ -126,7 +126,7 @@ Line style of connection lines.
  | `Solid` | number | `0` | Solid | 
 
 ## <a name="NavigationMode" id="NavigationMode">NavigationMode</a>
-Interactivity mode. Control implements standard behavior of classic desktop UI controls. It supports single selected node - cursor. It supports on mouse over node visual feedback - highlight. It supports selection of group of nodes - selected items. All that functionality can be disabled depending on your application requirements.
+It is possible to disable control interactivity depending on application requirements. The control implements the standard behavior of collection controls. It supports single node selection, mouse over visual feedback, and multiple node selection.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
@@ -136,15 +136,15 @@ Interactivity mode. Control implements standard behavior of classic desktop UI c
  | `Inactive` | number | `2` | No interactivity | 
 
 ## <a name="NeighboursSelectionMode" id="NeighboursSelectionMode">NeighboursSelectionMode</a>
-Neighbors selection mode. The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers. So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items of the diagram in full size and draw all other as markers. This enumeration controls visibility of neighbors of the cursor node in the auto fit mode. It allows to draw them in full size regardless of available space.
+Neighbors selection method defines the neighbors of the cursor node in the autofit mode. The auto-fit mode replaces nodes with small markers to fit the diagram into the screen view. Small nodes fit the diagram into the screen space, but they have no details. So our solution is to show the cursor, neighbors, and selected diagram items with templates and draw all others as markers.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `ParentsAndChildren` | number | `0` | Selects parents and children of the cursor item | 
- | `ParentsChildrenSiblingsAndSpouses` | number | `1` | Selects parents, children, and siblings of the cursor item. | 
+ | `ParentsAndChildren` | number | `0` | Parents and children of the cursor item | 
+ | `ParentsChildrenSiblingsAndSpouses` | number | `1` | Parents, children, and siblings of the cursor item. | 
 
 ## <a name="OrientationType" id="OrientationType">OrientationType</a>
-Controls diagram layout orientation. The control can be rotated in any direction, this is needed for arabic support and various layout.
+The orientation type defines diagram layout direction. The control can rotate diagrams in any direction; this is needed for Arabic support and other layouts.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
@@ -155,19 +155,19 @@ Controls diagram layout orientation. The control can be rotated in any direction
  | `Top` | number | `0` | Top | 
 
 ## <a name="PageFitMode" id="PageFitMode">PageFitMode</a>
-Fits diagram into available screen space. When diagram size significantly larger that available screen space, its scrolling and navigation becomes problematic, so we support automatic diagram fit into the screen space via rendering some of its nodes in form of small markers. Control supports several page fit mode options which can match your requirements depending on diagram layout, orientation and number of nodes. Autosize - this option is opposite to auto fit. It lets you expand control size to fit all diagram nodes full size without scroll bars.
+The page fit method defines how the control fits the diagram into available screen space. When the diagram size is significantly larger than the screen space, its scrolling and navigation become problematic, so the component automatically fits the diagram into the screen space via rendering some of its nodes in the form of small markers. The control supports several page fit method options which can match your requirements depending on the diagram layout, orientation, and the number of nodes.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `AutoSize` | number | `5` | This is opposite mode to auto fit. In this mode diagram controls its size, it sets its size to fit all nodes and render them full size using templates. | 
+ | `AutoSize` | number | `5` | The auto size option is opposite to the fit-to-page. It expands the control placeholder to fit the entire diagram without scrolling. | 
  | `FitToPage` | number | `3` | Fits diagram into the view so it has no scroll bars. | 
  | `None` | number | `0` | Disabled. All nodes are being rendered using their templates. | 
- | `PageHeight` | number | `2` | Fits diagram into the view hight, so it has no vertical scrollbar. | 
- | `PageWidth` | number | `1` | Fits diagram into the view width, so it has no horizontal scrollbar. | 
- | `SelectionOnly` | number | `6` | Renders all nodes as markers regardless of available screen space. Control selects and renders full size cursor, its neighbours and selected nodes only. Don't forget to disable selection path as well, so nodes from cursor up to the root are not selected. | 
+ | `PageHeight` | number | `2` | fits the diagram into the view hight, so it has no vertical scrollbar. | 
+ | `PageWidth` | number | `1` | Fits the diagram into the view width, so it has no horizontal scrollbar. | 
+ | `SelectionOnly` | number | `6` | It renders all nodes as markers regardless of available screen space, and only the cursor node, neighbors, and selected nodes are rendered with templates. Don't forget to disable the selection path mode, which forces all nodes from the cursor up to the root to be shown with templates. | 
 
 ## <a name="PlacementType" id="PlacementType">PlacementType</a>
-Defines element placement relative to rectangular area it is bound to.
+Defines element placement around the rectangular area it is bound to.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
@@ -186,20 +186,20 @@ Defines element placement relative to rectangular area it is bound to.
  | `TopRight` | number | `2` | Top Right | 
 
 ## <a name="RenderingMode" id="RenderingMode">RenderingMode</a>
-This enumeration is used to tell rendering callback functions current state of the template. It is needed for proper events binding and content updates.
+This enumeration is used to tell rendering callback functions the current state of the template. It is needed for proper events binding and content updates.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `Create` | number | `0` | Template is just created. | 
- | `Update` | number | `1` | Template is reused and update is needed. | 
+ | `Create` | number | `0` | Create | 
+ | `Update` | number | `1` | Update | 
 
 ## <a name="SelectionPathMode" id="SelectionPathMode">SelectionPathMode</a>
-Selection path mode. This enumeration controls visibility of nodes between cursor and the root of the diagram in the auto fit mode. It allows to draw them in full size regardless of available space and auto fit mode. The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers. So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items of the diagram in full size and draw all other diagram nodes as markers.
+The selection path enumeration controls nodes visibility between the cursor node and the root of the diagram in the auto-fit mode. It forces drawing of them with templates.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
- | `FullStack` | number | `1` | Selects cursor node parents up to the root are renders them full size regardless of available space. | 
- | `None` | number | `0` | No selection path | 
+ | `FullStack` | number | `1` | Snow all parent nodes with templates | 
+ | `None` | number | `0` | Disabled | 
 
 ## <a name="ShapeType" id="ShapeType">ShapeType</a>
 Shapes
@@ -225,18 +225,18 @@ Text rotation
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
  | `Auto` | number | `3` | Depends on other options. | 
- | `Horizontal` | number | `0` | Regular horizontal text | 
+ | `Horizontal` | number | `0` | Horizontal text | 
  | `RotateLeft` | number | `1` | Rotate text left for 90 degree. | 
  | `RotateRight` | number | `2` | Rotate text right for 90 degree. | 
 
 ## <a name="UpdateMode" id="UpdateMode">UpdateMode</a>
-Controls update of the diagram
+Defines update method of the diagram
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
  | `PositonHighlight` | number | `2` | Updates highlight position only | 
- | `Recreate` | number | `0` | Forces control to make a full chart redraw. It is equivalent to initial chart creation. It removes everything from placeholder and renders all elements again. | 
- | `Refresh` | number | `1` | Optimized refresh. It only updates visual elements which needs to be updated. | 
+ | `Recreate` | number | `0` | Forces control to make a full chart redraw. It is equivalent to initial chart creation. It removes everything from the placeholder and renders all elements again. | 
+ | `Refresh` | number | `1` | Optimized refresh. It only updates visual elements which need to be updated. | 
 
 ## <a name="VectorRelationType" id="VectorRelationType">VectorRelationType</a>
 Defines relation between two vectors
@@ -249,7 +249,7 @@ Defines relation between two vectors
  | `Opposite` | number | `3` | Opposite | 
 
 ## <a name="VerticalAlignmentType" id="VerticalAlignmentType">VerticalAlignmentType</a>
-Controls nodes vertical alignment inside row of nodes. If row of nodes contains nodes of multiple sizes then small nodes are vertically aligned relative to their large neighbours.
+The vertical alignment defines nodes alignment inside row's vertical boundaries. If a row of nodes contains nodes of multiple sizes, small nodes are vertically aligned relative to their bigger siblings.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
@@ -258,18 +258,18 @@ Controls nodes vertical alignment inside row of nodes. If row of nodes contains 
  | `Top` | number | `0` | Top | 
 
 ## <a name="Visibility" id="Visibility">Visibility</a>
-Minimal nodes visibility in the diagram. If auto fit of diagram into current page size is enabled, then this option controls minimum allowed size of diagram nodes.
+The enumeration defines nodes visibility in the diagram. If the diagram's auto-fit is enabled, this option controls the minimum allowed size of diagram nodes.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 
  | `Auto` | number | `0` | Selects best visibility mode. | 
- | `Dot` | number | `2` | Diagram draws nodes in form of markers | 
- | `Invisible` | number | `4` | Makes node invisible in layout. If node has no parents then its connection lines are hidden as well. | 
- | `Line` | number | `3` | Diagram only draws connection lines and hides actual nodes. | 
- | `Normal` | number | `1` | Regular template based diagram nodes | 
+ | `Dot` | number | `2` | Nodes are allowed to be replaced with markers | 
+ | `Invisible` | number | `4` | It hides the node and shows only its connection lines. If the node has no parents, its connection lines are hidden as well. | 
+ | `Line` | number | `3` | The component displays only connection lines, no nodes or markers visible in layout | 
+ | `Normal` | number | `1` | All nodes shown with templates | 
 
 ## <a name="ZOrderType" id="ZOrderType">ZOrderType</a>
-Option to draw annotation in the foreground or in the background of diagram nodes.
+Z-order type defines the annotation layer in the foreground or the background of diagram nodes.
 
 | Name | Type | Value | Description | 
 | --- | --- | --- | --- | 

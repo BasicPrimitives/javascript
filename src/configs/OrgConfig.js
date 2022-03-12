@@ -11,6 +11,12 @@ import Size from '../graphics/structs/Size';
  * @classdesc Organizational Chart configuration object. Use this object as a reference 
  * for available properties and their default values.
  * 
+ * Organizational Chart control has API options similar to regular UI collection controls.
+ * It supports single node selection with the `cursorItem` property, mouse click,
+ * or keyboard `Enter` key. The `highlightItem` functionality provides mouse over feedback
+ * and lets the user navigate diagram nodes with keyboard arrow keys. The `selectedItems`
+ * collection and checkboxes enable multi-select available in ListView and TreeView controls.
+ * 
  * @param {string} name
  */
 export default function OrgConfig(name) {
@@ -18,28 +24,26 @@ export default function OrgConfig(name) {
   this.classPrefix = "orgdiagram";
 
   /**
-   * Sets control navigation mode.
+   * The navigation mode property allows disabling control interactivity.
+   * By default, the control behaves like a regular collection control. It has a cursor to select
+   * a single item in the collection. So user can click and select any node in the diagram.
+   * The control has a highlight for mouseover feedback. So user can move the mouse and see highlight
+   * frame and callout callback annotation for a node under the cursor.
    * 
-   * By default control replicates interactivity of regular collection control. It has cursor to select single
-   * item in the collection. So user can click and select any node in the diagram. The control has highlight for mouse over feedback.
-   * So user can move mouse and see highlight frame and callout callback annotation for node under cursor.
-   * 
-   * By `Default` the control has both cursor and highlight. If they are disabled then control is rendered as a static image.
+   * By `Default`, the control has both cursor and highlight. If they are disabled, then control is rendered as a static image.
    * 
    * @type {NavigationMode}
    */
   this.navigationMode = NavigationMode.Default;
 
   /**
-   * Page fit mode. Minimizing nodes into markers and labels. This option provides a special mode that renders the diagram
-   * nodes in the form of markers. This is a highly scalable form that is capable of rendering large numbers of nodes
-   * while not affecting the rendering performance. With this, huge diagrams can be fit into available screen space.
-   * 
-   * When using a graphics editor to manually draw your diagrams, it is common place to have large gaps between the nodes.
-   * This can make the diagram/chart unreadable, hard to edit and navigate. On top of that, on a large scale the diagram could have screen size
-   * intervals between items. Admittedly the computer UI does allow the user to scale and fit the diagram in order to visualize it
-   * on a single screen. But in that case, the items become small and unreadable as there is no scaling priority and the items
-   * are just too small to be readable.
+   * The page fit mode option minimizes the diagram size via replacing nodes with markers and labels. 
+   * That mode can show a large number of nodes while not affecting the rendering performance.
+   * It can fit thousands of nodes into available screen space without losing usability. 
+   * On the other hand, when we use a graphics editor to draw our diagrams manually,
+   * it is common to have a sparse layout with significant gaps between the nodes.
+   * If we don't fit the graph, the space between nodes can easily make 
+   * the diagram/chart unusable hard to view, edit and navigate.
    * 
    * @group Auto Layout
    * @type {PageFitMode}
@@ -47,8 +51,7 @@ export default function OrgConfig(name) {
   this.pageFitMode = PageFitMode.FitToPage;
 
   /**
-   * Minimal nodes visibility in the diagram. If auto fit of the diagram into current page size is enabled, then
-   * this option controls minimum allowed size of the diagram nodes.
+   * The minimal nodes visibility option controls how small nodes of the diagram can be in auto-fit mode. 
    * 
    * @group Auto Layout
    * @type {Visibility}
@@ -56,8 +59,8 @@ export default function OrgConfig(name) {
   this.minimalVisibility = Visibility.Dot;
 
   /**
-   * Minimum visible levels option prevents top-level nodes from folding into markers. The option 
-   * accounts for organizational chart relations and `levelOffset` of individual items.
+   * The minimum visible levels option prevents top-level nodes from folding into markers.
+   * It accounts for organizational chart relations and the `levelOffset` of individual items.
    * 
    * @group Auto Layout
    * @type {number}
@@ -65,8 +68,7 @@ export default function OrgConfig(name) {
   this.minimumVisibleLevels = 1;
 
   /**
-   * Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction,
-   * this is needed for Arabic support and various layouts.
+   * The orientation property rotates the diagram layout. It is needed for right-to-left languages support and custom layouts.
    * 
    * @group Auto Layout
    * @type {OrientationType}
@@ -74,9 +76,10 @@ export default function OrgConfig(name) {
   this.orientationType = OrientationType.Top;
 
   /**
-   * Sets children horizontal alignment relative to their parent. The children by default are measured in size and then aligned 
-   * towards the parent node. If it is `Center` aligned then parent node is placed in the middle of the children. In the `Left`
-   * alignment mode parent is aligned to left of the children and vice versa for `Right` alignment.
+   * The horizontal alignment allows the transformation of hierarchy into a folder-like tree
+   * visualization, where the parent node is aligned with the first child. If alignment
+   * is set to center, then the parent node is aligned to the children's center.
+   * In the `Left` alignment mode parent is aligned to left most child and vice versa for the `Right` alignment.
    * 
    * @group Auto Layout
    * @type {HorizontalAlignmentType}
@@ -84,7 +87,9 @@ export default function OrgConfig(name) {
   this.horizontalAlignment = HorizontalAlignmentType.Center;
 
   /**
-   * Sets items vertical alignment relative to each other within one level of the hierarchy. 
+   * The vertical alignment sets nodes alignment inside row's vertical boundaries.
+   * If a row of nodes contains nodes of multiple sizes, small nodes
+   * are vertically aligned relative to their bigger siblings.
    * It does not change anything if diagram nodes are all of the same size.
    * 
    * @group Auto Layout
@@ -93,8 +98,8 @@ export default function OrgConfig(name) {
   this.verticalAlignment = VerticalAlignmentType.Middle;
 
   /**
-   * Sets arrows direction for connector lines. If this property set to `Parents` then arrows are drawn
-   * from logical children towards logical parents. By default diagram has no arrows.
+   * The arrows direction property shows arrows for connector lines. 
+   * If it is set to the `Parents`, arrows are drawn towards logical parents from logical children. 
    * 
    * @group Relation Lines
    * @type {GroupByType}
@@ -102,8 +107,8 @@ export default function OrgConfig(name) {
   this.arrowsDirection = GroupByType.None;
 
   /**
-   * Show extra horizontal arrows on top of long horizontal connection lines for the easy visual tracing 
-   * of relations between parents and children. By default it is off.
+   * Show extra horizontal arrows for long horizontal connection lines for the easy visual 
+   * tracking of relations between parents and children. By default, it is off.
    * 
    * @group Relation Lines
    * @type {boolean}
@@ -111,7 +116,7 @@ export default function OrgConfig(name) {
   this.showExtraArrows = false;
 
   /**
-   * Set minimum space for placement of extra arrows on horizontal connection lines. See `showExtraArrows` property.
+   * The extra arrows minimum space on horizontal connection lines. See `showExtraArrows` property.
    * 
    * @group Relation Lines
    * @type {number}
@@ -119,8 +124,9 @@ export default function OrgConfig(name) {
   this.extraArrowsMinimumSpace = 30;
 
   /**
-   * Connection lines style. This option is only applicable to nodes minimized to markers or lines. Full size nodes
-   * are always connected with squared connection lines
+   * The connector type option defines the style of connection lines in the diagram.
+   * It is only applicable to nodes minimized to markers or lines.
+   * The templated nodes are always connected with squared connection lines
    * 
    * @group Relation Lines
    * @type {ConnectorType}
@@ -128,7 +134,7 @@ export default function OrgConfig(name) {
   this.connectorType = ConnectorType.Squared;
 
   /**
-   * The bevel size of squared connector lines.
+   * The bevel size of squared connection lines.
    * 
    * @group Relation Lines
    * @type {number}
@@ -136,7 +142,7 @@ export default function OrgConfig(name) {
   this.bevelSize = 4;
 
   /**
-   * Set style of squared connectors with custom elbows.
+   * The elbow type of squared connection lines
    * 
    * @group Relation Lines
    * @type {ElbowType}
@@ -144,7 +150,7 @@ export default function OrgConfig(name) {
   this.elbowType = ElbowType.None;
 
   /**
-   * The size of dot markers placed in the elbows of connector lines.
+   * The elbow dot size property sets marker size in elbows of connector lines.
    * 
    * @group Relation Lines
    * @type {number}
@@ -153,103 +159,99 @@ export default function OrgConfig(name) {
 
 
   /**
-   * Empty diagram message. This option is supposed to say user that chart is empty when no data is available for rendering.
+   * Empty diagram message. This option should tell the user 
+   * that the chart is blank when no data is available for rendering.
    * 
    * @type {string}
    */
   this.emptyDiagramMessage = "Diagram is empty.";
 
   /**
-   * Items collection. Ths property defines data we render in the diagram.
-   * 
-   * Every item should have set unique `id` property. They are used to create relations
-   * between items in the diagram and for rendering of various UI elements bound to nodes.
+   * The items collection defines the data we render in the diagram.
+   * Every item should have a unique `id`. They are used to create relations
+   * between the nodes of the graph and render various UI elements associated with nodes.
    * 
    * @type {OrgItemConfig[]}
    */
   this.items = [];
 
   /**
-   * Annotations. Annotations are API elements attached to the diagram nodes 
-   * and designed to highlight some nodes or relations. We draw our annotations 
-   * either in front of the nodes or in the background. The annotations don't affect 
-   * the placement of the nodes in any way. We have some exceptions. As a result, the control 
-   * redraws them instantaneously without rendering or recalculating the actual diagram layout. 
+   * Annotations are visual elements attached to the diagram nodes and designed to spotlight
+   * some nodes or relations. They are drawn either in front of the diagram or the background.
+   * The annotations don't impact the placement of the nodes, though, with some exceptions.
+   * As a result, the control redraws them instantaneously without rendering
+   * or recalculating the actual diagram layout. 
    * 
    * @type {Array.<(ShapeAnnotationConfig | BackgroundAnnotationConfig | ConnectorAnnotationConfig | HighlightPathAnnotationConfig)>}
    */
   this.annotations = [];
 
   /**
-   * Cursor item. Organization Chart control has API options equivalent to standard UI controls.
-   * The cursor item is used to select a single item in the hierarchy with a mouse click, and 
-   * the highlighted item provides visual feedback on the mouse over. Selected items collection 
-   * is equivalent to checked items in ListView or TreeView controls.
-   * 
-   * The chart's navigation work around the current cursor item. The component shows 
-   * the cursor and its neighbors regardless of page fit mode. So cursor item plays the role 
-   * of local zoom in the chart hierarchy. The user navigates around the chart via clicking 
-   * and selecting cursor items and zooming into data around the new cursor item. 
-   * 
-   * The control notifies about this property changes with `onCursorChanging` and `onCursorChanged` events.
-   * 
-   * If the cursor item is set to null, then no cursor item is selected in the diagram.
-   * 
+   * The cursor item provides a single node selection, navigation, and local zoom in the diagram.
+   * The component shows the cursor, neighbors, and selected nodes using templates and folds
+   * everything into markers to save space. So clicking and moving the cursor from node to node
+   * works as stepping in and expanding nodes in the neighboring diagram area. To select cursor
+   * node with keyboard, use arrow keys to change focus selection first in the diagram and press
+   * the `Enter` key to set the `cursorItem` to the required node. See the'onCursorChanging` 
+   * and `onCursorChanged` events to handle user clicks on nodes. If the cursor item is set to
+   * null, then no cursor item is selected in the diagram.
+   *  
    * @type {string}
    */
   this.cursorItem = null;
 
   /**
-   * Highlighted item. Shows highlight and callout annotation for given item id. It does not trigger diagram
-   * layout or scrolling so it can be used to synchronize mouse over feedback of the diagram nodes with other
-   * collection controls or UI elements. 
-   * 
-   * The control notifies about this property changes with `onHighlightChanging` and `onHighlightChanged` events.
-   * 
-   * If `null` then no highlight shown on the diagram.
+   * The highlighted item sets focus to some node in the diagram. It is a redundant feature on
+   * touch screen devices, so use the `navigationMode` property to disable it.
+   * The highlight item can be set programmatically, with mouseover, keyboard arrow keys, or the `Tab` key. 
+   * The default visual is a rounded rectangle; use templates to customize the highlight's graphic. 
+   * The highlight item setting does not trigger diagram layout or scrolling, so it is near-instant.
+   * It is designed to synchronize mouse moves over diagram nodes with other collection controls or UI elements.
+   * The component triggers  the `onHighlightChanging` and `onHighlightChanged` events on highlight changes.
+   * Set it to `null` to hide the highlight of the diagram.
    * 
    * @type {string}
    */
   this.highlightItem = null;
 
   /**
-   * Highlight gravity radius. This property controls mouse over feedback and callout annotation visibility for nodes
-   * rendered as markers when diagram auto fits nodes into available screen space. It makes marker highlighted when 
-   * mouse pointer is inside of the gravity radius cycle of the marker. This property is ignored when the nearest item
-   * is outside of the screen boundaries and is not visible to the end user.
-   *
-   * The normal item has mouse over feedback in form of highlight border only when mouse pointer is inside of its boundaries. 
+   * The highlight gravity radius controls distance to the nearest marker to trigger the highlight setting
+   * and callout annotation. For the templated nodes, it is required for the mouse to be inside the node's
+   * bounding rectangle to activate the highlight setting. It can be problematic to put the mouse precisely
+   * over the marker. The gravity radius helps to overcome that issue, but at the same time, it can be a source
+   * of performance if the component gets too many markers within the scope of the gravity radius.
+   * Please, keep this in mind and don't make it too big. It is crucial when the diagram has
+   * over 5 thousand nodes in the hierarchy.
    * 
    * @type {number}
    */
   this.highlightGravityRadius = 40;
 
   /**
-   * Selected items collection. Selected items is a collection of items ids having checked their check boxes.
-   * The control always shows selected items in the full size form, regardless of enabled page fit mode.
-   * 
-   * The control notifies about user made changes in this collection with `onSelectionChanging` and `onSelectionChanged` events.
+   * The selected items collection property allows the end-user to choose multiple nodes in the diagram.
+   * It is a collection of ids of checked nodes. The selected items impact the diagram layout and navigation
+   * process since they are always shown in the expanded templated form. So it also helps users pin nodes while they browse in the diagram.
+   * The control notifies about the user changes in this collection with the `onSelectionChanging` and the `onSelectionChanged` events.
    * 
    * @type {string[]}
    */
   this.selectedItems = [];
 
   /**
-  * Sets visibility of selection check boxes for the diagram nodes.
-  * 
+  * The selection checkboxes are built-in UI elements managing the `selectedItems` collection property. 
   * `Auto` - visible for cursor item only
   * `True` - visible
   * `False` - hidden
   * 
-  * See `selectedItems` property. All items listed in this property are going to have checked selection checkboxes.
-  * Checkbox can be added to item template, in that case it should be named="checkbox", so control can use it as built in checkbox element.
+  * Adding a custom checkbox element to the item template requires its name to be `checkbox`,
+  * so the control can use it the same way as the built-in checkbox element.
   * 
   * @type {Enabled}
   */
   this.hasSelectorCheckbox = Enabled.Auto;
 
   /**
-   * Selection check box label. See `hasSelectorCheckbox` and `selectedItems` properties.
+   * The checkbox label. See `hasSelectorCheckbox` and `selectedItems` properties.
    * 
    * @group Templates
    * @type {string}
@@ -257,12 +259,9 @@ export default function OrgConfig(name) {
   this.selectCheckBoxLabel = "Selected";
 
   /**
-   * Selection path mode. This property controls visibility of nodes between cursor and the root of the diagram in the auto fit mode. It allows to draw 
-   * them in full size regardless of available space and auto fit mode.
-   * 
-   * The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers.
-   * So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items
-   * of the diagram in full size and draw all other diagram nodes as markers.
+   * The selection path mode property makes all parents of the cursor item up to the root node
+   * to be shown with templates. It is a complimentary feature to the auto-fit mode of the
+   * diagram. See the `pageFitMode` for more details.
    *
    * @group Auto Layout
    * @type {SelectionPathMode}
@@ -270,8 +269,9 @@ export default function OrgConfig(name) {
   this.selectionPathMode = SelectionPathMode.FullStack;
 
   /**
-   * Sets selected items frame visibility. If selected item is outside of the diagram's area visible to the end user,
-   * control displays that item in the form of the marker on frame around the diagram.
+   * The show frame controls the visibility of decorating frame around the diagram.
+   * The frame displays markers for selected nodes in the chart when they are outside
+   * the screen and not visible to the end-user.
    * 
    * @group Frame
    * @type {boolean}
@@ -279,7 +279,7 @@ export default function OrgConfig(name) {
   this.showFrame = false;
 
   /**
-   * Frame inner padding. Adds extra padding around markers on the inner side of the frame.
+   * The frame's inner padding adds extra padding around markers on the inner side of the frame.
    * 
    * @group Frame
    * @type {Thickness}
@@ -287,7 +287,7 @@ export default function OrgConfig(name) {
   this.frameInnerPadding = new Thickness(2, 2, 2, 2);
 
   /**
-   * Frame outer padding. Adds extra padding around markers on the outer side of the frame.
+   * The frame's outer padding adds extra padding around markers on the outer side of the frame.
    * 
    * @group Frame
    * @type {Thickness}
@@ -295,7 +295,7 @@ export default function OrgConfig(name) {
   this.frameOuterPadding = new Thickness(2, 2, 2, 2);
 
   /**
-   * Diagram padding. Adds extra padding around the diagram.
+   * The diagram padding adds extra padding around the diagram nodes.
    * 
    * @group Frame
    * @type {Thickness}
@@ -303,8 +303,10 @@ export default function OrgConfig(name) {
   this.padding = new Thickness(10, 10, 10, 10);
 
   /**
-   * Collection of named templates used to define content for nodes, cursor and highlight.
-   * By default control provides templates for all types of visual elements.
+   * The templates property is a collection of uniquely named templates objects used
+   * to customize nodes' size, interactivity, and visuals for content, cursor, and highlight.
+   * By default, the control provides templates for all types of visual elements.
+   * So to start experimenting with the Basic Primitives library, you don't need to define any templates.
    * 
    * @group Templates
    * @type {TemplateConfig[]}
@@ -312,8 +314,9 @@ export default function OrgConfig(name) {
   this.templates = [];
 
   /**
-   * Name of the template used to render nodes in the diagram. See `templates` property. Template name can be set individually for every node
-   * see `templateName` property of `OrgItemConfig`.
+   * The default template name property allows overriding the default template for all nodes
+   * without setting the template name individually per node. See the `templates` property for mode details.
+   * To customize the template per node, see the `templateName` property of the `OrgItemConfig`.
    * 
    * @group Templates
    * @type {string}
@@ -321,7 +324,10 @@ export default function OrgConfig(name) {
   this.defaultTemplateName = null;
 
   /**
-   * Sets buttons visibility.
+   * The button visibility is a legacy property. The only reason it is still available on the components API
+   * is the lack of consistent support of the mouse transparency across browsers.
+   * The buttons panel is placed over all other visuals in the diagram,
+   * so they are not obstructed by the connector and shape annotations. 
    * 
    * `Auto` - cursor item only.
    * `True` - visible
@@ -333,9 +339,7 @@ export default function OrgConfig(name) {
   this.hasButtons = Enabled.Auto;
 
   /**
-   * On buttons panel render event. This callback function is called to render context of buttons panel.
-   * It is used to replace `buttons` collection property in the control. So we preserve context buttons panel as a functional 
-   * concept, but eliminate buttons customization API.
+   * The event property is used to render the content of the buttons panel.
    *
    * @callback
    * @param {EventArgs} data Context information
@@ -343,18 +347,21 @@ export default function OrgConfig(name) {
   this.onButtonsRender = null;
 
   /**
-   * This callback function is called before `onHighlightChanged` event. See `highlightItem` property.
-   * Use this event to modify diagram elements not affecting diagram layout. For example on-screen connector annotations added 
-   * in this event handler to diagram configuration would be rendered together with highlight.
+   * This callback function is called before the `onHighlightChanged` event.
+   * See the `highlightItem` property. Use this event to modify diagram elements
+   * not affecting diagram layout. For example, on-screen connector annotations
+   * added in this event handler to the diagram configuration would be rendered
+   * together with highlight. Use properties of this event to stop event propagation 
+   * and the following diagram layout and rendering if needed.
    *
    * @callback
    * @param {Object} event Mouse event
-   * @param {EventArgs} data Context information. Use properties of this argument to stop event propagate and further diagram layout and rendering.
+   * @param {EventArgs} data Context information.
    */
   this.onHighlightChanging = null;
 
   /**
-   * On highlight item changed event. See `highlightItem` property.
+   * The on highlight changed event. See `highlightItem` property.
    *
    * @callback
    * @param {Object} event Mouse event
@@ -363,8 +370,9 @@ export default function OrgConfig(name) {
   this.onHighlightChanged = null;
 
   /**
-   * On cursor item being changed event. See `cursorItem` property. This callback function is called before `onCursorChanged` event.
-   * Use this callback function to stop event propagation. See `EventArgs` for details.
+   * This callback function is called before the `onCursorChanged` event. 
+   * See the `cursorItem` property. Use properties of this event to stop event propagation 
+   * and the following diagram layout and rendering if needed.
    *
    * @callback
    * @param {Object} event Mouse event
@@ -373,7 +381,7 @@ export default function OrgConfig(name) {
   this.onCursorChanging = null;
 
   /**
-   * On cursor item changed event. See `cursorItem` property.
+   * The on cursor item changed event. See `cursorItem` property.
    *
    * @callback
    * @param {Object} event Mouse event
@@ -382,7 +390,7 @@ export default function OrgConfig(name) {
   this.onCursorChanged = null;
 
   /**
-   * On selected items being changed event. See `selectedItems` property.
+   * The on selected items being changed event. See `selectedItems` property.
    *
    * @callback
    * @param {Object} event Mouse event
@@ -391,7 +399,7 @@ export default function OrgConfig(name) {
   this.onSelectionChanging = null;
 
   /**
-   * On selected items changed event. See `selectedItems` property.
+   * The on selected items changed event. See `selectedItems` property.
    *
    * @callback
    * @param {Object} event Mouse event
@@ -400,7 +408,8 @@ export default function OrgConfig(name) {
   this.onSelectionChanged = null;
 
   /**
-   * Button click event. See `buttons` property.
+   * The on content button click event is a legacy property.
+   * To use it, buttons in the buttons panel in the item template should have the `data-buttonname` property set.
    *
    * @callback
    * @param {Object} event Mouse event
@@ -427,11 +436,10 @@ export default function OrgConfig(name) {
   this.onMouseDblClick = null;
 
   /**
-   * Callback function for rendering content of the diagram nodes. This callback is only 
-   * called when custom item template is defined in the template object configuration.
-   * This callback receives reference to DOM element and context object of the rendered item.
-   * The control reuses existing elements in the DOM, so it is applications responsibility 
-   * to properly update their content.
+   * The on item render callback function is used to populate the content of templated
+   * nodes in the diagram. It is called for user templates only. The callback references
+   * the DOM element and the node configuration object. The control reuses existing DOM elements,
+   * so the application should update the entire content of the template.
    *
    * @callback
    * @param {Object} event Event if available
@@ -440,8 +448,7 @@ export default function OrgConfig(name) {
   this.onItemRender = null;
 
   /**
-   * Callback function for rendering content of the highlight template. This callback is only 
-   * called when custom highlight is defined in the template configuration.
+   * The on highlight render callback function is used to update the highlight visual content having a custom template.
    *
    * @callback
    * @param {Object} event Event if available
@@ -450,8 +457,7 @@ export default function OrgConfig(name) {
   this.onHighlightRender = null;
 
   /**
-   * Callback function for rendering content of the cursor template. This callback is only 
-   * called when custom cursor is defined in the template configuration.
+   * The on cursor render callback function is used to update the cursor visual content having a custom template.
    *
    * @callback
    * @param {Object} event Event if available
@@ -460,7 +466,7 @@ export default function OrgConfig(name) {
   this.onCursorRender = null;
 
   /**
-   * Sets the spacing between rows.
+   * The normal level shift sets spacing between rows of templated nodes.
    * 
    * @group Intervals
    * @type {number}
@@ -468,7 +474,7 @@ export default function OrgConfig(name) {
   this.normalLevelShift = 20;
 
   /**
-   * Sets the spacing after the row containing nodes minimized down to markers.
+   * The dot level shift property sets the spacing between rows of markers.
    * 
    * @group Intervals
    * @type {number}
@@ -476,7 +482,8 @@ export default function OrgConfig(name) {
   this.dotLevelShift = 20;
 
   /**
-   * Sets the spacing after the row containing nodes minimized down to lines.
+   * The lines level shift property sets the spacing between rows
+   * having only connection lines. Nodes are hidden completely.
    * 
    * @group Intervals
    * @type {number}
@@ -484,7 +491,7 @@ export default function OrgConfig(name) {
   this.lineLevelShift = 10;
 
   /**
-   * Sets interval between nodes of the same row.
+   * The normal items interval property sets the spacing between templated nodes.
    * 
    * @group Intervals
    * @type {number}
@@ -492,7 +499,7 @@ export default function OrgConfig(name) {
   this.normalItemsInterval = 10;
 
   /**
-   * Sets interval between nodes of the same row, minimized down to markers.
+   * The dotted items interval property sets the spacing between markers.
    * 
    * @group Intervals
    * @type {number}
@@ -500,7 +507,7 @@ export default function OrgConfig(name) {
   this.dotItemsInterval = 1;
 
   /**
-   * Sets interval between nodes of the same row, minimized down to lines.
+   * The line items interval property sets the spacing between lines.
    * 
    * @group Intervals
    * @type {number}
@@ -508,8 +515,9 @@ export default function OrgConfig(name) {
   this.lineItemsInterval = 2;
 
   /**
-   * Set cousins interval multiplier. This values adds extra space between branches of the hierarchy.
-   * For example nodes of the same parent have interval 20 and nodes of two different parents are going to have interval 100.
+   * The cousins' interval multiplier property adds extra space between branches of the hierarchy.
+   * For example, if the multiplier equals five, nodes of the same parent will have interval 20,
+   * and nodes of two different parents will have interval 100.
    * 
    * @group Intervals
    * @type {number}
@@ -517,11 +525,8 @@ export default function OrgConfig(name) {
   this.cousinsIntervalMultiplier = 5;
 
   /**
-   * The first font color of the title.
-   * 
-   * The title background color is designed to be one of the available dimensions to group nodes in the diagram,
-   * so title can be unreadable if its color matches its background color. This property is created to auto resolve this issue
-   * via automatic switch between two available font title colors.
+   * The first choice title color. The component has two properties for the title color to automatically select
+   * the one having the highest contract for the node's background-color
    * 
    * @group Templates
    * @type {string}
@@ -529,7 +534,7 @@ export default function OrgConfig(name) {
   this.itemTitleFirstFontColor = Colors.White;
 
   /**
-   * The second font color of the title.
+   * The second choice title color.
    * 
    * @group Templates
    * @type {string}
@@ -537,12 +542,9 @@ export default function OrgConfig(name) {
   this.itemTitleSecondFontColor = Colors.Navy;
 
   /**
-   * Markers. The shape of the markers when nodes are minimized by auto fit. The control supports auto fit of the diagram into available screen space.
-   * When the diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
-   * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
-   * So this option sets default marker shape for nodes. It can be set individually per node in items configurations.
-   * 
-   * The default color of shape is the same as `itemTitleColor` property set for individual items.
+   * The markers shape type property sets the default marker shape for nodes.
+   * It is possible to set it individually for every node or in the item template.
+   * By default color of the marker is equal to the `itemTitleColor` property set for individual items. 
    * 
    * @group Templates
    * @type {ShapeType}
@@ -550,7 +552,7 @@ export default function OrgConfig(name) {
   this.minimizedItemShapeType = ShapeType.None;
 
   /**
-   * The relations lines color. The control uses this lines color to render basic relations between nodes.
+   * The color of the relations lines
    * 
    * @group Relation Lines
    * @type {string}
@@ -558,7 +560,7 @@ export default function OrgConfig(name) {
   this.linesColor = Colors.Silver;
 
   /**
-   * The relations lines width
+   * The line width of the relations lines
    * 
    * @group Relation Lines
    * @type {number}
@@ -566,7 +568,7 @@ export default function OrgConfig(name) {
   this.linesWidth = 1;
 
   /**
-   * The relations lines pattern
+   * The line style of the relations lines
    * 
    * @group Relation Lines
    * @type {LineType}
@@ -574,7 +576,7 @@ export default function OrgConfig(name) {
   this.linesType = LineType.Solid;
 
   /**
-   * Sets highlight lines color. The diagram uses highlight lines to render highlighted relation lines between nodes.
+   * The color of the highlighted relation lines.
    * 
    * @group Relation Lines
    * @type {string}
@@ -582,7 +584,7 @@ export default function OrgConfig(name) {
   this.highlightLinesColor = Colors.Red;
 
   /**
-   * Sets highlight lines width.
+   * The line width of the highlighted relation lines.
    * 
    * @group Relation Lines
    * @type {number}
@@ -590,7 +592,7 @@ export default function OrgConfig(name) {
   this.highlightLinesWidth = 1;
 
   /**
-   * Sets highlight lines pattern.
+   * The line style of the highlighted relation lines.
    * 
    * @group Relation Lines
    * @type {LineType}
@@ -598,7 +600,7 @@ export default function OrgConfig(name) {
   this.highlightLinesType = LineType.Solid;
 
   /**
-   * Sets callout visibility.
+   * The show callout property enables on mouse over node callout for the diagram.
    * 
    * @group Callout
    * @type {boolean}
@@ -606,7 +608,8 @@ export default function OrgConfig(name) {
   this.showCallout = true;
 
   /**
-   * Sets visibility of the callout annotation depending on size of a node it is shown for. See `pageFitMode` property.
+   * The callout maximum visibility property enables callout 
+   * for the diagram nodes having specified visibility. See the `pageFitMode` property.
    * 
    * @group Callout
    * @type {Visibility}
@@ -614,7 +617,7 @@ export default function OrgConfig(name) {
   this.calloutMaximumVisibility = Visibility.Dot;
 
   /**
-   * Callout annotation placement offset. Sets how far callout content is offset from the marker it is displayed for.
+   * The callout annotation placement offset sets how far the callout rectangle is offset from the marker it is displayed for.
    * 
    * @group Callout
    * @type {number}
@@ -622,10 +625,8 @@ export default function OrgConfig(name) {
   this.calloutPlacementOffset = 100;
 
   /**
-   * Callout annotation default template name.
-   * 
-   * Templates are HTML fragments containing layout and styles used to render diagram nodes.
-   * They are defined with a named configuration objects. See `templates` property of control's configuration object.
+   * The callout default template name. Templates are HTML fragments used to render diagram nodes.
+   * They are defined with named configuration objects. See the `templates` property for more details.
    * 
    * @group Callout
    * @type {string}
@@ -689,7 +690,13 @@ export default function OrgConfig(name) {
   this.calloutOpacity = 0.2;
 
   /**
-   * Enables cross branch nodes alignment. Places the same type of nodes across all branches of the diagram at the same level.
+   * The align branches property enables cross-branch nodes alignment. In the Organizational Chart layout,
+   * the number of rows occupied by the immediate children depends on the number of assistants, advisers,
+   * and levels of children of the node. So nodes at the same logical level in the organizational chart
+   * hierarchy require visual alignment. As expected, the control aligns regular horizontally placed children
+   * across branches of the hierarchy. But it supports the alignment of Assistants, SubAssistants, Advisers,
+   * and SubAdvisers hierarchies and child nodes in vertical and matrix formations across departments.
+   * The component supports the infinite nesting of children layers and their alignment across hierarchy branches.
    * 
    * @group Auto Layout
    * @type {boolean}
@@ -698,11 +705,12 @@ export default function OrgConfig(name) {
 
 
   /**
-   * Sets default formation of child nodes. By default all children that belong to a parent node are always aligned 
-   * below and placed in a horizontal line. On a large scale this may result in the end user having to scroll screens
-   * in order to view all of the nodes. To compensate for this, we provide the option of placing all of the children
-   * of a parent node in a square/matrix formation. This will reduce sideways screen scrolling by compacting the child
-   * nodes into a much smaller area on the screen.
+   * The children's placement type sets default children's layout formation. 
+   * The control places children in a horizontal line below the parent node by default.
+   * That may result in the end-user having to scroll screens to view many child nodes.
+   * So to compensate for this, the component supports placing children in a square/matrix and vertical formation.
+   * It reduces sideways screen scrolling by compacting the child nodes into a much smaller area on the screen.
+   * See the 'levelOffset' and the 'itemType' on `OrgItemConfig` for more layout options.
    * 
    * @group Auto Layout
    * @type {ChildrenPlacementType}
@@ -710,7 +718,8 @@ export default function OrgConfig(name) {
   this.childrenPlacementType = ChildrenPlacementType.Horizontal;
 
   /**
-   * Sets formation of leave children.
+   * The leaves placement type property sets default children formation of
+   * leave children. See the `childrenPlacementType` for more details.
    * 
    * @group Auto Layout
    * @type {ChildrenPlacementType}
@@ -718,9 +727,10 @@ export default function OrgConfig(name) {
   this.leavesPlacementType = ChildrenPlacementType.Horizontal;
 
   /**
-   * Sets default placement of assistants hierarchies relative to the regular children of the parent node.
-   * If assistant node has its own children then control adds extra levels, so assistants children are placed
-   * above level of the parent node children.
+   * The property sets the default placement of assistants hierarchies
+   * relative to the regular children of the node. If the assistant
+   * node has its children, control adds extra levels, so the assistant's
+   * children are placed above the regular children.
    * 
    * @group Auto Layout
    * @type {boolean}
@@ -728,17 +738,18 @@ export default function OrgConfig(name) {
   this.placeAssistantsAboveChildren = true;
 
   /**
- * Sets default placement of advisers hierarchies relative to the regular children of the parent node.
- * If adviser node has its own children then control adds extra levels, so advisers children are placed
- * above level of the parent node children.
- * 
- * @group Auto Layout
- * @type {boolean}
- */
+   * The property sets default placement of advisers hierarchies relative to the regular 
+   * children of the node. If the adviser node has its children, then control adds extra levels,
+   * so the adviser's children are placed above the regular children.
+   * 
+   * @group Auto Layout
+   * @type {boolean}
+   */
   this.placeAdvisersAboveChildren = true;
 
   /**
-   * Maximum number of columns for matrix layout of children.
+   * The maximum number of columns in the matrix formation prevents
+   * it from outgrowing screen width and forces it to grow vertically. 
    * 
    * @group Auto Layout
    * @type {number}
@@ -746,7 +757,7 @@ export default function OrgConfig(name) {
   this.maximumColumnsInMatrix = 6;
 
   /**
-   * The size of the panel containing context buttons.
+   * The size of the button panel
    * 
    * @group Templates
    * @type {number}
@@ -754,7 +765,7 @@ export default function OrgConfig(name) {
   this.buttonsPanelSize = 28;
 
   /**
-   * The size of the panel containing group title.
+   * The size of the group title
    * 
    * @group Group Titles
    * @type {number}
@@ -762,7 +773,7 @@ export default function OrgConfig(name) {
   this.groupTitlePanelSize = 24;
 
   /**
-   * The size of the panel containing selection checkbox.
+   * The size of the selection checkbox
    * 
    * @group Templates
    * @type {number}
@@ -770,9 +781,8 @@ export default function OrgConfig(name) {
   this.checkBoxPanelSize = 24;
 
   /**
-   * Group titles placement. Defines group title and buttons panel position relative to the node.
-   * The group title on the side of the diagram node is one of controls default easy to use features. It gives extra dimension 
-   * for nodes visual grouping in the diagram.
+   * The group titles placement property sets left to right or right to left alignment
+   * for group title and buttons panel relative to the node. 
    * 
    * @group Group Titles
    * @type {AdviserPlacementType}
@@ -788,7 +798,7 @@ export default function OrgConfig(name) {
   this.groupTitleOrientation = TextOrientationType.RotateRight;
 
   /**
-   * Group titles vertical alignment.
+   * The group titles vertical alignment property sets text vertical alignment inside the group title panel.
    * 
    * @group Group Titles
    * @type {VerticalAlignmentType}
@@ -796,7 +806,7 @@ export default function OrgConfig(name) {
   this.groupTitleVerticalAlignment = VerticalAlignmentType.Middle;
 
   /**
-   * Group titles horizontal alignment.
+   * The group titles horizontal alignment property sets text horizontal alignment inside the group title panel.
    * 
    * @group Group Titles
    * @type {HorizontalAlignmentType}
@@ -855,7 +865,7 @@ export default function OrgConfig(name) {
   this.onGroupTitleRender = null;
 
   /**
-   * The size of the panel containing level titles.
+   * The panel size of the level annotation titles
    * 
    * @group Level Titles
    * @type {number}
@@ -863,7 +873,7 @@ export default function OrgConfig(name) {
   this.levelTitlePanelSize = 24;
 
   /**
-   * Level titles placement. Defines level title panel position relative to the diagram.
+   * The panel placement of the level annotation titles
    * 
    * @group Level Titles
    * @type {AdviserPlacementType}
@@ -871,7 +881,7 @@ export default function OrgConfig(name) {
   this.levelTitlePlacementType = AdviserPlacementType.Left;
 
   /**
-   * If this property is true then level titles are placed inside of the diagram's view port above or below diagram nodes.
+   * If this property is true, level titles are placed inside the diagram's viewport above or below diagram nodes.
    * 
    * @group Level Titles
    * @type {boolean}
@@ -879,7 +889,7 @@ export default function OrgConfig(name) {
   this.levelTitlePlaceInside = false;
 
   /**
-   * Group titles orientation.
+   * The level annotation titles orientation.
    * 
    * @group Level Titles
    * @type {TextOrientationType}
@@ -887,7 +897,7 @@ export default function OrgConfig(name) {
   this.levelTitleOrientation = TextOrientationType.Auto;
 
   /**
-   * Level titles vertical alignment.
+   * The level annotation titles vertical alignment.
    * 
    * @group Level Titles
    * @type {VerticalAlignmentType}
@@ -895,7 +905,7 @@ export default function OrgConfig(name) {
   this.levelTitleVerticalAlignment = VerticalAlignmentType.Middle;
 
   /**
-   * Level titles horizontal alignment.
+   * The level annotation titles horizontal alignment.
    * 
    * @group Level Titles
    * @type {HorizontalAlignmentType}
@@ -951,9 +961,8 @@ export default function OrgConfig(name) {
   this.levelTitleFontStyle = "normal";
 
   /**
-   * On level annotation title render event. This callback function is called to render level annotation title panel. 
-   * It is used to overwrite default level title template renderer. It is called only when level annotations are visible.
-   * See other level annotation options for details.
+   * The level title callback function allows rendering custom content in the level annotation title panel.
+   * It is called only for the visible level annotations. See other level annotation options for details.
    *
    * @group Level Titles
    * @callback
@@ -962,9 +971,8 @@ export default function OrgConfig(name) {
    this.onLevelTitleRender = null;
 
   /**
-   * On level annotation background render event. This callback function is called to render level annotation background panel. 
-   * It is used to overwrite default level background template renderer. It is called only when level annotations are visible.
-   * See other level annotation options for details.
+   * The level background callback function allows rendering custom content in the level annotation background panel.
+   * It is called only for the visible level annotations. See other level annotation options for details.
    *
    * @group Level Titles
    * @callback
@@ -978,17 +986,14 @@ export default function OrgConfig(name) {
   this.distance = 3;
 
   /**
-   * CSS3 scale transform. Control supports content scaling using CSS scale transform. It scales everything except scroll bars.
-   * It properly handles mouse event coordinates. The CSS scale transform produces unreadable text and corrupted lines in desktop browsers,
-   * it looks good only in mobile browsers, so our recommendation is to use zoom with collection of item templates of various sizes.
-   * Templates gives you better control over quality of your content at various zoom levels.
+   * The scale property sets the CSS scale-transform property for the diagram content. 
    * 
    * @type {number}
    */
   this.scale = 1;
 
   /**
-   * Minimum CSS3 scale transform.
+   * Minimum scale
    * 
    * @ignore
    * @type {number}
@@ -996,7 +1001,7 @@ export default function OrgConfig(name) {
   this.minimumScale = 0.5;
 
   /**
-   * Maximum CSS3 scale transform.
+   * Maximum scale
    * 
    * @ignore
    * @type {number}
@@ -1004,17 +1009,19 @@ export default function OrgConfig(name) {
   this.maximumScale = 2;
 
   /**
-   * Sets labels visibility for nodes when they are minimized into markers by page auto fit. See `pageFitMode` property.
+   * The show label property sets labels visibility for individual nodes.
+   * The control displays label only for node markers. The control does not
+   * preserve space for labels in the diagram layout. The application's
+   * responsibility is to set intervals between nodes to fit labels.
+   * Use controls `dotLevelShift`, `dotItemsInterval` and `padding` properties to preserve
+   * space between nodes for labels. Labels are displayed inside `div's of
+   * the fixed size, see the `labelSize` property, and the control provides
+   * simple conflict resolution to avoid displaying overlapping labels.
+   * If two labels overlap with their bounding rectangles,
+   * then only one of them will stay visible. 
    * 
-   * The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes
-   * into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels.
-   * 
-   * Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict
-   * resolution to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
-   * is going to stay visible.
-   * 
-   * Auto - displays label only when it has space to be rendered.
-   * True - shows label regardless, even if it overlaps other labels and nodes.
+   * Auto - avoid labels overlapping, hide some of them
+   * True - visible
    * False - hidden.
    * 
    * @group Labels
@@ -1023,8 +1030,8 @@ export default function OrgConfig(name) {
   this.showLabels = Enabled.Auto;
 
   /**
-   * Label size. Sets labels placeholders `div`s size. It is needed to resolve labels overlapping.
-   * If one label overlaps another label the or item it will be hidden.
+   * The label size property defines the label's placeholder `div` size,
+   * which impacts conflict resolution if labels overlap.
    * 
    * @group Labels
    * @type {Size}
@@ -1032,7 +1039,7 @@ export default function OrgConfig(name) {
   this.labelSize = new Size(80, 24);
 
   /**
-   * Sets labels offset from the markers bounding rectangles.
+   * The label offset property sets the distance from the markers bounding rectangles.
    * 
    * @group Labels
    * @type {number}
@@ -1040,7 +1047,7 @@ export default function OrgConfig(name) {
   this.labelOffset = 1;
 
   /**
-   * Labels orientation.
+   * Label orientation defines label rotation.
    * 
    * @group Labels
    * @type {TextOrientationType}
@@ -1048,7 +1055,7 @@ export default function OrgConfig(name) {
   this.labelOrientation = TextOrientationType.Horizontal;
 
   /**
-   * Labels placement. Sets labels placement relative to the markers bounding rectangles.
+   * Label placement sets label placement around the marker.
    * 
    * @group Labels
    * @type {PlacementType}
@@ -1097,15 +1104,15 @@ export default function OrgConfig(name) {
   this.labelFontStyle = "normal";
 
   /**
-   * Enable panning. Enable chart panning with mouse drag & drop for desktop browsers.
-   * Disable it if you need to support items Drag & Drop.
+   * The enable panning property enables chart panning with mouse drag for
+   * desktop browsers. Disable it if you need to support items Drag & Drop.
    * 
    * @type {boolean}
    */
   this.enablePanning = true;
 
   /**
-   * Sets minimum size the diagram can shrink itself in auto size mode. See `pageFitMode` property.
+   * Sets minimum size, the diagram can shrink itself in auto size mode. See `pageFitMode` property.
    * In the auto size mode diagram controls its placeholder size itself,
    * it sets its size to accommodate all nodes and render them normally.
    * 
@@ -1115,7 +1122,7 @@ export default function OrgConfig(name) {
   this.autoSizeMinimum = new Size(800, 600);
 
   /**
-   * Sets maximum size the diagram can expand itself in auto size mode. See `pageFitMode` property.
+   * Sets maximum size, the diagram can expand itself in auto size mode. See `pageFitMode` property.
    * In the auto size mode diagram controls its placeholder size itself,
    * it sets its size to accommodate all nodes and render them normally.
    * 

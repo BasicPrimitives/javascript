@@ -1,6 +1,6 @@
 /**
  * @class RenderEventArgs
- * @classdesc This is object parameter of rendering callback function 
+ * @classdesc The render event arguments contains parameters of rendering callback function 
  */
 export default function RenderEventArgs() {
   /**

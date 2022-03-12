@@ -2,8 +2,10 @@ import {Enabled, ShapeType, AdviserPlacementType, TextOrientationType, Placement
 
 /**
  * @class FamItemConfig
- * @classdesc Item Configuration Object defines properties of individual node in the family chart hierarchy. See `items` collection property
- * of family control configuration object. 
+ * @classdesc Family chart item configuration object defines properties 
+ * of individual nodes in the family diagram. Nodes configurations 
+ * populate the `items` collection property of the family chart 
+ * configuration object used to describe the entire component configuration. 
  * 
  * @param {FamItemConfig} arg0 Item config properties
  * 
@@ -16,25 +18,27 @@ import {Enabled, ShapeType, AdviserPlacementType, TextOrientationType, Placement
 export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   var property;
   /**
-   * Item id. It should be unique per chart.
+   * Unique item id.
    * 
    * @type {string}
    */
   this.id = null;
 
   /**
-   * Parents items ids. If this collection is empty then item considered as a root item.
+   * The parents collection property contains parent nodes ids.
+   * If it is empty, then the item is considered a root item.
+   * 
    * @type {string[]}
    */
   this.parents = [];
 
   /**
-   * Relative item id. This property is used to control items mutual placement in order to keep consistent ordering within levels. Relative item is used 
-   * for placing given item in diagram. We can place item on left or right side of relative item via setting placementType type property.
-   * In case when multiple items use the same relative item then their order can be customized with position property.
-   * 
-   * If this property set to null, family layout algorithm will try to choose elements order via placing connected 
-   * nodes as close to each other as possible.
+   * The relative item id is used to place the given item in the diagram on the left
+   * or right side of the referenced item. See the `placementType` property.
+   * If multiple items share the same relative item, their order can be customized
+   * with the `position` property. If this property is set to null, the family layout
+   * algorithm will try to choose elements order via placing connected nodes
+   * as close to each other as possible.
    * 
    * @group Order
    * @type {string}
@@ -42,7 +46,7 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.relativeItem = null;
 
   /**
-   * Relative placement type defines Left ot Right side placement of the node relative to the `relativeItem`.
+   * The placement type property defines the node position on the left or the right side of the relative node.
    * 
    * @group Order
    * @type {AdviserPlacementType}
@@ -50,7 +54,7 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.placementType = AdviserPlacementType.Right;
 
   /**
-   * Relative position defines order of elements placed relative to the same relative item on the same side.
+   * The position property sets the sequence of elements placed relative to the same relative item on the same side.
    * 
    * @group Order
    * @type {number}
@@ -58,8 +62,9 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.position = null;
 
   /**
-   * Primary parents id. Set this property to place item close to the selected primary parent in `parents` collection.
-   * If property set to null or referenced parent does not exists then this property is ignored.
+   * The primary parent id lets place item close to the selected parent when the
+   * node has multiple parents. If the referenced parent does not exist,
+   * this property is simply ignored.
    * 
    * @group Order
    * @type {string}
@@ -67,7 +72,7 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.primaryParent = null;
 
   /**
-   * Title
+   * Title. It is used in the default template.
    * 
    * @group Template
    * @type {string}
@@ -99,7 +104,8 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.context = null;
 
   /**
-   * Title background color. The same color is used for node marker when control has enabled auto fit mode.
+   * Title background color for default template.
+   * When the node is displayed as a marker, it sets the marker color. 
    * 
    * @group Template
    * @type {string}
@@ -107,10 +113,11 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.itemTitleColor = Colors.RoyalBlue;
 
   /**
-   * Marker type. The shape of the marker when node is minimized by auto fit. The control supports auto fit of diagram into available screen space.
-   * When diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic,
-   * so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
-   * So this option sets marker shape for individual node.
+   * Marker type. The shape of the marker when the node is minimized in the diagram layout.
+   * The component is designed for automatic nodes positioning; it optimizes nodes placement
+   * and size depending on the available screen space. When the diagram size is significantly
+   * larger than the available screen space, its scrolling and navigation become problematic,
+   * so control replaces some nodes with markers. That feature has a lot of options for tuning.
    * 
    * @group Template
    * @type {ShapeType}
@@ -118,8 +125,9 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.minimizedItemShapeType = null;
 
   /**
-   * Group Title. The group title on the side of the diagram node is one of controls default easy to use features.
-   * It gives extra dimension for nodes visual grouping in the diagram.
+   * Group Title. The group title is a panel on the side of the node with rotated text inside.
+   * It is one of the control's default easy-to-use features.
+   * It gives extra dimension for the visual grouping in the diagram.
    * 
    * @group Group Title
    * @type {string}
@@ -135,37 +143,39 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.groupTitleColor = Colors.RoyalBlue;
 
   /**
-   * Matrix id defines grouping of multiple nodes into individual matrixes. By default all applicable nodes grouped into a single matrix.
-   * Use this property to split nodes into multiple matrixes.
+   * Matrix id defines the grouping of multiple nodes into matrixes.
+   * Use this property to split large matrixes into small ones.
    * 
    * @type {string}
    */
   this.matrixId = null;
 
   /**
-   * Add to matrix property allows node to be grouped with other nodes into matrix. It is true by default.
+   * Add to matrix property allows the node to be grouped with other nodes. It is true, by default.
    * 
    * @type {boolean}
    */
   this.addToMatrix = true;
 
   /**
-   * If true it makes item inactive in the diagram layout. Inactive items are regular items excluded from navigation, that means 
-   * when diagram uses auto fit mode, selection of the neighboring nodes goes through inactive items, so all nodes next to inactive item
-   * become selected and shown in full size as well. Inactive items play a role of in layout annotations having no user interaction
-   * and templated with HTML. For example they can be used to add titles into family diagram layout or terminator items
-   * indicating that upon reaching them diagram would load extra nodes into layout.
+   * If it is true, it makes the node inactive in the diagram layout.
+   * The inactive item is excluded from navigation, which means it is not clickable,
+   * and it is impossible to set the cursor to it. Consider the inactive node as an in-layout
+   * label or title having a custom item template. It is worth mentioning that it
+   * impacts cursor neighbors selection. The component skips the static node
+   * and selects its neighbors instead
    * 
    * @type {boolean}
    */
   this.isActive = true;
 
   /**
-   * Shows selection check box for the node.
-   * If Auto then selection check box visibility depends on control's configuration.
+   * It controls the visibility of the selection check box for the node.
+   * The selection checkbox is a default, easy-to-use feature to add and
+   * remove nodes to selected items collection
    * 
-   * Auto - depends on `hasSelectorCheckbox` property of the control
-   * True - shown
+   * Auto - depends on the control's configuration `hasSelectorCheckbox` property setting
+   * True - visible
    * False - hidden
    * 
    * @type {Enabled}
@@ -173,11 +183,13 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.hasSelectorCheckbox = Enabled.Auto;
 
   /**
-   * Shows context buttons panel for the node.
-   * If Auto then context buttons panel visibility depends on control's configuration.
+   * It controls the visibility of the context buttons panel for the node. 
+   * The context buttons panel is a built-in, easy-to-use feature to add
+   * interactive UI elements around the cursor node. On-screen annotations
+   * do not block context buttons panel as well
    * 
-   * Auto - depends on `hasButtons` property of the control
-   * True - shown
+   * Auto - depends on the control's configuration `hasButtons` property setting
+   * True - visible
    * False - hidden
    * 
    * @group Template
@@ -186,9 +198,10 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.hasButtons = Enabled.Auto;
 
   /**
-   * Template name. Templates are HTML fragments containing layout and styles used to render diagram nodes.
-   * They are defined with a named configuration objects. See `templates` property of control's configuration object.
-   * This option lets individually assign rendering template per individual node of the diagram.
+   * Template name lets individually assign rendering templates per individual
+   * node of the diagram. Templates contain settings defining node size,
+   * interactivity options, and HTML fragments to render nodes.
+   * See the family chart configuration object for the `templates` property
    * 
    * @group Template
    * @type {string}
@@ -196,15 +209,15 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.templateName = null;
 
   /**
-   * Sets callout annotation visibility for individual node. The callout annotation is one of easy to use features of the control.
-   * By default it is displayed for markers in order to preview their node's content. The content is displayed using
-   * current template of the node it is rendered for.
+   * Show callout property sets callout annotation visibility per individual node.
+   * The callout annotation is one of the easy-to-use features of the control.
+   * It is displayed for markers to preview the node's content. The content is displayed
+   * using the current node template it is rendered for. The callout can be forced
+   * to be displayed for templated nodes as well. In that case, use the `calloutTemplateName`
+   * property to change the callout template
    * 
-   * The callout can be forced to be displayed for regular nodes as well. In that case use `calloutTemplateName` property
-   * to change their template.
-   * 
-   * Auto - depends on `showCallout` property of the control
-   * True - shown regardless of node's visibility
+   * Auto - depends on the control's configuration `showCallout` property setting
+   * True - always visible
    * False - hidden
    * 
    * @group Callout
@@ -213,11 +226,10 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.showCallout = Enabled.Auto;
 
   /**
-   * Callout annotation template name. This option lets individually assign rendering callout annotation template
-   * per individual node of the diagram.
-   * 
-   * Templates are HTML fragments containing layout and styles used to render diagram nodes.
-   * They are defined with a named configuration objects. See `templates` property of control's configuration object.
+   * Callout annotation template name redefined default item template used to display
+   * the content of the callout annotation. Templates contain size and HTML fragments
+   * to display node content. See the `templates` property of the family
+   * chart control configuration object
    * 
    * @group Callout
    * @type {string}
@@ -225,7 +237,7 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.calloutTemplateName = null;
 
   /**
-   * Marker label.
+   * Marker label
    * 
    * @group Label
    * @type {string}
@@ -233,18 +245,20 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.label = null;
 
   /**
-   * Sets label visibility for individual nodes. Labels are only rendered for a node's markers. 
+   * The show label property sets labels visibility for individual nodes.
+   * The control displays label only for node markers. The control does not
+   * preserve space for labels in the diagram layout. The application's
+   * responsibility is to set intervals between nodes to fit labels.
+   * Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve
+   * space between nodes for labels. Labels are displayed inside `div's of
+   * the fixed size, see the `labelSize` property, and the control provides
+   * simple conflict resolution to avoid displaying overlapping labels.
+   * If two labels overlap each other with their bounding rectangles,
+   * then only one of them will stay visible. 
    * 
-   * The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes
-   * into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels.
-   * 
-   * Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict
-   * resolution to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them
-   * is going to stay visible.
-   * 
-   * Auto - displays label only when it has space to be rendered.
-   * True - shows label regardless, even if it overlaps other labels and nodes.
-   * False - hidden.
+   * Auto - avoid labels overlapping, hide some of them
+   * True - visible
+   * False - hidden
    * 
    * @group Label
    * @type {Enabled}
@@ -252,8 +266,9 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.showLabel = Enabled.Auto;
 
   /**
-   * Label size. Sets label's placeholder `div` size and controls conflict resolution if labels overlap each other.
-   * If `null` then it is set to `labelSize` property of the control configuration.
+   * The label size property defines the label's placeholder `div` size,
+   * which impacts conflict resolution if labels overlap. If it is `null`,
+   * it uses the `labelSize` property of the control configuration
    * 
    * @group Label
    * @type {Size}
@@ -261,8 +276,8 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.labelSize = null;
 
   /**
-   * Label orientation.
-   * If `Auto` then it is set to `labelOrientation` property of the control configuration.
+   * Label orientation defines label rotation. If it is `Auto`,
+   * it uses the `labelOrientation` property of the control configuration
    * 
    * @group Label
    * @type {TextOrientationType}
@@ -270,8 +285,8 @@ export default function FamItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.labelOrientation = TextOrientationType.Auto;
 
   /**
-   * Label placement. Sets label placement relative to the marker bounding rectangle.
-   * If `Auto` then it is set to `labelPlacement` of the control configuration.
+   * Label placement sets label placement around the marker.
+   * If it is `Auto`, it uses the `labelPlacement` of the control configuration
    * 
    * @group Label
    * @type {PlacementType}

@@ -1,10 +1,12 @@
 import { LineType, Colors } from '../enums';
 /**
  * @class PaletteItemConfig
- * @classdesc Palette Item configuration object defines cross family connections lines styles. Multi-parent diagrams have cross hierarchy 
- * relation lines, so in order to make their visual tracing more easy on diagram every connection line can be styled differently.
- * (This is the same approach as for visualization of regular classic line charts. If we have multiple lines in chart area it makes
- * sense to style every line individually.)
+ * @classdesc Palette Item configuration object defines cross-family 
+ * connections lines styles. Multi-parent diagrams may have a lot of
+ * parallel lines, so to make their visual tracing easier, the component
+ * supports multiple line styles and evenly distributes them. It is a similar
+ * approach as for visualization of regular line charts. If we have numerous
+ * lines in the chart area, it makes sense to style every line individually.
  * 
  * @param {PaletteItemConfig} arg0 Palette properties object.
  * 

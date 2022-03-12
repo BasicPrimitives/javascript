@@ -3,10 +3,11 @@ import { AnnotationType, LineType, Colors } from '../enums';
 
 /**
  * @class LevelAnnotationConfig
- * @classdesc Level annotation highlights same level nodes of the diagram via drawing continuous rectangular shape 
- * from side to side in their background. Level has optional title on the side of the diagram view area.
- * Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the 
- * background and does not occupy space. 
+ * @classdesc Level annotation highlights the same level nodes of the diagram via
+ * drawing continuous rectangular shapes from side to side and the optional title
+ * on the side of the diagram view area. Title placement can be inside or outside
+ * of the diagram. The inside placement does not occupy diagram space and
+ * is rendered in the background. 
  *
  * @param {object} arg0 Object properties.
  */
@@ -14,8 +15,9 @@ export default function LevelAnnotationConfig(arg0) {
   var property;
 
   /**
-   * Annotation type. All types of annotations objects are added to `annotations` collection property of the control.
-   * This property is needed to distinguish them when they are defined as a type less JSON objects.
+   * Annotation type property explicitly defines annotation object type when 
+   * it is defined as a JSON object. The `annotations` collection contains 
+   * a mixture of all kinds of control annotations.
    * 
    * @type {AnnotationType}
    */
@@ -29,7 +31,7 @@ export default function LevelAnnotationConfig(arg0) {
   this.levels = [];
 
   /**
-   * Level Title.
+   * Title.
    * 
    * @type {string}
    */
@@ -43,21 +45,21 @@ export default function LevelAnnotationConfig(arg0) {
   this.titleFontColor = null;
 
   /**
-   * The level title background color.
+   * The title background color.
    * 
    * @type {string}
    */
   this.titleColor = null;
 
   /**
-   * Sets background offset relative to default position.
+   * Background offset relative to its default position.
    * 
    * @type {Thickness}
    */
   this.offset = new Thickness(0, 0, 0, 0);
 
   /**
-   * Background stripe border line width. Use {Thickness} to set border width individually per side.
+   * The background border line width. Use {Thickness} to set border width individually per side.
    * 
    * @type {Thickness}
    */
@@ -71,21 +73,21 @@ export default function LevelAnnotationConfig(arg0) {
   this.opacity = 1;
 
   /**
-   * Background stripe border line color
+   * Background border line color
    * 
    * @type {string}
    */
   this.borderColor = null;
 
   /**
-   * Background stripe fill Color.
+   * Background fill Color.
    * 
    * @type {string}
    */
   this.fillColor = "#D4D4D4";
 
   /**
-   * Background stripe border line type
+   * Background border line type
    * 
    * @type {LineType}
    */

@@ -4,9 +4,10 @@
 
 
 /**
- * The enumeration sets leftward or rightward item placement relative to the referenced item.
- * In the case of assistants or advisers, the referenced node is their immediate parent.
- * In the case of the family diagram, the referenced node is a sibling. 
+ * The adviser placement type controls assistants and advisers placement relative
+ * to the parent node, on the left or the right side of the parent's hierarchy
+ * in the organizational chart. In the case of the family diagram,
+ * the position is defined relative to siblings. 
  *  
  * @enum {AdviserPlacementType}
  */
@@ -31,8 +32,8 @@ export const AdviserPlacementType = {
 
 
 /**
- * Defines type of on-screen and in-layout annotation object. Annotations are geometrical 
- * figures drawn around or bound to existing nodes of the diagram.
+ * Annotation type defines the type of on-screen and in-layout annotation object.
+ * Annotations are geometrical figures drawn around or bound to existing nodes of the diagram.
  *
  * @enum {AnnotationType}
  */
@@ -45,7 +46,7 @@ export const AnnotationType = {
      */
     Connector: 0,
     /**
-     * Shape annotation is a possibility to draw some geometrical shapes over several nodes of the diagram. 
+     * Shape annotation lets draw some geometrical figures over nodes of the diagram. 
      */
     Shape: 1,
     /**
@@ -53,21 +54,21 @@ export const AnnotationType = {
      */
     HighlightPath: 2,
     /**
-     * The in-layout label annotation display values over relation lines between nodes. 
-     * The control preserves space for labels in the diagram layout so they don't overlap nodes.
-     * Label annotations are designed for auto-placement and bundling of connection lines between nodes when needed.
+     * The in-layout label annotations display values over relation lines between nodes.
+     * The control reserves space for labels in the diagram layout to not overlap nodes.
+     * Label annotations are designed for auto-placement and bundling connection lines between nodes when needed.
      */
     Label: 3,
     /**
      * The background annotation highlights nodes via drawing the rectangular shape in the node's background.
-     * If the same style annotations of neighboring nodes overlap, control merges them into one continuous polygon geometry. 
+     * If annotations of neighboring nodes overlap, control merges them into one continuous polygon geometry. 
      */
     Background: 4,
     /**
-     * Level annotation highlights same level nodes of the diagram via drawing continuous rectangular shape 
-     * from side to side in their background. Level has optional title on the side of the diagram view area.
-     * Title may be placed inside or outside of the diagram. If it is placed inside, it is drawn in the 
-     * background and does not occupy space. 
+     * Level annotation highlights the row of nodes of the diagram by drawing a continuous rectangular shape
+     * from side to side in their background. The level annotation has the optional title on the side of
+     * the diagram view area. The level's title is optionally placed inside or outside of the diagram.
+     * If placed inside, it is drawn in the background and does not occupy space. 
      */
     Level: 5
 };
@@ -78,17 +79,18 @@ export const AnnotationType = {
 
 
 /**
- * The enumeration defines the shape of children's formation. By default, control places children in a horizontal 
- * line below the parent node. On a large scale, this may result in the end-user having to scroll screens 
- * to view all of them. To compensate, we provide the option of placing all of the children of a parent node
- * in a square/matrix formation. That will reduce sideways screen scrolling by compacting the child
- * nodes into a much smaller area on the screen.
+ * The children's placement type enumeration defines the shape of children's formation.
+ * Control places children in a horizontal line below the parent node by default.
+ * In the case of many child nodes, this may result in the end-user having to scroll screens to
+ * view all of them. To compensate, we provide the option of placing all of the parent node's
+ * children in a square/matrix formation. That will reduce sideways screen scrolling by compacting
+ * the child nodes into a much smaller area on the screen.
  *  
  * @enum {ChildrenPlacementType}
  */
 export const ChildrenPlacementType = {
     /**
-     * Auto: This mode lets you set nodes layout at the component level and then redefine it for individual nodes if needed.
+     * Sets nodes layout at the component level
      */
     Auto: 0,
     /**
@@ -110,7 +112,7 @@ export const ChildrenPlacementType = {
  **/
 
 /**
- * Just a list of named colors.
+ * List of named colors.
  * 
  * @ignore
  * @enum {Colors}
@@ -285,9 +287,9 @@ export const Colors = {
 
 
 /**
- * Label placement relative to connector annotation. Connector annotation is bound and drawn between two nodes
- * defined by two properties: `fromItem` and `toItem`. Label can be placed close to "start", "end" nodes or in between of them
- *  along the connector line. 
+ * Connector label placement type defines label placement relative to connector annotation endpoints.
+ * Connector annotation is bound and drawn between two nodes defined by the `fromItem` and the `toItem`
+ * properties. The label can be placed close to the start, end, or between them along the connector line. 
  *
  * @enum {ConnectorLabelPlacementType}
  */
@@ -303,26 +305,21 @@ export const ConnectorLabelPlacementType = {
 
 
 /**
- * Connector placement type defines style of connector line drawing over diagram layout. It supports two options: 
- * the `Straight` is classic direct line connecting two nodes, this is the most expected style of connector annotation
- * drawing over diagram, the second style is called `Offbeat` and it design to dynamically adopt to nodes mutual 
- * location and gap between them. It uses free hand line style drawing going from start to the end nodes. Since every diagram 
- * is packed with various connection lines, this annotation placement style is deliberately made not straight, so it can be 
- * noticeable on top of other lines of the diagram.
+ * Connector placement type defines style and shape of the connector line. 
  *
  * @enum {ConnectorPlacementType}
  */
 export const ConnectorPlacementType = {
     /**
-     * Places connector annotation in the way that it does not overlap underlying diagram connector lines.
-     * If nodes are close to each other and gap between them cannot fit annotation, then 
-     * it will be drawn on the side of the nodes, so it will have enough space for arrow and label.
+     * The offbeat connection line style places the connector line not to overlap or parallel
+     * the underlying diagram connector lines. If nodes are close to each other and the gap
+     * between them cannot fit annotation, it will be traced around the nodes to have enough space for arrows and labels.
      */
     Offbeat: 0,
     /**
-     * Straight line annotation between nodes. This annotation mode provides basic conflict resolution between annotations
-     * overlapping each other. If two or more straight annotations overlap each other then layout engine will 
-     * add extra offset to them, so they will be drawn in parallel to each other.
+     * The straight option is a classic direct line connecting two nodes. The component provides conflict
+     * resolution between annotations overlapping each other. If two or more annotations overlap,
+     * the layout engine will add offset to them to be drawn parallel.
      */
     Straight: 1
 };
@@ -333,9 +330,11 @@ export const ConnectorPlacementType = {
 
 
 /**
- * Connector shape type defines number of lines and arrows at their ends drawn between nodes of the connector annotation.
- * This feature combined with basic conflict resolution, which places overlapping annotations in parallel when they overlap each other,
- * gives you full flexibility over variations of possible connector lines between two given nodes of diagram.
+ * Connector shape type defines the number of lines and arrows at their ends drawn between
+ * nodes of the connector annotation. The possibility to draw single lines, combined with
+ * conflict resolution, which places overlapping annotations in parallel when they overlap
+ * each other, provides flexibility to create an infinite variety of parallel lines and
+ * styles between nodes. 
  *
  * @enum {ConnectorShapeType}
  */
@@ -365,22 +364,23 @@ export const ConnectorStyleType = {
  **/
 
 /**
- * Connection lines style. This option is only applicable to nodes minimized to markers or lines.
- * Full size nodes are always connected with squared connection lines
+ * The connector type option defines the base connection lines in the diagram.
+ * It is only applicable to nodes minimized to markers or lines.
+ * The templated nodes are always connected with squared connection lines
  *  
  * @enum {ConnectorType}
  */
 export const ConnectorType = {
     /**
-     * Orthogonal connection lines
+     * Orthogonal
      */
     Squared: 0,
     /**
-     * Angular direct node to node connection lines
+     * Angular
      */
     Angular: 1,
     /**
-     * Curved direct node to node connection lines
+     * Curved
      */
     Curved: 2
 };
@@ -439,11 +439,11 @@ export const Enabled = {
  **/
 
 /**
- * This enumeration defines objects gravity in the chart relative to parents and children.
- * For example connection lines can be drawn with arrows, so this enumeration controls
- * direction of arrows up towards parents or down towards children in the hierarchy.
- * The other example is nodes placement close to their immediate parents or immediate children 
- * in case when parents and children are offset from them by multiple levels in hierarchy.
+ * The group by type enumeration defines direction towards parents or children.
+ * For example, connection lines arrows direction can be towards parents or down
+ * towards children in the hierarchy. The other example is the placement of nodes
+ * close to their parents or children when we have multiple empty levels between
+ * parents and children of the node.
  *  
  * @enum {GroupByType}
  */
@@ -473,23 +473,21 @@ export const HorizontalAlignmentType = {
  **/
 
 /**
- * The enumeration defines child node placement relative to its parent node.
- * By default, the control places all children that belong to the same parent as
- * the horizontal line below it. That works for a regular hierarchy of nodes
- * having the same type. In the organizational chart, we have a lot of exceptions
- * and non-hierarchical relations between nodes. For this purpose, we provide custom
- * item types to place nodes around the logical parent, which helps visually
- * differentiate nodes logically belonging to the same parent.  These placement
- * options give a lot of space for creating roles such as an Assistant, Adviser,
- * various Partners, and co-heads in the organization.  Additionally, control allows
- * shaping the same type of children into vertical and matrix formations
- * and place them into multiple levels.
- *  
+ * The enumeration defines child nodes' placement relative to their parents. 
+ * By default, all children of the same parent node are of the same rank and
+ * status are aligned below the parent in a horizontal line. However,
+ * for exceptional cases where the end-user wishes to have a child separate
+ * from the rest of its siblings, we provide custom child types that
+ * the end-user can use to place different ranking nodes anywhere around
+ * the parent node. These placement options give a lot of space for creating
+ * roles such as an Assistant, Adviser, various Partners,
+ * and co-heads in the organization.
+ * 
  * @enum {ItemType}
  */
 export const ItemType = {
     /**
-     * The regular type places node below parent.
+     * The regular type places node below the parent.
      */
     Regular: 0,
     /**
@@ -497,18 +495,21 @@ export const ItemType = {
      */
     Assistant: 1,
     /**
-     * The sub-assistant node type is a variation of the assistant node type. 
-     * The sub-assistant places node at the row on the side of the connection line
-     * going from parent to its children. The connection line goes out of the top side of the node.
+     * The sub-assistant node type is a variation of the assistant type. 
+     * It is placed on the side of the connection line going from parent 
+     * to regular children and attached to it with the connection 
+     * line going from the top of the node.
      */
     SubAssistant: 4,
     /**
-     * The adviser type places node on the right or left side of the parent.
+     * The adviser type places node on the right or left side of the parent
+     * and attaches to it with a horizontal connection line.
      */
     Adviser: 2,
     /**
-     * The sub-adviser type places node on the right or left side of the parent. 
-     * The connection line goes out of the top side of the sub-adviser node.
+     * The sub-adviser type places node on the right or left side of the
+     * parent and attaches to it with the connection line that goes out of
+     * the top side of the sub-adviser node.
      */
     SubAdviser: 5,
     /**
@@ -579,9 +580,9 @@ export const LineType = {
  **/
 
 /**
- * Interactivity mode. Control implements standard behavior of classic desktop UI controls. It supports single selected node - cursor.
- * It supports on mouse over node visual feedback - highlight. It supports selection of group of nodes - selected items. 
- * All that functionality can be disabled depending on your application requirements.
+ * It is possible to disable control interactivity depending on application requirements.
+ * The control implements the standard behavior of collection controls. It supports single
+ * node selection, mouse over visual feedback, and multiple node selection. 
  *  
  * @enum {NavigationMode}
  */
@@ -609,22 +610,21 @@ export const NavigationMode = {
  **/
 
 /**
- * Neighbors selection mode. The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers.
- * So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items
- * of the diagram in full size and draw all other as markers.
- *
- * This enumeration controls visibility of neighbors of the cursor node in the auto fit mode. It allows to draw 
- * them in full size regardless of available space.
+ * Neighbors selection method defines the neighbors of the cursor node in the autofit mode.
+ * The auto-fit mode replaces nodes with small markers to fit the diagram into the screen view.
+ * Small nodes fit the diagram into the screen space, but they have no details.
+ * So our solution is to show the cursor, neighbors, and selected diagram items
+ * with templates and draw all others as markers.
  *
  * @enum {NavigationMode}
  */
 export const NeighboursSelectionMode = {
     /**
-     * Selects parents and children of the cursor item
+     * Parents and children of the cursor item
      */
     ParentsAndChildren: 0,
     /**
-     * Selects parents, children, and siblings of the cursor item.
+     * Parents, children, and siblings of the cursor item.
      */
     ParentsChildrenSiblingsAndSpouses: 1
 };
@@ -634,7 +634,8 @@ export const NeighboursSelectionMode = {
  **/
 
 /**
- * Controls diagram layout orientation. The control can be rotated in any direction, this is needed for arabic support and various layout.
+ * The orientation type defines diagram layout direction.
+ * The control can rotate diagrams in any direction; this is needed for Arabic support and other layouts.
  *  
  * @enum {OrientationType}
  */
@@ -651,11 +652,12 @@ export const OrientationType = {
  **/
 
 /**
- * Fits diagram into available screen space. When diagram size significantly larger that available screen space, its scrolling and navigation
- * becomes problematic, so we support automatic diagram fit into the screen space via rendering some of its nodes in form of small markers.
- * Control supports several page fit mode options which can match your requirements depending on diagram layout, orientation and number of nodes.
- * 
- * Autosize - this option is opposite to auto fit. It lets you expand control size to fit all diagram nodes full size without scroll bars.
+ * The page fit method defines how the control fits the diagram into available screen space.
+ * When the diagram size is significantly larger than the screen space, its scrolling and navigation
+ * become problematic, so the component automatically fits the diagram into the screen space via
+ * rendering some of its nodes in the form of small markers. The control supports several page fit
+ * method options which can match your requirements depending on the diagram layout, orientation,
+ * and the number of nodes.
  *  
  * @enum {PageFitMode}
  */
@@ -665,11 +667,11 @@ export const PageFitMode = {
      */
     None: 0,
     /**
-     * Fits diagram into the view width, so it has no horizontal scrollbar.
+     * Fits the diagram into the view width, so it has no horizontal scrollbar.
      */
     PageWidth: 1,
     /**
-     * Fits diagram into the view hight, so it has no vertical scrollbar.
+     * fits the diagram into the view hight, so it has no vertical scrollbar.
      */
     PageHeight: 2,
     /**
@@ -677,12 +679,13 @@ export const PageFitMode = {
      */
     FitToPage: 3,
     /**
-     * This is opposite mode to auto fit. In this mode diagram controls its size, it sets its size to fit all nodes and render them full size using templates.
+     * The auto size option is opposite to the fit-to-page. It expands the control placeholder to fit the entire diagram without scrolling.
      */
     AutoSize: 5,
     /**
-     * Renders all nodes as markers regardless of available screen space. Control selects and renders full size cursor, its neighbours and selected nodes only.
-     * Don't forget to disable selection path as well, so nodes from cursor up to the root are not selected.
+     * It renders all nodes as markers regardless of available screen space, and only the cursor node,
+     * neighbors, and selected nodes are rendered with templates. Don't forget to disable the selection
+     * path mode, which forces all nodes from the cursor up to the root to be shown with templates.
      */
     SelectionOnly: 6
 };
@@ -693,7 +696,7 @@ export const PageFitMode = {
 
 
 /**
- * Defines element placement relative to rectangular area it is bound to.
+ * Defines element placement around the rectangular area it is bound to.
  *  
  * @enum {PlacementType}
  */
@@ -721,19 +724,13 @@ export const PlacementType = {
  **/
 
 /**
- * This enumeration is used to tell rendering callback functions current state of the template.
- * It is needed for proper events binding and content updates.
+ * This enumeration is used to tell rendering callback functions the current state
+ * of the template. It is needed for proper events binding and content updates.
  *
  * @enum {RenderingMode}
  */
 export const RenderingMode = {
-    /**
-     * Template is just created.
-     */
     Create: 0,
-    /**
-     * Template is reused and update is needed.
-     */
     Update: 1
 };
 
@@ -750,22 +747,18 @@ export const SegmentType = {
  **/
 
 /**
- * Selection path mode. This enumeration controls visibility of nodes between cursor and the root of the diagram in the auto fit mode. It allows to draw 
- * them in full size regardless of available space and auto fit mode.
- * 
- * The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers.
- * So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items
- * of the diagram in full size and draw all other diagram nodes as markers.
+ * The selection path enumeration controls nodes visibility between the cursor node and
+ * the root of the diagram in the auto-fit mode. It forces drawing of them with templates.
  *
  * @enum {SelectionPathMode}
  */
 export const SelectionPathMode = {
     /**
-     * No selection path
+     * Disabled
      */
     None: 0,
     /**
-     * Selects cursor node parents up to the root are renders them full size regardless of available space.
+     * Snow all parent nodes with templates
      */
     FullStack: 1
 };
@@ -812,7 +805,7 @@ export const SideFlag = {
  */
 export const TextOrientationType = {
     /**
-     * Regular horizontal text
+     * Horizontal text
      */
     Horizontal: 0,
     /**
@@ -834,18 +827,18 @@ export const TextOrientationType = {
  **/
 
 /**
- * Controls update of the diagram
+ * Defines update method of the diagram
  *
  * @enum {UpdateMode}
  */
 export const UpdateMode = {
     /**
-     * Forces control to make a full chart redraw. It is equivalent to initial chart creation. 
-     * It removes everything from placeholder and renders all elements again.
+     * Forces control to make a full chart redraw. It is equivalent to initial chart creation.
+     * It removes everything from the placeholder and renders all elements again.
      */
     Recreate: 0,
     /**
-     * Optimized refresh. It only updates visual elements which needs to be updated.
+     * Optimized refresh. It only updates visual elements which need to be updated.
      */
     Refresh: 1,
     /**
@@ -875,8 +868,9 @@ export const VectorRelationType = {
  **/
 
 /**
- * Controls nodes vertical alignment inside row of nodes. If row of nodes contains nodes of
- * multiple sizes then small nodes are vertically aligned relative to their large neighbours.
+ * The vertical alignment defines nodes alignment inside row's vertical boundaries.
+ * If a row of nodes contains nodes of multiple sizes, small nodes
+ * are vertically aligned relative to their bigger siblings.
  *  
  * @enum {VerticalAlignmentType}
  */
@@ -892,8 +886,8 @@ export const VerticalAlignmentType = {
 
 
 /**
- * Minimal nodes visibility in the diagram. If auto fit of diagram into current page size is enabled, then
- * this option controls minimum allowed size of diagram nodes.
+ * The enumeration defines nodes visibility in the diagram.
+ * If the diagram's auto-fit is enabled, this option controls the minimum allowed size of diagram nodes.
  *  
  * @enum {Visibility}
  */
@@ -903,20 +897,20 @@ export const Visibility = {
      */
     Auto: 0,
     /**
-     * Regular template based diagram nodes
+     * All nodes shown with templates
      */
     Normal: 1,
     /**
-     * Diagram draws nodes in form of markers
+     * Nodes are allowed to be replaced with markers
      */
     Dot: 2,
     /**
-     * Diagram only draws connection lines and hides actual nodes.
+     * The component displays only connection lines, no nodes or markers visible in layout
      */
     Line: 3,
     /**
-     * Makes node invisible in layout. If node has no parents then 
-     * its connection lines are hidden as well.
+     * It hides the node and shows only its connection lines.
+     * If the node has no parents, its connection lines are hidden as well.
      * 
      * @ignore
      */
@@ -928,7 +922,7 @@ export const Visibility = {
  **/
 
 /**
- * Option to draw annotation in the foreground or in the background of diagram nodes.
+ * Z-order type defines the annotation layer in the foreground or the background of diagram nodes.
  *  
  * @enum {ZOrderType}
  */

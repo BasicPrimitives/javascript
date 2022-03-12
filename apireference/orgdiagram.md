@@ -1,6 +1,6 @@
 # Organizational Chart Configuration Objects
 ## <a name="OrgConfig" id="OrgConfig">OrgConfig</a>
-Organizational Chart configuration object. Use this object as a reference for available properties and their default values.
+Organizational Chart configuration object. Use this object as a reference for available properties and their default values. Organizational Chart control has API options similar to regular UI collection controls. It supports single node selection with the `cursorItem` property, mouse click, or keyboard `Enter` key. The `highlightItem` functionality provides mouse over feedback and lets the user navigate diagram nodes with keyboard arrow keys. The `selectedItems` collection and checkboxes enable multi-select available in ListView and TreeView controls.
 
  `OrgConfig` 
 
@@ -8,7 +8,7 @@ Organizational Chart configuration object. Use this object as a reference for av
 
  `OrgConfig(name)` 
 
-Organizational Chart configuration object. Use this object as a reference for available properties and their default values.
+Organizational Chart configuration object. Use this object as a reference for available properties and their default values. Organizational Chart control has API options similar to regular UI collection controls. It supports single node selection with the `cursorItem` property, mouse click, or keyboard `Enter` key. The `highlightItem` functionality provides mouse over feedback and lets the user navigate diagram nodes with keyboard arrow keys. The `selectedItems` collection and checkboxes enable multi-select available in ListView and TreeView controls.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -17,36 +17,36 @@ Organizational Chart configuration object. Use this object as a reference for av
 ### Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `annotations` | Array.<(ShapeAnnotationConfi | `[]` | Annotations. Annotations are API elements attached to the diagram nodes and designed to highlight some nodes or relations. We draw our annotations either in front of the nodes or in the background. The annotations don't affect the placement of the nodes in any way. We have some exceptions. As a result, the control redraws them instantaneously without rendering or recalculating the actual diagram layout. | 
- | `cursorItem` | string | `null` | Cursor item. Organization Chart control has API options equivalent to standard UI controls. The cursor item is used to select a single item in the hierarchy with a mouse click, and the highlighted item provides visual feedback on the mouse over. Selected items collection is equivalent to checked items in ListView or TreeView controls. The chart's navigation work around the current cursor item. The component shows the cursor and its neighbors regardless of page fit mode. So cursor item plays the role of local zoom in the chart hierarchy. The user navigates around the chart via clicking and selecting cursor items and zooming into data around the new cursor item. The control notifies about this property changes with `onCursorChanging` and `onCursorChanged` events. If the cursor item is set to null, then no cursor item is selected in the diagram. | 
- | `emptyDiagramMessage` | string | `"Diagram is empty."` | Empty diagram message. This option is supposed to say user that chart is empty when no data is available for rendering. | 
- | `enablePanning` | boolean | `true` | Enable panning. Enable chart panning with mouse drag & drop for desktop browsers. Disable it if you need to support items Drag & Drop. | 
- | `hasSelectorCheckbox` | Enabled | `Auto` | Sets visibility of selection check boxes for the diagram nodes. `Auto` - visible for cursor item only `True` - visible `False` - hidden See `selectedItems` property. All items listed in this property are going to have checked selection checkboxes. Checkbox can be added to item template, in that case it should be named="checkbox", so control can use it as built in checkbox element. | 
- | `highlightGravityRadius` | number | `40` | Highlight gravity radius. This property controls mouse over feedback and callout annotation visibility for nodes rendered as markers when diagram auto fits nodes into available screen space. It makes marker highlighted when mouse pointer is inside of the gravity radius cycle of the marker. This property is ignored when the nearest item is outside of the screen boundaries and is not visible to the end user. The normal item has mouse over feedback in form of highlight border only when mouse pointer is inside of its boundaries. | 
- | `highlightItem` | string | `null` | Highlighted item. Shows highlight and callout annotation for given item id. It does not trigger diagram layout or scrolling so it can be used to synchronize mouse over feedback of the diagram nodes with other collection controls or UI elements. The control notifies about this property changes with `onHighlightChanging` and `onHighlightChanged` events. If `null` then no highlight shown on the diagram. | 
- | `items` | OrgItemConfig[] | `[]` | Items collection. Ths property defines data we render in the diagram. Every item should have set unique `id` property. They are used to create relations between items in the diagram and for rendering of various UI elements bound to nodes. | 
- | `navigationMode` | NavigationMode | `Default` | Sets control navigation mode. By default control replicates interactivity of regular collection control. It has cursor to select single item in the collection. So user can click and select any node in the diagram. The control has highlight for mouse over feedback. So user can move mouse and see highlight frame and callout callback annotation for node under cursor. By `Default` the control has both cursor and highlight. If they are disabled then control is rendered as a static image. | 
- | `scale` | number | `1` | CSS3 scale transform. Control supports content scaling using CSS scale transform. It scales everything except scroll bars. It properly handles mouse event coordinates. The CSS scale transform produces unreadable text and corrupted lines in desktop browsers, it looks good only in mobile browsers, so our recommendation is to use zoom with collection of item templates of various sizes. Templates gives you better control over quality of your content at various zoom levels. | 
- | `selectedItems` | string[] | `[]` | Selected items collection. Selected items is a collection of items ids having checked their check boxes. The control always shows selected items in the full size form, regardless of enabled page fit mode. The control notifies about user made changes in this collection with `onSelectionChanging` and `onSelectionChanged` events. | 
+ | `annotations` | Array.<(ShapeAnnotationConfi | `[]` | Annotations are visual elements attached to the diagram nodes and designed to spotlight some nodes or relations. They are drawn either in front of the diagram or the background. The annotations don't impact the placement of the nodes, though, with some exceptions. As a result, the control redraws them instantaneously without rendering or recalculating the actual diagram layout. | 
+ | `cursorItem` | string | `null` | The cursor item provides a single node selection, navigation, and local zoom in the diagram. The component shows the cursor, neighbors, and selected nodes using templates and folds everything into markers to save space. So clicking and moving the cursor from node to node works as stepping in and expanding nodes in the neighboring diagram area. To select cursor node with keyboard, use arrow keys to change focus selection first in the diagram and press the `Enter` key to set the `cursorItem` to the required node. See the'onCursorChanging` and `onCursorChanged` events to handle user clicks on nodes. If the cursor item is set to null, then no cursor item is selected in the diagram. | 
+ | `emptyDiagramMessage` | string | `"Diagram is empty."` | Empty diagram message. This option should tell the user that the chart is blank when no data is available for rendering. | 
+ | `enablePanning` | boolean | `true` | The enable panning property enables chart panning with mouse drag for desktop browsers. Disable it if you need to support items Drag & Drop. | 
+ | `hasSelectorCheckbox` | Enabled | `Auto` | The selection checkboxes are built-in UI elements managing the `selectedItems` collection property. `Auto` - visible for cursor item only `True` - visible `False` - hidden Adding a custom checkbox element to the item template requires its name to be `checkbox`, so the control can use it the same way as the built-in checkbox element. | 
+ | `highlightGravityRadius` | number | `40` | The highlight gravity radius controls distance to the nearest marker to trigger the highlight setting and callout annotation. For the templated nodes, it is required for the mouse to be inside the node's bounding rectangle to activate the highlight setting. It can be problematic to put the mouse precisely over the marker. The gravity radius helps to overcome that issue, but at the same time, it can be a source of performance if the component gets too many markers within the scope of the gravity radius. Please, keep this in mind and don't make it too big. It is crucial when the diagram has over 5 thousand nodes in the hierarchy. | 
+ | `highlightItem` | string | `null` | The highlighted item sets focus to some node in the diagram. It is a redundant feature on touch screen devices, so use the `navigationMode` property to disable it. The highlight item can be set programmatically, with mouseover, keyboard arrow keys, or the `Tab` key. The default visual is a rounded rectangle; use templates to customize the highlight's graphic. The highlight item setting does not trigger diagram layout or scrolling, so it is near-instant. It is designed to synchronize mouse moves over diagram nodes with other collection controls or UI elements. The component triggers  the `onHighlightChanging` and `onHighlightChanged` events on highlight changes. Set it to `null` to hide the highlight of the diagram. | 
+ | `items` | OrgItemConfig[] | `[]` | The items collection defines the data we render in the diagram. Every item should have a unique `id`. They are used to create relations between the nodes of the graph and render various UI elements associated with nodes. | 
+ | `navigationMode` | NavigationMode | `Default` | The navigation mode property allows disabling control interactivity. By default, the control behaves like a regular collection control. It has a cursor to select a single item in the collection. So user can click and select any node in the diagram. The control has a highlight for mouseover feedback. So user can move the mouse and see highlight frame and callout callback annotation for a node under the cursor. By `Default`, the control has both cursor and highlight. If they are disabled, then control is rendered as a static image. | 
+ | `scale` | number | `1` | The scale property sets the CSS scale-transform property for the diagram content. | 
+ | `selectedItems` | string[] | `[]` | The selected items collection property allows the end-user to choose multiple nodes in the diagram. It is a collection of ids of checked nodes. The selected items impact the diagram layout and navigation process since they are always shown in the expanded templated form. So it also helps users pin nodes while they browse in the diagram. The control notifies about the user changes in this collection with the `onSelectionChanging` and the `onSelectionChanged` events. | 
 
 ### Auto Layout Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `alignBranches` | boolean | `false` | Enables cross branch nodes alignment. Places the same type of nodes across all branches of the diagram at the same level. | 
- | `autoSizeMaximum` | Size | `{1024, 768}` | Sets maximum size the diagram can expand itself in auto size mode. See `pageFitMode` property. In the auto size mode diagram controls its placeholder size itself, it sets its size to accommodate all nodes and render them normally. | 
- | `autoSizeMinimum` | Size | `{800, 600}` | Sets minimum size the diagram can shrink itself in auto size mode. See `pageFitMode` property. In the auto size mode diagram controls its placeholder size itself, it sets its size to accommodate all nodes and render them normally. | 
- | `childrenPlacementType` | ChildrenPlacementType | `Horizontal` | Sets default formation of child nodes. By default all children that belong to a parent node are always aligned below and placed in a horizontal line. On a large scale this may result in the end user having to scroll screens in order to view all of the nodes. To compensate for this, we provide the option of placing all of the children of a parent node in a square/matrix formation. This will reduce sideways screen scrolling by compacting the child nodes into a much smaller area on the screen. | 
- | `horizontalAlignment` | HorizontalAlignmentType | `Center` | Sets children horizontal alignment relative to their parent. The children by default are measured in size and then aligned towards the parent node. If it is `Center` aligned then parent node is placed in the middle of the children. In the `Left` alignment mode parent is aligned to left of the children and vice versa for `Right` alignment. | 
- | `leavesPlacementType` | ChildrenPlacementType | `Horizontal` | Sets formation of leave children. | 
- | `maximumColumnsInMatrix` | number | `6` | Maximum number of columns for matrix layout of children. | 
- | `minimalVisibility` | Visibility | `Dot` | Minimal nodes visibility in the diagram. If auto fit of the diagram into current page size is enabled, then this option controls minimum allowed size of the diagram nodes. | 
- | `minimumVisibleLevels` | number | `1` | Minimum visible levels option prevents top-level nodes from folding into markers. The option accounts for organizational chart relations and `levelOffset` of individual items. | 
- | `orientationType` | OrientationType | `Top` | Set diagram orientation. This option controls diagram layout orientation. The control can be rotated in any direction, this is needed for Arabic support and various layouts. | 
- | `pageFitMode` | PageFitMode | `FitToPage` | Page fit mode. Minimizing nodes into markers and labels. This option provides a special mode that renders the diagram nodes in the form of markers. This is a highly scalable form that is capable of rendering large numbers of nodes while not affecting the rendering performance. With this, huge diagrams can be fit into available screen space. When using a graphics editor to manually draw your diagrams, it is common place to have large gaps between the nodes. This can make the diagram/chart unreadable, hard to edit and navigate. On top of that, on a large scale the diagram could have screen size intervals between items. Admittedly the computer UI does allow the user to scale and fit the diagram in order to visualize it on a single screen. But in that case, the items become small and unreadable as there is no scaling priority and the items are just too small to be readable. | 
- | `placeAdvisersAboveChildren` | boolean | `true` | Sets default placement of advisers hierarchies relative to the regular children of the parent node. If adviser node has its own children then control adds extra levels, so advisers children are placed above level of the parent node children. | 
- | `placeAssistantsAboveChildren` | boolean | `true` | Sets default placement of assistants hierarchies relative to the regular children of the parent node. If assistant node has its own children then control adds extra levels, so assistants children are placed above level of the parent node children. | 
- | `selectionPathMode` | SelectionPathMode | `FullStack` | Selection path mode. This property controls visibility of nodes between cursor and the root of the diagram in the auto fit mode. It allows to draw them in full size regardless of available space and auto fit mode. The control supports diagram auto fit into screen view. It is achieved via drawing nodes in form of markers. So small nodes make diagram fit into the screen space, but they have no details. Our solution is to show cursor and selected items of the diagram in full size and draw all other diagram nodes as markers. | 
- | `verticalAlignment` | VerticalAlignmentType | `Middle` | Sets items vertical alignment relative to each other within one level of the hierarchy. It does not change anything if diagram nodes are all of the same size. | 
+ | `alignBranches` | boolean | `false` | The align branches property enables cross-branch nodes alignment. In the Organizational Chart layout, the number of rows occupied by the immediate children depends on the number of assistants, advisers, and levels of children of the node. So nodes at the same logical level in the organizational chart hierarchy require visual alignment. As expected, the control aligns regular horizontally placed children across branches of the hierarchy. But it supports the alignment of Assistants, SubAssistants, Advisers, and SubAdvisers hierarchies and child nodes in vertical and matrix formations across departments. The component supports the infinite nesting of children layers and their alignment across hierarchy branches. | 
+ | `autoSizeMaximum` | Size | `{1024, 768}` | Sets maximum size, the diagram can expand itself in auto size mode. See `pageFitMode` property. In the auto size mode diagram controls its placeholder size itself, it sets its size to accommodate all nodes and render them normally. | 
+ | `autoSizeMinimum` | Size | `{800, 600}` | Sets minimum size, the diagram can shrink itself in auto size mode. See `pageFitMode` property. In the auto size mode diagram controls its placeholder size itself, it sets its size to accommodate all nodes and render them normally. | 
+ | `childrenPlacementType` | ChildrenPlacementType | `Horizontal` | The children's placement type sets default children's layout formation. The control places children in a horizontal line below the parent node by default. That may result in the end-user having to scroll screens to view many child nodes. So to compensate for this, the component supports placing children in a square/matrix and vertical formation. It reduces sideways screen scrolling by compacting the child nodes into a much smaller area on the screen. See the 'levelOffset' and the 'itemType' on `OrgItemConfig` for more layout options. | 
+ | `horizontalAlignment` | HorizontalAlignmentType | `Center` | The horizontal alignment allows the transformation of hierarchy into a folder-like tree visualization, where the parent node is aligned with the first child. If alignment is set to center, then the parent node is aligned to the children's center. In the `Left` alignment mode parent is aligned to left most child and vice versa for the `Right` alignment. | 
+ | `leavesPlacementType` | ChildrenPlacementType | `Horizontal` | The leaves placement type property sets default children formation of leave children. See the `childrenPlacementType` for more details. | 
+ | `maximumColumnsInMatrix` | number | `6` | The maximum number of columns in the matrix formation prevents it from outgrowing screen width and forces it to grow vertically. | 
+ | `minimalVisibility` | Visibility | `Dot` | The minimal nodes visibility option controls how small nodes of the diagram can be in auto-fit mode. | 
+ | `minimumVisibleLevels` | number | `1` | The minimum visible levels option prevents top-level nodes from folding into markers. It accounts for organizational chart relations and the `levelOffset` of individual items. | 
+ | `orientationType` | OrientationType | `Top` | The orientation property rotates the diagram layout. It is needed for right-to-left languages support and custom layouts. | 
+ | `pageFitMode` | PageFitMode | `FitToPage` | The page fit mode option minimizes the diagram size via replacing nodes with markers and labels. That mode can show a large number of nodes while not affecting the rendering performance. It can fit thousands of nodes into available screen space without losing usability. On the other hand, when we use a graphics editor to draw our diagrams manually, it is common to have a sparse layout with significant gaps between the nodes. If we don't fit the graph, the space between nodes can easily make the diagram/chart unusable hard to view, edit and navigate. | 
+ | `placeAdvisersAboveChildren` | boolean | `true` | The property sets default placement of advisers hierarchies relative to the regular children of the node. If the adviser node has its children, then control adds extra levels, so the adviser's children are placed above the regular children. | 
+ | `placeAssistantsAboveChildren` | boolean | `true` | The property sets the default placement of assistants hierarchies relative to the regular children of the node. If the assistant node has its children, control adds extra levels, so the assistant's children are placed above the regular children. | 
+ | `selectionPathMode` | SelectionPathMode | `FullStack` | The selection path mode property makes all parents of the cursor item up to the root node to be shown with templates. It is a complimentary feature to the auto-fit mode of the diagram. See the `pageFitMode` for more details. | 
+ | `verticalAlignment` | VerticalAlignmentType | `Middle` | The vertical alignment sets nodes alignment inside row's vertical boundaries. If a row of nodes contains nodes of multiple sizes, small nodes are vertically aligned relative to their bigger siblings. It does not change anything if diagram nodes are all of the same size. | 
 
 ### Callout Properties
 | Name | Type | Default | Description | 
@@ -54,22 +54,22 @@ Organizational Chart configuration object. Use this object as a reference for av
  | `calloutBorderColor` | string | `null` | Callout annotation border color. | 
  | `calloutCornerRadius` | number | `4` | Callout annotation corner radius. | 
  | `calloutLineWidth` | number | `1` | Callout annotation border line width. | 
- | `calloutMaximumVisibility` | Visibility | `Dot` | Sets visibility of the callout annotation depending on size of a node it is shown for. See `pageFitMode` property. | 
+ | `calloutMaximumVisibility` | Visibility | `Dot` | The callout maximum visibility property enables callout for the diagram nodes having specified visibility. See the `pageFitMode` property. | 
  | `calloutOffset` | number | `4` | Callout annotation border line offset. | 
  | `calloutOpacity` | number | `0.2` | Callout annotation opacity | 
- | `calloutPlacementOffset` | number | `100` | Callout annotation placement offset. Sets how far callout content is offset from the marker it is displayed for. | 
+ | `calloutPlacementOffset` | number | `100` | The callout annotation placement offset sets how far the callout rectangle is offset from the marker it is displayed for. | 
  | `calloutPointerWidth` | string | `"10%"` | Callout annotation pointer width. | 
  | `calloutfillColor` | string | `"#000000"` | Callout annotation fill color. | 
- | `defaultCalloutTemplateName` | string | `null` | Callout annotation default template name. Templates are HTML fragments containing layout and styles used to render diagram nodes. They are defined with a named configuration objects. See `templates` property of control's configuration object. | 
- | `showCallout` | boolean | `true` | Sets callout visibility. | 
+ | `defaultCalloutTemplateName` | string | `null` | The callout default template name. Templates are HTML fragments used to render diagram nodes. They are defined with named configuration objects. See the `templates` property for more details. | 
+ | `showCallout` | boolean | `true` | The show callout property enables on mouse over node callout for the diagram. | 
 
 ### Frame Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `frameInnerPadding` | Thickness | `{2, 2, 2, 2}` | Frame inner padding. Adds extra padding around markers on the inner side of the frame. | 
- | `frameOuterPadding` | Thickness | `{2, 2, 2, 2}` | Frame outer padding. Adds extra padding around markers on the outer side of the frame. | 
- | `padding` | Thickness | `{10, 10, 10, 10}` | Diagram padding. Adds extra padding around the diagram. | 
- | `showFrame` | boolean | `false` | Sets selected items frame visibility. If selected item is outside of the diagram's area visible to the end user, control displays that item in the form of the marker on frame around the diagram. | 
+ | `frameInnerPadding` | Thickness | `{2, 2, 2, 2}` | The frame's inner padding adds extra padding around markers on the inner side of the frame. | 
+ | `frameOuterPadding` | Thickness | `{2, 2, 2, 2}` | The frame's outer padding adds extra padding around markers on the outer side of the frame. | 
+ | `padding` | Thickness | `{10, 10, 10, 10}` | The diagram padding adds extra padding around the diagram nodes. | 
+ | `showFrame` | boolean | `false` | The show frame controls the visibility of decorating frame around the diagram. The frame displays markers for selected nodes in the chart when they are outside the screen and not visible to the end-user. | 
 
 ### Group Titles Properties
 | Name | Type | Default | Description | 
@@ -79,22 +79,22 @@ Organizational Chart configuration object. Use this object as a reference for av
  | `groupTitleFontSize` | number | `"12px"` | Group titles font size. | 
  | `groupTitleFontStyle` | string | `"normal"` | Group titles font style: normal, italic | 
  | `groupTitleFontWeight` | string | `"normal"` | Group titles font weight: normal, bold | 
- | `groupTitleHorizontalAlignment` | HorizontalAlignmentType | `Center` | Group titles horizontal alignment. | 
+ | `groupTitleHorizontalAlignment` | HorizontalAlignmentType | `Center` | The group titles horizontal alignment property sets text horizontal alignment inside the group title panel. | 
  | `groupTitleOrientation` | TextOrientationType | `RotateRight` | Group titles orientation. | 
- | `groupTitlePanelSize` | number | `24` | The size of the panel containing group title. | 
- | `groupTitlePlacementType` | AdviserPlacementType | `Left` | Group titles placement. Defines group title and buttons panel position relative to the node. The group title on the side of the diagram node is one of controls default easy to use features. It gives extra dimension for nodes visual grouping in the diagram. | 
- | `groupTitleVerticalAlignment` | VerticalAlignmentType | `Middle` | Group titles vertical alignment. | 
+ | `groupTitlePanelSize` | number | `24` | The size of the group title | 
+ | `groupTitlePlacementType` | AdviserPlacementType | `Left` | The group titles placement property sets left to right or right to left alignment for group title and buttons panel relative to the node. | 
+ | `groupTitleVerticalAlignment` | VerticalAlignmentType | `Middle` | The group titles vertical alignment property sets text vertical alignment inside the group title panel. | 
 
 ### Intervals Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `cousinsIntervalMultiplier` | number | `5` | Set cousins interval multiplier. This values adds extra space between branches of the hierarchy. For example nodes of the same parent have interval 20 and nodes of two different parents are going to have interval 100. | 
- | `dotItemsInterval` | number | `1` | Sets interval between nodes of the same row, minimized down to markers. | 
- | `dotLevelShift` | number | `20` | Sets the spacing after the row containing nodes minimized down to markers. | 
- | `lineItemsInterval` | number | `2` | Sets interval between nodes of the same row, minimized down to lines. | 
- | `lineLevelShift` | number | `10` | Sets the spacing after the row containing nodes minimized down to lines. | 
- | `normalItemsInterval` | number | `10` | Sets interval between nodes of the same row. | 
- | `normalLevelShift` | number | `20` | Sets the spacing between rows. | 
+ | `cousinsIntervalMultiplier` | number | `5` | The cousins' interval multiplier property adds extra space between branches of the hierarchy. For example, if the multiplier equals five, nodes of the same parent will have interval 20, and nodes of two different parents will have interval 100. | 
+ | `dotItemsInterval` | number | `1` | The dotted items interval property sets the spacing between markers. | 
+ | `dotLevelShift` | number | `20` | The dot level shift property sets the spacing between rows of markers. | 
+ | `lineItemsInterval` | number | `2` | The line items interval property sets the spacing between lines. | 
+ | `lineLevelShift` | number | `10` | The lines level shift property sets the spacing between rows having only connection lines. Nodes are hidden completely. | 
+ | `normalItemsInterval` | number | `10` | The normal items interval property sets the spacing between templated nodes. | 
+ | `normalLevelShift` | number | `20` | The normal level shift sets spacing between rows of templated nodes. | 
 
 ### Labels Properties
 | Name | Type | Default | Description | 
@@ -104,11 +104,11 @@ Organizational Chart configuration object. Use this object as a reference for av
  | `labelFontSize` | string | `"10px"` | Labels font size. | 
  | `labelFontStyle` | string | `"normal"` | Labels font style. Font style: normal, italic | 
  | `labelFontWeight` | string | `"normal"` | Labels font weight Font weight: normal, bold | 
- | `labelOffset` | number | `1` | Sets labels offset from the markers bounding rectangles. | 
- | `labelOrientation` | TextOrientationType | `Horizontal` | Labels orientation. | 
- | `labelPlacement` | PlacementType | `Top` | Labels placement. Sets labels placement relative to the markers bounding rectangles. | 
- | `labelSize` | Size | `{80, 24}` | Label size. Sets labels placeholders `div`s size. It is needed to resolve labels overlapping. If one label overlaps another label the or item it will be hidden. | 
- | `showLabels` | Enabled | `Auto` | Sets labels visibility for nodes when they are minimized into markers by page auto fit. See `pageFitMode` property. The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels. Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict resolution to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them is going to stay visible. Auto - displays label only when it has space to be rendered. True - shows label regardless, even if it overlaps other labels and nodes. False - hidden. | 
+ | `labelOffset` | number | `1` | The label offset property sets the distance from the markers bounding rectangles. | 
+ | `labelOrientation` | TextOrientationType | `Horizontal` | Label orientation defines label rotation. | 
+ | `labelPlacement` | PlacementType | `Top` | Label placement sets label placement around the marker. | 
+ | `labelSize` | Size | `{80, 24}` | The label size property defines the label's placeholder `div` size, which impacts conflict resolution if labels overlap. | 
+ | `showLabels` | Enabled | `Auto` | The show label property sets labels visibility for individual nodes. The control displays label only for node markers. The control does not preserve space for labels in the diagram layout. The application's responsibility is to set intervals between nodes to fit labels. Use controls `dotLevelShift`, `dotItemsInterval` and `padding` properties to preserve space between nodes for labels. Labels are displayed inside `div's of the fixed size, see the `labelSize` property, and the control provides simple conflict resolution to avoid displaying overlapping labels. If two labels overlap with their bounding rectangles, then only one of them will stay visible. Auto - avoid labels overlapping, hide some of them True - visible False - hidden. | 
 
 ### Level Titles Properties
 | Name | Type | Default | Description | 
@@ -119,48 +119,48 @@ Organizational Chart configuration object. Use this object as a reference for av
  | `levelTitleFontSize` | number | `"12px"` | Level titles font size. | 
  | `levelTitleFontStyle` | string | `"normal"` | Level titles font style: normal, italic | 
  | `levelTitleFontWeight` | string | `"normal"` | Level titles font weight: normal, bold | 
- | `levelTitleHorizontalAlignment` | HorizontalAlignmentType | `Center` | Level titles horizontal alignment. | 
- | `levelTitleOrientation` | TextOrientationType | `Auto` | Group titles orientation. | 
- | `levelTitlePanelSize` | number | `24` | The size of the panel containing level titles. | 
- | `levelTitlePlaceInside` | boolean | `false` | If this property is true then level titles are placed inside of the diagram's view port above or below diagram nodes. | 
- | `levelTitlePlacementType` | AdviserPlacementType | `Left` | Level titles placement. Defines level title panel position relative to the diagram. | 
- | `levelTitleVerticalAlignment` | VerticalAlignmentType | `Middle` | Level titles vertical alignment. | 
+ | `levelTitleHorizontalAlignment` | HorizontalAlignmentType | `Center` | The level annotation titles horizontal alignment. | 
+ | `levelTitleOrientation` | TextOrientationType | `Auto` | The level annotation titles orientation. | 
+ | `levelTitlePanelSize` | number | `24` | The panel size of the level annotation titles | 
+ | `levelTitlePlaceInside` | boolean | `false` | If this property is true, level titles are placed inside the diagram's viewport above or below diagram nodes. | 
+ | `levelTitlePlacementType` | AdviserPlacementType | `Left` | The panel placement of the level annotation titles | 
+ | `levelTitleVerticalAlignment` | VerticalAlignmentType | `Middle` | The level annotation titles vertical alignment. | 
 
 ### Relation Lines Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `arrowsDirection` | GroupByType | `None` | Sets arrows direction for connector lines. If this property set to `Parents` then arrows are drawn from logical children towards logical parents. By default diagram has no arrows. | 
- | `bevelSize` | number | `4` | The bevel size of squared connector lines. | 
- | `connectorType` | ConnectorType | `Squared` | Connection lines style. This option is only applicable to nodes minimized to markers or lines. Full size nodes are always connected with squared connection lines | 
- | `elbowDotSize` | number | `4` | The size of dot markers placed in the elbows of connector lines. | 
- | `elbowType` | ElbowType | `None` | Set style of squared connectors with custom elbows. | 
- | `extraArrowsMinimumSpace` | number | `30` | Set minimum space for placement of extra arrows on horizontal connection lines. See `showExtraArrows` property. | 
- | `highlightLinesColor` | string | `Colors.Red` | Sets highlight lines color. The diagram uses highlight lines to render highlighted relation lines between nodes. | 
- | `highlightLinesType` | LineType | `Solid` | Sets highlight lines pattern. | 
- | `highlightLinesWidth` | number | `1` | Sets highlight lines width. | 
- | `linesColor` | string | `Colors.Silver` | The relations lines color. The control uses this lines color to render basic relations between nodes. | 
- | `linesType` | LineType | `Solid` | The relations lines pattern | 
- | `linesWidth` | number | `1` | The relations lines width | 
- | `showExtraArrows` | boolean | `false` | Show extra horizontal arrows on top of long horizontal connection lines for the easy visual tracing of relations between parents and children. By default it is off. | 
+ | `arrowsDirection` | GroupByType | `None` | The arrows direction property shows arrows for connector lines. If it is set to the `Parents`, arrows are drawn towards logical parents from logical children. | 
+ | `bevelSize` | number | `4` | The bevel size of squared connection lines. | 
+ | `connectorType` | ConnectorType | `Squared` | The connector type option defines the style of connection lines in the diagram. It is only applicable to nodes minimized to markers or lines. The templated nodes are always connected with squared connection lines | 
+ | `elbowDotSize` | number | `4` | The elbow dot size property sets marker size in elbows of connector lines. | 
+ | `elbowType` | ElbowType | `None` | The elbow type of squared connection lines | 
+ | `extraArrowsMinimumSpace` | number | `30` | The extra arrows minimum space on horizontal connection lines. See `showExtraArrows` property. | 
+ | `highlightLinesColor` | string | `Colors.Red` | The color of the highlighted relation lines. | 
+ | `highlightLinesType` | LineType | `Solid` | The line style of the highlighted relation lines. | 
+ | `highlightLinesWidth` | number | `1` | The line width of the highlighted relation lines. | 
+ | `linesColor` | string | `Colors.Silver` | The color of the relations lines | 
+ | `linesType` | LineType | `Solid` | The line style of the relations lines | 
+ | `linesWidth` | number | `1` | The line width of the relations lines | 
+ | `showExtraArrows` | boolean | `false` | Show extra horizontal arrows for long horizontal connection lines for the easy visual tracking of relations between parents and children. By default, it is off. | 
 
 ### Templates Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `buttonsPanelSize` | number | `28` | The size of the panel containing context buttons. | 
- | `checkBoxPanelSize` | number | `24` | The size of the panel containing selection checkbox. | 
- | `defaultTemplateName` | string | `null` | Name of the template used to render nodes in the diagram. See `templates` property. Template name can be set individually for every node see `templateName` property of `OrgItemConfig`. | 
- | `hasButtons` | Enabled | `Auto` | Sets buttons visibility. `Auto` - cursor item only. `True` - visible `False` - hidden | 
- | `itemTitleFirstFontColor` | string | `Colors.White` | The first font color of the title. The title background color is designed to be one of the available dimensions to group nodes in the diagram, so title can be unreadable if its color matches its background color. This property is created to auto resolve this issue via automatic switch between two available font title colors. | 
- | `itemTitleSecondFontColor` | string | `Colors.Navy` | The second font color of the title. | 
- | `minimizedItemShapeType` | ShapeType | `None` | Markers. The shape of the markers when nodes are minimized by auto fit. The control supports auto fit of the diagram into available screen space. When the diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic, so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers. So this option sets default marker shape for nodes. It can be set individually per node in items configurations. The default color of shape is the same as `itemTitleColor` property set for individual items. | 
- | `selectCheckBoxLabel` | string | `"Selected"` | Selection check box label. See `hasSelectorCheckbox` and `selectedItems` properties. | 
- | `templates` | TemplateConfig[] | `[]` | Collection of named templates used to define content for nodes, cursor and highlight. By default control provides templates for all types of visual elements. | 
+ | `buttonsPanelSize` | number | `28` | The size of the button panel | 
+ | `checkBoxPanelSize` | number | `24` | The size of the selection checkbox | 
+ | `defaultTemplateName` | string | `null` | The default template name property allows overriding the default template for all nodes without setting the template name individually per node. See the `templates` property for mode details. To customize the template per node, see the `templateName` property of the `OrgItemConfig`. | 
+ | `hasButtons` | Enabled | `Auto` | The button visibility is a legacy property. The only reason it is still available on the components API is the lack of consistent support of the mouse transparency across browsers. The buttons panel is placed over all other visuals in the diagram, so they are not obstructed by the connector and shape annotations. `Auto` - cursor item only. `True` - visible `False` - hidden | 
+ | `itemTitleFirstFontColor` | string | `Colors.White` | The first choice title color. The component has two properties for the title color to automatically select the one having the highest contract for the node's background-color | 
+ | `itemTitleSecondFontColor` | string | `Colors.Navy` | The second choice title color. | 
+ | `minimizedItemShapeType` | ShapeType | `None` | The markers shape type property sets the default marker shape for nodes. It is possible to set it individually for every node or in the item template. By default color of the marker is equal to the `itemTitleColor` property set for individual items. | 
+ | `selectCheckBoxLabel` | string | `"Selected"` | The checkbox label. See `hasSelectorCheckbox` and `selectedItems` properties. | 
+ | `templates` | TemplateConfig[] | `[]` | The templates property is a collection of uniquely named templates objects used to customize nodes' size, interactivity, and visuals for content, cursor, and highlight. By default, the control provides templates for all types of visual elements. So to start experimenting with the Basic Primitives library, you don't need to define any templates. | 
 
 **Events**
 
  `onButtonClick(event, data)` 
 
-Button click event. See `buttons` property.
+The on content button click event is a legacy property. To use it, buttons in the buttons panel in the item template should have the `data-buttonname` property set.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -169,7 +169,7 @@ Button click event. See `buttons` property.
 
  `onButtonsRender(data)` 
 
-On buttons panel render event. This callback function is called to render context of buttons panel. It is used to replace `buttons` collection property in the control. So we preserve context buttons panel as a functional concept, but eliminate buttons customization API.
+The event property is used to render the content of the buttons panel.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -177,7 +177,7 @@ On buttons panel render event. This callback function is called to render contex
 
  `onCursorChanged(event, data)` 
 
-On cursor item changed event. See `cursorItem` property.
+The on cursor item changed event. See `cursorItem` property.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -186,7 +186,7 @@ On cursor item changed event. See `cursorItem` property.
 
  `onCursorChanging(event, data)` 
 
-On cursor item being changed event. See `cursorItem` property. This callback function is called before `onCursorChanged` event. Use this callback function to stop event propagation. See `EventArgs` for details.
+This callback function is called before the `onCursorChanged` event. See the `cursorItem` property. Use properties of this event to stop event propagation and the following diagram layout and rendering if needed.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -195,7 +195,7 @@ On cursor item being changed event. See `cursorItem` property. This callback fun
 
  `onCursorRender(event, data)` 
 
-Callback function for rendering content of the cursor template. This callback is only called when custom cursor is defined in the template configuration.
+The on cursor render callback function is used to update the cursor visual content having a custom template.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -212,7 +212,7 @@ On group title render event. This callback function renders the group title pane
 
  `onHighlightChanged(event, data)` 
 
-On highlight item changed event. See `highlightItem` property.
+The on highlight changed event. See `highlightItem` property.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -221,16 +221,16 @@ On highlight item changed event. See `highlightItem` property.
 
  `onHighlightChanging(event, data)` 
 
-This callback function is called before `onHighlightChanged` event. See `highlightItem` property. Use this event to modify diagram elements not affecting diagram layout. For example on-screen connector annotations added in this event handler to diagram configuration would be rendered together with highlight.
+This callback function is called before the `onHighlightChanged` event. See the `highlightItem` property. Use this event to modify diagram elements not affecting diagram layout. For example, on-screen connector annotations added in this event handler to the diagram configuration would be rendered together with highlight. Use properties of this event to stop event propagation and the following diagram layout and rendering if needed.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `event` | Object | `` | Mouse event | 
- | `data` | EventArgs | `` | Context information. Use properties of this argument to stop event propagate and further diagram layout and rendering. | 
+ | `data` | EventArgs | `` | Context information. | 
 
  `onHighlightRender(event, data)` 
 
-Callback function for rendering content of the highlight template. This callback is only called when custom highlight is defined in the template configuration.
+The on highlight render callback function is used to update the highlight visual content having a custom template.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -239,7 +239,7 @@ Callback function for rendering content of the highlight template. This callback
 
  `onItemRender(event, data)` 
 
-Callback function for rendering content of the diagram nodes. This callback is only called when custom item template is defined in the template object configuration. This callback receives reference to DOM element and context object of the rendered item. The control reuses existing elements in the DOM, so it is applications responsibility to properly update their content.
+The on item render callback function is used to populate the content of templated nodes in the diagram. It is called for user templates only. The callback references the DOM element and the node configuration object. The control reuses existing DOM elements, so the application should update the entire content of the template.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -248,7 +248,7 @@ Callback function for rendering content of the diagram nodes. This callback is o
 
  `onLevelBackgroundRender(data)` 
 
-On level annotation background render event. This callback function is called to render level annotation background panel. It is used to overwrite default level background template renderer. It is called only when level annotations are visible. See other level annotation options for details.
+The level background callback function allows rendering custom content in the level annotation background panel. It is called only for the visible level annotations. See other level annotation options for details.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -256,7 +256,7 @@ On level annotation background render event. This callback function is called to
 
  `onLevelTitleRender(data)` 
 
-On level annotation title render event. This callback function is called to render level annotation title panel. It is used to overwrite default level title template renderer. It is called only when level annotations are visible. See other level annotation options for details.
+The level title callback function allows rendering custom content in the level annotation title panel. It is called only for the visible level annotations. See other level annotation options for details.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -282,7 +282,7 @@ Mouse double click event.
 
  `onSelectionChanged(event, data)` 
 
-On selected items changed event. See `selectedItems` property.
+The on selected items changed event. See `selectedItems` property.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -291,14 +291,14 @@ On selected items changed event. See `selectedItems` property.
 
  `onSelectionChanging(event, data)` 
 
-On selected items being changed event. See `selectedItems` property.
+The on selected items being changed event. See `selectedItems` property.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `event` | Object | `` | Mouse event | 
  | `data` | EventArgs | `` | Context information | 
 ## <a name="OrgItemConfig" id="OrgItemConfig">OrgItemConfig</a>
-Item Configuration Object defines properties of individual node in the organizational chart hierarchy. See `items` collection property of organizational chart control configuration object.
+Organizational chart item configuration object defines properties of individual nodes in the organizational chart hierarchy. Nodes configurations populate the `items` collection property of the organizational chart configuration object used to describe the entire component configuration.
 
  `OrgItemConfig` 
 
@@ -306,7 +306,7 @@ Item Configuration Object defines properties of individual node in the organizat
 
  `OrgItemConfig(arg0, arg1, arg2, arg3, arg4)` 
 
-Item Configuration Object defines properties of individual node in the organizational chart hierarchy. See `items` collection property of organizational chart control configuration object.
+Organizational chart item configuration object defines properties of individual nodes in the organizational chart hierarchy. Nodes configurations populate the `items` collection property of the organizational chart configuration object used to describe the entire component configuration.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -320,50 +320,50 @@ Item Configuration Object defines properties of individual node in the organizat
 ### Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `adviserPlacementType` | AdviserPlacementType | `Auto` | Defines leftward or rightward item placement relative to the parent item. By default it is `Auto` and depends on general diagram layout orientation. | 
- | `childrenPlacementType` | ChildrenPlacementType | `Auto` | The property defines children's layout formation. By default, control places children in a horizontal line below the parent node. On a large scale, this may result in the end-user having to scroll screens to view all nodes. To compensate for this, we place children in a square/matrix formation. That will reduce sideways screen scrolling by compacting the child nodes into a much smaller area on the screen. | 
- | `hasSelectorCheckbox` | Enabled | `Auto` | Shows selection check box for the node. If Auto then selection check box visibility depends on control's configuration. Auto - depends on `hasSelectorCheckbox` property of the control True - shown False - hidden | 
- | `id` | string | `null` | Item id. It should be unique per chart. | 
- | `isActive` | boolean | `true` | If true it makes item inactive in the diagram layout. Inactive items are regular items excluded from navigation, that means when diagram uses auto fit mode, selection of the neighboring nodes goes through inactive items, so all nodes next to inactive item become selected and shown in full size as well. Inactive items play a role of in layout annotations having no user interaction and templated with HTML. For example they can be used to add titles into family diagram layout or terminator items indicating that upon reaching them diagram would load extra nodes into layout. | 
- | `isVisible` | boolean | `true` | If `false` it makes item invisible in the layout. If item has no visible parents then its connections are hidden as well. From navigation perspective invisible items make all their children to be children of their parents. | 
- | `itemType` | ItemType | `Regular` | Item type. This property defines child node placement relative to its parent node. By default all children that belong to a parent node are of the same rank and status between each other and due to that, are always aligned below the parent and are organized in the same way. However for special cases were the end user wishes to have a child that is separate from the rest of it's siblings, we provide custom child types that the end user can use to place different ranking nodes anywhere around the parent node. These placement options give a lot of space for the creation of roles such as an Assistant, Adviser, various Partners and co-heads that may be in the organization. Additionally, by default `Regular` children are always placed in a horizontal line below the parent node. | 
- | `levelOffset` | number | `null` | Sets node level offset relative to parent node. This property is ignored if it is not applicable. | 
- | `parent` | string | `null` | Parent item id. If `null` then node is the root item of the hierarchy. | 
- | `placeAdvisersAboveChildren` | Enabled | `Auto` | The property sets default placement of advisers hierarchies relative to the regular children of the node. If the adviser node has its children, then control adds extra levels, so the adviser's children are placed above the regular children. | 
- | `placeAssistantsAboveChildren` | Enabled | `Auto` | The property sets the default placement of assistants hierarchies relative to the regular children of the node. If the assistant node has its children, then control adds extra levels, so the assistant's children are placed above the regular children. | 
+ | `adviserPlacementType` | AdviserPlacementType | `Auto` | Adviser placement type sets node placement relative to the parent item on the left or right side of the parent's hierarchy. If it is set to `Auto`, the control's configuration object property is used. | 
+ | `childrenPlacementType` | ChildrenPlacementType | `Auto` | The children's placement type sets children's layout formation. Control places children in a horizontal line below the parent node by default. That may result in the end-user having to scroll screens to view many child nodes. Placing children in a square/matrix formation compensates for this. It reduces sideways screen scrolling by compacting the child nodes into a much smaller area on the screen. | 
+ | `hasSelectorCheckbox` | Enabled | `Auto` | It controls the visibility of the selection check box for the node. The selection checkbox is a default, easy-to-use feature to add and remove nodes to selected items collection. Auto - depends on the control's configuration `hasSelectorCheckbox` property setting. True - visible False - hidden | 
+ | `id` | string | `null` | Unique item id | 
+ | `isActive` | boolean | `true` | If it is true, it makes the node inactive in the diagram layout. The inactive item is excluded from navigation, which means it is not clickable, and it is impossible to set the cursor to it. Consider the inactive node as an in-layout label or title having a custom item template. It is worth mentioning that it impacts cursor neighbors selection. The component skips the static node and selects its neighbors instead. | 
+ | `isVisible` | boolean | `true` | If `false`, it makes the item invisible in the layout. If the item has no visible parents, its connections are hidden as well. From the navigation perspective, children of hidden nodes become children of their parents. | 
+ | `itemType` | ItemType | `Regular` | Item type defines child node placement relative to its parent node. By default, all children of the same parent node are of the same rank and status are aligned below the parent in a horizontal line. However, for exceptional cases where the end-user wishes to have a child separate from the rest of its siblings, we provide custom child types that the end-user can use to place different ranking nodes anywhere around the parent node. These placement options give a lot of space for creating roles such as an Assistant, Adviser, various Partners, and co-heads in the organization. | 
+ | `levelOffset` | number | `null` | Level offset organizes some node types, like regular children and assistants, into multiple rows. | 
+ | `parent` | string | `null` | Parent item id. If `null`, then the node is the root item of the hierarchy. | 
+ | `placeAdvisersAboveChildren` | Enabled | `Auto` | The property sets placement of advisers hierarchies relative to the regular children of the node. If the adviser node has its children, then control adds extra levels, so the adviser's children are placed above the regular children. | 
+ | `placeAssistantsAboveChildren` | Enabled | `Auto` | The property sets the placement of assistants hierarchies relative to the regular children of the node. If the assistant node has its children, control adds extra levels, so the assistant's children are placed above the regular children. | 
 
 ### Callout Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `calloutTemplateName` | string | `null` | Callout annotation template name. This option lets individually assign rendering callout annotation template per individual node of the diagram. Templates are HTML fragments containing layout and styles used to render diagram nodes. They are defined with a named configuration objects. See `templates` property of control's configuration object. | 
- | `showCallout` | Enabled | `Auto` | Sets callout annotation visibility for individual node. The callout annotation is one of easy to use features of the control. By default it is displayed for markers in order to preview their node's content. The content is displayed using current template of the node it is rendered for. The callout can be forced to be displayed for regular nodes as well. In that case use `calloutTemplateName` property to change their template. Auto - depends on `showCallout` property of the control True - shown regardless of node's visibility False - hidden | 
+ | `calloutTemplateName` | string | `null` | Callout annotation template name redefined default item template used to display the content of the callout annotation. Templates contain size and HTML fragments to display node content. See the `templates` property of the organizational chart control configuration object. | 
+ | `showCallout` | Enabled | `Auto` | Show callout property sets callout annotation visibility per individual node. The callout annotation is one of the easy-to-use features of the control. It is displayed for markers to preview the node's content. The content is displayed using the current node template it is rendered for. The callout can be forced to be displayed for templated nodes as well. In that case, use the `calloutTemplateName` property to change the callout template. Auto - depends on the control's configuration `showCallout` property setting True - always visible False - hidden | 
 
 ### Group Title Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `groupTitle` | string | `null` | Group Title. The group title on the side of the diagram node is one of controls default easy to use features. It gives extra dimension for nodes visual grouping in the diagram. | 
+ | `groupTitle` | string | `null` | Group Title. The group title is a panel on the side of the node with rotated text inside. It is one of the control's default easy-to-use features. It gives extra dimension for the visual grouping in the diagram. | 
  | `groupTitleColor` | string | `Colors.RoyalBlue` | The group title background color. | 
 
 ### Label Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `label` | string | `null` | Marker label. | 
- | `labelOrientation` | TextOrientationType | `Auto` | Label orientation. If `Auto` then it is set to `labelOrientation` property of the control configuration. | 
- | `labelPlacement` | PlacementType | `Auto` | Label placement. Sets label placement relative to the marker bounding rectangle. If `Auto` then it is set to `labelPlacement` of the control configuration. | 
- | `labelSize` | Size | `null` | Label size. Sets label's placeholder `div` size and controls conflict resolution if labels overlap each other. If `null` then it is set to `labelSize` property of the control configuration. | 
- | `showLabel` | Enabled | `Auto` | Sets label visibility for individual nodes. Labels are only rendered for a node's markers. The control does not preserve space for labels in the diagram layout, since that would contradict the purpose of minimizing the nodes into markers. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels. Labels are displayed inside of `div`s of the fixed size, see `labelSize` property, and control provides simple conflict resolution to avoid labels overlapping. If two labels overlap each other with their bounding rectangles then only one of them is going to stay visible. Auto - displays label only when it has space to be rendered. True - shows label regardless, even if it overlaps other labels and nodes. False - hidden. | 
+ | `labelOrientation` | TextOrientationType | `Auto` | Label orientation defines label rotation. If it is `Auto`, it uses the `labelOrientation` property of the control configuration. | 
+ | `labelPlacement` | PlacementType | `Auto` | Label placement sets label placement around the marker. If it is `Auto`, it uses the `labelPlacement` of the control configuration. | 
+ | `labelSize` | Size | `null` | The label size property defines the label's placeholder `div` size, which impacts conflict resolution if labels overlap. If it is `null`, it uses the `labelSize` property of the control configuration. | 
+ | `showLabel` | Enabled | `Auto` | The show label property sets labels visibility for individual nodes. The control displays label only for node markers. The control does not preserve space for labels in the diagram layout. The application's responsibility is to set intervals between nodes to fit labels. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels. Labels are displayed inside `div's of the fixed size, see the `labelSize` property, and the control provides simple conflict resolution to avoid displaying overlapping labels. If two labels overlap each other with their bounding rectangles, then only one of them will stay visible. Auto - avoid labels overlapping, hide some of them True - visible False - hidden. | 
 
 ### Template Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `context` | object | `null` | Context object | 
  | `description` | string | `null` | Description | 
- | `hasButtons` | Enabled | `Auto` | Shows context buttons panel for the node. If Auto then context buttons panel visibility depends on control's configuration. Auto - depends on `hasButtons` property of the control True - shown False - hidden | 
- | `image` | string | `null` | Image | 
- | `itemTitleColor` | string | `Colors.RoyalBlue` | Title background color. The same color is used for node marker when control has enabled auto fit mode. | 
- | `minimizedItemShapeType` | ShapeType | `null` | Marker type. The shape of the marker when node is minimized by auto fit. The control supports auto fit of diagram into available screen space. When diagram size significantly larger than available screen space, its scrolling and navigation becomes problematic, so control supports automatic diagram fit into the screen space via rendering some of its nodes in form of small markers. So this option sets marker shape for individual node. | 
- | `templateName` | string | `null` | Template name. Templates are HTML fragments containing layout and styles used to render diagram nodes. They are defined with a named configuration objects. See `templates` property of control's configuration object. This option lets individually assign rendering template per individual node of the diagram. | 
- | `title` | string | `null` | Title | 
+ | `hasButtons` | Enabled | `Auto` | It controls the visibility of the context buttons panel for the node. The context buttons panel is a built-in, easy-to-use feature to add interactive UI elements around the cursor node. On-screen annotations do not block context buttons panel as well. Auto - depends on the control's configuration `hasButtons` property setting True - visible False - hidden | 
+ | `image` | string | `null` | Image. It is used in the default template. | 
+ | `itemTitleColor` | string | `Colors.RoyalBlue` | Title background color for default template. When the node is displayed in its minimized form, it also sets the marker color. | 
+ | `minimizedItemShapeType` | ShapeType | `null` | Marker type. The shape of the marker when the node is minimized in the diagram layout. The component is designed for automatic nodes positioning; it optimizes nodes placement and size depending on the available screen space. When the diagram size is significantly larger than the available screen space, its scrolling and navigation become problematic, so control replaces some nodes with markers. That feature has a lot of options for tuning. | 
+ | `templateName` | string | `null` | Template name lets individually assign rendering templates per individual node of the diagram. Templates contain settings defining node size, interactivity options, and HTML fragments to render nodes. See the organization chart configuration object for the `templates` property. | 
+ | `title` | string | `null` | Title. It is used in the default template. | 
 
 ## <a name="OrgEventArgs" id="OrgEventArgs">OrgEventArgs</a>
 Context object

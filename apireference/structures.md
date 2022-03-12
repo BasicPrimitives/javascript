@@ -453,7 +453,7 @@ Vertical Interval
 
 
 ## <a name="RenderEventArgs" id="RenderEventArgs">RenderEventArgs</a>
-This is object parameter of rendering callback function
+The render event arguments contains parameters of rendering callback function
 
  `RenderEventArgs` 
 

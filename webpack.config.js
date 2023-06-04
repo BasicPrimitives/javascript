@@ -1,5 +1,6 @@
-const HtmlWebPackPlugin = require('html-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const HtmlWebPackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpack = require('webpack');
 var path = require("path");
 const options = { };
 
@@ -12,7 +13,7 @@ module.exports = {
 		"interactivetests": "./samples/javascript.controls/common/tests.js",
 	},
     devServer: {
-		contentBase: './',
+		static: './',
 		hot: true,
 		port: 8080
 	},
@@ -54,17 +55,25 @@ module.exports = {
 		],
 	},
 	resolve: {
-        extensions: ['.js', '.scss']
+        extensions: ['.js', '.scss'],
+		fallback: {
+			stream: require.resolve('stream-browserify'),
+			util: require.resolve('util/')
+		}
 	},
 		plugins: [
-		new CleanWebpackPlugin(),
-		// new HtmlWebPackPlugin({
-		//   template: './*.html',
-		//   filename: './*.html'
-		// }),
-		// new HtmlWebPackPlugin({
-		//   template: './photos.html',
-		//   filename: './photos.html'
-		// })
+			new CleanWebpackPlugin(),
+			// fix "process is not defined" error:
+			new webpack.ProvidePlugin({
+				process: 'process/browser',
+			}),
+			// new HtmlWebPackPlugin({
+			//   template: './*.html',
+			//   filename: './*.html'
+			// }),
+			// new HtmlWebPackPlugin({
+			//   template: './photos.html',
+			//   filename: './photos.html'
+			// })
 	]
 };

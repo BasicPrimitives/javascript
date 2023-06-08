@@ -11,7 +11,7 @@ Data visualization diagramming components library for dependencies visualization
 
 ## Products
 ### Basic Primitives Diagrams for JavaScript
-* 100% client-side JavaScript layout and rendering.
+* Stable automatic diagrams layout with user-guided hints
 * No dependencies on 3rd party libraries.
 * Webpack [Tree Shaking](https://webpack.js.org/guides/tree-shaking/) support
 
@@ -97,6 +97,6 @@ Do you want to use a Basic Primitives diagram for a personal website, a school s
 ## Performance
 Through a full API, you can add, remove and modify individual items and their properties. The component will only update the visual elements affected by the API changes. We put in much effort to make it happen!
 
-Copyright (c) 2013 - 2022 Basic Primitives Inc
+Copyright (c) 2013 - 2023 Basic Primitives Inc
 * [Non-commercial - Free](http://creativecommons.org/licenses/by-nc/3.0/)
 * [Commercial and government licenses](license.pdf)

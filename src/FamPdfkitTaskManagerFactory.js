@@ -13,6 +13,7 @@ import { ZOrderType, Colors } from './enums';
 
 // reused tasks from org diagram
 import CalloutOptionTask from './tasks/options/CalloutOptionTask';
+import EndPointsOptionTask from './tasks/options/EndPointsOptionTask';
 import ConnectorsOptionTask from './tasks/options/ConnectorsOptionTask';
 import FamItemsOptionTask from './tasks/options/FamItemsOptionTask';
 import ItemsSizesOptionTask from './tasks/options/ItemsSizesOptionTask';
@@ -40,6 +41,7 @@ import GroupTitleTemplateTask from './tasks/templates/GroupTitleTemplateTask';
 import CheckBoxTemplateTask from './tasks/templates/CheckBoxTemplateTask';
 import ButtonsTemplateTask from './tasks/templates/ButtonsTemplateTask';
 import AnnotationLabelTemplateTask from './tasks/templates/AnnotationLabelTemplateTask';
+import EndPointTemplateTask from './tasks/templates/EndPointTemplateTask';
 import LevelAnnotationTemplateTask from './tasks/templates/LevelAnnotationTemplateTask';
 
 import ConnectionsGraphTask from './tasks/transformations/ConnectionsGraphTask';
@@ -134,6 +136,7 @@ export default function FamPdfkitTaskManagerFactory(getOptions, getGraphics, set
   tasks.addTask('OptionsTask', ['options'], OptionsTask, Colors.Black);
 
   tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], CalloutOptionTask, Colors.Navy);
+  tasks.addTask('EndPointsOptionTask', ['OptionsTask', 'defaultConfig'], EndPointsOptionTask, Colors.Navy);
   tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], ConnectorsOptionTask, Colors.Navy);
   tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], FamItemsOptionTask, Colors.Navy);
   tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], ItemsSizesOptionTask, Colors.Navy);
@@ -197,6 +200,7 @@ export default function FamPdfkitTaskManagerFactory(getOptions, getGraphics, set
   tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask', 'templates'], CheckBoxTemplateTask, Colors.Cyan);
   tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask', 'templates'], ButtonsTemplateTask, Colors.Cyan);
   tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask', 'templates'], AnnotationLabelTemplateTask, Colors.Cyan);
+  tasks.addTask('EndPointTemplateTask', ['EndPointsOptionTask', 'templates'], EndPointTemplateTask, Colors.Cyan);
   tasks.addTask('LevelAnnotationTemplateTask', ['OrientationOptionTask', 'LevelTitleTemplateOptionTask', 'templates'], LevelAnnotationTemplateTask, Colors.Cyan);
 
   tasks.addTask('ConnectionsGraphTask', ['graphics', 'CreateTransformTask', 'ConnectorsOptionTask', 'OrderFamilyNodesTask', 'ExtractNestedLayoutsTask', 'AlignDiagramTask', 'RemoveLoopsTask'], ConnectionsGraphTask, Colors.Cyan);
@@ -234,7 +238,7 @@ export default function FamPdfkitTaskManagerFactory(getOptions, getGraphics, set
   // Renders
   tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'LogicalFamilyTask', 'AlignDiagramTask'], DrawBackgroundAnnotationTask, Colors.Green);
   tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundAnnotationTask'], DrawShapeAnnotationTask, Colors.Green);
-  tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundShapeAnnotationTask'], DrawConnectorAnnotationTask, Colors.Green);
+  tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'CursorItemOptionTask', 'EndPointsOptionTask', 'EndPointTemplateTask', 'background', 'DrawBackgroundShapeAnnotationTask'], DrawConnectorAnnotationTask, Colors.Green);
 
   tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground', 'DrawBackgroundConnectorAnnotationTask'], DrawHighlightPathAnnotationTask, Colors.Cyan);
   tasks.addTask('DrawConnectorsTask', ['graphics', 'ConnectionsGraphTask', 'ConnectorsOptionTask', 'showElbowDots', 'PaletteManagerTask', 'DrawBackgroundHighlightPathAnnotationTask'], DrawConnectorsTask, Colors.Green);
@@ -254,7 +258,7 @@ export default function FamPdfkitTaskManagerFactory(getOptions, getGraphics, set
   tasks.addTask('DrawHighlightTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'CombinedTemplateParamsTask', 'HighlightItemTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawCursorTask'], DrawHighlightTask, Colors.Green);
 
   tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawHighlightTask'], DrawShapeAnnotationTask, Colors.Green);
-  tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawForegroundShapeAnnotationTask'], DrawConnectorAnnotationTask, Colors.Green);
+  tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'CursorItemOptionTask', 'EndPointsOptionTask', 'EndPointTemplateTask', 'foreground', 'DrawForegroundShapeAnnotationTask'], DrawConnectorAnnotationTask, Colors.Green);
 
   tasks.addTask('DrawLevelAnnotationBackgroundTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask'], DrawLevelAnnotationBackgroundTask, Colors.Green);
   tasks.addTask('DrawLevelAnnotationTitlesTask', ['graphics', 'VerticalOffsetTask', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'LevelAnnotationOptionTask', 'MergeLevelIntervalsTask', 'LevelAnnotationTemplateTask', 'LevelTitlePlacementOptionTask'], DrawLevelAnnotationTitlesTask, Colors.Green);

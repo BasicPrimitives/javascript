@@ -62,6 +62,17 @@ Connector annotations draw lines between two nodes of the diagram. They are draw
  | `toItem` | string | `null` | The end node of the connection line | 
  | `zOrderType` | ZOrderType | `Foreground` | Sets annotation z-order placement relative to the diagram items. Diagram visual elements are drawn in layers on top of each other. If you place annotations over diagram nodes, you block mouse events of UI elements in nodes templates. Browsers don't support mouse events transparency consistently yet. So to avoid mouse events blocking UI elements in node templates, you have to place annotation items under nodes or manipulate z-index for UI interactive controls and make them placed on top of other visual elements. The component puts the buttons panel on top of everything, so annotations drawn over the diagram nodes are not blocked. | 
 
+### Endpoints Properties
+| Name | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `showFromEndpoint` | Enabled | `Auto` | Show connector annotation from endpoint Auto - depends on the entire diagram configuration options True - always visible False - always hidden | 
+ | `showToEndpoint` | Enabled | `Auto` | Show connector annotation to endpoint Auto - depends on the entire diagram configuration options True - always visible False - always hidden | 
+
+### Template Properties
+| Name | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `context` | object | `null` | Context object | 
+
 ## <a name="HighlightPathAnnotationConfig" id="HighlightPathAnnotationConfig">HighlightPathAnnotationConfig</a>
 Highlight path annotation renders the route between the given sequence of nodes over existing connector lines in the diagram.
 

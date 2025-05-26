@@ -11,6 +11,7 @@ import { ZOrderType, Colors } from './enums';
 
 import OptionsTask from './tasks/options/OptionsTask';
 import CalloutOptionTask from './tasks/options/CalloutOptionTask';
+import EndPointsOptionTask from './tasks/options/EndPointsOptionTask';
 import ConnectorsOptionTask from './tasks/options/ConnectorsOptionTask';
 import OrgItemsOptionTask from './tasks/options/OrgItemsOptionTask';
 import ItemsSizesOptionTask from './tasks/options/ItemsSizesOptionTask';
@@ -41,6 +42,7 @@ import GroupTitleTemplateTask from './tasks/templates/GroupTitleTemplateTask';
 import CheckBoxTemplateTask from './tasks/templates/CheckBoxTemplateTask';
 import ButtonsTemplateTask from './tasks/templates/ButtonsTemplateTask';
 import AnnotationLabelTemplateTask from './tasks/templates/AnnotationLabelTemplateTask';
+import EndPointTemplateTask from './tasks/templates/EndPointTemplateTask';
 import LevelAnnotationTemplateTask from './tasks/templates/LevelAnnotationTemplateTask';
 
 import VisualTreeTask from './tasks/transformations/VisualTreeTask';
@@ -111,6 +113,7 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics, set
   tasks.addTask('OptionsTask', ['options'], OptionsTask, Colors.Black);
 
   tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], CalloutOptionTask, Colors.Navy);
+  tasks.addTask('EndPointsOptionTask', ['OptionsTask', 'defaultConfig'], EndPointsOptionTask, Colors.Navy);
   tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], ConnectorsOptionTask, Colors.Navy);
   tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], OrgItemsOptionTask, Colors.Navy);
   tasks.addTask('ItemsSizesOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], ItemsSizesOptionTask, Colors.Navy);
@@ -150,6 +153,7 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics, set
   tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask', 'templates'], CheckBoxTemplateTask, Colors.Cyan);
   tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask', 'templates'], ButtonsTemplateTask, Colors.Cyan);
   tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask', 'templates'], AnnotationLabelTemplateTask, Colors.Cyan);
+  tasks.addTask('EndPointTemplateTask', ['EndPointsOptionTask', 'templates'], EndPointTemplateTask, Colors.Cyan);
   tasks.addTask('LevelAnnotationTemplateTask', ['OrientationOptionTask', 'LevelTitleTemplateOptionTask', 'templates'], LevelAnnotationTemplateTask, Colors.Cyan);
   
   tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'null', 'VisualTreeOptionTask'], VisualTreeTask, Colors.Red);
@@ -190,7 +194,7 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics, set
   // Renders
   tasks.addTask('DrawBackgroundAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'BackgroundAnnotationOptionTask', 'VisualTreeTask', 'AlignDiagramTask'], DrawBackgroundAnnotationTask, Colors.Green);
   tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundAnnotationTask' /*dummy dependency enforeces drawing order */], DrawShapeAnnotationTask, Colors.Green);
-  tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background', 'DrawBackgroundShapeAnnotationTask'], DrawConnectorAnnotationTask, Colors.Green);
+  tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'CursorItemOptionTask', 'EndPointsOptionTask', 'EndPointTemplateTask', 'background', 'DrawBackgroundShapeAnnotationTask'], DrawConnectorAnnotationTask, Colors.Green);
 
   tasks.addTask('DrawTreeItemsTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'null',
     'ItemsSizesOptionTask',
@@ -207,7 +211,7 @@ export default function OrgPdfkitTaskManagerFactory(getOptions, getGraphics, set
   tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background', 'DrawConnectorsTask'], DrawHighlightPathAnnotationTask, Colors.Cyan);
 
   tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawForegroundHighlightPathAnnotationTask'], DrawShapeAnnotationTask, Colors.Green);
-  tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground', 'DrawForegroundShapeAnnotationTask'], DrawConnectorAnnotationTask, Colors.Green);
+  tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'CursorItemOptionTask', 'EndPointsOptionTask', 'EndPointTemplateTask', 'foreground', 'DrawForegroundShapeAnnotationTask'], DrawConnectorAnnotationTask, Colors.Green);
 
 
   tasks.addTask('DrawCursorTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'CombinedContextsTask', 'AlignDiagramTask', 'ItemTemplateParamsTask', 'CursorItemTask', 'SelectedItemsTask', 'DrawForegroundConnectorAnnotationTask'], DrawCursorTask, Colors.Green);

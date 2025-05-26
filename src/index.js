@@ -58,5 +58,17 @@ export { default as FamDiagram } from './FamDiagram';
 export { default as OrgDiagramPdfkit } from './OrgDiagramPdfkit';
 export { default as FamDiagramPdfkit } from './FamDiagramPdfkit';
 
+export { default as ConnectorAnnotationControlConfig } from './configs/ConnectorAnnotationControlConfig';
+export { default as ConnectorAnnotationControl } from './ConnectorAnnotationControl';
+
+export { default as ShapeAnnotationControlConfig } from './configs/ShapeAnnotationControlConfig';
+export { default as ShapeAnnotationControl } from './ShapeAnnotationControl';
+
+export { default as CalloutAnnotationControlConfig } from './configs/CalloutAnnotationControlConfig';
+export { default as CalloutAnnotationControl } from './CalloutAnnotationControl';
+
+export { default as RotatedTextControlConfig } from './configs/RotatedTextControlConfig';
+export { default as RotatedTextControl } from './RotatedTextControl';
+
 export { default as FamTaskManagerFactory } from './FamTaskManagerFactory';
 export { default as OrgTaskManagerFactory } from './OrgTaskManagerFactory';

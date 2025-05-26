@@ -557,7 +557,8 @@ export const Layers =
   ForegroundAnnotations: 13,
   ForegroundConnectorAnnotation: 14,
   Annotation: 15,
-  Controls: 16
+  Controls: 16,
+  EndPoint: 17
 };
 
 /**

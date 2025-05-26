@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>JavaScript Control Patents Inheritance Diagram Demo</title>
+  <title>Connector Annotation JavaScript Control Demo</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
@@ -12,47 +12,43 @@
   <link href="./css/styles.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type="text/javascript">
-    var control;
-    var parents = {};
-    var children = {};
+    var connectorAnnotationControl;
     var timer = null;
-    var { Point, Rect, Size, Layers } = primitives;
+    var { Point, Rect, Size, Layers, ConnectorAnnotationControl } = primitives;
     var { ValueType, Render, PanelConfig, SizeConfig, ColorConfig, RadioBoxConfig, RangeConfig, DropDownBoxConfig, CaptionConfig, DropDownBoxConfig } = javascriptsamples;
-    var { RenderEventArgs, Callout, createGraphics, PaletteItem, PlacementType, Colors, LineType, PolylinesBuffer, ConnectorOffbeat, ConnectorStraight, ConnectorAnnotationOffsetResolver } = interactivetests;
+    var { RenderEventArgs, createGraphics, PaletteItem, PlacementType, Colors, LineType, PolylinesBuffer, ConnectorOffbeat, ConnectorStraight, ConnectorAnnotationOffsetResolver } = interactivetests;
 
     var optionsRender = new Render([
-      new PanelConfig("Layout & Shape Options", [
-        new RadioBoxConfig("connectorPlacementType", primitives.ConnectorPlacementType.Offbeat, "Placement type", primitives.ConnectorPlacementType, ValueType.Integer, onUpdate),
-        new RadioBoxConfig("connectorShapeType", primitives.ConnectorShapeType.OneWay, "Connector shape type", primitives.ConnectorShapeType, ValueType.Integer, onUpdate),
-        new RangeConfig("labelOffset", 6, "Label Offset", 0, 20, 1, onUpdate),
-        new RangeConfig("linesOffset", 3, "Lines Offset", 0, 20, 1, onUpdate),
-        new SizeConfig("labelSize", new Size(30, 14), "Label size", 1, 100, 1, onUpdate),
-        new RadioBoxConfig("labelPlacementType", primitives.ConnectorLabelPlacementType.Between, "Label Placement", primitives.ConnectorLabelPlacementType, ValueType.Integer, onUpdate),
-      ]),
-      new PanelConfig("Style Options", [
-        new RadioBoxConfig("lineType", primitives.LineType.Solid, "Line Type", primitives.LineType, ValueType.Integer, onUpdate),
-        new ColorConfig("lineColor", primitives.Colors.Black, "Color", false, onUpdate),
-        new RangeConfig("lineWidth",2, "Line width", 0, 10, 1, onUpdate)
-      ])
-    ], {
+        new PanelConfig("Layout & Shape Options", [
+          new RadioBoxConfig("orientationType", primitives.OrientationType.Top, "Diagram orientation type", primitives.OrientationType, ValueType.Integer, onUpdate),
+          new RadioBoxConfig("connectorPlacementType", primitives.ConnectorPlacementType.Offbeat, "Placement type", primitives.ConnectorPlacementType, ValueType.Integer, onUpdate),
+          new RadioBoxConfig("connectorShapeType", primitives.ConnectorShapeType.OneWay, "Connector shape type", primitives.ConnectorShapeType, ValueType.Integer, onUpdate),
+          new RangeConfig("labelOffset", 6, "Label Offset", 0, 20, 1, onUpdate),
+          new RangeConfig("offset", 3, "Lines Offset", 0, 20, 1, onUpdate),
+          new SizeConfig("labelSize", new Size(30, 14), "Label size", 1, 100, 1, onUpdate),
+          new RadioBoxConfig("labelPlacementType", primitives.ConnectorLabelPlacementType.Between, "Label Placement", primitives.ConnectorLabelPlacementType, ValueType.Integer, onUpdate),
+        ]),
+        new PanelConfig("Style Options", [
+          new RadioBoxConfig("lineType", primitives.LineType.Solid, "Line Type", primitives.LineType, ValueType.Integer, onUpdate),
+          new ColorConfig("color", primitives.Colors.Black, "Color", false, onUpdate),
+          new RangeConfig("lineWidth",2, "Line width", 0, 10, 1, onUpdate)
+        ])
+      ], {
         connectorPlacementType: primitives.ConnectorPlacementType.Offbeat,
+        orientationType: primitives.OrientationType.Top,
         connectorShapeType: primitives.ConnectorShapeType.OneWay,
         labelOffset: 4,
-        linesOffset: 3,
+        offset: 3,
         labelSize: new Size(40, 30),
         labelPlacementType: primitives.ConnectorLabelPlacementType.Between,
 
         lineType: primitives.LineType.Solid,
-        lineColor: primitives.Colors.Black,
+        color: primitives.Colors.Black,
         lineWidth: 2
       });
 
-      var graphics;
-      var callout;
       document.addEventListener('DOMContentLoaded', function () {
         optionsRender.render(document.getElementById("westpanel"));
-
-        graphics = createGraphics(document.getElementById("placeholder"));
 
         onUpdate();
 
@@ -63,63 +59,63 @@
 
       var fromPosition = new Rect(100, 100, 200, 100);
       var toPosition = new Rect(400, 400, 200, 100);
-      var dragStartPoint;
-      var resizeStartPoint;
-      var topLeftStartPoint;
-      var bottomRightStartPoint;
-      function allowDrop(event) {
-        event.preventDefault();
-      }
+
+      const dragContext = {
+        name: null,
+        rectRef: null,
+        startPoint: null,
+        topLeftStartPoint: null,
+        bottomRightStartPoint: null
+      };
 
       function drag(event) {
-        dragStartPoint = { x: event.clientX, y: event.clientY };
-        var name = event.target.id;
-        switch(name) {
+        dragContext.startPoint = { x: event.clientX, y: event.clientY };
+        dragContext.name = event.target.id;
+        switch(dragContext.name) {
           case "fromrect":
-            topLeftStartPoint = new Point(fromPosition);
+            dragContext.topLeftStartPoint = new Point(fromPosition);
             break;
           case "torect":
-            topLeftStartPoint = new Point(toPosition);
+            dragContext.topLeftStartPoint = new Point(toPosition);
             break;
         }
-        
-        event.dataTransfer.setData("name", name);
+        event.dataTransfer.setDragImage(new Image(), 0, 0);
       }
 
       function dragresize(event) {
-        resizeStartPoint = { x: event.clientX, y: event.clientY };
-        var name = event.target.id;
-        switch(name) {
+        dragContext.startPoint = { x: event.clientX, y: event.clientY };
+        dragContext.name = event.target.id;
+        switch(dragContext.name) {
           case "fromresizer":
-            bottomRightStartPoint = new Point(fromPosition.right(), fromPosition.bottom());
+            dragContext.bottomRightStartPoint = new Point(fromPosition.right(), fromPosition.bottom());
             break;
           case "toresizer":
-            bottomRightStartPoint = new Point(toPosition.right(), toPosition.bottom());
+            dragContext.bottomRightStartPoint = new Point(toPosition.right(), toPosition.bottom());
             break;
         }
-        event.dataTransfer.setData("name", name);
+        event.dataTransfer.setDragImage(new Image(), 0, 0);
       }
 
-      function drop(event) {
+      function onDragOver(event) {
         event.preventDefault();
+        const { name, startPoint, topLeftStartPoint, bottomRightStartPoint } = dragContext;
         var endPoint = new Point(event.clientX, event.clientY);
-        var name = event.dataTransfer.getData("name");
         switch(name) {
           case "fromrect":
-            fromPosition.x = topLeftStartPoint.x + endPoint.x - dragStartPoint.x;
-            fromPosition.y = topLeftStartPoint.y + endPoint.y - dragStartPoint.y;
+            fromPosition.x = topLeftStartPoint.x + endPoint.x - startPoint.x;
+            fromPosition.y = topLeftStartPoint.y + endPoint.y - startPoint.y;
             break;
           case "fromresizer":
-            var bottomRight = new Point(bottomRightStartPoint.x + endPoint.x - resizeStartPoint.x, bottomRightStartPoint.y + endPoint.y - resizeStartPoint.y);
+            var bottomRight = new Point(bottomRightStartPoint.x + endPoint.x - startPoint.x, bottomRightStartPoint.y + endPoint.y - startPoint.y);
             var topLeft = new Point(fromPosition);
             fromPosition = new Rect(topLeft, bottomRight);
             break;
           case "torect":
-            toPosition.x = topLeftStartPoint.x + endPoint.x - dragStartPoint.x;
-            toPosition.y = topLeftStartPoint.y + endPoint.y - dragStartPoint.y;
+            toPosition.x = topLeftStartPoint.x + endPoint.x - startPoint.x;
+            toPosition.y = topLeftStartPoint.y + endPoint.y - startPoint.y;
             break;
           case "toresizer":
-            var bottomRight = new Point(bottomRightStartPoint.x + endPoint.x - resizeStartPoint.x, bottomRightStartPoint.y + endPoint.y - resizeStartPoint.y);
+            var bottomRight = new Point(bottomRightStartPoint.x + endPoint.x - startPoint.x, bottomRightStartPoint.y + endPoint.y - startPoint.y);
             var topLeft = new Point(toPosition);
             toPosition = new Rect(topLeft, bottomRight);
             break;
@@ -127,7 +123,12 @@
 
         onUpdate()
       }
-      
+
+      function drop(event) {
+        event.preventDefault();
+        dragContext.name = null;
+      }
+
       function onUpdate() {
         var fromRect = document.getElementById("fromrect");
         fromRect.style.left = fromPosition.x + "px";
@@ -141,75 +142,18 @@
         toRect.style.width = toPosition.width + "px";
         toRect.style.height = toPosition.height + "px";
 
-        var rect = document.getElementById("centerpanel");
-        var width = rect.offsetWidth;
-        var height = rect.offsetHeight;
-
         var options = optionsRender.getValues();
         options.label = "100";
-        var connector;
-        switch(options.connectorPlacementType) {
-          case primitives.ConnectorPlacementType.Offbeat:
-            connector = new ConnectorOffbeat(graphics);
-            break;
-          case primitives.ConnectorPlacementType.Straight:
-            connector = new ConnectorStraight(graphics);
-            break;
+        options.fromRectangle = fromPosition;
+        options.toRectangle = toPosition;
+        if (!connectorAnnotationControl) {
+          connectorAnnotationControl = new ConnectorAnnotationControl(document.getElementById("annotation"), options);
+        } else {
+          connectorAnnotationControl.setOptions(options);
+          connectorAnnotationControl.update();
         }
-        graphics.begin();
-        graphics.resize("placeholder", width, height);
-        graphics.activate("placeholder", Layers.BackgroundConnectorAnnotation);
-        var buffer = new PolylinesBuffer();
-        var connectorAnnotationOffsetResolver = ConnectorAnnotationOffsetResolver();
-        connector.draw(buffer, new PaletteItem({
-              lineColor: options.lineColor,
-              lineWidth: options.lineWidth,
-              lineType: options.lineType
-            }), fromPosition, toPosition, 
-            options.linesOffset, 0,  
-            options.labelSize, 
-            new Size(width, height),
-            options.connectorShapeType, options.labelOffset, options.labelPlacementType, true,
-            connectorAnnotationOffsetResolver, 
-            function (labelPlacement, labelConfig) {
-              uiHash = new RenderEventArgs();
-              uiHash.context = labelConfig;
-
-              /* draw label */
-              graphics.template(
-                labelPlacement.x
-                , labelPlacement.y
-                , 0
-                , 0
-                , 0
-                , 0
-                , labelPlacement.width
-                , labelPlacement.height
-                , ["div", {"border-style": "solid", "border-color": "black", "border-width": "1px"}]
-                , "AnnotationTemplate"
-                , (function (event, data) {
-                    data.element.innerHTML = "";
-                    var div = document.createElement("div");
-                    div.style.borderWidth = "1px";
-                    div.style.borderColor = "black";
-                    div.style.borderStyle = "dotted";
-                    div.style.width = "100%";
-                    div.style.height = "100%";
-                    div.appendChild(document.createTextNode(data.context.label));
-                    data.element.appendChild(div);
-                })
-                , uiHash
-                , null
-              );
-            }, options);
-
-        connectorAnnotationOffsetResolver.resolve();
-
-        /* draw background polylines */
-        graphics.polylinesBuffer(buffer);
-        graphics.end();
       }
-
+ 
       function onWindowResize() {
         if (timer == null) {
           timer = window.setTimeout(function () {
@@ -234,10 +178,11 @@
 	
 		<main class="col-md-8 ms-sm-auto col-lg-10 px-md-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2">Connector Shape Test</h1>
+          <h1 class="h2">Connector Annotation Control</h1>
         </div>
-        <div id="centerpanel" class="mediaPlaceholder my-2 w-100" ondrop="drop(event)" ondragover="allowDrop(event)" style="border-style: dotted; border-width: 1px;">
+        <div id="centerpanel" class="mediaPlaceholder my-2 w-100" ondrop="drop(event)" ondragover="onDragOver(event)" style="border-style: dotted; border-width: 1px;">
           <div id="placeholder" style="overflow: hidden; position: relative; width: 100%; height: 100%;">
+            <div id="annotation" style="position: absolute; padding: 0px; margin: 0px; width: 100%; height: 100%;"></div>
             <div id="fromrect" style="position: absolute; top: 100px; left: 100px; width: 200px; height: 100px; border-width: 1px; border-style: dotted;" draggable="true" ondragstart="drag(event)">Drag & Resize Rect
               <div id="fromresizer" style="position: absolute; right: 0px; bottom: 0px; width: 16px; height: 8px; border-width: 1px; border-style: dotted;" draggable="true" ondragstart="dragresize(event)"></div>
             </div>

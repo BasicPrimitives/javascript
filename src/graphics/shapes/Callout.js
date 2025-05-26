@@ -130,7 +130,7 @@ Callout.prototype._drawSegment = function (polyline, pointA, pointB, pointC, bas
   }
 
   polyline.addSegment(new LineSegment(pointB1));
-  if (cornerSnapPoint !== null) {
+  if (cornerSnapPoint != null) {
     polyline.addSegment(new LineSegment(cornerSnapPoint));
     polyline.addSegment(new LineSegment(pointB2));
   }

@@ -1,4 +1,5 @@
 import AnnotationLabelTemplate from './templates/pdf/AnnotationLabelTemplate';
+import EndPointTemplate from './templates/pdf/EndPointTemplate';
 import CheckBoxTemplate from './templates/pdf/CheckBoxTemplate';
 import CustomRenderTemplate from './templates/pdf/CustomRenderTemplate';
 import CursorTemplate from './templates/pdf/CursorTemplate';
@@ -24,6 +25,7 @@ import FamPdfkitTaskManagerFactory from './FamPdfkitTaskManagerFactory';
 export default function FamDiagramPdfkit(options, templates) {
   return BasePdfkitPlugin(options, FamPdfkitTaskManagerFactory, {
     AnnotationLabelTemplate,
+    EndPointTemplate,
     ButtonsTemplate: DummyTemplate,
     CheckBoxTemplate,
     CursorTemplate,

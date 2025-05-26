@@ -22,6 +22,7 @@ var annotations = read_annotations(lines);
 var doc = getDoc(annotations);
 // fs.writeFileSync(config.destination + "doc.json", JSON.stringify(doc, null, 2));
 
+// enums.md
 fs.writeFileSync(config.destination + "enums.md", create_enums_md("Enumerations", doc));
 
 var structures = doc.classes.filter(item => { return item.returns == undefined 
@@ -36,12 +37,14 @@ var structures = doc.classes.filter(item => { return item.returns == undefined
 });
 fs.writeFileSync(config.destination + "structures.md", create_classes_md("Structures", structures));
 
-
+// algorithms.md
 var algorithms = doc.classes.filter(item => { return item.returns != undefined
-  && ["OrgDiagram", "FamDiagram", "FamDiagramPdfkit", "OrgDiagramPdfkit", "BasePdfkitPlugin"].indexOf(item.name) <0
+  && ["OrgDiagram", "FamDiagram", "FamDiagramPdfkit", "OrgDiagramPdfkit", "BasePdfkitPlugin",
+    "ConnectorAnnotationControl", "ShapeAnnotationControl", "CalloutAnnotationControl", "RotatedTextControl"].indexOf(item.name) <0
 });
 fs.writeFileSync(config.destination + "algorithms.md", create_classes_md("Algorithms", algorithms));
 
+// functions.md
 var functions = doc.functions;
 functions.sort(({name: ap}, {name: bp}) => {
   if (ap < bp) { return -1; }
@@ -50,6 +53,7 @@ functions.sort(({name: ap}, {name: bp}) => {
 });
 fs.writeFileSync(config.destination + "functions.md", create_functions_md("Functions", functions));
 
+// orgdiagram.md
 var orgpriorities = config["orgdiagram.md"].reduce((agg, name, index) => {
   agg[name] = index + 1;
   return agg;
@@ -66,6 +70,7 @@ orgdiagramclasses = orgdiagramclasses.sort((a, b) => {
 
 fs.writeFileSync(config.destination + "orgdiagram.md", create_classes_md("Organizational Chart Configuration Objects", orgdiagramclasses));
 
+// famdiagram.md
 var fampriorities = config["famdiagram.md"].reduce((agg, name, index) => {
   agg[name] = index + 1;
   return agg;
@@ -82,8 +87,26 @@ famdiagramclasses = famdiagramclasses.sort((a, b) => {
 
 fs.writeFileSync(config.destination + "famdiagram.md", create_classes_md("Family Diagram Configuration Objects", famdiagramclasses));
 
+// auxiliary.md
+var auxiliarypriorities = config["auxiliary.md"].reduce((agg, name, index) => {
+  agg[name] = index + 1;
+  return agg;
+}, {})
+
+var auxiliaryclasses = doc.classes.filter(item => { return auxiliarypriorities[item.name] > 0 });
+auxiliaryclasses = auxiliaryclasses.sort((a, b) => {
+  var ap = auxiliarypriorities[a.name] || 100;
+  var bp = auxiliarypriorities[b.name] || 100;
+  if (ap < bp) { return -1; }
+  if (ap > bp) { return 1; }
+  return 0;
+});
+
+fs.writeFileSync(config.destination + "auxiliary.md", create_classes_md("Auxiliary JavaScript Controls", auxiliaryclasses));
+
+// configs.md
 var configclasses = doc.classes.filter(item => { return item.name.indexOf("Config") > 0 
-  && !(orgpriorities[item.name] > 0 || fampriorities[item.name] > 0)
+  && !(orgpriorities[item.name] > 0 || fampriorities[item.name] > 0 || auxiliarypriorities[item.name] > 0)
 });
 configclasses = configclasses.sort(({name: ap}, {name: bp}) => {
   if (ap < bp) { return -1; }
@@ -108,7 +131,8 @@ fs.writeFileSync(config.destination + "readme.md", create_index_md("Basic Primit
   structures,
   algorithms,
   controlsclasses,
-  pdfkitclasses
+  pdfkitclasses,
+  auxiliaryclasses
 }));
 
 function create_index_md(title, {
@@ -120,7 +144,8 @@ function create_index_md(title, {
   structures,
   algorithms,
   controlsclasses,
-  pdfkitclasses
+  pdfkitclasses,
+  auxiliaryclasses
 }) {
   var result = "### " + title;
   result += "\r\n#### [JavaScript Controls](javascriptcontrols.md)";
@@ -166,6 +191,11 @@ function create_index_md(title, {
   result += "\r\n#### [Algorithms](algorithms.md)";
   result = algorithms.reduce((agg, annotation) => {
     agg += "\r\n* [" + annotation.name + "](algorithms.md#" +  annotation.name + ")";
+    return agg;
+  }, result);
+    result += "\r\n#### [Auxiliary JavaScript Controls](auxiliary.md)";
+  result = auxiliaryclasses.reduce((agg, annotation) => {
+    agg += "\r\n* [" +  annotation.name + "](auxiliary.md#" +  annotation.name + ")";
     return agg;
   }, result);
   return result;

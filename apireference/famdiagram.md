@@ -63,6 +63,15 @@ Family Chart configuration object. Use this object as a reference for available 
  | `defaultCalloutTemplateName` | string | `null` | The callout default template name. Templates are HTML fragments used to render diagram nodes. They are defined with named configuration objects. See the `templates` property for more details. | 
  | `showCallout` | boolean | `true` | The show callout property enables on mouse over node callout for the diagram. | 
 
+### Endpoints Properties
+| Name | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `endPointCornerRadius` | number | `4` | Annotations endpoints corner radius. | 
+ | `endPointFillColor` | string | `"#000080"` | Annotations endpoints fill color. | 
+ | `endPointOpacity` | number | `0.5` | Annotations endpoints opacity | 
+ | `endPointSize` | Size | `{8, 8}` | Annotations endpoints size | 
+ | `showEndPoints` | Enabled | `False` | Show connector annotation endpoints property sets their visibility for the entire diagram. Customize them with drag placeholders to implement connector annotation placement using mouse drag & drop operations. Auto - only connector annotations linked to cursor node have endpoints visible True - always visible False - hidden | 
+
 ### Frame Properties
 | Name | Type | Default | Description | 
 | --- | --- | --- | --- | 
@@ -203,6 +212,14 @@ The on cursor render callback function is used to update the cursor visual conte
 | --- | --- | --- | --- | 
  | `event` | Object | `` | Event if available | 
  | `data` | RenderEventArgs | `` | The context information | 
+
+ `onEndPointRender(data)` 
+
+The endpoints rendering callback function allows rendering custom content for connection annotation endpoints.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `data` | EventArgs | `` | Context information | 
 
  `onGroupTitleRender(data)` 
 
@@ -348,7 +365,7 @@ Family chart item configuration object defines properties of individual nodes in
  | `labelOrientation` | TextOrientationType | `Auto` | Label orientation defines label rotation. If it is `Auto`, it uses the `labelOrientation` property of the control configuration | 
  | `labelPlacement` | PlacementType | `Auto` | Label placement sets label placement around the marker. If it is `Auto`, it uses the `labelPlacement` of the control configuration | 
  | `labelSize` | Size | `null` | The label size property defines the label's placeholder `div` size, which impacts conflict resolution if labels overlap. If it is `null`, it uses the `labelSize` property of the control configuration | 
- | `showLabel` | Enabled | `Auto` | The show label property sets labels visibility for individual nodes. The control displays label only for node markers. The control does not preserve space for labels in the diagram layout. The application's responsibility is to set intervals between nodes to fit labels. Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve space between nodes for labels. Labels are displayed inside `div's of the fixed size, see the `labelSize` property, and the control provides simple conflict resolution to avoid displaying overlapping labels. If two labels overlap each other with their bounding rectangles, then only one of them will stay visible. Auto - avoid labels overlapping, hide some of them True - visible False - hidden | 
+ | `showLabel` | Enabled | `Auto` | The `showLabel` property controls the visibility of labels for individual nodes. Labels are shown only for node markers. The control does not reserve space for labels in the diagram layout. It is the application's responsibility to set spacing between nodes to accommodate labels. Use the `dotLevelShift` and `dotItemsInterval` properties to reserve space between nodes for labels. Labels are displayed inside fixed-size `div` elements (see the `labelSize` property). The control includes basic conflict resolution to prevent overlapping labels. If two labels overlap based on their bounding rectangles, only one will be visible. Options: Auto - Automatically avoid overlapping by hiding some labels True - Labels are visible False - Labels are hidden | 
 
 ### Order Properties
 | Name | Type | Default | Description | 

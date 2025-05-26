@@ -25,6 +25,13 @@
       alignBylevels: true,
       hideGrandParentsConnectors: false,
 
+      // Connector Annotation EndPoints
+      showEndPoints: primitives.Enabled.False,
+      endPointSize: new primitives.Size(8, 8),
+      endPointCornerRadius: 4,
+      endPointFillColor: "#000080",
+      endPointOpacity: 0.5,
+
       /* On-screen annotations specific options */
       AnnotationOptions: {
         connectorPlacementType: primitives.ConnectorPlacementType.Offbeat,
@@ -34,7 +41,9 @@
         lineType: primitives.LineType.Dashed,
         color: primitives.Colors.Red,
         offset: 5,
-        zOrderType: primitives.ZOrderType.Auto
+        zOrderType: primitives.ZOrderType.Auto,
+        showFromEndpoint: primitives.Enabled.Auto,
+        showToEndpoint: primitives.Enabled.Auto
       },
       /* Layout */
       pageFitMode: primitives.PageFitMode.FitToPage,
@@ -234,7 +243,7 @@
       var result = new primitives.TemplateConfig();
       result.name = "defaultTemplate";
 
-      // If we don't change anything in template then all its properties stays default
+      // If we don't change anything in template then all its properties stay default
       // So we change only minimized item properties
       primitives.mergeObjects(result, options.DefaultTemplateOptions);
 

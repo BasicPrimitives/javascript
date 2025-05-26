@@ -1,4 +1,5 @@
 import AnnotationLabelTemplate from './templates/html/AnnotationLabelTemplate';
+import EndPointTemplate from './templates/html/EndPointTemplate';
 import ButtonsTemplate from './templates/html/ButtonsTemplate';
 import CustomRenderTemplate from './templates/html/CustomRenderTemplate';
 import CheckBoxTemplate from './templates/html/CheckBoxTemplate';
@@ -15,6 +16,7 @@ import LevelBackgroundTemplate from './templates/html/LevelBackgroundTemplate';
 import OrgTaskManagerFactory from './OrgTaskManagerFactory';
 import OrgEventArgsFactory from './OrgEventArgsFactory';
 import BaseControl from './BaseControl';
+
 /**
  * Creates JavaScript Organizational Chart Control
  * @class Control
@@ -28,6 +30,7 @@ import BaseControl from './BaseControl';
 export default function OrgDiagram(element, options, templates) {
   return BaseControl(element, options, OrgTaskManagerFactory, OrgEventArgsFactory, {
     AnnotationLabelTemplate,
+    EndPointTemplate,
     ButtonsTemplate,
     CustomRenderTemplate,
     CheckBoxTemplate,

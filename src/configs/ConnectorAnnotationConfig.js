@@ -1,7 +1,7 @@
 import Thickness from '../graphics/structs/Thickness';
 import Size from '../graphics/structs/Size';
 import {AnnotationType, LineType, Colors, ZOrderType, ConnectorShapeType,
-  ConnectorPlacementType, ConnectorLabelPlacementType } from '../enums';
+  ConnectorPlacementType, ConnectorLabelPlacementType, Enabled} from '../enums';
 /**
  * @class ConnectorAnnotationConfig
  * @classdesc Connector annotations draw lines between two nodes of the diagram. 
@@ -137,6 +137,38 @@ export default function ConnectorAnnotationConfig(arg0, arg1) {
    * @type {Size}
    */
   this.labelSize = new Size(60, 30);
+
+  /**
+   * Show connector annotation from endpoint
+   *
+   * Auto - depends on the entire diagram configuration options
+   * True - always visible
+   * False - always hidden
+   *
+   * @group Endpoints
+   * @type {Enabled}
+   */
+  this.showFromEndpoint = Enabled.Auto;
+
+  /**
+   * Show connector annotation to endpoint
+   *
+   * Auto - depends on the entire diagram configuration options
+   * True - always visible
+   * False - always hidden
+   *
+   * @group Endpoints
+   * @type {Enabled}
+   */
+  this.showToEndpoint = Enabled.Auto;
+
+  /**
+   * Context object
+   *
+   * @group Template
+   * @type {object}
+   */
+  this.context = null;
 
   switch (arguments.length) {
     case 1:

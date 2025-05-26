@@ -74,7 +74,15 @@ function getOrgDiagramOptionsPanels(onUpdate) {
 
 function getAnnotationsOptionsPanels(onUpdate) {
   return [
-    new PanelConfig("On-screen Annotations", [
+    new PanelConfig("Annotation End-Points", [
+      new CaptionConfig("Show connector annotation endpoints property sets their visibility for the entire diagram. Customize them with drag placeholders to implement connector annotation placement using mouse drag & drop operations.", false),
+      new RadioBoxConfig("showEndPoints", Enabled.False, "Show end points", Enabled, ValueType.Integer, onUpdate),
+      new SizeConfig("endPointSize", new Size(8, 8), "Marker size", 1, 40, 1, onUpdate),
+      new DropDownBoxConfig("endPointCornerRadius", null, "Corner Radius", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20], ValueType.Number, onUpdate),
+      new ColorConfig("endPointFillColor", Colors.Navy, "Fill Color", false, onUpdate),
+      new RangeConfig("endPointOpacity", 1.0, "Opacity", 0, 1, 0.1, onUpdate)
+    ]),
+    new PanelConfig("On-screen Annotation", [
       new RadioBoxConfig("connectorPlacementType", ConnectorPlacementType.Offbeat, "Placement type", ConnectorPlacementType, ValueType.Integer, onUpdate),
       new RadioBoxConfig("connectorShapeType", ConnectorShapeType.OneWay, "Connector shape type", ConnectorShapeType, ValueType.Integer, onUpdate),
       new RadioBoxConfig("labelPlacementType", ConnectorLabelPlacementType.Between, "Label Placement type", ConnectorLabelPlacementType, ValueType.Integer, onUpdate),
@@ -82,7 +90,9 @@ function getAnnotationsOptionsPanels(onUpdate) {
       new RadioBoxConfig("lineType", LineType.Dashed, "Line type", LineType, ValueType.Integer, onUpdate),
       new ColorConfig("color", Colors.Red, "Color", false, onUpdate),
       new DropDownBoxConfig("offset", 5, "Offset", [-50, -20, -10, -5, 0, 5, 10, 20, 50], ValueType.Number, onUpdate),
-      new RadioBoxConfig("zOrderType", ZOrderType.Auto, "Connector Z order type", ZOrderType, ValueType.Integer, onUpdate)
+      new RadioBoxConfig("zOrderType", ZOrderType.Auto, "Connector Z order type", ZOrderType, ValueType.Integer, onUpdate),
+      new RadioBoxConfig("showFromEndpoint", Enabled.False, "Show from end point", Enabled, ValueType.Integer, onUpdate),
+      new RadioBoxConfig("showToEndpoint", Enabled.False, "Show to end point", Enabled, ValueType.Integer, onUpdate)
     ], "AnnotationOptions")
   ];
 };

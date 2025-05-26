@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>JavaScript Control Patents Inheritance Diagram Demo</title>
+  <title>Shape Annotation JavaScript Control Demo</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
@@ -12,11 +12,9 @@
   <link href="./css/styles.css" media="screen" rel="stylesheet" type="text/css" />
 
   <script type="text/javascript">
-    var control;
-    var parents = {};
-    var children = {};
+    var shapeAnnotationControl;
     var timer = null;
-    var { Point, Size, Rect } = primitives;
+    var { Point, Size, Rect, ShapeAnnotationControl } = primitives;
     var { ValueType, Render, PanelConfig, ColorConfig, SizeConfig, CheckBoxConfig, RadioBoxConfig, RangeConfig, DropDownBoxConfig, CaptionConfig, DropDownBoxConfig } = javascriptsamples;
     var { Shape, createGraphics, PlacementType, Colors, LineType } = interactivetests;
 
@@ -58,12 +56,8 @@
         labelSize: new Size(60, 30)
       });
 
-      var graphics;
-      var shape;
       document.addEventListener('DOMContentLoaded', function () {
         optionsRender.render(document.getElementById("westpanel"));
-
-        graphics = createGraphics(document.getElementById("placeholder"));
 
         onUpdate();
 
@@ -73,37 +67,40 @@
       });
 
       var position = new Rect(200, 200, 200, 100);
-      var dragStartPoint;
-      var resizeStartPoint;
-      var topLeftStartPoint;
-      var bottomRightStartPoint;
-      function allowDrop(event) {
-        event.preventDefault();
-      }
+      const dragContext = {
+        name: null,
+        rectRef: null,
+        startPoint: null,
+        topLeftStartPoint: null,
+        bottomRightStartPoint: null
+      };
 
       function drag(event) {
-        dragStartPoint = { x: event.clientX, y: event.clientY };
-        topLeftStartPoint = new Point(position);
-        event.dataTransfer.setData("name", event.target.id);
+        dragContext.startPoint = { x: event.clientX, y: event.clientY };
+        dragContext.name = event.target.id;
+        dragContext.topLeftStartPoint = new Point(position);
+        event.dataTransfer.setDragImage(new Image(), 0, 0);
       }
 
-      function dragresize(event) {
-        resizeStartPoint = { x: event.clientX, y: event.clientY };
-        bottomRightStartPoint = new Point(position.right(), position.bottom());
-        event.dataTransfer.setData("name", event.target.id);
+      function dragResize(event) {
+        dragContext.startPoint = { x: event.clientX, y: event.clientY };
+        dragContext.name = event.target.id;
+        dragContext.bottomRightStartPoint = new Point(position.right(), position.bottom());
+        event.dataTransfer.setDragImage(new Image(), 0, 0);
       }
 
-      function drop(event) {
+      function onDragOver(event) {
         event.preventDefault();
+
+        const { name, startPoint, topLeftStartPoint, bottomRightStartPoint } = dragContext;
         var endPoint = new Point(event.clientX, event.clientY);
-        var name = event.dataTransfer.getData("name");
         switch(name) {
           case "rect":
-            position.x = topLeftStartPoint.x + endPoint.x - dragStartPoint.x;
-            position.y = topLeftStartPoint.y + endPoint.y - dragStartPoint.y;
+            position.x = topLeftStartPoint.x + endPoint.x - startPoint.x;
+            position.y = topLeftStartPoint.y + endPoint.y - startPoint.y;
             break;
           case "resizer":
-            var bottomRight = new Point(bottomRightStartPoint.x + endPoint.x - resizeStartPoint.x, bottomRightStartPoint.y + endPoint.y - resizeStartPoint.y);
+            var bottomRight = new Point(bottomRightStartPoint.x + endPoint.x - startPoint.x, bottomRightStartPoint.y + endPoint.y - startPoint.y);
             var topLeft = new Point(position);
             position = new Rect(topLeft, bottomRight);
             break;
@@ -112,36 +109,11 @@
         onUpdate()
       }
 
-      function LabelTemplate() {
-        var _template = ["div", {"border-style": "solid", "border-color": "black", "border-width": "1px"}];
+      function drop(event) {
+        event.preventDefault();
+        dragContext.name = null;
+      }
 
-        function template() {
-          return _template;
-        }
-
-        function getHashCode() {
-          return "LabelTemplate";
-        }
-
-        function render(event, data) {
-          data.element.innerHTML = "";
-          var div = document.createElement("div");
-          div.style.borderWidth = "1px";
-          div.style.borderColor = "black";
-          div.style.borderStyle = "dotted";
-          div.style.width = "100%";
-          div.style.height = "100%";
-          div.appendChild(document.createTextNode(data.label));
-          data.element.appendChild(div);
-        }
-
-        return {
-          template: template,
-          getHashCode: getHashCode,
-          render: render
-        };
-      };
-      
       function onUpdate() {
         var rect = document.getElementById("rect");
         rect.style.left = position.x + "px";
@@ -149,23 +121,15 @@
         rect.style.width = position.width + "px";
         rect.style.height = position.height + "px";
 
-        var rect = document.getElementById("centerpanel");
-        var width = rect.offsetWidth;
-        var height = rect.offsetHeight;
-
         var options = optionsRender.getValues();
-
-        shape = new Shape(graphics);
-        primitives.mergeObjects(shape, options);
-
-        shape.labelTemplate = new LabelTemplate();
-        shape.panelSize = new Size( width, height );
-
-        graphics.begin();
-        graphics.activate("placeholder");
-        graphics.resize("placeholder", width, height);
-        shape.draw(position, {label: "100"});
-        graphics.end();
+        options.label = options.hasLabel ? "100" : null;
+        options.position = position;
+        if (!shapeAnnotationControl) {
+          shapeAnnotationControl = new ShapeAnnotationControl(document.getElementById("annotation"), options);
+        } else {
+          shapeAnnotationControl.setOptions(options);
+          shapeAnnotationControl.update();
+        }
       }
 
       function onWindowResize() {
@@ -192,12 +156,13 @@
 	
 		<main class="col-md-8 ms-sm-auto col-lg-10 px-md-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2">Shape Test</h1>
+          <h1 class="h2">Shape Annotation Control</h1>
         </div>
-        <div id="centerpanel" class="mediaPlaceholder my-2 w-100" ondrop="drop(event)" ondragover="allowDrop(event)" style="border-style: dotted; border-width: 1px;">
+        <div id="centerpanel" class="mediaPlaceholder my-2 w-100" ondrop="drop(event)" ondragover="onDragOver(event)" style="border-style: dotted; border-width: 1px;">
           <div id="placeholder" style="overflow: hidden; position: relative; width: 100%; height: 100%;">
+            <div id="annotation" style="position: absolute; padding: 0px; margin: 0px; width: 100%; height: 100%;"></div>
             <div id="rect" style="position: absolute; top: 300px; left: 300px; width: 200px; height: 100px; border-width: 1px; border-style: dotted;" draggable="true" ondragstart="drag(event)">Drag & Resize Rect
-              <div id="resizer" style="position: absolute; right: 0px; bottom: 0px; width: 16px; height: 8px; border-width: 1px; border-style: dotted;" draggable="true" ondragstart="dragresize(event)"></div>
+              <div id="resizer" style="position: absolute; right: 0px; bottom: 0px; width: 16px; height: 8px; border-width: 1px; border-style: dotted;" draggable="true" ondragstart="dragResize(event)"></div>
             </div>
           </div>
         </div>

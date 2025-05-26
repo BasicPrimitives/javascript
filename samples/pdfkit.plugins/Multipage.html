@@ -176,6 +176,7 @@
           { id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: photos.b },
           { id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: photos.c }
         ],
+        showEndPoints: primitives.Enabled.True,
         annotations: [
           /* JSON noname object equivalent to primitives.ConnectorAnnotationConfig */
           {
@@ -189,7 +190,8 @@
             offset: 0,
             lineWidth: 2,
             lineType: primitives.LineType.Dashed,
-            selectItems: false
+            selectItems: false,
+            showToEndpoint: primitives.Enabled.False
           },
           /* prototype based instantiation */
           new primitives.ConnectorAnnotationConfig({
@@ -202,7 +204,8 @@
             offset: 0,
             lineWidth: 2,
             lineType: primitives.LineType.Dashed,
-            selectItems: false
+            selectItems: false,
+            showToEndpoint: primitives.Enabled.False
           })
         ],
         cursorItem: 0,

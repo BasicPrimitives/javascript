@@ -733,6 +733,32 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
     return eventArgsFactory(_data, oldTreeItemId, newTreeItemId, name);
   }
 
+  /**
+   * This method returns item position relative to the control's element.
+   *
+   * @returns {Rect} Returns item position
+   */
+  function getItemPosition(itemId) {
+    var combinedContextsTask = _data.tasks.getTask("CombinedContextsTask"),
+      alignDiagramTask = _data.tasks.getTask("AlignDiagramTask"),
+      itemConfig = combinedContextsTask.getConfig(itemId),
+      itemPosition,
+      result,
+      offset,
+      panelOffset;
+
+    if (itemConfig && itemConfig.id != null) {
+      panelOffset = getElementOffset(_data.layout.mousePanel);
+      offset = getElementOffset(_data.layout.element);
+      itemPosition = alignDiagramTask.getItemPosition(itemId);
+      result = new Rect(itemPosition.actualPosition)
+          .translate(panelOffset.left, panelOffset.top)
+          .translate(-offset.left, -offset.top);
+    }
+
+    return result;
+  };
+
   function trigger(eventHandlerName, event, eventArgs) {
     var eventHandler = _data.options[eventHandlerName];
     if (eventHandler != null) {
@@ -748,6 +774,7 @@ export default function BaseControl(element, options, taskManagerFactory, eventA
     getOptions: getOptions,
     setOption: setOption,
     getOption: getOption,
-    update: update
+    update: update,
+    getItemPosition: getItemPosition
   };
 };

@@ -131,7 +131,8 @@
 	text-decoration: none;
 	vertical-align: middle;
 	color: black;
-	font-weight:bold;
+	font-weight: bold;
+	pointer-events: none
 }
 
 .bp-label-annotation 

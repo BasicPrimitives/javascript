@@ -74,6 +74,60 @@
     ];
 
 	document.addEventListener('DOMContentLoaded', function () {
+		window.addEventListener('resize', function (event) {
+			onWindowResize();
+		});
+
+		document.addEventListener("drag", function( event ) {
+
+		}, false);
+
+		document.addEventListener("dragstart", function( event ) {
+			var itemid = event.target.getAttribute("data-itemid");
+			event.dataTransfer.setData("itemid", itemid);
+			event.dataTransfer.setData('text/html', "null");
+
+			var div = document.getElementById("selectionpanel");
+			div.innerHTML = "";
+			div.appendChild(document.createTextNode("Drag started of node: " + itemid))
+		}, false);
+
+		document.addEventListener("dragend", function( event ) {
+			// reset the transparency
+			event.target.style.opacity = "";
+		}, false);
+
+		/* events fired on the drop targets */
+		document.addEventListener("dragover", function( event ) {
+			// prevent default to allow drop
+			event.preventDefault();
+		}, false);
+
+		document.addEventListener("dragenter", function( event ) {
+			event.preventDefault();
+		}, false);
+
+		document.addEventListener("dragleave", function( event ) {
+			event.preventDefault();
+		}, false);
+
+		document.addEventListener("drop", function( event ) {
+			// move dragged elem to the selected drop target
+			event.preventDefault();
+			var parentid = parseInt(event.target.getAttribute("data-itemid"), 10);
+			var itemid = parseInt(event.dataTransfer.getData("itemid"), 10);
+
+			if(canDropItem(parentid, itemid)) {
+				onMoveItem(parentid, itemid);
+
+				onUpdate();
+
+				var div = document.getElementById("selectionpanel");
+				div.innerHTML = "";
+				div.appendChild(document.createTextNode("Node: " + itemid + " dropped over " + parentid));
+			}
+		}, false);
+
 		var options = new primitives.OrgConfig();
 		options.templates = [getContactTemplate()];
 		options.onItemRender = onTemplateRender;
@@ -93,10 +147,6 @@
 		options2.pageFitMode = primitives.PageFitMode.None;
 		options2.hasSelectorCheckbox = primitives.Enabled.True;
 		control2 = primitives.OrgDiagram(document.getElementById("basicdiagram2"), options2);
-
-		window.addEventListener('resize', function (event) {
-			onWindowResize();
-		});
 	});
 
     function onTemplateRender(event, data) {
@@ -160,67 +210,6 @@
 
 		return result;
 	}
-
-	document.addEventListener("drag", function( event ) {
-
-	}, false);
-
-	document.addEventListener("dragstart", function( event ) {
-		var itemid = event.target.getAttribute("data-itemid");
-		event.dataTransfer.setData("itemid", itemid);
-		event.dataTransfer.setData('text/html', "null");
-
-		var div = document.getElementById("selectionpanel");
-		div.innerHTML = "";
-		div.appendChild(document.createTextNode("Drag started of node: " + itemid))
-	}, false);
-
-	document.addEventListener("dragend", function( event ) {
-		// reset the transparency
-		event.target.style.opacity = "";
-	}, false);
-
-	/* events fired on the drop targets */
-	document.addEventListener("dragover", function( event ) {
-		// prevent default to allow drop
-		event.preventDefault();
-	}, false);
-
-	document.addEventListener("dragenter", function( event ) {
-		// highlight potential drop target when the draggable element enters it
-		if ( event.target.className == "dropzone" ) {
-			event.target.style.background = "purple";
-		}
-
-	}, false);
-
-	document.addEventListener("dragleave", function( event ) {
-		// reset background of potential drop target when the draggable element leaves it
-		if ( event.target.className == "dropzone" ) {
-			event.target.style.background = "";
-		}
-
-	}, false);
-
-	document.addEventListener("drop", function( event ) {
-		// prevent default action (open as link for some elements)
-		event.preventDefault();
-		// move dragged elem to the selected drop target
-		event.preventDefault();
-		var parentid = parseInt(event.target.getAttribute("data-itemid"), 10);
-		var itemid = parseInt(event.dataTransfer.getData("itemid"), 10);
-
-		if(canDropItem(parentid, itemid)) {
-			onMoveItem(parentid, itemid);
-
-			onUpdate();
-
-			var div = document.getElementById("selectionpanel");
-			div.innerHTML = "";
-			div.appendChild(document.createTextNode("Node: " + itemid + " dropped over " + parentid));
-		}
-	}, false);
-
 
 	function canDropItem(parentid, itemid) {
 		const tree = getTree(items.concat(items2));

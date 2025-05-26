@@ -981,6 +981,60 @@ export default function OrgConfig(name) {
    this.onLevelBackgroundRender = null;   
 
   /**
+   * The endpoints rendering callback function allows rendering custom content for connection annotation endpoints.
+   *
+   * @group Endpoints
+   * @callback
+   * @param {EventArgs} data Context information
+   */
+  this.onEndPointRender = null;
+
+  /**
+   * Show connector annotation endpoints property sets their visibility for the entire diagram.
+   * Customize them with drag placeholders to implement connector annotation placement using mouse drag & drop operations.
+   *
+   * Auto - only connector annotations linked to cursor node have endpoints visible
+   * True - always visible
+   * False - hidden
+   *
+   * @group Endpoints
+   * @type {Enabled}
+   */
+  this.showEndPoints = Enabled.False;
+
+  /**
+   * Annotations endpoints size
+   *
+   * @group Endpoints
+   * @type {Size}
+   */
+  this.endPointSize = new Size(8, 8);
+
+  /**
+   * Annotations endpoints corner radius.
+   *
+   * @group Endpoints
+   * @type {number}
+   */
+  this.endPointCornerRadius = 4;
+
+  /**
+   * Annotations endpoints fill color.
+   *
+   * @group Endpoints
+   * @type {string}
+   */
+  this.endPointFillColor = "#000080";
+
+  /**
+   * Annotations endpoints opacity
+   *
+   * @group Endpoints
+   * @type {number}
+   */
+  this.endPointOpacity = 0.5;
+
+  /**
    * @ignore
    */
   this.distance = 3;

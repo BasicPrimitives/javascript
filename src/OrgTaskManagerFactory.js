@@ -12,6 +12,7 @@ import LevelAnnotationConfig from './configs/LevelAnnotationConfig';
 
 import OptionsTask from './tasks/options/OptionsTask';
 import CalloutOptionTask from './tasks/options/CalloutOptionTask';
+import EndPointsOptionTask from './tasks/options/EndPointsOptionTask';
 import ConnectorsOptionTask from './tasks/options/ConnectorsOptionTask';
 import OrgItemsOptionTask from './tasks/options/OrgItemsOptionTask';
 import ItemsContentOptionTask from './tasks/options/ItemsContentOptionTask';
@@ -51,6 +52,7 @@ import GroupTitleTemplateTask from './tasks/templates/GroupTitleTemplateTask';
 import CheckBoxTemplateTask from './tasks/templates/CheckBoxTemplateTask';
 import ButtonsTemplateTask from './tasks/templates/ButtonsTemplateTask';
 import AnnotationLabelTemplateTask from './tasks/templates/AnnotationLabelTemplateTask';
+import EndPointTemplateTask from './tasks/templates/EndPointTemplateTask';
 import LevelAnnotationTemplateTask from './tasks/templates/LevelAnnotationTemplateTask';
 
 import VisualTreeTask from './tasks/transformations/VisualTreeTask';
@@ -133,6 +135,7 @@ export default function TaskManagerFactory(getOptions, getGraphics, getLayout, s
   // Options
   tasks.addTask('OptionsTask', ['options'], OptionsTask, Colors.Black);
   tasks.addTask('CalloutOptionTask', ['OptionsTask', 'defaultConfig', 'defaultItemConfig'], CalloutOptionTask, Colors.Navy);
+  tasks.addTask('EndPointsOptionTask', ['OptionsTask', 'defaultConfig'], EndPointsOptionTask, Colors.Navy);
   tasks.addTask('ConnectorsOptionTask', ['OptionsTask', 'defaultConfig'], ConnectorsOptionTask, Colors.Navy);
   tasks.addTask('ItemsOptionTask', ['OptionsTask', 'defaultItemConfig'], OrgItemsOptionTask, Colors.Navy);
   tasks.addTask('ItemsContentOptionTask', ['OptionsTask', 'defaultItemConfig'], ItemsContentOptionTask, Colors.Navy);
@@ -178,6 +181,7 @@ export default function TaskManagerFactory(getOptions, getGraphics, getLayout, s
   tasks.addTask('CheckBoxTemplateTask', ['ItemsSizesOptionTask', 'templates'], CheckBoxTemplateTask, Colors.Cyan);
   tasks.addTask('ButtonsTemplateTask', ['ItemsSizesOptionTask', 'templates'], ButtonsTemplateTask, Colors.Cyan);
   tasks.addTask('AnnotationLabelTemplateTask', ['ItemsOptionTask', 'templates'], AnnotationLabelTemplateTask, Colors.Cyan);
+  tasks.addTask('EndPointTemplateTask', ['EndPointsOptionTask', 'templates'], EndPointTemplateTask, Colors.Cyan);
   tasks.addTask('LevelAnnotationTemplateTask', ['OrientationOptionTask', 'LevelTitleTemplateOptionTask', 'templates'], LevelAnnotationTemplateTask, Colors.Cyan);
 
   tasks.addTask('VisualTreeTask', ['OrgTreeTask', 'ActiveItemsTask', 'VisualTreeOptionTask'], VisualTreeTask, Colors.Red);
@@ -259,8 +263,8 @@ export default function TaskManagerFactory(getOptions, getGraphics, getLayout, s
   tasks.addTask('DrawBackgroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'ForegroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'foreground'], DrawHighlightPathAnnotationTask, Colors.Cyan);
   tasks.addTask('DrawForegroundHighlightPathAnnotationTask', ['graphics', 'ConnectorsOptionTask', 'BackgroundHighlightPathAnnotationOptionTask', 'ConnectionsGraphTask', 'background'], DrawHighlightPathAnnotationTask, Colors.Cyan);
 
-  tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], DrawConnectorAnnotationTask, Colors.Green);
-  tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], DrawConnectorAnnotationTask, Colors.Green);
+  tasks.addTask('DrawForegroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'CursorItemOptionTask', 'EndPointsOptionTask', 'EndPointTemplateTask', 'foreground'], DrawConnectorAnnotationTask, Colors.Green);
+  tasks.addTask('DrawBackgroundConnectorAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundConnectorAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'CursorItemOptionTask', 'EndPointsOptionTask', 'EndPointTemplateTask', 'background'], DrawConnectorAnnotationTask, Colors.Green);
   tasks.addTask('DrawForegroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'ForegroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'foreground'], DrawShapeAnnotationTask, Colors.Green);
   tasks.addTask('DrawBackgroundShapeAnnotationTask', ['graphics', 'CreateTransformTask', 'ApplyLayoutChangesTask', 'OrientationOptionTask', 'BackgroundShapeAnnotationOptionTask', 'AlignDiagramTask', 'AnnotationLabelTemplateTask', 'background'], DrawShapeAnnotationTask, Colors.Green);
 

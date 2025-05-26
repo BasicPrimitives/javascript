@@ -1,3 +1,11 @@
+#### Version 6.6.0
+* Added templated end points to connector annotations. Added `showFromEndpoint`, `showToEndpoint`, `context` properties to to `ConnectorAnnotationConfig`. Added `onEndPointRender`, `showEndPoints`, `endPointSize`, `endPointCornerRadius`, `endPointOpacity` properties to `OrgConfig`. Added drag and drop sample creating and editing connector annotations.
+* Changed CSS styles for connector annotations, so when they are rendered over diagram nodes, they should be transparent for mouse events.
+* Added connector annotation control to use in Drag & Drop overlays for visual feedback implementation: `ConnectorAnnotationControlConfig`, `ConnectorAnnotationControl`
+* Added shape annotation control: `ShapeAnnotationControlConfig`, `ShapeAnnotationControl`
+* Added callout annotation control: `CalloutAnnotationControlConfig`, `CalloutAnnotationControl`
+* Added rotated text control: `RotatedTextControlConfig`, `RotatedTextControl`
+* Added `getItemPosition` method to diagram controls to get node placement in the control's coordinates.
 #### Version 6.5.1
 * Added Angular 13 components and samples, see GtiHub [angular](https://github.com/BasicPrimitives/angular) repository.
 * Removed deprecated AngularJS directive sample.

@@ -10,5 +10,15 @@
     "FamConfig",
     "FamItemConfig",
     "FamEventArgs"
+  ],
+  "auxiliary.md": [
+    "ConnectorAnnotationControl",
+    "ConnectorAnnotationControlConfig",
+    "ShapeAnnotationControl",
+    "ShapeAnnotationControlConfig",
+    "CalloutAnnotationControl",
+    "CalloutAnnotationControlConfig",
+    "RotatedTextControl",
+    "RotatedTextControlConfig"
   ]
 }

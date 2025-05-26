@@ -1,4 +1,5 @@
 import AnnotationLabelTemplate from './templates/pdf/AnnotationLabelTemplate';
+import EndPointTemplate from './templates/pdf/EndPointTemplate';
 import CheckBoxTemplate from './templates/pdf/CheckBoxTemplate';
 import CustomRenderTemplate from './templates/pdf/CustomRenderTemplate';
 import CursorTemplate from './templates/pdf/CursorTemplate';
@@ -25,6 +26,7 @@ import OrgPdfkitTaskManagerFactory from './OrgPdfkitTaskManagerFactory';
 export default function OrgDiagramPdfkit(options, templates) {
   return BasePdfkitPlugin(options, OrgPdfkitTaskManagerFactory, {
     AnnotationLabelTemplate,
+    EndPointTemplate,
     ButtonsTemplate: DummyTemplate,
     CheckBoxTemplate,
     CursorTemplate,

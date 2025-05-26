@@ -37,6 +37,13 @@
       minimumMatrixSize: 2,
       maximumColumnsInMatrix: 6,
 
+      // Connector Annotation EndPoints
+      showEndPoints: primitives.Enabled.False,
+      endPointSize: new primitives.Size(8, 8),
+      endPointCornerRadius: 4,
+      endPointFillColor: "#000080",
+      endPointOpacity: 0.5,
+
       /* On-screen annotations specific options */
       AnnotationOptions: {
         connectorPlacementType: primitives.ConnectorPlacementType.Offbeat,
@@ -46,7 +53,9 @@
         lineType: primitives.LineType.Dashed,
         color: primitives.Colors.Red,
         offset: 5,
-        zOrderType: primitives.ZOrderType.Auto
+        zOrderType: primitives.ZOrderType.Auto,
+        showFromEndpoint: primitives.Enabled.Auto,
+        showToEndpoint: primitives.Enabled.Auto
       },
       /* Layout */
       pageFitMode: primitives.PageFitMode.FitToPage,

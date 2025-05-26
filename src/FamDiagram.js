@@ -1,4 +1,5 @@
 import AnnotationLabelTemplate from './templates/html/AnnotationLabelTemplate';
+import EndPointTemplate from './templates/html/EndPointTemplate';
 import ButtonsTemplate from './templates/html/ButtonsTemplate';
 import CustomRenderTemplate from './templates/html/CustomRenderTemplate';
 import CheckBoxTemplate from './templates/html/CheckBoxTemplate';
@@ -28,6 +29,7 @@ import FamEventArgsFactory from './FamEventArgsFactory';
 export default function FamDiagram(element, options, templates) {
   return BaseControl(element, options, FamTaskManagerFactory, FamEventArgsFactory, {
     AnnotationLabelTemplate,
+    EndPointTemplate,
     ButtonsTemplate,
     CustomRenderTemplate,
     CheckBoxTemplate,

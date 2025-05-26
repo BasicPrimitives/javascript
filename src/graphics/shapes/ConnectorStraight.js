@@ -13,7 +13,7 @@ export default function ConnectorStraight() {
 ConnectorStraight.prototype = new BaseShape();
 
 ConnectorStraight.prototype.draw = function (buffer, linePaletteItem, fromRect, toRect, linesOffset, bundleOffset, labelSize, panelSize, connectorShapeType, labelOffset, labelPlacementType, hasLabel,
-  connectorAnnotationOffsetResolver, onLabelPlacement, labelConfig) {
+  connectorAnnotationOffsetResolver, onLabelPlacement, labelConfig, onEndPointsPlacement) {
   var fromPoint, toPoint, betweenPoint,
     vector, newVector,
     offset = linesOffset / 2,
@@ -44,6 +44,9 @@ ConnectorStraight.prototype.draw = function (buffer, linePaletteItem, fromRect, 
       fromPoint = baseVector.from;
       toPoint = baseVector.to;
 
+      if (onEndPointsPlacement != null) {
+        onEndPointsPlacement.call(this, fromPoint, toPoint, labelConfig);
+      }
       switch (connectorShapeType) {
         case ConnectorShapeType.TwoWay:
           newVector = new Vector(toPoint.clone(), fromPoint.clone());

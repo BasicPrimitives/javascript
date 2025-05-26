@@ -262,21 +262,23 @@ export default function OrgItemConfig(arg0, arg1, arg2, arg3, arg4) {
   this.label = null;
 
   /**
-   * The show label property sets labels visibility for individual nodes.
-   * The control displays label only for node markers. The control does not
-   * preserve space for labels in the diagram layout. The application's
-   * responsibility is to set intervals between nodes to fit labels.
-   * Use controls `dotLevelShift`, `dotItemsInterval` properties to preserve
-   * space between nodes for labels. Labels are displayed inside `div's of
-   * the fixed size, see the `labelSize` property, and the control provides
-   * simple conflict resolution to avoid displaying overlapping labels.
-   * If two labels overlap each other with their bounding rectangles,
-   * then only one of them will stay visible. 
-   * 
-   * Auto - avoid labels overlapping, hide some of them
-   * True - visible
-   * False - hidden.
-   * 
+   * The `showLabel` property controls the visibility of labels for individual nodes.
+   * Labels are shown only for node markers. The control does not reserve space
+   * for labels in the diagram layout. It is the application's responsibility
+   * to set spacing between nodes to accommodate labels.
+   *
+   * Use the `dotLevelShift` and `dotItemsInterval` properties to reserve
+   * space between nodes for labels. Labels are displayed inside fixed-size `div` elements
+   * (see the `labelSize` property). The control includes basic conflict resolution
+   * to prevent overlapping labels.
+   *
+   * If two labels overlap based on their bounding rectangles, only one will be visible.
+   *
+   * Options:
+   *  Auto - Automatically avoid overlapping by hiding some labels
+   *  True - Labels are visible
+   *  False - Labels are hidden
+   *
    * @group Label
    * @type {Enabled}
    */

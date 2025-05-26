@@ -1,0 +1,435 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Create and edit connector annotations with Drag & Drop</title>
+  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script type="text/javascript" src="../../primitives.js"></script>
+  <link href="../../css/primitives.css" media="screen" rel="stylesheet" type="text/css" />
+  <style>
+    .interact-draggable {
+      cursor: pointer !important;  /* or 'pointer', 'grab', etc. */
+    }
+    .drag-indicator {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background-color: blue;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      user-select: none;
+    }
+  </style>
+  <script type='text/javascript'>
+    var { Point, Rect, Size, Colors, Enabled, ConnectorAnnotationControl, ConnectorAnnotationControlConfig} = primitives;
+    var control;
+    var connectorAnnotationControl;
+    var connectorPlacementType = primitives.ConnectorPlacementType.Offbeat;
+    var dragContext = {
+      id: null,
+      itemType: null,
+      isFromEndPoint: null,
+      startPoint: null,
+      fromRect: null,
+      toRect: null,
+      annotation: null,
+      indicator: null, // the dragged object
+      position: { x: 0, y: 0 } // dragged object position
+    }
+    var annotations = [
+      /* prototype based instantiation */
+      new primitives.ConnectorAnnotationConfig({
+        context: 1,
+        fromItem: 0,
+        toItem: 5,
+        label: "<span class=\"badge bg-danger\">1</span>",
+        labelSize: new primitives.Size(80, 30),
+        connectorShapeType: primitives.ConnectorShapeType.OneWay,
+        color: primitives.Colors.Red,
+        offset: -10,
+        lineWidth: 2,
+        lineType: primitives.LineType.Dashed,
+        connectorPlacementType: primitives.ConnectorPlacementType.Offbeat,
+        selectItems: false
+      }),
+      /* prototype based instantiation */
+      new primitives.ConnectorAnnotationConfig({
+        context: 2,
+        fromItem: 0,
+        toItem: 3,
+        label: "<span class=\"badge bg-primary\">3</span>",
+        labelSize: new primitives.Size(80, 30),
+        connectorShapeType: primitives.ConnectorShapeType.OneWay,
+        color: primitives.Colors.Blue,
+        offset: -10,
+        lineWidth: 2,
+        lineType: primitives.LineType.Dashed,
+        connectorPlacementType: primitives.ConnectorPlacementType.Offbeat,
+        selectItems: false
+      })
+    ];
+    var config = {
+      items: [
+        /* JSON noname objects equivalent to primitives.OrgItemConfig */
+        { id: 0, parent: null, title: "James Smith", description: "VP, Public Sector", image: "../images/photos/a.png" },
+        { id: 1, parent: 0, title: "Ted Lucas", description: "VP, Human Resources", image: "../images/photos/b.png" },
+        { id: 2, parent: 0, title: "Fritz Stuger", description: "Business Solutions, US", image: "../images/photos/c.png" },
+        { id: 3, parent: 0, title: "Joseph Gipson", description: "President, Entertainment & Devices Devision", image: "../images/photos/d.png" },
+        { id: 5, parent: 2, title: "Robert Dahl", description: "Regional VP, Name Asia Pacific", image: "../images/photos/e.png" },
+        { id: 6, parent: 2, title: "Rufus Parrish", description: "GM, Mergers and Acquisitions", image: "../images/photos/f.png" },
+      ],
+      annotations: annotations,
+      showEndPoints: Enabled.Auto,
+      onEndPointRender: function(data) {
+        var radius = 8;
+        var width = data.width;
+        var height = data.height;
+        var element = data.element;
+        element.innerHTML = "";
+        var contentElement = primitives.JsonML.toHTML(["div",
+          {
+            "style": {
+              cursor: "pointer",
+              position: "absolute",
+              "MozBorderRadius": radius + "px",
+              "WebkitBorderRadius": radius + "px",
+              "-khtml-border-radius": radius + "px",
+              "borderRadius": radius + "px",
+              margin: 0,
+              width: width + "px",
+              height: height + "px",
+              background: "blue",
+              opacity: 0.5
+            }
+          }
+        ]);
+        element.appendChild(contentElement);
+        // This is needed to get dragged item id
+        // the first context is ConnectorAnnotationConfig object
+        // the second context it is its context property, basically it is user defined property
+        element.setAttribute("data-id", data.context.context);
+        element.setAttribute("data-isFromEndPoint", data.context.isFromEndPoint);
+        element.setAttribute("data-itemType", "endpoint");
+
+        // It is important to call interact only once we create node content
+        if (data.renderingMode == primitives.RenderingMode.Create) {
+          interact(data.element).draggable({
+            listeners: {
+              start(event) {
+                document.body.style.cursor = 'pointer';
+                // Create drag indicator and add to body
+                dragContext.indicator = document.createElement('div');
+                dragContext.indicator.classList.add('drag-indicator');
+                dragContext.indicator.setAttribute("data-itemType", "endpoint");
+                // This is needed to get dragged item id
+                dragContext.itemType = "endpoint";
+                dragContext.id = parseInt(event.target.getAttribute("data-id"), 10);
+                dragContext.isFromEndPoint = event.target.getAttribute("data-isFromEndPoint") === "true";
+                document.body.appendChild(dragContext.indicator);
+                // Position clone at pointer position
+                dragContext.position.x = event.client.x - dragContext.indicator.offsetWidth / 2;
+                dragContext.position.y = event.client.y - dragContext.indicator.offsetHeight / 2;
+                dragContext.indicator.style.left = dragContext.position.x + 'px';
+                dragContext.indicator.style.top = dragContext.position.y + 'px';
+
+                dragContext.startPoint = { x: event.clientX, y: event.clientY };
+                dragContext.annotation = annotations.find(annotation => annotation.context == dragContext.id);
+                dragContext.annotation.offset = 0;
+
+                // hide dragged annotation from the diagram
+                annotations = annotations.filter(annotation => annotation.context != dragContext.id);
+                updateAnnotations();
+              },
+              move(event) {
+                if (!dragContext.indicator) {
+                  return;
+                }
+
+                dragContext.position.x += event.dx;
+                dragContext.position.y += event.dy;
+                dragContext.indicator.style.left = dragContext.position.x + 'px';
+                dragContext.indicator.style.top = dragContext.position.y + 'px';
+
+                const { id } = dragContext;
+                var endPoint = clientToElementCoords(new Point(event.clientX, event.clientY), document.getElementById('annotation'));
+                if (dragContext.isFromEndPoint) {
+                  dragContext.toRect = control.getItemPosition(dragContext.annotation.toItem);
+                  dragContext.fromRect = new Rect(endPoint.x, endPoint.y, 1, 1);
+                } else {
+                  dragContext.fromRect = control.getItemPosition(dragContext.annotation.fromItem);
+                  dragContext.toRect = new Rect(endPoint.x, endPoint.y, 1, 1);
+                }
+                updateVisualFeedback();
+              },
+              end(event) {
+                document.body.style.cursor = '';
+                if (dragContext.indicator) {
+                  dragContext.indicator.remove();
+                  dragContext.indicator = null;
+                }
+                dragContext.itemType = null;
+                document.getElementById("annotation").style.visibility = "hidden";
+              }
+            }
+          });
+        }
+      },
+      cursorItem: 0,
+      hasSelectorCheckbox: primitives.Enabled.False,
+      arrowsDirection: primitives.GroupByType.Parents,
+      pageFitMode: primitives.PageFitMode.None,
+      endPointSize: {width: 10, height: 10},
+      templates: [getContactTemplate()],
+      onItemRender: onTemplateRender,
+      defaultTemplateName: "contactTemplate"
+    };
+
+    function onTemplateRender(event, data) {
+      switch (data.renderingMode) {
+        case primitives.RenderingMode.Create:
+          /* Initialize template content here */
+          break;
+        case primitives.RenderingMode.Update:
+          /* Update template content here */
+          break;
+      }
+
+      var itemConfig = data.context;
+
+      if (data.templateName == "contactTemplate") {
+        var titleBackground = data.element.firstChild;
+        titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
+
+        var title = data.element.firstChild.firstChild;
+        title.textContent = itemConfig.title;
+
+        var description = data.element.childNodes[1];
+        description.textContent = itemConfig.description;
+
+        // This is needed to get dragged item id
+        data.element.setAttribute("data-id", itemConfig.id);
+        data.element.setAttribute("data-itemType", "node");
+
+        // It is important to call interact only once when we create node content
+        if (data.renderingMode == primitives.RenderingMode.Create) {
+          interact(data.element).draggable({
+            listeners: {
+              start(event) {
+                document.body.style.cursor = 'pointer';
+                // Create drag indicator and add to body
+                dragContext.indicator = document.createElement('div');
+                dragContext.indicator.classList.add('drag-indicator');
+                dragContext.indicator.setAttribute("data-itemType", "node");
+                // This is needed to get dragged item id
+                dragContext.id = parseInt(event.target.getAttribute("data-id"), 10);
+                dragContext.itemType = "node";
+                document.body.appendChild(dragContext.indicator);
+                // Position clone at pointer position
+                dragContext.position.x = event.client.x - dragContext.indicator.offsetWidth / 2;
+                dragContext.position.y = event.client.y - dragContext.indicator.offsetHeight / 2;
+                dragContext.indicator.style.left = dragContext.position.x + 'px';
+                dragContext.indicator.style.top = dragContext.position.y + 'px';
+
+                dragContext.startPoint = { x: event.clientX, y: event.clientY };
+                dragContext.annotation = createAnnotation(dragContext.id);
+              },
+              move(event) {
+                if (!dragContext.indicator) {
+                  return;
+                }
+
+                dragContext.position.x += event.dx;
+                dragContext.position.y += event.dy;
+                dragContext.indicator.style.left = dragContext.position.x + 'px';
+                dragContext.indicator.style.top = dragContext.position.y + 'px';
+
+                const { id } = dragContext;
+                var endPoint = clientToElementCoords(new Point(event.clientX, event.clientY), document.getElementById('annotation'));
+                const fromItemCenterPoint = control.getItemPosition(id).centerPoint();
+                dragContext.fromRect = new Rect(fromItemCenterPoint.x, fromItemCenterPoint.y, 1, 1);
+                dragContext.toRect = new Rect(endPoint.x, endPoint.y, 1, 1);
+
+                updateVisualFeedback();
+              },
+              end(event) {
+                document.body.style.cursor = '';
+                if (dragContext.indicator) {
+                  dragContext.indicator.remove();
+                  dragContext.indicator = null;
+                }
+                dragContext.itemType = null;
+                document.getElementById("annotation").style.visibility = "hidden";
+              }
+            }
+          });
+          interact(data.element).dropzone({
+            // Accept elements with data-type node and endpoint
+            accept: '[data-itemType="node"], [data-itemType="endpoint"]',
+
+            ondropactivate(event) {
+            },
+            ondragenter(event) {
+            },
+            ondragleave(event) {
+            },
+            ondrop(event) {
+              var toItem = parseInt(event.target.getAttribute("data-id"), 10);
+              const {id, itemType, isFromEndPoint} = dragContext;
+              if(!Number.isNaN(toItem)) {
+                switch(dragContext.itemType) {
+                  case "node":
+                    dragContext.annotation.toItem = toItem;
+                    dragContext.annotation.offset = -10;
+                    annotations.push(dragContext.annotation);
+                    break;
+                  case "endpoint":
+                    reconnectAnnotation(id, dragContext.isFromEndPoint, toItem);
+                    break;
+                }
+                dragContext.itemType = null;
+                updateAnnotations();
+              }
+            },
+            ondropdeactivate(event) {
+            }
+          });
+        }
+      }
+    }
+
+    function clientToElementCoords(clientPoint, element) {
+      const rect = element.getBoundingClientRect();
+      const x = clientPoint.x - rect.left;
+      const y = clientPoint.y - rect.top;
+      return new Point(x, y);
+    }
+            
+    function getContactTemplate() {
+      var result = new primitives.TemplateConfig();
+      result.name = "contactTemplate";
+
+      result.itemSize = new primitives.Size(160, 100);
+      result.minimizedItemSize = new primitives.Size(10, 10);
+
+      /* this template demonstrates template definition in form of regular text, see: https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML for details */
+      result.itemTemplate = 
+        '<div class="interact-draggable bp-item bp-corner-all bt-item-frame" style="width:' + result.itemSize.width + 'px; height: ' + result.itemSize.height + 'px;">'
+        + '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 154px; height: 20px; pointer-events: none;">'
+          + '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 148px; height: 18px; pointer-events: none;">'
+          + '</div>'
+        + '</div>'
+        + '<div name="description" class="bp-item" style="top: 22px; left: 6px; width: 102px; height: 36px; font-size: 12px; pointer-events: none;"></div>'
+      + '</div>'
+
+      return result;
+    }
+
+    function updateVisualFeedback() {
+      const { id, startPoint, itemType, isFromEndPoint, fromRect, toRect, annotation } = dragContext;
+      var options;
+      if(!!itemType) {
+        switch(itemType) {
+          case 'node':
+            options = new ConnectorAnnotationControlConfig({
+              ...annotation,
+              fromRectangle: fromRect,
+              toRectangle: toRect
+            });
+            break;
+          case "endpoint":
+            options = new ConnectorAnnotationControlConfig(annotation);
+            options.fromRectangle = fromRect;
+            options.toRectangle = toRect;
+            break;
+        }
+        document.getElementById("annotation").style.visibility = "visible";
+        if (!connectorAnnotationControl) {
+          connectorAnnotationControl = new ConnectorAnnotationControl(document.getElementById("annotation"), options);
+        } else {
+          connectorAnnotationControl.setOptions(options);
+          connectorAnnotationControl.update();
+        }
+      } else {
+        document.getElementById("annotation").style.visibility = "hidden";
+      }
+    }
+
+    function createAnnotation(id, toItem) {
+      const newId = annotations.reduce((maximum, annotation) => {
+        return Math.max(maximum, annotation.context);
+      }, 0) + 1;
+      return new primitives.ConnectorAnnotationConfig({
+        context: newId,
+        fromItem: id,
+        toItem: null,
+        label: `<span class=\"badge bg-primary\">${newId}</span>`,
+        labelSize: new primitives.Size(30, 30),
+        connectorShapeType: primitives.ConnectorShapeType.OneWay,
+        color: [primitives.Colors.Blue, primitives.Colors.Red][Math.round(Math.random())],
+        offset: 0,
+        lineWidth: 2,
+        lineType: primitives.LineType.Dashed,
+        connectorPlacementType: connectorPlacementType,
+        selectItems: false
+      });
+    }
+
+    function reconnectAnnotation(id, isFromEndPoint, toItem) {
+      var { id, annotation } = dragContext;
+      if (isFromEndPoint) {
+        annotation.fromItem = toItem;
+      } else {
+        annotation.toItem = toItem;
+      }
+      annotation.offset = -10;
+      if (annotation.fromItem != annotation.toItem) {
+        annotations.push(annotation);
+      }
+    }
+
+    function updateAnnotations(value) {
+      if (value !== undefined) {
+        connectorPlacementType = value;
+      }
+      for (var index = 0; index < annotations.length; index += 1) {
+        var annotation = annotations[index];
+        annotation.connectorPlacementType = connectorPlacementType;
+      }
+      control.setOption("annotations", annotations);
+      control.update(primitives.UpdateMode.Refresh);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      control = primitives.OrgDiagram(document.getElementById('basicdiagram'), config);
+    });
+  </script>
+</head>
+
+<body>
+  <p>
+    Set connector annotation placement type:
+    <input onclick="updateAnnotations(primitives.ConnectorPlacementType.Offbeat)" type="button" value="Offbeat" />
+    <input onclick="updateAnnotations(primitives.ConnectorPlacementType.Straight)" type="button" value="Straight" />
+  </p>
+  <div id="centerpanel" style="position: relative; width: 640px; height: 480px; overflow:hidden; border-style: dotted; border-width: 1px;">
+    <div id="basicdiagram" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+    <div id="annotation" style="visibility: hidden; pointer-events: none; overflow: hidden; position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+  </div>
+  <div id="selectionpanel" style="width: 640px; height: 30px; border-style: dotted; border-width: 1px;"></div>
+  <div style="width: 640px;">
+    This sample demonstrates how drag-and-drop can be used to create or modify connector annotations in a diagram.
+
+    <ul>
+      <li>Drag nodes to create new annotations.</li>
+      <li>Drag annotation endpoints to reconnect them to different nodes.</li>
+      <li>Drag an endpoint to empty space to delete the annotation.</li>
+    </ul>
+
+    The sample uses the <a href="https://interactjs.io" target="_blank">Interact.js</a> drag-and-drop library (MIT licensed) to support dynamic diagram updates during node or endpoint movement. An overlay containing the annotation control is displayed during the drag to provide visual feedback. When dragging begins, the corresponding annotation is temporarily removed from the diagram and reinserted upon drop, reflecting the updated connection.
+  </div>
+</body>
+
+</html>

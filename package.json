@@ -2,7 +2,7 @@
   "name": "basicprimitives",
   "sideEffects": false,
   "homepage": "https://www.basicprimitives.com/",
-  "version": "6.5.1",
+  "version": "6.6.0",
   "author": "Basic Primitives Inc. <support@basicprimitives.com> (https://www.basicprimitives.com)",
   "description": "Basic Primitives Diagrams for JavaScript - data visualization components library that implements organizational chart and multi-parent dependency diagrams, contains implementations of JavaScript Controls and PDF rendering plugins.",
   "repository": {
@@ -26,6 +26,7 @@
     "jest-image-snapshot": "^4.2.0",
     "jest-puppeteer": "^4.4.0",
     "pdfkit-nodejs-webpack": "^0.0.2",
+    "process": "^0.11.10",
     "puppeteer": "^5.5.0",
     "stream-browserify": "^3.0.0",
     "style-loader": "^2.0.0",
@@ -33,8 +34,7 @@
     "util": "^0.12.5",
     "webpack": "^5.85.0",
     "webpack-cli": "^5.1.3",
-    "webpack-dev-server": "^4.15.0",
-    "process": "^0.11.10"
+    "webpack-dev-server": "^4.15.0"
   },
   "scripts": {
     "test": "jest",
@@ -42,7 +42,6 @@
     "start": "webpack serve ",
     "apireference": "node apireference.js apireference.json"
   },
-  "dependencies": {},
   "jest": {
     "testEnvironment": "jsdom"
   },

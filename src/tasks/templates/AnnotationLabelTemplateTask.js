@@ -1,6 +1,6 @@
-﻿export default function AnnotationLabelTemplateTask(itemsSizesOptionTask, templates) {
+﻿export default function AnnotationLabelTemplateTask(itemsSizesOptionTask /* changes in items update layout anyway */, templates) {
   var _data = {
-    template: null
+    labelTemplate: null
   };
 
   function process() {
@@ -8,10 +8,10 @@
   }
 
   function getTemplate() {
-    if (_data.template == null) {
-      _data.template = new templates.AnnotationLabelTemplate();
+    if (_data.labelTemplate == null) {
+      _data.labelTemplate = new templates.AnnotationLabelTemplate();
     }
-    return _data.template;
+    return _data.labelTemplate;
   }
 
   return {

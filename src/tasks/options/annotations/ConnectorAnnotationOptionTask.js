@@ -2,7 +2,7 @@ import ArrayReader from '../../../readers/ArrayReader';
 import ValueReader from '../../../readers/ValueReader';
 import ObjectReader from '../../../readers/ObjectReader';
 import EnumerationReader from '../../../readers/EnumerationReader';
-import {ConnectorPlacementType, ShapeType, ZOrderType, ConnectorLabelPlacementType, AnnotationType, LineType} from '../../../enums';
+import {ConnectorPlacementType, ShapeType, ZOrderType, ConnectorLabelPlacementType, AnnotationType, LineType, Enabled} from '../../../enums';
 
 export default function ConnectorAnnotationOptionTask(splitAnnotationsOptionTask, defaultConnectorAnnotationConfig, zOrderType) {
   var _annotations = [],
@@ -30,7 +30,10 @@ export default function ConnectorAnnotationOptionTask(splitAnnotationsOptionTask
       labelSize: new ObjectReader({
         width: new ValueReader(["number"], false, defaultConnectorAnnotationConfig.labelSize.width),
         height: new ValueReader(["number"], false, defaultConnectorAnnotationConfig.labelSize.height)
-      }, false, defaultConnectorAnnotationConfig.labelSize)
+      }, false, defaultConnectorAnnotationConfig.labelSize),
+      showFromEndpoint: new EnumerationReader(Enabled, false, defaultConnectorAnnotationConfig.showFromEndpoint),
+      showToEndpoint: new EnumerationReader(Enabled, false, defaultConnectorAnnotationConfig.showToEndpoint),
+      context: new ValueReader(["string", "number", "object"], true)
     }),
     false
   );

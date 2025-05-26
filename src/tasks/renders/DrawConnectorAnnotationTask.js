@@ -1,7 +1,7 @@
 import Size from '../../graphics/structs/Size';
 import Rect from '../../graphics/structs/Rect';
 import RenderEventArgs from '../../events/RenderEventArgs';
-import { Layers, ZOrderType, ConnectorPlacementType } from '../../enums';
+import { Layers, ZOrderType, ConnectorPlacementType, Enabled } from '../../enums';
 import PolylinesBuffer from '../../graphics/structs/PolylinesBuffer';
 import PaletteItem from '../../graphics/structs/PaletteItem';
 import ConnectorAnnotationOffsetResolver from './offsetResolver/ConnectorAnnotationOffsetResolver';
@@ -11,11 +11,13 @@ import { isNullOrEmpty } from '../../common';
 
 
 export default function DrawConnectorAnnotationTask(getGraphics, createTransformTask, applyLayoutChangesTask,
-  orientationOptionTask, connectorAnnotationOptionTask, alignDiagramTask, annotationLabelTemplateTask, zOrderType) {
+  orientationOptionTask, connectorAnnotationOptionTask, alignDiagramTask, annotationLabelTemplateTask, cursorItemOptionTask, endPointsOptionTask, endPointTemplateTask, zOrderType) {
   var _graphics,
     _transform,
     _orientationOptions,
+    _endPointsOptions,
     _annotationLabelTemplate,
+    _endPointTemplate,
     _panelSize;
 
   function process() {
@@ -24,8 +26,9 @@ export default function DrawConnectorAnnotationTask(getGraphics, createTransform
 
     _transform = createTransformTask.getTransform();
     _orientationOptions = orientationOptionTask.getOptions();
-
+    _endPointsOptions = endPointsOptionTask.getOptions();
     _annotationLabelTemplate = annotationLabelTemplateTask.getTemplate();
+    _endPointTemplate = endPointTemplateTask.getTemplate();
 
     _panelSize = new Size(alignDiagramTask.getContentSize());
 
@@ -37,6 +40,7 @@ export default function DrawConnectorAnnotationTask(getGraphics, createTransform
         _graphics.reset("placeholder", Layers.ForegroundConnectorAnnotation);
         break;
     }
+    _graphics.reset("placeholder", Layers.EndPoint);
 
     drawAnnotations(connectorAnnotationOptionTask.getAnnotations(), alignDiagramTask.getItemPosition);
 
@@ -56,15 +60,6 @@ export default function DrawConnectorAnnotationTask(getGraphics, createTransform
       labelPlacement,
       connectorAnnotationOffsetResolver = ConnectorAnnotationOffsetResolver(),
       maximumLineWidth = 0;
-
-    switch (zOrderType) {
-      case ZOrderType.Background://ignore jslint
-        panel = _graphics.activate("placeholder", Layers.BackgroundConnectorAnnotation);
-        break;
-      case ZOrderType.Foreground://ignore jslint
-        panel = _graphics.activate("placeholder", Layers.ForegroundConnectorAnnotation);
-        break;
-    }
 
     for (index = 0, len = annotations.length; index < len; index += 1) {
       annotationConfig = annotations[index];
@@ -119,6 +114,15 @@ export default function DrawConnectorAnnotationTask(getGraphics, createTransform
           var linesOffset = annotationConfig.lineWidth * 3;
           var bundleOffset = maximumLineWidth * 6;
 
+          switch (zOrderType) {
+            case ZOrderType.Background://ignore jslint
+              _graphics.activate("placeholder", Layers.BackgroundConnectorAnnotation);
+              break;
+            case ZOrderType.Foreground://ignore jslint
+              _graphics.activate("placeholder", Layers.ForegroundConnectorAnnotation);
+              break;
+          }
+
           /* create connection lines */
           shape.draw(buffer, linePaletteItem, fromRect, toRect, linesOffset, bundleOffset, labelSize, panelSize,
             annotationConfig.connectorShapeType, 4 /*labelOffset*/, annotationConfig.labelPlacementType, hasLabel,
@@ -135,6 +139,14 @@ export default function DrawConnectorAnnotationTask(getGraphics, createTransform
                 uiHash.context = labelConfig;
 
                 /* draw label */
+                switch (labelConfig.zOrderType) {
+                  case ZOrderType.Background://ignore jslint
+                    _graphics.activate("placeholder", Layers.BackgroundConnectorAnnotation);
+                    break;
+                  case ZOrderType.Foreground://ignore jslint
+                    _graphics.activate("placeholder", Layers.ForegroundConnectorAnnotation);
+                    break;
+                }
                 _graphics.template(
                   labelPlacement.x
                   , labelPlacement.y
@@ -151,7 +163,55 @@ export default function DrawConnectorAnnotationTask(getGraphics, createTransform
                   , null
                 );
               }
-            }, annotationConfig);
+            }, annotationConfig,
+            function (fromPoint, toPoint, annotationConfig) {
+              var cursorItem = cursorItemOptionTask.getCursorItem();
+              var hasFromEndpoint = false;
+              switch(annotationConfig.showFromEndpoint) {
+                case Enabled.True:
+                  hasFromEndpoint = true;
+                  break;
+                case Enabled.Auto:
+                  switch (_endPointsOptions.showEndPoints) {
+                    case Enabled.True:
+                      hasFromEndpoint = true;
+                      break;
+                    case Enabled.Auto:
+                      // Point is visible only when the other end is cursor node
+                      hasFromEndpoint = cursorItem !== null && annotationConfig.toItem == cursorItem;
+                      break;
+                  }
+                  break;
+              }
+              if (hasFromEndpoint && fromPoint != null) {
+                //_graphics.activate("placeholder", Layers.EndPoint);
+                var isFromEndPoint = true;
+                drawEndPoint(fromPoint, annotationConfig, isFromEndPoint);
+              }
+              var hasToEndpoint = false;
+              switch(annotationConfig.showToEndpoint) {
+                case Enabled.True:
+                  hasToEndpoint = true;
+                  break;
+                case Enabled.Auto:
+                  switch (_endPointsOptions.showEndPoints) {
+                    case Enabled.True:
+                      hasToEndpoint = true;
+                      break;
+                    case Enabled.Auto:
+                      // Point is visible only when the other end is cursor node
+                      hasToEndpoint = cursorItem !== null && annotationConfig.fromItem == cursorItem;
+                      break;
+                  }
+                  break;
+              }
+              if (hasToEndpoint && toPoint != null) {
+                //_graphics.activate("placeholder", Layers.EndPoint);
+                var isFromEndPoint = false;
+                drawEndPoint(toPoint, annotationConfig, isFromEndPoint);
+              }
+            }
+          );
         }
       }
     }
@@ -163,6 +223,37 @@ export default function DrawConnectorAnnotationTask(getGraphics, createTransform
     buffer.transform(_transform, true);
     /* draw background polylines */
     _graphics.polylinesBuffer(buffer);
+  }
+
+  function drawEndPoint(fromPoint, annotationConfig, isFromEndPoint) {
+    /* translate result label placement back to users orientation */
+    var endPointSize = _endPointsOptions.endPointSize;
+    var endPointPlacement = new Rect(fromPoint.x, fromPoint.y, endPointSize.width, endPointSize.height);
+    endPointPlacement.translate(- endPointSize.width / 2, - endPointSize.height / 2);
+    _transform.transformRect(endPointPlacement.x, endPointPlacement.y, endPointPlacement.width, endPointPlacement.height, true,
+      this, function (x, y, width, height) {
+        endPointPlacement = new Rect(x, y, width, height);
+      });
+
+    let uiHash = new RenderEventArgs();
+    uiHash.context = {...annotationConfig, isFromEndPoint};
+
+    /* draw label */
+    _graphics.template(
+      endPointPlacement.x
+      , endPointPlacement.y
+      , 0
+      , 0
+      , 0
+      , 0
+      , endPointPlacement.width
+      , endPointPlacement.height
+      , _endPointTemplate.template()
+      , _endPointTemplate.getHashCode()
+      , _endPointTemplate.render
+      , uiHash
+      , null
+    );
   }
 
   return {

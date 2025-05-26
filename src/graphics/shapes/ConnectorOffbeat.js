@@ -12,7 +12,7 @@ export default function ConnectorOffbeat() {
 ConnectorOffbeat.prototype = new BaseShape();
 
 ConnectorOffbeat.prototype.draw = function (buffer, linePaletteItem, fromRect, toRect, linesOffset, bundleOffset, labelSize, panelSize, connectorShapeType, labelOffset, labelPlacementType, hasLabel,
-  connectorAnnotationOffsetResolver, onLabelPlacement, labelConfig) {
+  connectorAnnotationOffsetResolver, onLabelPlacement, labelConfig, onEndPointsPlacement) {
   var minimalGap,
     connectorRect,
     fromPoint, toPoint,
@@ -199,7 +199,9 @@ ConnectorOffbeat.prototype.draw = function (buffer, linePaletteItem, fromRect, t
       }
     }
   }
-
+  if (onEndPointsPlacement != null) {
+    onEndPointsPlacement.call(this, fromPoint, toPoint, labelConfig);
+  }
   if (hasLabel) {
     /* end points labels placement */
     switch (labelPlacementType) {

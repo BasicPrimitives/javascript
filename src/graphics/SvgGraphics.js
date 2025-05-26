@@ -48,7 +48,8 @@ SvgGraphics.prototype.resizePlaceholder = function (placeholder, left, top, widt
         JsonML.applyStyles(layer.svgcanvas, {
           "position": "absolute",
           "width": width + "px",
-          "height": height + "px"
+          "height": height + "px",
+          "pointer-events": "none"
         });
         layer.svgcanvas.setAttribute('viewBox', "0 0 " + width + " " + height);
       }
@@ -65,7 +66,8 @@ SvgGraphics.prototype._getCanvas = function () {
     layer.svgcanvas.setAttribute("viewBox", panelSize.x + " " + panelSize.y + " " + panelSize.width + " " + panelSize.height);
     JsonML.applyStyles(layer.svgcanvas, {
       "width": panelSize.width + "px",
-      "height": panelSize.height + "px"
+      "height": panelSize.height + "px",
+      "pointer-events": "none"
     });
 
     this.prepend(placeholder.activeLayer.canvas, layer.svgcanvas);

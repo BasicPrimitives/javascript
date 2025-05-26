@@ -24,6 +24,13 @@ Creates JavaScript Organizational Chart Control
 Removes all elements control added to DOM including event listeners.
 
 
+ `getItemPosition(itemId)` 
+
+This method returns item position relative to the control's element.
+
+ Returns: `Rect` - returns item position
+
+
  `getOption(option)` 
 
 This method returns configuration option by name.
@@ -88,6 +95,13 @@ Creates JavaScript Family Diagram Control
  `destroy()` 
 
 Removes all elements control added to DOM including event listeners.
+
+
+ `getItemPosition(itemId)` 
+
+This method returns item position relative to the control's element.
+
+ Returns: `Rect` - returns item position
 
 
  `getOption(option)` 

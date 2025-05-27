@@ -94,17 +94,16 @@ The control is an interactive component by design, so it needs to add event list
 control.destroy();
 ```
 
-## PDFKit
+## PDFKit Integration
 
-Basic Primitives library provides plugins for [PDFkit](www.PDFkit.org) (MIT License) - it is JavaScript PDF generation library for NodeJS and client-side rendering in browser.
+The Basic Primitives library offers plugins for [PDFKit](https://www.PDFkit.org) (MIT License), a robust JavaScript library designed for generating PDFs in Node.js and client-side rendering in browsers.
 
-PDFKit library provides the complete experience for rendering documents in PDF format. Basic Primitives library has two plugins for PDFkit to generate Diagrams on PDF page:
-* OrgDiagramPdfkit - Organizational Chart PDFkit Plugin
-* FamDiagramPdfkit - Family Diagram PDFkit Plugin
+PDFKit provides a comprehensive solution for rendering documents in PDF format. The Basic Primitives library includes two plugins for generating diagrams on PDF pages using PDFKit:
+* **OrgDiagramPdfkit** – Organizational Chart PDFKit Plugin
+* **FamDiagramPdfkit** – Family Diagram PDFKit Plugin
 
-PDFkit Plugins are stand-alone products. They share many API options with Basic Primitives Controls, but they don't have any interactivity, and their rendering engine uses PDFkit's library vector graphics capabilities, see PDFkit site for reference.
+These PDFKit plugins are standalone products. While they share many API options with Basic Primitives controls, they do not include interactivity. Instead, their rendering engine utilizes PDFKit’s vector graphics capabilities. For further reference, consult the PDFKit documentation.
 
-The following example is a minimal code needed to create a new empty PDF file on the browser's client-side using the PDFkit library.
 
 ```JavaScript
 const PDFDocument = require('pdfkit');
@@ -187,3 +186,24 @@ Plugins are part of the Basic Primitives distribution package.
 [PDFKit](pdfkit.plugins/FirstOrganizationalChart.html)
 
 ![Screenshot](javascript.controls/__image_snapshots__/CaseFirstOrganizationalChart-snap.png)
+
+### Browser Usage: PDFKit and Recommended Setup
+
+For use in browser environments, especially in frameworks like **React** and **Angular**, PDFKit developers recommend using the standalone version of the library for optimal performance.
+
+1. **`pdfkit.standalone.js`**
+   This file contains the standalone version of [PDFKit](https://github.com/foliojs/pdfkit/releases), enabling PDF generation directly in the browser or on the server. It’s ideal for environments like React and Angular, where the regular Node.js version might not be compatible.
+
+2. **`blob-stream.js`**
+   This file is part of the [Blob Stream](https://github.com/devongovett/blob-stream/releases) library, which allows you to create binary blobs in the browser from streams. This is particularly useful when generating downloadable files such as PDFs.
+
+### React Demo Repository
+
+For a practical example, our **React-demo repository** includes a sample integration of **pdfkit.standalone.js** into a React application built with **Vite**. This demo showcases how to set up and use PDFKit in a modern React environment, providing a simple yet complete solution for PDF generation in client-side applications.
+
+You can explore the sample integration here: [React Demo Repository](https://github.com/BasicPrimitives/react-demo/blob/master/client/src/components/PdfViewDialog/PdfViewDialog.jsx)
+
+For further details on these libraries, you can refer to the following GitHub pages:
+
+- [PDFKit Releases](https://github.com/foliojs/pdfkit/releases)
+- [Blob Stream Releases](https://github.com/devongovett/blob-stream/releases)

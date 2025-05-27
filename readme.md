@@ -16,7 +16,7 @@ Data visualization diagramming components library for dependencies visualization
 * Webpack [Tree Shaking](https://webpack.js.org/guides/tree-shaking/) support
 
 ### Basic Primitives Diagrams for [React](https://reactjs.org/)
-* [create-react-app](https://github.com/facebook/create-react-app#readme) compatible 
+* [Vite](https://vite.dev/) Fast build tool for modern web development.
 * User [JSX](https://reactjs.org/docs/introducing-jsx.html) templates
 * 100% [Virtual DOM](https://reactjs.org/docs/faq-internals.html) rendering cycle
 * [react-dnd](http://react-dnd.github.io/react-dnd/about) & [React Context](https://reactjs.org/docs/context.html) compatible 

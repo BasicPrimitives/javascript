@@ -8,6 +8,7 @@ The following sample demonstrates connection annotation drawn in the offbeat sty
 
 ![Screenshot](javascript.controls/__image_snapshots__/CaseConnectorAnnotation-snap.png)
 
+## Drag & Drop
 The following sample demonstrates how drag-and-drop can be used to create or modify connector annotations in a diagram.
 
 * Drag nodes to create new annotations.

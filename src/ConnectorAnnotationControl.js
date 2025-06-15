@@ -1,17 +1,9 @@
 import Rect from './graphics/structs/Rect';
-import PaletteItem from './graphics/structs/PaletteItem';
-import { ConnectorPlacementType } from './enums';
 import createGraphics from './graphics/createGraphics';
-import { getFixOfPixelAlignment, getInnerSize, getElementOffset } from './graphics/dom';
+import { getFixOfPixelAlignment, getInnerSize } from './graphics/dom';
 import JsonML from './common/jsonml-html';
-import Transform from './graphics/Transform';
-import PolylinesBuffer from './graphics/structs/PolylinesBuffer';
-import ConnectorAnnotationOffsetResolver from './tasks/renders/offsetResolver/ConnectorAnnotationOffsetResolver';
-import ConnectorOffbeat from './graphics/shapes/ConnectorOffbeat';
-import ConnectorStraight from './graphics/shapes/ConnectorStraight';
+import ConnectorAnnotation from './graphics/annotations/ConnectorAnnotation';
 import AnnotationLabelTemplate from './templates/html/AnnotationLabelTemplate';
-import { isNullOrEmpty } from './common';
-import RenderEventArgs from './events/RenderEventArgs';
 
 /**
 * Creates JavaScript Connector Annotation Control
@@ -30,7 +22,8 @@ export default function ConnectorAnnotationControl(element, options) {
     placeholder: null,
     panelSize: null,
     graphics: null,
-    labelTemplate: null
+    labelTemplate: null,
+    connector: null
   };
 
   if(!element) {
@@ -70,6 +63,7 @@ export default function ConnectorAnnotationControl(element, options) {
     );
   
     _data.graphics = createGraphics(_data.element);
+    _data.connector = new ConnectorAnnotation();
   };
 
   function cleanLayout() {
@@ -106,125 +100,17 @@ export default function ConnectorAnnotationControl(element, options) {
       _data.labelTemplate = AnnotationLabelTemplate(_data.options);
       cleanLayout();
       createLayout();
-      redraw();
+      _data.graphics.begin();
+      _data.connector.draw(_data.options, _data.graphics, _data.panelSize, _data.labelTemplate);
+      _data.graphics.end();
     }
     else {
       updateLayout();
       _data.graphics.resize("placeholder", _data.panelSize.width, _data.panelSize.height);
       _data.graphics.begin();
-      redraw();
+      _data.connector.draw(_data.options, _data.graphics, _data.panelSize, _data.labelTemplate);
       _data.graphics.end();
     }
-  }
-
-  function redraw() {
-    var annotationConfig = _data.options,
-      shape,
-      uiHash,
-      transform = new Transform(),
-      panel = _data.graphics.activate("placeholder"),
-      buffer = new PolylinesBuffer(),
-      connectorAnnotationOffsetResolver = ConnectorAnnotationOffsetResolver();
-
-    transform.size = new Size(_data.panelSize.width, _data.panelSize.height);
-    transform.setOrientation(annotationConfig.orientationType);
-
-    if (annotationConfig.fromRectangle != null && annotationConfig.toRectangle != null) {
-      var fromRect = annotationConfig.fromRectangle,
-        toRect = annotationConfig.toRectangle;
-
-      /* translate rectangles to Top orientation */
-      /* from rectangle */
-      transform.transformRect(fromRect.x, fromRect.y, fromRect.width, fromRect.height, false,
-        this, function (x, y, width, height) {
-          fromRect = new Rect(x, y, width, height);
-        });
-
-      /* to rectangle */
-      transform.transformRect(toRect.x, toRect.y, toRect.width, toRect.height, false,
-        this, function (x, y, width, height) {
-          toRect = new Rect(x, y, width, height);
-        });
-
-      switch (annotationConfig.connectorPlacementType) {
-        case ConnectorPlacementType.Offbeat:
-          shape = new ConnectorOffbeat();
-          break;
-        case ConnectorPlacementType.Straight:
-          shape = new ConnectorStraight();
-          break;
-      }
-
-      /* rotate label size to user orientation */
-      var labelSize;
-      transform.transformRect(0, 0, annotationConfig.labelSize.width, annotationConfig.labelSize.height, false,
-        this, function (x, y, width, height) {
-          labelSize = new Size(width, height);
-        });
-
-      /* rotate panel size to user orientation */
-      var panelSize = null;
-      transform.transformRect(0, 0, panel.size.width, panel.size.height, false,
-        this, function (x, y, width, height) {
-          panelSize = new Size(width, height);
-        });
-
-      var linePaletteItem = new PaletteItem({
-        lineColor: annotationConfig.color,
-        lineWidth: annotationConfig.lineWidth,
-        lineType: annotationConfig.lineType
-      });
-
-      var hasLabel = !isNullOrEmpty(annotationConfig.label);
-
-      /* offset rectangles */
-      fromRect = new Rect(fromRect).offset(annotationConfig.offset);
-      toRect = new Rect(toRect).offset(annotationConfig.offset);
-
-      var linesOffset = annotationConfig.lineWidth * 6;
-
-      /* create connection lines */
-      shape.draw(buffer, linePaletteItem, fromRect, toRect, linesOffset, 0, labelSize, panelSize,
-        annotationConfig.connectorShapeType, annotationConfig.labelOffset, annotationConfig.labelPlacementType, hasLabel,
-        connectorAnnotationOffsetResolver, function (labelPlacement, labelConfig) {
-          var hasLabel = !isNullOrEmpty(labelConfig.label);
-          if (hasLabel && labelPlacement != null) {
-            /* translate result label placement back to users orientation */
-            transform.transformRect(labelPlacement.x, labelPlacement.y, labelPlacement.width, labelPlacement.height, true,
-              self, function (x, y, width, height) {
-                labelPlacement = new Rect(x, y, width, height);
-              });
-
-            uiHash = new RenderEventArgs();
-            uiHash.context = labelConfig;
-
-            /* draw label */
-            _data.graphics.template(
-              labelPlacement.x
-              , labelPlacement.y
-              , 0
-              , 0
-              , 0
-              , 0
-              , labelPlacement.width
-              , labelPlacement.height
-              , _data.labelTemplate.template()
-              , _data.labelTemplate.getHashCode()
-              , _data.labelTemplate.render
-              , uiHash
-              , null
-            );
-          }
-        }, annotationConfig);
-      connectorAnnotationOffsetResolver.resolve();
-    }
-
-    /* translate result polylines back to users orientation */
-    buffer.transform(transform, true);
-    /* draw background polylines */
-    _data.graphics.polylinesBuffer(buffer);
-
-    _data.graphics.end();
   }
 
   function destroy() {

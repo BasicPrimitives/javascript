@@ -2,11 +2,8 @@ import Rect from './graphics/structs/Rect';
 import createGraphics from './graphics/createGraphics';
 import { getFixOfPixelAlignment, getInnerSize } from './graphics/dom';
 import JsonML from './common/jsonml-html';
-import Transform from './graphics/Transform';
-import Shape from './graphics/shapes/Shape';
+import ShapeAnnotation from './graphics/annotations/ShapeAnnotation';
 import AnnotationLabelTemplate from './templates/html/AnnotationLabelTemplate';
-import { isNullOrEmpty } from './common';
-import RenderEventArgs from './events/RenderEventArgs';
 
 /**
 * Creates JavaScript Shape Annotation Control
@@ -25,7 +22,8 @@ export default function ShapeAnnotationControl(element, options) {
     placeholder: null,
     panelSize: null,
     graphics: null,
-    labelTemplate: null
+    labelTemplate: null,
+    shape: null
   };
 
   if(!element) {
@@ -65,6 +63,7 @@ export default function ShapeAnnotationControl(element, options) {
     );
   
     _data.graphics = createGraphics(_data.element);
+    _data.shape = new ShapeAnnotation();
   };
 
   function cleanLayout() {
@@ -101,61 +100,14 @@ export default function ShapeAnnotationControl(element, options) {
       _data.labelTemplate = AnnotationLabelTemplate(_data.options);
       cleanLayout();
       createLayout();
-      redraw();
+      _data.shape.draw(_data.options, _data.graphics, _data.panelSize, _data.labelTemplate);
     }
     else {
       updateLayout();
       _data.graphics.resize("placeholder", _data.panelSize.width, _data.panelSize.height);
       _data.graphics.begin();
-      redraw();
+      _data.shape.draw(_data.options, _data.graphics, _data.panelSize, _data.labelTemplate);
       _data.graphics.end();
-    }
-  }
-
-  function redraw() {
-    var annotationConfig = _data.options,
-      shape,
-      uiHash,
-      transform = new Transform(),
-      panel = _data.graphics.activate("placeholder");
-
-    transform.size = new Size(_data.panelSize.width, _data.panelSize.height);
-    transform.setOrientation(annotationConfig.orientationType);
-
-    if (annotationConfig.position != null) {
-      shape = new Shape(_data.graphics);
-      primitives.mergeObjects(shape, options);
-
-      /* rotate label size to user orientation */
-      transform.transformRect(0, 0, annotationConfig.labelSize.width, annotationConfig.labelSize.height, false,
-        this, function (x, y, width, height) {
-          shape.labelSize = new Size(width, height);
-        });
-
-      /* rotate panel size to user orientation */
-      transform.transformRect(0, 0, panel.size.width, panel.size.height, false,
-        this, function (x, y, width, height) {
-          shape.panelSize = new Size(width, height);
-        });
-
-      shape.hasLabel = !isNullOrEmpty(annotationConfig.label);
-
-      var position = annotationConfig.position;
-
-      /* translate position to Top orientation */
-      transform.transformRect(position.x, position.y, position.width, position.height, false,
-        this, function (x, y, width, height) {
-          position = new Rect(x, y, width, height);
-        });
-
-      /* offset position */
-      position = new Rect(annotationConfig.position).offset(annotationConfig.offset);
-
-      shape.labelTemplate = _data.labelTemplate;
-
-      uiHash = new RenderEventArgs();
-      uiHash.context = annotationConfig;
-      shape.draw(position, uiHash);
     }
   }
 

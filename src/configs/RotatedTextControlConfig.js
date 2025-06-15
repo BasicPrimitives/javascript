@@ -1,4 +1,4 @@
-import {VerticalAlignmentType, TextOrientationType, HorizontalAlignmentType} from '../enums';
+import {VerticalAlignmentType, TextOrientationType, HorizontalAlignmentType, Colors} from '../enums';
 
 /**
  * @class RotatedTextControlConfig

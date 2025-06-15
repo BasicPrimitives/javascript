@@ -72,3 +72,6 @@ export { default as RotatedTextControl } from './RotatedTextControl';
 
 export { default as FamTaskManagerFactory } from './FamTaskManagerFactory';
 export { default as OrgTaskManagerFactory } from './OrgTaskManagerFactory';
+export { default as ConnectorAnnotation} from './graphics/annotations/ConnectorAnnotation';
+export { default as ShapeAnnotation} from './graphics/annotations/ShapeAnnotation';
+export { default as Callout} from './graphics/shapes/Callout';

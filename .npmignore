@@ -1,5 +1,6 @@
 apireference
 node_modules
+.vscode
 samples
 .gitignore
 apireference.js

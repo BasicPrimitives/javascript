@@ -23,6 +23,9 @@ ConnectorStraight.prototype.draw = function (buffer, linePaletteItem, fromRect, 
     self = this;
 
   vector = new Vector(fromRect.centerPoint(), toRect.centerPoint());
+  if (vector.isNull()) {
+    return;
+  }
 
   fromRect.loopEdges(function (sideVector, placementType) {
     fromPoint = sideVector.getIntersectionPoint(vector, true, 1.0);
@@ -36,7 +39,7 @@ ConnectorStraight.prototype.draw = function (buffer, linePaletteItem, fromRect, 
     return (toPoint != null);
   });
 
-  if (fromPoint != null && toPoint != null) {
+  if (fromPoint != null && toPoint != null && !fromPoint.equalTo(toPoint)) {
     var baseVector = new Vector(fromPoint, toPoint);
     connectorAnnotationOffsetResolver.getOffset(baseVector, function (offsetIndex, bundleSize, direction) {
       var tempOffset = (offsetIndex * bundleOffset - (bundleSize - 1) * bundleOffset / 2.0) * direction;

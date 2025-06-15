@@ -48,7 +48,7 @@ export default function Vector(arg0, arg1) {
  * @returns {boolean} Returns true if start and end points are the same.
  */
 Vector.prototype.isNull = function () {
-  return this.from.x == this.to && this.from.y == this.to.y;
+  return this.from.x == this.to.x && this.from.y == this.to.y;
 };
 
 /**

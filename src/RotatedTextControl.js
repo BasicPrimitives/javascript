@@ -2,11 +2,7 @@ import Rect from './graphics/structs/Rect';
 import createGraphics from './graphics/createGraphics';
 import { getFixOfPixelAlignment, getInnerSize } from './graphics/dom';
 import JsonML from './common/jsonml-html';
-import Transform from './graphics/Transform';
-import Shape from './graphics/shapes/Shape';
 import AnnotationLabelTemplate from './templates/html/AnnotationLabelTemplate';
-import { isNullOrEmpty } from './common';
-import RenderEventArgs from './events/RenderEventArgs';
 
 /**
 * Creates JavaScript Rotated Text Control

@@ -10,11 +10,18 @@ export function Edge(from, to) {
 }
 
 /**
- * This function finds [optimal collection of feedback edges](https://en.wikipedia.org/wiki/Feedback_arc_set) needed to be cut in 
- * order to eliminate loops in family structure.
- * 
- * @param {Family} family Family structure
- * @returns {Edge[]} Returns optimal collection of feedback loops 
+ * Computes the optimal set of feedback edges that must be removed
+ * to eliminate all cycles in a family structure. This corresponds to
+ * [finding a minimum feedback arc set in the directed graph](https://en.wikipedia.org/wiki/Feedback_arc_set) formed by
+ * the family relationships.
+ *
+ * The function analyzes the directed dependencies inside the family,
+ * detects all cycles, and returns the smallest collection of edges
+ * whose removal makes the structure acyclic.
+ *
+ * @param {Family} family - The family structure represented as a directed graph.
+ * @param {boolean} [debug=false] - If true, enables diagnostic output.
+ * @returns {Edge[]} The minimal set of edges whose removal breaks all cycles.
  */
 export default function getFamilyLoops(family, debug) {
   var loops = [], loop,
@@ -24,6 +31,11 @@ export default function getFamilyLoops(family, debug) {
 
   var tempFamily = family.clone();
 
+  /* Cleaning loops stage: use topological sorting to remove all nodes without parents.
+    Then use reversed topological sorting to remove all nodes without children.
+    The final temp family should contain only nodes that are in loops,
+    having both children and parents at the same time.
+  */
   family.loopTopo(this, function (itemid) {
     tempFamily.removeNode(itemid);
   })
@@ -32,13 +44,20 @@ export default function getFamilyLoops(family, debug) {
   })
   var cleanFamily = tempFamily.clone();
 
+  /* Take any node in the temp family and break all its parent relations, storing them in the loops collection.
+    After that, repeat the previous cleaning stage: use topological and reversed topological sorting
+    to remove nodes that are no longer part of loops.
+    Repeat this until the temp family becomes empty.
+  */
   cleanFamily.loop(this, function (itemid) {
+    /* take any node in temp family and break its parents relations*/
     if (tempFamily.node(itemid) != null) {
       tempFamily.loopParents(this, itemid, function (parentid) {
         loops.push(new Edge(parentid, itemid));
         tempFamily.removeChildRelation(parentid, itemid);
         return tempFamily.SKIP;
       });
+      /* clean nodes in broken loops */
       var itemsToRemove = [];
       tempFamily.loopTopo(this, function (itemid) {
         itemsToRemove.push(itemid);
@@ -52,7 +71,10 @@ export default function getFamilyLoops(family, debug) {
     }
   });
 
-  /* Invert loops */
+  /* At this stage we have a copy of the original clean family
+    and a collection of loops we need to break to make the clean family acyclic.
+    So we remove the broken loops (edges) from the clean family here.
+  */
   for (index = 0, len = loops.length; index < len; index += 1) {
     loop = loops[index];
     if (!cleanFamily.removeChildRelation(loop.from, loop.to)) {
@@ -68,6 +90,12 @@ export default function getFamilyLoops(family, debug) {
     return { from: from, to: to, capacity: 1, flow: 0 };
   });
 
+  /* Create two nodes, `from` and `to`, for finding the maximum flow in the graph
+    around and through the broken loops.
+    For each broken loop we create two edges: the parent node of the broken loop
+    is connected to the `from` node, and the child node of the broken loop
+    is connected to the `to` node.
+  */
   var from = "__1000__";
   var to = "__2000__";
   var defaultMinimalFlow = loops.length;
@@ -89,6 +117,7 @@ export default function getFamilyLoops(family, debug) {
     }
   }
 
+  /*Now, use standard algorithm to find maximum flow between `from` and `to` nodes */
   var totalFlow = 0;
   var levelGraph = null;
   while (true) {
@@ -150,12 +179,42 @@ export default function getFamilyLoops(family, debug) {
     }
   }
 
+  /* If the maximum flow is less than the number of initially broken loops,
+    then it means the graph has a more optimal set of edges to break.
+  */
   if (totalFlow < defaultMinimalFlow) {
-    var residueGraph = graph.getLevelGraph(this, from, function (fromNode, toNode, edge) {
-      if (fromNode == edge.from) {
-        return edge.capacity > edge.flow;
+    /* Collect residue graph nodes from the graph used to find the maximum flow.
+      Start collecting edges from the `from` node.
+      Use the same logic as for searching maximum flow:
+        - if edge capacity > edge.flow, we can go forward
+        - if edge.flow > 0, we can go backward through the edge
+      Stop when no more new nodes are available.
+      The `to` node cannot be reached this time.
+    */
+    var residueGraphNodes = {};
+    residueGraphNodes[from] = true;
+    graph.dfsLoop(this, from, function (fromNode, toNode2, edge) {
+        if (fromNode == edge.from) {
+          return edge.capacity > edge.flow;
+        } else {
+          return edge.flow > 0;
+        }
+    }, function (foundid) {
+      if (!residueGraphNodes.hasOwnProperty(foundid)) {
+        residueGraphNodes[foundid] = true;
       }
       return false;
+    });
+
+    /* The minimum cut of the directed graph is the set of edges
+      between residue graph nodes and the inaccessible nodes of the graph.
+    */
+    var edgesToBreak = [];
+    graph.loopEdges(this, function (fromKey, toKey, edge) {
+      if (residueGraphNodes.hasOwnProperty(fromKey) && !residueGraphNodes.hasOwnProperty(toKey) && edge.capacity == edge.flow) {
+        edgesToBreak.push(new Edge(fromKey, toKey));
+        // console.log("Edge to break: fromKey: " + fromKey + ", toKey: " + toKey + ", edge=" + JSON.stringify(edge));
+      }
     });
 
     // graph.loopNodes(this, from, function (nodeid) {
@@ -167,41 +226,11 @@ export default function getFamilyLoops(family, debug) {
     //   })
     // });
 
-    // var resedueNodes = [];
-    // residueGraph.loopNodes(this, from, function (nodeid) {
-    //   resedueNodes.push(nodeid);
-    // });
-    // console.log("Residue graph: " + resedueNodes.join(", "));
+    // console.log("Residue graph nodes: " + Object.keys(residueGraphNodes).join(", "));
 
-    var edgesToBreak = [];
-    residueGraph.loopNodes(this, from, function (nodeid) {
-      graph.loopNodeEdges(this, nodeid, function (toNode, edge) {
-        if (edge.to == toNode) {
-          if (!residueGraph.hasNode(toNode)) {
-            // console.log("Edge to test: from: " + nodeid + ", to " + toNode);
-            var isIsolated = false;
-            graph.dfsLoop(this, toNode, function (fromNode, toNode2, edge) {
-              if (edge.from == fromNode && !residueGraph.hasNode(fromNode)) {
-                return true;
-              }
-              return false;
-            }, function (foundid) {
-              if (foundid == to) {
-                // console.log("Isolated: " + toNode + ", may access exit node" + foundid);
-                isIsolated = true;
-                return true;
-              }
-              return false;
-            });
-            if (isIsolated) {
-              edgesToBreak.push(new Edge(nodeid, toNode));
-            }
-          }
-        }
-      });
-    });
-
-    // collect loops to break
+    /* Collect loops to break. If a broken edge contains the `from` or `to` nodes,
+      recover the original edge from the family structure.
+    */
     var optimizedLoops = [];
     var validatedFlow = 0;
     for (index = 0, len = edgesToBreak.length; index < len; index += 1) {

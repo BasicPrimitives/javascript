@@ -1,3 +1,5 @@
+#### Version 6.6.2
+* Fixed computation of the optimal set of feedback edges that must be removed to eliminate all cycles in a family structure.
 #### Version 6.6.0
 * Added templated end points to connector annotations. Added `showFromEndpoint`, `showToEndpoint`, `context` properties to to `ConnectorAnnotationConfig`. Added `onEndPointRender`, `showEndPoints`, `endPointSize`, `endPointCornerRadius`, `endPointOpacity` properties to `OrgConfig`. Added drag and drop sample creating and editing connector annotations.
 * Changed CSS styles for connector annotations, so when they are rendered over diagram nodes, they should be transparent for mouse events.

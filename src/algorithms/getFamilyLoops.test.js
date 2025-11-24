@@ -143,3 +143,18 @@ test('getFamilyLoops - find optimal set of loops in the interlinked set of nodes
 
   expect(containsAllNodes).toBe(true);
 });
+
+test('getFamilyLoops - find optimal set of loops in the looped linked list, nodes should stay connected after loops removal', () => {
+  var family = getFamily([
+    { id: 'A', parents: ['C'] },
+    { id: 'D', parents: ['C'] },
+    { id: 'B', parents: ['A', 'D'] },
+    { id: 'C', parents: ['B'] }
+  ]);
+
+  var result = getFamilyLoops(family);
+
+  var expected = [new Edge('B', 'C')];
+
+  expect(result).toEqual(expected);
+});

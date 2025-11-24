@@ -586,7 +586,7 @@ Validates internal structure consistency.
 
 
 ## <a name="Graph" id="Graph">Graph</a>
-Creates graph structure
+Creates an undirected graph structure backed by adjacency lists. Each edge stores a context object provided by the caller.
 
  `Graph` 
 
@@ -594,114 +594,118 @@ Creates graph structure
 
  `Graph()` 
 
-Creates graph structure
+Creates an undirected graph structure backed by adjacency lists. Each edge stores a context object provided by the caller.
 
- Returns: `Graph` - returns graph object
+ Returns: `Graph` - a new graph instance
 
 
 ### Functions
 
  `addEdge(from, to, edge)` 
 
-Adds edge to the graph
+Adds an undirected edge between two nodes. If the edge already exists, it will not be replaced.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `from` | string | `` | The id of the start node | 
- | `to` | string | `` | The id of the end node | 
- | `edge` | object | `` | The edge contextual object | 
+ | `from` | string | `` | The starting node id | 
+ | `to` | string | `` | The ending node id | 
+ | `edge` | object | `` | The edge context object | 
 
  `dfsLoop(thisArg, startNode, onEdge, onNode)` 
 
-Depth first search loop
+Performs a depth-first traversal starting at a node. Edge usability is determined by the onEdge callback.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `thisArg` | object | `` | The callback function invocation context | 
+ | `thisArg` | object | `` | Execution context | 
  | `startNode` | string | `` | The start node id | 
- | `onEdge` | onPathEdgeCallback | `` | A callback function to call for every edge of the graph | 
- | `onNode` | onNodeCallback | `` | A callback function to be called for every neighboring node | 
+ | `onEdge` | onPathEdgeCallback | `` | Callback deciding edge usability | 
+ | `onNode` | onNodeCallback | `` | Callback invoked for each newly visited node | 
 **Callbacks**
 
  `onPathEdgeCallback(from, to, edge)` 
 
-Callback for iterating path edges
+Callback used for filtering usable edges during DFS path search.
 
- Returns: `boolean` - returns true if edge is usable
+ Returns: `boolean` - true if the edge may be used in traversal
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `from` | string | `` | The from node id | 
- | `to` | string | `` | The to node id | 
- | `edge` | Object | `` | The edge's context object | 
+ | `from` | string | `` | The start node id | 
+ | `to` | string | `` | The end node id | 
+ | `edge` | Object | `` | The edge context object | 
 
  `onNodeCallback(to)` 
 
-Callback function for iterating graphs nodes
+Callback for node iteration functions.
 
- Returns: `boolean` - returns true to break loop
+ Returns: `boolean` - return true to stop traversal early
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `to` | string | `` | The next neighboring node id | 
+ | `to` | string | `` | The node id visited | 
 
  `dfsPath(thisArg, startNode, endNode, onEdge)` 
 
-Search any path from node to node using depth first search
+Finds any path between two nodes using depth-first search.
+
+ Returns: `string[]` - array of node ids forming the found path
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `thisArg` | object | `` | The callback function invocation context | 
+ | `thisArg` | object | `` | Execution context for callbacks | 
  | `startNode` | string | `` | The start node id | 
- | `endNode` | string | `` | The end node id. | 
- | `onEdge` | onPathEdgeCallback | `` | A callback function to call for every edge of the node | 
+ | `endNode` | string | `` | The end node id | 
+ | `onEdge` | onPathEdgeCallback | `` | Callback deciding whether an edge is usable | 
 **Callbacks**
 
  `onPathEdgeCallback(from, to, edge)` 
 
-Callback for iterating path edges
+Callback used for filtering usable edges during DFS path search.
 
- Returns: `boolean` - returns true if edge is usable
+ Returns: `boolean` - true if the edge may be used in traversal
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `from` | string | `` | The from node id | 
- | `to` | string | `` | The to node id | 
- | `edge` | Object | `` | The edge's context object | 
+ | `from` | string | `` | The start node id | 
+ | `to` | string | `` | The end node id | 
+ | `edge` | Object | `` | The edge context object | 
 
  `edge(from, to)` 
 
-Returns edge context object
+Retrieves the stored edge context object for a given pair of nodes.
 
- Returns: `object` - the edge's context object
+ Returns: `object|null` - the edge's context object, or null if none exists
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `from` | string | `` | The edge's from node id | 
- | `to` | string | `` | The edge's to node id | 
+ | `from` | string | `` | The source node id | 
+ | `to` | string | `` | The target node id | 
 
  `getLevelGraph(thisArg, startNode, onEdge)` 
 
-Get Level Graph starting with `startNode`
+Computes a level graph starting from a given node. Levels are assigned via BFS using only edges allowed by the callback.
+
+ Returns: `Graph` - a new graph representing the level structure
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `thisArg` | object | `` | The callback function invocation context | 
+ | `thisArg` | object | `` | Execution context | 
  | `startNode` | string | `` | The start node id | 
- | `onEdge` | onPathEdgeCallback | `` | A callback function to call for every edge of the graph | 
+ | `onEdge` | onPathEdgeCallback | `` | Callback deciding if an edge is valid to traverse | 
 **Callbacks**
 
  `onPathEdgeCallback(from, to, edge)` 
 
-Callback for iterating path edges
+Callback used for filtering usable edges during DFS path search.
 
- Returns: `boolean` - returns true if edge is usable
+ Returns: `boolean` - true if the edge may be used in traversal
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `from` | string | `` | The from node id | 
- | `to` | string | `` | The to node id | 
- | `edge` | Object | `` | The edge's context object | 
+ | `from` | string | `` | The start node id | 
+ | `to` | string | `` | The end node id | 
+ | `edge` | Object | `` | The edge context object | 
 
  `getMinimumWeightGrowthSequence(thisArg, startNode, onEdgeWeight, onItem)` 
 
@@ -717,83 +721,83 @@ Get minimum weight graph growth sequence. The sequence of the traversing order o
 
  `getGraphEdgeWeightCallback(edge, fromItem, toItem)` 
 
-Callback for finding edge weight
+Returns edge weight used in certain algorithms.
 
- Returns: `number` - returns weight of the edge
+ Returns: `number` - the weight of the edge
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `edge` | object | `` | The edge context object | 
- | `fromItem` | string | `` | The edge's start node id | 
- | `toItem` | string | `` | The edge's end node id | 
+ | `fromItem` | string | `` | The start node id | 
+ | `toItem` | string | `` | The end node id | 
 
  `onNodeCallback(to)` 
 
-Callback function for iterating graphs nodes
+Callback for node iteration functions.
 
- Returns: `boolean` - returns true to break loop
+ Returns: `boolean` - return true to stop traversal early
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `to` | string | `` | The next neighboring node id | 
+ | `to` | string | `` | The node id visited | 
 
  `getShortestPath(thisArg, startNode, endNodes, getWeightFunc, onPathFound)` 
 
-Get shortest path between two nodes in graph. The start and the end nodes are supposed to have connection path.
+Computes the shortest paths from a start node to one or more target nodes.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `thisArg` | object | `` | The callback function invocation context | 
- | `startNode` | string | `` | The start node id | 
- | `endNodes` | string[] | `` | The array of end node ids. | 
- | `getWeightFunc` | getGraphEdgeWeightCallback | `` | Callback function to get weight of an edge. | 
- | `onPathFound` | onPathFoundCallback | `` | A callback function to be called for every end node with the optimal connection path | 
+ | `thisArg` | object | `` | Execution context for callbacks | 
+ | `startNode` | string | `` | Starting node id | 
+ | `endNodes` | string[] | `` | Target node ids | 
+ | `getWeightFunc` | getGraphEdgeWeightCallback | `` | Optional function returning edge weight | 
+ | `onPathFound` | onPathFoundCallback | `` | Callback invoked when a target path is found | 
 **Callbacks**
 
  `getGraphEdgeWeightCallback(edge, fromItem, toItem)` 
 
-Callback for finding edge weight
+Returns edge weight used in certain algorithms.
 
- Returns: `number` - returns weight of the edge
+ Returns: `number` - the weight of the edge
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `edge` | object | `` | The edge context object | 
- | `fromItem` | string | `` | The edge's start node id | 
- | `toItem` | string | `` | The edge's end node id | 
+ | `fromItem` | string | `` | The start node id | 
+ | `toItem` | string | `` | The end node id | 
 
  `onPathFoundCallback(path, to)` 
 
-Callback for returning optimal connection path for every end node.
+Callback invoked when a full path has been reconstructed.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `path` | string[] | `` | An array of connection path node ids. | 
- | `to` | string | `` | The end node id, the connection path is found for. | 
+ | `path` | string[] | `` | The node sequence forming the path | 
+ | `to` | string | `` | The end node id | 
 
  `getSpanningTree(startNode, getWeightFunc)` 
 
-Get maximum spanning tree. Graph may have disconnected sub graphs, so start node is necessary.
+Computes a maximum spanning tree using a priority queue. The graph may be disconnected; a start node is required.
 
- Returns: `tree` - returns tree structure containing maximum spanning tree of the graph
+ Returns: `tree` - a tree structure containing the maximum spanning tree
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `startNode` | string | `` | The node to start searching for maximum spanning tree. Graph is not necessary connected | 
- | `getWeightFunc` | getGraphEdgeWeightCallback | `` | Callback function to get weight of an edge. | 
+ | `startNode` | string | `` | Node to begin spanning tree search | 
+ | `getWeightFunc` | getGraphEdgeWeightCallback | `` | Function returning edge weight | 
 **Callbacks**
 
  `getGraphEdgeWeightCallback(edge, fromItem, toItem)` 
 
-Callback for finding edge weight
+Returns edge weight used in certain algorithms.
 
- Returns: `number` - returns weight of the edge
+ Returns: `number` - the weight of the edge
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `edge` | object | `` | The edge context object | 
- | `fromItem` | string | `` | The edge's start node id | 
- | `toItem` | string | `` | The edge's end node id | 
+ | `fromItem` | string | `` | The start node id | 
+ | `toItem` | string | `` | The end node id | 
 
  `getTotalWeightGrowthSequence(thisArg, onEdgeWeight, onItem)` 
 
@@ -808,76 +812,97 @@ Get graph growth sequence. The sequence of graph traversing order.
 
  `getGraphEdgeWeightCallback(edge, fromItem, toItem)` 
 
-Callback for finding edge weight
+Returns edge weight used in certain algorithms.
 
- Returns: `number` - returns weight of the edge
+ Returns: `number` - the weight of the edge
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `edge` | object | `` | The edge context object | 
- | `fromItem` | string | `` | The edge's start node id | 
- | `toItem` | string | `` | The edge's end node id | 
+ | `fromItem` | string | `` | The start node id | 
+ | `toItem` | string | `` | The end node id | 
 
  `onNodeCallback(to)` 
 
-Callback function for iterating graphs nodes
+Callback for node iteration functions.
 
- Returns: `boolean` - returns true to break loop
+ Returns: `boolean` - return true to stop traversal early
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `to` | string | `` | The next neighboring node id | 
+ | `to` | string | `` | The node id visited | 
 
  `hasNode(from)` 
 
-Returns true if node exists in the graph
+Checks whether a node exists in the graph.
 
- Returns: `boolean` - returns true if node exists
+ Returns: `boolean` - true if the node is present in the graph
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
  | `from` | string | `` | The node id | 
 
- `loopNodeEdges(thisArg, itemid, onEdge)` 
+ `loopEdges(thisArg, onEdge)` 
 
-Loop edges of the node
+Iterates over all edges in the graph.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `thisArg` | object | `` | The callback function invocation context | 
- | `itemid` | string | `` | The node id | 
- | `onEdge` | onEdgeCallback | `` | A callback function to call for every edge of the node | 
+ | `thisArg` | object | `` | Execution context for the callback | 
+ | `onEdge` | onEdgeCallback | `` | Callback invoked for each edge | 
 **Callbacks**
 
- `onEdgeCallback(to, edge)` 
+ `onEdgeCallback(from, to, edge)` 
 
-Callback for iterating edges of the graph's node
+Callback invoked for each edge during iteration.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `to` | string | `` | The neighboring node id | 
- | `edge` | Object | `` | The edge's context object | 
+ | `from` | string | `` | The start node id | 
+ | `to` | string | `` | The end node id | 
+ | `edge` | Object | `` | The edge context object | 
+
+ `loopNodeEdges(thisArg, itemid, onEdge)` 
+
+Iterates over all edges connected to a specific node.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `thisArg` | object | `` | Execution context for the callback | 
+ | `itemid` | string | `` | The node id whose edges to iterate | 
+ | `onEdge` | onEdgeCallback | `` | Callback invoked for each connected edge | 
+**Callbacks**
+
+ `onEdgeCallback(from, to, edge)` 
+
+Callback invoked for each edge during iteration.
+
+| Param | Type | Default | Description | 
+| --- | --- | --- | --- | 
+ | `from` | string | `` | The start node id | 
+ | `to` | string | `` | The end node id | 
+ | `edge` | Object | `` | The edge context object | 
 
  `loopNodes(thisArg, startNode, onItem)` 
 
-Loop nodes of the graph
+Traverses all connected nodes starting from the given node. If no start node is provided, traversal begins with the first available node.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `thisArg` | object | `` | The callback function invocation context | 
- | `itemid` | string | `undefined` | The optional start node id. If start node is undefined, function loops graphs node starting from first available node | 
- | `onItem` | onNodeCallback | `` | A callback function to be called for every neighboring node | 
+ | `thisArg` | object | `` | Execution context for the callback | 
+ | `startNode` | string | `` | Optional starting node id | 
+ | `onItem` | onNodeCallback | `` | Callback invoked for each visited node | 
 **Callbacks**
 
  `onNodeCallback(to)` 
 
-Callback function for iterating graphs nodes
+Callback for node iteration functions.
 
- Returns: `boolean` - returns true to break loop
+ Returns: `boolean` - return true to stop traversal early
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `to` | string | `` | The next neighboring node id | 
+ | `to` | string | `` | The node id visited | 
 
 ## <a name="LCA" id="LCA">LCA</a>
 Creates Lowest Common Ancestor Structure for the given tree

@@ -111,13 +111,14 @@ Callback function to iterate over pairs of crossing rectangles
 
 ## <a name="getFamilyLoops" id="getFamilyLoops">getFamilyLoops</a>
 
-This function finds [optimal collection of feedback edges](https://en.wikipedia.org/wiki/Feedback_arc_set) needed to be cut in order to eliminate loops in family structure.
+Computes the optimal set of feedback edges that must be removed to eliminate all cycles in a family structure. This corresponds to [finding a minimum feedback arc set in the directed graph](https://en.wikipedia.org/wiki/Feedback_arc_set) formed by the family relationships. The function analyzes the directed dependencies inside the family, detects all cycles, and returns the smallest collection of edges whose removal makes the structure acyclic.
 
- Returns: `Edge[]` - returns optimal collection of feedback loops
+ Returns: `Edge[]` - the minimal set of edges whose removal breaks all cycles.
 
 | Param | Type | Default | Description | 
 | --- | --- | --- | --- | 
- | `family` | Family | `` | Family structure | 
+ | `family` | Family | `` | - The family structure represented as a directed graph. | 
+ | `debug` | boolean | `false` | - If true, enables diagnostic output. | 
 
 ## <a name="getGreen" id="getGreen">getGreen</a>
 

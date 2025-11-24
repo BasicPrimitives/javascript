@@ -295,3 +295,36 @@ test('dfsLoop searches graph nodes using depth first order', () => {
 
   expect(result).toBe(true);
 });
+
+test('loopEdges function test', () => {
+  var items = [
+    { from: 'A', to: 'B' }, { from: 'A', to: 'C' }, { from: 'A', to: 'D' },
+    { from: 'B', to: 'E' },
+    { from: 'C', to: 'E' }, { from: 'C', to: 'D' },
+    { from: 'D', to: 'F' }, { from: 'D', to: 'J' },
+    { from: 'E', to: 'Z' },
+    { from: 'Z', to: 'F' }
+  ];
+
+  var graph = Graph();
+  for (var index = 0; index < items.length; index += 1) {
+    var item = items[index];
+    graph.addEdge(item.from, item.to, item);
+  }
+
+  var result = [];
+  var expected = [];
+  for(var index = 0; index < items.length; index+=1) {
+    var item = items[index];
+    expected.push([item.from, item.to]);
+    expected.push([item.to, item.from]);
+  }
+
+  graph.loopEdges(this, function (fromNode, toNode, edge) {
+    result.push([fromNode, toNode]);
+  });
+
+  result.sort((a, b) => (a[0] + a[1]).localeCompare(b[0] + b[1]));
+  expected.sort((a, b) => (a[0] + a[1]).localeCompare(b[0] + b[1]));
+  expect(result).toEqual(expected);
+});

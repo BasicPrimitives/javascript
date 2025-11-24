@@ -1,10 +1,12 @@
 import Tree from './Tree';
 import FibonacciHeap from './FibonacciHeap';
+
 /**
- * Creates graph structure
+ * Creates an undirected graph structure backed by adjacency lists.
+ * Each edge stores a context object provided by the caller.
+ *
  * @class Graph
- * 
- * @returns {Graph} Returns graph object
+ * @returns {Graph} A new graph instance
  */
 export default function Graph() {
   var _edges = {},
@@ -12,10 +14,12 @@ export default function Graph() {
     MINIMUMWEIGHT = 2;
 
   /**
-   * Adds edge to the graph
-   * @param {string} from The id of the start node 
-   * @param {string} to The id of the end node
-   * @param {object} edge The edge contextual object
+   * Adds an undirected edge between two nodes.
+   * If the edge already exists, it will not be replaced.
+   *
+   * @param {string} from The starting node id
+   * @param {string} to The ending node id
+   * @param {object} edge The edge context object
    */
   function addEdge(from, to, edge) {
     if ((_edges[from] == null || _edges[from][to] == null) && edge != null) {
@@ -33,11 +37,11 @@ export default function Graph() {
   }
 
   /**
-   * Returns edge context object
-   * 
-   * @param {string} from The edge's from node id
-   * @param {string} to The edge's to node id
-   * @returns {object} The edge's context object
+   * Retrieves the stored edge context object for a given pair of nodes.
+   *
+   * @param {string} from The source node id
+   * @param {string} to The target node id
+   * @returns {object|null} The edge's context object, or null if none exists
    */
   function edge(from, to) {
     var result = null;
@@ -48,29 +52,54 @@ export default function Graph() {
   }
 
   /**
-   * Returns true if node exists in the graph
-   * 
+   * Checks whether a node exists in the graph.
+   *
    * @param {string} from The node id
-   * @returns {boolean} Returns true if node exists
+   * @returns {boolean} True if the node is present in the graph
    */
   function hasNode(from) {
     return _edges.hasOwnProperty(from);
   }
 
   /**
-   * Callback for iterating edges of the graph's node
-   * 
+   * Callback invoked for each edge during iteration.
+   *
    * @callback onEdgeCallback
-   * @param {string} to The neighboring node id
-   * @param {Object} edge The edge's context object
+   * @param {string} from The start node id
+   * @param {string} to The end node id
+   * @param {Object} edge The edge context object
    */
 
   /**
-   * Loop edges of the node
-   * 
-   * @param {object} thisArg The callback function invocation context
-   * @param {string} itemid The node id
-   * @param {onEdgeCallback} onEdge A callback function to call for every edge of the node
+   * Iterates over all edges in the graph.
+   *
+   * @param {object} thisArg Execution context for the callback
+   * @param {onEdgeCallback} onEdge Callback invoked for each edge
+   */
+  function loopEdges(thisArg, onEdge) {
+    var neighbours, fromKey, toKey;
+    if (onEdge != null) {
+      for (fromKey in _edges) {
+        if (_edges.hasOwnProperty(fromKey)) {
+          neighbours = _edges[fromKey];
+          if (neighbours != null) {
+            for (toKey in neighbours) {
+              if (neighbours.hasOwnProperty(toKey)) {
+                onEdge.call(thisArg, fromKey, toKey, neighbours[toKey]);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Iterates over all edges connected to a specific node.
+   *
+   * @param {object} thisArg Execution context for the callback
+   * @param {string} itemid The node id whose edges to iterate
+   * @param {onEdgeCallback} onEdge Callback invoked for each connected edge
    */
   function loopNodeEdges(thisArg, itemid, onEdge) {
     var neighbours, neighbourKey;
@@ -87,20 +116,20 @@ export default function Graph() {
   }
 
   /**
-   * Callback function for iterating graphs nodes
-   * 
+   * Callback for node iteration functions.
+   *
    * @callback onNodeCallback
-   * @param {string} to The next neighboring node id
-   * @returns {boolean} Returns true to break loop
+   * @param {string} to The node id visited
+   * @returns {boolean} Return true to stop traversal early
    */
 
   /**
-   * Loop nodes of the graph
-   * 
-   * @param {object} thisArg The callback function invocation context
-   * @param {string} [itemid=undefined] The optional start node id. If start node is undefined, 
-   * function loops graphs node starting from first available node
-   * @param {onNodeCallback} onItem A callback function to be called for every neighboring node
+   * Traverses all connected nodes starting from the given node.
+   * If no start node is provided, traversal begins with the first available node.
+   *
+   * @param {object} thisArg Execution context for the callback
+   * @param {string} [startNode] Optional starting node id
+   * @param {onNodeCallback} onItem Callback invoked for each visited node
    */
   function loopNodes(thisArg, startNode, onItem) {
     var processed = {};
@@ -152,21 +181,22 @@ export default function Graph() {
   }
 
   /**
-   * Callback for finding edge weight
-   * 
+   * Returns edge weight used in certain algorithms.
+   *
    * @callback getGraphEdgeWeightCallback
    * @param {object} edge The edge context object
-   * @param {string} fromItem The edge's start node id
-   * @param {string} toItem The edge's end node id
-   * @returns {number} Returns weight of the edge
+   * @param {string} fromItem The start node id
+   * @param {string} toItem The end node id
+   * @returns {number} The weight of the edge
    */
 
   /**
-   * Get maximum spanning tree. Graph may have disconnected sub graphs, so start node is necessary.
-   * 
-   * @param {string} startNode The node to start searching for maximum spanning tree. Graph is not necessary connected
-   * @param {getGraphEdgeWeightCallback} getWeightFunc Callback function to get weight of an edge.
-   * @returns {tree} Returns tree structure containing maximum spanning tree of the graph
+   * Computes a maximum spanning tree using a priority queue.
+   * The graph may be disconnected; a start node is required.
+   *
+   * @param {string} startNode Node to begin spanning tree search
+   * @param {getGraphEdgeWeightCallback} getWeightFunc Function returning edge weight
+   * @returns {tree} A Tree structure containing the maximum spanning tree
    */
   function getSpanningTree(startNode, getWeightFunc) {
     var result = Tree(),
@@ -362,22 +392,21 @@ export default function Graph() {
   }
 
   /**
-   * Callback for returning optimal connection path for every end node.
-   * 
+   * Callback invoked when a full path has been reconstructed.
+   *
    * @callback onPathFoundCallback
-   * @param {string[]} path An array of connection path node ids.
-   * @param {string} to The end node id, the connection path is found for.
+   * @param {string[]} path The node sequence forming the path
+   * @param {string} to The end node id
    */
 
   /**
-   * Get shortest path between two nodes in graph. The start and the end nodes are supposed to have connection path.
-   * 
-   * @param {object} thisArg The callback function invocation context
-   * @param {string} startNode The start node id 
-   * @param {string[]} endNodes The array of end node ids.
-   * @param {getGraphEdgeWeightCallback} getWeightFunc Callback function to get weight of an edge. 
-   * @param {onPathFoundCallback} onPathFound A callback function to be called for every end node 
-   * with the optimal connection path
+   * Computes the shortest paths from a start node to one or more target nodes.
+   *
+   * @param {object} thisArg Execution context for callbacks
+   * @param {string} startNode Starting node id
+   * @param {string[]} endNodes Target node ids
+   * @param {getGraphEdgeWeightCallback} getWeightFunc Optional function returning edge weight
+   * @param {onPathFoundCallback} onPathFound Callback invoked when a target path is found
    */
   function getShortestPath(thisArg, startNode, endNodes, getWeightFunc, onPathFound) {
     var margin = FibonacciHeap(false),
@@ -457,22 +486,23 @@ export default function Graph() {
   }
 
   /**
-   * Callback for iterating path edges
-   * 
+   * Callback used for filtering usable edges during DFS path search.
+   *
    * @callback onPathEdgeCallback
-   * @param {string} from The from node id
-   * @param {string} to The to node id
-   * @param {Object} edge The edge's context object
-   * @returns {boolean} Returns true if edge is usable
+   * @param {string} from The start node id
+   * @param {string} to The end node id
+   * @param {Object} edge The edge context object
+   * @returns {boolean} True if the edge may be used in traversal
    */
 
   /**
-   * Search any path from node to node using depth first search
-   * 
-   * @param {object} thisArg The callback function invocation context
-   * @param {string} startNode The start node id 
-   * @param {string} endNode The end node id.
-   * @param {onPathEdgeCallback} onEdge A callback function to call for every edge of the node
+   * Finds any path between two nodes using depth-first search.
+   *
+   * @param {object} thisArg Execution context for callbacks
+   * @param {string} startNode The start node id
+   * @param {string} endNode The end node id
+   * @param {onPathEdgeCallback} onEdge Callback deciding whether an edge is usable
+   * @returns {string[]} Array of node ids forming the found path
    */
   function dfsPath(thisArg, startNode, endNode, onEdge) {
     var margin = [],
@@ -522,11 +552,13 @@ export default function Graph() {
   }
 
   /**
-   * Get Level Graph starting with `startNode`
-   * 
-   * @param {object} thisArg The callback function invocation context
-   * @param {string} startNode The start node id 
-   * @param {onPathEdgeCallback} onEdge A callback function to call for every edge of the graph
+   * Computes a level graph starting from a given node.
+   * Levels are assigned via BFS using only edges allowed by the callback.
+   *
+   * @param {object} thisArg Execution context
+   * @param {string} startNode The start node id
+   * @param {onPathEdgeCallback} onEdge Callback deciding if an edge is valid to traverse
+   * @returns {Graph} A new graph representing the level structure
    */
   function getLevelGraph(thisArg, startNode, onEdge) {
     var level = {},
@@ -560,7 +592,7 @@ export default function Graph() {
     }
 
     // Create level graph, copy existing edges to the new graph
-  var levelGraph = Graph();
+    var levelGraph = Graph();
     for (currentNode in _edges) {
       if (level.hasOwnProperty(currentNode)) {
         currentLevel = level[currentNode];
@@ -580,12 +612,13 @@ export default function Graph() {
   }
 
   /**
-   * Depth first search loop
-   * 
-   * @param {object} thisArg The callback function invocation context
-   * @param {string} startNode The start node id 
-   * @param {onPathEdgeCallback} onEdge A callback function to call for every edge of the graph
-   * @param {onNodeCallback} onNode A callback function to be called for every neighboring node
+   * Performs a depth-first traversal starting at a node.
+   * Edge usability is determined by the onEdge callback.
+   *
+   * @param {object} thisArg Execution context
+   * @param {string} startNode The start node id
+   * @param {onPathEdgeCallback} onEdge Callback deciding edge usability
+   * @param {onNodeCallback} onNode Callback invoked for each newly visited node
    */
   function dfsLoop(thisArg, startNode, onEdge, onNode) {
     var margin = [],
@@ -625,6 +658,7 @@ export default function Graph() {
     edge: edge,
     hasNode: hasNode,
     loopNodes: loopNodes,
+    loopEdges: loopEdges,
     loopNodeEdges: loopNodeEdges,
     getSpanningTree: getSpanningTree,
     getTotalWeightGrowthSequence: getTotalWeightGrowthSequence,

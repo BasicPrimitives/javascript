@@ -941,3 +941,26 @@ export const ZOrderType = {
      */
     Foreground: 2
 };
+
+/**
+ * Defines automatic horizontal item ordering in a family diagram layout.
+ *
+ * @enum {ItemsOrderType}
+ */
+export const ItemsOrderType = {
+    /**
+     * Balance family tree so parents sharing the most children stay close to each other
+     *
+     * Takes into account user-defined item `position` and the
+     * `primaryParent` options.
+     */
+    Families: 0,
+    /**
+     * Balances the family tree so children who share the most parents
+     * are placed close to each other.
+     *
+     * Takes into account user-defined item `position` and the
+     * `primaryParent` options.
+     */
+    MergedTrees: 1
+};

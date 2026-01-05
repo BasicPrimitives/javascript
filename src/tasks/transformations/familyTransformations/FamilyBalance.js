@@ -1,29 +1,58 @@
-﻿/*  This class transforms normalized logical family into levels of nodes.
-  The current approach to optimize items placement is to transform family into hierarchy of nodes and order 
-  children of every node in the way minimizing number of intersections between connection lines.
-  1. Extract families into _families array of type FamilyItem. Family is sub tree of items logicalFamily. 
-    In order to extract families out of logicalFamily we count from bottom to roots total number of descendants for evry item and then extract 
-    sub hierarchy having minimum number of members. This process is repeated till all nodes are extracted into separate families.
-      orgPartners - When we extract families we store links to parents in other branches having the same children of 
-      some already extracted item as partner in orgPartners hash
-    This hash table is used to create links collections between families
-    The orgTree collection is used to define final org hierarchy used to balance nodes in levels.
-  2. Use links in families to build family graph
-  3. Find maximum spanning tree of family graph
-  4. Since spanning tree is the tree we calculate number of descendants in every branch. So when we join families into one 
-    org chart we sort them taking first child family having maximum number of links to its parent family
-    sortedFamilies collection
-  5. Using sortedFamilies collection we merge roots of families back to primary org chart. The rule of that backward merging is 
-    to find ancestor in target tree having level less then root item of merged family.
-    this is done without extra collection creation via making changes in orgTree
-    If family has no links it is added to root of orgTree
-  6. Balance organizational chart in order to place items having extra connections close to each other. 
-    Assign every extra link to every pair of parent nodes up to the root.
-  7. Scan orgTree hierarchy from root to bottom and balance children using extra links collected from children
-    So at the top most level we know number of links between children, so we sort them, then number of overlappings between branches should be minimal
-    Balancing algorithms finds maximum spanning tree in connections between children and groups them from bottom of that tree up to the root
-    In the way when groups having maximum mutual links placed close to each other.
-*/
+﻿/*
+ * This class transforms a normalized logical family into levels of nodes.
+ *
+ * The current approach to optimize item placement is to transform the family
+ * into a hierarchy of nodes and order the children of every node in a way that
+ * minimizes the number of intersections between connection lines.
+ *
+ * 1. Extract families into the `_families` array of type `FamilyItem`.
+ *    A family is a subtree of items from `logicalFamily`.
+ *    To extract families from `logicalFamily`, we count from bottom to root
+ *    the total number of descendants for every item and then extract a
+ *    sub-hierarchy with the minimum number of members.
+ *    This process is repeated until all nodes are extracted into separate families.
+ *
+ *    `orgPartners` — while extracting families, we store links to parents in
+ *    other branches that share the same children with an already extracted item
+ *    as partners in the `orgPartners` hash.
+ *
+ *    This hash table is used to create link collections between families.
+ *    The `orgTree` collection is used to define the final organizational hierarchy
+ *    used to balance nodes across levels.
+ *
+ * 2. Use links between families to build a family graph.
+ *
+ * 3. Find the maximum spanning tree of the family graph.
+ *
+ * 4. Since a spanning tree is a hierarchy, we calculate the number of descendants
+ *    in every branch. When joining families into a single organizational chart,
+ *    we sort them by taking first the child family with the maximum number of links
+ *    to its parent family.
+ *
+ *    The result is stored in the `sortedFamilies` collection.
+ *
+ * 5. Using the `sortedFamilies` collection, we merge family roots back into the
+ *    primary organizational chart. The rule of backward merging is to find an
+ *    ancestor in the target tree whose level is less than the root item of the
+ *    merged family.
+ *
+ *    This is done without creating extra collections, by applying changes
+ *    directly to `orgTree`.
+ *    If a family has no links, it is added to the root of `orgTree`.
+ *
+ * 6. Balance the organizational chart in order to place items with extra
+ *    connections close to each other.
+ *    Assign every extra link to every pair of parent nodes up to the root.
+ *
+ * 7. Scan the `orgTree` hierarchy from root to bottom and balance children using
+ *    extra links collected from their descendants.
+ *    At the topmost level, the number of links between children is known, so we
+ *    sort them to minimize overlaps between branches.
+ *
+ *    The balancing algorithm finds a maximum spanning tree of connections between
+ *    children and groups them from the bottom of that tree up to the root, so that
+ *    groups with the maximum number of mutual links are placed close to each other.
+ */
 import TreeLevels from '../../../algorithms/TreeLevels';
 import LinkedHashItems from '../../../algorithms/LinkedHashItems';
 import Tree from '../../../algorithms/Tree';
@@ -39,15 +68,10 @@ export default function FamilyBalance() {
 
 };
 
-//var params = {
-//  logicalFamily,
-//  maximumId,
-//  items
-//};
-FamilyBalance.prototype.balance = function (params) {
+FamilyBalance.prototype.balance = function (params, isReversed) {
   var result = {
     maximumId: null,
-    treeLevels: TreeLevels(),
+    treeLevels: null, // TreeLevels()
     bundles: [],
     connectorStacks: []
   };
@@ -61,9 +85,41 @@ FamilyBalance.prototype.balance = function (params) {
     maximumLevel: null
   };
 
-  this.createOrgTree(params, data);
+  var logicalFamily = params.logicalFamily;
+  var minimum = null;
+  var maximum = null;
+  if (isReversed) {
+    logicalFamily = logicalFamily.getReversedFamily();
 
-  var currentLevelIndex, index = -1;
+    // find minimum and maximum level logicalFamily
+    var levels = {};
+    logicalFamily.loop(this, (itemId, item) => {
+      var level = item.level;
+      if (!levels.hasOwnProperty(level)) {
+        levels[level] = true;
+        if(minimum === null || minimum > level) {
+          minimum = level;
+        }
+        if(maximum === null || maximum < level) {
+          maximum = level;
+        }
+      }
+    });
+    // reverse levels for nodes
+    logicalFamily.loop(this, (itemId, item) => {
+      var level = item.level;
+      item.level = minimum + maximum - level;
+    });
+  }
+  var orgTreeParams = {
+    ...params,
+    logicalFamily: isReversed ? params.logicalFamily.getReversedFamily() : params.logicalFamily
+  }
+  this.createOrgTree(orgTreeParams, data);
+
+  var currentLevelIndex,
+    index = -1,
+    treeLevels = TreeLevels();
   data.orgTree.loopLevels(this, function (treeItemId, treeItem, levelIndex) {
     var familyItem = params.logicalFamily.node(treeItemId);
     if (familyItem != null) {
@@ -71,9 +127,19 @@ FamilyBalance.prototype.balance = function (params) {
         currentLevelIndex = levelIndex;
         index += 1;
       }
-      result.treeLevels.addItem(index, treeItemId, familyItem);
+      treeLevels.addItem(index, treeItemId, familyItem);
     }
   });
+
+  result.treeLevels = isReversed ? treeLevels.getReversedTreeLevels() : treeLevels;
+
+  if (isReversed) {
+    // reverse levels of individual nodes
+    logicalFamily.loop(this, (itemId, item) => {
+      var level = item.level;
+      item.level = minimum + maximum - level;
+    });
+  }
 
   this.recalcLevelsDepth(result.bundles, result.connectorStacks, result.treeLevels, params.logicalFamily);
 
@@ -882,7 +948,7 @@ FamilyBalance.prototype.recalcLevelsDepth = function (bundles, connectorStacks, 
 
           bundles.push(bundle);
 
-          if (fromItems.length > 1) {
+          if (fromItems.length > 1 || toItems.length > 1) {
             bundlesToStack.push(bundle);
           }
         }
@@ -897,18 +963,36 @@ FamilyBalance.prototype.recalcLevelsDepth = function (bundles, connectorStacks, 
 
         startIndex = null;
         endIndex = null;
-        for (index3 = 0, len3 = bundle.fromItems.length; index3 < len3; index3 += 1) {
-          itemPosition = treeLevels.getItemPosition(bundle.fromItems[index3]);
+        if (bundle.fromItems.length > 1) {
+          for (index3 = 0, len3 = bundle.fromItems.length; index3 < len3; index3 += 1) {
+            itemPosition = treeLevels.getItemPosition(bundle.fromItems[index3]);
 
-          startIndex = (startIndex != null) ? Math.min(startIndex, itemPosition) : itemPosition;
-          endIndex = (endIndex != null) ? Math.max(endIndex, itemPosition) : itemPosition;
+            startIndex = (startIndex != null) ? Math.min(startIndex, itemPosition) : itemPosition;
+            endIndex = (endIndex != null) ? Math.max(endIndex, itemPosition) : itemPosition;
+          }
+        }
+        if (bundle.toItems.length > 1) {
+          for (index3 = 0, len3 = bundle.toItems.length; index3 < len3; index3 += 1) {
+            itemPosition = treeLevels.getItemPosition(bundle.toItems[index3]);
+
+            startIndex = (startIndex != null) ? Math.min(startIndex, itemPosition) : itemPosition;
+            endIndex = (endIndex != null) ? Math.max(endIndex, itemPosition) : itemPosition;
+          }
         }
         stackSegments.add(startIndex, endIndex, bundle);
       }
 
       stacksSizes.parentsStackSize = stackSegments.resolve(this, function (from, to, bundle, offset, stackSize) {
-        bundle.fromOffset = offset + 1;
-        bundle.fromStackSize = stackSize;
+        if (stackSize > 1) {
+          if (bundle.fromItems.length > 1) {
+            bundle.fromOffset = offset + 1;
+            bundle.fromStackSize = stackSize;
+          }
+          if (bundle.toItems.length > 1) {
+            bundle.toOffset = offset + 1;
+            bundle.toStackSize = stackSize;
+          }
+        }
       });//ignore jslint
     }
   });

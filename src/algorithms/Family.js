@@ -418,6 +418,100 @@ export default function Family(source) {
     }
   }
 
+  /**
+   * Callback for iterating family parents level by level
+   *
+   * @callback onFamilyItemsWithLevelCallback
+   * @param {string[]} parents1 The collection of parent ids for the first node
+   * @param {string[]} parents2 The collection of parent ids for the second node
+   * @param {number} levelIndex The node level index
+   * @returns {boolean} Returns true to break the loop and exit.
+   */
+
+  /**
+   * Loops through parent nodes level by level from 2 starting nodes returning parent family nodes at level as arrays
+   *
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} nodeid1 First node id to start parents traversing
+   * @param {string} nodeid2 Second node id to start parents traversing
+   * @param {onFamilyItemsWithLevelCallback} onItems A callback function to call for every parent node
+   */
+  function zipParents(thisArg, nodeid1, nodeid2, onItems) {
+    if (onItems != null) {
+      if (nodeid1 != null && _nodes[nodeid1] != null && _parents[nodeid1] != null
+        && nodeid2 != null && _nodes[nodeid2] != null && _parents[nodeid2] != null
+      ) {
+        _zipItems(thisArg, _parents, nodeid1, nodeid2, onItems);
+      }
+    }
+  }
+
+  /**
+   * Loops through child nodes level by level from 2 starting nodes returning child family nodes at level as arrays
+   *
+   * @param {Object} thisArg The callback function invocation context
+   * @param {string} nodeid1 First node id to start parents traversing
+   * @param {string} nodeid2 Second node id to start parents traversing
+   * @param {onFamilyItemsWithLevelCallback} onItems A callback function to call for every parent node
+   */
+  function zipChildren(thisArg, nodeid1, nodeid2, onItems) {
+    if (onItems != null) {
+      if (nodeid1 != null && _nodes[nodeid1] != null && _children[nodeid1] != null
+        && nodeid2 != null && _nodes[nodeid2] != null && _children[nodeid2] != null
+      ) {
+        _zipItems(thisArg, _children, nodeid1, nodeid2, onItems);
+      }
+    }
+  }
+
+  function _zipItems(thisArg, collection, nodeid1, nodeid2, onItems) { // onItems([items1], [items2], levelIndex)
+    var items1, items2,
+      newItems1, newItems2,
+      processed1 = {},
+      processed2 = {},
+      levelIndex = 0,
+      index, itemid;
+
+    items1 = [nodeid1];
+    items2 = [nodeid2];
+    processed1[nodeid1] = true;
+    processed2[nodeid2] = true;
+    while (items1.length > 0 && items2.length > 0) {
+      newItems1 = [];
+      for (index = 0; index < items1.length; index += 1) {
+        itemid = items1[index];
+        _loop(this, collection, itemid, function (newItemId) {
+          if (!processed1[newItemId]) {
+            newItems1.push(newItemId);
+            processed1[newItemId] = true;
+          }
+        });
+      }
+
+      newItems2 = [];
+      for (index = 0; index < items2.length; index += 1) {
+        itemid = items2[index];
+        _loop(this, collection, itemid, function (newItemId) {
+          if (!processed2[newItemId]) {
+            newItems2.push(newItemId);
+            processed2[newItemId] = true;
+          }
+        });
+      }
+
+      if (newItems1.length > 0 && newItems2.length > 0) {
+        if (onItems.call(thisArg, newItems1, newItems2, levelIndex)) {
+          break;
+        }
+      } else {
+        break;
+      }
+      items1 = newItems1;
+      items2 = newItems2;
+      levelIndex += 1;
+    }
+  }
+
   function _loopTopo(thisArg, backwardCol, backwardCount, forwardCol, forwardCount, onItem) { // onItem(itemid, item, position)
     var index, len, nodeid, references,
       queue, newQueue, position;
@@ -1266,6 +1360,25 @@ export default function Family(source) {
   }
 
   /**
+   * Creates a new Family structure with parent–child relationships reversed.
+   * Every original parent becomes a child, and every child becomes a parent.
+   * The original Family structure is not modified.
+   *
+   * @returns {family} Returns a Family structure with inverted parent–child relations.
+   */
+  function getReversedFamily() {
+    return Family({
+      roots: {},
+      rootsCount: {},
+      children: _parents,
+      childrenCount: _parentsCount,
+      parents: _children,
+      parentsCount: _childrenCount,
+      nodes: _nodes
+    });
+  }
+
+  /**
    * Eliminates crossing parent child relations between nodes based of nodes order in treeLevels structure.
    * @param {treeLevels} treeLevels Tree levels structure keeps orders of nodes level by level.
    * @returns {family} Returns planar family structure. 
@@ -1880,6 +1993,7 @@ export default function Family(source) {
     groupBy: groupBy,
     getPlanarFamily: getPlanarFamily,
     getFamilyWithoutGrandParentsRelations: getFamilyWithoutGrandParentsRelations,
+    getReversedFamily: getReversedFamily,
     getGraph: getGraph,
 
     removeNode: removeNode,
@@ -1903,6 +2017,8 @@ export default function Family(source) {
     countParents: countParents,
     firstParent: firstParent,
     firstChild: firstChild,
+    zipParents: zipParents,
+    zipChildren: zipChildren,
 
     /* force validation */
     validate: validate,

@@ -12,6 +12,9 @@ export default function VerticalConnectorBundle(fromItems, toItems, dotId) {
 
   this.fromOffset = 0;
   this.fromStackSize = 0;
+
+  this.toOffset = 0;
+  this.toStackSize = 0;
 };
 
 VerticalConnectorBundle.prototype = new BaseConnectorBundle();
@@ -85,7 +88,7 @@ VerticalConnectorBundle.prototype.trace = function (data, params, options) {
     children.sort(function (a, b) { return a.x - b.x; });
 
     /* Find offset of horizontal connector line between children */
-    childrenConnectorOffset = treeItemPosition.topConnectorShift;
+    childrenConnectorOffset = treeItemPosition.topConnectorShift - treeItemPosition.topConnectorInterval * (this.toStackSize - this.toOffset);
   }
 
   if (children.length == 1) {
@@ -120,7 +123,7 @@ VerticalConnectorBundle.prototype.trace = function (data, params, options) {
     if (topCenterPoint != null && bottomCenterPoint.y == topCenterPoint.y) {
       bottomCenterPoint = topCenterPoint;
     }
-    this.traceFork(data, params, options, bottomCenterPoint, children, hasSquared, false, 0, options.showExtraArrows);
+    this.traceFork(data, params, options, bottomCenterPoint, children, hasSquared, false, this.toOffset, options.showExtraArrows);
   }
 
   /* draw connector line between children and parents */

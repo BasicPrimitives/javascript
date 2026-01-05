@@ -371,6 +371,54 @@ export default function TreeLevels(source) {
   }
 
   /**
+   * Loops elements level by level reversed
+   *
+   * @param {Object} thisArg The callback function invocation context
+   * @param {onTreeLevelsItemCallback} onItem A callback function to call for every item
+   */
+  function loopItemsReversed(thisArg, onItem) { // function onItem(itemid, item, position, levelIndex, level)
+    var index, len,
+      level, levelIndex,
+      items,
+      itemid,
+      processed = {};
+    if (onItem != null) {
+      for (levelIndex = _maximum; levelIndex >= _minimum; levelIndex -= 1) {
+        level = _levels[levelIndex];
+        if (level != null) {
+          items = level.items;
+          for (index = 0, len = items.length; index < len; index += 1) {
+            itemid = items[index];
+            if (!processed.hasOwnProperty(itemid)) {
+              processed[itemid] = true;
+              if (onItem.call(thisArg, itemid, _items[itemid].context, index, levelIndex, level.context)) {
+                return;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Returns TreeLevel structure with reversed levels
+   *
+   * @returns {family} Returns a TreeLevels structure with reversed levels.
+   */
+  function getReversedTreeLevels() {
+    var result = TreeLevels();
+    this.loopLevelsReversed(this, function (levelIndex, level) {
+      var newLevelIndex = _minimum + _maximum - levelIndex;
+      result.addlevel(newLevelIndex, level);
+      this.loopLevelItems(this, levelIndex, function (itemid, item, position) {
+        result.addItem(newLevelIndex, itemid, item);
+      })
+    });
+    return result;
+  }
+
+  /**
    * Callback for finding distance for element
    *
    * @callback onTreeLevelDistanceCallback
@@ -555,6 +603,8 @@ export default function TreeLevels(source) {
     loopLevelItems: loopLevelItems,
     getLevelLength: getLevelLength,
     loopItems: loopItems,
+    loopItemsReversed: loopItemsReversed,
+    getReversedTreeLevels: getReversedTreeLevels,
     binarySearch: binarySearch,
     loopMerged: loopMerged,
     loopFromItem: loopFromItem,

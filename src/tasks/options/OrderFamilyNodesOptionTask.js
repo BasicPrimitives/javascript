@@ -2,13 +2,14 @@ import ValueReader from '../../readers/ValueReader';
 import ObjectReader from '../../readers/ObjectReader';
 import ArrayReader from '../../readers/ArrayReader';
 import EnumerationReader from '../../readers/EnumerationReader';
-import { AdviserPlacementType } from '../../enums';
+import { AdviserPlacementType, ItemsOrderType } from '../../enums';
 
 export default function OrderFamilyNodesOptionTask(optionsTask, defaultConfig, defaultItemConfig) {
   var _data = {},
     _hash = {};
 
   var _dataTemplate = new ObjectReader({
+    itemsOrderType: new EnumerationReader(ItemsOrderType, false, defaultConfig.itemsOrderType),
     enableMatrixLayout: new ValueReader(["boolean"], false, defaultConfig.enableMatrixLayout),
     minimumMatrixSize: new ValueReader(["number"], false, defaultConfig.minimumMatrixSize),
     maximumColumnsInMatrix: new ValueReader(["number"], false, defaultConfig.maximumColumnsInMatrix),

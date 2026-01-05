@@ -14,7 +14,7 @@ import { ValueType } from './enums';
 import { NeighboursSelectionMode, GroupByType, ConnectorPlacementType, ConnectorShapeType, 
   ConnectorLabelPlacementType, LineType, Colors, ZOrderType, AdviserPlacementType, TextOrientationType, VerticalAlignmentType, HorizontalAlignmentType,
   ConnectorType, ElbowType, PageFitMode, OrientationType, ChildrenPlacementType, Visibility, SelectionPathMode, Enabled, ShapeType, PlacementType,
-  NavigationMode
+  NavigationMode, ItemsOrderType
  } from '../../../src/enums';
 
  import Size from '../../../src/graphics/structs/Size';
@@ -48,6 +48,7 @@ export function getFamDiagramOptionsRender(extraPanels, defaultOptions, onUpdate
 function getFamDiagramOptionsPanels(onUpdate) {
   return [
     new PanelConfig("Family layout", [
+      new RadioBoxConfig("itemsOrderType", NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses, "Items horizontal order type", ItemsOrderType, ValueType.Integer, onUpdate),
       new RadioBoxConfig("neighboursSelectionMode", NeighboursSelectionMode.ParentsChildrenSiblingsAndSpouses, "Neighbors Selection Modes", NeighboursSelectionMode, ValueType.Integer, onUpdate),
       new RadioBoxConfig("groupByType", GroupByType.Children, "Group by option defines node placement in layout close to its parents or children when node is linked across multiple levels in hierarchy. See \"alignment\" data set.", { Children: 2, Parents: 1 }, ValueType.Integer, onUpdate),
       new CheckBoxConfig("alignBylevels", true, "Keep items at the same levels after connections bundling", onUpdate),

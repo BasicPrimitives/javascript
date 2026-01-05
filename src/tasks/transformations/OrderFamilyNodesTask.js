@@ -4,6 +4,7 @@
 import FamilyBalance from './familyTransformations/FamilyBalance';
 import UserDefinedPrimaryParents from './familyTransformations/UserDefinedPrimaryParents';
 import TreeLevelConnectorStackSize from '../../models/TreeLevelConnectorStackSize';
+import { ItemsOrderType } from '../../enums';
 
 export default function OrderFamilyNodesTask(orderFamilyNodesOptionTask, userDefinedNodesOrderTask, normalizeLogicalFamilyTask) {
   var _data = {
@@ -22,21 +23,26 @@ export default function OrderFamilyNodesTask(orderFamilyNodesOptionTask, userDef
       maximumId = normalizeLogicalFamilyTask.getMaximumId(),
       orderFamilyNodesOptions = orderFamilyNodesOptionTask.getOptions();
 
-    var balanceParams = {
-      logicalFamily: logicalFamily,
-      maximumId: maximumId,
-      itemsPositions: userDefinedNodesOrderTask.getPositions(),
-      itemsGroups: userDefinedNodesOrderTask.getGroups(),
-      primaryParents: _userDefinedPrimaryParents.getUserDefinedPrimaryParents(orderFamilyNodesOptions.items, logicalFamily)
-    };
+    switch (orderFamilyNodesOptions.itemsOrderType) {
+      case ItemsOrderType.Families:
+      case ItemsOrderType.MergedTrees:
+        var isReversed = orderFamilyNodesOptions.itemsOrderType === ItemsOrderType.MergedTrees
+        var params = {
+          logicalFamily,
+          maximumId,
+          itemsPositions: userDefinedNodesOrderTask.getPositions(),
+          itemsGroups: userDefinedNodesOrderTask.getGroups(),
+          primaryParents: _userDefinedPrimaryParents.getUserDefinedPrimaryParents(orderFamilyNodesOptions.items, logicalFamily)
+        }
+        var {maximumId, treeLevels, bundles, connectorStacks} = _familyBalance.balance(params, isReversed);
 
-    var {maximumId, treeLevels, bundles, connectorStacks} = _familyBalance.balance(balanceParams);
-
-    _data.maximumId = maximumId;
-    _data.treeLevels = treeLevels;
-    _data.bundles = bundles;
-    _data.connectorStacks = connectorStacks;
-    _data.logicalFamily = logicalFamily;
+        _data.maximumId = maximumId;
+        _data.treeLevels = treeLevels;
+        _data.bundles = bundles;
+        _data.connectorStacks = connectorStacks;
+        _data.logicalFamily = logicalFamily;
+        break;
+    }
 
     return true;
   }

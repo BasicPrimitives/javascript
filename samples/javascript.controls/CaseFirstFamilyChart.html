@@ -12,19 +12,139 @@
 		document.addEventListener('DOMContentLoaded', function () {
 			var options = new primitives.FamConfig();
 
-			var items = [
-				{ id: 1, title: "Thomas Williams", label: "Thomas Williams", description: "1st husband", image: "../images/photos/t.png" },
-				{ id: 2, title: "Mary Spencer", label: "Mary Spencer", description: "The Mary",image: "../images/photos/m.png" },
-				{ id: 3, title: "David Kirby", label: "David Kirby", description: "2nd Husband", image: "../images/photos/d.png" },
-				{ id: 4, parents: [1, 2], title: "Brad Williams", label: "Brad Williams", description: "1st son", image: "../images/photos/b.png" },
-				{ id: 5, parents: [2, 3], title: "Mike Kirby", label: "Mike Kirby", description: "2nd son, having 2 spouses", image: "../images/photos/m.png"},
-				{ id: 6, title: "Lynette Maloney", label: "Lynette Maloney", description: "Spouse I", image: "../images/photos/m.png" },
-				{ id: 11, parents: [5, 6], title: "Steven Powell", label: "Steven Powell", description: "1st son", image: "../images/photos/s.png" },
-				{ id: 7, title: "Sara Kemp", label: "Sara Kemp", description: "Spouse II", image: "../images/photos/s.png" },
-				{ id: 12, parents: [5, 7], title: "John Smith", label: "John Smith", description: "2ns son", image: "../images/photos/j.png" },
-				{ id: 8, parents: [7], title: "Leon Kemp", label: "Leon Kemp", description: "", image: "../images/photos/l.png" }
-			];
+			var itemsDirect = [
+				{ id: 1, title: "SHAPE", label: "SHAPE", description: "", image: "../images/photos/e.png", itemTitleColor: primitives.Colors.Navy },
+				{ id: 2, title: "CENTCOM", label: "CENTCOM", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
+				
+				{ id: 3, parents: [1], title: "JFC Brunssum", label: "JFC Brunssum", description: "", image: "../images/photos/j.png", itemTitleColor: primitives.Colors.Navy },
+				{ id: 107, parents: [2], title: "NONE 107", label: "NONE 107", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
 
+				{ id: 4, parents: [107], title: "ARCENT", label: "ARCENT", description: "", image: "../images/photos/a.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 5, parents: [107], title: "AFCENT", label: "AFCENT", description: "", image: "../images/photos/f.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 6, parents: [107], title: "SOCCENT", label: "SOCCENT", description: "", image: "../images/photos/s.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 7, parents: [3], title: "ISAF", label: "ISAF", description: "", image: "../images/photos/i.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 8, parents: [107], title: "USFOR.A", label: "USFOR.A", description: "", image: "../images/photos/a.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 9, parents: [107], title: "NAVCENT", label: "NAVCENT", description: "", image: "../images/photos/n.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 10, parents: [107], title: "MARCENT", label: "MARCENT", description: "", image: "../images/photos/m.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 11, parents: [107], title: "TFS-35", label: "TFS-35", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+
+				{ id: 12, parents: [5], title: "AETF-A", label: "AETF-A", description: "", image: "../images/photos/e.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 13, parents: [7], title: "NONE 13", label: "NONE 13", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Navy },
+				{ id: 14, parents: [8], title: "NONE 14", label: "NONE 14", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
+				{ id: 15, parents: [11], title: "NONE 15", label: "NONE 15", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
+
+				{ id: 16, parents: [12], title: "NONE 16", label: "NONE 16", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
+				{ id: 17, parents: [13], title: "ISAF SOF", label: "ISAF SOF", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Navy },
+				{ id: 18, parents: [14], title: "TF YANKEE 26 MED", label: "TF YANKEE 26 MED", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 19, parents: [14], title: "TAD FWD-A", label: "TAD FWD-A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 20, parents: [13], title: "MTM-A", label: "MTM-A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 21, parents: [14], title: "CSTC-A", label: "CSTC-A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 22, parents: [14], title: "NONE 22", label: "NONE 22", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Navy },
+				{ id: 23, parents: [14], title: "CRATF 435", label: "CRATF 435", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 24, parents: [13], title: "UC", label: "UC", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 25, parents: [14], title: "NONE 25", label: "NONE 25", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
+				{ id: 26, parents: [14], title: "TF-46", label: "TF-46", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 27, parents: [14], title: "44-MED", label: "44-MED", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 28, parents: [14], title: "NONE 28", label: "NONE 28", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
+				{ id: 29, parents: [14], title: "TF DDN", label: "TF DDN", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 30, parents: [14], title: "359 TT58", label: "359 TT58", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 45, parents: [14], title: "NONE 45", label: "NONE 45", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
+				{ id: 31, parents: [14], title: "ISC-A", label: "ISC-A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 32, parents: [14], title: "CFSOCC-A", label: "CFSOCC-A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 33, parents: [15], title: "NONE 33", label: "NONE 33", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
+
+				{ id: 34, parents: [16], title: "AGG AFS", label: "AGG AFS", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 35, parents: [16], title: "ADS EASOG", label: "ADS EASOG", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 36, parents: [16], title: "ESS AEW", label: "ESS AEW", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 37, parents: [16], title: "438 AEW", label: "438 AEW", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 38, parents: [16], title: "451 AEW", label: "451 AEW", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 39, parents: [22], title: "MTM-A", label: "MTM-A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 40, parents: [23], title: "RCX FF-A", label: "RCX-FF-A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 41, parents: [24], title: "NONE 41", label: "NONE 41", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Navy },
+				{ id: 42, parents: [25], title: "NONE 42", label: "NONE 42", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
+				{ id: 43, parents: [28], title: "CILATS NEXUS", label: "CILATS NEXUS", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 44, parents: [28], title: "3 NCR", label: "3 NCR", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 46, parents: [45], title: "CNOC-A", label: "CNOC-A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 47, parents: [32], title: "CJSOTF-A", label: "CJSOTF-A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 48, parents: [33], title: "TF 3-10", label: "TF 3-10", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				
+				{ id: 49, parents: [41], title: "RED HORSE ROS CRES", label: "RED HORSE ROS CRES", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 50, parents: [41], title: "RC (SW)", label: "RC (SW)", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 51, parents: [42], title: "W MEF", label: "W MEF", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 62, parents: [41], title: "COMKAF", label: "COMKAF", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 63, parents: [41], title: "NONE 63", label: "NONE 63", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Navy },
+				{ id: 64, parents: [41], title: "RC (S)", label: "RC (S)", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 65, parents: [42], title: "10 MTN", label: "10 MTB", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 66, parents: [41], title: "RC (W)", label: "RC (W)", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 67, parents: [42], title: "NONE 67", label: "NONE 67", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
+				{ id: 68, parents: [41], title: "RC (N)", label: "RC (N)", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 69, parents: [42], title: "USFOR (N)", label: "USFOR (N)", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 70, parents: [41], title: "RC (C)", label: "RC (C)", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 71, parents: [42], title: "NONE 71", label: "NONE 71", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
+				{ id: 72, parents: [41], title: "RC (E)", label: "RC (E)", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 73, parents: [42], title: "1 CAV", label: "1 CAV", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
+				{ id: 74, parents: [42], title: "JEF PALADIN", label: "JEF PALADIN", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
+				{ id: 75, parents: [42], title: "NONE 75", label: "NONE 75", templateName: "dot", description: "",image: "../images/photos/u.png", itemTitleColor: primitives.Colors.Red },
+				{ id: 76, parents: [41], title: "NONE 76", label: "NONE 76", templateName: "dot", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 77, parents: [42], title: "PRIME BEEF 527 EPOG", label: "PRIME BEEF 527 EPOG", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+				{ id: 78, parents: [42], title: "175 EN", label: "175 EN", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red},
+
+				{ id: 79, parents: [50], title: "RC (SW) A", label: "RC (SW) A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 80, parents: [50, 51], title: "RC (SW) B", label: "RC (SW) B", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 81, parents: [63], title: "COMCALA", label: "COMCALA", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 82, parents: [64, 65], title: "RC (S) A", label: "RC (S) A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 83, parents: [64, 65], title: "RC (S) B", label: "RC (S) B", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 84, parents: [64, 65], title: "RC (S) C", label: "RC (S) C", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 85, parents: [64, 65], title: "RC (S) D", label: "RC (S) D", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 86, parents: [64, 65], title: "RC (S) E", label: "RC (S) E", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 87, parents: [64, 65], title: "RC (S) F", label: "RC (S) F", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 88, parents: [64, 65], title: "RC (S) J", label: "RC (S) J", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 89, parents: [66], title: "RC (W) A", label: "RC (W) A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 90, parents: [66], title: "RC (W) B", label: "RC (W) B", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 91, parents: [66, 67], title: "RC (W) C", label: "RC (W) C", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 92, parents: [66, 67], title: "RC (W) D", label: "RC (W) D", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 93, parents: [68], title: "RC (N) A", label: "RC (N) A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 94, parents: [68, 69], title: "RC (N) B", label: "RC (N) B", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 95, parents: [68, 69], title: "RC (N) C", label: "RC (N) C", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 96, parents: [70], title: "RC (C) A", label: "RC (C) A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 97, parents: [70, 71], title: "RC (C) B", label: "RC (C) B", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 98, parents: [72], title: "RC (E) A", label: "RC (E) A", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 99, parents: [72], title: "RC (E) B", label: "RC (E) B", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 100, parents: [72, 73], title: "RC (E) C", label: "RC (E) C", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 101, parents: [72, 73], title: "RC (E) D", label: "RC (E) D", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 102, parents: [72, 73], title: "RC (E) E", label: "RC (E) E", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 103, parents: [72, 73], title: "RC (E) F", label: "RC (E) F", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 104, parents: [72, 73], title: "RC (E) J", label: "RC (E) J", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 105, parents: [72, 73], title: "RC (E) H", label: "RC (E) H", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Navy},
+				{ id: 106, parents: [75, 76], title: "25 NCR", label: "25 NCR", description: "", image: "../images/photos/t.png", itemTitleColor: primitives.Colors.Red}
+			];
+			// var items = [];
+			// var newParents = {};
+			// for( var index = 0; index < itemsDirect.length; index++) {
+			// 	var item = itemsDirect[index];
+			// 	var parents = item.parents || [];
+			// 	for(var pIndex = 0; pIndex < parents.length; pIndex++) {
+			// 		var parent = parents[pIndex];
+			// 		if(newParents.hasOwnProperty(parent)) {
+			// 			newParents[parent].push(item.id); 
+			// 		} else {
+			// 			newParents[parent] = [item.id];
+			// 		}
+			// 	}
+			// }
+
+			// for( var index = 0; index < itemsDirect.length; index++) {
+			// 	var item = itemsDirect[index];
+			// 	item.parents = newParents[item.id] || [];
+
+			// 	items.push(item);
+			// }
+
+			var items = itemsDirect;
+
+			options.itemsOrderType = primitives.ItemsOrderType.MergedTrees;
+			options.enableMatrixLayout = false;
+      		options.minimumMatrixSize = 5;
 			options.pageFitMode = primitives.PageFitMode.None;
 			options.items = items;
 			options.cursorItem = 2;
@@ -39,13 +159,87 @@
 			options.lineItemsInterval = 10;
 			options.arrowsDirection = primitives.GroupByType.Parents;
 			options.showExtraArrows = false;
+			options.itemTitleFirstFontColor = primitives.Colors.White;
+			options.itemTitleSecondFontColor = primitives.Colors.White;
+			options.templates = [getContactTemplate(), getDotTemplate()];
+			options.onItemRender = onTemplateRender;
+			options.defaultTemplateName = "contactTemplate";
+			
 
 			control = primitives.FamDiagram(document.getElementById("basicdiagram"), options);
 		});
 
+		function onTemplateRender(event, data) {
+			switch (data.renderingMode) {
+				case primitives.RenderingMode.Create:
+					/* Initialize template content here */
+					break;
+				case primitives.RenderingMode.Update:
+					/* Update template content here */
+					break;
+			}
+
+			var itemConfig = data.context;
+
+			if (data.templateName == "contactTemplate") {
+				var titleBackground = data.element.firstChild;
+				titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
+
+				var title = data.element.firstChild.firstChild;
+				title.textContent = itemConfig.title;
+			} else if (data.templateName == "dot") {
+				var titleBackground = data.element;
+				titleBackground.style.backgroundColor = itemConfig.itemTitleColor || primitives.Colors.RoyalBlue;
+			}
+		}
+
+		function getContactTemplate() {
+			var result = new primitives.TemplateConfig();
+			result.name = "contactTemplate";
+			result.itemSize = new primitives.Size(60, 26);
+			result.minimizedItemSize = new primitives.Size(3, 3);
+			result.hasButtons = primitives.Enabled.False;
+
+			result.itemTemplate = 
+				'<div class="bp-item bp-corner-all bt-item-frame" style="width:' + result.itemSize.width + 'px; height: ' + result.itemSize.height + 'px;">'
+				+ '<div name="titleBackground" class="bp-item bp-corner-all bp-title-frame" style="top: 2px; left: 2px; width: 116px; height: 20px;">'
+					+ '<div name="title" class="bp-item bp-title" style="top: 3px; left: 6px; width: 108px; height: 18px;">'
+					+ '</div>'
+				+ '</div>'
+			+ '</div>'
+
+			return result;
+		}
+
+		function getDotTemplate() {
+			var result = new primitives.TemplateConfig();
+			result.name = "dot";
+
+			result.isActive = false;
+			result.itemSize = new primitives.Size(2, 2);
+			result.minimizedItemSize = new primitives.Size(2, 2);
+			result.minimizedItemCornerRadius = 4;
+			result.minimizedItemLineWidth = 1;
+			result.minimizedItemLineType = primitives.LineType.Solid;
+			result.minimizedItemBorderColor = null; // Shape border line has the same color as item title background color 
+			result.minimizedItemFillColor = null; // Shape background has the same color as item title background color 
+			result.minimizedItemOpacity = 0.7; // Shape background opacity
+
+			result.itemTemplate = ["div", {
+				"style": {
+				top: "2px",
+				left: "2px",
+				width: result.itemSize.width + "px",
+				height: result.itemSize.height + "px"
+				},
+				"class": ["bp-corner-all"]
+			}];
+
+			return result;
+		}
 	</script>
 </head>
 <body>
-	<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;"></div>
+	<div id="basicdiagram" style="width: 1280px; height: 800px; border-style: dotted; border-width: 1px;"></div>
 </body>
 </html>

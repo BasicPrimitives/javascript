@@ -1,7 +1,8 @@
 import {NavigationMode, PageFitMode, Visibility, OrientationType, VerticalAlignmentType,
   GroupByType, ElbowType, Enabled, SelectionPathMode, NeighboursSelectionMode,
   Colors, ShapeType, LineType, AdviserPlacementType, TextOrientationType, HorizontalAlignmentType,
-  PlacementType
+  PlacementType,
+  ItemsOrderType
 } from '../enums';
 import Thickness from '../graphics/structs/Thickness';
 import Size from '../graphics/structs/Size';
@@ -119,6 +120,17 @@ export default function FamConfig(name) {
    * @type {GroupByType}
    */
   this.groupByType = GroupByType.Children;
+
+  /**
+   * Defines ordering of items in the family diagram layout.
+   * Items can either be arranged left-to-right in the same order as they appear
+   * in the `items` collection, or be automatically reordered to minimize
+   * connector crossings.
+   *
+   * @group Auto Layout
+   * @type {ItemsOrderType}
+   */
+  this.itemsOrderType = ItemsOrderType.Families;
 
   /**
    * The align by levels option keeps items at the same levels after bundling connection lines between parents and children.
